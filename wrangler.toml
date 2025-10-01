@@ -1,0 +1,13 @@
+name = "swftstudios"
+compatibility_date = "2025-09-13"
+
+[assets]
+directory = "."
+
+[[routes]]
+pattern = "swftstudios.com/*"
+zone_name = "swftstudios.com"
+
+[[routes]]
+pattern = "www.swftstudios.com/*"
+zone_name = "swftstudios.com"
