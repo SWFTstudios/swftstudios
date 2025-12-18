@@ -206,8 +206,14 @@
   async function checkSession() {
     if (!supabase) return;
 
-    // Don't redirect if already on upload or blog page
     const currentPath = window.location.pathname;
+    
+    // Don't check session on auth.html - let the auth flow handle it
+    if (currentPath.includes('auth.html') || currentPath.includes('/auth')) {
+      return;
+    }
+
+    // Don't redirect if already on upload or blog page
     if (currentPath.includes('upload.html') || currentPath.includes('blog.html')) {
       return;
     }

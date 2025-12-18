@@ -1,4 +1,5 @@
 # Cloudflare Pages redirects
-/auth /auth.html 301
-/upload /upload.html 301
-/blog /blog.html 301
+# Note: These redirects might cause loops if not handled carefully
+# /auth /auth.html 301
+# /upload /upload.html 301
+# /blog /blog.html 301
