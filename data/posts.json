@@ -1,0 +1,91 @@
+[
+  {
+    "id": "welcome-to-swft-notes",
+    "slug": "welcome",
+    "title": "Welcome to SWFT Notes",
+    "description": "An introduction to the SWFT Studios knowledge graph",
+    "date": "2025-01-15",
+    "tags": [
+      "intro",
+      "personal"
+    ],
+    "image": null,
+    "excerpt": "Welcome to the SWFT Notes knowledge graph! This is where ideas, projects, and learnings come together. Check out web-development for tech insights or design-thinking for creative processes. This syste...",
+    "links": [
+      "web-development",
+      "design-thinking"
+    ],
+    "metaError": false
+  },
+  {
+    "id": "web-development",
+    "slug": "web-development",
+    "title": "Web Development",
+    "description": "Notes on modern web development practices",
+    "date": "2025-01-14",
+    "tags": [
+      "tech",
+      "tutorial"
+    ],
+    "image": null,
+    "excerpt": "Web Development Notes Modern web development involves: - Frontend: HTML, CSS, JavaScript - Backend: Node.js, APIs - Infrastructure: Cloudflare, Vercel See also: javascript-tips and design-thinking for...",
+    "links": [
+      "javascript-tips",
+      "design-thinking"
+    ],
+    "metaError": false
+  },
+  {
+    "id": "design-thinking",
+    "slug": "design-thinking",
+    "title": "Design Thinking",
+    "description": "Human-centered design approaches",
+    "date": "2025-01-13",
+    "tags": [
+      "design",
+      "business"
+    ],
+    "image": null,
+    "excerpt": "Design Thinking A methodology for creative problem-solving: 1. Empathize - Understand the user 2. Define - Frame the problem 3. Ideate - Generate solutions 4. Prototype - Build to learn 5. Test - Vali...",
+    "links": [
+      "welcome"
+    ],
+    "metaError": false
+  },
+  {
+    "id": "javascript-tips",
+    "slug": "javascript-tips",
+    "title": "JavaScript Tips",
+    "description": "Useful JavaScript patterns and tricks",
+    "date": "2025-01-12",
+    "tags": [
+      "tech",
+      "tutorial"
+    ],
+    "image": null,
+    "excerpt": "JavaScript Tips  Async/Await javascript async function fetchData() {   const response = await fetch('/api/data');   return response.json(); }  Destructuring javascript const { name, age } = user; Part...",
+    "links": [
+      "web-development"
+    ],
+    "metaError": false
+  },
+  {
+    "id": "project-ideas",
+    "slug": "project-ideas",
+    "title": "Project Ideas",
+    "description": "Future project concepts and brainstorms",
+    "date": "2025-01-11",
+    "tags": [
+      "idea",
+      "project"
+    ],
+    "image": null,
+    "excerpt": "Project Ideas  Knowledge Graph Blog A blog system with interactive graph visualization. See welcome for the current implementation.  AI Assistant Building on web-development skills to create helpful t...",
+    "links": [
+      "welcome",
+      "web-development",
+      "design-thinking"
+    ],
+    "metaError": false
+  }
+]

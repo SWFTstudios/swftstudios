@@ -1,3 +1,17 @@
 # Large video files - temporarily excluded due to GitHub size limits
 videos/
 swftstudios-website-template-folder/
+
+# Node.js dependencies
+node_modules/
+
+# Build artifacts - generated from notes repo
+.notes-temp/
+
+# OS files
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~

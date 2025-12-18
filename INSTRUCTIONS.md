@@ -17,7 +17,7 @@
 - `detail_video.html` - Video detail template
 - `style-guide.html` - Design system reference
 - `401.html` / `404.html` - Error pages
-- `blog.html` - Blog with list/graph views (planned)
+- `blog.html` - Notes/Knowledge Graph with list and 3D graph views
 
 ---
 
@@ -28,7 +28,7 @@
 | Frontend | Static HTML, CSS, Vanilla JS |
 | CSS Framework | Custom CSS (Webflow-exported structure) |
 | Hosting | Cloudflare Pages |
-| Build | None (static files) |
+| Build | Node.js script (npm run build) |
 | CDN | Cloudflare |
 | Analytics | Google Analytics, Microsoft Clarity |
 | Forms | FormSubmit.co |
@@ -57,13 +57,19 @@ swftstudios_cloudflare/
 │   ├── components.css      # Webflow components
 │   └── swftstudios000.css  # Main styles
 ├── js/
-│   └── swftstudios000.js   # Main JavaScript
+│   ├── swftstudios000.js   # Main JavaScript
+│   └── blog.js             # Blog/Notes functionality
+├── css/
+│   └── blog.css            # Blog-specific styles
 ├── images/                 # Static images
 ├── videos/                 # Video files
 ├── fonts/                  # Inter Display font family
-├── functions/              # Cloudflare Pages Functions (planned)
-│   └── api/
-│       └── blog-data.js    # Blog data API (planned)
+├── scripts/
+│   └── build-blog-data.js  # Build script for blog data
+├── data/                   # Generated blog data (build output)
+│   ├── posts.json          # List of all posts
+│   └── graph.*.json        # Graph data (versioned)
+├── package.json            # Node.js dependencies
 ├── wrangler.toml           # Cloudflare config
 ├── .cursorrules            # Cursor AI rules
 ├── INSTRUCTIONS.md         # This file
@@ -76,7 +82,17 @@ swftstudios_cloudflare/
 
 ### Local Development
 
-1. **No build step required** - open HTML files directly or use a local server:
+1. **Install dependencies** (for blog build script):
+   ```bash
+   npm install
+   ```
+
+2. **Build blog data** (generates `data/posts.json` and `data/graph.*.json`):
+   ```bash
+   npm run build
+   ```
+
+3. **Start local server**:
    ```bash
    # Using Python
    python -m http.server 8000
@@ -88,13 +104,19 @@ swftstudios_cloudflare/
    npx wrangler pages dev .
    ```
 
-2. **Test in browser** at `http://localhost:8000`
+4. **Test in browser** at `http://localhost:8000`
 
 ### Deployment
 
 - **Auto-deploy:** Push to `main` branch triggers Cloudflare Pages build
+- **Build command:** `npm run build` (generates blog data from notes repo)
 - **Preview deploys:** PRs get preview URLs automatically
 - **Production:** https://swftstudios.com (or configured domain)
+
+**Cloudflare Pages Build Settings:**
+- Build command: `npm run build`
+- Build output directory: `.` (static site)
+- Node.js version: 18.x or later
 
 ---
 
@@ -118,6 +140,7 @@ swftstudios_cloudflare/
   - GSAP 3.12.4 (animations)
   - Tippy.js (tooltips)
   - Spline (3D backgrounds)
+  - 3d-force-graph (lazy-loaded for blog graph view)
 
 ---
 
@@ -139,13 +162,10 @@ swftstudios_cloudflare/
 
 ## Environment Variables
 
-Currently none required for static site.
-
-**Planned for Blog feature:**
-```
-GITHUB_TOKEN=<personal access token for private repos>
-GITHUB_REPO=<username/repo-name>
-```
+**Build-time (Cloudflare Pages):**
+- None required (public GitHub repo: https://github.com/SWFTstudios/notes.git)
+- Build script clones notes repo during build process
+- Generated JSON files are committed to the site repo
 
 ---
 
@@ -174,14 +194,39 @@ Form is in `index.html` under `#wf-form-Contact-Form`. Validation is handled by 
 
 ---
 
-## Planned Features
+## Blog / Notes Feature
 
-### Blog with List/Graph Views
-- **Status:** Planning
-- **Files:** `blog.html`, `functions/api/blog-data.js`, `js/blog.js`, `css/blog.css`
-- **Data source:** GitHub repo with Markdown files
-- **Update trigger:** GitHub webhook to Cloudflare Pages
-- **Libraries:** 3d-force-graph (via CDN)
+### Overview
+Interactive knowledge graph page (`blog.html`) displaying notes from https://github.com/SWFTstudios/notes.git with:
+- **List View**: Card-based layout with search and tag filtering
+- **Graph View**: 3D force-directed graph showing connections between notes
+- **Dual View**: Both views side-by-side on desktop
+
+### Architecture
+1. **Build Process**: `scripts/build-blog-data.js` clones notes repo, parses markdown files, generates JSON
+2. **Data Files**: `data/posts.json` (list data) and `data/graph.*.json` (graph data with versioning)
+3. **Frontend**: `js/blog.js` fetches JSON, renders list/graph views, handles interactions
+4. **Styling**: `css/blog.css` provides responsive layout and accessibility features
+
+### Content Source
+- **Repo**: https://github.com/SWFTstudios/notes.git (public)
+- **Structure**: Markdown files in `notes/` folder with YAML frontmatter
+- **Links**: `[[wiki-style]]` links create connections in graph
+- **Tags**: Shared tags create automatic connections
+
+### Updating Content
+1. Edit markdown files in the notes repo
+2. Commit and push to `main` branch
+3. Cloudflare Pages auto-rebuilds (runs `npm run build`)
+4. New content appears on site automatically
+
+### Features
+- Search by title, description, or tags
+- Filter by tags
+- Click nodes in graph to view note details
+- Modal preview for quick note viewing
+- Responsive: list-only on mobile, graph available on desktop
+- Accessibility: keyboard navigation, screen reader support, reduced motion support
 
 ---
 
@@ -201,6 +246,13 @@ If fetching external data, ensure:
 - Check Spline URL validity
 - Verify no content blockers
 - Check console for errors
+
+### Blog Data Not Loading
+- Ensure `npm run build` completed successfully
+- Check that `data/posts.json` and `data/graph.*.json` exist
+- Verify notes repo is accessible (public)
+- Check browser console for fetch errors
+- If graph view doesn't load, check WebGL support in browser
 
 ---
 

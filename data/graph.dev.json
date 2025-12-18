@@ -1,0 +1,141 @@
+{
+  "version": "dev",
+  "generatedAt": "2025-12-18T20:06:37.774Z",
+  "nodes": [
+    {
+      "id": "welcome-to-swft-notes",
+      "name": "Welcome to SWFT Notes",
+      "val": 2,
+      "color": "#6366f1",
+      "tags": [
+        "intro",
+        "personal"
+      ],
+      "status": "published",
+      "slug": "welcome"
+    },
+    {
+      "id": "web-development",
+      "name": "Web Development",
+      "val": 7,
+      "color": "#3b82f6",
+      "tags": [
+        "tech",
+        "tutorial"
+      ],
+      "status": "published",
+      "slug": "web-development"
+    },
+    {
+      "id": "design-thinking",
+      "name": "Design Thinking",
+      "val": 4,
+      "color": "#ec4899",
+      "tags": [
+        "design",
+        "business"
+      ],
+      "status": "published",
+      "slug": "design-thinking"
+    },
+    {
+      "id": "javascript-tips",
+      "name": "JavaScript Tips",
+      "val": 4,
+      "color": "#3b82f6",
+      "tags": [
+        "tech",
+        "tutorial"
+      ],
+      "status": "published",
+      "slug": "javascript-tips"
+    },
+    {
+      "id": "project-ideas",
+      "name": "Project Ideas",
+      "val": 3,
+      "color": "#06b6d4",
+      "tags": [
+        "idea",
+        "project"
+      ],
+      "status": "published",
+      "slug": "project-ideas"
+    },
+    {
+      "id": "welcome",
+      "name": "Welcome",
+      "val": 1,
+      "color": "#666666",
+      "tags": [],
+      "status": "missing",
+      "slug": "welcome"
+    }
+  ],
+  "links": [
+    {
+      "source": "welcome-to-swft-notes",
+      "target": "web-development",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "welcome-to-swft-notes",
+      "target": "design-thinking",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "web-development",
+      "target": "javascript-tips",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "web-development",
+      "target": "design-thinking",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "design-thinking",
+      "target": "welcome",
+      "type": "manual",
+      "weight": 1
+    },
+    {
+      "source": "javascript-tips",
+      "target": "web-development",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "project-ideas",
+      "target": "welcome",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "project-ideas",
+      "target": "web-development",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "project-ideas",
+      "target": "design-thinking",
+      "type": "manual",
+      "weight": 2
+    },
+    {
+      "source": "web-development",
+      "target": "javascript-tips",
+      "type": "tag",
+      "weight": 2,
+      "tags": [
+        "tech",
+        "tutorial"
+      ]
+    }
+  ]
+}
