@@ -77,21 +77,31 @@
   /**
    * Redirect user based on authorization status
    */
+  let isRedirecting = false; // Prevent multiple redirects
+  
   async function redirectUser(user) {
+    // Prevent redirect loops
+    if (isRedirecting) {
+      console.log('Redirect already in progress, skipping');
+      return;
+    }
+
     if (!user || !user.email) {
       console.warn('No user email found');
+      isRedirecting = true;
       window.location.href = CONFIG.redirectUrls.blog;
       return;
     }
 
     const authorized = isAuthorizedUser(user.email);
 
+    isRedirecting = true;
+    
     if (authorized) {
       console.log('User authorized, redirecting to upload page');
       window.location.href = CONFIG.redirectUrls.upload;
     } else {
       console.log('User not authorized, redirecting to blog (read-only)');
-      // You could show a message before redirecting
       window.location.href = CONFIG.redirectUrls.blog;
     }
   }
@@ -154,18 +164,33 @@
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: `${window.location.origin}/auth.html`
+          redirectTo: `${window.location.origin}/auth.html`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('GitHub OAuth error:', error);
+        throw error;
+      }
 
       // OAuth will redirect, so show loading state
       showLoading();
 
     } catch (error) {
       console.error('GitHub sign-in error:', error);
-      showError(error.message || 'Failed to sign in with GitHub. Please try again.');
+      let errorMessage = 'Failed to sign in with GitHub. ';
+      
+      if (error.message && error.message.includes('404')) {
+        errorMessage += 'GitHub OAuth app not configured. Please contact admin.';
+      } else {
+        errorMessage += error.message || 'Please try again.';
+      }
+      
+      showError(errorMessage);
       setLoading(elements.githubBtn, false);
     }
   }
@@ -176,9 +201,16 @@
   
   /**
    * Check for existing session and handle redirect
+   * Only redirect if we're on auth.html (not already on target page)
    */
   async function checkSession() {
     if (!supabase) return;
+
+    // Don't redirect if already on upload or blog page
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('upload.html') || currentPath.includes('blog.html')) {
+      return;
+    }
 
     try {
       const { data: { session }, error } = await supabase.auth.getSession();
@@ -187,7 +219,12 @@
 
       if (session && session.user) {
         console.log('Session found:', session.user.email);
-        await redirectUser(session.user);
+        // Small delay to prevent race condition with auth state change
+        setTimeout(() => {
+          if (!isRedirecting) {
+            redirectUser(session.user);
+          }
+        }, 100);
       }
     } catch (error) {
       console.error('Session check error:', error);
@@ -201,21 +238,39 @@
     if (!supabase) return;
 
     supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event);
+      console.log('Auth state changed:', event, session?.user?.email);
 
+      // Only handle SIGNED_IN if we're on auth.html (callback page)
       if (event === 'SIGNED_IN' && session && session.user) {
-        console.log('User signed in:', session.user.email);
-        showLoading();
-        await redirectUser(session.user);
+        const currentPath = window.location.pathname;
+        
+        // Only redirect if we're on auth.html (not already on target page)
+        if (currentPath.includes('auth.html')) {
+          console.log('User signed in:', session.user.email);
+          showLoading();
+          
+          // Small delay to ensure session is fully established
+          setTimeout(() => {
+            redirectUser(session.user);
+          }, 200);
+        }
       }
 
       if (event === 'SIGNED_OUT') {
         console.log('User signed out');
-        window.location.href = CONFIG.redirectUrls.blog;
+        // Only redirect if not already on blog
+        if (!window.location.pathname.includes('blog.html')) {
+          window.location.href = CONFIG.redirectUrls.blog;
+        }
       }
 
       if (event === 'USER_UPDATED' && session && session.user) {
         console.log('User updated:', session.user.email);
+      }
+
+      // Handle TOKEN_REFRESHED to prevent loops
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('Token refreshed');
       }
     });
   }
