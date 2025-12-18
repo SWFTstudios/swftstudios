@@ -167,9 +167,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   const calculator = document.querySelector('[data-ms-code="price-calculator"]');
   if (!calculator) return;
-  const BASE_PRICE = 600; // base price requested
+  const BASE_PRICE = 600; // base price includes first page
   const totalPriceEl = calculator.querySelector('[data-ms-code-price-total]');
   const pagesOutput = document.querySelector('[data-ms-code-output="pages"]');
+
+  // Enforce mutual exclusivity for feature groups (e.g., CMS options)
+  function enforceFeatureGroupExclusivity(changedInput) {
+    const group = changedInput.dataset.featureGroup;
+    if (!group || !changedInput.checked) return;
+    const groupInputs = calculator.querySelectorAll(`[data-feature-group="${group}"]`);
+    groupInputs.forEach((input) => {
+      if (input !== changedInput) {
+        input.checked = false;
+      }
+    });
+  }
+
   function calculate() {
     let subTotal = 0;
     const pricedInputs = calculator.querySelectorAll('[data-price], [data-price-per-unit]');
@@ -178,14 +191,28 @@ document.addEventListener("DOMContentLoaded", function () {
       const price = parseFloat(input.dataset.price) || 0;
       const perUnit = parseFloat(input.dataset.pricePerUnit) || 0;
       const value = parseFloat(input.value) || 0;
-      subTotal += perUnit > 0 ? value * perUnit : price;
+      // First page is included in base price, charge only for additional pages
+      if (perUnit > 0) {
+        const additionalPages = Math.max(0, value - 1);
+        subTotal += additionalPages * perUnit;
+      } else {
+        subTotal += price;
+      }
     });
     const total = BASE_PRICE + subTotal;
     if (totalPriceEl) totalPriceEl.textContent = `$${Math.round(total).toLocaleString()}`;
     const pagesSlider = calculator.querySelector('[data-ms-code-slider="pages"]');
     if (pagesOutput && pagesSlider) pagesOutput.textContent = pagesSlider.value;
   }
-  calculator.addEventListener("input", calculate);
+
+  // Listen for changes and enforce exclusivity before calculating
+  calculator.addEventListener("input", function(e) {
+    if (e.target.type === "checkbox" && e.target.dataset.featureGroup) {
+      enforceFeatureGroupExclusivity(e.target);
+    }
+    calculate();
+  });
+
   calculate();
 });
   </script>
