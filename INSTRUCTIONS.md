@@ -18,6 +18,8 @@
 - `style-guide.html` - Design system reference
 - `401.html` / `404.html` - Error pages
 - `blog.html` - Notes/Knowledge Graph with list and 3D graph views
+- `auth.html` - Authentication page (email + GitHub OAuth)
+- `upload.html` - Content upload interface (authorized users only)
 
 ---
 
@@ -227,6 +229,47 @@ Interactive knowledge graph page (`blog.html`) displaying notes from https://git
 - Modal preview for quick note viewing
 - Responsive: list-only on mobile, graph available on desktop
 - Accessibility: keyboard navigation, screen reader support, reduced motion support
+
+## Upload System (Authorized Users Only)
+
+### Overview
+Secure content upload interface for authorized collaborators to submit notes directly to the knowledge graph.
+
+### Authentication
+- **Method**: Supabase Auth (Email magic link + GitHub OAuth)
+- **Authorized Users**: 
+  - elombe@swftstudios.com
+  - elombekisala@gmail.com
+  - stephen@swftstudios.com
+  - stephen.iezzi@gmail.com
+
+### Supported Content Types
+1. **Text** - Markdown or plain text notes
+2. **Audio** - MP3, M4A, WAV files (max 50MB)
+3. **Images** - JPG, PNG, WEBP, GIF (max 10MB)
+4. **Links** - URLs to external content (tweets, articles, etc.)
+
+### Workflow
+1. Visit `auth.html` → Sign in with email or GitHub
+2. If authorized → redirected to `upload.html`
+3. Submit content (text, files, links)
+4. Files uploaded to Supabase Storage
+5. Markdown generated and committed to notes repo via GitHub API
+6. Cloudflare Pages auto-rebuilds
+7. New note appears in blog after ~1-2 minutes
+
+### Setup Required
+See `UPLOAD_SETUP.md` for detailed configuration instructions:
+- Supabase database and storage setup
+- GitHub personal access token creation
+- Cloudflare environment variable configuration
+
+### Architecture
+- **Frontend**: `auth.html`, `upload.html` with Supabase client
+- **Storage**: Supabase Storage (3 buckets: audio, images, files)
+- **Database**: Supabase PostgreSQL (notes table)
+- **Processing**: Cloudflare Pages Function (`functions/api/submit-note.js`)
+- **Destination**: GitHub notes repo → triggers site rebuild
 
 ---
 

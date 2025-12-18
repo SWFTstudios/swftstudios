@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Upload Note | SWFT Notes</title>
+  <meta content="Create and upload notes to your knowledge graph" name="description">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/components.css" rel="stylesheet" type="text/css">
+  <link href="css/swftstudios000.css" rel="stylesheet" type="text/css">
+  <link href="css/upload.css" rel="stylesheet" type="text/css">
+  <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.webp" rel="apple-touch-icon">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F2BXR858CL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F2BXR858CL');
+  </script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Navigation -->
+    <header class="upload-nav">
+      <div class="upload-nav-container">
+        <a href="index.html" class="nav_logo">SWFT <span class="skinny">STUDIOS</span></a>
+        <nav class="upload-nav-links">
+          <a href="blog.html" class="upload-nav-link">View Notes</a>
+          <button type="button" id="sign-out-btn" class="upload-nav-link">Sign Out</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="upload-main">
+      <div class="upload-container">
+        <!-- Upload Form -->
+        <div class="upload-section">
+          <div class="upload-header">
+            <h1 class="upload-title">Create Note</h1>
+            <p class="upload-subtitle">Upload text, audio, images, or links to your knowledge graph</p>
+          </div>
+
+          <form id="upload-form" class="upload-form">
+            <!-- Title -->
+            <div class="form-group">
+              <label for="note-title" class="form-label">
+                Title
+                <span class="form-label-hint">(optional - auto-generated if empty)</span>
+              </label>
+              <input 
+                type="text" 
+                id="note-title" 
+                class="form-control"
+                placeholder="My Note Title"
+              >
+            </div>
+
+            <!-- Content Type Selector -->
+            <div class="form-group">
+              <label class="form-label">Content Type</label>
+              <div class="content-type-selector">
+                <button type="button" class="content-type-btn active" data-type="text">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <line x1="10" y1="9" x2="8" y2="9"></line>
+                  </svg>
+                  Text
+                </button>
+                <button type="button" class="content-type-btn" data-type="audio">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                  </svg>
+                  Audio
+                </button>
+                <button type="button" class="content-type-btn" data-type="image">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                  Image
+                </button>
+                <button type="button" class="content-type-btn" data-type="link">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                  Link
+                </button>
+              </div>
+              <input type="hidden" id="content-type" value="text">
+            </div>
+
+            <!-- Text Content -->
+            <div class="form-group content-group" data-content="text">
+              <label for="note-content" class="form-label">
+                Content
+                <span class="form-label-hint">(supports markdown)</span>
+              </label>
+              <textarea 
+                id="note-content" 
+                class="form-control form-textarea"
+                placeholder="Write your note here... Use [[note-name]] to link to other notes"
+                rows="10"
+              ></textarea>
+            </div>
+
+            <!-- Audio Upload -->
+            <div class="form-group content-group" data-content="audio" hidden>
+              <label for="audio-file" class="form-label">Audio File</label>
+              <div class="file-upload-area" id="audio-upload-area">
+                <input 
+                  type="file" 
+                  id="audio-file" 
+                  accept=".mp3,.m4a,.wav,audio/*"
+                  class="file-input"
+                >
+                <div class="file-upload-prompt">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <p><strong>Click to upload</strong> or drag and drop</p>
+                  <p class="file-hint">MP3, M4A, or WAV (max 50MB)</p>
+                </div>
+                <div class="file-preview" id="audio-preview" hidden></div>
+              </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-group content-group" data-content="image" hidden>
+              <label for="image-file" class="form-label">Image File</label>
+              <div class="file-upload-area" id="image-upload-area">
+                <input 
+                  type="file" 
+                  id="image-file" 
+                  accept=".jpg,.jpeg,.png,.webp,.gif,image/*"
+                  class="file-input"
+                >
+                <div class="file-upload-prompt">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                  <p><strong>Click to upload</strong> or drag and drop</p>
+                  <p class="file-hint">JPG, PNG, WEBP, or GIF (max 10MB)</p>
+                </div>
+                <div class="file-preview" id="image-preview" hidden></div>
+              </div>
+            </div>
+
+            <!-- Link Input -->
+            <div class="form-group content-group" data-content="link" hidden>
+              <label for="external-link" class="form-label">
+                URL
+                <span class="form-label-hint">(tweet, Instagram post, article, etc.)</span>
+              </label>
+              <input 
+                type="url" 
+                id="external-link" 
+                class="form-control"
+                placeholder="https://twitter.com/..."
+              >
+            </div>
+
+            <!-- Tags -->
+            <div class="form-group">
+              <label for="note-tags" class="form-label">
+                Tags
+                <span class="form-label-hint">(comma-separated)</span>
+              </label>
+              <input 
+                type="text" 
+                id="note-tags" 
+                class="form-control"
+                placeholder="design, idea, personal"
+              >
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="form-actions">
+              <button type="submit" class="form-button primary" id="submit-btn">
+                <span class="button-text">Publish Note</span>
+                <span class="button-loader" hidden>
+                  <svg class="spinner" width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" opacity="0.25"/>
+                    <path d="M12 2 A10 10 0 0 1 22 12" stroke="currentColor" stroke-width="3" fill="none"/>
+                  </svg>
+                </span>
+              </button>
+              <button type="button" class="form-button secondary" id="preview-btn">
+                Preview
+              </button>
+            </div>
+
+            <!-- Success Message -->
+            <div id="upload-success" class="upload-message success" hidden>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <div>
+                <p><strong>Note published!</strong></p>
+                <p>Your note will appear in the blog after the site rebuilds (usually 1-2 minutes)</p>
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="upload-error" class="upload-message error" hidden>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <div>
+                <p id="upload-error-message">Failed to upload note</p>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-section">
+          <div class="preview-header">
+            <h2 class="preview-title">Preview</h2>
+            <button type="button" class="preview-close" id="preview-close" aria-label="Close preview">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="preview-body" id="preview-content">
+            <p class="preview-empty">Fill out the form to see a preview</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Auth Script -->
+  <script src="js/auth.js"></script>
+  <!-- Upload Script -->
+  <script src="js/upload.js"></script>
+</body>
+</html>
