@@ -147,6 +147,37 @@
 }
 
 /* ==========================================================================
+   Sort Controls
+   ========================================================================== */
+
+.blog_sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.blog_sort-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.blog_sort-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.blog_sort-select:focus {
+  border-color: var(--primary-color, #6366f1);
+}
+
+/* ==========================================================================
    Tag Filters
    ========================================================================== */
 

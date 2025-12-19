@@ -1,9 +1,7 @@
 /**
- * SWFT Notes Upload Interface
+ * SWFT Notes Chat Interface
  * 
- * Handles multi-format content uploads (text, audio, images, links)
- * Uploads files to Supabase Storage
- * Generates markdown and commits to notes repo
+ * Chat messenger-style note upload with threads, auto-tagging, and multi-format support
  */
 
 (function() {
@@ -17,12 +15,16 @@
     apiEndpoint: '/api/submit-note',
     maxFileSizes: {
       image: 10 * 1024 * 1024, // 10MB
-      audio: 50 * 1024 * 1024  // 50MB
+      audio: 50 * 1024 * 1024, // 50MB
+      video: 100 * 1024 * 1024  // 100MB
     },
     allowedTypes: {
       image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-      audio: ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a']
-    }
+      audio: ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a'],
+      video: ['video/mp4', 'video/quicktime', 'video/webm']
+    },
+    supabaseUrl: 'https://mnrteunavnzrglbozpfc.supabase.co',
+    supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ucnRldW5hdm56cmdsYm96cGZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwOTM5NjUsImV4cCI6MjA4MTY2OTk2NX0.7XORw2dbCDG64i2HfiAaTt70ZJTg89BVO7DAPeSCsU8'
   };
 
   // ==========================================================================
@@ -32,9 +34,9 @@
   let state = {
     supabase: window.SWFTAuth?.supabase,
     currentUser: null,
-    contentType: 'text',
-    uploadedFiles: [],
-    isDraft: true
+    messages: [],
+    attachments: [],
+    isSubmitting: false
   };
 
   // ==========================================================================
@@ -42,52 +44,31 @@
   // ==========================================================================
   
   const elements = {
-    form: document.getElementById('upload-form'),
-    titleInput: document.getElementById('note-title'),
-    contentInput: document.getElementById('note-content'),
-    tagsInput: document.getElementById('note-tags'),
-    contentTypeInput: document.getElementById('content-type'),
-    contentTypeBtns: document.querySelectorAll('.content-type-btn'),
-    contentGroups: document.querySelectorAll('.content-group'),
-    audioFile: document.getElementById('audio-file'),
-    imageFile: document.getElementById('image-file'),
-    externalLink: document.getElementById('external-link'),
-    audioPreview: document.getElementById('audio-preview'),
-    imagePreview: document.getElementById('image-preview'),
-    submitBtn: document.getElementById('submit-btn'),
-    previewBtn: document.getElementById('preview-btn'),
-    previewContent: document.getElementById('preview-content'),
-    previewSection: document.querySelector('.preview-section'),
-    previewClose: document.getElementById('preview-close'),
-    uploadSuccess: document.getElementById('upload-success'),
-    uploadError: document.getElementById('upload-error'),
-    uploadErrorMessage: document.getElementById('upload-error-message'),
-    signOutBtn: document.getElementById('sign-out-btn')
+    messageForm: document.getElementById('message-form'),
+    messageInput: document.getElementById('message-input'),
+    messagesList: document.getElementById('messages-list'),
+    attachmentBtn: document.getElementById('attachment-btn'),
+    attachmentMenu: document.getElementById('attachment-menu'),
+    attachmentsContainer: document.getElementById('message-attachments'),
+    sendBtn: document.getElementById('send-btn'),
+    signOutBtn: document.getElementById('sign-out-btn'),
+    settingsBtn: document.getElementById('settings-btn'),
+    imageFileInput: document.getElementById('image-file-input'),
+    audioFileInput: document.getElementById('audio-file-input'),
+    videoFileInput: document.getElementById('video-file-input'),
+    fileInput: document.getElementById('file-input')
   };
 
   // ==========================================================================
-  // Authentication Check
+  // Authentication
   // ==========================================================================
   
-  let authCheckInProgress = false; // Prevent multiple simultaneous auth checks
-  
-  /**
-   * Verify user is authenticated and authorized
-   */
   async function checkAuth() {
-    // Prevent multiple simultaneous auth checks
-    if (authCheckInProgress) {
-      console.log('Auth check already in progress, skipping');
-      return;
-    }
-    
-    authCheckInProgress = true;
-
     try {
       if (!state.supabase) {
         console.error('Supabase not initialized');
         window.location.href = '/auth.html';
-        return;
+        return false;
       }
 
       const { data: { session }, error } = await state.supabase.auth.getSession();
@@ -97,494 +78,467 @@
       if (!session || !session.user) {
         console.log('No session found, redirecting to auth');
         window.location.href = '/auth.html';
-        return;
+        return false;
       }
 
       state.currentUser = session.user;
 
-      // Check if user is authorized
       const authorized = window.SWFTAuth?.isAuthorizedUser(session.user.email);
       
       if (!authorized) {
         console.log('User not authorized, redirecting to blog');
         window.location.href = '/blog.html';
-        return;
+        return false;
       }
 
       console.log('User authorized:', session.user.email);
+      return true;
 
     } catch (error) {
       console.error('Auth check failed:', error);
       window.location.href = '/auth.html';
-    } finally {
-      authCheckInProgress = false;
+      return false;
     }
   }
 
   // ==========================================================================
-  // Content Type Management
+  // Message Management
   // ==========================================================================
   
-  /**
-   * Switch content type
-   */
-  function setContentType(type) {
-    state.contentType = type;
+  function loadMessages() {
+    const threadId = window.ThreadManager?.currentThreadId || 'default';
+    const stored = localStorage.getItem(`swft-messages-${threadId}`);
     
-    // Update hidden input
-    if (elements.contentTypeInput) {
-      elements.contentTypeInput.value = type;
+    if (stored) {
+      try {
+        state.messages = JSON.parse(stored);
+        renderMessages();
+      } catch (e) {
+        console.error('Error loading messages:', e);
+        state.messages = [];
+      }
+    } else {
+      state.messages = [];
+      renderEmptyState();
     }
-
-    // Update button states
-    elements.contentTypeBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.type === type);
-    });
-
-    // Show/hide content groups
-    elements.contentGroups.forEach(group => {
-      group.hidden = group.dataset.content !== type;
-    });
-
-    // Update preview
-    updatePreview();
   }
 
-  // ==========================================================================
-  // File Upload Handling
-  // ==========================================================================
-  
-  /**
-   * Upload file to Supabase Storage
-   */
-  async function uploadFileToSupabase(file, bucket) {
-    if (!state.supabase || !state.currentUser) {
-      throw new Error('Not authenticated');
-    }
+  function saveMessages() {
+    const threadId = window.ThreadManager?.currentThreadId || 'default';
+    localStorage.setItem(`swft-messages-${threadId}`, JSON.stringify(state.messages));
+  }
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${state.currentUser.id}/${Date.now()}.${fileExt}`;
-
-    try {
-      const { data, error } = await state.supabase.storage
-        .from(bucket)
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
+  function addMessage(message) {
+    state.messages.push(message);
+    saveMessages();
+    renderMessages();
+    
+    // Update thread message count
+    if (window.ThreadManager) {
+      const thread = window.ThreadManager.getCurrentThread();
+      if (thread) {
+        window.ThreadManager.updateThread(thread.id, {
+          messageCount: state.messages.length
         });
-
-      if (error) throw error;
-
-      // Get public URL
-      const { data: urlData } = state.supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName);
-
-      return urlData.publicUrl;
-
-    } catch (error) {
-      console.error('File upload failed:', error);
-      throw new Error(`Failed to upload ${file.name}: ${error.message}`);
+      }
     }
+    
+    // Scroll to bottom
+    scrollToBottom();
   }
 
-  /**
-   * Handle image file selection
-   */
-  async function handleImageUpload(file) {
-    // Validate
-    if (!CONFIG.allowedTypes.image.includes(file.type)) {
-      throw new Error('Invalid image type. Please upload JPG, PNG, WEBP, or GIF');
+  function renderMessages() {
+    if (state.messages.length === 0) {
+      renderEmptyState();
+      return;
     }
-
-    if (file.size > CONFIG.maxFileSizes.image) {
-      throw new Error('Image too large. Maximum size is 10MB');
-    }
-
-    // Show preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      elements.imagePreview.innerHTML = `
-        <img src="${e.target.result}" alt="Preview">
-        <div>
-          <p><strong>${file.name}</strong></p>
-          <p>${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+    
+    elements.messagesList.innerHTML = state.messages.map(msg => `
+      <div class="message">
+        <div class="message-bubble ${msg.content ? 'has-content' : ''}">
+          <div class="message-header">
+            <span class="message-author">${escapeHtml(msg.author)}</span>
+            <span class="message-time">${formatTime(msg.timestamp)}</span>
+          </div>
+          
+          ${msg.content ? `<div class="message-content">${marked.parse(msg.content)}</div>` : ''}
+          
+          ${msg.attachments && msg.attachments.length > 0 ? `
+            <div class="message-attachment">
+              ${msg.attachments.map(att => renderAttachment(att)).join('')}
+            </div>
+          ` : ''}
+          
+          ${msg.tags && msg.tags.length > 0 ? `
+            <div class="message-tags">
+              ${msg.tags.map(tag => `<span class="message-tag">${escapeHtml(tag)}</span>`).join('')}
+            </div>
+          ` : ''}
         </div>
-      `;
-      elements.imagePreview.hidden = false;
-    };
-    reader.readAsDataURL(file);
-
-    return file;
+      </div>
+    `).join('');
   }
 
-  /**
-   * Handle audio file selection
-   */
-  async function handleAudioUpload(file) {
-    // Validate
-    if (!CONFIG.allowedTypes.audio.includes(file.type)) {
-      throw new Error('Invalid audio type. Please upload MP3, M4A, or WAV');
-    }
-
-    if (file.size > CONFIG.maxFileSizes.audio) {
-      throw new Error('Audio too large. Maximum size is 50MB');
-    }
-
-    // Show preview
-    const url = URL.createObjectURL(file);
-    elements.audioPreview.innerHTML = `
-      <div>
-        <p><strong>${file.name}</strong></p>
-        <p>${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-        <audio controls src="${url}"></audio>
+  function renderEmptyState() {
+    elements.messagesList.innerHTML = `
+      <div class="messages-empty">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <p>No messages yet. Start by sending a note!</p>
       </div>
     `;
-    elements.audioPreview.hidden = false;
+  }
 
-    return file;
+  function renderAttachment(attachment) {
+    if (attachment.type === 'image') {
+      return `<img src="${escapeHtml(attachment.url)}" alt="Image attachment" loading="lazy">`;
+    } else if (attachment.type === 'audio') {
+      return `<audio controls src="${escapeHtml(attachment.url)}"></audio>`;
+    } else if (attachment.type === 'video') {
+      return `<video controls src="${escapeHtml(attachment.url)}"></video>`;
+    }
+    return '';
+  }
+
+  function scrollToBottom() {
+    setTimeout(() => {
+      elements.messagesList.scrollTop = elements.messagesList.scrollHeight;
+    }, 100);
   }
 
   // ==========================================================================
-  // Markdown Generation
+  // Attachments
   // ==========================================================================
   
-  /**
-   * Generate markdown content from form data
-   */
-  function generateMarkdown(formData) {
-    const { title, content, tags, contentType, fileUrl, externalLink } = formData;
-    
-    // Generate frontmatter
-    const frontmatter = {
-      title: title || 'Untitled Note',
-      date: new Date().toISOString().split('T')[0],
-      tags: tags || [],
-      author: state.currentUser.email,
-      content_type: contentType
-    };
+  function toggleAttachmentMenu() {
+    elements.attachmentMenu.hidden = !elements.attachmentMenu.hidden;
+  }
 
-    // Add content-specific metadata
-    if (contentType === 'audio' && fileUrl) {
-      frontmatter.audio_url = fileUrl;
-    }
-    if (contentType === 'image' && fileUrl) {
-      frontmatter.image = fileUrl;
-    }
-    if (contentType === 'link' && externalLink) {
-      frontmatter.link_url = externalLink;
-    }
+  function setupAttachmentHandlers() {
+    // Attachment menu items
+    const menuItems = document.querySelectorAll('.attachment-menu-item');
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const type = item.dataset.type;
+        handleAttachmentType(type);
+        elements.attachmentMenu.hidden = true;
+      });
+    });
 
-    // Build markdown
-    let markdown = '---\n';
-    for (const [key, value] of Object.entries(frontmatter)) {
-      if (Array.isArray(value)) {
-        markdown += `${key}: [${value.map(v => `"${v}"`).join(', ')}]\n`;
-      } else {
-        markdown += `${key}: "${value}"\n`;
+    // File input handlers
+    elements.imageFileInput.addEventListener('change', (e) => handleFileSelect(e, 'image'));
+    elements.audioFileInput.addEventListener('change', (e) => handleFileSelect(e, 'audio'));
+    elements.videoFileInput.addEventListener('change', (e) => handleFileSelect(e, 'video'));
+    elements.fileInput.addEventListener('change', (e) => handleFileSelect(e, 'file'));
+  }
+
+  function handleAttachmentType(type) {
+    switch (type) {
+      case 'image':
+        elements.imageFileInput.click();
+        break;
+      case 'audio':
+        elements.audioFileInput.click();
+        break;
+      case 'video':
+        elements.videoFileInput.click();
+        break;
+      case 'file':
+        elements.fileInput.click();
+        break;
+    }
+  }
+
+  async function handleFileSelect(event, type) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    for (const file of files) {
+      // Validate file
+      if (!validateFile(file, type)) {
+        showError(`Invalid ${type} file: ${file.name}`);
+        continue;
       }
-    }
-    markdown += '---\n\n';
 
-    // Add content based on type
-    if (contentType === 'text' && content) {
-      markdown += content;
-    } else if (contentType === 'audio' && fileUrl) {
-      markdown += content || 'Voice note\n\n';
-      markdown += `<audio controls>\n  <source src="${fileUrl}" type="audio/mpeg">\n</audio>\n`;
-    } else if (contentType === 'image' && fileUrl) {
-      markdown += content || 'Image note\n\n';
-      markdown += `![${title || 'Image'}](${fileUrl})\n`;
-    } else if (contentType === 'link' && externalLink) {
-      markdown += content || '';
-      markdown += `\n\n[View original](${externalLink})\n`;
+      // Add to attachments
+      state.attachments.push({
+        file: file,
+        type: type,
+        preview: await generatePreview(file, type)
+      });
     }
 
-    return markdown;
+    renderAttachments();
+    
+    // Clear input
+    event.target.value = '';
+  }
+
+  function validateFile(file, type) {
+    const maxSize = CONFIG.maxFileSizes[type] || 10 * 1024 * 1024;
+    
+    if (file.size > maxSize) {
+      return false;
+    }
+
+    if (type !== 'file' && CONFIG.allowedTypes[type]) {
+      return CONFIG.allowedTypes[type].includes(file.type);
+    }
+
+    return true;
+  }
+
+  async function generatePreview(file, type) {
+    if (type === 'image') {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+    return null;
+  }
+
+  function renderAttachments() {
+    if (state.attachments.length === 0) {
+      elements.attachmentsContainer.hidden = true;
+      return;
+    }
+
+    elements.attachmentsContainer.hidden = false;
+    elements.attachmentsContainer.innerHTML = state.attachments.map((att, index) => `
+      <div class="attachment-preview">
+        ${att.preview ? `<img src="${att.preview}" alt="Preview">` : `
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+            <polyline points="13 2 13 9 20 9"></polyline>
+          </svg>
+        `}
+        <button type="button" class="attachment-preview-remove" data-index="${index}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    `).join('');
+
+    // Attach remove handlers
+    document.querySelectorAll('.attachment-preview-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        state.attachments.splice(index, 1);
+        renderAttachments();
+      });
+    });
   }
 
   // ==========================================================================
-  // Form Submission
+  // Message Submission
   // ==========================================================================
   
-  /**
-   * Submit note to server
-   */
-  async function submitNote(e) {
-    if (e) e.preventDefault();
+  async function submitMessage(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    const content = elements.messageInput.value.trim();
+    
+    if (!content && state.attachments.length === 0) {
+      return;
+    }
+
+    if (state.isSubmitting) {
+      return;
+    }
+
+    state.isSubmitting = true;
+    setLoading(true);
 
     try {
-      setLoading(true);
-      hideMessages();
+      // Upload attachments to Supabase
+      const uploadedAttachments = await uploadAttachments();
 
-      // Get form data
-      const title = elements.titleInput.value.trim();
-      const content = elements.contentInput.value.trim();
-      const tagsStr = elements.tagsInput.value.trim();
-      const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
-      const contentType = state.contentType;
-
-      // Validate
-      if (!title && !content) {
-        throw new Error('Please provide at least a title or content');
-      }
-
-      // Handle file uploads
-      let fileUrl = null;
-      
-      if (contentType === 'image' && elements.imageFile.files[0]) {
-        const file = elements.imageFile.files[0];
-        await handleImageUpload(file);
-        showInfo('Uploading image...');
-        fileUrl = await uploadFileToSupabase(file, 'notes-images');
-      } else if (contentType === 'audio' && elements.audioFile.files[0]) {
-        const file = elements.audioFile.files[0];
-        await handleAudioUpload(file);
-        showInfo('Uploading audio...');
-        fileUrl = await uploadFileToSupabase(file, 'notes-audio');
-      }
-
-      // Get external link
-      const externalLink = elements.externalLink?.value.trim() || null;
+      // Get tags from auto-tagger
+      const tags = window.AutoTagger?.getSelectedTags() || [];
 
       // Generate markdown
-      const markdown = generateMarkdown({
-        title,
-        content,
-        tags,
-        contentType,
-        fileUrl,
-        externalLink
-      });
+      const markdown = generateMarkdown(content, uploadedAttachments, tags);
 
-      // Submit to server
-      showInfo('Publishing note...');
-      
-      // #region agent log
-      const payload = {
-        title: title || 'Untitled Note',
-        content,
-        markdown,
-        tags,
-        contentType,
-        fileUrl,
-        externalLink,
-        userEmail: state.currentUser.email
-      };
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:363',message:'Attempting to submit note',data:{url:CONFIG.apiEndpoint,method:'POST',bodySize:JSON.stringify(payload).length,hasTitle:!!title,hasContent:!!content},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
-      
+      // Submit to API
       const response = await fetch(CONFIG.apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${(await state.supabase.auth.getSession()).data.session.access_token}`
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          title: generateTitle(content),
+          content: content,
+          markdown: markdown,
+          tags: tags,
+          contentType: determineContentType(content, uploadedAttachments),
+          fileUrl: uploadedAttachments[0]?.url || null,
+          externalLink: extractLinks(content)[0] || null,
+          userEmail: state.currentUser.email,
+          threadId: window.ThreadManager?.currentThreadId || 'default'
+        })
       });
-
-      // #region agent log
-      const responseText = await response.text();
-      console.log('[DEBUG] Response received:', {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-        contentType: response.headers.get('content-type'),
-        bodyLength: responseText.length,
-        bodyPreview: responseText.substring(0, 200),
-        url: response.url || CONFIG.apiEndpoint
-      });
-      
-      // If 404, provide more helpful error message
-      if (response.status === 404) {
-        console.error('[ERROR] 404 - Function not found. Possible causes:');
-        console.error('1. Cloudflare Pages Functions may not be enabled');
-        console.error('2. Function may not be deployed yet (check Cloudflare dashboard)');
-        console.error('3. Function path might be incorrect');
-        console.error('4. Build may have failed (check deployment logs)');
-      }
-      
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:381',message:'Received raw response',data:{status:response.status,statusText:response.statusText,ok:response.ok,contentType:response.headers.get('content-type'),responseTextLength:responseText.length,responseTextSnippet:responseText.substring(0,200)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
 
       if (!response.ok) {
-        // #region agent log
-        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:384',message:'Response not OK - attempting to parse error',data:{status:response.status,responseText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
-        let errorMessage = 'Failed to publish note';
-        try {
-          if (responseText && responseText.trim()) {
-            const error = JSON.parse(responseText);
-            errorMessage = error.message || error.error || errorMessage;
-          } else {
-            if (response.status === 404) {
-              errorMessage = `API endpoint not found (404). The Cloudflare Pages Function may not be deployed. Please check: 1) Functions are enabled in Cloudflare Pages settings, 2) The function file exists at functions/api/submit-note.js, 3) The deployment completed successfully.`;
-            } else {
-              errorMessage = `Server returned ${response.status} ${response.statusText} with empty body`;
-            }
-          }
-        } catch (jsonError) {
-          // #region agent log
-          fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:393',message:'JSON parsing failed for error response',data:{error:jsonError.message,responseText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-          // #endregion
-          errorMessage = `Server returned ${response.status} ${response.statusText}. ${responseText || 'No error details available'}`;
-        }
-        throw new Error(errorMessage);
+        throw new Error(`Server returned ${response.status}`);
       }
 
-      // Parse success response
-      let result;
-      try {
-        if (!responseText || !responseText.trim()) {
-          // #region agent log
-          fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:402',message:'Success response is empty',data:{status:response.status},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-          // #endregion
-          throw new Error('Server returned empty response');
-        }
-        result = JSON.parse(responseText);
-        // #region agent log
-        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:407',message:'Successfully parsed response JSON',data:{hasSuccess:!!result.success,hasMessage:!!result.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
-      } catch (jsonError) {
-        // #region agent log
-        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:410',message:'JSON parsing failed for success response',data:{error:jsonError.message,responseText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
-        throw new Error(`Failed to parse server response: ${jsonError.message}. Response: ${responseText.substring(0, 100)}`);
-      }
-      
-      // Show success
-      showSuccess('Note published successfully!');
-      
-      // Reset form
-      setTimeout(() => {
-        elements.form.reset();
-        state.uploadedFiles = [];
-        elements.imagePreview.hidden = true;
-        elements.audioPreview.hidden = true;
-        updatePreview();
-      }, 2000);
+      // Add message to local state
+      const message = {
+        id: Date.now(),
+        author: state.currentUser.email.split('@')[0],
+        content: content,
+        attachments: uploadedAttachments,
+        tags: tags,
+        timestamp: new Date().toISOString()
+      };
+
+      addMessage(message);
+
+      // Clear form
+      elements.messageInput.value = '';
+      state.attachments = [];
+      renderAttachments();
+      window.AutoTagger?.hideSuggestions();
+
+      // Reset textarea height
+      elements.messageInput.style.height = 'auto';
 
     } catch (error) {
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:417',message:'Error submitting note',data:{error:error.message,stack:error.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
-      console.error('Submit failed:', error);
-      showError(error.message || 'Failed to publish note. Please try again.');
+      console.error('Submit error:', error);
+      showError('Failed to send message. Please try again.');
     } finally {
+      state.isSubmitting = false;
       setLoading(false);
     }
   }
 
-  // ==========================================================================
-  // Preview
-  // ==========================================================================
-  
-  /**
-   * Update live preview
-   */
-  function updatePreview() {
-    if (!elements.previewContent) return;
+  async function uploadAttachments() {
+    const uploaded = [];
 
-    const title = elements.titleInput.value.trim() || 'Untitled Note';
-    const content = elements.contentInput.value.trim();
-    const tagsStr = elements.tagsInput.value.trim();
-    const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
-    const externalLink = elements.externalLink?.value.trim();
+    for (const attachment of state.attachments) {
+      try {
+        const bucket = attachment.type === 'image' ? 'notes-images' : 
+                       attachment.type === 'audio' ? 'notes-audio' :
+                       attachment.type === 'video' ? 'notes-videos' : 'notes-files';
 
-    if (!content && !externalLink && state.uploadedFiles.length === 0) {
-      elements.previewContent.innerHTML = '<p class="preview-empty">Fill out the form to see a preview</p>';
-      return;
+        const fileName = `${state.currentUser.id}/${Date.now()}-${attachment.file.name}`;
+
+        const { data, error } = await state.supabase.storage
+          .from(bucket)
+          .upload(fileName, attachment.file);
+
+        if (error) throw error;
+
+        const { data: { publicUrl } } = state.supabase.storage
+          .from(bucket)
+          .getPublicUrl(fileName);
+
+        uploaded.push({
+          type: attachment.type,
+          url: publicUrl,
+          name: attachment.file.name
+        });
+
+      } catch (error) {
+        console.error('Upload error:', error);
+      }
     }
 
-    let html = `<h2>${escapeHtml(title)}</h2>`;
+    return uploaded;
+  }
+
+  function generateMarkdown(content, attachments, tags) {
+    let markdown = `---
+title: "${generateTitle(content)}"
+date: "${new Date().toISOString()}"
+author: "${state.currentUser.email}"
+tags: [${tags.map(t => `"${t}"`).join(', ')}]
+---
+
+${content}
+
+`;
+
+    // Add attachments
+    attachments.forEach(att => {
+      if (att.type === 'image') {
+        markdown += `\n![${att.name}](${att.url})\n`;
+      } else if (att.type === 'audio') {
+        markdown += `\n<audio controls src="${att.url}"></audio>\n`;
+      } else if (att.type === 'video') {
+        markdown += `\n<video controls src="${att.url}"></video>\n`;
+      }
+    });
+
+    return markdown;
+  }
+
+  function generateTitle(content) {
+    if (!content) return 'Untitled Note';
     
-    // Tags
-    if (tags.length > 0) {
-      html += '<div class="preview-meta">';
-      tags.forEach(tag => {
-        html += `<span class="preview-tag">${escapeHtml(tag)}</span>`;
-      });
-      html += '</div>';
-    }
+    const firstLine = content.split('\n')[0];
+    const title = firstLine.substring(0, 60);
+    return title || 'Untitled Note';
+  }
 
-    // Content based on type
-    if (state.contentType === 'text' && content) {
-      html += `<div class="preview-text">${escapeHtml(content).replace(/\n/g, '<br>')}</div>`;
-    } else if (state.contentType === 'image' && elements.imageFile.files[0]) {
-      const file = elements.imageFile.files[0];
-      const url = URL.createObjectURL(file);
-      html += `<img src="${url}" alt="${escapeHtml(title)}">`;
-      if (content) html += `<p>${escapeHtml(content)}</p>`;
-    } else if (state.contentType === 'audio' && elements.audioFile.files[0]) {
-      const file = elements.audioFile.files[0];
-      const url = URL.createObjectURL(file);
-      if (content) html += `<p>${escapeHtml(content)}</p>`;
-      html += `<audio controls src="${url}"></audio>`;
-    } else if (state.contentType === 'link' && externalLink) {
-      if (content) html += `<p>${escapeHtml(content)}</p>`;
-      html += `<p><a href="${escapeHtml(externalLink)}" target="_blank" rel="noopener">${escapeHtml(externalLink)}</a></p>`;
+  function determineContentType(content, attachments) {
+    if (attachments.length > 0) {
+      return attachments[0].type;
     }
+    return 'text';
+  }
 
-    elements.previewContent.innerHTML = html;
+  function extractLinks(content) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return content.match(urlRegex) || [];
   }
 
   // ==========================================================================
   // UI Helpers
   // ==========================================================================
   
-  /**
-   * Escape HTML to prevent XSS
-   */
+  function setLoading(loading) {
+    elements.sendBtn.disabled = loading;
+    elements.messageInput.disabled = loading;
+  }
+
+  function showError(message) {
+    // Simple alert for now - can be enhanced with better UI
+    alert(message);
+  }
+
+  function formatTime(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    
+    const diffHours = Math.floor(diffMs / 3600000);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
   function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
-  }
-
-  /**
-   * Set loading state
-   */
-  function setLoading(loading) {
-    elements.submitBtn.disabled = loading;
-    elements.submitBtn.classList.toggle('loading', loading);
-    elements.previewBtn.disabled = loading;
-  }
-
-  /**
-   * Show success message
-   */
-  function showSuccess(message) {
-    hideMessages();
-    elements.uploadSuccess.hidden = false;
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-      elements.uploadSuccess.hidden = true;
-    }, 5000);
-  }
-
-  /**
-   * Show error message
-   */
-  function showError(message) {
-    hideMessages();
-    elements.uploadErrorMessage.textContent = message;
-    elements.uploadError.hidden = false;
-  }
-
-  /**
-   * Show info (temporary loading message)
-   */
-  function showInfo(message) {
-    // You could create a toast notification here
-    console.log(message);
-  }
-
-  /**
-   * Hide all messages
-   */
-  function hideMessages() {
-    elements.uploadSuccess.hidden = true;
-    elements.uploadError.hidden = true;
   }
 
   // ==========================================================================
@@ -592,113 +546,76 @@
   // ==========================================================================
   
   function setupEventListeners() {
-    // Content type buttons
-    elements.contentTypeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        setContentType(btn.dataset.type);
-      });
-    });
+    // Form submission
+    if (elements.messageForm) {
+      elements.messageForm.addEventListener('submit', submitMessage);
+    }
 
-    // File inputs
-    if (elements.imageFile) {
-      elements.imageFile.addEventListener('change', async (e) => {
-        if (e.target.files[0]) {
-          try {
-            await handleImageUpload(e.target.files[0]);
-            updatePreview();
-          } catch (error) {
-            showError(error.message);
-          }
-        }
+    // Attachment button
+    if (elements.attachmentBtn) {
+      elements.attachmentBtn.addEventListener('click', () => {
+        toggleAttachmentMenu();
       });
     }
 
-    if (elements.audioFile) {
-      elements.audioFile.addEventListener('change', async (e) => {
-        if (e.target.files[0]) {
-          try {
-            await handleAudioUpload(e.target.files[0]);
-            updatePreview();
-          } catch (error) {
-            showError(error.message);
-          }
-        }
-      });
-    }
-
-    // Form inputs - update preview on change
-    ['titleInput', 'contentInput', 'tagsInput', 'externalLink'].forEach(key => {
-      if (elements[key]) {
-        elements[key].addEventListener('input', updatePreview);
+    // Close attachment menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!elements.attachmentBtn.contains(e.target) && 
+          !elements.attachmentMenu.contains(e.target)) {
+        elements.attachmentMenu.hidden = true;
       }
     });
 
-    // Form submission
-    if (elements.form) {
-      elements.form.addEventListener('submit', submitNote);
-    }
+    // Auto-resize textarea
+    if (elements.messageInput) {
+      elements.messageInput.addEventListener('input', () => {
+        elements.messageInput.style.height = 'auto';
+        elements.messageInput.style.height = elements.messageInput.scrollHeight + 'px';
 
-    // Preview button (mobile)
-    if (elements.previewBtn) {
-      elements.previewBtn.addEventListener('click', () => {
-        elements.previewSection.classList.toggle('show-mobile');
+        // Auto-suggest tags
+        if (window.AutoTagger) {
+          window.AutoTagger.autoSuggest(elements.messageInput.value);
+        }
+      });
+
+      // Submit on Enter (not Shift+Enter)
+      elements.messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          submitMessage();
+        }
       });
     }
 
-    // Preview close button (mobile)
-    if (elements.previewClose) {
-      elements.previewClose.addEventListener('click', () => {
-        elements.previewSection.classList.remove('show-mobile');
-      });
-    }
-
-    // Sign out button
-    if (elements.signOutBtn && state.supabase) {
+    // Sign out
+    if (elements.signOutBtn) {
       elements.signOutBtn.addEventListener('click', async () => {
-        try {
-          await state.supabase.auth.signOut();
-          window.location.href = '/blog.html';
-        } catch (error) {
-          console.error('Sign out failed:', error);
+        await state.supabase.auth.signOut();
+        window.location.href = '/blog.html';
+      });
+    }
+
+    // Settings button
+    if (elements.settingsBtn) {
+      elements.settingsBtn.addEventListener('click', () => {
+        if (window.Settings) {
+          window.Settings.showModal();
         }
       });
     }
 
-    // Drag and drop for file inputs
-    setupDragAndDrop();
-  }
-
-  /**
-   * Setup drag and drop for file uploads
-   */
-  function setupDragAndDrop() {
-    const dropZones = [
-      { element: document.getElementById('audio-upload-area'), input: elements.audioFile },
-      { element: document.getElementById('image-upload-area'), input: elements.imageFile }
-    ];
-
-    dropZones.forEach(({ element, input }) => {
-      if (!element || !input) return;
-
-      element.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        element.classList.add('drag-over');
-      });
-
-      element.addEventListener('dragleave', () => {
-        element.classList.remove('drag-over');
-      });
-
-      element.addEventListener('drop', (e) => {
-        e.preventDefault();
-        element.classList.remove('drag-over');
-
-        if (e.dataTransfer.files.length > 0) {
-          input.files = e.dataTransfer.files;
-          input.dispatchEvent(new Event('change'));
-        }
-      });
+    // Thread switching
+    window.addEventListener('thread-switched', () => {
+      loadMessages();
     });
+
+    // Setup attachment handlers
+    setupAttachmentHandlers();
+
+    // Setup auto-tagger
+    if (window.AutoTagger && elements.messageInput) {
+      window.AutoTagger.setupAutoSuggest(elements.messageInput);
+    }
   }
 
   // ==========================================================================
@@ -706,14 +623,22 @@
   // ==========================================================================
   
   async function init() {
-    // Check authentication first
-    await checkAuth();
+    // Check auth
+    const authorized = await checkAuth();
+    if (!authorized) return;
+
+    // Initialize thread manager
+    if (window.ThreadManager) {
+      await window.ThreadManager.init(state.supabase, state.currentUser);
+    }
+
+    // Load messages for current thread
+    loadMessages();
 
     // Setup event listeners
     setupEventListeners();
 
-    // Set initial content type
-    setContentType('text');
+    console.log('Chat interface initialized');
   }
 
   // Start when DOM is ready

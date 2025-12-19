@@ -144,6 +144,18 @@ body {
                     </svg>
                   </div>
                   
+                  <!-- Sort Controls -->
+                  <div class="blog_sort-controls">
+                    <select id="blog-sort-by" class="blog_sort-select" aria-label="Sort by">
+                      <option value="date-desc">Newest First</option>
+                      <option value="date-asc">Oldest First</option>
+                      <option value="title-asc">Title A-Z</option>
+                      <option value="title-desc">Title Z-A</option>
+                      <option value="author-asc">Author A-Z</option>
+                      <option value="author-desc">Author Z-A</option>
+                    </select>
+                  </div>
+                  
                   <!-- View Toggle Buttons -->
                   <div class="blog_view-toggle" role="tablist" aria-label="View options">
                     <button 
@@ -327,6 +339,8 @@ body {
   <script src="js/swftstudios000.js" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/auth.js" type="text/javascript"></script>
+  <script src="js/settings.js" type="text/javascript"></script>
+  <script src="js/graph-customizer.js" type="text/javascript"></script>
   <script src="js/blog.js" type="text/javascript"></script>
   <script>
     // Show auth actions if user is authorized

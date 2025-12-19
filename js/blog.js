@@ -43,6 +43,7 @@
     searchQuery: '',
     activeTag: null,
     activeAuthor: null,
+    sortBy: 'date-desc',
     highlightedPostId: null
   };
 
@@ -54,6 +55,7 @@
     blogList: document.getElementById('blog-list'),
     blogContent: document.querySelector('.blog_content'),
     searchInput: document.getElementById('blog-search'),
+    sortSelect: document.getElementById('blog-sort-by'),
     tagFilters: document.getElementById('tag-filters'),
     authorFilters: document.getElementById('author-filters'),
     viewButtons: document.querySelectorAll('.blog_view-btn'),
@@ -183,8 +185,9 @@
   function renderListView(posts) {
     if (!elements.blogList) return;
 
-    // Filter posts based on search and tag
-    const filteredPosts = filterPosts(posts);
+    // Filter and sort posts
+    let filteredPosts = filterPosts(posts);
+    filteredPosts = sortPosts(filteredPosts);
 
     // Show/hide empty state
     if (filteredPosts.length === 0) {
@@ -247,7 +250,8 @@
         const matchesTitle = post.title.toLowerCase().includes(query);
         const matchesDescription = post.description.toLowerCase().includes(query);
         const matchesTags = post.tags.some(tag => tag.toLowerCase().includes(query));
-        if (!matchesTitle && !matchesDescription && !matchesTags) return false;
+        const matchesAuthor = post.author && post.author.toLowerCase().includes(query);
+        if (!matchesTitle && !matchesDescription && !matchesTags && !matchesAuthor) return false;
       }
 
       // Tag filter
@@ -261,6 +265,40 @@
       }
 
       return true;
+    });
+  }
+
+  /**
+   * Sort posts based on selected sort option
+   */
+  function sortPosts(posts) {
+    const [field, direction] = state.sortBy.split('-');
+    
+    return [...posts].sort((a, b) => {
+      let aVal, bVal;
+      
+      switch (field) {
+        case 'date':
+          aVal = new Date(a.date);
+          bVal = new Date(b.date);
+          break;
+        case 'title':
+          aVal = a.title.toLowerCase();
+          bVal = b.title.toLowerCase();
+          break;
+        case 'author':
+          aVal = (a.author || '').toLowerCase();
+          bVal = (b.author || '').toLowerCase();
+          break;
+        default:
+          return 0;
+      }
+      
+      if (direction === 'asc') {
+        return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+      } else {
+        return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+      }
     });
   }
 
@@ -455,6 +493,11 @@
       }, 30000);
 
       state.graphLoaded = true;
+
+      // Apply graph customization settings if available
+      if (window.GraphCustomizer && window.Settings) {
+        window.GraphCustomizer.init(state.graph, window.Settings.settings);
+      }
 
     } catch (error) {
       console.error('Failed to initialize graph:', error);
@@ -834,6 +877,14 @@
     if (elements.searchInput) {
       elements.searchInput.addEventListener('input', (e) => {
         handleSearch(e.target.value);
+      });
+    }
+
+    // Sort select
+    if (elements.sortSelect) {
+      elements.sortSelect.addEventListener('change', (e) => {
+        state.sortBy = e.target.value;
+        renderListView(state.posts);
       });
     }
 
