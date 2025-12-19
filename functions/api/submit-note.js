@@ -104,6 +104,25 @@ async function commitToGitHub(filename, content, commitMessage, env) {
   return await response.json();
 }
 
+// Catch-all handler for debugging (handles all HTTP methods)
+export async function onRequest(context) {
+  const { request, env } = context;
+  
+  // Only handle POST requests in catch-all, let onRequestPost handle POST specifically
+  if (request.method === 'POST') {
+    return onRequestPost(context);
+  }
+  
+  // For non-POST requests, return method not allowed
+  return addCorsHeaders(new Response(JSON.stringify({
+    error: `Method ${request.method} not allowed. Use POST.`,
+    allowedMethods: ['POST', 'OPTIONS']
+  }), {
+    status: 405,
+    headers: { 'Content-Type': 'application/json' }
+  }));
+}
+
 // Main handler
 export async function onRequestPost(context) {
   const { request, env } = context;

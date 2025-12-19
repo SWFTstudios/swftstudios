@@ -391,8 +391,19 @@
         ok: response.ok,
         contentType: response.headers.get('content-type'),
         bodyLength: responseText.length,
-        bodyPreview: responseText.substring(0, 200)
+        bodyPreview: responseText.substring(0, 200),
+        url: response.url || CONFIG.apiEndpoint
       });
+      
+      // If 404, provide more helpful error message
+      if (response.status === 404) {
+        console.error('[ERROR] 404 - Function not found. Possible causes:');
+        console.error('1. Cloudflare Pages Functions may not be enabled');
+        console.error('2. Function may not be deployed yet (check Cloudflare dashboard)');
+        console.error('3. Function path might be incorrect');
+        console.error('4. Build may have failed (check deployment logs)');
+      }
+      
       fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:381',message:'Received raw response',data:{status:response.status,statusText:response.statusText,ok:response.ok,contentType:response.headers.get('content-type'),responseTextLength:responseText.length,responseTextSnippet:responseText.substring(0,200)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
       // #endregion
 
@@ -406,7 +417,11 @@
             const error = JSON.parse(responseText);
             errorMessage = error.message || error.error || errorMessage;
           } else {
-            errorMessage = `Server returned ${response.status} ${response.statusText} with empty body`;
+            if (response.status === 404) {
+              errorMessage = `API endpoint not found (404). The Cloudflare Pages Function may not be deployed. Please check: 1) Functions are enabled in Cloudflare Pages settings, 2) The function file exists at functions/api/submit-note.js, 3) The deployment completed successfully.`;
+            } else {
+              errorMessage = `Server returned ${response.status} ${response.statusText} with empty body`;
+            }
           }
         } catch (jsonError) {
           // #region agent log
