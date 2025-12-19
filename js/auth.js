@@ -208,13 +208,14 @@
 
     const currentPath = window.location.pathname;
     
-    // Don't check session on auth.html - let the auth flow handle it
-    if (currentPath.includes('auth.html') || currentPath.includes('/auth')) {
+    // Don't check session on auth.html or upload.html - let those pages handle their own auth
+    if (currentPath.includes('auth.html') || currentPath.includes('/auth') || 
+        currentPath.includes('upload.html') || currentPath.includes('/upload')) {
       return;
     }
 
-    // Don't redirect if already on upload or blog page
-    if (currentPath.includes('upload.html') || currentPath.includes('blog.html')) {
+    // Don't redirect if already on blog page
+    if (currentPath.includes('blog.html')) {
       return;
     }
 
@@ -242,6 +243,12 @@
    */
   function setupAuthListener() {
     if (!supabase) return;
+
+    // Don't set up auth listener on upload.html - it has its own auth handling
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('upload.html') || currentPath.includes('/upload')) {
+      return; // Let upload.js handle its own auth
+    }
 
     supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);

@@ -69,17 +69,27 @@
   // Authentication Check
   // ==========================================================================
   
+  let authCheckInProgress = false; // Prevent multiple simultaneous auth checks
+  
   /**
    * Verify user is authenticated and authorized
    */
   async function checkAuth() {
-    if (!state.supabase) {
-      console.error('Supabase not initialized');
-      window.location.href = '/auth.html';
+    // Prevent multiple simultaneous auth checks
+    if (authCheckInProgress) {
+      console.log('Auth check already in progress, skipping');
       return;
     }
+    
+    authCheckInProgress = true;
 
     try {
+      if (!state.supabase) {
+        console.error('Supabase not initialized');
+        window.location.href = '/auth.html';
+        return;
+      }
+
       const { data: { session }, error } = await state.supabase.auth.getSession();
 
       if (error) throw error;
@@ -106,6 +116,8 @@
     } catch (error) {
       console.error('Auth check failed:', error);
       window.location.href = '/auth.html';
+    } finally {
+      authCheckInProgress = false;
     }
   }
 
