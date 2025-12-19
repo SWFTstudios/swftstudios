@@ -262,6 +262,7 @@ function parseNote(filePath) {
     description: data.description || extractExcerpt(body, 150),
     date: data.date || new Date().toISOString().split('T')[0],
     tags: Array.isArray(data.tags) ? data.tags : [],
+    author: data.author || null, // Extract author from frontmatter
     image: data.image || null,
     excerpt: extractExcerpt(body, CONFIG.excerptLength),
     links: extractLinks(body),
@@ -446,6 +447,7 @@ async function main() {
     description: note.description,
     date: note.date,
     tags: note.tags,
+    author: note.author, // Include author in output
     image: note.image,
     excerpt: note.excerpt,
     links: note.links,

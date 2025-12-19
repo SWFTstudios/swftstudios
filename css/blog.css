@@ -184,6 +184,64 @@
 }
 
 /* ==========================================================================
+   Author Filters
+   ========================================================================== */
+
+.blog_authors-filter {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.blog_filter-section-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.75rem;
+}
+
+.blog_author-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.blog_author-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blog_author-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.blog_author-btn.is-active {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--primary-color, #6366f1);
+  color: var(--primary-color, #6366f1);
+}
+
+.blog_author-btn:focus-visible {
+  outline: 2px solid var(--primary-color, #6366f1);
+  outline-offset: 2px;
+}
+
+.blog_filter-empty {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.875rem;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ==========================================================================
    Blog Content Area
    ========================================================================== */
 
@@ -668,6 +726,7 @@
   
   .blog_view-btn,
   .blog_tag-btn,
+  .blog_author-btn,
   .blog_graph-control-btn,
   .blog_modal-close,
   .blog_search-input {
@@ -692,7 +751,8 @@
   .blog_graph-view,
   .blog_view-toggle,
   .blog_search-wrapper,
-  .blog_tags-filter {
+  .blog_tags-filter,
+  .blog_authors-filter {
     display: none !important;
   }
   

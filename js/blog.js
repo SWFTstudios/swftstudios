@@ -42,6 +42,7 @@
     currentView: 'list',
     searchQuery: '',
     activeTag: null,
+    activeAuthor: null,
     highlightedPostId: null
   };
 
@@ -54,6 +55,7 @@
     blogContent: document.querySelector('.blog_content'),
     searchInput: document.getElementById('blog-search'),
     tagFilters: document.getElementById('tag-filters'),
+    authorFilters: document.getElementById('author-filters'),
     viewButtons: document.querySelectorAll('.blog_view-btn'),
     graphContainer: document.getElementById('graph-container'),
     graphPlaceholder: document.getElementById('graph-placeholder'),
@@ -235,7 +237,7 @@
   }
 
   /**
-   * Filter posts based on search query and active tag
+   * Filter posts based on search query, active tag, and active author
    */
   function filterPosts(posts) {
     return posts.filter(post => {
@@ -251,6 +253,11 @@
       // Tag filter
       if (state.activeTag) {
         if (!post.tags.includes(state.activeTag)) return false;
+      }
+
+      // Author filter
+      if (state.activeAuthor) {
+        if (!post.author || post.author !== state.activeAuthor) return false;
       }
 
       return true;
@@ -291,6 +298,50 @@
     // Add click handlers
     elements.tagFilters.querySelectorAll('.blog_tag-btn').forEach(btn => {
       btn.addEventListener('click', () => handleTagClick(btn.dataset.tag));
+    });
+  }
+
+  /**
+   * Render author filter buttons
+   */
+  function renderAuthorFilters(posts) {
+    if (!elements.authorFilters) return;
+
+    // Get unique authors with counts
+    const authorCounts = {};
+    posts.forEach(post => {
+      if (post.author) {
+        authorCounts[post.author] = (authorCounts[post.author] || 0) + 1;
+      }
+    });
+
+    // Sort alphabetically by email
+    const sortedAuthors = Object.keys(authorCounts).sort();
+
+    if (sortedAuthors.length === 0) {
+      elements.authorFilters.innerHTML = '<p class="blog_filter-empty">No authors found</p>';
+      return;
+    }
+
+    elements.authorFilters.innerHTML = `
+      <div class="blog_filter-section-title">Filter by Author</div>
+      <div class="blog_author-buttons">
+        ${sortedAuthors.map(author => `
+          <button 
+            type="button" 
+            class="blog_author-btn ${state.activeAuthor === author ? 'is-active' : ''}" 
+            data-author="${escapeHtml(author)}"
+            aria-pressed="${state.activeAuthor === author}"
+          >
+            ${escapeHtml(author)} (${authorCounts[author]})
+          </button>
+        `).join('')}
+      </div>
+    `;
+
+    // Add click handlers
+    elements.authorFilters.querySelectorAll('.blog_author-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleAuthorClick(btn.dataset.author));
     });
   }
 
@@ -722,17 +773,37 @@
   }
 
   /**
+   * Handle author filter click
+   */
+  function handleAuthorClick(author) {
+    // Toggle author
+    state.activeAuthor = state.activeAuthor === author ? null : author;
+    
+    // Update button states
+    elements.authorFilters.querySelectorAll('.blog_author-btn').forEach(btn => {
+      const isActive = btn.dataset.author === state.activeAuthor;
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-pressed', isActive);
+    });
+
+    // Re-render list
+    renderListView(state.posts);
+  }
+
+  /**
    * Clear all filters
    */
   function clearFilters() {
     state.searchQuery = '';
     state.activeTag = null;
+    state.activeAuthor = null;
     
     if (elements.searchInput) {
       elements.searchInput.value = '';
     }
     
     renderTagFilters(state.posts);
+    renderAuthorFilters(state.posts);
     renderListView(state.posts);
   }
 
@@ -827,6 +898,7 @@
     
     if (posts.length > 0) {
       renderTagFilters(posts);
+      renderAuthorFilters(posts);
       renderListView(posts);
     }
 
