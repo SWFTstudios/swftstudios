@@ -3,12 +3,16 @@
  * 
  * Processes note uploads and commits to GitHub notes repo
  * 
- * POST /api/submit-note
+ * Route: /api/submit-note
+ * Method: POST
  * 
  * Body: {
  *   title, content, markdown, tags, contentType, 
  *   fileUrl, externalLink, userEmail
  * }
+ * 
+ * This function is located at: functions/api/submit-note.js
+ * Cloudflare Pages automatically maps this to: /api/submit-note
  */
 
 // Helper to slugify text
