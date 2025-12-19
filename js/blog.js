@@ -74,7 +74,14 @@
     modalExcerpt: document.getElementById('modal-excerpt'),
     modalLinks: document.getElementById('modal-links'),
     modalClose: document.querySelector('.blog_modal-close'),
-    modalBackdrop: document.querySelector('.blog_modal-backdrop')
+    modalBackdrop: document.querySelector('.blog_modal-backdrop'),
+    signinForm: document.getElementById('blog-email-form'),
+    emailInput: document.getElementById('blog-email-input'),
+    emailSubmit: document.getElementById('blog-email-submit'),
+    signinSuccess: document.getElementById('blog-signin-success'),
+    signinFormContainer: document.getElementById('blog-signin-form'),
+    authActions: document.getElementById('blog-auth-actions'),
+    signOutBtn: document.getElementById('blog-sign-out')
   };
 
   // ==========================================================================
@@ -869,10 +876,126 @@
   }
 
   // ==========================================================================
+  // Authentication
+  // ==========================================================================
+  
+  /**
+   * Handle email sign-in form submission
+   */
+  async function handleEmailSignIn(event) {
+    event.preventDefault();
+    
+    const email = elements.emailInput.value.trim();
+    if (!email) return;
+    
+    if (!window.SWFTAuth || !window.SWFTAuth.supabase) {
+      alert('Authentication service unavailable');
+      return;
+    }
+    
+    try {
+      elements.emailSubmit.disabled = true;
+      elements.emailSubmit.textContent = 'Sending...';
+      
+      const { error } = await window.SWFTAuth.supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/blog.html`
+        }
+      });
+      
+      if (error) throw error;
+      
+      // Show success message
+      elements.signinForm.hidden = true;
+      elements.signinSuccess.hidden = false;
+      
+    } catch (error) {
+      console.error('Sign-in error:', error);
+      alert(error.message || 'Failed to send sign-in link. Please try again.');
+      elements.emailSubmit.disabled = false;
+      elements.emailSubmit.textContent = 'Sign In';
+    }
+  }
+  
+  /**
+   * Check auth state and update UI
+   */
+  async function checkAuthState() {
+    if (!window.SWFTAuth || !window.SWFTAuth.supabase) {
+      // Show sign-in form if auth not available
+      if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
+      if (elements.authActions) elements.authActions.style.display = 'none';
+      return;
+    }
+    
+    try {
+      const { data: { session }, error } = await window.SWFTAuth.supabase.auth.getSession();
+      
+      if (error) throw error;
+      
+      if (session && session.user) {
+        const authorized = window.SWFTAuth.isAuthorizedUser(session.user.email);
+        
+        if (authorized) {
+          // Show auth actions (New Note button)
+          if (elements.signinFormContainer) elements.signinFormContainer.hidden = true;
+          if (elements.authActions) elements.authActions.style.display = 'flex';
+        } else {
+          // Not authorized - show sign-in form
+          if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
+          if (elements.authActions) elements.authActions.style.display = 'none';
+        }
+      } else {
+        // Not signed in - show sign-in form
+        if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
+        if (elements.authActions) elements.authActions.style.display = 'none';
+      }
+    } catch (error) {
+      console.error('Auth check error:', error);
+      // Show sign-in form on error
+      if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
+      if (elements.authActions) elements.authActions.style.display = 'none';
+    }
+  }
+  
+  /**
+   * Handle sign out
+   */
+  async function handleSignOut() {
+    if (!window.SWFTAuth || !window.SWFTAuth.supabase) return;
+    
+    try {
+      await window.SWFTAuth.supabase.auth.signOut();
+      // Update UI
+      await checkAuthState();
+    } catch (error) {
+      console.error('Sign-out error:', error);
+    }
+  }
+
+  // ==========================================================================
   // Event Listeners
   // ==========================================================================
   
   function setupEventListeners() {
+    // Email sign-in form
+    if (elements.signinForm) {
+      elements.signinForm.addEventListener('submit', handleEmailSignIn);
+    }
+    
+    // Sign out button
+    if (elements.signOutBtn) {
+      elements.signOutBtn.addEventListener('click', handleSignOut);
+    }
+    
+    // Listen for auth state changes
+    if (window.SWFTAuth && window.SWFTAuth.supabase) {
+      window.SWFTAuth.supabase.auth.onAuthStateChange(() => {
+        checkAuthState();
+      });
+    }
+    
     // Search input
     if (elements.searchInput) {
       elements.searchInput.addEventListener('input', (e) => {
@@ -938,6 +1061,9 @@
   // ==========================================================================
   
   async function init() {
+    // Check auth state and update UI
+    await checkAuthState();
+    
     // Setup event listeners
     setupEventListeners();
 

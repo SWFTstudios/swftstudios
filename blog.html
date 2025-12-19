@@ -125,12 +125,37 @@ body {
                   <p class="text-size-small blog_description">Interconnected thoughts on tech, design, business, and creative workflows. Explore the graph to see how ideas connect.</p>
                 </div>
                 
-                <!-- Auth Actions -->
-                <div class="blog_auth-actions" id="blog-auth-actions" style="display: none;">
-                  <a href="upload.html" class="button is-course w-inline-block">
-                    <div class="button_bg"></div>
-                    <div class="button_text">New Note</div>
-                  </a>
+                <!-- Sign In / Auth Actions -->
+                <div class="blog_auth-section">
+                  <!-- Sign In Form (shown when not signed in) -->
+                  <div class="blog_signin-form" id="blog-signin-form">
+                    <p class="blog_signin-hint">Collaborator? Sign in to create notes:</p>
+                    <form id="blog-email-form" class="blog_email-form">
+                      <input 
+                        type="email" 
+                        id="blog-email-input" 
+                        class="blog_email-input" 
+                        placeholder="your@email.com"
+                        required
+                        aria-label="Email address"
+                      >
+                      <button type="submit" class="blog_email-submit" id="blog-email-submit">
+                        Sign In
+                      </button>
+                    </form>
+                    <div class="blog_signin-success" id="blog-signin-success" hidden>
+                      <p>Check your email for the sign-in link!</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Auth Actions (shown when signed in) -->
+                  <div class="blog_auth-actions" id="blog-auth-actions" style="display: none;">
+                    <a href="upload.html" class="button is-course w-inline-block">
+                      <div class="button_bg"></div>
+                      <div class="button_text">New Note</div>
+                    </a>
+                    <button type="button" id="blog-sign-out" class="blog_sign-out-btn">Sign Out</button>
+                  </div>
                 </div>
                 
                 <!-- View Toggle & Search -->
@@ -342,23 +367,5 @@ body {
   <script src="js/settings.js" type="text/javascript"></script>
   <script src="js/graph-customizer.js" type="text/javascript"></script>
   <script src="js/blog.js" type="text/javascript"></script>
-  <script>
-    // Show auth actions if user is authorized
-    (async function() {
-      if (window.SWFTAuth && window.SWFTAuth.supabase) {
-        try {
-          const { data: { session } } = await window.SWFTAuth.supabase.auth.getSession();
-          if (session && session.user && window.SWFTAuth.isAuthorizedUser(session.user.email)) {
-            const authActions = document.getElementById('blog-auth-actions');
-            if (authActions) {
-              authActions.style.display = 'flex';
-            }
-          }
-        } catch (error) {
-          console.log('Not authenticated');
-        }
-      }
-    })();
-  </script>
 </body>
 </html>

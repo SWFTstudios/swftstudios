@@ -76,6 +76,7 @@
 
   /**
    * Redirect user based on authorization status
+   * Only used from auth.html - blog.html is public, upload.html is protected
    */
   let isRedirecting = false; // Prevent multiple redirects
   let redirectTimeout = null; // Track redirect timeout
@@ -128,19 +129,24 @@
     }, 5000); // 5 second timeout
     
     try {
-      const redirectUrl = authorized ? CONFIG.redirectUrls.upload : CONFIG.redirectUrls.blog;
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:115',message:'redirectUser - setting location.href',data:{authorized,redirectUrl,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-      // #endregion
+      // Only redirect authorized users to upload page
+      // Unauthorized users stay on blog (public access)
       if (authorized) {
         console.log('User authorized, redirecting to upload page');
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:115',message:'redirectUser - setting location.href to upload',data:{authorized,redirectUrl:CONFIG.redirectUrls.upload,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+        // #endregion
         window.location.href = CONFIG.redirectUrls.upload;
       } else {
-        console.log('User not authorized, redirecting to blog (read-only)');
+        // Unauthorized users go to blog (public)
+        console.log('User not authorized, redirecting to blog');
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:122',message:'redirectUser - setting location.href to blog',data:{authorized,redirectUrl:CONFIG.redirectUrls.blog,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+        // #endregion
         window.location.href = CONFIG.redirectUrls.blog;
       }
       // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:122',message:'redirectUser - location.href set',data:{redirectUrl},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:122',message:'redirectUser - location.href set',data:{redirectUrl:authorized ? CONFIG.redirectUrls.upload : CONFIG.redirectUrls.blog},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
       // #endregion
     } catch (error) {
       // #region agent log
@@ -259,25 +265,29 @@
 
     const currentPath = window.location.pathname;
     
-    // Don't check session on auth.html or upload.html - let those pages handle their own auth
-    // The auth state change listener will handle redirects when user returns from magic link
-    if (currentPath.includes('auth.html') || currentPath.includes('/auth') || 
-        currentPath.includes('upload.html') || currentPath.includes('/upload')) {
+    // Blog page is public - no auth checks needed
+    if (currentPath.includes('blog.html') || currentPath.includes('/blog')) {
       // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:234',message:'checkSession - on auth/upload page, hiding loading',data:{currentPath},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:234',message:'checkSession - on blog page (public), skipping',data:{currentPath},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
       // #endregion
-      // On auth.html, just make sure loading is hidden initially
-      // The auth state change listener will handle the redirect
+      return; // Blog is public, no auth needed
+    }
+
+    // Don't check session on auth.html - let that page handle its own auth
+    if (currentPath.includes('auth.html') || currentPath.includes('/auth')) {
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:240',message:'checkSession - on auth page, hiding loading',data:{currentPath},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
       hideLoading();
       return;
     }
 
-    // Don't redirect if already on blog page
-    if (currentPath.includes('blog.html')) {
+    // Upload page requires auth - handled by upload.js, but we can skip here
+    if (currentPath.includes('upload.html') || currentPath.includes('/upload')) {
       // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:243',message:'checkSession - on blog page, skipping',data:{currentPath},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:247',message:'checkSession - on upload page, let upload.js handle auth',data:{currentPath},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
       // #endregion
-      return;
+      return; // Let upload.js handle its own auth
     }
 
     try {
@@ -348,11 +358,18 @@
       console.log('Auth state changed:', event, session?.user?.email);
 
       // Only handle SIGNED_IN if we're on auth.html (callback page)
+      // Don't redirect from blog.html - it's public
       if (event === 'SIGNED_IN' && session && session.user) {
         const currentPath = window.location.pathname;
         // #region agent log
         fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:282',message:'SIGNED_IN event detected',data:{userEmail:session.user.email,currentPath,isAuthPage:currentPath.includes('auth.html')||currentPath.includes('/auth')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
         // #endregion
+        
+        // Don't redirect if on blog page - it's public
+        if (currentPath.includes('blog.html') || currentPath.includes('/blog')) {
+          console.log('User signed in on blog page - staying on blog (public access)');
+          return; // Blog is public, stay here
+        }
         
         // Only redirect if we're on auth.html (not already on target page)
         if (currentPath.includes('auth.html') || currentPath.includes('/auth')) {
