@@ -1,7 +1,7 @@
 /**
  * SWFT Notes Authentication
  * 
- * Handles Supabase authentication (email magic link + GitHub OAuth)
+ * Handles Supabase authentication (email/password sign-in and sign-up)
  * Checks authorization and redirects users appropriately
  */
 
@@ -19,12 +19,7 @@
       upload: '/upload.html',
       blog: '/blog.html'
     },
-    authorizedUsers: [
-      'elombe@swftstudios.com',
-      'elombekisala@gmail.com',
-      'stephen@swftstudios.com',
-      'stephen.iezzi@gmail.com'
-    ]
+    authorizedUsers: [] // No longer needed - all authenticated users can upload
   };
 
   // ==========================================================================
@@ -50,14 +45,18 @@
   const elements = {
     emailForm: document.getElementById('email-form'),
     emailInput: document.getElementById('email-input'),
+    passwordInput: document.getElementById('password-input'),
     emailSubmitBtn: document.getElementById('email-submit-btn'),
-    emailSuccess: document.getElementById('email-success'),
-    githubBtn: document.getElementById('github-auth-btn'),
+    submitButtonText: document.getElementById('submit-button-text'),
+    signinToggle: document.getElementById('signin-toggle'),
+    signupToggle: document.getElementById('signup-toggle'),
     authError: document.getElementById('auth-error'),
     errorMessage: document.getElementById('error-message'),
     authLoading: document.getElementById('auth-loading'),
     emailAuth: document.getElementById('email-auth')
   };
+  
+  let authMode = 'signin'; // 'signin' or 'signup'
 
   // ==========================================================================
   // Authorization Check
@@ -110,41 +109,21 @@
       return;
     }
 
-    const authorized = isAuthorizedUser(user.email);
-    // #region agent log
-    fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:100',message:'redirectUser - authorization check',data:{userEmail:user.email,authorized},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-    // #endregion
-
+    // All authenticated users can access upload page
     isRedirecting = true;
     
     // Set a timeout to hide loading if redirect takes too long
     redirectTimeout = setTimeout(() => {
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:106',message:'redirectUser - timeout fired',data:{elapsed:'5000ms'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-      // #endregion
       console.warn('Redirect taking too long, hiding loading spinner');
       hideLoading();
-      isRedirecting = false; // Reset flag so user can try again
+      isRedirecting = false;
       showError('Redirect is taking longer than expected. Please try refreshing the page.');
-    }, 5000); // 5 second timeout
+    }, 5000);
     
     try {
-      // Only redirect authorized users to upload page
-      // Unauthorized users stay on blog (public access)
-      if (authorized) {
-        console.log('User authorized, redirecting to upload page');
-        // #region agent log
-        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:115',message:'redirectUser - setting location.href to upload',data:{authorized,redirectUrl:CONFIG.redirectUrls.upload,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
-        window.location.href = CONFIG.redirectUrls.upload;
-      } else {
-        // Unauthorized users go to blog (public)
-        console.log('User not authorized, redirecting to blog');
-        // #region agent log
-        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:122',message:'redirectUser - setting location.href to blog',data:{authorized,redirectUrl:CONFIG.redirectUrls.blog,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
-        window.location.href = CONFIG.redirectUrls.blog;
-      }
+      // Redirect authenticated users to upload page
+      console.log('User authenticated, redirecting to upload page');
+      window.location.href = CONFIG.redirectUrls.upload;
       // #region agent log
       fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:122',message:'redirectUser - location.href set',data:{redirectUrl:authorized ? CONFIG.redirectUrls.upload : CONFIG.redirectUrls.blog},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
       // #endregion
@@ -165,9 +144,9 @@
   // ==========================================================================
   
   /**
-   * Handle email magic link sign-in
+   * Handle email/password sign-in or sign-up
    */
-  async function signInWithEmail(email) {
+  async function handleEmailAuth(email, password) {
     if (!supabase) {
       showError('Authentication service unavailable');
       return;
@@ -177,24 +156,58 @@
       setLoading(elements.emailSubmitBtn, true);
       hideError();
 
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth.html`
-        }
-      });
+      let result;
+      
+      if (authMode === 'signup') {
+        // Sign up
+        result = await supabase.auth.signUp({
+          email: email,
+          password: password
+        });
+      } else {
+        // Sign in
+        result = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+      }
 
-      if (error) throw error;
+      if (result.error) throw result.error;
 
-      // Show success message
-      elements.emailAuth.hidden = true;
-      elements.emailSuccess.hidden = false;
+      // Success - redirect will happen via auth state change listener
+      if (authMode === 'signup' && result.data.user) {
+        showSuccess('Account created! Please check your email to verify your account.');
+      }
 
     } catch (error) {
-      console.error('Email sign-in error:', error);
-      showError(error.message || 'Failed to send magic link. Please try again.');
+      console.error('Auth error:', error);
+      showError(error.message || `Failed to ${authMode === 'signup' ? 'create account' : 'sign in'}. Please try again.`);
     } finally {
       setLoading(elements.emailSubmitBtn, false);
+    }
+  }
+  
+  /**
+   * Toggle between sign in and sign up modes
+   */
+  function setAuthMode(mode) {
+    authMode = mode;
+    
+    // Update toggle buttons
+    if (elements.signinToggle && elements.signupToggle) {
+      elements.signinToggle.classList.toggle('active', mode === 'signin');
+      elements.signupToggle.classList.toggle('active', mode === 'signup');
+    }
+    
+    // Update submit button text
+    if (elements.submitButtonText) {
+      elements.submitButtonText.textContent = mode === 'signup' ? 'Sign Up' : 'Sign In';
+    }
+    
+    // Update password field placeholder
+    if (elements.passwordInput) {
+      elements.passwordInput.placeholder = mode === 'signup' ? 'At least 6 characters' : '••••••••';
+      elements.passwordInput.autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
     }
   }
 
@@ -496,21 +509,27 @@
       elements.emailForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = elements.emailInput.value.trim();
+        const password = elements.passwordInput.value;
         
         if (!email) {
-          showError('Please enter a valid email address');
+          showError('Please enter your email address');
           return;
         }
-
-        await signInWithEmail(email);
+        if (!password || password.length < 6) {
+          showError('Please enter a password (at least 6 characters)');
+          return;
+        }
+        
+        await handleEmailAuth(email, password);
       });
     }
 
-    // GitHub OAuth button
-    if (elements.githubBtn) {
-      elements.githubBtn.addEventListener('click', async () => {
-        await signInWithGitHub();
-      });
+    // Toggle between sign in and sign up
+    if (elements.signinToggle) {
+      elements.signinToggle.addEventListener('click', () => setAuthMode('signin'));
+    }
+    if (elements.signupToggle) {
+      elements.signupToggle.addEventListener('click', () => setAuthMode('signup'));
     }
   }
 

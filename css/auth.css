@@ -71,6 +71,37 @@
   margin-bottom: 1.5rem;
 }
 
+.auth-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.25rem;
+  border-radius: 8px;
+}
+
+.auth-toggle-btn {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.auth-toggle-btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.auth-toggle-btn.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #6366f1;
+}
+
 .auth-method {
   margin-bottom: 1.5rem;
 }

@@ -19,7 +19,6 @@
   
   const CONFIG = {
     dataUrl: '/data/posts.json', // Fallback to static file
-    githubApiUrl: 'https://api.github.com/repos/SWFTstudios/notes/contents/notes',
     graphUrl: '/data/graph.latest.json',
     graphLibraryUrl: 'https://cdn.jsdelivr.net/npm/3d-force-graph@1/dist/3d-force-graph.min.js',
     storageKey: 'swft-blog-view',
@@ -28,7 +27,8 @@
       desktop: 500,
       mobile: 150
     },
-    useGitHubApi: true // Set to false to use static data/posts.json
+    supabaseUrl: 'https://mnrteunavnzrglbozpfc.supabase.co',
+    supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ucnRldW5hdm56cmdsYm96cGZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwOTM5NjUsImV4cCI6MjA4MTY2OTk2NX0.7XORw2dbCDG64i2HfiAaTt70ZJTg89BVO7DAPeSCsU8'
   };
 
   // ==========================================================================
@@ -154,49 +154,6 @@
   // ==========================================================================
   
   /**
-   * Parse frontmatter from markdown content
-   */
-  function parseFrontmatter(content) {
-    const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
-    const match = content.match(frontmatterRegex);
-    
-    if (!match) {
-      return { data: {}, content: content };
-    }
-    
-    const frontmatter = match[1];
-    const body = match[2];
-    const data = {};
-    
-    // Simple YAML parsing (basic key: value pairs)
-    frontmatter.split('\n').forEach(line => {
-      const colonIndex = line.indexOf(':');
-      if (colonIndex > 0) {
-        const key = line.substring(0, colonIndex).trim();
-        let value = line.substring(colonIndex + 1).trim();
-        
-        // Remove quotes
-        if ((value.startsWith('"') && value.endsWith('"')) || 
-            (value.startsWith("'") && value.endsWith("'"))) {
-          value = value.slice(1, -1);
-        }
-        
-        // Parse arrays
-        if (value.startsWith('[') && value.endsWith(']')) {
-          value = value.slice(1, -1)
-            .split(',')
-            .map(v => v.trim().replace(/^["']|["']$/g, ''))
-            .filter(v => v);
-        }
-        
-        data[key] = value;
-      }
-    });
-    
-    return { data, content: body };
-  }
-  
-  /**
    * Extract excerpt from markdown content
    */
   function extractExcerpt(content, length = 200) {
@@ -242,69 +199,54 @@
   }
   
   /**
-   * Parse a markdown file into a post object
+   * Fetch blog posts data from Supabase
    */
-  function parseNote(filename, content) {
-    const { data, content: body } = parseFrontmatter(content);
-    const slug = filename.replace('.md', '');
-    
-    return {
-      id: data.title ? slugify(data.title) : slug,
-      slug: slug,
-      title: data.title || slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      description: data.description || extractExcerpt(body, 150),
-      date: data.date || new Date().toISOString().split('T')[0],
-      tags: Array.isArray(data.tags) ? data.tags : (typeof data.tags === 'string' ? [data.tags] : []),
-      author: data.author || null,
-      image: data.image || null,
-      excerpt: extractExcerpt(body, 200),
-      links: extractLinks(body),
-      content: body,
-      metaError: !data.title
-    };
-  }
-  
-  /**
-   * Fetch blog posts data from GitHub API
-   */
-  async function fetchBlogDataFromGitHub() {
+  async function fetchBlogDataFromSupabase() {
     try {
-      // Fetch list of markdown files
-      const listResponse = await fetch(CONFIG.githubApiUrl);
-      if (!listResponse.ok) {
-        throw new Error(`GitHub API error: ${listResponse.status}`);
+      // Initialize Supabase client if not already available
+      if (!window.SWFTAuth || !window.SWFTAuth.supabase) {
+        const { createClient } = window.supabase;
+        window.SWFTAuth = window.SWFTAuth || {};
+        window.SWFTAuth.supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
       }
       
-      const files = await listResponse.json();
-      const markdownFiles = files.filter(file => 
-        file.type === 'file' && file.name.endsWith('.md')
-      );
+      const supabase = window.SWFTAuth.supabase;
       
-      console.log(`Found ${markdownFiles.length} markdown files in GitHub`);
+      // Fetch published notes from Supabase
+      const { data: notes, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false });
       
-      // Fetch content for each file
-      const posts = await Promise.all(
-        markdownFiles.map(async (file) => {
-          try {
-            const contentResponse = await fetch(file.download_url);
-            if (!contentResponse.ok) throw new Error(`Failed to fetch ${file.name}`);
-            
-            const content = await contentResponse.text();
-            return parseNote(file.name, content);
-          } catch (error) {
-            console.error(`Error fetching ${file.name}:`, error);
-            return null;
-          }
-        })
-      );
+      if (error) throw error;
       
-      // Filter out nulls and sort by date
-      const validPosts = posts.filter(p => p !== null);
-      validPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+      console.log(`Found ${notes.length} published notes in Supabase`);
       
-      return validPosts;
+      // Transform Supabase notes to blog post format
+      const posts = notes.map(note => {
+        // Extract links from content (wiki-style [[links]])
+        const links = extractLinks(note.content || '');
+        
+        return {
+          id: note.id,
+          slug: slugify(note.title),
+          title: note.title,
+          description: extractExcerpt(note.content || '', 150),
+          date: note.created_at ? note.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+          tags: Array.isArray(note.tags) ? note.tags : [],
+          author: note.user_email ? note.user_email.split('@')[0] : 'Unknown',
+          image: note.file_urls && note.file_urls.length > 0 ? note.file_urls[0] : null,
+          excerpt: extractExcerpt(note.content || '', 200),
+          links: links,
+          content: note.content || '',
+          metaError: false
+        };
+      });
+      
+      return posts;
     } catch (error) {
-      console.error('Failed to fetch from GitHub:', error);
+      console.error('Failed to fetch from Supabase:', error);
       throw error;
     }
   }
@@ -313,17 +255,15 @@
    * Fetch blog posts data
    */
   async function fetchBlogData() {
-    // Try GitHub API first if enabled
-    if (CONFIG.useGitHubApi) {
-      try {
-        console.log('Fetching notes from GitHub...');
-        state.posts = await fetchBlogDataFromGitHub();
-        console.log(`Loaded ${state.posts.length} notes from GitHub`);
-        return state.posts;
-      } catch (error) {
-        console.warn('GitHub API fetch failed, falling back to static file:', error);
-        // Fall through to static file
-      }
+    // Try Supabase first
+    try {
+      console.log('Fetching notes from Supabase...');
+      state.posts = await fetchBlogDataFromSupabase();
+      console.log(`Loaded ${state.posts.length} notes from Supabase`);
+      return state.posts;
+    } catch (error) {
+      console.warn('Supabase fetch failed, falling back to static file:', error);
+      // Fall through to static file
     }
     
     // Fallback to static file
@@ -1116,12 +1056,10 @@
       elements.emailSubmit.disabled = true;
       elements.emailSubmit.textContent = 'Sending...';
       
-      const { error } = await window.SWFTAuth.supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/blog.html`
-        }
-      });
+      // Note: Sign-in is handled on auth.html page
+      // This form is just for display - redirect to auth page
+      window.location.href = '/auth.html';
+      return;
       
       if (error) throw error;
       
@@ -1154,17 +1092,9 @@
       if (error) throw error;
       
       if (session && session.user) {
-        const authorized = window.SWFTAuth.isAuthorizedUser(session.user.email);
-        
-        if (authorized) {
-          // Show auth actions (New Note button)
-          if (elements.signinFormContainer) elements.signinFormContainer.hidden = true;
-          if (elements.authActions) elements.authActions.style.display = 'flex';
-        } else {
-          // Not authorized - show sign-in form
-          if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
-          if (elements.authActions) elements.authActions.style.display = 'none';
-        }
+        // Any authenticated user can upload
+        if (elements.signinFormContainer) elements.signinFormContainer.hidden = true;
+        if (elements.authActions) elements.authActions.style.display = 'flex';
       } else {
         // Not signed in - show sign-in form
         if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;

@@ -12,7 +12,6 @@
   // ==========================================================================
   
   const CONFIG = {
-    apiEndpoint: '/api/submit-note',
     maxFileSizes: {
       image: 10 * 1024 * 1024, // 10MB
       audio: 50 * 1024 * 1024, // 50MB
@@ -363,41 +362,40 @@
       // Get tags from auto-tagger
       const tags = window.AutoTagger?.getSelectedTags() || [];
 
-      // Generate markdown
-      const markdown = generateMarkdown(content, uploadedAttachments, tags);
-
-      // Submit to API
-      const response = await fetch(CONFIG.apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${(await state.supabase.auth.getSession()).data.session.access_token}`
-        },
-        body: JSON.stringify({
-          title: generateTitle(content),
+      // Save note directly to Supabase
+      const title = generateTitle(content);
+      const fileUrls = uploadedAttachments.map(att => att.url);
+      const externalLinks = extractLinks(content);
+      
+      const { data: noteData, error: noteError } = await state.supabase
+        .from('notes')
+        .insert({
+          user_id: state.currentUser.id,
+          user_email: state.currentUser.email,
+          title: title,
           content: content,
-          markdown: markdown,
           tags: tags,
-          contentType: determineContentType(content, uploadedAttachments),
-          fileUrl: uploadedAttachments[0]?.url || null,
-          externalLink: extractLinks(content)[0] || null,
-          userEmail: state.currentUser.email,
-          threadId: window.ThreadManager?.currentThreadId || 'default'
+          content_type: determineContentType(content, uploadedAttachments),
+          file_urls: fileUrls,
+          external_links: externalLinks,
+          status: 'published',
+          thread_id: window.ThreadManager?.currentThreadId || null
         })
-      });
+        .select()
+        .single();
 
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}`);
+      if (noteError) {
+        throw noteError;
       }
 
       // Add message to local state
       const message = {
-        id: Date.now(),
+        id: noteData.id,
         author: state.currentUser.email.split('@')[0],
         content: content,
         attachments: uploadedAttachments,
         tags: tags,
-        timestamp: new Date().toISOString()
+        timestamp: noteData.created_at
       };
 
       addMessage(message);
