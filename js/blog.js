@@ -1044,22 +1044,8 @@
   async function handleEmailSignIn(event) {
     event.preventDefault();
     
-    const email = elements.emailInput.value.trim();
-    if (!email) return;
-    
-    if (!window.SWFTAuth || !window.SWFTAuth.supabase) {
-      alert('Authentication service unavailable');
-      return;
-    }
-    
-    try {
-      elements.emailSubmit.disabled = true;
-      elements.emailSubmit.textContent = 'Sending...';
-      
-      // Note: Sign-in is handled on auth.html page
-      // This form is just for display - redirect to auth page
-      window.location.href = '/auth.html';
-      return;
+    // Redirect to auth page for sign-in
+    window.location.href = '/auth.html';
       
       if (error) throw error;
       
