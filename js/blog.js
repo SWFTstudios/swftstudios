@@ -18,7 +18,8 @@
   // ==========================================================================
   
   const CONFIG = {
-    dataUrl: '/data/posts.json',
+    dataUrl: '/data/posts.json', // Fallback to static file
+    githubApiUrl: 'https://api.github.com/repos/SWFTstudios/notes/contents/notes',
     graphUrl: '/data/graph.latest.json',
     graphLibraryUrl: 'https://cdn.jsdelivr.net/npm/3d-force-graph@1/dist/3d-force-graph.min.js',
     storageKey: 'swft-blog-view',
@@ -26,7 +27,8 @@
     graphNodeLimit: {
       desktop: 500,
       mobile: 150
-    }
+    },
+    useGitHubApi: true // Set to false to use static data/posts.json
   };
 
   // ==========================================================================
@@ -152,13 +154,184 @@
   // ==========================================================================
   
   /**
+   * Parse frontmatter from markdown content
+   */
+  function parseFrontmatter(content) {
+    const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+    const match = content.match(frontmatterRegex);
+    
+    if (!match) {
+      return { data: {}, content: content };
+    }
+    
+    const frontmatter = match[1];
+    const body = match[2];
+    const data = {};
+    
+    // Simple YAML parsing (basic key: value pairs)
+    frontmatter.split('\n').forEach(line => {
+      const colonIndex = line.indexOf(':');
+      if (colonIndex > 0) {
+        const key = line.substring(0, colonIndex).trim();
+        let value = line.substring(colonIndex + 1).trim();
+        
+        // Remove quotes
+        if ((value.startsWith('"') && value.endsWith('"')) || 
+            (value.startsWith("'") && value.endsWith("'"))) {
+          value = value.slice(1, -1);
+        }
+        
+        // Parse arrays
+        if (value.startsWith('[') && value.endsWith(']')) {
+          value = value.slice(1, -1)
+            .split(',')
+            .map(v => v.trim().replace(/^["']|["']$/g, ''))
+            .filter(v => v);
+        }
+        
+        data[key] = value;
+      }
+    });
+    
+    return { data, content: body };
+  }
+  
+  /**
+   * Extract excerpt from markdown content
+   */
+  function extractExcerpt(content, length = 200) {
+    const plainText = content
+      .replace(/\[\[([^\]]+)\]\]/g, '$1') // Remove wiki links
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Remove markdown links
+      .replace(/[#*_~`]/g, '') // Remove formatting chars
+      .replace(/\n+/g, ' ') // Replace newlines with spaces
+      .trim();
+    
+    if (plainText.length <= length) return plainText;
+    return plainText.substring(0, length).trim() + '...';
+  }
+  
+  /**
+   * Extract [[wiki-style]] links from content
+   */
+  function extractLinks(content) {
+    const linkPattern = /\[\[([^\]]+)\]\]/g;
+    const links = [];
+    let match;
+    
+    while ((match = linkPattern.exec(content)) !== null) {
+      links.push(slugify(match[1]));
+    }
+    
+    return [...new Set(links)]; // Return unique links only
+  }
+  
+  /**
+   * Slugify a string
+   */
+  function slugify(text) {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
+  }
+  
+  /**
+   * Parse a markdown file into a post object
+   */
+  function parseNote(filename, content) {
+    const { data, content: body } = parseFrontmatter(content);
+    const slug = filename.replace('.md', '');
+    
+    return {
+      id: data.title ? slugify(data.title) : slug,
+      slug: slug,
+      title: data.title || slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      description: data.description || extractExcerpt(body, 150),
+      date: data.date || new Date().toISOString().split('T')[0],
+      tags: Array.isArray(data.tags) ? data.tags : (typeof data.tags === 'string' ? [data.tags] : []),
+      author: data.author || null,
+      image: data.image || null,
+      excerpt: extractExcerpt(body, 200),
+      links: extractLinks(body),
+      content: body,
+      metaError: !data.title
+    };
+  }
+  
+  /**
+   * Fetch blog posts data from GitHub API
+   */
+  async function fetchBlogDataFromGitHub() {
+    try {
+      // Fetch list of markdown files
+      const listResponse = await fetch(CONFIG.githubApiUrl);
+      if (!listResponse.ok) {
+        throw new Error(`GitHub API error: ${listResponse.status}`);
+      }
+      
+      const files = await listResponse.json();
+      const markdownFiles = files.filter(file => 
+        file.type === 'file' && file.name.endsWith('.md')
+      );
+      
+      console.log(`Found ${markdownFiles.length} markdown files in GitHub`);
+      
+      // Fetch content for each file
+      const posts = await Promise.all(
+        markdownFiles.map(async (file) => {
+          try {
+            const contentResponse = await fetch(file.download_url);
+            if (!contentResponse.ok) throw new Error(`Failed to fetch ${file.name}`);
+            
+            const content = await contentResponse.text();
+            return parseNote(file.name, content);
+          } catch (error) {
+            console.error(`Error fetching ${file.name}:`, error);
+            return null;
+          }
+        })
+      );
+      
+      // Filter out nulls and sort by date
+      const validPosts = posts.filter(p => p !== null);
+      validPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      return validPosts;
+    } catch (error) {
+      console.error('Failed to fetch from GitHub:', error);
+      throw error;
+    }
+  }
+  
+  /**
    * Fetch blog posts data
    */
   async function fetchBlogData() {
+    // Try GitHub API first if enabled
+    if (CONFIG.useGitHubApi) {
+      try {
+        console.log('Fetching notes from GitHub...');
+        state.posts = await fetchBlogDataFromGitHub();
+        console.log(`Loaded ${state.posts.length} notes from GitHub`);
+        return state.posts;
+      } catch (error) {
+        console.warn('GitHub API fetch failed, falling back to static file:', error);
+        // Fall through to static file
+      }
+    }
+    
+    // Fallback to static file
     try {
       const response = await fetch(CONFIG.dataUrl);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       state.posts = await response.json();
+      console.log(`Loaded ${state.posts.length} notes from static file`);
       return state.posts;
     } catch (error) {
       console.error('Failed to fetch blog data:', error);
@@ -168,9 +341,50 @@
   }
 
   /**
+   * Build graph data from posts
+   */
+  function buildGraphData(posts) {
+    const nodes = posts.map(post => ({
+      id: post.id,
+      name: post.title,
+      tags: post.tags || [],
+      val: post.links ? post.links.length + 1 : 1,
+      color: post.tags && post.tags.length > 0 ? '#6366f1' : '#888'
+    }));
+    
+    const links = [];
+    const nodeMap = new Map(nodes.map(n => [n.id, n]));
+    
+    posts.forEach(post => {
+      if (post.links && post.links.length > 0) {
+        post.links.forEach(linkId => {
+          // Check if linked post exists
+          if (nodeMap.has(linkId)) {
+            links.push({
+              source: post.id,
+              target: linkId,
+              type: 'manual'
+            });
+          }
+        });
+      }
+    });
+    
+    return { nodes, links };
+  }
+  
+  /**
    * Fetch graph data
    */
   async function fetchGraphData() {
+    // If we have posts loaded, build graph from them
+    if (state.posts && state.posts.length > 0) {
+      console.log('Building graph from fetched posts...');
+      state.graphData = buildGraphData(state.posts);
+      return state.graphData;
+    }
+    
+    // Fallback to static graph file
     try {
       const response = await fetch(CONFIG.graphUrl);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -178,6 +392,11 @@
       return state.graphData;
     } catch (error) {
       console.error('Failed to fetch graph data:', error);
+      // Try building from posts if available
+      if (state.posts && state.posts.length > 0) {
+        state.graphData = buildGraphData(state.posts);
+        return state.graphData;
+      }
       return null;
     }
   }
@@ -1077,15 +1296,15 @@
       renderTagFilters(posts);
       renderAuthorFilters(posts);
       renderListView(posts);
+      
+      // Build graph data from fetched posts
+      if (isWebGLAvailable() && !prefersReducedMotion()) {
+        await fetchGraphData(); // This will build from posts if available
+      }
     }
 
     // Set initial view
     setView(preferredView);
-
-    // Pre-fetch graph data if WebGL is available
-    if (isWebGLAvailable() && !prefersReducedMotion()) {
-      fetchGraphData();
-    }
   }
 
   // Start when DOM is ready
