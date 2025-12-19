@@ -78,6 +78,7 @@
    * Redirect user based on authorization status
    */
   let isRedirecting = false; // Prevent multiple redirects
+  let redirectTimeout = null; // Track redirect timeout
   
   async function redirectUser(user) {
     // Prevent redirect loops
@@ -88,8 +89,11 @@
 
     if (!user || !user.email) {
       console.warn('No user email found');
+      hideLoading(); // Hide loading if no user
       isRedirecting = true;
-      window.location.href = CONFIG.redirectUrls.blog;
+      setTimeout(() => {
+        window.location.href = CONFIG.redirectUrls.blog;
+      }, 100);
       return;
     }
 
@@ -97,12 +101,28 @@
 
     isRedirecting = true;
     
-    if (authorized) {
-      console.log('User authorized, redirecting to upload page');
-      window.location.href = CONFIG.redirectUrls.upload;
-    } else {
-      console.log('User not authorized, redirecting to blog (read-only)');
-      window.location.href = CONFIG.redirectUrls.blog;
+    // Set a timeout to hide loading if redirect takes too long
+    redirectTimeout = setTimeout(() => {
+      console.warn('Redirect taking too long, hiding loading spinner');
+      hideLoading();
+      isRedirecting = false; // Reset flag so user can try again
+      showError('Redirect is taking longer than expected. Please try refreshing the page.');
+    }, 5000); // 5 second timeout
+    
+    try {
+      if (authorized) {
+        console.log('User authorized, redirecting to upload page');
+        window.location.href = CONFIG.redirectUrls.upload;
+      } else {
+        console.log('User not authorized, redirecting to blog (read-only)');
+        window.location.href = CONFIG.redirectUrls.blog;
+      }
+    } catch (error) {
+      console.error('Redirect error:', error);
+      clearTimeout(redirectTimeout);
+      hideLoading();
+      isRedirecting = false;
+      showError('Failed to redirect. Please try refreshing the page.');
     }
   }
 
@@ -209,8 +229,12 @@
     const currentPath = window.location.pathname;
     
     // Don't check session on auth.html or upload.html - let those pages handle their own auth
+    // The auth state change listener will handle redirects when user returns from magic link
     if (currentPath.includes('auth.html') || currentPath.includes('/auth') || 
         currentPath.includes('upload.html') || currentPath.includes('/upload')) {
+      // On auth.html, just make sure loading is hidden initially
+      // The auth state change listener will handle the redirect
+      hideLoading();
       return;
     }
 
@@ -258,7 +282,7 @@
         const currentPath = window.location.pathname;
         
         // Only redirect if we're on auth.html (not already on target page)
-        if (currentPath.includes('auth.html')) {
+        if (currentPath.includes('auth.html') || currentPath.includes('/auth')) {
           console.log('User signed in:', session.user.email);
           showLoading();
           
@@ -271,6 +295,9 @@
 
       if (event === 'SIGNED_OUT') {
         console.log('User signed out');
+        hideLoading(); // Hide loading on sign out
+        clearTimeout(redirectTimeout); // Clear any pending redirect timeout
+        isRedirecting = false; // Reset redirect flag
         // Only redirect if not already on blog
         if (!window.location.pathname.includes('blog.html')) {
           window.location.href = CONFIG.redirectUrls.blog;
@@ -284,6 +311,15 @@
       // Handle TOKEN_REFRESHED to prevent loops
       if (event === 'TOKEN_REFRESHED') {
         console.log('Token refreshed');
+      }
+
+      // Handle errors
+      if (event === 'SIGNED_IN' && !session) {
+        console.warn('SIGNED_IN event but no session');
+        hideLoading();
+        clearTimeout(redirectTimeout);
+        isRedirecting = false;
+        showError('Authentication failed. Please try again.');
       }
     });
   }
@@ -373,6 +409,9 @@
       showError('Authentication service unavailable');
       return;
     }
+
+    // Make sure loading is hidden on initial load
+    hideLoading();
 
     // Setup event listeners
     setupEventListeners();
