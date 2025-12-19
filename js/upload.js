@@ -360,30 +360,82 @@
       // Submit to server
       showInfo('Publishing note...');
       
+      // #region agent log
+      const payload = {
+        title: title || 'Untitled Note',
+        content,
+        markdown,
+        tags,
+        contentType,
+        fileUrl,
+        externalLink,
+        userEmail: state.currentUser.email
+      };
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:363',message:'Attempting to submit note',data:{url:CONFIG.apiEndpoint,method:'POST',bodySize:JSON.stringify(payload).length,hasTitle:!!title,hasContent:!!content},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      
       const response = await fetch(CONFIG.apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${(await state.supabase.auth.getSession()).data.session.access_token}`
         },
-        body: JSON.stringify({
-          title: title || 'Untitled Note',
-          content,
-          markdown,
-          tags,
-          contentType,
-          fileUrl,
-          externalLink,
-          userEmail: state.currentUser.email
-        })
+        body: JSON.stringify(payload)
       });
 
+      // #region agent log
+      const responseText = await response.text();
+      console.log('[DEBUG] Response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        contentType: response.headers.get('content-type'),
+        bodyLength: responseText.length,
+        bodyPreview: responseText.substring(0, 200)
+      });
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:381',message:'Received raw response',data:{status:response.status,statusText:response.statusText,ok:response.ok,contentType:response.headers.get('content-type'),responseTextLength:responseText.length,responseTextSnippet:responseText.substring(0,200)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to publish note');
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:384',message:'Response not OK - attempting to parse error',data:{status:response.status,responseText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+        let errorMessage = 'Failed to publish note';
+        try {
+          if (responseText && responseText.trim()) {
+            const error = JSON.parse(responseText);
+            errorMessage = error.message || error.error || errorMessage;
+          } else {
+            errorMessage = `Server returned ${response.status} ${response.statusText} with empty body`;
+          }
+        } catch (jsonError) {
+          // #region agent log
+          fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:393',message:'JSON parsing failed for error response',data:{error:jsonError.message,responseText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+          // #endregion
+          errorMessage = `Server returned ${response.status} ${response.statusText}. ${responseText || 'No error details available'}`;
+        }
+        throw new Error(errorMessage);
       }
 
-      const result = await response.json();
+      // Parse success response
+      let result;
+      try {
+        if (!responseText || !responseText.trim()) {
+          // #region agent log
+          fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:402',message:'Success response is empty',data:{status:response.status},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+          // #endregion
+          throw new Error('Server returned empty response');
+        }
+        result = JSON.parse(responseText);
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:407',message:'Successfully parsed response JSON',data:{hasSuccess:!!result.success,hasMessage:!!result.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+      } catch (jsonError) {
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:410',message:'JSON parsing failed for success response',data:{error:jsonError.message,responseText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+        throw new Error(`Failed to parse server response: ${jsonError.message}. Response: ${responseText.substring(0, 100)}`);
+      }
       
       // Show success
       showSuccess('Note published successfully!');
@@ -398,6 +450,9 @@
       }, 2000);
 
     } catch (error) {
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:417',message:'Error submitting note',data:{error:error.message,stack:error.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
       console.error('Submit failed:', error);
       showError(error.message || 'Failed to publish note. Please try again.');
     } finally {

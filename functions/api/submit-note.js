@@ -108,38 +108,55 @@ async function commitToGitHub(filename, content, commitMessage, env) {
 export async function onRequestPost(context) {
   const { request, env } = context;
 
+  // #region agent log
+  try {
+    await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:108',message:'Function invoked',data:{method:request.method,url:request.url,hasBody:!!request.body},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+  } catch (logErr) {
+    // Ignore logging errors
+  }
+  // #endregion
+
   try {
     // Parse request body
-    const body = await request.json();
+    // #region agent log
+    let body;
+    try {
+      body = await request.json();
+      await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:115',message:'Parsed request body',data:{bodyKeys:Object.keys(body),hasTitle:!!body.title,hasContent:!!body.content,hasUserEmail:!!body.userEmail},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    } catch (jsonParseError) {
+      await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:118',message:'Failed to parse request JSON',data:{error:jsonParseError.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      return addCorsHeaders(new Response(JSON.stringify({ error: `Invalid JSON in request body: ${jsonParseError.message}` }), { status: 400, headers: { 'Content-Type': 'application/json' } }));
+    }
+    // #endregion
     const { title, content, markdown, tags, contentType, userEmail } = body;
 
     // Validate required fields
     if (!title && !content) {
-      return new Response(JSON.stringify({
+      return addCorsHeaders(new Response(JSON.stringify({
         error: 'Title or content is required'
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
-      });
+      }));
     }
 
     if (!userEmail) {
-      return new Response(JSON.stringify({
+      return addCorsHeaders(new Response(JSON.stringify({
         error: 'User email is required'
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
-      });
+      }));
     }
 
     // Check authorization
     if (!isAuthorizedUser(userEmail, env)) {
-      return new Response(JSON.stringify({
+      return addCorsHeaders(new Response(JSON.stringify({
         error: 'Unauthorized: You do not have permission to upload notes'
       }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' }
-      });
+      }));
     }
 
     // Generate filename
@@ -150,6 +167,10 @@ export async function onRequestPost(context) {
     // Commit to GitHub
     const commitMessage = `Add note: ${title || 'Untitled'} (by ${userEmail})`;
     
+    // #region agent log
+    await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:153',message:'Calling commitToGitHub',data:{filename,hasMarkdown:!!markdown},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    
     const result = await commitToGitHub(
       filename,
       markdown,
@@ -157,28 +178,43 @@ export async function onRequestPost(context) {
       env
     );
 
+    // #region agent log
+    await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:161',message:'GitHub commit successful, returning response',data:{filename,hasResult:!!result},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+
     // Return success
-    return new Response(JSON.stringify({
+    const successResponse = JSON.stringify({
       success: true,
       message: 'Note published successfully',
       filename,
       commit: result.content.sha,
       url: result.content.html_url
-    }), {
+    });
+    // #region agent log
+    await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:170',message:'Returning success response',data:{status:200,bodyLength:successResponse.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    return addCorsHeaders(new Response(successResponse, {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
-    });
+    }));
 
   } catch (error) {
     console.error('Submit note error:', error);
+    // #region agent log
+    await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:177',message:'Unhandled exception in function',data:{error:error.message,stack:error.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
 
-    return new Response(JSON.stringify({
+    const errorResponse = JSON.stringify({
       error: error.message || 'Failed to process note',
       details: error.stack
-    }), {
+    });
+    // #region agent log
+    await fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'submit-note.js:183',message:'Returning error response',data:{status:500,bodyLength:errorResponse.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    return addCorsHeaders(new Response(errorResponse, {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
-    });
+    }));
   }
 }
 
@@ -191,5 +227,18 @@ export async function onRequestOptions(context) {
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization'
     }
+  });
+}
+
+// Add CORS headers to all responses
+function addCorsHeaders(response) {
+  const newHeaders = new Headers(response.headers);
+  newHeaders.set('Access-Control-Allow-Origin', '*');
+  newHeaders.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  newHeaders.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: newHeaders
   });
 }
