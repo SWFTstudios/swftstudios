@@ -292,6 +292,11 @@
    * Build graph data from posts
    */
   function buildGraphData(posts) {
+    // Return empty graph if no posts
+    if (!posts || posts.length === 0) {
+      return { nodes: [], links: [] };
+    }
+    
     const nodes = posts.map(post => ({
       id: post.id,
       name: post.title,
@@ -325,28 +330,17 @@
    * Fetch graph data
    */
   async function fetchGraphData() {
-    // If we have posts loaded, build graph from them
-    if (state.posts && state.posts.length > 0) {
-      console.log('Building graph from fetched posts...');
-      state.graphData = buildGraphData(state.posts);
+    // Always build graph from posts (no fallback to static file)
+    // If no posts, return empty graph data
+    if (!state.posts || state.posts.length === 0) {
+      console.log('No posts available, returning empty graph data');
+      state.graphData = { nodes: [], links: [] };
       return state.graphData;
     }
     
-    // Fallback to static graph file
-    try {
-      const response = await fetch(CONFIG.graphUrl);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      state.graphData = await response.json();
-      return state.graphData;
-    } catch (error) {
-      console.error('Failed to fetch graph data:', error);
-      // Try building from posts if available
-      if (state.posts && state.posts.length > 0) {
-        state.graphData = buildGraphData(state.posts);
-        return state.graphData;
-      }
-      return null;
-    }
+    console.log('Building graph from fetched posts...');
+    state.graphData = buildGraphData(state.posts);
+    return state.graphData;
   }
 
   // ==========================================================================
@@ -656,6 +650,12 @@
         return;
       }
 
+      // Check if there are any nodes to display
+      if (!state.graphData.nodes || state.graphData.nodes.length === 0) {
+        showNoNotesMessage();
+        return;
+      }
+
       // Apply node limit based on device
       const nodeLimit = isMobile() 
         ? CONFIG.graphNodeLimit.mobile 
@@ -667,10 +667,11 @@
         graphData = limitGraphData(graphData, nodeLimit);
       }
 
-      // Hide placeholder
+      // Hide placeholder and no-notes message
       if (elements.graphPlaceholder) {
         elements.graphPlaceholder.style.display = 'none';
       }
+      hideNoNotesMessage();
 
       // Create graph
       state.graph = ForceGraph3D()(elements.graphContainer)
@@ -750,6 +751,58 @@
       elements.graphToggleBtn.title = 'Graph view is not available on this device';
     }
   }
+  
+  /**
+   * Show "no notes" message in graph view
+   */
+  function showNoNotesMessage() {
+    // Hide graph container
+    if (elements.graphContainer) {
+      elements.graphContainer.style.display = 'none';
+    }
+    
+    // Show empty state if available
+    if (elements.emptyState) {
+      elements.emptyState.hidden = false;
+    }
+    
+    // Create or show "no notes" message in graph area
+    let noNotesMsg = document.getElementById('graph-no-notes');
+    if (!noNotesMsg && elements.graphContainer) {
+      noNotesMsg = document.createElement('div');
+      noNotesMsg.id = 'graph-no-notes';
+      noNotesMsg.className = 'blog_no-notes-message';
+      noNotesMsg.innerHTML = `
+        <div class="blog_no-notes-content">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <h3>No notes to show</h3>
+          <p>Create your first note to see it appear in the graph view.</p>
+        </div>
+      `;
+      elements.graphContainer.parentElement.appendChild(noNotesMsg);
+    } else if (noNotesMsg) {
+      noNotesMsg.hidden = false;
+    }
+  }
+  
+  /**
+   * Hide "no notes" message
+   */
+  function hideNoNotesMessage() {
+    const noNotesMsg = document.getElementById('graph-no-notes');
+    if (noNotesMsg) {
+      noNotesMsg.hidden = true;
+    }
+    if (elements.graphContainer) {
+      elements.graphContainer.style.display = 'block';
+    }
+  }
 
   /**
    * Handle graph node click
@@ -824,7 +877,17 @@
     });
 
     // Initialize graph if switching to graph or both view
-    if ((view === 'graph' || view === 'both') && !state.graphLoaded) {
+    if ((view === 'graph' || view === 'both')) {
+      // Check if there are posts before initializing graph
+      if (!state.posts || state.posts.length === 0) {
+        showNoNotesMessage();
+      } else if (!state.graphLoaded) {
+        initGraph();
+      } else {
+        // Graph already loaded, make sure no-notes message is hidden
+        hideNoNotesMessage();
+      }
+    } {
       initGraph();
     }
 
@@ -1622,6 +1685,21 @@
 
     // Fetch and render posts
     const posts = await fetchBlogData();
+    
+    // If no posts, show empty state
+    if (posts.length === 0) {
+      if (elements.emptyState) {
+        elements.emptyState.hidden = false;
+      }
+      // If switching to graph view, show no notes message
+      if (preferredView === 'graph' || preferredView === 'both') {
+        showNoNotesMessage();
+      }
+    } else {
+      if (elements.emptyState) {
+        elements.emptyState.hidden = true;
+      }
+    }
     
     if (posts.length > 0) {
       renderTagFilters(posts);
