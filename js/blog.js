@@ -74,8 +74,6 @@
     modalTitle: document.getElementById('modal-title'),
     modalDate: document.getElementById('modal-date'),
     modalTags: document.getElementById('modal-tags'),
-    modalExcerpt: document.getElementById('modal-excerpt'),
-    modalLinks: document.getElementById('modal-links'),
     modalContent: document.getElementById('modal-content'),
     modalRelatedNotes: document.getElementById('modal-related-notes'),
     modalClose: document.querySelector('.blog_modal-close'),
