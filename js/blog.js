@@ -46,7 +46,8 @@
     activeTag: null,
     activeAuthor: null,
     sortBy: 'date-desc',
-    highlightedPostId: null
+    highlightedPostId: null,
+    currentUser: null // Track current authenticated user
   };
 
   // ==========================================================================
@@ -80,7 +81,15 @@
     collaboratorAccess: document.getElementById('blog-collaborator-access'),
     collaboratorSigninBtn: document.getElementById('blog-collaborator-signin'),
     authActions: document.getElementById('blog-auth-actions'),
-    signOutBtn: document.getElementById('blog-sign-out')
+    signOutBtn: document.getElementById('blog-sign-out'),
+    editModal: document.getElementById('edit-note-modal'),
+    editForm: document.getElementById('edit-note-form'),
+    editTitle: document.getElementById('edit-note-title'),
+    editContent: document.getElementById('edit-note-content'),
+    editTags: document.getElementById('edit-note-tags'),
+    editSaveBtn: document.getElementById('edit-note-save'),
+    editCancelBtn: document.getElementById('edit-note-cancel'),
+    editCloseBtn: document.getElementById('edit-note-close')
   };
 
   // ==========================================================================
@@ -233,6 +242,8 @@
           date: note.created_at ? note.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
           tags: Array.isArray(note.tags) ? note.tags : [],
           author: note.user_email ? note.user_email.split('@')[0] : 'Unknown',
+          user_email: note.user_email, // Store for ownership check
+          user_id: note.user_id, // Store for ownership check
           image: note.file_urls && note.file_urls.length > 0 ? note.file_urls[0] : null,
           excerpt: extractExcerpt(note.content || '', 200),
           links: links,
@@ -386,18 +397,55 @@
               ${post.links.length}
             </span>
           ` : ''}
+          ${isNoteOwner(post) ? `
+            <div class="blog_card-actions">
+              <button class="blog_edit-btn" data-note-id="${escapeHtml(post.id)}" aria-label="Edit note" title="Edit note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="blog_delete-btn" data-note-id="${escapeHtml(post.id)}" aria-label="Delete note" title="Delete note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          ` : ''}
         </div>
       </article>
     `).join('');
 
-    // Add click handlers to cards
+    // Add click handlers to cards (but not on action buttons)
     elements.blogList.querySelectorAll('.blog_card').forEach(card => {
-      card.addEventListener('click', () => handlePostClick(card.dataset.postId));
+      card.addEventListener('click', (e) => {
+        // Don't trigger card click if clicking on action buttons
+        if (e.target.closest('.blog_card-actions')) {
+          return;
+        }
+        handlePostClick(card.dataset.postId);
+      });
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handlePostClick(card.dataset.postId);
         }
+      });
+    });
+    
+    // Add click handlers for edit/delete buttons
+    elements.blogList.querySelectorAll('.blog_edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openEditModal(btn.dataset.noteId);
+      });
+    });
+    
+    elements.blogList.querySelectorAll('.blog_delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        confirmDelete(btn.dataset.noteId);
       });
     });
   }
@@ -1053,19 +1101,32 @@
       
       if (session && session.user) {
         // User is signed in - show auth actions, hide collaborator button
+        state.currentUser = session.user;
         if (elements.collaboratorAccess) elements.collaboratorAccess.style.display = 'none';
         if (elements.authActions) elements.authActions.style.display = 'flex';
       } else {
         // Not signed in - show subtle collaborator button
+        state.currentUser = null;
         if (elements.collaboratorAccess) elements.collaboratorAccess.style.display = 'block';
         if (elements.authActions) elements.authActions.style.display = 'none';
       }
     } catch (error) {
       console.error('Auth check error:', error);
+      state.currentUser = null;
       // Show subtle collaborator button on error
       if (elements.collaboratorAccess) elements.collaboratorAccess.style.display = 'block';
       if (elements.authActions) elements.authActions.style.display = 'none';
     }
+  }
+  
+  /**
+   * Check if current user owns the note
+   */
+  function isNoteOwner(post) {
+    if (!state.currentUser) return false;
+    // Check by user_id (preferred) or user_email (fallback)
+    return (post.user_id && post.user_id === state.currentUser.id) ||
+           (post.user_email && post.user_email === state.currentUser.email);
   }
   
   /**
@@ -1076,10 +1137,154 @@
     
     try {
       await window.SWFTAuth.supabase.auth.signOut();
+      state.currentUser = null;
       // Update UI
       await checkAuthState();
+      // Re-render list to hide edit/delete buttons
+      renderListView(state.posts);
     } catch (error) {
       console.error('Sign-out error:', error);
+    }
+  }
+  
+  /**
+   * Open edit modal for a note
+   */
+  function openEditModal(noteId) {
+    if (!state.currentUser || !window.SWFTAuth || !window.SWFTAuth.supabase) {
+      console.warn('User not authenticated');
+      return;
+    }
+    
+    const post = state.posts.find(p => p.id === noteId);
+    if (!post) {
+      console.error('Note not found:', noteId);
+      return;
+    }
+    
+    if (!isNoteOwner(post)) {
+      console.warn('User does not own this note');
+      return;
+    }
+    
+    // Populate edit form
+    if (elements.editTitle) elements.editTitle.value = post.title;
+    if (elements.editContent) elements.editContent.value = post.content;
+    if (elements.editTags) elements.editTags.value = Array.isArray(post.tags) ? post.tags.join(', ') : '';
+    
+    // Store note ID for save
+    if (elements.editForm) elements.editForm.dataset.noteId = noteId;
+    
+    // Show modal
+    if (elements.editModal) {
+      elements.editModal.hidden = false;
+      elements.editModal.setAttribute('aria-hidden', 'false');
+    }
+  }
+  
+  /**
+   * Close edit modal
+   */
+  function closeEditModal() {
+    if (elements.editModal) {
+      elements.editModal.hidden = true;
+      elements.editModal.setAttribute('aria-hidden', 'true');
+    }
+    if (elements.editForm) {
+      elements.editForm.dataset.noteId = '';
+      elements.editForm.reset();
+    }
+  }
+  
+  /**
+   * Update a note in Supabase
+   */
+  async function updateNote(noteId, updates) {
+    if (!window.SWFTAuth || !window.SWFTAuth.supabase || !state.currentUser) {
+      throw new Error('Not authenticated');
+    }
+    
+    const supabase = window.SWFTAuth.supabase;
+    
+    // Parse tags from comma-separated string
+    const tags = updates.tags 
+      ? updates.tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
+      : [];
+    
+    const updateData = {
+      title: updates.title,
+      content: updates.content,
+      tags: tags,
+      updated_at: new Date().toISOString()
+    };
+    
+    const { data, error } = await supabase
+      .from('notes')
+      .update(updateData)
+      .eq('id', noteId)
+      .eq('user_id', state.currentUser.id) // Ensure user owns the note
+      .select()
+      .single();
+    
+    if (error) throw error;
+    
+    return data;
+  }
+  
+  /**
+   * Delete a note from Supabase
+   */
+  async function deleteNote(noteId) {
+    if (!window.SWFTAuth || !window.SWFTAuth.supabase || !state.currentUser) {
+      throw new Error('Not authenticated');
+    }
+    
+    const supabase = window.SWFTAuth.supabase;
+    
+    const { error } = await supabase
+      .from('notes')
+      .delete()
+      .eq('id', noteId)
+      .eq('user_id', state.currentUser.id); // Ensure user owns the note
+    
+    if (error) throw error;
+  }
+  
+  /**
+   * Confirm and delete a note
+   */
+  async function confirmDelete(noteId) {
+    const post = state.posts.find(p => p.id === noteId);
+    if (!post) return;
+    
+    if (!isNoteOwner(post)) {
+      alert('You can only delete your own notes.');
+      return;
+    }
+    
+    const confirmed = confirm(`Are you sure you want to delete "${post.title}"? This action cannot be undone.`);
+    if (!confirmed) return;
+    
+    try {
+      await deleteNote(noteId);
+      
+      // Remove from state
+      state.posts = state.posts.filter(p => p.id !== noteId);
+      
+      // Refresh UI
+      renderListView(state.posts);
+      renderTagFilters(state.posts);
+      renderAuthorFilters(state.posts);
+      
+      // Rebuild graph if loaded
+      if (state.graphLoaded) {
+        await fetchGraphData();
+      }
+      
+      console.log('Note deleted successfully');
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Failed to delete note. Please try again.');
     }
   }
 
@@ -1104,8 +1309,76 @@
     if (window.SWFTAuth && window.SWFTAuth.supabase) {
       window.SWFTAuth.supabase.auth.onAuthStateChange(() => {
         checkAuthState();
+        // Re-render list to show/hide edit/delete buttons
+        renderListView(state.posts);
       });
     }
+    
+    // Edit form submission
+    if (elements.editForm) {
+      elements.editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const noteId = elements.editForm.dataset.noteId;
+        if (!noteId) return;
+        
+        const title = elements.editTitle?.value.trim();
+        const content = elements.editContent?.value.trim();
+        const tags = elements.editTags?.value.trim();
+        
+        if (!title) {
+          alert('Title is required');
+          return;
+        }
+        
+        try {
+          const updatedNote = await updateNote(noteId, { title, content, tags });
+          
+          // Update the note in state.posts
+          const postIndex = state.posts.findIndex(p => p.id === noteId);
+          if (postIndex !== -1) {
+            // Re-fetch to get updated data
+            state.posts = await fetchBlogDataFromSupabase();
+            
+            // Refresh UI
+            renderListView(state.posts);
+            renderTagFilters(state.posts);
+            renderAuthorFilters(state.posts);
+            
+            // Rebuild graph if loaded
+            if (state.graphLoaded) {
+              await fetchGraphData();
+            }
+          }
+          
+          closeEditModal();
+          console.log('Note updated successfully');
+        } catch (error) {
+          console.error('Update error:', error);
+          alert('Failed to update note. Please try again.');
+        }
+      });
+    }
+    
+    // Edit modal close buttons
+    if (elements.editCloseBtn) {
+      elements.editCloseBtn.addEventListener('click', closeEditModal);
+    }
+    if (elements.editCancelBtn) {
+      elements.editCancelBtn.addEventListener('click', closeEditModal);
+    }
+    if (elements.editModal) {
+      const backdrop = elements.editModal.querySelector('.blog_modal-backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', closeEditModal);
+      }
+    }
+    
+    // Close edit modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && elements.editModal && !elements.editModal.hidden) {
+        closeEditModal();
+      }
+    });
     
     // Search input
     if (elements.searchInput) {

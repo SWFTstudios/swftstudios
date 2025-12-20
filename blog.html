@@ -298,6 +298,59 @@ body {
               </div>
 
               <!-- Note Preview Modal -->
+              <!-- Edit Note Modal -->
+              <div class="blog_modal" id="edit-note-modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title" hidden>
+                <div class="blog_modal-backdrop"></div>
+                <div class="blog_modal-content">
+                  <div class="blog_modal-header">
+                    <h2 class="blog_modal-title" id="edit-modal-title">Edit Note</h2>
+                    <button type="button" class="blog_modal-close" id="edit-note-close" aria-label="Close modal">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  <form id="edit-note-form" class="blog_edit-form">
+                    <div class="blog_edit-field">
+                      <label for="edit-note-title" class="blog_edit-label">Title</label>
+                      <input 
+                        type="text" 
+                        id="edit-note-title" 
+                        name="title" 
+                        class="blog_edit-input" 
+                        required
+                        placeholder="Note title"
+                      >
+                    </div>
+                    <div class="blog_edit-field">
+                      <label for="edit-note-content" class="blog_edit-label">Content</label>
+                      <textarea 
+                        id="edit-note-content" 
+                        name="content" 
+                        class="blog_edit-textarea" 
+                        rows="10"
+                        placeholder="Note content (Markdown supported)"
+                      ></textarea>
+                    </div>
+                    <div class="blog_edit-field">
+                      <label for="edit-note-tags" class="blog_edit-label">Tags (comma-separated)</label>
+                      <input 
+                        type="text" 
+                        id="edit-note-tags" 
+                        name="tags" 
+                        class="blog_edit-input" 
+                        placeholder="tag1, tag2, tag3"
+                      >
+                    </div>
+                    <div class="blog_edit-actions">
+                      <button type="button" class="blog_edit-btn-cancel" id="edit-note-cancel">Cancel</button>
+                      <button type="submit" class="blog_edit-btn-save" id="edit-note-save">Save Changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
               <div class="blog_modal" id="note-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
                 <div class="blog_modal-backdrop"></div>
                 <div class="blog_modal-content">
