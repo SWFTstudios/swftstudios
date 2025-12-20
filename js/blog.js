@@ -1708,15 +1708,17 @@
     }, true); // Use capture phase to catch events earlier
     
     // Prevent clicks on modal content from closing the modal
+    // But allow close button clicks to propagate
     if (elements.modal) {
       const modalContent = elements.modal.querySelector('.blog_modal-content');
       if (modalContent) {
         modalContent.addEventListener('click', (e) => {
-          // Don't stop propagation if clicking on close button
-          if (!e.target.closest('.blog_modal-close')) {
+          // Only stop propagation if NOT clicking on close button
+          const isCloseButton = e.target.closest('.blog_modal-close');
+          if (!isCloseButton) {
             e.stopPropagation();
           }
-        });
+        }, false); // Use bubble phase so close button handler in capture phase runs first
       }
     }
 
