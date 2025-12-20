@@ -82,15 +82,8 @@
 
       state.currentUser = session.user;
 
-      const authorized = window.SWFTAuth?.isAuthorizedUser(session.user.email);
-      
-      if (!authorized) {
-        console.log('User not authorized, redirecting to blog');
-        window.location.href = '/blog.html';
-        return false;
-      }
-
-      console.log('User authorized:', session.user.email);
+      // All authenticated users can upload
+      console.log('User authenticated:', session.user.email);
       return true;
 
     } catch (error) {
