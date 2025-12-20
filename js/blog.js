@@ -697,10 +697,23 @@
         state.graph.cooldownTicks(0);
       }
 
+      // Center the graph
+      setTimeout(() => {
+        if (state.graph) {
+          // Center camera on the graph
+          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+          // Zoom to fit all nodes
+          state.graph.zoomToFit(400, 0);
+        }
+      }, 100);
+
       // Stop simulation after settling
       setTimeout(() => {
         if (state.graph) {
           state.graph.cooldownTicks(0);
+          // Re-center after simulation settles
+          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+          state.graph.zoomToFit(400, 0);
         }
       }, 30000);
 
@@ -841,7 +854,7 @@
   function resetGraph() {
     if (state.graph) {
       state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-      state.graph.zoomToFit(400);
+      state.graph.zoomToFit(400, 0);
     }
   }
 
@@ -850,7 +863,8 @@
    */
   function zoomGraphToFit() {
     if (state.graph) {
-      state.graph.zoomToFit(400);
+      state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+      state.graph.zoomToFit(400, 0);
     }
   }
 
@@ -896,6 +910,9 @@
       setTimeout(() => {
         state.graph.width(elements.graphContainer.clientWidth);
         state.graph.height(elements.graphContainer.clientHeight);
+        // Re-center after resize
+        state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+        state.graph.zoomToFit(400, 0);
       }, 100);
     }
 
@@ -1505,6 +1522,13 @@
         state.graphData = buildGraphData(state.posts);
         // Update graph with new data
         state.graph.graphData(state.graphData);
+        // Re-center the graph after update
+        setTimeout(() => {
+          if (state.graph) {
+            state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+            state.graph.zoomToFit(400, 0);
+          }
+        }, 100);
       }
       
       console.log('Note deleted successfully');
@@ -1576,6 +1600,13 @@
               state.graphData = buildGraphData(state.posts);
               // Update graph with new data
               state.graph.graphData(state.graphData);
+              // Re-center the graph after update
+              setTimeout(() => {
+                if (state.graph) {
+                  state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+                  state.graph.zoomToFit(400, 0);
+                }
+              }, 100);
             }
           }
           
