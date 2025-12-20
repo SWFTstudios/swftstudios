@@ -1674,10 +1674,20 @@
       elements.graphZoomFitBtn.addEventListener('click', zoomGraphToFit);
     }
 
-    // Modal close button - use event delegation for reliability
+    // Modal close button - use both direct handler and event delegation
+    if (elements.modalClose) {
+      elements.modalClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+      });
+    }
+    
+    // Also use event delegation as backup for close button
     document.addEventListener('click', (e) => {
-      // Close button click
-      if (e.target.closest('.blog_modal-close') && !elements.modal.hidden) {
+      // Close button click - check if clicking on button or any child element (like SVG)
+      const closeButton = e.target.closest('.blog_modal-close');
+      if (closeButton && !elements.modal.hidden) {
         e.preventDefault();
         e.stopPropagation();
         closeModal();
@@ -1685,7 +1695,7 @@
       }
       
       // Backdrop click - check if click is on backdrop or modal container (not content)
-      if (!elements.modal.hidden && elements.modal.contains(e.target)) {
+      if (!elements.modal.hidden && elements.modal && elements.modal.contains(e.target)) {
         const clickedBackdrop = e.target.classList.contains('blog_modal-backdrop');
         const clickedModalContainer = e.target === elements.modal;
         
