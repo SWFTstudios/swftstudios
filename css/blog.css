@@ -603,6 +603,43 @@
 }
 
 /* ==========================================================================
+   No Notes Message (Graph View)
+   ========================================================================== */
+
+.blog_no-notes-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+  padding: 2rem;
+}
+
+.blog_no-notes-content {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.blog_no-notes-content svg {
+  margin: 0 auto 1.5rem;
+  display: block;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.blog_no-notes-content h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 0.75rem 0;
+}
+
+.blog_no-notes-content p {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+/* ==========================================================================
    Graph Unavailable Notice
    ========================================================================== */
 
