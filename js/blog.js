@@ -76,6 +76,8 @@
     modalTags: document.getElementById('modal-tags'),
     modalExcerpt: document.getElementById('modal-excerpt'),
     modalLinks: document.getElementById('modal-links'),
+    modalContent: document.getElementById('modal-content'),
+    modalRelatedNotes: document.getElementById('modal-related-notes'),
     modalClose: document.querySelector('.blog_modal-close'),
     modalBackdrop: document.querySelector('.blog_modal-backdrop'),
     collaboratorAccess: document.getElementById('blog-collaborator-access'),
@@ -761,13 +763,13 @@
     const post = state.posts.find(p => p.id === node.id || p.slug === node.slug);
     
     if (post) {
-      // If in "both" view, highlight and scroll to list item
+      // Always show modal when clicking graph node
+      openModal(post);
+      
+      // If in "both" view, also highlight and scroll to list item
       if (state.currentView === 'both') {
         highlightPost(post.id);
         scrollToPost(post.id);
-      } else {
-        // Show modal
-        openModal(post);
       }
     } else if (node.status === 'missing') {
       // Handle missing node (referenced but not existing)
@@ -910,6 +912,121 @@
   // ==========================================================================
   
   /**
+   * Find related notes based on tags, links, and content similarity
+   */
+  function findRelatedNotes(currentPost, limit = 5) {
+    if (!currentPost) return [];
+    
+    const related = [];
+    const currentPostId = currentPost.id;
+    const currentTags = new Set(currentPost.tags || []);
+    const currentKeywords = extractKeywords(currentPost.content || '');
+    
+    state.posts.forEach(post => {
+      if (post.id === currentPostId) return; // Skip self
+      
+      let score = 0;
+      
+      // Score by shared tags
+      const postTags = new Set(post.tags || []);
+      const sharedTags = [...currentTags].filter(tag => postTags.has(tag));
+      score += sharedTags.length * 3;
+      
+      // Score by direct links
+      if (currentPost.links && currentPost.links.includes(post.id)) {
+        score += 5;
+      }
+      if (post.links && post.links.includes(currentPostId)) {
+        score += 5;
+      }
+      
+      // Score by keyword overlap
+      const postKeywords = extractKeywords(post.content || '');
+      const sharedKeywords = currentKeywords.filter(kw => 
+        postKeywords.some(pk => pk.toLowerCase() === kw.toLowerCase())
+      );
+      score += sharedKeywords.length;
+      
+      // Score by title/content similarity
+      const titleSimilarity = calculateSimilarity(
+        currentPost.title.toLowerCase(),
+        post.title.toLowerCase()
+      );
+      score += titleSimilarity * 2;
+      
+      if (score > 0) {
+        related.push({ post, score, sharedTags, sharedKeywords });
+      }
+    });
+    
+    // Sort by score and return top results
+    return related
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map(item => item.post);
+  }
+  
+  /**
+   * Extract keywords from content (simple implementation)
+   */
+  function extractKeywords(content) {
+    if (!content) return [];
+    
+    // Remove markdown syntax, get words
+    const text = content
+      .replace(/[#*`\[\]()]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .toLowerCase();
+    
+    // Common stop words to filter
+    const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'what', 'which', 'who', 'when', 'where', 'why', 'how']);
+    
+    // Extract words (3+ characters, not stop words)
+    const words = text.split(/\s+/)
+      .filter(word => word.length >= 3 && !stopWords.has(word))
+      .filter((word, index, arr) => arr.indexOf(word) === index); // Unique
+    
+    // Return top 10 keywords
+    return words.slice(0, 10);
+  }
+  
+  /**
+   * Calculate simple similarity between two strings
+   */
+  function calculateSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+    if (str1 === str2) return 1;
+    
+    // Simple word overlap
+    const words1 = new Set(str1.split(/\s+/));
+    const words2 = new Set(str2.split(/\s+/));
+    const intersection = [...words1].filter(w => words2.has(w)).length;
+    const union = new Set([...words1, ...words2]).size;
+    
+    return union > 0 ? intersection / union : 0;
+  }
+  
+  /**
+   * Highlight keywords in text
+   */
+  function highlightKeywords(text, keywords) {
+    if (!text || !keywords || keywords.length === 0) return escapeHtml(text);
+    
+    let highlighted = escapeHtml(text);
+    const keywordPatterns = keywords
+      .filter(kw => kw && kw.length >= 3)
+      .map(kw => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('|');
+    
+    if (keywordPatterns) {
+      const regex = new RegExp(`(${keywordPatterns})`, 'gi');
+      highlighted = highlighted.replace(regex, '<mark class="blog_keyword-highlight">$1</mark>');
+    }
+    
+    return highlighted;
+  }
+
+  /**
    * Open the modal with post details
    */
   function openModal(post) {
@@ -918,42 +1035,87 @@
     // Populate modal
     elements.modalTitle.textContent = post.title;
     elements.modalDate.textContent = formatDate(post.date);
-    elements.modalExcerpt.textContent = post.excerpt;
 
     // Tags
     elements.modalTags.innerHTML = post.tags.map(tag => 
       `<span class="blog_modal-tag">${escapeHtml(tag)}</span>`
     ).join('');
 
-    // Connected links
-    if (post.links.length > 0) {
-      elements.modalLinks.innerHTML = post.links.map(linkId => {
-        const linkedPost = state.posts.find(p => p.id === linkId || p.slug === linkId);
-        const linkName = linkedPost ? linkedPost.title : linkId;
-        return `<button type="button" class="blog_modal-link" data-link-id="${escapeHtml(linkId)}">${escapeHtml(linkName)}</button>`;
-      }).join('');
+    // Full content with markdown support (if marked.js is available)
+    if (elements.modalContent) {
+      let contentHtml = '';
+      if (window.marked) {
+        try {
+          contentHtml = window.marked.parse(post.content || '');
+        } catch (e) {
+          console.error('Markdown parsing error:', e);
+          contentHtml = escapeHtml(post.content || '');
+        }
+      } else {
+        // Fallback: plain text with line breaks
+        contentHtml = escapeHtml(post.content || '')
+          .replace(/\n/g, '<br>');
+      }
+      elements.modalContent.innerHTML = contentHtml || '<p style="color: rgba(255,255,255,0.5);">No content</p>';
+    }
 
-      // Add click handlers to links
-      elements.modalLinks.querySelectorAll('.blog_modal-link').forEach(link => {
-        link.addEventListener('click', () => {
-          const linkedPost = state.posts.find(p => 
-            p.id === link.dataset.linkId || p.slug === link.dataset.linkId
-          );
-          if (linkedPost) {
-            openModal(linkedPost);
-          }
+    // Find and display related notes
+    const relatedNotes = findRelatedNotes(post, 5);
+    if (elements.modalRelatedNotes) {
+      if (relatedNotes.length > 0) {
+        const currentKeywords = extractKeywords(post.content || '');
+        elements.modalRelatedNotes.innerHTML = relatedNotes.map(relatedPost => {
+          const excerpt = extractExcerpt(relatedPost.content || '', 100);
+          const highlightedExcerpt = highlightKeywords(excerpt, currentKeywords);
+          const highlightedTitle = highlightKeywords(relatedPost.title, currentKeywords);
+          
+          return `
+            <div class="blog_related-note-tile" data-post-id="${escapeHtml(relatedPost.id)}" role="button" tabindex="0">
+              <h5 class="blog_related-note-title">${highlightedTitle}</h5>
+              <p class="blog_related-note-excerpt">${highlightedExcerpt}</p>
+              ${relatedPost.tags && relatedPost.tags.length > 0 ? `
+                <div class="blog_related-note-tags">
+                  ${relatedPost.tags.slice(0, 3).map(tag => 
+                    `<span class="blog_related-note-tag">${escapeHtml(tag)}</span>`
+                  ).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+        
+        // Add click handlers to related note tiles
+        elements.modalRelatedNotes.querySelectorAll('.blog_related-note-tile').forEach(tile => {
+          tile.addEventListener('click', () => {
+            const relatedPost = state.posts.find(p => p.id === tile.dataset.postId);
+            if (relatedPost) {
+              openModal(relatedPost);
+            }
+          });
+          tile.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              const relatedPost = state.posts.find(p => p.id === tile.dataset.postId);
+              if (relatedPost) {
+                openModal(relatedPost);
+              }
+            }
+          });
         });
-      });
-    } else {
-      elements.modalLinks.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 0.875rem;">No connected notes</p>';
+      } else {
+        elements.modalRelatedNotes.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 0.875rem;">No related notes found</p>';
+      }
     }
 
     // Show modal
     elements.modal.hidden = false;
+    elements.modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
     // Focus management
-    elements.modalClose.focus();
+    if (elements.modalClose) {
+      elements.modalClose.focus();
+    }
 
     // Trap focus in modal
     elements.modal.addEventListener('keydown', trapFocus);
@@ -1277,8 +1439,11 @@
       renderAuthorFilters(state.posts);
       
       // Rebuild graph if loaded
-      if (state.graphLoaded) {
-        await fetchGraphData();
+      if (state.graphLoaded && state.graph) {
+        // Rebuild graph data
+        state.graphData = buildGraphData(state.posts);
+        // Update graph with new data
+        state.graph.graphData(state.graphData);
       }
       
       console.log('Note deleted successfully');
@@ -1345,8 +1510,11 @@
             renderAuthorFilters(state.posts);
             
             // Rebuild graph if loaded
-            if (state.graphLoaded) {
-              await fetchGraphData();
+            if (state.graphLoaded && state.graph) {
+              // Rebuild graph data
+              state.graphData = buildGraphData(state.posts);
+              // Update graph with new data
+              state.graph.graphData(state.graphData);
             }
           }
           

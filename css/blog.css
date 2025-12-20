@@ -688,6 +688,89 @@
 
 .blog_modal-body {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(80vh - 120px);
+  overflow: hidden;
+}
+
+.blog_modal-content-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
+  margin-bottom: 1.5rem;
+  max-height: 50vh;
+}
+
+.blog_modal-content-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.blog_modal-content-scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.blog_modal-content-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.blog_modal-content-scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.blog_modal-content-scrollable p,
+.blog_modal-content-scrollable h1,
+.blog_modal-content-scrollable h2,
+.blog_modal-content-scrollable h3,
+.blog_modal-content-scrollable h4,
+.blog_modal-content-scrollable h5,
+.blog_modal-content-scrollable h6,
+.blog_modal-content-scrollable ul,
+.blog_modal-content-scrollable ol,
+.blog_modal-content-scrollable pre,
+.blog_modal-content-scrollable code {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+}
+
+.blog_modal-content-scrollable h1,
+.blog_modal-content-scrollable h2,
+.blog_modal-content-scrollable h3 {
+  color: #fff;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog_modal-content-scrollable code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875em;
+}
+
+.blog_modal-content-scrollable pre {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.blog_modal-content-scrollable pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.blog_keyword-highlight {
+  background: rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  font-weight: 500;
 }
 
 .blog_modal-meta {
