@@ -54,7 +54,8 @@
     currentUser: null,
     messages: [],
     attachments: [],
-    isSubmitting: false
+    isSubmitting: false,
+    currentAttachmentPreview: null
   };
 
   // ==========================================================================
@@ -64,6 +65,7 @@
   const elements = {
     messageForm: document.getElementById('message-form'),
     messageInput: document.getElementById('message-input'),
+    editorWrapper: document.getElementById('editor-wrapper'),
     messagesList: document.getElementById('messages-list'),
     attachmentBtn: document.getElementById('attachment-btn'),
     attachmentMenu: document.getElementById('attachment-menu'),
@@ -71,11 +73,21 @@
     sendBtn: document.getElementById('send-btn'),
     signOutBtn: document.getElementById('sign-out-btn'),
     settingsBtn: document.getElementById('settings-btn'),
+    previewToggle: document.getElementById('preview-toggle'),
     imageFileInput: document.getElementById('image-file-input'),
     audioFileInput: document.getElementById('audio-file-input'),
     videoFileInput: document.getElementById('video-file-input'),
-    fileInput: document.getElementById('file-input')
+    fileInput: document.getElementById('file-input'),
+    attachmentModal: document.getElementById('attachment-modal'),
+    attachmentModalClose: document.getElementById('attachment-modal-close'),
+    attachmentModalBody: document.getElementById('attachment-modal-body'),
+    attachmentModalTitle: document.getElementById('attachment-modal-title'),
+    attachmentDownloadBtn: document.getElementById('attachment-download-btn')
   };
+
+  // CodeMirror editor instance
+  let editor = null;
+  let previewMode = false;
 
   // ==========================================================================
   // Authentication
@@ -175,8 +187,8 @@
           ${msg.content ? `<div class="message-content">${marked.parse(msg.content)}</div>` : ''}
           
           ${msg.attachments && msg.attachments.length > 0 ? `
-            <div class="message-attachment">
-              ${msg.attachments.map(att => renderAttachment(att)).join('')}
+            <div class="message-attachments-list">
+              ${msg.attachments.map((att, idx) => renderAttachment(att, idx)).join('')}
             </div>
           ` : ''}
           
@@ -188,6 +200,30 @@
         </div>
       </div>
     `).join('');
+    
+    // Add click handlers for attachment previews
+    elements.messagesList.querySelectorAll('.attachment-item[data-attachment-id]').forEach(item => {
+      item.addEventListener('click', () => {
+        const index = parseInt(item.dataset.attachmentId.replace('attachment-', ''));
+        const message = state.messages[Math.floor(index / 10)]; // Approximate - better to store attachment index
+        if (message && message.attachments) {
+          // Find attachment by matching URL or index
+          const attachment = message.attachments.find(att => 
+            att.url === item.querySelector('img, video')?.src || 
+            att.url === item.querySelector('source')?.src
+          ) || message.attachments[0];
+          if (attachment) {
+            showAttachmentPreview(attachment);
+          }
+        }
+      });
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          item.click();
+        }
+      });
+    });
   }
 
   function renderEmptyState() {
@@ -201,15 +237,73 @@
     `;
   }
 
-  function renderAttachment(attachment) {
+  function renderAttachment(attachment, index = 0) {
+    const attachmentId = `attachment-${index}`;
+    
     if (attachment.type === 'image') {
-      return `<img src="${escapeHtml(attachment.url)}" alt="Image attachment" loading="lazy">`;
+      return `
+        <div class="attachment-item attachment-image" data-attachment-id="${attachmentId}" role="button" tabindex="0">
+          <img src="${escapeHtml(attachment.url)}" alt="${escapeHtml(attachment.name || 'Image')}" loading="lazy">
+          <div class="attachment-overlay">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>Click to preview</span>
+          </div>
+        </div>
+      `;
     } else if (attachment.type === 'audio') {
-      return `<audio controls src="${escapeHtml(attachment.url)}"></audio>`;
+      return `
+        <div class="attachment-item attachment-audio">
+          <audio controls src="${escapeHtml(attachment.url)}"></audio>
+          <a href="${escapeHtml(attachment.url)}" download="${escapeHtml(attachment.name || 'audio')}" class="attachment-download-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download
+          </a>
+        </div>
+      `;
     } else if (attachment.type === 'video') {
-      return `<video controls src="${escapeHtml(attachment.url)}"></video>`;
+      return `
+        <div class="attachment-item attachment-video" data-attachment-id="${attachmentId}" role="button" tabindex="0">
+          <video controls src="${escapeHtml(attachment.url)}"></video>
+          <div class="attachment-overlay">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>Click to preview</span>
+          </div>
+        </div>
+      `;
+    } else {
+      // File attachment
+      return `
+        <div class="attachment-item attachment-file">
+          <div class="attachment-file-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+              <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+          </div>
+          <div class="attachment-file-info">
+            <span class="attachment-file-name">${escapeHtml(attachment.name || 'File')}</span>
+            <a href="${escapeHtml(attachment.url)}" download="${escapeHtml(attachment.name || 'file')}" class="attachment-download-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download
+            </a>
+          </div>
+        </div>
+      `;
     }
-    return '';
   }
 
   function scrollToBottom() {
@@ -356,7 +450,8 @@
       event.preventDefault();
     }
 
-    const content = elements.messageInput.value.trim();
+    // Get content from editor or textarea
+    const content = editor ? editor.getValue().trim() : elements.messageInput.value.trim();
     console.log('Content check:', { content, contentLength: content.length, attachmentsCount: state.attachments.length });
     
     if (!content && state.attachments.length === 0) {
@@ -459,13 +554,14 @@
       addMessage(message);
 
       // Clear form
-      elements.messageInput.value = '';
+      if (editor) {
+        editor.setValue('');
+      } else {
+        elements.messageInput.value = '';
+      }
       state.attachments = [];
       renderAttachments();
       window.AutoTagger?.hideSuggestions();
-
-      // Reset textarea height
-      elements.messageInput.style.height = 'auto';
 
     } catch (error) {
       // #region agent log
@@ -702,9 +798,253 @@ ${content}
     setupAttachmentHandlers();
 
     // Setup auto-tagger
-    if (window.AutoTagger && elements.messageInput) {
-      window.AutoTagger.setupAutoSuggest(elements.messageInput);
+    if (window.AutoTagger) {
+      if (editor) {
+        // Setup for CodeMirror editor
+        editor.on('change', () => {
+          window.AutoTagger.analyzeText(editor.getValue());
+        });
+      } else if (elements.messageInput) {
+        window.AutoTagger.setupAutoSuggest(elements.messageInput);
+      }
     }
+
+    // Preview toggle
+    if (elements.previewToggle) {
+      elements.previewToggle.addEventListener('click', togglePreview);
+    }
+
+    // Attachment modal close
+    if (elements.attachmentModalClose) {
+      elements.attachmentModalClose.addEventListener('click', hideAttachmentPreview);
+    }
+    if (elements.attachmentModal) {
+      const backdrop = elements.attachmentModal.querySelector('.attachment-modal-backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', hideAttachmentPreview);
+      }
+    }
+
+    // Setup drag and drop on textarea if no editor
+    if (!editor && elements.messageInput) {
+      setupDragAndDrop(elements.messageInput);
+    }
+  }
+
+  // ==========================================================================
+  // Markdown Editor Setup
+  // ==========================================================================
+  
+  function initMarkdownEditor() {
+    if (!elements.messageInput || !window.CodeMirror) {
+      console.warn('CodeMirror not available, using plain textarea');
+      return;
+    }
+
+    try {
+      editor = CodeMirror.fromTextArea(elements.messageInput, {
+        mode: 'markdown',
+        lineNumbers: false,
+        lineWrapping: true,
+        theme: 'default',
+        placeholder: 'Type a note... (Markdown supported). Drag and drop files here!',
+        autofocus: false,
+        autoCloseBrackets: true,
+        matchBrackets: true,
+        indentUnit: 2,
+        tabSize: 2
+      });
+
+      // Update textarea when editor content changes
+      editor.on('change', () => {
+        elements.messageInput.value = editor.getValue();
+        // Trigger auto-tagger if available
+        if (window.AutoTagger) {
+          window.AutoTagger.analyzeText(editor.getValue());
+        }
+      });
+
+      // Setup drag and drop on editor
+      setupDragAndDrop(editor.getWrapperElement());
+      
+      console.log('Markdown editor initialized');
+    } catch (error) {
+      console.error('Failed to initialize CodeMirror:', error);
+    }
+  }
+
+  function setupDragAndDrop(element) {
+    if (!element) return;
+
+    element.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      element.classList.add('drag-over');
+    });
+
+    element.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      element.classList.remove('drag-over');
+    });
+
+    element.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      element.classList.remove('drag-over');
+
+      const files = Array.from(e.dataTransfer.files);
+      if (files.length === 0) {
+        // Check for text content
+        const text = e.dataTransfer.getData('text/plain');
+        if (text) {
+          if (editor) {
+            const cursor = editor.getCursor();
+            editor.replaceRange(text, cursor);
+          } else {
+            elements.messageInput.value += text;
+          }
+        }
+        return;
+      }
+
+      // Handle file drops
+      for (const file of files) {
+        await handleDroppedFile(file);
+      }
+    });
+  }
+
+  async function handleDroppedFile(file) {
+    // Determine file type
+    let type = 'file';
+    if (file.type.startsWith('image/')) {
+      type = 'image';
+    } else if (file.type.startsWith('audio/')) {
+      type = 'audio';
+    } else if (file.type.startsWith('video/')) {
+      type = 'video';
+    }
+
+    // Validate and add to attachments
+    if (validateFile(file, type)) {
+      const preview = await generatePreview(file, type);
+      state.attachments.push({
+        file: file,
+        type: type,
+        preview: preview
+      });
+      
+      // Insert markdown image reference if it's an image
+      if (type === 'image' && editor) {
+        const fileName = file.name;
+        const cursor = editor.getCursor();
+        editor.replaceRange(`![${fileName}](attachment:${state.attachments.length - 1})\n`, cursor);
+      }
+      
+      renderAttachments();
+    } else {
+      showError(`Invalid file: ${file.name}`);
+    }
+  }
+
+  function togglePreview() {
+    if (!editor) return;
+    
+    previewMode = !previewMode;
+    
+    if (previewMode) {
+      // Show markdown preview
+      const content = editor.getValue();
+      const previewHtml = window.marked ? window.marked.parse(content) : escapeHtml(content).replace(/\n/g, '<br>');
+      
+      // Create preview element
+      const previewDiv = document.createElement('div');
+      previewDiv.className = 'markdown-preview';
+      previewDiv.innerHTML = previewHtml;
+      
+      // Replace editor with preview
+      const wrapper = editor.getWrapperElement();
+      wrapper.style.display = 'none';
+      wrapper.parentElement.insertBefore(previewDiv, wrapper.nextSibling);
+      
+      if (elements.previewToggle) {
+        elements.previewToggle.classList.add('active');
+      }
+    } else {
+      // Hide preview, show editor
+      const preview = document.querySelector('.markdown-preview');
+      if (preview) {
+        preview.remove();
+      }
+      
+      const wrapper = editor.getWrapperElement();
+      wrapper.style.display = 'block';
+      
+      if (elements.previewToggle) {
+        elements.previewToggle.classList.remove('active');
+      }
+    }
+  }
+
+  // ==========================================================================
+  // Attachment Preview Modal
+  // ==========================================================================
+  
+  function showAttachmentPreview(attachment) {
+    if (!elements.attachmentModal) return;
+    
+    state.currentAttachmentPreview = attachment;
+    
+    // Set title
+    if (elements.attachmentModalTitle) {
+      elements.attachmentModalTitle.textContent = attachment.name || 'Attachment';
+    }
+    
+    // Set download link
+    if (elements.attachmentDownloadBtn && attachment.url) {
+      elements.attachmentDownloadBtn.href = attachment.url;
+      elements.attachmentDownloadBtn.download = attachment.name || 'attachment';
+    }
+    
+    // Render preview content
+    if (elements.attachmentModalBody) {
+      let previewHtml = '';
+      
+      if (attachment.type === 'image' && attachment.url) {
+        previewHtml = `<img src="${attachment.url}" alt="${attachment.name || 'Image'}" class="attachment-preview-image">`;
+      } else if (attachment.type === 'video' && attachment.url) {
+        previewHtml = `<video controls class="attachment-preview-video"><source src="${attachment.url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+      } else if (attachment.type === 'audio' && attachment.url) {
+        previewHtml = `<audio controls class="attachment-preview-audio"><source src="${attachment.url}">Your browser does not support the audio tag.</audio>`;
+      } else {
+        previewHtml = `
+          <div class="attachment-preview-file">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+              <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+            <p>${attachment.name || 'File'}</p>
+          </div>
+        `;
+      }
+      
+      elements.attachmentModalBody.innerHTML = previewHtml;
+    }
+    
+    // Show modal
+    elements.attachmentModal.hidden = false;
+    elements.attachmentModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function hideAttachmentPreview() {
+    if (elements.attachmentModal) {
+      elements.attachmentModal.hidden = true;
+      elements.attachmentModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    state.currentAttachmentPreview = null;
   }
 
   // ==========================================================================
@@ -720,6 +1060,9 @@ ${content}
     if (window.ThreadManager) {
       await window.ThreadManager.init(state.supabase, state.currentUser);
     }
+
+    // Initialize markdown editor
+    initMarkdownEditor();
 
     // Load messages for current thread
     loadMessages();

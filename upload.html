@@ -14,6 +14,12 @@
   <link href="images/webclip.webp" rel="apple-touch-icon">
   <!-- Marked.js for markdown parsing -->
   <script src="https://cdn.jsdelivr.net/npm/marked@11/marked.min.js"></script>
+  <!-- CodeMirror 6 for rich markdown editor -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@6/lib/codemirror.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@6/lib/codemirror.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@6/mode/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@6/addon/edit/closebrackets.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@6/addon/edit/matchbrackets.js"></script>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F2BXR858CL"></script>
   <script>
@@ -116,14 +122,22 @@
               </button>
 
               <!-- Text Input -->
-              <div class="message-input-wrapper">
+              <div class="message-input-wrapper" id="editor-wrapper">
                 <textarea 
                   id="message-input" 
                   class="message-input"
-                  placeholder="Type a note... (Markdown supported)"
+                  placeholder="Type a note... (Markdown supported). Drag and drop files here!"
                   rows="1"
                 ></textarea>
               </div>
+              
+              <!-- Markdown Preview Toggle -->
+              <button type="button" class="preview-toggle-btn" id="preview-toggle" aria-label="Toggle preview">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
 
               <!-- Send Button -->
               <button type="submit" class="send-btn" id="send-btn" aria-label="Send">
@@ -178,6 +192,35 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Attachment Preview Modal -->
+  <div class="attachment-modal" id="attachment-modal" hidden>
+    <div class="attachment-modal-backdrop"></div>
+    <div class="attachment-modal-content">
+      <div class="attachment-modal-header">
+        <h3 class="attachment-modal-title" id="attachment-modal-title">Attachment Preview</h3>
+        <button type="button" class="attachment-modal-close" id="attachment-modal-close" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="attachment-modal-body" id="attachment-modal-body">
+        <!-- Preview content will be inserted here -->
+      </div>
+      <div class="attachment-modal-footer">
+        <a href="#" class="attachment-download-btn" id="attachment-download-btn" download>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
   </div>
 
   <!-- Supabase Client -->
