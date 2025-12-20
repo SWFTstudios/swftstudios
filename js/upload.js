@@ -403,19 +403,26 @@
         status: 'published'
       };
       
-      // Only include thread_id if it's not null/undefined (column may not exist in database)
-      // Add explicit checks for both null and undefined to be safe
-      if (threadId !== null && threadId !== undefined) {
-        insertPayload.thread_id = threadId;
-      }
+      // Only include thread_id if it's a valid UUID (not null, undefined, or "default")
+      // The thread_id column doesn't exist in the database, so we exclude it entirely
+      // Only include if it's a real UUID (36 characters with dashes)
+      const isValidUUID = threadId && 
+                          typeof threadId === 'string' && 
+                          threadId !== 'default' && 
+                          threadId.length === 36 && 
+                          threadId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
       
-      // Defensive cleanup: ensure thread_id is never null/undefined in payload
-      if (insertPayload.thread_id === null || insertPayload.thread_id === undefined) {
+      if (isValidUUID) {
+        insertPayload.thread_id = threadId;
+      } else {
+        // Explicitly exclude thread_id - column doesn't exist in database
+        // Don't include it at all, even if threadId has a value
         delete insertPayload.thread_id;
       }
       
       // Console log for debugging payload (can be removed after verification)
-      console.log('Insert payload (thread_id excluded if null):', JSON.stringify(insertPayload, null, 2));
+      console.log('Insert payload (thread_id excluded):', JSON.stringify(insertPayload, null, 2));
+      console.log('threadId value:', threadId, 'isValidUUID:', isValidUUID);
       
       // #region agent log
       fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:392',message:'Supabase insert payload',data:{payload:JSON.stringify(insertPayload),includesThreadId:threadId!==null&&threadId!==undefined,threadIdValue:threadId},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'B'})}).catch(()=>{});
