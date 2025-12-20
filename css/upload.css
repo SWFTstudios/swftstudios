@@ -310,20 +310,129 @@
   overflow-x: auto;
 }
 
-.message-attachment {
+.message-attachments-list {
   margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.message-attachment img {
-  max-width: 100%;
+.attachment-item {
+  position: relative;
   border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.message-attachment audio,
-.message-attachment video {
-  max-width: 100%;
-  border-radius: 8px;
+.attachment-item.attachment-image {
+  max-width: 300px;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.attachment-item.attachment-image:hover {
+  transform: scale(1.02);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.attachment-item.attachment-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.attachment-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.attachment-item.attachment-image:hover .attachment-overlay {
+  opacity: 1;
+}
+
+.attachment-overlay svg {
+  width: 32px;
+  height: 32px;
+}
+
+.attachment-overlay span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.attachment-item.attachment-audio,
+.attachment-item.attachment-video {
+  width: 100%;
+  max-width: 500px;
+}
+
+.attachment-item.attachment-video {
+  cursor: pointer;
+}
+
+.attachment-item.attachment-video video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.attachment-item.attachment-audio audio {
+  width: 100%;
+}
+
+.attachment-item.attachment-file {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  min-width: 200px;
+}
+
+.attachment-file-icon {
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.attachment-file-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.attachment-file-name {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.attachment-download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6366f1;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.attachment-download-link:hover {
+  color: #818cf8;
 }
 
 .message-tags {

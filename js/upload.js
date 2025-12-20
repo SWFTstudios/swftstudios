@@ -204,16 +204,29 @@
     // Add click handlers for attachment previews
     elements.messagesList.querySelectorAll('.attachment-item[data-attachment-id]').forEach(item => {
       item.addEventListener('click', () => {
-        const index = parseInt(item.dataset.attachmentId.replace('attachment-', ''));
-        const message = state.messages[Math.floor(index / 10)]; // Approximate - better to store attachment index
-        if (message && message.attachments) {
-          // Find attachment by matching URL or index
-          const attachment = message.attachments.find(att => 
-            att.url === item.querySelector('img, video')?.src || 
-            att.url === item.querySelector('source')?.src
-          ) || message.attachments[0];
-          if (attachment) {
-            showAttachmentPreview(attachment);
+        // Find the message container
+        const messageBubble = item.closest('.message-bubble');
+        if (!messageBubble) return;
+        
+        // Find the message index
+        const messageIndex = Array.from(elements.messagesList.querySelectorAll('.message')).indexOf(
+          item.closest('.message')
+        );
+        
+        if (messageIndex >= 0 && state.messages[messageIndex]) {
+          const message = state.messages[messageIndex];
+          if (message.attachments && message.attachments.length > 0) {
+            // Find attachment by matching URL
+            const img = item.querySelector('img');
+            const video = item.querySelector('video');
+            const attachment = message.attachments.find(att => 
+              (img && att.url === img.src) || 
+              (video && att.url === video.src)
+            ) || message.attachments[0];
+            
+            if (attachment) {
+              showAttachmentPreview(attachment);
+            }
           }
         }
       });
