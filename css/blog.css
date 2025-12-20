@@ -844,3 +844,144 @@
     margin-bottom: 1rem;
   }
 }
+
+/* ==========================================================================
+   Edit Modal & Form
+   ========================================================================== */
+
+.blog_edit-form {
+  padding: 1.5rem;
+}
+
+.blog_edit-field {
+  margin-bottom: 1.5rem;
+}
+
+.blog_edit-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5rem;
+}
+
+.blog_edit-input,
+.blog_edit-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.blog_edit-input:focus,
+.blog_edit-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #6366f1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.blog_edit-textarea {
+  resize: vertical;
+  min-height: 200px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  line-height: 1.6;
+}
+
+.blog_edit-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.blog_edit-btn-cancel,
+.blog_edit-btn-save {
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.blog_edit-btn-cancel {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.blog_edit-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.blog_edit-btn-save {
+  background: var(--primary-color, #6366f1);
+  color: #fff;
+}
+
+.blog_edit-btn-save:hover {
+  background: var(--primary-color-hover, #4f46e5);
+}
+
+.blog_edit-btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Card Action Buttons
+   ========================================================================== */
+
+.blog_card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.blog_card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.blog_edit-btn,
+.blog_delete-btn {
+  padding: 0.375rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blog_edit-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #818cf8;
+}
+
+.blog_delete-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.blog_edit-btn:focus-visible,
+.blog_delete-btn:focus-visible {
+  outline: 2px solid var(--primary-color, #6366f1);
+  outline-offset: 2px;
+}
