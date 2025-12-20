@@ -30,8 +30,27 @@
   // State
   // ==========================================================================
   
+  // Initialize Supabase client
+  let supabaseClient;
+  try {
+    if (window.SWFTAuth?.supabase) {
+      supabaseClient = window.SWFTAuth.supabase;
+    } else if (window.supabase) {
+      // Fallback: initialize directly if SWFTAuth not available
+      supabaseClient = window.supabase.createClient(
+        CONFIG.supabaseUrl,
+        CONFIG.supabaseAnonKey
+      );
+      console.log('Supabase client initialized directly (SWFTAuth not available)');
+    } else {
+      console.error('Supabase library not loaded');
+    }
+  } catch (error) {
+    console.error('Failed to initialize Supabase:', error);
+  }
+
   let state = {
-    supabase: window.SWFTAuth?.supabase,
+    supabase: supabaseClient,
     currentUser: null,
     messages: [],
     attachments: [],
