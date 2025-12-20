@@ -947,13 +947,6 @@
   margin-left: auto;
 }
 
-.blog_card-footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-}
-
 .blog_edit-btn,
 .blog_delete-btn {
   padding: 0.375rem;
