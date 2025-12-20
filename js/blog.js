@@ -1190,18 +1190,6 @@
     elements.modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    // Ensure backdrop click handler is set up (in case modal was re-rendered)
-    const backdrop = elements.modal.querySelector('.blog_modal-backdrop');
-    if (backdrop) {
-      // Remove any existing listeners to avoid duplicates
-      const newBackdrop = backdrop.cloneNode(true);
-      backdrop.parentNode.replaceChild(newBackdrop, backdrop);
-      newBackdrop.addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeModal();
-      });
-    }
-
     // Focus management
     if (elements.modalClose) {
       elements.modalClose.focus();
@@ -1686,14 +1674,29 @@
       elements.graphZoomFitBtn.addEventListener('click', zoomGraphToFit);
     }
 
-    // Modal close button
-    if (elements.modalClose) {
-      elements.modalClose.addEventListener('click', (e) => {
-        e.stopPropagation();
+    // Modal close button - use event delegation for reliability
+    document.addEventListener('click', (e) => {
+      // Close button click
+      if (e.target.closest('.blog_modal-close') && !elements.modal.hidden) {
         e.preventDefault();
+        e.stopPropagation();
         closeModal();
-      });
-    }
+        return;
+      }
+      
+      // Backdrop click - check if click is on backdrop or modal container (not content)
+      if (!elements.modal.hidden && elements.modal.contains(e.target)) {
+        const clickedBackdrop = e.target.classList.contains('blog_modal-backdrop');
+        const clickedModalContainer = e.target === elements.modal;
+        
+        if (clickedBackdrop || clickedModalContainer) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeModal();
+          return;
+        }
+      }
+    });
     
     // Prevent clicks on modal content from closing the modal
     if (elements.modal) {
@@ -1701,26 +1704,6 @@
       if (modalContent) {
         modalContent.addEventListener('click', (e) => {
           e.stopPropagation();
-        });
-      }
-      
-      // Close modal when clicking on backdrop or modal container (but not content)
-      elements.modal.addEventListener('click', (e) => {
-        // Check if clicking on backdrop (by class name) or directly on modal container
-        const backdrop = elements.modal.querySelector('.blog_modal-backdrop');
-        if (e.target === elements.modal || 
-            e.target === backdrop || 
-            (backdrop && backdrop.contains(e.target) && e.target === backdrop)) {
-          closeModal();
-        }
-      });
-      
-      // Also add direct click handler to backdrop if it exists
-      const backdrop = elements.modal.querySelector('.blog_modal-backdrop');
-      if (backdrop) {
-        backdrop.addEventListener('click', (e) => {
-          e.stopPropagation();
-          closeModal();
         });
       }
     }
