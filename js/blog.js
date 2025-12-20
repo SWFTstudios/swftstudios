@@ -1205,6 +1205,8 @@
    */
   function closeModal() {
     if (!elements.modal) return;
+    
+    console.log('Closing modal'); // Debug log
 
     elements.modal.hidden = true;
     elements.modal.setAttribute('aria-hidden', 'true');
@@ -1674,30 +1676,43 @@
       elements.graphZoomFitBtn.addEventListener('click', zoomGraphToFit);
     }
 
-    // Modal
+    // Modal close button
     if (elements.modalClose) {
       elements.modalClose.addEventListener('click', (e) => {
         e.stopPropagation();
+        e.preventDefault();
         closeModal();
       });
     }
     
     // Prevent clicks on modal content from closing the modal
-    const modalContent = elements.modal?.querySelector('.blog_modal-content');
-    if (modalContent) {
-      modalContent.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-    }
-    
-    // Close modal when clicking on backdrop or modal container (but not content)
     if (elements.modal) {
+      const modalContent = elements.modal.querySelector('.blog_modal-content');
+      if (modalContent) {
+        modalContent.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+      
+      // Close modal when clicking on backdrop or modal container (but not content)
       elements.modal.addEventListener('click', (e) => {
-        // Close if clicking directly on modal container or backdrop (not on content)
-        if (e.target === elements.modal || e.target === elements.modalBackdrop) {
+        // Check if clicking on backdrop (by class name) or directly on modal container
+        const backdrop = elements.modal.querySelector('.blog_modal-backdrop');
+        if (e.target === elements.modal || 
+            e.target === backdrop || 
+            (backdrop && backdrop.contains(e.target) && e.target === backdrop)) {
           closeModal();
         }
       });
+      
+      // Also add direct click handler to backdrop if it exists
+      const backdrop = elements.modal.querySelector('.blog_modal-backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeModal();
+        });
+      }
     }
 
     // Clear filters
