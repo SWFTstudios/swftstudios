@@ -1190,6 +1190,18 @@
     elements.modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
+    // Ensure backdrop click handler is set up (in case modal was re-rendered)
+    const backdrop = elements.modal.querySelector('.blog_modal-backdrop');
+    if (backdrop) {
+      // Remove any existing listeners to avoid duplicates
+      const newBackdrop = backdrop.cloneNode(true);
+      backdrop.parentNode.replaceChild(newBackdrop, backdrop);
+      newBackdrop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeModal();
+      });
+    }
+
     // Focus management
     if (elements.modalClose) {
       elements.modalClose.focus();
@@ -1205,8 +1217,6 @@
    */
   function closeModal() {
     if (!elements.modal) return;
-    
-    console.log('Closing modal'); // Debug log
 
     elements.modal.hidden = true;
     elements.modal.setAttribute('aria-hidden', 'true');
