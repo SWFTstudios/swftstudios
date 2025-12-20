@@ -1204,8 +1204,13 @@
    * Close the modal
    */
   function closeModal() {
-    if (!elements.modal) return;
+    if (!elements.modal) {
+      console.warn('Modal element not found');
+      return;
+    }
 
+    console.log('Closing modal'); // Debug
+    
     elements.modal.hidden = true;
     elements.modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -1674,22 +1679,15 @@
       elements.graphZoomFitBtn.addEventListener('click', zoomGraphToFit);
     }
 
-    // Modal close button - use both direct handler and event delegation
-    if (elements.modalClose) {
-      elements.modalClose.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        closeModal();
-      });
-    }
-    
-    // Also use event delegation as backup for close button
+    // Modal close button - use event delegation on document for reliability
+    // This ensures it works even if the button is dynamically added/removed
     document.addEventListener('click', (e) => {
       // Close button click - check if clicking on button or any child element (like SVG)
       const closeButton = e.target.closest('.blog_modal-close');
-      if (closeButton && !elements.modal.hidden) {
+      if (closeButton && elements.modal && !elements.modal.hidden) {
         e.preventDefault();
         e.stopPropagation();
+        console.log('Close button clicked'); // Debug
         closeModal();
         return;
       }
@@ -1702,18 +1700,22 @@
         if (clickedBackdrop || clickedModalContainer) {
           e.preventDefault();
           e.stopPropagation();
+          console.log('Backdrop clicked'); // Debug
           closeModal();
           return;
         }
       }
-    });
+    }, true); // Use capture phase to catch events earlier
     
     // Prevent clicks on modal content from closing the modal
     if (elements.modal) {
       const modalContent = elements.modal.querySelector('.blog_modal-content');
       if (modalContent) {
         modalContent.addEventListener('click', (e) => {
-          e.stopPropagation();
+          // Don't stop propagation if clicking on close button
+          if (!e.target.closest('.blog_modal-close')) {
+            e.stopPropagation();
+          }
         });
       }
     }
