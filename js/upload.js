@@ -331,20 +331,26 @@
   // ==========================================================================
   
   async function submitMessage(event) {
+    console.log('submitMessage called', { event, hasEvent: !!event });
+    
     if (event) {
       event.preventDefault();
     }
 
     const content = elements.messageInput.value.trim();
+    console.log('Content check:', { content, contentLength: content.length, attachmentsCount: state.attachments.length });
     
     if (!content && state.attachments.length === 0) {
+      console.warn('Submission blocked: empty content and no attachments');
       return;
     }
 
     if (state.isSubmitting) {
+      console.warn('Submission blocked: already submitting');
       return;
     }
 
+    console.log('Starting submission...');
     state.isSubmitting = true;
     setLoading(true);
 
@@ -423,6 +429,7 @@
         timestamp: noteData.created_at
       };
 
+      console.log('Note saved successfully:', noteData.id);
       addMessage(message);
 
       // Clear form
@@ -436,9 +443,15 @@
 
     } catch (error) {
       // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:420',message:'Submit error caught',data:{errorMessage:error?.message,errorCode:error?.code,errorDetails:error?.details,errorHint:error?.hint,errorString:String(error),errorStack:error?.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'E'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:430',message:'Submit error caught',data:{errorMessage:error?.message,errorCode:error?.code,errorDetails:error?.details,errorHint:error?.hint,errorString:String(error),errorStack:error?.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'E'})}).catch(()=>{});
       // #endregion
       console.error('Submit error:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint
+      });
       
       // More specific error message for thread_id column errors
       let errorMessage = 'Failed to send message. Please try again.';
@@ -449,6 +462,7 @@
       
       showError(errorMessage);
     } finally {
+      console.log('Submission finished, resetting state');
       state.isSubmitting = false;
       setLoading(false);
     }
@@ -582,7 +596,22 @@ ${content}
   function setupEventListeners() {
     // Form submission
     if (elements.messageForm) {
+      console.log('Setting up form submit listener');
       elements.messageForm.addEventListener('submit', submitMessage);
+    } else {
+      console.error('messageForm element not found!');
+    }
+    
+    // Also add click handler to send button as backup
+    if (elements.sendBtn) {
+      console.log('Setting up send button click listener');
+      elements.sendBtn.addEventListener('click', (e) => {
+        console.log('Send button clicked');
+        e.preventDefault();
+        submitMessage(e);
+      });
+    } else {
+      console.error('sendBtn element not found!');
     }
 
     // Attachment button
