@@ -359,25 +359,57 @@
       const title = generateTitle(content);
       const fileUrls = uploadedAttachments.map(att => att.url);
       const externalLinks = extractLinks(content);
+      const contentType = determineContentType(content, uploadedAttachments);
+      const threadId = window.ThreadManager?.currentThreadId || null;
+      
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:366',message:'Before Supabase insert - payload values',data:{userId:state.currentUser?.id,userEmail:state.currentUser?.email,title,contentLength:content?.length,tags:JSON.stringify(tags),contentType,fileUrls:JSON.stringify(fileUrls),externalLinks:JSON.stringify(externalLinks),threadId,status:'published'},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      
+      const insertPayload = {
+        user_id: state.currentUser.id,
+        user_email: state.currentUser.email,
+        title: title,
+        content: content,
+        tags: tags,
+        content_type: contentType,
+        file_urls: fileUrls,
+        external_links: externalLinks,
+        status: 'published'
+      };
+      
+      // Only include thread_id if it's not null/undefined (column may not exist in database)
+      // Add explicit checks for both null and undefined to be safe
+      if (threadId !== null && threadId !== undefined) {
+        insertPayload.thread_id = threadId;
+      }
+      
+      // Defensive cleanup: ensure thread_id is never null/undefined in payload
+      if (insertPayload.thread_id === null || insertPayload.thread_id === undefined) {
+        delete insertPayload.thread_id;
+      }
+      
+      // Console log for debugging payload (can be removed after verification)
+      console.log('Insert payload (thread_id excluded if null):', JSON.stringify(insertPayload, null, 2));
+      
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:392',message:'Supabase insert payload',data:{payload:JSON.stringify(insertPayload),includesThreadId:threadId!==null&&threadId!==undefined,threadIdValue:threadId},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
       
       const { data: noteData, error: noteError } = await state.supabase
         .from('notes')
-        .insert({
-          user_id: state.currentUser.id,
-          user_email: state.currentUser.email,
-          title: title,
-          content: content,
-          tags: tags,
-          content_type: determineContentType(content, uploadedAttachments),
-          file_urls: fileUrls,
-          external_links: externalLinks,
-          status: 'published',
-          thread_id: window.ThreadManager?.currentThreadId || null
-        })
+        .insert(insertPayload)
         .select()
         .single();
 
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:395',message:'Supabase insert response',data:{hasData:!!noteData,hasError:!!noteError,errorMessage:noteError?.message,errorCode:noteError?.code,errorDetails:noteError?.details,errorHint:noteError?.hint},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
+
       if (noteError) {
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:400',message:'Supabase error thrown',data:{error:JSON.stringify(noteError),message:noteError?.message,code:noteError?.code,details:noteError?.details,hint:noteError?.hint},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'D'})}).catch(()=>{});
+      // #endregion
         throw noteError;
       }
 
@@ -403,8 +435,19 @@
       elements.messageInput.style.height = 'auto';
 
     } catch (error) {
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:420',message:'Submit error caught',data:{errorMessage:error?.message,errorCode:error?.code,errorDetails:error?.details,errorHint:error?.hint,errorString:String(error),errorStack:error?.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'E'})}).catch(()=>{});
+      // #endregion
       console.error('Submit error:', error);
-      showError('Failed to send message. Please try again.');
+      
+      // More specific error message for thread_id column errors
+      let errorMessage = 'Failed to send message. Please try again.';
+      if (error?.code === 'PGRST204' && error?.message?.includes('thread_id')) {
+        errorMessage = 'Database schema issue detected. Please refresh the page and try again.';
+        console.error('thread_id column error - this should not happen with the current fix. Please check if the updated code is deployed.');
+      }
+      
+      showError(errorMessage);
     } finally {
       state.isSubmitting = false;
       setLoading(false);
