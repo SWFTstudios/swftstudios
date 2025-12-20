@@ -77,11 +77,8 @@
     modalLinks: document.getElementById('modal-links'),
     modalClose: document.querySelector('.blog_modal-close'),
     modalBackdrop: document.querySelector('.blog_modal-backdrop'),
-    signinForm: document.getElementById('blog-email-form'),
-    emailInput: document.getElementById('blog-email-input'),
-    emailSubmit: document.getElementById('blog-email-submit'),
-    signinSuccess: document.getElementById('blog-signin-success'),
-    signinFormContainer: document.getElementById('blog-signin-form'),
+    collaboratorAccess: document.getElementById('blog-collaborator-access'),
+    collaboratorSigninBtn: document.getElementById('blog-collaborator-signin'),
     authActions: document.getElementById('blog-auth-actions'),
     signOutBtn: document.getElementById('blog-sign-out')
   };
@@ -1039,35 +1036,12 @@
   // ==========================================================================
   
   /**
-   * Handle email sign-in form submission
-   */
-  async function handleEmailSignIn(event) {
-    event.preventDefault();
-    
-    // Redirect to auth page for sign-in
-    window.location.href = '/auth.html';
-      
-      if (error) throw error;
-      
-      // Show success message
-      elements.signinForm.hidden = true;
-      elements.signinSuccess.hidden = false;
-      
-    } catch (error) {
-      console.error('Sign-in error:', error);
-      alert(error.message || 'Failed to send sign-in link. Please try again.');
-      elements.emailSubmit.disabled = false;
-      elements.emailSubmit.textContent = 'Sign In';
-    }
-  }
-  
-  /**
    * Check auth state and update UI
    */
   async function checkAuthState() {
     if (!window.SWFTAuth || !window.SWFTAuth.supabase) {
-      // Show sign-in form if auth not available
-      if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
+      // Show subtle collaborator button if auth not available
+      if (elements.collaboratorAccess) elements.collaboratorAccess.style.display = 'block';
       if (elements.authActions) elements.authActions.style.display = 'none';
       return;
     }
@@ -1078,18 +1052,18 @@
       if (error) throw error;
       
       if (session && session.user) {
-        // Any authenticated user can upload
-        if (elements.signinFormContainer) elements.signinFormContainer.hidden = true;
+        // User is signed in - show auth actions, hide collaborator button
+        if (elements.collaboratorAccess) elements.collaboratorAccess.style.display = 'none';
         if (elements.authActions) elements.authActions.style.display = 'flex';
       } else {
-        // Not signed in - show sign-in form
-        if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
+        // Not signed in - show subtle collaborator button
+        if (elements.collaboratorAccess) elements.collaboratorAccess.style.display = 'block';
         if (elements.authActions) elements.authActions.style.display = 'none';
       }
     } catch (error) {
       console.error('Auth check error:', error);
-      // Show sign-in form on error
-      if (elements.signinFormContainer) elements.signinFormContainer.hidden = false;
+      // Show subtle collaborator button on error
+      if (elements.collaboratorAccess) elements.collaboratorAccess.style.display = 'block';
       if (elements.authActions) elements.authActions.style.display = 'none';
     }
   }
@@ -1114,9 +1088,11 @@
   // ==========================================================================
   
   function setupEventListeners() {
-    // Email sign-in form
-    if (elements.signinForm) {
-      elements.signinForm.addEventListener('submit', handleEmailSignIn);
+    // Collaborator sign-in button (subtle)
+    if (elements.collaboratorSigninBtn) {
+      elements.collaboratorSigninBtn.addEventListener('click', () => {
+        window.location.href = '/auth.html';
+      });
     }
     
     // Sign out button

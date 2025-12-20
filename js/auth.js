@@ -390,12 +390,6 @@
         fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth.js:282',message:'SIGNED_IN event detected',data:{userEmail:session.user.email,currentPath,isAuthPage:currentPath.includes('auth.html')||currentPath.includes('/auth')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
         // #endregion
         
-        // Don't redirect if on blog page - it's public
-        if (currentPath.includes('blog.html') || currentPath.includes('/blog')) {
-          console.log('User signed in on blog page - staying on blog (public access)');
-          return; // Blog is public, stay here
-        }
-        
         // Only redirect if we're on auth.html (not already on target page)
         if (currentPath.includes('auth.html') || currentPath.includes('/auth')) {
           // #region agent log

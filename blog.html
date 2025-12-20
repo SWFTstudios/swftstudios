@@ -125,37 +125,24 @@ body {
                   <p class="text-size-small blog_description">Interconnected thoughts on tech, design, business, and creative workflows. Explore the graph to see how ideas connect.</p>
                 </div>
                 
-                <!-- Sign In / Auth Actions -->
-                <div class="blog_auth-section">
-                  <!-- Sign In Form (shown when not signed in) -->
-                  <div class="blog_signin-form" id="blog-signin-form">
-                    <p class="blog_signin-hint">Collaborator? Sign in to create notes:</p>
-                    <form id="blog-email-form" class="blog_email-form">
-                      <input 
-                        type="email" 
-                        id="blog-email-input" 
-                        class="blog_email-input" 
-                        placeholder="your@email.com"
-                        required
-                        aria-label="Email address"
-                      >
-                      <button type="submit" class="blog_email-submit" id="blog-email-submit">
-                        Sign In
-                      </button>
-                    </form>
-                    <div class="blog_signin-success" id="blog-signin-success" hidden>
-                      <p>Check your email for the sign-in link!</p>
-                    </div>
-                  </div>
-                  
-                  <!-- Auth Actions (shown when signed in) -->
-                  <div class="blog_auth-actions" id="blog-auth-actions" style="display: none;">
-                    <a href="upload.html" class="button is-course w-inline-block">
-                      <div class="button_bg"></div>
-                      <div class="button_text">New Note</div>
-                    </a>
-                    <button type="button" id="blog-sign-out" class="blog_sign-out-btn">Sign Out</button>
-                  </div>
+                <!-- Subtle Collaborator Sign In (hidden by default) -->
+                <div class="blog_collaborator-access" id="blog-collaborator-access" style="display: none;">
+                  <button type="button" id="blog-collaborator-signin" class="blog_collaborator-signin-btn" title="Collaborator sign in">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                      <polyline points="10 17 15 12 10 7"></polyline>
+                      <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                  </button>
+                </div>
+                
+                <!-- Auth Actions (shown when signed in) -->
+                <div class="blog_auth-actions" id="blog-auth-actions" style="display: none;">
+                  <a href="upload.html" class="button is-course w-inline-block">
+                    <div class="button_bg"></div>
+                    <div class="button_text">New Note</div>
+                  </a>
+                  <button type="button" id="blog-sign-out" class="blog_sign-out-btn">Sign Out</button>
                 </div>
                 
                 <!-- View Toggle & Search -->
