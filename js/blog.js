@@ -1195,7 +1195,8 @@
       elements.modalClose.focus();
     }
 
-    // Trap focus in modal
+    // Trap focus in modal (remove old listener first to avoid duplicates)
+    elements.modal.removeEventListener('keydown', trapFocus);
     elements.modal.addEventListener('keydown', trapFocus);
   }
 
@@ -1206,8 +1207,11 @@
     if (!elements.modal) return;
 
     elements.modal.hidden = true;
+    elements.modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    elements.modal.removeEventListener('keydown', trapFocus);
+    if (elements.modal) {
+      elements.modal.removeEventListener('keydown', trapFocus);
+    }
   }
 
   /**
@@ -1672,10 +1676,27 @@
 
     // Modal
     if (elements.modalClose) {
-      elements.modalClose.addEventListener('click', closeModal);
+      elements.modalClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeModal();
+      });
     }
     if (elements.modalBackdrop) {
-      elements.modalBackdrop.addEventListener('click', closeModal);
+      elements.modalBackdrop.addEventListener('click', (e) => {
+        // Only close if clicking directly on backdrop, not on modal content
+        if (e.target === elements.modalBackdrop) {
+          closeModal();
+        }
+      });
+    }
+    // Also allow clicking on the modal container itself (outside content) to close
+    if (elements.modal) {
+      elements.modal.addEventListener('click', (e) => {
+        // Close if clicking on modal container but not on content
+        if (e.target === elements.modal || e.target === elements.modalBackdrop) {
+          closeModal();
+        }
+      });
     }
 
     // Clear filters
