@@ -192,10 +192,9 @@ body {
                       type="button" 
                       class="blog_view-btn" 
                       data-view="graph" 
-                      role="tab" 
-                      aria-selected="false"
-                      aria-controls="blog-graph-view"
+                      role="button"
                       id="graph-toggle-btn"
+                      aria-label="Open graph view"
                     >
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"></circle>
@@ -209,22 +208,6 @@ body {
                         <line x1="14.5" y1="14.5" x2="17" y2="17"></line>
                       </svg>
                       <span>Graph</span>
-                    </button>
-                    <button 
-                      type="button" 
-                      class="blog_view-btn blog_view-btn--both" 
-                      data-view="both" 
-                      role="tab" 
-                      aria-selected="false"
-                      aria-controls="blog-list-view blog-graph-view"
-                    >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="14" width="7" height="7"></rect>
-                        <rect x="3" y="14" width="7" height="7"></rect>
-                      </svg>
-                      <span>Both</span>
                     </button>
                   </div>
                 </div>
@@ -254,8 +237,8 @@ body {
                   </div>
                 </div>
                 
-                <!-- Graph View -->
-                <div class="blog_graph-view" id="blog-graph-view" role="tabpanel" aria-labelledby="graph-toggle-btn" aria-hidden="true">
+                <!-- Graph View (hidden, kept for structure) -->
+                <div class="blog_graph-view" id="blog-graph-view" role="tabpanel" aria-labelledby="graph-toggle-btn" aria-hidden="true" style="display: none;">
                   <div class="blog_graph-layout">
                     <!-- Graph Sidebar -->
                     <aside class="blog_graph-sidebar" id="graph-sidebar">
@@ -316,7 +299,40 @@ body {
                           <span class="blog_graph-section-title">Display</span>
                         </button>
                         <div class="blog_graph-section-content" id="display-content" hidden>
-                          <!-- Display options will be populated by JavaScript -->
+                          <div class="blog_graph-color-group">
+                            <label class="blog_graph-color-label">
+                              <span>Node Color</span>
+                              <input type="color" id="display-node-color" class="blog_graph-color-input" value="#ffffff">
+                            </label>
+                            <label class="blog_graph-color-label">
+                              <span>Link Color</span>
+                              <input type="color" id="display-link-color" class="blog_graph-color-input" value="#ffffff">
+                            </label>
+                            <label class="blog_graph-color-label">
+                              <span>Highlight Color</span>
+                              <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#5DADE2">
+                            </label>
+                          </div>
+                          <div class="blog_graph-slider-group">
+                            <label class="blog_graph-slider-label">
+                              <span>Node Size</span>
+                              <input type="range" id="display-node-size" class="blog_graph-slider" min="1" max="20" value="5">
+                            </label>
+                            <label class="blog_graph-slider-label">
+                              <span>Link Width</span>
+                              <input type="range" id="display-link-width" class="blog_graph-slider" min="0.5" max="5" step="0.5" value="1">
+                            </label>
+                          </div>
+                          <div class="blog_graph-select-group">
+                            <label class="blog_graph-select-label">
+                              <span>Link Style</span>
+                              <select id="display-link-style" class="blog_graph-select">
+                                <option value="solid">Solid</option>
+                                <option value="dashed">Dashed</option>
+                                <option value="dotted">Dotted</option>
+                              </select>
+                            </label>
+                          </div>
                         </div>
                       </div>
                       
@@ -496,6 +512,187 @@ body {
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- Graph Modal (Full-Screen) -->
+  <div class="blog_graph-modal" id="graph-modal" role="dialog" aria-modal="true" aria-labelledby="graph-modal-title" hidden>
+    <div class="blog_graph-modal-backdrop"></div>
+    <div class="blog_graph-modal-content">
+      <button type="button" class="blog_graph-modal-close" id="graph-modal-close" aria-label="Close graph modal">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="blog_graph-layout">
+        <!-- Graph Sidebar -->
+        <aside class="blog_graph-sidebar" id="graph-sidebar">
+          <div class="blog_graph-sidebar-header">
+            <h3 class="blog_graph-sidebar-title" id="graph-modal-title">Graph view</h3>
+          </div>
+          
+          <!-- Filters Section -->
+          <div class="blog_graph-sidebar-section">
+            <button type="button" class="blog_graph-section-toggle" data-section="filters" aria-expanded="true">
+              <span class="blog_graph-section-icon">▼</span>
+              <span class="blog_graph-section-title">Filters</span>
+            </button>
+            <div class="blog_graph-section-content" id="filters-content">
+              <div class="blog_graph-search-wrapper">
+                <input type="text" id="graph-search-files" class="blog_graph-search-input" placeholder="Search files...">
+              </div>
+              <div class="blog_graph-toggle-group">
+                <label class="blog_graph-toggle">
+                  <input type="checkbox" id="filter-tags" checked>
+                  <span class="blog_graph-toggle-slider"></span>
+                  <span class="blog_graph-toggle-label">Tags</span>
+                </label>
+                <label class="blog_graph-toggle">
+                  <input type="checkbox" id="filter-attachments">
+                  <span class="blog_graph-toggle-slider"></span>
+                  <span class="blog_graph-toggle-label">Attachments</span>
+                </label>
+                <label class="blog_graph-toggle">
+                  <input type="checkbox" id="filter-existing-files">
+                  <span class="blog_graph-toggle-slider"></span>
+                  <span class="blog_graph-toggle-label">Existing files only</span>
+                </label>
+                <label class="blog_graph-toggle">
+                  <input type="checkbox" id="filter-orphans" checked>
+                  <span class="blog_graph-toggle-slider"></span>
+                  <span class="blog_graph-toggle-label">Orphans</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Groups Section -->
+          <div class="blog_graph-sidebar-section">
+            <button type="button" class="blog_graph-section-toggle" data-section="groups" aria-expanded="false">
+              <span class="blog_graph-section-icon">►</span>
+              <span class="blog_graph-section-title">Groups</span>
+            </button>
+            <div class="blog_graph-section-content" id="groups-content" hidden>
+              <!-- Groups content will be populated by JavaScript -->
+            </div>
+          </div>
+          
+          <!-- Display Section -->
+          <div class="blog_graph-sidebar-section">
+            <button type="button" class="blog_graph-section-toggle" data-section="display" aria-expanded="false">
+              <span class="blog_graph-section-icon">►</span>
+              <span class="blog_graph-section-title">Display</span>
+            </button>
+            <div class="blog_graph-section-content" id="display-content" hidden>
+              <div class="blog_graph-color-group">
+                <label class="blog_graph-color-label">
+                  <span>Node Color</span>
+                  <input type="color" id="display-node-color" class="blog_graph-color-input" value="#ffffff">
+                </label>
+                <label class="blog_graph-color-label">
+                  <span>Link Color</span>
+                  <input type="color" id="display-link-color" class="blog_graph-color-input" value="#ffffff">
+                </label>
+                <label class="blog_graph-color-label">
+                  <span>Highlight Color</span>
+                  <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#5DADE2">
+                </label>
+              </div>
+              <div class="blog_graph-slider-group">
+                <label class="blog_graph-slider-label">
+                  <span>Node Size</span>
+                  <input type="range" id="display-node-size" class="blog_graph-slider" min="1" max="20" value="8">
+                </label>
+                <label class="blog_graph-slider-label">
+                  <span>Link Width</span>
+                  <input type="range" id="display-link-width" class="blog_graph-slider" min="0.5" max="5" step="0.5" value="1">
+                </label>
+              </div>
+              <div class="blog_graph-select-group">
+                <label class="blog_graph-select-label">
+                  <span>Link Style</span>
+                  <select id="display-link-style" class="blog_graph-select">
+                    <option value="solid">Solid</option>
+                    <option value="dashed">Dashed</option>
+                    <option value="dotted">Dotted</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Forces Section -->
+          <div class="blog_graph-sidebar-section">
+            <button type="button" class="blog_graph-section-toggle" data-section="forces" aria-expanded="true">
+              <span class="blog_graph-section-icon">▼</span>
+              <span class="blog_graph-section-title">Forces</span>
+            </button>
+            <div class="blog_graph-section-content" id="forces-content">
+              <div class="blog_graph-slider-group">
+                <label class="blog_graph-slider-label">
+                  <span>Center force</span>
+                  <input type="range" id="force-center" class="blog_graph-slider" min="0" max="100" value="70">
+                </label>
+                <label class="blog_graph-slider-label">
+                  <span>Repel force</span>
+                  <input type="range" id="force-repel" class="blog_graph-slider" min="0" max="100" value="30">
+                </label>
+                <label class="blog_graph-slider-label">
+                  <span>Link force</span>
+                  <input type="range" id="force-link" class="blog_graph-slider" min="0" max="100" value="60">
+                </label>
+                <label class="blog_graph-slider-label">
+                  <span>Link distance</span>
+                  <input type="range" id="force-distance" class="blog_graph-slider" min="0" max="100" value="40">
+                </label>
+              </div>
+            </div>
+          </div>
+        </aside>
+        
+        <!-- Graph Container -->
+        <div class="blog_graph-main">
+          <div class="blog_graph-container" id="graph-container">
+            <!-- 3D Graph will be rendered here -->
+            <div class="blog_graph-placeholder" id="graph-placeholder">
+              <div class="blog_graph-placeholder-content">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <circle cx="19" cy="5" r="2"></circle>
+                  <circle cx="5" cy="19" r="2"></circle>
+                  <circle cx="5" cy="5" r="2"></circle>
+                  <circle cx="19" cy="19" r="2"></circle>
+                  <line x1="14.5" y1="9.5" x2="17" y2="7"></line>
+                  <line x1="9.5" y1="14.5" x2="7" y2="17"></line>
+                  <line x1="9.5" y1="9.5" x2="7" y2="7"></line>
+                  <line x1="14.5" y1="14.5" x2="17" y2="17"></line>
+                </svg>
+                <p>Click a node to explore connections</p>
+                <p class="blog_graph-hint">Drag to rotate • Scroll to zoom</p>
+              </div>
+            </div>
+          </div>
+          <div class="blog_graph-controls">
+            <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset graph view">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              Reset
+            </button>
+            <button type="button" class="blog_graph-control-btn" id="graph-zoom-fit" aria-label="Fit graph to view">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 3h6v6"></path>
+                <path d="M9 21H3v-6"></path>
+                <path d="M21 3l-7 7"></path>
+                <path d="M3 21l7-7"></path>
+              </svg>
+              Fit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Scripts -->

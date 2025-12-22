@@ -364,11 +364,6 @@
       
       const tags = Object.keys(this.settings.tagColors);
       
-      if (tags.length === 0) {
-        listEl.innerHTML = '<p style="color: rgba(255,255,255,0.4); text-align: center;">No custom tag colors yet</p>';
-        return;
-      }
-      
       listEl.innerHTML = tags.map(tag => `
         <div class="tag-color-item">
           <span class="tag-color-name">${this.escapeHtml(tag)}</span>
@@ -382,10 +377,21 @@
             </svg>
           </button>
         </div>
-      `).join('');
+      `).join('') + `
+        <div class="tag-color-item tag-color-add">
+          <input type="text" class="tag-color-add-input" placeholder="Tag name" id="new-tag-name">
+          <input type="color" class="color-picker-input" id="new-tag-color" value="#6366f1">
+          <button type="button" class="tag-color-add-btn" id="add-tag-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      `;
       
-      // Attach handlers
-      listEl.querySelectorAll('.color-picker-input').forEach(input => {
+      // Attach handlers for existing tags
+      listEl.querySelectorAll('.color-picker-input[data-tag]').forEach(input => {
         input.addEventListener('change', () => {
           this.settings.tagColors[input.dataset.tag] = input.value;
         });
@@ -397,6 +403,30 @@
           this.renderTagColorList();
         });
       });
+
+      // Add new tag handler
+      const addBtn = document.getElementById('add-tag-btn');
+      const nameInput = document.getElementById('new-tag-name');
+      const colorInput = document.getElementById('new-tag-color');
+      
+      if (addBtn && nameInput && colorInput) {
+        const addTag = () => {
+          const tagName = nameInput.value.trim().toLowerCase();
+          if (tagName && !this.settings.tagColors[tagName]) {
+            this.settings.tagColors[tagName] = colorInput.value;
+            nameInput.value = '';
+            this.renderTagColorList();
+          }
+        };
+        
+        addBtn.addEventListener('click', addTag);
+        nameInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            addTag();
+          }
+        });
+      }
     },
     
     // ==========================================================================

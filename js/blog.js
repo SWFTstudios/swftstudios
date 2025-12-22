@@ -63,6 +63,14 @@
       repel: 30,
       link: 60,
       distance: 40
+    },
+    graphDisplay: {
+      nodeColor: '#ffffff',
+      linkColor: '#ffffff',
+      highlightColor: '#5DADE2',
+      nodeSize: 8, // Increased from 5 for better visibility
+      linkWidth: 1,
+      linkStyle: 'solid'
     }
   };
 
@@ -115,7 +123,16 @@
     forceCenter: document.getElementById('force-center'),
     forceRepel: document.getElementById('force-repel'),
     forceLink: document.getElementById('force-link'),
-    forceDistance: document.getElementById('force-distance')
+    forceDistance: document.getElementById('force-distance'),
+    displayNodeColor: document.getElementById('display-node-color'),
+    displayLinkColor: document.getElementById('display-link-color'),
+    displayHighlightColor: document.getElementById('display-highlight-color'),
+    displayNodeSize: document.getElementById('display-node-size'),
+    displayLinkWidth: document.getElementById('display-link-width'),
+    displayLinkStyle: document.getElementById('display-link-style'),
+    graphModal: document.getElementById('graph-modal'),
+    graphModalClose: document.getElementById('graph-modal-close'),
+    graphModalBackdrop: document.querySelector('.blog_graph-modal-backdrop')
   };
 
   // ==========================================================================
@@ -1011,7 +1028,9 @@
    * Initialize the 3D graph
    */
   async function initGraph() {
-    if (state.graphLoaded || !elements.graphContainer) return;
+    // Use graph container from modal (not the hidden one)
+    const graphContainer = document.getElementById('graph-container');
+    if (state.graphLoaded || !graphContainer) return;
 
     // Check WebGL availability
     if (!isWebGLAvailable()) {
@@ -1030,13 +1049,20 @@
 
       // Fetch graph data if not already loaded
       if (!state.graphData) {
+        console.log('[Graph] Fetching graph data...');
         await fetchGraphData();
       }
 
       if (!state.graphData) {
+        console.error('[Graph] No graph data available');
         showGraphUnavailable();
         return;
       }
+      
+      console.log('[Graph] Graph data loaded:', {
+        nodes: state.graphData.nodes?.length || 0,
+        links: state.graphData.links?.length || 0
+      });
 
       // Check if there are any nodes to display
       if (!state.graphData.nodes || state.graphData.nodes.length === 0) {
@@ -1080,8 +1106,9 @@
       };
 
       // Hide placeholder and no-notes message
-      if (elements.graphPlaceholder) {
-        elements.graphPlaceholder.style.display = 'none';
+      const graphPlaceholder = document.getElementById('graph-placeholder');
+      if (graphPlaceholder) {
+        graphPlaceholder.style.display = 'none';
       }
       hideNoNotesMessage();
 
@@ -1091,8 +1118,11 @@
       // Filter graph data based on initial zoom level (show only notes initially)
       const filteredGraphData = filterGraphDataByZoom(graphData, 'far', null);
       
-      // Create graph
-      state.graph = ForceGraph3D()(elements.graphContainer)
+      // Create graph (use container from modal)
+      const graphContainer = document.getElementById('graph-container');
+      if (!graphContainer) return;
+      
+      state.graph = ForceGraph3D()(graphContainer)
         .graphData(filteredGraphData)
         .nodeLabel(node => {
           if (node.nodeType === 'message') {
@@ -1111,7 +1141,7 @@
           `;
         })
         .nodeColor(node => {
-          // Default to white for all nodes
+          // Always return white by default - don't rely on state during init
           if (node.status === 'missing') {
             return '#666';
           }
@@ -1134,18 +1164,18 @@
             }
             
             if (isHovered || isConnected) {
-              return '#5DADE2'; // SWFT accent color for hovered/connected nodes
+              return state.graphDisplay.highlightColor || '#5DADE2'; // SWFT accent color for hovered/connected nodes
             }
           }
           
-          // Default white for all nodes
+          // Hardcode white as default - ensure nodes are always visible
           return '#ffffff';
         })
         .nodeVal(node => {
           if (node.nodeType === 'message') {
-            return 0.5; // Smaller message nodes
+            return 1.5; // Increased from 0.5 for better visibility
           }
-          return node.val || 1;
+          return Math.max(node.val || 3, 3); // Minimum size 3, increased from 1
         })
         .nodeOpacity(node => {
           if (node.nodeType === 'message') {
@@ -1155,7 +1185,11 @@
         })
         .linkColor(link => {
           // Default to white for all links
-          const defaultColor = 'rgba(255, 255, 255, 0.6)';
+          const linkColorHex = state.graphDisplay.linkColor || '#ffffff';
+          const r = parseInt(linkColorHex.slice(1, 3), 16);
+          const g = parseInt(linkColorHex.slice(3, 5), 16);
+          const b = parseInt(linkColorHex.slice(5, 7), 16);
+          const defaultColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
           
           // If a node is hovered, highlight connected links in accent color
           if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
@@ -1164,7 +1198,11 @@
             const isConnected = sourceId === state.hoveredNodeId || targetId === state.hoveredNodeId;
             
             if (isConnected) {
-              return 'rgba(93, 173, 226, 0.8)'; // SWFT accent color with higher opacity
+              const highlightHex = state.graphDisplay.highlightColor || '#5DADE2';
+              const hr = parseInt(highlightHex.slice(1, 3), 16);
+              const hg = parseInt(highlightHex.slice(3, 5), 16);
+              const hb = parseInt(highlightHex.slice(5, 7), 16);
+              return `rgba(${hr}, ${hg}, ${hb}, 0.8)`; // SWFT accent color with higher opacity
             }
           }
           
@@ -1284,26 +1322,45 @@
         }
       }, 30000);
 
-      state.graphLoaded = true;
-
-      // Apply graph customization settings if available
-      // Note: GraphCustomizer might override node colors, so we apply it after setting nodeColor
-      if (window.GraphCustomizer && window.Settings) {
-        // Only apply non-color settings to preserve white nodes
-        const customSettings = window.Settings.settings;
-        if (customSettings && customSettings.graph) {
-          // Apply only non-color customizations
-          if (state.graph.nodeVal) {
-            state.graph.nodeVal(customSettings.graph.nodeSize || 1);
-          }
-          if (state.graph.linkWidth) {
-            state.graph.linkWidth(customSettings.graph.linkWidth || 0.5);
-          }
-          if (state.graph.linkOpacity) {
-            state.graph.linkOpacity(customSettings.graph.linkOpacity || 0.6);
-          }
+      // Set initial size for graph container
+      const graphContainerEl = document.getElementById('graph-container');
+      if (graphContainerEl && state.graph) {
+        // Get dimensions from modal container
+        const sidebar = document.getElementById('graph-sidebar');
+        const sidebarWidth = sidebar ? sidebar.offsetWidth : 280;
+        
+        const containerWidth = graphContainerEl.clientWidth || (window.innerWidth - sidebarWidth);
+        const containerHeight = graphContainerEl.clientHeight || window.innerHeight;
+        
+        console.log('[Graph] Container dimensions:', { containerWidth, containerHeight, sidebarWidth });
+        
+        if (containerWidth > 0 && containerHeight > 0) {
+          state.graph.width(containerWidth);
+          state.graph.height(containerHeight);
+          console.log('[Graph] Graph initialized with size:', containerWidth, 'x', containerHeight);
+        } else {
+          console.warn('[Graph] Container has invalid dimensions:', { containerWidth, containerHeight });
         }
       }
+      
+      // Apply initial display settings BEFORE marking as loaded
+      applyGraphDisplay();
+      
+      // Small delay to ensure colors are applied before graph settles
+      setTimeout(() => {
+        if (state.graph) {
+          applyGraphDisplay();
+          // Resize to fit modal if modal is open
+          if (elements.graphModal && !elements.graphModal.hidden) {
+            resizeGraphForModal();
+          }
+          // Ensure graph is visible and centered
+          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+          state.graph.zoomToFit(400, 0);
+        }
+      }, 200);
+
+      state.graphLoaded = true;
 
     } catch (error) {
       console.error('Failed to initialize graph:', error);
@@ -1610,6 +1667,98 @@
   }
 
   /**
+   * Apply graph display settings (colors, sizes, styles)
+   */
+  function applyGraphDisplay() {
+    if (!state.graph) return;
+    
+    // Always update node color function to use current display settings
+    state.graph.nodeColor(node => {
+      // Default to white for all nodes (balls/spheres)
+      if (node.status === 'missing') {
+        return '#666';
+      }
+      
+      // If a node is hovered, highlight it and connected nodes
+      if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
+        const isHovered = node.id === state.hoveredNodeId;
+        let isConnected = false;
+        for (const link of state.fullGraphData.links) {
+          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+          const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+          if ((sourceId === state.hoveredNodeId && targetId === node.id) ||
+              (targetId === state.hoveredNodeId && sourceId === node.id)) {
+            isConnected = true;
+            break;
+          }
+        }
+        if (isHovered || isConnected) {
+          return state.graphDisplay.highlightColor || '#5DADE2';
+        }
+      }
+      
+      // Use the display node color setting
+      return state.graphDisplay.nodeColor || '#ffffff';
+    });
+    
+    // Always update link color function to use current display settings
+    const linkColorHex = state.graphDisplay.linkColor || '#ffffff';
+    const r = parseInt(linkColorHex.slice(1, 3), 16);
+    const g = parseInt(linkColorHex.slice(3, 5), 16);
+    const b = parseInt(linkColorHex.slice(5, 7), 16);
+    const defaultLinkColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
+    
+    state.graph.linkColor(link => {
+      // If a node is hovered, highlight connected links
+      if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
+        const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+        const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+        if (sourceId === state.hoveredNodeId || targetId === state.hoveredNodeId) {
+          const highlightHex = state.graphDisplay.highlightColor || '#5DADE2';
+          const hr = parseInt(highlightHex.slice(1, 3), 16);
+          const hg = parseInt(highlightHex.slice(3, 5), 16);
+          const hb = parseInt(highlightHex.slice(5, 7), 16);
+          return `rgba(${hr}, ${hg}, ${hb}, 0.8)`;
+        }
+      }
+      return defaultLinkColor;
+    });
+    
+    // Apply node size
+    if (state.graphDisplay.nodeSize) {
+      state.graph.nodeVal(node => {
+        if (node.nodeType === 'message') {
+          return state.graphDisplay.nodeSize * 0.5;
+        }
+        return state.graphDisplay.nodeSize;
+      });
+    }
+    
+    // Apply link width
+    if (state.graphDisplay.linkWidth !== undefined) {
+      state.graph.linkWidth(() => state.graphDisplay.linkWidth);
+    }
+    
+    // Apply link style
+    if (state.graphDisplay.linkStyle) {
+      if (state.graphDisplay.linkStyle === 'dashed') {
+        state.graph.linkDirectionalParticles(2);
+        state.graph.linkDirectionalParticleWidth(1);
+      } else if (state.graphDisplay.linkStyle === 'dotted') {
+        state.graph.linkDirectionalParticles(4);
+        state.graph.linkDirectionalParticleWidth(0.5);
+      } else {
+        state.graph.linkDirectionalParticles(0);
+      }
+    }
+    
+    // Force graph to re-render
+    if (state.graph.cooldownTicks) {
+      state.graph.cooldownTicks(100);
+    }
+  }
+
+  /**
    * Apply graph force settings
    * Note: 3d-force-graph uses d3-force internally, but we need d3 to be available
    * For now, we'll use the graph's built-in cooldownTicks to restart simulation
@@ -1728,9 +1877,14 @@
   // ==========================================================================
   
   /**
-   * Set the current view mode
+   * Set the current view mode (list only now, graph is modal)
    */
   function setView(view) {
+    // Only allow list view now
+    if (view !== 'list') {
+      view = 'list';
+    }
+    
     state.currentView = view;
     
     // Update data attribute
@@ -1745,38 +1899,68 @@
       btn.setAttribute('aria-selected', isActive);
     });
 
-    // Initialize graph if switching to graph or both view
-    if ((view === 'graph' || view === 'both')) {
-      // Check if there are posts before initializing graph
-      if (!state.posts || state.posts.length === 0) {
-        showNoNotesMessage();
-      } else if (!state.graphLoaded) {
-        initGraph();
-      } else {
-        // Graph already loaded, make sure no-notes message is hidden
-        hideNoNotesMessage();
-      }
-    } {
-      initGraph();
-    }
-
-    // Resize graph when showing
-    if (state.graph && (view === 'graph' || view === 'both')) {
-      setTimeout(() => {
-        state.graph.width(elements.graphContainer.clientWidth);
-        state.graph.height(elements.graphContainer.clientHeight);
-        // Re-center after resize
-        state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-        state.graph.zoomToFit(400, 0);
-      }, 100);
-    }
-
     // Save preference
     try {
       localStorage.setItem(CONFIG.storageKey, view);
     } catch (e) {
       // localStorage not available
     }
+  }
+
+  /**
+   * Open graph modal
+   */
+  function openGraphModal() {
+    if (!elements.graphModal) return;
+    
+    // Show modal
+    elements.graphModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    
+    // Initialize graph if not already loaded
+    if (!state.graphLoaded) {
+      initGraph();
+    } else {
+      // Resize graph to fit modal
+      resizeGraphForModal();
+    }
+  }
+
+  /**
+   * Close graph modal
+   */
+  function closeGraphModal() {
+    if (!elements.graphModal) return;
+    
+    // Hide modal
+    elements.graphModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  /**
+   * Resize graph to fit modal container
+   */
+  function resizeGraphForModal() {
+    if (!state.graph) return;
+    
+    const graphContainer = document.getElementById('graph-container');
+    if (!graphContainer) return;
+    
+    setTimeout(() => {
+      if (state.graph && graphContainer) {
+        const containerWidth = graphContainer.clientWidth;
+        const containerHeight = graphContainer.clientHeight;
+        
+        if (containerWidth > 0 && containerHeight > 0) {
+          state.graph.width(containerWidth);
+          state.graph.height(containerHeight);
+          
+          // Re-center and fit
+          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+          state.graph.zoomToFit(400, 0);
+        }
+      }
+    }, 100);
   }
 
   /**
@@ -2574,6 +2758,44 @@
       });
     }
     
+    // Graph display color/size controls
+    if (elements.displayNodeColor) {
+      elements.displayNodeColor.addEventListener('input', (e) => {
+        state.graphDisplay.nodeColor = e.target.value;
+        applyGraphDisplay();
+      });
+    }
+    if (elements.displayLinkColor) {
+      elements.displayLinkColor.addEventListener('input', (e) => {
+        state.graphDisplay.linkColor = e.target.value;
+        applyGraphDisplay();
+      });
+    }
+    if (elements.displayHighlightColor) {
+      elements.displayHighlightColor.addEventListener('input', (e) => {
+        state.graphDisplay.highlightColor = e.target.value;
+        applyGraphDisplay();
+      });
+    }
+    if (elements.displayNodeSize) {
+      elements.displayNodeSize.addEventListener('input', (e) => {
+        state.graphDisplay.nodeSize = parseInt(e.target.value);
+        applyGraphDisplay();
+      });
+    }
+    if (elements.displayLinkWidth) {
+      elements.displayLinkWidth.addEventListener('input', (e) => {
+        state.graphDisplay.linkWidth = parseFloat(e.target.value);
+        applyGraphDisplay();
+      });
+    }
+    if (elements.displayLinkStyle) {
+      elements.displayLinkStyle.addEventListener('change', (e) => {
+        state.graphDisplay.linkStyle = e.target.value;
+        applyGraphDisplay();
+      });
+    }
+    
     // Sign out button
     if (elements.signOutBtn) {
       elements.signOutBtn.addEventListener('click', handleSignOut);
@@ -2682,8 +2904,36 @@
     // View toggle buttons
     elements.viewButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        setView(btn.dataset.view);
+        const view = btn.dataset.view;
+        if (view === 'graph') {
+          // Open graph modal instead of switching views
+          openGraphModal();
+        } else {
+          // List view - just switch views
+          setView(view);
+        }
       });
+    });
+    
+    // Graph modal close handlers
+    if (elements.graphModalClose) {
+      elements.graphModalClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeGraphModal();
+      });
+    }
+    
+    if (elements.graphModalBackdrop) {
+      elements.graphModalBackdrop.addEventListener('click', () => {
+        closeGraphModal();
+      });
+    }
+    
+    // ESC key to close graph modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && elements.graphModal && !elements.graphModal.hidden) {
+        closeGraphModal();
+      }
     });
 
     // Graph controls
@@ -2750,11 +3000,10 @@
       }
     });
 
-    // Window resize
+    // Window resize - resize graph if modal is open
     window.addEventListener('resize', debounce(() => {
-      if (state.graph && (state.currentView === 'graph' || state.currentView === 'both')) {
-        state.graph.width(elements.graphContainer.clientWidth);
-        state.graph.height(elements.graphContainer.clientHeight);
+      if (state.graph && elements.graphModal && !elements.graphModal.hidden) {
+        resizeGraphForModal();
       }
     }, 200));
   }
@@ -2770,8 +3019,8 @@
     // Setup event listeners
     setupEventListeners();
 
-    // Load view preference
-    const preferredView = loadViewPreference();
+    // Load view preference (default to list, graph is now modal)
+    const preferredView = 'list'; // Always default to list view
 
     // Fetch and render posts
     const posts = await fetchBlogData();

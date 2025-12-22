@@ -60,13 +60,21 @@
     currentAttachmentPreview: null,
     // Voice recording state
     isRecording: false,
+    isRecordingVideo: false,
     mediaRecorder: null,
+    videoRecorder: null,
     audioChunks: [],
+    videoChunks: [],
     recordingStartTime: null,
     recordingTimer: null,
     recognition: null, // Speech recognition
     transcriptionSegments: [],
-    lastTranscriptionTime: null
+    liveTranscriptionText: '', // Accumulated final transcription
+    interimTranscriptionText: '', // Current interim transcription
+    lastTranscriptionTime: null,
+    recordingStream: null, // Track the active media stream
+    currentMessageMenu: null, // Currently open message menu
+    editingMessage: null // Message being edited
   };
 
   // ==========================================================================
@@ -95,6 +103,9 @@
     attachmentModalBody: document.getElementById('attachment-modal-body'),
     attachmentModalTitle: document.getElementById('attachment-modal-title'),
     attachmentDownloadBtn: document.getElementById('attachment-download-btn'),
+    transcriptModal: document.getElementById('transcript-modal'),
+    transcriptModalClose: document.getElementById('transcript-modal-close'),
+    transcriptModalBody: document.getElementById('transcript-modal-body'),
     newNoteBtn: document.getElementById('new-note-btn'),
     currentNoteTitle: document.getElementById('current-note-title'),
     currentNoteSubtitle: document.getElementById('current-note-subtitle'),
@@ -158,33 +169,68 @@
   
   async function loadNotes() {
     try {
-      const { data, error } = await state.supabase
+      console.log('[FIX] loadNotes: Starting, user ID:', state.currentUser?.id);
+      
+      // Try to select WITHOUT messages column first to avoid the error
+      // We'll add messages as empty arrays in memory for compatibility
+      let { data, error } = await state.supabase
         .from('notes')
-        .select('id, title, messages, updated_at, created_at, content')
+        .select('id, title, updated_at, created_at, content')
         .eq('user_id', state.currentUser.id)
         .order('updated_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('[FIX] loadNotes: Query result:', { hasData: !!data, dataLength: data?.length, hasError: !!error, errorCode: error?.code });
+
+      if (error) {
+        console.error('[FIX] loadNotes: Query failed:', error);
+        throw error;
+      }
+
+      // Parse messages from content field if stored as JSON, or create from content
+      if (data) {
+        data = data.map(note => {
+          let messages = [];
+          
+          // Try to parse messages from content if it's JSON
+          if (note.content) {
+            try {
+              const parsed = JSON.parse(note.content);
+              if (Array.isArray(parsed)) {
+                messages = parsed;
+              } else {
+                // Content is plain text, create a message from it
+                messages = [{
+                  id: crypto.randomUUID(),
+                  content: note.content,
+                  attachments: [],
+                  tags: note.tags || [],
+                  created_at: note.created_at
+                }];
+              }
+            } catch (e) {
+              // Content is not JSON, create message from it
+              messages = [{
+                id: crypto.randomUUID(),
+                content: note.content,
+                attachments: [],
+                tags: note.tags || [],
+                created_at: note.created_at
+              }];
+            }
+          }
+          
+          return { 
+            ...note, 
+            messages: messages
+          };
+        });
+        console.log('[FIX] loadNotes: Processed notes, total:', data.length);
+      }
 
       state.notes = data || [];
       
-      // Migrate old notes: if messages is empty but content exists, create initial message
-      for (const note of state.notes) {
-        if ((!note.messages || note.messages.length === 0) && note.content) {
-          note.messages = [{
-            id: crypto.randomUUID(),
-            content: note.content,
-            attachments: [],
-            tags: [],
-            created_at: note.created_at
-          }];
-          // Update in database
-          await state.supabase
-            .from('notes')
-            .update({ messages: note.messages })
-            .eq('id', note.id);
-        }
-      }
+      // Notes are already processed with messages arrays from content field above
+      // No need for additional migration here
 
       renderNotesList();
       
@@ -195,7 +241,7 @@
         renderEmptyState('no-notes');
       }
     } catch (error) {
-      console.error('Error loading notes:', error);
+      console.error('[FIX] Error loading notes:', error);
       state.notes = [];
       renderEmptyState('no-notes');
     }
@@ -346,19 +392,40 @@
 
   async function createNewNote() {
     try {
+      console.log('[FIX] createNewNote: Starting');
+      
+      // Build payload WITHOUT messages column to avoid errors
+      const insertPayload = {
+        user_id: state.currentUser.id,
+        user_email: state.currentUser.email,
+        title: 'New Note',
+        status: 'draft'
+      };
+      
+      console.log('[FIX] createNewNote: Inserting note with payload:', insertPayload);
+      
       const { data, error } = await state.supabase
         .from('notes')
-        .insert({
-          user_id: state.currentUser.id,
-          user_email: state.currentUser.email,
-          title: 'New Note',
-          messages: [],
-          status: 'draft'
-        })
+        .insert(insertPayload)
         .select()
         .single();
 
-      if (error) throw error;
+      console.log('[FIX] createNewNote: Result:', { hasData: !!data, hasError: !!error, errorCode: error?.code });
+
+      if (error) {
+        console.error('[FIX] createNewNote: Error:', error);
+        throw error;
+      }
+
+      // Add empty messages array for compatibility
+      if (data) {
+        data.messages = [];
+        // Initialize content as empty JSON array for messages
+        if (!data.content) {
+          data.content = '[]';
+        }
+        console.log('[FIX] createNewNote: Success, note ID:', data.id);
+      }
 
       // Add to local state
       state.notes.unshift(data);
@@ -522,12 +589,22 @@
       const author = state.currentUser?.email?.split('@')[0] || 'You';
       const timestamp = msg.created_at || msg.timestamp || new Date().toISOString();
       
+      const messageIndex = messages.indexOf(msg);
       return `
-        <div class="message">
+        <div class="message" data-message-id="${msg.id}" data-message-index="${messageIndex}">
           <div class="message-bubble ${msg.content ? 'has-content' : ''}">
             <div class="message-header">
-              <span class="message-author">${escapeHtml(author)}</span>
-              <span class="message-time">${formatTime(timestamp)}</span>
+              <div class="message-header-left">
+                <span class="message-author">${escapeHtml(author)}</span>
+                <span class="message-time">${formatTime(timestamp)}</span>
+              </div>
+              <button type="button" class="message-menu-btn" data-message-id="${msg.id}" aria-label="Message options">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="12" cy="5" r="1"></circle>
+                  <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+              </button>
             </div>
             
             ${msg.content ? `<div class="message-content">${marked.parse(msg.content)}</div>` : ''}
@@ -541,14 +618,17 @@
                     transcription: att.transcription || msg.transcription?.[att.url] || null,
                     isVoiceRecording: att.isVoiceRecording || false
                   };
-                  return renderAttachment(attachmentWithTranscription, idx);
+                  return renderAttachment(attachmentWithTranscription, idx, messages);
                 }).join('')}
               </div>
             ` : ''}
             
             ${msg.tags && msg.tags.length > 0 ? `
               <div class="message-tags">
-                ${msg.tags.map(tag => `<span class="message-tag">${escapeHtml(tag)}</span>`).join('')}
+                ${msg.tags.map(tag => {
+                  const tagColor = getTagColor(tag);
+                  return `<span class="message-tag" style="background-color: ${tagColor}; color: ${getContrastColor(tagColor)}">${escapeHtml(tag)}</span>`;
+                }).join('')}
               </div>
             ` : ''}
           </div>
@@ -556,7 +636,207 @@
       `;
     }).join('');
     
-    // Add click handlers for attachment previews
+    // Add click handlers for message menu buttons
+    elements.messagesList.querySelectorAll('.message-menu-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const messageId = btn.getAttribute('data-message-id');
+        const message = messages.find(m => m.id === messageId);
+        if (message) {
+          showMessageMenu(message, btn);
+        }
+      });
+    });
+
+    // Close message menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.message-menu-btn') && !e.target.closest('.message-menu')) {
+        hideMessageMenu();
+      }
+    });
+  }
+
+  // ==========================================================================
+  // Message Menu Functions
+  // ==========================================================================
+
+  /**
+   * Show message menu for editing/tagging
+   */
+  function showMessageMenu(message, button) {
+    // Hide any existing menu
+    hideMessageMenu();
+    
+    // Create menu element
+    const menu = document.createElement('div');
+    menu.className = 'message-menu';
+    menu.setAttribute('role', 'menu');
+    
+    // Position menu near button
+    const rect = button.getBoundingClientRect();
+    menu.style.position = 'fixed';
+    menu.style.top = `${rect.bottom + 5}px`;
+    menu.style.left = `${rect.left}px`;
+    menu.style.zIndex = '1000';
+    
+    menu.innerHTML = `
+      <button type="button" class="message-menu-item" data-action="edit" role="menuitem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        Edit
+      </button>
+      <button type="button" class="message-menu-item" data-action="tags" role="menuitem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        Tags
+      </button>
+    `;
+    
+    // Add click handlers
+    menu.querySelector('[data-action="edit"]').addEventListener('click', () => {
+      editMessage(message);
+      hideMessageMenu();
+    });
+    
+    menu.querySelector('[data-action="tags"]').addEventListener('click', () => {
+      showTagDialog(message);
+      hideMessageMenu();
+    });
+    
+    // Store reference
+    state.currentMessageMenu = { menu, message, button };
+    
+    // Add to DOM
+    document.body.appendChild(menu);
+  }
+
+  /**
+   * Hide message menu
+   */
+  function hideMessageMenu() {
+    if (state.currentMessageMenu && state.currentMessageMenu.menu) {
+      state.currentMessageMenu.menu.remove();
+      state.currentMessageMenu = null;
+    }
+  }
+
+  /**
+   * Edit a message
+   */
+  function editMessage(message) {
+    if (!message) return;
+    
+    state.editingMessage = message;
+    
+    // Load message content into editor
+    if (editor) {
+      editor.setValue(message.content || '');
+      editor.focus();
+    } else if (elements.messageInput) {
+      elements.messageInput.value = message.content || '';
+      elements.messageInput.focus();
+      autoExpandTextarea();
+    }
+    
+    // Load attachments if any
+    if (message.attachments && message.attachments.length > 0) {
+      // Note: Attachments are already displayed in the message, 
+      // but we can't easily re-upload them, so we'll just show the content
+      console.log('Editing message with attachments:', message.attachments.length);
+    }
+  }
+
+  /**
+   * Show tag dialog for a message
+   */
+  function showTagDialog(message) {
+    if (!message) return;
+    
+    // Get current tags
+    const currentTags = message.tags || [];
+    
+    // Create simple prompt for now (can be enhanced with a modal later)
+    const tagInput = prompt('Enter tags (comma-separated):', currentTags.join(', '));
+    if (tagInput !== null) {
+      const tags = tagInput.split(',').map(t => t.trim()).filter(t => t);
+      updateMessageTags(message.id, tags);
+    }
+  }
+
+  /**
+   * Update message tags
+   */
+  async function updateMessageTags(messageId, tags) {
+    try {
+      await updateMessageInDatabase(messageId, { tags });
+      // Reload messages to show updated tags
+      if (state.currentNote) {
+        await loadMessages(state.currentNote.id);
+      }
+    } catch (error) {
+      console.error('Error updating message tags:', error);
+      showError('Failed to update tags');
+    }
+  }
+
+  /**
+   * Update message content
+   */
+  async function updateMessageContent(messageId, content) {
+    try {
+      await updateMessageInDatabase(messageId, { content });
+      // Reload messages to show updated content
+      if (state.currentNote) {
+        await loadMessages(state.currentNote.id);
+      }
+    } catch (error) {
+      console.error('Error updating message content:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update message in database
+   */
+  async function updateMessageInDatabase(messageId, updates) {
+    if (!state.currentNote || !state.supabase) {
+      throw new Error('No current note or Supabase client');
+    }
+    
+    // Get current messages
+    const messages = state.currentNote.messages || [];
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    
+    if (messageIndex === -1) {
+      throw new Error('Message not found');
+    }
+    
+    // Update message
+    messages[messageIndex] = {
+      ...messages[messageIndex],
+      ...updates
+    };
+    
+    // Update note in database
+    const { error } = await state.supabase
+      .from('notes')
+      .update({
+        content: JSON.stringify(messages)
+      })
+      .eq('id', state.currentNote.id)
+      .eq('user_id', state.currentUser.id);
+    
+    if (error) throw error;
+    
+    // Update local state
+    state.currentNote.messages = messages;
+    state.messages = messages;
+
+    // Add click handlers for attachment previews (images and videos)
     elements.messagesList.querySelectorAll('.attachment-item[data-attachment-id]').forEach(item => {
       item.addEventListener('click', () => {
         // Find the message container
@@ -592,6 +872,107 @@
         }
       });
     });
+
+    // Add click handlers for audio play buttons
+    elements.messagesList.querySelectorAll('.audio-play-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const audioId = btn.getAttribute('data-audio-id');
+        const audio = document.getElementById(audioId);
+        if (!audio) return;
+
+        const playIcon = btn.querySelector('.play-icon');
+        const pauseIcon = btn.querySelector('.pause-icon');
+
+        if (audio.paused) {
+          audio.play();
+          playIcon.style.display = 'none';
+          pauseIcon.style.display = 'block';
+        } else {
+          audio.pause();
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+        }
+      });
+    });
+
+    // Add event listeners for audio elements to update play button state
+    elements.messagesList.querySelectorAll('audio').forEach(audio => {
+      audio.addEventListener('play', () => {
+        const btn = elements.messagesList.querySelector(`.audio-play-btn[data-audio-id="${audio.id}"]`);
+        if (btn) {
+          const playIcon = btn.querySelector('.play-icon');
+          const pauseIcon = btn.querySelector('.pause-icon');
+          playIcon.style.display = 'none';
+          pauseIcon.style.display = 'block';
+        }
+      });
+      audio.addEventListener('pause', () => {
+        const btn = elements.messagesList.querySelector(`.audio-play-btn[data-audio-id="${audio.id}"]`);
+        if (btn) {
+          const playIcon = btn.querySelector('.play-icon');
+          const pauseIcon = btn.querySelector('.pause-icon');
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+        }
+      });
+      audio.addEventListener('loadedmetadata', () => {
+        const durationEl = elements.messagesList.querySelector(`.audio-duration[data-audio-id="${audio.id}"]`);
+        if (durationEl && !isNaN(audio.duration)) {
+          const minutes = Math.floor(audio.duration / 60);
+          const seconds = Math.floor(audio.duration % 60);
+          durationEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+      });
+    });
+
+    // Add click handlers for transcript buttons
+    elements.messagesList.querySelectorAll('.audio-transcript-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        // Get message index and attachment URL to find the full transcription
+        const messageIndex = parseInt(btn.getAttribute('data-message-index') || '-1');
+        const attachmentUrl = btn.getAttribute('data-attachment-url');
+        
+        if (messageIndex >= 0 && state.messages[messageIndex]) {
+          const message = state.messages[messageIndex];
+          if (message.attachments) {
+            const attachment = message.attachments.find(att => att.url === attachmentUrl);
+            if (attachment && attachment.transcription) {
+              const fullTranscription = attachment.transcription;
+              console.log('[Transcript] Retrieved full transcript from state:', {
+                length: fullTranscription.length,
+                preview: fullTranscription.substring(0, 150),
+                hasParagraphs: fullTranscription.includes('\n\n')
+              });
+              showTranscriptModal(fullTranscription);
+              return;
+            }
+          }
+        }
+        
+        // Fallback: try to get from data attribute (for backwards compatibility)
+        const transcription = btn.getAttribute('data-transcription');
+        if (transcription) {
+          showTranscriptModal(transcription);
+        } else {
+          showError('Transcript not found');
+        }
+      });
+    });
+
+    // Add click handlers for transcribe buttons
+    elements.messagesList.querySelectorAll('.audio-transcribe-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const audioUrl = btn.getAttribute('data-audio-url');
+        const attachmentIndex = parseInt(btn.getAttribute('data-attachment-index'));
+        if (audioUrl) {
+          await transcribeAudioFile(audioUrl, attachmentIndex, btn);
+        }
+      });
+    });
   }
 
   function renderEmptyState(type = 'no-note-selected') {
@@ -619,13 +1000,82 @@
     `;
   }
 
-  function renderAttachment(attachment, index = 0) {
+  /**
+   * Render a thumbnail/icon for an attachment in the message list
+   * Used to show file type indicators when message has no text content
+   */
+  function renderAttachmentThumbnail(attachment, index = 0) {
+    const attachmentId = `attachment-thumb-${index}`;
+    
+    if (attachment.type === 'image') {
+      return `
+        <div class="attachment-thumbnail attachment-thumbnail-image" data-attachment-id="${attachmentId}">
+          <img src="${escapeHtml(attachment.url)}" alt="${escapeHtml(attachment.name || 'Image')}" loading="lazy">
+          <div class="attachment-thumbnail-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+          </div>
+        </div>
+      `;
+    } else if (attachment.type === 'audio') {
+      return `
+        <div class="attachment-thumbnail attachment-thumbnail-audio" data-attachment-id="${attachmentId}">
+          <div class="attachment-thumbnail-icon audio-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </div>
+          <span class="attachment-thumbnail-label">Audio</span>
+        </div>
+      `;
+    } else if (attachment.type === 'video') {
+      return `
+        <div class="attachment-thumbnail attachment-thumbnail-video" data-attachment-id="${attachmentId}">
+          <div class="attachment-thumbnail-icon video-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+          </div>
+          <span class="attachment-thumbnail-label">Video</span>
+        </div>
+      `;
+    } else {
+      // File attachment
+      const fileExtension = attachment.name ? attachment.name.split('.').pop().toLowerCase() : 'file';
+      const isTextFile = ['txt', 'md', 'json', 'js', 'ts', 'html', 'css', 'xml', 'csv'].includes(fileExtension);
+      
+      return `
+        <div class="attachment-thumbnail attachment-thumbnail-file" data-attachment-id="${attachmentId}">
+          <div class="attachment-thumbnail-icon file-icon ${isTextFile ? 'text-file' : ''}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+              <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+          </div>
+          <span class="attachment-thumbnail-label">${escapeHtml(attachment.name || 'File')}</span>
+        </div>
+      `;
+    }
+  }
+
+  function renderAttachment(attachment, index = 0, messages = null) {
     const attachmentId = `attachment-${index}`;
+    // Get messages from state if not provided
+    if (!messages) {
+      messages = state.messages || [];
+    }
     
     if (attachment.type === 'image') {
       return `
         <div class="attachment-item attachment-image" data-attachment-id="${attachmentId}" role="button" tabindex="0">
-          <img src="${escapeHtml(attachment.url)}" alt="${escapeHtml(attachment.name || 'Image')}" loading="lazy">
+          <img src="${escapeHtml(attachment.url)}" alt="${escapeHtml(attachment.name || 'Image')}" loading="lazy" class="attachment-thumbnail-img">
           <div class="attachment-overlay">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -638,43 +1088,75 @@
     } else if (attachment.type === 'audio') {
       const hasTranscription = attachment.transcription && attachment.transcription.trim();
       const isVoiceRecording = attachment.isVoiceRecording;
+      const audioId = `audio-${index}-${Date.now()}`;
+      
+      // Find message index for this attachment
+      const messageIndex = messages.findIndex(m => 
+        m.attachments && m.attachments.some(a => a.url === attachment.url)
+      );
       
       return `
-        <div class="attachment-item attachment-audio ${isVoiceRecording ? 'voice-recording' : ''}">
-          <audio controls src="${escapeHtml(attachment.url)}"></audio>
-          ${hasTranscription ? `
-            <div class="audio-transcription">
-              <div class="audio-transcription-header">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="attachment-item attachment-audio ${isVoiceRecording ? 'voice-recording' : ''}" data-audio-id="${audioId}">
+          <audio id="${audioId}" src="${escapeHtml(attachment.url)}" preload="metadata"></audio>
+          <div class="audio-player">
+            <div class="audio-player-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </div>
+            <button type="button" class="audio-play-btn" data-audio-id="${audioId}" aria-label="Play audio">
+              <svg class="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <svg class="pause-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            </button>
+            <div class="audio-info">
+              <div class="audio-name">${escapeHtml(attachment.name || 'Audio recording')}</div>
+              <div class="audio-duration" data-audio-id="${audioId}">--:--</div>
+            </div>
+            ${hasTranscription ? `
+              <button type="button" class="audio-transcript-btn" data-message-index="${messageIndex}" data-attachment-url="${escapeHtml(attachment.url)}" aria-label="View formatted transcript" style="display: none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                   <polyline points="14 2 14 8 20 8"></polyline>
                   <line x1="16" y1="13" x2="8" y2="13"></line>
                   <line x1="16" y1="17" x2="8" y2="17"></line>
                   <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
-                <span>Transcription</span>
-              </div>
-              <div class="audio-transcription-content">
-                ${attachment.transcription.split('\n\n').map(para => 
-                  `<p>${escapeHtml(para.replace(/\n/g, ' '))}</p>`
-                ).join('')}
-              </div>
-            </div>
-          ` : ''}
-          <a href="${escapeHtml(attachment.url)}" download="${escapeHtml(attachment.name || 'audio')}" class="attachment-download-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download
-          </a>
+                <span>View Formatted Transcript</span>
+              </button>
+            ` : `
+              <button type="button" class="audio-transcribe-btn" data-audio-url="${escapeHtml(attachment.url)}" data-attachment-index="${index}" aria-label="Transcribe audio">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <span>Transcribe</span>
+              </button>
+            `}
+          </div>
         </div>
       `;
     } else if (attachment.type === 'video') {
       return `
         <div class="attachment-item attachment-video" data-attachment-id="${attachmentId}" role="button" tabindex="0">
-          <video controls src="${escapeHtml(attachment.url)}"></video>
+          <div class="attachment-video-thumbnail">
+            <video src="${escapeHtml(attachment.url)}" preload="metadata" muted></video>
+            <div class="attachment-video-play-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+            <div class="attachment-video-label">Video</div>
+          </div>
           <div class="attachment-overlay">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -686,13 +1168,18 @@
       `;
     } else {
       // File attachment
+      const fileExtension = attachment.name ? attachment.name.split('.').pop().toLowerCase() : 'file';
+      const isTextFile = ['txt', 'md', 'json', 'js', 'ts', 'html', 'css', 'xml', 'csv', 'py', 'java', 'cpp', 'c', 'php', 'rb', 'go', 'rs', 'swift', 'kt'].includes(fileExtension);
+      const isCodeFile = ['js', 'ts', 'html', 'css', 'xml', 'py', 'java', 'cpp', 'c', 'php', 'rb', 'go', 'rs', 'swift', 'kt', 'json'].includes(fileExtension);
+      
       return `
         <div class="attachment-item attachment-file">
-          <div class="attachment-file-icon">
+          <div class="attachment-file-icon ${isTextFile ? 'text-file' : ''} ${isCodeFile ? 'code-file' : ''}">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
               <polyline points="13 2 13 9 20 9"></polyline>
             </svg>
+            ${isTextFile ? '<span class="file-type-badge">TXT</span>' : ''}
           </div>
           <div class="attachment-file-info">
             <span class="attachment-file-name">${escapeHtml(attachment.name || 'File')}</span>
@@ -742,7 +1229,7 @@
     elements.fileInput.addEventListener('change', (e) => handleFileSelect(e, 'file'));
   }
 
-  function handleAttachmentType(type) {
+  async function handleAttachmentType(type) {
     switch (type) {
       case 'image':
         elements.imageFileInput.click();
@@ -752,6 +1239,9 @@
         break;
       case 'voice-record':
         startVoiceRecording();
+        break;
+      case 'video-record':
+        await startVideoRecording();
         break;
       case 'video':
         elements.videoFileInput.click();
@@ -858,6 +1348,45 @@
     // Get content from editor or textarea
     const content = editor ? editor.getValue().trim() : elements.messageInput.value.trim();
     
+    // If editing a message, handle update instead of new message
+    if (state.editingMessage) {
+      if (!content && state.attachments.length === 0) {
+        state.editingMessage = null;
+        if (editor) {
+          editor.setValue('');
+        } else {
+          elements.messageInput.value = '';
+        }
+        return;
+      }
+
+      state.isSubmitting = true;
+      setLoading(true);
+
+      try {
+        await updateMessageContent(state.editingMessage.id, content);
+        
+        // Clear editing state
+        state.editingMessage = null;
+        if (editor) {
+          editor.setValue('');
+        } else {
+          elements.messageInput.value = '';
+        }
+        state.attachments = [];
+        renderAttachments();
+        
+        showSuccess('Message updated successfully');
+      } catch (error) {
+        console.error('Error updating message:', error);
+        showError('Failed to update message');
+      } finally {
+        state.isSubmitting = false;
+        setLoading(false);
+      }
+      return;
+    }
+    
     if (!content && state.attachments.length === 0) {
       return;
     }
@@ -933,30 +1462,58 @@
         return msg;
       });
 
+      // Update WITHOUT messages column to avoid errors
+      // Store messages array as JSON string in content field for persistence
+      const updatePayload = {
+        updated_at: new Date().toISOString(),
+        content: JSON.stringify(messagesWithTranscription), // Store messages array as JSON
+        title: title,
+        tags: tags,
+        content_type: contentType,
+        file_urls: fileUrls,
+        external_links: externalLinks
+      };
+      
+      console.log('[FIX] submitMessage: Updating note:', state.currentNote.id);
+      
       const { data: updatedNote, error: updateError } = await state.supabase
         .from('notes')
-        .update({
-          messages: messagesWithTranscription,
-          updated_at: new Date().toISOString(),
-          content: content, // For backward compatibility
-          title: title,
-          tags: tags,
-          content_type: contentType,
-          file_urls: fileUrls,
-          external_links: externalLinks
-        })
+        .update(updatePayload)
         .eq('id', state.currentNote.id)
         .select()
         .single();
 
-      if (updateError) throw updateError;
+      console.log('[FIX] submitMessage: Update result:', { hasData: !!updatedNote, hasError: !!updateError });
+
+      if (updateError) {
+        console.error('[FIX] submitMessage: Update error:', updateError);
+        throw updateError;
+      }
+
+      // Parse messages back from JSON string and add to response
+      if (updatedNote) {
+        try {
+          updatedNote.messages = JSON.parse(updatedNote.content || '[]');
+        } catch (e) {
+          // If parsing fails, use the messages we just created
+          updatedNote.messages = messagesWithTranscription;
+        }
+        console.log('[FIX] submitMessage: Update succeeded, messages count:', updatedNote.messages.length);
+      }
 
       // Update local state
       state.currentNote = updatedNote;
       state.messages = updatedNote.messages || [];
       
-      // Refresh notes list to update preview and timestamp
-      await loadNotes();
+      // Update the note in the notes array without full reload
+      const noteIndex = state.notes.findIndex(n => n.id === updatedNote.id);
+      if (noteIndex !== -1) {
+        state.notes[noteIndex] = updatedNote;
+        renderNotesList();
+      } else {
+        // If note not in list, reload all notes
+        await loadNotes();
+      }
       
       // Re-render messages
       renderMessages();
@@ -964,16 +1521,32 @@
       
       // Scroll to bottom
       scrollToBottom();
+      
+      console.log('[FIX] submitMessage: Message submitted successfully');
 
-      // Clear form
-      if (editor) {
-        editor.setValue('');
+      // Clear form (unless editing a message)
+      if (!state.editingMessage) {
+        if (editor) {
+          editor.setValue('');
+        } else {
+          elements.messageInput.value = '';
+        }
+        state.attachments = [];
+        renderAttachments();
+        window.AutoTagger?.hideSuggestions();
       } else {
-        elements.messageInput.value = '';
+        // If editing, update the message instead
+        const content = editor ? editor.getValue().trim() : elements.messageInput.value.trim();
+        if (content) {
+          await updateMessageContent(state.editingMessage.id, content);
+        }
+        state.editingMessage = null;
+        if (editor) {
+          editor.setValue('');
+        } else {
+          elements.messageInput.value = '';
+        }
       }
-      state.attachments = [];
-      renderAttachments();
-      window.AutoTagger?.hideSuggestions();
 
     } catch (error) {
       console.error('Submit error:', error);
@@ -1076,6 +1649,27 @@ ${content}
     elements.messageInput.disabled = loading;
   }
 
+  function showSuccess(message) {
+    // Create or update a success notification
+    let notification = document.getElementById('success-notification');
+    if (!notification) {
+      notification = document.createElement('div');
+      notification.id = 'success-notification';
+      notification.className = 'notification notification-success';
+      document.body.appendChild(notification);
+    }
+    notification.textContent = message;
+    notification.style.display = 'block';
+    notification.style.opacity = '1';
+    
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 300);
+    }, 3000);
+  }
+
   function showError(message) {
     // Simple alert for now - can be enhanced with better UI
     alert(message);
@@ -1150,8 +1744,7 @@ ${content}
     // Auto-resize textarea
     if (elements.messageInput) {
       elements.messageInput.addEventListener('input', () => {
-        elements.messageInput.style.height = 'auto';
-        elements.messageInput.style.height = elements.messageInput.scrollHeight + 'px';
+        autoExpandTextarea();
 
         // Auto-create note if typing in empty state
         if (!state.currentNote && elements.messageInput.value.trim().length > 0) {
@@ -1160,7 +1753,14 @@ ${content}
 
         // Auto-suggest tags
         if (window.AutoTagger) {
-          window.AutoTagger.autoSuggest(elements.messageInput.value);
+          if (window.AutoTagger.autoSuggest) {
+            window.AutoTagger.autoSuggest(elements.messageInput.value);
+          } else if (window.AutoTagger.extractKeywords) {
+            const tags = window.AutoTagger.extractKeywords(elements.messageInput.value);
+            if (tags.length > 0) {
+              window.AutoTagger.showSuggestions(tags);
+            }
+          }
         }
       });
 
@@ -1200,9 +1800,21 @@ ${content}
     // Voice recording stop button
     if (elements.voiceRecordingStop) {
       elements.voiceRecordingStop.addEventListener('click', () => {
-        stopVoiceRecording();
+        if (state.isRecording) {
+          stopVoiceRecording();
+        } else if (state.isRecordingVideo) {
+          stopVideoRecording();
+        }
       });
     }
+
+    // Check webcam availability and show/hide video record button
+    checkWebcamAvailability().then(hasWebcam => {
+      const videoRecordBtn = document.getElementById('video-record-btn');
+      if (videoRecordBtn) {
+        videoRecordBtn.hidden = !hasWebcam;
+      }
+    });
 
     // Add click handler to close transcription preview after recording
     // User can click outside or on a close action to dismiss the transcription view
@@ -1238,7 +1850,14 @@ ${content}
         }
         
         if (window.AutoTagger) {
-          window.AutoTagger.analyzeText(editor.getValue());
+          if (window.AutoTagger.autoSuggest) {
+            window.AutoTagger.autoSuggest(editor.getValue());
+          } else if (window.AutoTagger.extractKeywords) {
+            const tags = window.AutoTagger.extractKeywords(editor.getValue());
+            if (tags.length > 0) {
+              window.AutoTagger.showSuggestions(tags);
+            }
+          }
         }
       });
       } else if (elements.messageInput) {
@@ -1268,13 +1887,37 @@ ${content}
           hideAttachmentPreview();
         });
       }
-      // Also close on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !elements.attachmentModal.hidden) {
-          hideAttachmentPreview();
-        }
+    }
+
+    // Transcript modal close
+    if (elements.transcriptModalClose) {
+      elements.transcriptModalClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        hideTranscriptModal();
       });
     }
+    if (elements.transcriptModal) {
+      const backdrop = elements.transcriptModal.querySelector('.transcript-modal-backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          hideTranscriptModal();
+        });
+      }
+    }
+
+    // Global Escape key handler for modals
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (elements.attachmentModal && !elements.attachmentModal.hidden) {
+          hideAttachmentPreview();
+        } else if (elements.transcriptModal && !elements.transcriptModal.hidden) {
+          hideTranscriptModal();
+        }
+      }
+    });
 
     // Setup drag and drop on textarea if no editor
     if (!editor && elements.messageInput) {
@@ -1309,9 +1952,21 @@ ${content}
       // Update textarea when editor content changes
       editor.on('change', () => {
         elements.messageInput.value = editor.getValue();
+        // Auto-expand editor
+        autoExpandEditor();
         // Trigger auto-tagger if available
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:1310',message:'CodeMirror change handler',data:{hasAutoTagger:!!window.AutoTagger,autoTaggerMethods:window.AutoTagger?Object.keys(window.AutoTagger):[],hasAnalyzeText:!!(window.AutoTagger?.analyzeText),hasExtractKeywords:!!(window.AutoTagger?.extractKeywords),hasAutoSuggest:!!(window.AutoTagger?.autoSuggest)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         if (window.AutoTagger) {
-          window.AutoTagger.analyzeText(editor.getValue());
+          if (window.AutoTagger.autoSuggest) {
+            window.AutoTagger.autoSuggest(editor.getValue());
+          } else if (window.AutoTagger.extractKeywords) {
+            const tags = window.AutoTagger.extractKeywords(editor.getValue());
+            if (tags.length > 0) {
+              window.AutoTagger.showSuggestions(tags);
+            }
+          }
         }
       });
 
@@ -1498,9 +2153,707 @@ ${content}
     state.currentAttachmentPreview = null;
   }
 
+  function showTranscriptModal(transcription) {
+    if (!elements.transcriptModal || !elements.transcriptModalBody) return;
+
+    // Ensure we have the full transcription (not truncated)
+    if (!transcription || !transcription.trim()) {
+      showError('No transcript available');
+      return;
+    }
+
+    console.log('[DEBUG] Showing transcript, length:', transcription.length);
+
+    // Parse transcription as markdown and render it with blog-style formatting
+    let transcriptHtml = '';
+    if (window.marked) {
+      try {
+        // Configure marked for blog-style formatting
+        const markedOptions = {
+          breaks: false, // Don't convert single line breaks to <br>
+          gfm: true, // GitHub Flavored Markdown
+          headerIds: false, // Don't add IDs to headers
+          mangle: false, // Don't mangle email addresses
+        };
+        
+        // Parse markdown
+        transcriptHtml = window.marked.parse(transcription, markedOptions);
+        
+        // Post-process HTML for better blog formatting
+        transcriptHtml = enhanceBlogFormatting(transcriptHtml);
+      } catch (e) {
+        console.error('Error parsing markdown:', e);
+        // Fallback to plain text with paragraph formatting
+        transcriptHtml = formatPlainTextAsHTML(transcription);
+      }
+    } else {
+      // Fallback to plain text with paragraph formatting
+      transcriptHtml = formatPlainTextAsHTML(transcription);
+    }
+
+    elements.transcriptModalBody.innerHTML = `
+      <div class="transcript-content">
+        ${transcriptHtml}
+      </div>
+    `;
+
+    elements.transcriptModal.hidden = false;
+    elements.transcriptModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    // Scroll to top of modal content
+    elements.transcriptModalBody.scrollTop = 0;
+  }
+
+  /**
+   * Enhance HTML with blog-style formatting
+   */
+  function enhanceBlogFormatting(html) {
+    // Wrap content in article-like structure
+    // Ensure paragraphs have proper spacing
+    html = html.replace(/<p>/g, '<p class="transcript-paragraph">');
+    
+    // Add emphasis to first paragraph
+    html = html.replace(/<p class="transcript-paragraph">([^<]+)/, '<p class="transcript-paragraph transcript-lead">$1');
+    
+    return html;
+  }
+
+  /**
+   * Format plain text transcript as HTML paragraphs
+   */
+  function formatPlainTextAsHTML(text) {
+    return text
+      .split('\n\n')
+      .map(para => {
+        const trimmed = para.trim();
+        if (!trimmed) return '';
+        // Clean up the text
+        const cleaned = trimmed.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+        return `<p class="transcript-paragraph">${escapeHtml(cleaned)}</p>`;
+      })
+      .filter(p => p)
+      .join('');
+  }
+
+  function hideTranscriptModal() {
+    if (elements.transcriptModal) {
+      elements.transcriptModal.hidden = true;
+      elements.transcriptModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Transcribe an audio file using OpenAI's Whisper model
+   * Works in the background - no audio playback required
+   * 
+   * Uses Whisper via Hugging Face Inference API (free tier available)
+   * To use: Set HUGGINGFACE_API_KEY in your Cloudflare environment variables
+   * 
+   * Alternative options:
+   * - Replicate: Set REPLICATE_API_TOKEN
+   * - OpenAI API: Set OPENAI_API_KEY
+   * 
+   * @param {string} audioUrl - URL of the audio file
+   * @param {number} attachmentIndex - Index of the attachment in the message
+   * @param {HTMLElement} button - The transcribe button element
+   */
+  async function transcribeAudioFile(audioUrl, attachmentIndex, button) {
+    try {
+      // Update button to show loading state
+      const originalHTML = button.innerHTML;
+      button.disabled = true;
+      button.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinning">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 6v6l4 2"></path>
+        </svg>
+        <span>Transcribing...</span>
+      `;
+
+      // Call Cloudflare Worker function for transcription
+      // This handles the transcription in the background
+      const transcriptionResponse = await fetch('/api/transcribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          audioUrl: audioUrl
+        })
+      });
+
+      if (!transcriptionResponse.ok) {
+        const errorText = await transcriptionResponse.text();
+        throw new Error(`Transcription failed: ${errorText}`);
+      }
+
+      const result = await transcriptionResponse.json();
+      
+      console.log('[Transcribe] Received transcription result:', {
+        transcriptLength: result.transcript?.length || 0,
+        segmentsCount: result.segments?.length || 0,
+        preview: result.transcript?.substring(0, 100) || 'N/A'
+      });
+      
+      if (!result.transcript || !result.transcript.trim()) {
+        throw new Error('No transcription generated - Whisper returned empty result');
+      }
+
+      // Ensure we have the complete transcript
+      const fullTranscript = result.transcript.trim();
+      if (fullTranscript.length < 10) {
+        console.warn('[Transcribe] Warning: Very short transcript received:', fullTranscript);
+      }
+
+      // Format as markdown with blog-style paragraphs
+      const markdownTranscript = formatTranscriptionAsMarkdown(fullTranscript, result.segments);
+      
+      console.log('[Transcribe] Formatted markdown length:', markdownTranscript.length);
+      
+      // Validate transcript completeness
+      if (markdownTranscript.length < fullTranscript.length * 0.5) {
+        console.warn('[Transcribe] Warning: Formatted transcript is significantly shorter than original. This may indicate formatting issues.');
+      }
+
+      // Find the message and update the attachment
+      const messageElement = button.closest('.message');
+      const messageIndex = Array.from(elements.messagesList.querySelectorAll('.message')).indexOf(messageElement);
+      
+      if (messageIndex >= 0 && state.messages[messageIndex]) {
+        const message = state.messages[messageIndex];
+        if (message.attachments && message.attachments[attachmentIndex]) {
+          // Update attachment with transcription
+          message.attachments[attachmentIndex].transcription = markdownTranscript;
+
+          // Update in database
+          await updateMessageWithTranscript(state.currentNote.id, messageIndex, message.attachments[attachmentIndex]);
+
+          // Re-render messages to show transcript button
+          renderMessages();
+
+          // Show success message
+          showSuccess('Audio transcribed successfully!');
+        }
+      }
+
+    } catch (error) {
+      console.error('Transcription error:', error);
+      showError(`Failed to transcribe audio: ${error.message}. Please ensure transcription service is configured.`);
+      button.innerHTML = originalHTML;
+      button.disabled = false;
+    }
+  }
+
+  /**
+   * Format transcription as markdown
+   * @param {string} transcript - Full transcript text
+   * @param {Array} segments - Optional array of transcription segments with timestamps
+   * @returns {string} - Formatted markdown transcript
+   */
+  function formatTranscriptionAsMarkdown(transcript, segments = null) {
+    if (!transcript || !transcript.trim()) {
+      return '';
+    }
+
+    // Clean up transcript
+    let cleanedTranscript = transcript.trim();
+    
+    // Remove "# Audio Transcript" header if present
+    cleanedTranscript = cleanedTranscript.replace(/^#\s*Audio\s+Transcript\s*\n*/i, '');
+    
+    // Remove excessive whitespace
+    cleanedTranscript = cleanedTranscript.replace(/\s+/g, ' ');
+    
+    // If we have segments with timestamps, use them for better paragraph breaks
+    if (segments && segments.length > 0) {
+      let markdown = '';
+      let currentParagraph = [];
+      let lastTimestamp = segments[0]?.start || 0;
+      const PARAGRAPH_PAUSE = 2000; // 2 seconds pause = new paragraph
+      const SENTENCE_PAUSE = 800; // 0.8 seconds = sentence break
+
+      for (let i = 0; i < segments.length; i++) {
+        const segment = segments[i];
+        const pause = (segment.start || 0) - lastTimestamp;
+        const segmentText = segment.text?.trim() || '';
+
+        if (!segmentText) continue;
+
+        currentParagraph.push(segmentText);
+
+        // If pause is long enough, start a new paragraph
+        if (pause > PARAGRAPH_PAUSE && i < segments.length - 1) {
+          if (currentParagraph.length > 0) {
+            const paraText = currentParagraph.join(' ').trim();
+            if (paraText) {
+              markdown += formatParagraph(paraText) + '\n\n';
+            }
+            currentParagraph = [];
+          }
+        } else if (pause > SENTENCE_PAUSE && i < segments.length - 1) {
+          // Add sentence break within paragraph
+          const lastItem = currentParagraph.pop();
+          if (lastItem) {
+            currentParagraph.push(lastItem + '.');
+          }
+        }
+
+        lastTimestamp = segment.start || lastTimestamp;
+      }
+
+      // Add remaining paragraph
+      if (currentParagraph.length > 0) {
+        const paraText = currentParagraph.join(' ').trim();
+        if (paraText) {
+          markdown += formatParagraph(paraText);
+        }
+      }
+
+      return markdown.trim();
+    } else {
+      // Format plain text transcript into blog-style paragraphs
+      return formatPlainTranscript(cleanedTranscript);
+    }
+  }
+
+  /**
+   * Format a paragraph with proper sentence structure
+   */
+  function formatParagraph(text) {
+    // Ensure proper sentence capitalization
+    text = text.trim();
+    if (!text) return '';
+    
+    // Capitalize first letter
+    text = text.charAt(0).toUpperCase() + text.slice(1);
+    
+    // Ensure sentence ends with punctuation
+    if (!/[.!?]$/.test(text)) {
+      text += '.';
+    }
+    
+    return text;
+  }
+
+  /**
+   * Format plain transcript text into blog-style paragraphs
+   */
+  function formatPlainTranscript(transcript) {
+    let markdown = '';
+    
+    // Split into sentences (period, exclamation, question mark followed by space)
+    const sentenceRegex = /([.!?]+\s+)/g;
+    const parts = transcript.split(sentenceRegex);
+    
+    let sentences = [];
+    for (let i = 0; i < parts.length; i += 2) {
+      const sentence = parts[i]?.trim();
+      const punctuation = parts[i + 1]?.trim() || '.';
+      if (sentence) {
+        sentences.push(sentence + punctuation);
+      }
+    }
+    
+    // If splitting didn't work well, try simpler approach
+    if (sentences.length === 0) {
+      sentences = transcript.split(/[.!?]+\s+/).filter(s => s.trim());
+      sentences = sentences.map(s => {
+        s = s.trim();
+        if (!/[.!?]$/.test(s)) s += '.';
+        return s;
+      });
+    }
+    
+    // Group sentences into paragraphs (3-5 sentences per paragraph)
+    let currentParagraph = [];
+    const sentencesPerParagraph = 4;
+    
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i].trim();
+      if (!sentence) continue;
+      
+      // Capitalize first letter
+      const formattedSentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+      currentParagraph.push(formattedSentence);
+      
+      // Start new paragraph every N sentences, or at natural breaks
+      const shouldBreak = 
+        currentParagraph.length >= sentencesPerParagraph ||
+        (i < sentences.length - 1 && shouldStartNewParagraph(sentence, sentences[i + 1]));
+      
+      if (shouldBreak && i < sentences.length - 1) {
+        const paraText = currentParagraph.join(' ').trim();
+        if (paraText) {
+          markdown += paraText + '\n\n';
+        }
+        currentParagraph = [];
+      }
+    }
+    
+    // Add remaining paragraph
+    if (currentParagraph.length > 0) {
+      const paraText = currentParagraph.join(' ').trim();
+      if (paraText) {
+        markdown += paraText;
+      }
+    }
+    
+    return markdown.trim();
+  }
+
+  /**
+   * Determine if we should start a new paragraph based on sentence content
+   */
+  function shouldStartNewParagraph(currentSentence, nextSentence) {
+    // Look for transition words or topic changes
+    const transitionWords = [
+      'however', 'therefore', 'furthermore', 'moreover', 'additionally',
+      'meanwhile', 'consequently', 'nevertheless', 'on the other hand',
+      'in addition', 'for example', 'for instance', 'specifically',
+      'in conclusion', 'to summarize', 'finally', 'next', 'then'
+    ];
+    
+    const lowerCurrent = currentSentence.toLowerCase();
+    const lowerNext = nextSentence.toLowerCase();
+    
+    // Check if next sentence starts with transition word
+    for (const word of transitionWords) {
+      if (lowerNext.startsWith(word)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Update message in database with transcription
+   * @param {string} noteId - Note ID
+   * @param {number} messageIndex - Index of message in messages array
+   * @param {Object} attachment - Updated attachment with transcription
+   */
+  async function updateMessageWithTranscript(noteId, messageIndex, attachment) {
+    try {
+      // Load current note
+      const { data: note, error: loadError } = await state.supabase
+        .from('notes')
+        .select('content')
+        .eq('id', noteId)
+        .single();
+
+      if (loadError) throw loadError;
+
+      // Parse messages from content
+      let messages = [];
+      try {
+        messages = JSON.parse(note.content || '[]');
+      } catch (e) {
+        console.error('Failed to parse messages:', e);
+        return;
+      }
+
+      // Update attachment in message - ensure full transcript is preserved
+      if (messages[messageIndex] && messages[messageIndex].attachments) {
+        const attachmentIndex = messages[messageIndex].attachments.findIndex(
+          att => att.url === attachment.url
+        );
+        if (attachmentIndex >= 0) {
+          // Store the complete transcription
+          const fullTranscription = attachment.transcription || '';
+          messages[messageIndex].attachments[attachmentIndex].transcription = fullTranscription;
+          
+          console.log('[Update] Stored transcript in database:', {
+            length: fullTranscription.length,
+            preview: fullTranscription.substring(0, 100)
+          });
+        }
+      }
+
+      // Update note in database
+      const { error: updateError } = await state.supabase
+        .from('notes')
+        .update({
+          content: JSON.stringify(messages),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', noteId);
+
+      if (updateError) throw updateError;
+
+      // Update local state
+      state.currentNote.content = JSON.stringify(messages);
+      state.messages = messages;
+
+    } catch (error) {
+      console.error('Failed to update transcript:', error);
+      throw error;
+    }
+  }
+
   // ==========================================================================
   // Voice Recording
   // ==========================================================================
+  
+  /**
+   * Check if webcam is available
+   */
+  async function checkWebcamAvailability() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      return videoDevices.length > 0;
+    } catch (error) {
+      console.error('Error checking webcam:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Start video recording with webcam
+   */
+  async function startVideoRecording() {
+    try {
+      // Check webcam availability
+      const hasWebcam = await checkWebcamAvailability();
+      if (!hasWebcam) {
+        showError('No webcam detected. Please connect a webcam to record video.');
+        return;
+      }
+
+      // Close attachment menu
+      elements.attachmentMenu.hidden = true;
+
+      // Check for browser support
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showError('Your browser does not support video recording');
+        return;
+      }
+
+      // Request camera and microphone access
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: 'user'
+        }, 
+        audio: true 
+      });
+      state.recordingStream = stream;
+      
+      // Initialize live transcription state
+      state.liveTranscriptionText = '';
+      state.interimTranscriptionText = '';
+      state.transcriptionSegments = [];
+      state.lastTranscriptionTime = Date.now();
+      
+      // Initialize MediaRecorder for video
+      const mimeType = MediaRecorder.isTypeSupported('video/webm') ? 'video/webm' :
+                      MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' :
+                      'video/webm';
+      
+      state.videoRecorder = new MediaRecorder(stream, { mimeType });
+      state.videoChunks = [];
+
+      // Collect video chunks
+      state.videoRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          state.videoChunks.push(event.data);
+        }
+      };
+
+      // Initialize Speech Recognition for live transcription
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        state.recognition = new SpeechRecognition();
+        state.recognition.continuous = true;
+        state.recognition.interimResults = true;
+        state.recognition.lang = 'en-US';
+        
+        state.recognition.onend = () => {
+          if (state.isRecordingVideo && state.videoRecorder && state.videoRecorder.state !== 'inactive') {
+            try {
+              state.recognition.start();
+            } catch (e) {
+              console.warn('Could not restart speech recognition:', e);
+            }
+          }
+        };
+
+        state.recognition.onresult = (event) => {
+          let interimTranscript = '';
+          let finalTranscript = '';
+
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript + ' ';
+              const currentTime = Date.now();
+              const pauseDuration = state.lastTranscriptionTime ? 
+                (currentTime - state.lastTranscriptionTime) : 0;
+              
+              state.transcriptionSegments.push({
+                text: transcript.trim(),
+                timestamp: currentTime,
+                pauseDuration: pauseDuration
+              });
+              state.lastTranscriptionTime = currentTime;
+            } else {
+              interimTranscript += transcript;
+            }
+          }
+
+          // Update text field with live transcription
+          if (finalTranscript) {
+            state.liveTranscriptionText += finalTranscript;
+            updateLiveTranscription();
+          }
+          if (interimTranscript) {
+            state.interimTranscriptionText = interimTranscript;
+            updateLiveTranscription();
+          }
+        };
+
+        state.recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          if (event.error === 'not-allowed') {
+            console.warn('Microphone permission denied for speech recognition');
+          }
+        };
+
+        try {
+          state.recognition.start();
+        } catch (error) {
+          console.warn('Could not start speech recognition:', error);
+        }
+      }
+
+      // Start recording
+      state.videoRecorder.start(1000); // Collect data every second
+      state.isRecordingVideo = true;
+      state.recordingStartTime = Date.now();
+
+      // Show recording UI (reuse voice recording UI)
+      if (elements.voiceRecordingContainer) {
+        elements.voiceRecordingContainer.hidden = false;
+      }
+
+      // Start timer
+      startRecordingTimer();
+
+      console.log('Video recording started');
+    } catch (error) {
+      console.error('Error starting video recording:', error);
+      showError('Failed to start video recording. Please check camera and microphone permissions.');
+      stopVideoRecording();
+    }
+  }
+
+  /**
+   * Stop video recording
+   */
+  function stopVideoRecording() {
+    if (!state.isRecordingVideo) return;
+
+    state.isRecordingVideo = false;
+
+    // Stop MediaRecorder
+    if (state.videoRecorder && state.videoRecorder.state !== 'inactive') {
+      state.videoRecorder.stop();
+    }
+
+    // Stop Speech Recognition
+    if (state.recognition) {
+      state.recognition.stop();
+    }
+
+    // Stop all tracks
+    if (state.recordingStream) {
+      state.recordingStream.getTracks().forEach(track => track.stop());
+      state.recordingStream = null;
+    }
+
+    // Stop timer
+    if (state.recordingTimer) {
+      clearInterval(state.recordingTimer);
+      state.recordingTimer = null;
+    }
+
+    // Finalize live transcription
+    if (state.interimTranscriptionText) {
+      state.liveTranscriptionText += state.interimTranscriptionText;
+      state.interimTranscriptionText = '';
+      updateLiveTranscription();
+    }
+
+    // Process recording
+    processVideoRecording();
+  }
+
+  /**
+   * Process video recording after stop
+   */
+  async function processVideoRecording() {
+    try {
+      // Wait for MediaRecorder to finish
+      await new Promise((resolve) => {
+        if (state.videoRecorder) {
+          state.videoRecorder.onstop = resolve;
+          if (state.videoRecorder.state === 'inactive') {
+            resolve();
+          }
+        } else {
+          resolve();
+        }
+      });
+
+      // Create video blob
+      const videoBlob = new Blob(state.videoChunks, { type: state.videoRecorder.mimeType });
+      
+      // Use live transcription if available
+      let formattedTranscription = '';
+      if (state.liveTranscriptionText.trim()) {
+        formattedTranscription = state.liveTranscriptionText.trim();
+      } else {
+        formattedTranscription = formatTranscriptionWithPauses(state.transcriptionSegments);
+      }
+
+      // Create video file
+      const videoFile = new File([videoBlob], `video-recording-${Date.now()}.webm`, { 
+        type: state.videoRecorder.mimeType 
+      });
+
+      // Add to attachments
+      state.attachments.push({
+        file: videoFile,
+        type: 'video',
+        preview: null,
+        transcription: formattedTranscription || null,
+        isVideoRecording: true
+      });
+
+      // Hide recording UI
+      if (elements.voiceRecordingContainer) {
+        elements.voiceRecordingContainer.hidden = true;
+      }
+
+      // Render attachments
+      renderAttachments();
+
+      // Clear recording state
+      state.videoRecorder = null;
+      state.videoChunks = [];
+      state.transcriptionSegments = [];
+      state.liveTranscriptionText = '';
+      state.interimTranscriptionText = '';
+
+      console.log('Video recording processed');
+    } catch (error) {
+      console.error('Error processing video recording:', error);
+      showError('Failed to process video recording');
+    }
+  }
   
   async function startVoiceRecording() {
     try {
@@ -1515,6 +2868,13 @@ ${content}
 
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.recordingStream = stream;
+      
+      // Initialize live transcription state
+      state.liveTranscriptionText = '';
+      state.interimTranscriptionText = '';
+      state.transcriptionSegments = [];
+      state.lastTranscriptionTime = Date.now();
       
       // Initialize MediaRecorder
       const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' :
@@ -1523,8 +2883,6 @@ ${content}
       
       state.mediaRecorder = new MediaRecorder(stream, { mimeType });
       state.audioChunks = [];
-      state.transcriptionSegments = [];
-      state.lastTranscriptionTime = Date.now();
 
       // Collect audio chunks
       state.mediaRecorder.ondataavailable = (event) => {
@@ -1578,7 +2936,15 @@ ${content}
             }
           }
 
-          // Don't update preview during recording - transcription will show after recording stops
+          // Update text field with live transcription
+          if (finalTranscript) {
+            state.liveTranscriptionText += finalTranscript;
+            updateLiveTranscription();
+          }
+          if (interimTranscript) {
+            state.interimTranscriptionText = interimTranscript;
+            updateLiveTranscription();
+          }
         };
 
         state.recognition.onerror = (event) => {
@@ -1640,14 +3006,22 @@ ${content}
     }
 
     // Stop all tracks
-    if (state.mediaRecorder && state.mediaRecorder.stream) {
-      state.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+    if (state.recordingStream) {
+      state.recordingStream.getTracks().forEach(track => track.stop());
+      state.recordingStream = null;
     }
 
     // Stop timer
     if (state.recordingTimer) {
       clearInterval(state.recordingTimer);
       state.recordingTimer = null;
+    }
+
+    // Finalize live transcription (remove interim text, keep final)
+    if (state.interimTranscriptionText) {
+      state.liveTranscriptionText += state.interimTranscriptionText;
+      state.interimTranscriptionText = '';
+      updateLiveTranscription();
     }
 
     // Process recording
@@ -1672,46 +3046,79 @@ ${content}
       // Create audio blob
       const audioBlob = new Blob(state.audioChunks, { type: state.mediaRecorder.mimeType });
       
-      // Format transcription with paragraph breaks
-      const formattedTranscription = formatTranscriptionWithPauses(state.transcriptionSegments);
+      // Use live transcription if available, otherwise format from segments
+      // This will be saved as the message content, not as attachment.transcription
+      let formattedTranscription = '';
+      if (state.liveTranscriptionText.trim()) {
+        formattedTranscription = state.liveTranscriptionText.trim();
+      } else {
+        formattedTranscription = formatTranscriptionWithPauses(state.transcriptionSegments);
+      }
 
-      // Create file from blob
-      const fileExtension = state.mediaRecorder.mimeType.split('/')[1] || 'webm';
-      const fileName = `voice-recording-${Date.now()}.${fileExtension}`;
-      const audioFile = new File([audioBlob], fileName, { type: state.mediaRecorder.mimeType });
+      // Store transcription in the text field as message content
+      // This way it shows up as the message text, not as a separate transcript button
+      if (formattedTranscription && formattedTranscription.trim()) {
+        if (editor) {
+          editor.setValue(formattedTranscription);
+        } else if (elements.messageInput) {
+          elements.messageInput.value = formattedTranscription;
+          autoExpandTextarea();
+        }
+      }
 
-      // Add to attachments with transcription
+      // Convert to supported format if needed (Supabase only accepts: audio/mpeg, audio/mp4, audio/wav, audio/x-m4a)
+      let audioFile;
+      const originalMimeType = state.mediaRecorder.mimeType;
+      
+      console.log('[FIX] Processing audio recording, original MIME type:', originalMimeType);
+      
+      if (originalMimeType === 'audio/webm' || originalMimeType === 'audio/ogg') {
+        // Convert webm/ogg to WAV (supported format)
+        console.log('[FIX] Converting audio from', originalMimeType, 'to audio/wav');
+        try {
+          const wavBlob = await convertToWav(audioBlob);
+          audioFile = new File([wavBlob], `voice-recording-${Date.now()}.wav`, { type: 'audio/wav' });
+          console.log('[FIX] Audio conversion successful, WAV file size:', wavBlob.size, 'bytes');
+        } catch (conversionError) {
+          console.error('[FIX] Audio conversion failed:', conversionError);
+          showError('Failed to convert audio format. Please try recording again or contact support.');
+          return; // Don't add to attachments if conversion fails
+        }
+      } else if (['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a'].includes(originalMimeType)) {
+        // Already in supported format
+        const fileExtension = originalMimeType.split('/')[1] || 'mp3';
+        audioFile = new File([audioBlob], `voice-recording-${Date.now()}.${fileExtension}`, { type: originalMimeType });
+        console.log('[FIX] Audio already in supported format:', originalMimeType);
+      } else {
+        // Unknown format, try to convert to WAV
+        console.log('[FIX] Unknown audio format, converting to WAV:', originalMimeType);
+        try {
+          const wavBlob = await convertToWav(audioBlob);
+          audioFile = new File([wavBlob], `voice-recording-${Date.now()}.wav`, { type: 'audio/wav' });
+          console.log('[FIX] Audio conversion successful');
+        } catch (conversionError) {
+          console.error('[FIX] Audio conversion failed:', conversionError);
+          showError('Unable to convert audio to supported format. Please try recording again.');
+          return; // Don't add to attachments if conversion fails
+        }
+      }
+
+      // Add to attachments (transcription is stored in message content, not here)
+      // We keep transcription in attachment for reference, but don't show it as a separate button
       state.attachments.push({
         file: audioFile,
         type: 'audio',
         preview: null,
-        transcription: formattedTranscription || null,
+        transcription: formattedTranscription || null, // Keep for reference, but won't show "Read Transcript" button
         isVoiceRecording: true
       });
 
-      // Show transcription preview with final formatted transcription
-      // Update the segments first so formatTranscriptionWithPauses can use them
-      if (formattedTranscription && formattedTranscription.trim()) {
-        // Update preview content directly since we already have formatted transcription
-        if (elements.voiceRecordingTranscriptionPreview && elements.transcriptionPreviewContent) {
-          elements.voiceRecordingTranscriptionPreview.hidden = false;
-          elements.transcriptionPreviewContent.innerHTML = formattedTranscription
-            .split('\n\n')
-            .map(para => {
-              const paraWithBreaks = para.replace(/\n/g, '<br>');
-              return `<p>${escapeHtml(paraWithBreaks)}</p>`;
-            })
-            .join('');
-        }
-        // Keep recording UI visible to show transcription
-      } else {
-        // Hide recording UI if no transcription
-        if (elements.voiceRecordingContainer) {
-          elements.voiceRecordingContainer.hidden = true;
-        }
-        if (elements.voiceRecordingTranscriptionPreview) {
-          elements.voiceRecordingTranscriptionPreview.hidden = true;
-        }
+      // Hide recording UI - transcript is now in the text field as message content
+      if (elements.voiceRecordingContainer) {
+        elements.voiceRecordingContainer.hidden = true;
+      }
+      if (elements.voiceRecordingTranscriptionPreview) {
+        elements.voiceRecordingTranscriptionPreview.hidden = true;
       }
 
       // Render attachments
@@ -1729,6 +3136,186 @@ ${content}
       console.error('Error processing voice recording:', error);
       showError('Failed to process recording');
     }
+  }
+
+  /**
+   * Convert audio blob to WAV format using Web Audio API
+   * @param {Blob} audioBlob - Original audio blob (webm, ogg, etc.)
+   * @returns {Promise<Blob>} - WAV format blob
+   */
+  async function convertToWav(audioBlob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = async (e) => {
+        try {
+          const arrayBuffer = e.target.result;
+          
+          // Check if AudioContext is available
+          if (!window.AudioContext && !window.webkitAudioContext) {
+            throw new Error('Web Audio API not supported in this browser');
+          }
+          
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          
+          // Decode audio data - this may fail for webm in some browsers
+          let audioBuffer;
+          try {
+            audioBuffer = await audioContext.decodeAudioData(arrayBuffer.slice(0));
+          } catch (decodeError) {
+            console.error('[FIX] decodeAudioData failed:', decodeError);
+            // Try creating a new AudioContext and retry once
+            const newContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioBuffer = await newContext.decodeAudioData(arrayBuffer.slice(0));
+          }
+          
+          // Convert to WAV
+          const wavBuffer = audioBufferToWav(audioBuffer);
+          const wavBlob = new Blob([wavBuffer], { type: 'audio/wav' });
+          
+          // Clean up audio context
+          if (audioContext.state !== 'closed') {
+            await audioContext.close();
+          }
+          
+          resolve(wavBlob);
+        } catch (error) {
+          console.error('[FIX] convertToWav error:', error);
+          reject(new Error(`Audio conversion failed: ${error.message}`));
+        }
+      };
+      
+      reader.onerror = (error) => {
+        console.error('[FIX] FileReader error:', error);
+        reject(new Error('Failed to read audio file'));
+      };
+      
+      reader.readAsArrayBuffer(audioBlob);
+    });
+  }
+
+  /**
+   * Convert AudioBuffer to WAV format
+   * @param {AudioBuffer} audioBuffer - Audio buffer from Web Audio API
+   * @returns {ArrayBuffer} - WAV file as ArrayBuffer
+   */
+  function audioBufferToWav(audioBuffer) {
+    const numChannels = audioBuffer.numberOfChannels;
+    const sampleRate = audioBuffer.sampleRate;
+    const format = 1; // PCM
+    const bitDepth = 16;
+    
+    const bytesPerSample = bitDepth / 8;
+    const blockAlign = numChannels * bytesPerSample;
+    
+    const length = audioBuffer.length;
+    const arrayBuffer = new ArrayBuffer(44 + length * numChannels * bytesPerSample);
+    const view = new DataView(arrayBuffer);
+    
+    // WAV header
+    const writeString = (offset, string) => {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    };
+    
+    writeString(0, 'RIFF');
+    view.setUint32(4, 36 + length * numChannels * bytesPerSample, true);
+    writeString(8, 'WAVE');
+    writeString(12, 'fmt ');
+    view.setUint32(16, 16, true); // fmt chunk size
+    view.setUint16(20, format, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bitDepth, true);
+    writeString(36, 'data');
+    view.setUint32(40, length * numChannels * bytesPerSample, true);
+    
+    // Convert audio data
+    let offset = 44;
+    for (let i = 0; i < length; i++) {
+      for (let channel = 0; channel < numChannels; channel++) {
+        const sample = Math.max(-1, Math.min(1, audioBuffer.getChannelData(channel)[i]));
+        view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+        offset += 2;
+      }
+    }
+    
+    return arrayBuffer;
+  }
+
+  /**
+   * Update the text field with live transcription during recording
+   */
+  function updateLiveTranscription() {
+    if (!state.isRecording && !state.isRecordingVideo) return;
+
+    const fullText = (state.liveTranscriptionText + ' ' + state.interimTranscriptionText).trim();
+    
+    if (editor) {
+      // Update CodeMirror editor
+      const currentValue = editor.getValue();
+      if (currentValue !== fullText) {
+        editor.setValue(fullText);
+        // Auto-expand editor
+        autoExpandEditor();
+        // Scroll to bottom
+        editor.scrollIntoView({ line: editor.lineCount() - 1 });
+      }
+    } else if (elements.messageInput) {
+      // Update textarea
+      if (elements.messageInput.value !== fullText) {
+        elements.messageInput.value = fullText;
+        // Auto-expand textarea
+        autoExpandTextarea();
+        // Scroll to bottom
+        elements.messageInput.scrollTop = elements.messageInput.scrollHeight;
+      }
+    }
+  }
+
+  /**
+   * Auto-expand CodeMirror editor as content grows
+   */
+  function autoExpandEditor() {
+    if (!editor) return;
+    
+    const lineCount = editor.lineCount();
+    const minLines = 3;
+    const maxLines = 20;
+    const linesToShow = Math.min(Math.max(lineCount, minLines), maxLines);
+    
+    // Set editor height based on line count
+    const lineHeight = editor.defaultTextHeight();
+    const newHeight = linesToShow * lineHeight + 20; // Add padding
+    
+    const wrapper = editor.getWrapperElement();
+    if (wrapper) {
+      wrapper.style.height = `${newHeight}px`;
+      editor.refresh();
+    }
+  }
+
+  /**
+   * Auto-expand textarea as content grows
+   */
+  function autoExpandTextarea() {
+    if (!elements.messageInput) return;
+    
+    // Reset height to auto to get accurate scrollHeight
+    elements.messageInput.style.height = 'auto';
+    
+    // Calculate new height (min 3 lines, max 20 lines)
+    const lineHeight = parseInt(getComputedStyle(elements.messageInput).lineHeight) || 24;
+    const minHeight = lineHeight * 3;
+    const maxHeight = lineHeight * 20;
+    const scrollHeight = elements.messageInput.scrollHeight;
+    
+    const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
+    elements.messageInput.style.height = `${newHeight}px`;
+    elements.messageInput.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
   }
 
   function formatTranscriptionWithPauses(segments) {
