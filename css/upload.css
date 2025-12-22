@@ -117,6 +117,8 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--theme-bg-primary);
+  transition: background 0.3s;
 }
 
 .chat-main {
@@ -124,6 +126,8 @@ body {
   grid-template-columns: 320px 1fr;
   flex: 1;
   overflow: hidden;
+  background: var(--theme-bg-primary);
+  transition: background 0.3s;
 }
 
 @media (max-width: 768px) {
@@ -293,7 +297,9 @@ body {
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  background: var(--theme-bg-primary);
+  transition: background 0.3s;
 }
 
 .messages-empty {
@@ -324,9 +330,10 @@ body {
 .message-bubble {
   background: var(--theme-bg-tertiary);
   border: 1px solid var(--theme-border);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 1rem 1.25rem;
   transition: background 0.3s, border-color 0.3s;
+  box-shadow: 0 1px 2px var(--theme-shadow);
 }
 
 .message-bubble.has-content {
@@ -672,10 +679,11 @@ body {
   align-items: flex-end;
   gap: 0.75rem;
   background: var(--theme-bg-tertiary);
-  border: 2px solid var(--theme-border);
-  border-radius: 12px;
+  border: 1px solid var(--theme-border);
+  border-radius: 24px;
   padding: 0.75rem 1rem;
   transition: border-color 0.2s, background 0.3s;
+  box-shadow: 0 2px 8px var(--theme-shadow);
 }
 
 .message-input-row:focus-within {
@@ -844,11 +852,14 @@ body {
   color: var(--theme-text-primary);
   cursor: pointer;
   padding: 0.625rem;
-  border-radius: 8px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px var(--theme-shadow);
 }
 
 .send-btn:hover {
