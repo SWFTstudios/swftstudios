@@ -38,6 +38,7 @@
   let state = {
     posts: [],
     graphData: null,
+    fullGraphData: null, // Store all nodes including messages
     graph: null,
     graphLoaded: false,
     graphLibraryLoaded: false,
@@ -47,7 +48,22 @@
     activeAuthor: null,
     sortBy: 'date-desc',
     highlightedPostId: null,
-    currentUser: null // Track current authenticated user
+    currentUser: null, // Track current authenticated user
+    graphZoomLevel: 'far', // 'far', 'medium', 'close'
+    focusedNoteId: null, // Currently focused note for message display
+    hoveredNodeId: null, // Currently hovered node for highlighting
+    graphFilters: {
+      tags: true,
+      attachments: false,
+      existingFilesOnly: false,
+      orphans: true
+    },
+    graphForces: {
+      center: 70,
+      repel: 30,
+      link: 60,
+      distance: 40
+    }
   };
 
   // ==========================================================================
@@ -89,7 +105,17 @@
     editTags: document.getElementById('edit-note-tags'),
     editSaveBtn: document.getElementById('edit-note-save'),
     editCancelBtn: document.getElementById('edit-note-cancel'),
-    editCloseBtn: document.getElementById('edit-note-close')
+    editCloseBtn: document.getElementById('edit-note-close'),
+    graphSidebar: document.getElementById('graph-sidebar'),
+    graphSectionToggles: document.querySelectorAll('.blog_graph-section-toggle'),
+    filterTags: document.getElementById('filter-tags'),
+    filterAttachments: document.getElementById('filter-attachments'),
+    filterExistingFiles: document.getElementById('filter-existing-files'),
+    filterOrphans: document.getElementById('filter-orphans'),
+    forceCenter: document.getElementById('force-center'),
+    forceRepel: document.getElementById('force-repel'),
+    forceLink: document.getElementById('force-link'),
+    forceDistance: document.getElementById('force-distance')
   };
 
   // ==========================================================================
@@ -153,6 +179,209 @@
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  /**
+   * Get tag color from settings
+   */
+  function getTagColorForBlog(tag) {
+    if (window.Settings && window.Settings.settings && window.Settings.settings.tagColors) {
+      const normalizedTag = tag.toLowerCase();
+      return window.Settings.settings.tagColors[normalizedTag] || '#6366f1';
+    }
+    return '#6366f1'; // Default color
+  }
+
+  /**
+   * Get contrast color (black or white) for text on colored background
+   */
+  function getContrastColorForBlog(hexColor) {
+    const hex = hexColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }
+
+  /**
+   * Format plain text as HTML paragraphs
+   */
+  function formatPlainTextAsHTML(text) {
+    return text
+      .split('\n\n')
+      .map(para => {
+        const trimmed = para.trim();
+        if (!trimmed) return '';
+        const cleaned = trimmed.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+        return `<p>${escapeHtml(cleaned)}</p>`;
+      })
+      .filter(p => p)
+      .join('');
+  }
+
+  /**
+   * Open modal showing a specific message
+   */
+  function openMessageModal(post, message) {
+    if (!elements.modal) return;
+    
+    // Create a temporary post object with just this message
+    const messagePost = {
+      ...post,
+      content: JSON.stringify([message]), // Single message array
+      title: `${post.title} - Message`
+    };
+    
+    openModal(messagePost);
+  }
+
+  /**
+   * Show transcript modal with PDF-like reader interface
+   */
+  function showTranscriptModal(transcription) {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('blog-transcript-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'blog-transcript-modal';
+      modal.className = 'blog-transcript-modal';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.hidden = true;
+      modal.innerHTML = `
+        <div class="blog-transcript-modal-backdrop"></div>
+        <div class="blog-transcript-modal-container">
+          <!-- PDF-like Toolbar -->
+          <div class="blog-transcript-toolbar">
+            <div class="blog-transcript-toolbar-left">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.7;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span class="blog-transcript-title">Audio Transcript</span>
+            </div>
+            <div class="blog-transcript-toolbar-right">
+              <button type="button" class="blog-transcript-close-btn" aria-label="Close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <!-- PDF-like Document Area -->
+          <div class="blog-transcript-document-container">
+            <div class="blog-transcript-document" id="blog-transcript-content">
+              <!-- Transcript content will be inserted here -->
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Close handler function
+      const closeModal = () => {
+        modal.hidden = true;
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      };
+      
+      // Close on backdrop click
+      const backdrop = modal.querySelector('.blog-transcript-modal-backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeModal();
+        });
+      }
+      
+      // Close on close button click
+      const closeBtn = modal.querySelector('.blog-transcript-close-btn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeModal();
+        });
+      }
+      
+      // Prevent clicks on container from closing modal
+      const container = modal.querySelector('.blog-transcript-modal-container');
+      if (container) {
+        container.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+    }
+
+    // Format and display transcript
+    const contentEl = document.getElementById('blog-transcript-content');
+    if (contentEl) {
+      // Clean up transcription - remove headers
+      let cleanedTranscription = transcription.replace(/^#\s*Audio\s+Transcript\s*\n*/i, '').trim();
+      
+      let formattedHtml = '';
+      if (window.marked) {
+        try {
+          formattedHtml = window.marked.parse(cleanedTranscription, { 
+            breaks: false, // Don't convert single line breaks
+            gfm: true 
+          });
+        } catch (e) {
+          formattedHtml = formatPlainTextAsHTML(cleanedTranscription);
+        }
+      } else {
+        formattedHtml = formatPlainTextAsHTML(cleanedTranscription);
+      }
+      
+      contentEl.innerHTML = formattedHtml;
+      
+      // Scroll to top
+      contentEl.scrollTop = 0;
+    }
+
+    // Show modal
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    
+    // Focus management
+    const closeBtn = modal.querySelector('.blog-transcript-close-btn');
+    if (closeBtn) {
+      setTimeout(() => closeBtn.focus(), 100);
+    }
+    
+    // ESC key handler - attach to modal so it's scoped
+    const escHandler = (e) => {
+      if (e.key === 'Escape' && !modal.hidden) {
+        e.preventDefault();
+        e.stopPropagation();
+        modal.hidden = true;
+        document.body.style.overflow = '';
+      }
+    };
+    
+    // Remove any existing handler first
+    modal.removeEventListener('keydown', escHandler);
+    modal.addEventListener('keydown', escHandler);
+    
+    // Also add to document for broader coverage
+    document.addEventListener('keydown', escHandler);
+    
+    // Clean up when modal is hidden
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+          if (modal.hidden) {
+            document.removeEventListener('keydown', escHandler);
+            observer.disconnect();
+          }
+        }
+      });
+    });
+    observer.observe(modal, { attributes: true });
   }
 
   // ==========================================================================
@@ -291,27 +520,123 @@
   /**
    * Build graph data from posts
    */
+  /**
+   * Get message preview text for node label
+   */
+  function getMessagePreview(message) {
+    if (message.content && message.content.trim()) {
+      // Remove markdown headers and get first 50 chars
+      const cleaned = message.content.replace(/^#+\s*/gm, '').trim();
+      return cleaned.length > 50 ? cleaned.substring(0, 50) + '...' : cleaned;
+    }
+    if (message.attachments && message.attachments.length > 0) {
+      const audioCount = message.attachments.filter(a => a.type === 'audio').length;
+      const videoCount = message.attachments.filter(a => a.type === 'video').length;
+      const imageCount = message.attachments.filter(a => a.type === 'image').length;
+      if (audioCount > 0) return `Audio Message (${audioCount})`;
+      if (videoCount > 0) return `Video Message (${videoCount})`;
+      if (imageCount > 0) return `Image Message (${imageCount})`;
+      return 'File Attachment';
+    }
+    return 'Empty Message';
+  }
+
+  /**
+   * Get color for message node based on tags
+   */
+  function getMessageColor(message) {
+    if (message.tags && message.tags.length > 0) {
+      const tagColor = getTagColorForBlog(message.tags[0]);
+      // Lighten the color for messages
+      return lightenColor(tagColor, 30);
+    }
+    return '#aaaaaa'; // Default gray for messages
+  }
+
+  /**
+   * Lighten a hex color by a percentage
+   */
+  function lightenColor(hex, percent) {
+    const num = parseInt(hex.replace('#', ''), 16);
+    const r = Math.min(255, (num >> 16) + percent);
+    const g = Math.min(255, ((num >> 8) & 0x00FF) + percent);
+    const b = Math.min(255, (num & 0x0000FF) + percent);
+    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+  }
+
   function buildGraphData(posts) {
     // Return empty graph if no posts
     if (!posts || posts.length === 0) {
       return { nodes: [], links: [] };
     }
     
-    const nodes = posts.map(post => ({
-      id: post.id,
-      name: post.title,
-      tags: post.tags || [],
-      val: post.links ? post.links.length + 1 : 1,
-      color: post.tags && post.tags.length > 0 ? '#6366f1' : '#888'
-    }));
-    
+    const nodes = [];
     const links = [];
-    const nodeMap = new Map(nodes.map(n => [n.id, n]));
+    const messageNodes = [];
+    const allMessageNodes = []; // Store all messages for tag connections
     
+    // Create note nodes
+    posts.forEach(post => {
+      // Parse messages from content
+      let messages = [];
+      try {
+        const parsed = typeof post.content === 'string' ? JSON.parse(post.content) : post.content;
+        if (Array.isArray(parsed)) {
+          messages = parsed;
+        }
+      } catch (e) {
+        // Not JSON, skip messages
+      }
+      
+      // Create note node
+      const noteNode = {
+        id: post.id,
+        name: post.title,
+        tags: post.tags || [],
+        val: post.links ? post.links.length + 1 : 1,
+        // Don't set color property - let nodeColor function handle it
+        nodeType: 'note',
+        slug: post.slug,
+        post: post // Store full post reference
+      };
+      nodes.push(noteNode);
+      
+      // Create message nodes
+      messages.forEach(msg => {
+        const messageNode = {
+          id: `message-${post.id}-${msg.id}`,
+          name: getMessagePreview(msg),
+          nodeType: 'message',
+          parentNoteId: post.id,
+          messageId: msg.id,
+          noteId: post.id,
+          tags: msg.tags || [],
+          val: 0.5, // Smaller than note nodes
+          // Don't set color property - let nodeColor function handle it
+          message: msg, // Store full message reference
+          post: post // Store parent post reference
+        };
+        messageNodes.push(messageNode);
+        allMessageNodes.push(messageNode);
+        
+        // Link message to parent note
+        links.push({
+          source: post.id,
+          target: messageNode.id,
+          type: 'parent',
+          weight: 1
+        });
+      });
+    });
+    
+    // Create node map for lookups
+    const nodeMap = new Map(nodes.map(n => [n.id, n]));
+    messageNodes.forEach(m => nodeMap.set(m.id, m));
+    
+    // Create manual links between notes (existing functionality)
     posts.forEach(post => {
       if (post.links && post.links.length > 0) {
         post.links.forEach(linkId => {
-          // Check if linked post exists
           if (nodeMap.has(linkId)) {
             links.push({
               source: post.id,
@@ -323,7 +648,70 @@
       }
     });
     
-    return { nodes, links };
+    // Create tag-based connections between notes (existing functionality)
+    const postArray = Array.from(posts);
+    for (let i = 0; i < postArray.length; i++) {
+      for (let j = i + 1; j < postArray.length; j++) {
+        const postA = postArray[i];
+        const postB = postArray[j];
+        const sharedTags = (postA.tags || []).filter(tag => (postB.tags || []).includes(tag));
+        
+        if (sharedTags.length > 0) {
+          links.push({
+            source: postA.id,
+            target: postB.id,
+            type: 'tag',
+            weight: sharedTags.length,
+            tags: sharedTags
+          });
+        }
+      }
+    }
+    
+    // Create tag-based connections between messages
+    for (let i = 0; i < allMessageNodes.length; i++) {
+      for (let j = i + 1; j < allMessageNodes.length; j++) {
+        const msgA = allMessageNodes[i];
+        const msgB = allMessageNodes[j];
+        const sharedTags = (msgA.tags || []).filter(tag => (msgB.tags || []).includes(tag));
+        
+        if (sharedTags.length > 0) {
+          links.push({
+            source: msgA.id,
+            target: msgB.id,
+            type: 'tag',
+            weight: sharedTags.length,
+            tags: sharedTags
+          });
+        }
+      }
+    }
+    
+    // Create tag-based connections between messages and notes
+    allMessageNodes.forEach(msgNode => {
+      nodes.forEach(noteNode => {
+        if (noteNode.nodeType === 'note' && noteNode.id !== msgNode.parentNoteId) {
+          const sharedTags = (msgNode.tags || []).filter(tag => (noteNode.tags || []).includes(tag));
+          if (sharedTags.length > 0) {
+            links.push({
+              source: msgNode.id,
+              target: noteNode.id,
+              type: 'tag',
+              weight: sharedTags.length,
+              tags: sharedTags
+            });
+          }
+        }
+      });
+    });
+    
+    // Return nodes and links (messages will be filtered by zoom level)
+    return { 
+      nodes: [...nodes, ...messageNodes], 
+      links: links,
+      noteNodes: nodes,
+      messageNodes: messageNodes
+    };
   }
   
   /**
@@ -661,11 +1049,35 @@
         ? CONFIG.graphNodeLimit.mobile 
         : CONFIG.graphNodeLimit.desktop;
 
-      let graphData = state.graphData;
-      if (graphData.nodes.length > nodeLimit) {
-        console.log(`Limiting graph to ${nodeLimit} nodes (${graphData.nodes.length} total)`);
-        graphData = limitGraphData(graphData, nodeLimit);
+      // Apply node limit based on device (only for note nodes, messages handled by zoom)
+      const noteNodes = state.graphData.nodes.filter(n => n.nodeType === 'note' || !n.nodeType);
+      const messageNodes = state.graphData.nodes.filter(n => n.nodeType === 'message');
+      
+      let limitedNoteNodes = noteNodes;
+      if (noteNodes.length > nodeLimit) {
+        console.log(`Limiting graph to ${nodeLimit} note nodes (${noteNodes.length} total)`);
+        // Sort by val and limit
+        const sorted = [...noteNodes].sort((a, b) => (b.val || 0) - (a.val || 0));
+        limitedNoteNodes = sorted.slice(0, nodeLimit);
       }
+      
+      // Rebuild graph data with limited notes but all messages
+      const noteIds = new Set(limitedNoteNodes.map(n => n.id));
+      const filteredMessageNodes = messageNodes.filter(m => noteIds.has(m.parentNoteId));
+      
+      // Filter links to only include visible nodes
+      const allVisibleNodes = [...limitedNoteNodes, ...filteredMessageNodes];
+      const visibleNodeIds = new Set(allVisibleNodes.map(n => n.id));
+      const filteredLinks = state.graphData.links.filter(l => 
+        visibleNodeIds.has(l.source) && visibleNodeIds.has(l.target)
+      );
+      
+      let graphData = {
+        nodes: allVisibleNodes,
+        links: filteredLinks,
+        noteNodes: limitedNoteNodes,
+        messageNodes: filteredMessageNodes
+      };
 
       // Hide placeholder and no-notes message
       if (elements.graphPlaceholder) {
@@ -673,27 +1085,161 @@
       }
       hideNoNotesMessage();
 
+      // Store full graph data (with all messages)
+      state.fullGraphData = graphData;
+      
+      // Filter graph data based on initial zoom level (show only notes initially)
+      const filteredGraphData = filterGraphDataByZoom(graphData, 'far', null);
+      
       // Create graph
       state.graph = ForceGraph3D()(elements.graphContainer)
-        .graphData(graphData)
-        .nodeLabel(node => `
-          <div style="background: rgba(0,0,0,0.8); padding: 8px 12px; border-radius: 4px; font-size: 14px;">
-            <strong>${escapeHtml(node.name)}</strong>
-            ${node.tags && node.tags.length > 0 ? `<br><span style="color: #888; font-size: 12px;">${node.tags.join(', ')}</span>` : ''}
-          </div>
-        `)
-        .nodeColor(node => node.status === 'missing' ? '#666' : (node.color || '#6366f1'))
-        .nodeVal(node => node.val || 1)
-        .nodeOpacity(0.9)
-        .linkColor(() => 'rgba(255, 255, 255, 0.2)')
-        .linkOpacity(0.6)
-        .linkWidth(link => link.type === 'manual' ? 1.5 : 0.5)
+        .graphData(filteredGraphData)
+        .nodeLabel(node => {
+          if (node.nodeType === 'message') {
+            return `
+              <div style="background: rgba(0,0,0,0.8); padding: 6px 10px; border-radius: 4px; font-size: 12px; max-width: 200px;">
+                <strong style="color: ${node.color || '#aaa'};">${escapeHtml(node.name)}</strong>
+                ${node.tags && node.tags.length > 0 ? `<br><span style="color: #888; font-size: 11px;">${node.tags.slice(0, 3).join(', ')}</span>` : ''}
+              </div>
+            `;
+          }
+          return `
+            <div style="background: rgba(0,0,0,0.8); padding: 8px 12px; border-radius: 4px; font-size: 14px;">
+              <strong>${escapeHtml(node.name)}</strong>
+              ${node.tags && node.tags.length > 0 ? `<br><span style="color: #888; font-size: 12px;">${node.tags.join(', ')}</span>` : ''}
+            </div>
+          `;
+        })
+        .nodeColor(node => {
+          // Default to white for all nodes
+          if (node.status === 'missing') {
+            return '#666';
+          }
+          
+          // If a node is hovered, highlight it and connected nodes in accent color
+          if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
+            const isHovered = node.id === state.hoveredNodeId;
+            
+            // Check if node is connected to hovered node
+            let isConnected = false;
+            for (const link of state.fullGraphData.links) {
+              const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+              const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+              
+              if ((sourceId === state.hoveredNodeId && targetId === node.id) ||
+                  (targetId === state.hoveredNodeId && sourceId === node.id)) {
+                isConnected = true;
+                break;
+              }
+            }
+            
+            if (isHovered || isConnected) {
+              return '#5DADE2'; // SWFT accent color for hovered/connected nodes
+            }
+          }
+          
+          // Default white for all nodes
+          return '#ffffff';
+        })
+        .nodeVal(node => {
+          if (node.nodeType === 'message') {
+            return 0.5; // Smaller message nodes
+          }
+          return node.val || 1;
+        })
+        .nodeOpacity(node => {
+          if (node.nodeType === 'message') {
+            return 0.7; // Slightly transparent messages
+          }
+          return 0.9;
+        })
+        .linkColor(link => {
+          // Default to white for all links
+          const defaultColor = 'rgba(255, 255, 255, 0.6)';
+          
+          // If a node is hovered, highlight connected links in accent color
+          if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
+            const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+            const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+            const isConnected = sourceId === state.hoveredNodeId || targetId === state.hoveredNodeId;
+            
+            if (isConnected) {
+              return 'rgba(93, 173, 226, 0.8)'; // SWFT accent color with higher opacity
+            }
+          }
+          
+          // Default white for all links
+          return defaultColor;
+        })
+        .linkOpacity(link => {
+          if (link.type === 'parent') {
+            return 0.4;
+          }
+          return 0.6;
+        })
+        .linkWidth(link => {
+          if (link.type === 'manual') return 1.5;
+          if (link.type === 'parent') return 0.8;
+          if (link.type === 'tag') return 0.5;
+          return 0.5;
+        })
         .backgroundColor('rgba(0, 0, 0, 0)')
         .onNodeClick((node) => {
           console.log('Graph onNodeClick triggered for node:', node); // Debug
           handleGraphNodeClick(node);
         })
         .onNodeHover(handleGraphNodeHover);
+      
+      // Handle camera controls for zoom detection
+      // Listen for zoom/pan events
+      if (state.graph) {
+        // Track camera changes via periodic check
+        let lastUpdate = Date.now();
+        const updateGraphOnZoom = () => {
+          if (Date.now() - lastUpdate > 300) { // Throttle updates
+            checkZoomAndUpdate();
+            lastUpdate = Date.now();
+          }
+        };
+        
+        // Check zoom on any graph interaction
+        const checkZoomAndUpdate = () => {
+          if (!state.graph || !state.fullGraphData) return;
+          
+          try {
+            const camera = state.graph.camera();
+            const currentZ = camera.position.z;
+            
+            let newZoomLevel = 'far';
+            let newFocusedNote = state.focusedNoteId;
+            
+            if (currentZ < 200) {
+              newZoomLevel = 'close';
+            } else if (currentZ < 350) {
+              newZoomLevel = 'medium';
+              // Keep current focused note or find closest
+              if (!newFocusedNote && state.fullGraphData.noteNodes && state.fullGraphData.noteNodes.length > 0) {
+                newFocusedNote = state.fullGraphData.noteNodes[0].id;
+              }
+            } else {
+              newZoomLevel = 'far';
+              newFocusedNote = null; // Clear focus when zoomed out
+            }
+            
+            if (newZoomLevel !== state.graphZoomLevel || newFocusedNote !== state.focusedNoteId) {
+              state.graphZoomLevel = newZoomLevel;
+              state.focusedNoteId = newFocusedNote;
+              const filteredData = filterGraphDataByZoom(state.fullGraphData, newZoomLevel, newFocusedNote);
+              state.graph.graphData(filteredData);
+            }
+          } catch (e) {
+            // Ignore errors
+          }
+        };
+        
+        // Check periodically
+        setInterval(checkZoomAndUpdate, 500);
+      }
       
       console.log('Graph initialized with', graphData.nodes.length, 'nodes'); // Debug
 
@@ -702,21 +1248,37 @@
         state.graph.cooldownTicks(0);
       }
 
-      // Center the graph
+      // Center the graph and ensure all nodes are visible
       setTimeout(() => {
         if (state.graph) {
+          // Reset zoom state
+          state.graphZoomLevel = 'far';
+          state.focusedNoteId = null;
+          
           // Center camera on the graph
           state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-          // Zoom to fit all nodes
-          state.graph.zoomToFit(400, 0);
+          // Zoom to fit all nodes - use longer delay to ensure graph is rendered
+          setTimeout(() => {
+            if (state.graph) {
+              state.graph.zoomToFit(400, 0);
+            }
+          }, 200);
         }
       }, 100);
+
+      // Ensure all nodes are visible after graph renders
+      setTimeout(() => {
+        if (state.graph) {
+          // Force zoom to fit all nodes
+          state.graph.zoomToFit(400, 0);
+        }
+      }, 500);
 
       // Stop simulation after settling
       setTimeout(() => {
         if (state.graph) {
           state.graph.cooldownTicks(0);
-          // Re-center after simulation settles
+          // Re-center after simulation settles and ensure all nodes visible
           state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
           state.graph.zoomToFit(400, 0);
         }
@@ -725,8 +1287,22 @@
       state.graphLoaded = true;
 
       // Apply graph customization settings if available
+      // Note: GraphCustomizer might override node colors, so we apply it after setting nodeColor
       if (window.GraphCustomizer && window.Settings) {
-        window.GraphCustomizer.init(state.graph, window.Settings.settings);
+        // Only apply non-color settings to preserve white nodes
+        const customSettings = window.Settings.settings;
+        if (customSettings && customSettings.graph) {
+          // Apply only non-color customizations
+          if (state.graph.nodeVal) {
+            state.graph.nodeVal(customSettings.graph.nodeSize || 1);
+          }
+          if (state.graph.linkWidth) {
+            state.graph.linkWidth(customSettings.graph.linkWidth || 0.5);
+          }
+          if (state.graph.linkOpacity) {
+            state.graph.linkOpacity(customSettings.graph.linkOpacity || 0.6);
+          }
+        }
       }
 
     } catch (error) {
@@ -736,24 +1312,75 @@
   }
 
   /**
+   * Filter graph data based on zoom level
+   */
+  function filterGraphDataByZoom(graphData, zoomLevel, focusedNoteId) {
+    if (!graphData || !graphData.nodes) {
+      return { nodes: [], links: [] };
+    }
+    
+    let visibleNodes = [];
+    let visibleLinks = [];
+    
+    if (zoomLevel === 'far') {
+      // Show only note nodes
+      visibleNodes = graphData.nodes.filter(n => n.nodeType === 'note' || !n.nodeType);
+      visibleLinks = graphData.links.filter(l => {
+        const sourceNode = graphData.nodes.find(n => n.id === l.source);
+        const targetNode = graphData.nodes.find(n => n.id === l.target);
+        return (sourceNode?.nodeType === 'note' || !sourceNode?.nodeType) && 
+               (targetNode?.nodeType === 'note' || !targetNode?.nodeType);
+      });
+    } else if (zoomLevel === 'medium') {
+      // Show notes + messages for focused note
+      visibleNodes = graphData.nodes.filter(n => 
+        n.nodeType === 'note' || !n.nodeType || 
+        (n.nodeType === 'message' && n.parentNoteId === focusedNoteId)
+      );
+      visibleLinks = graphData.links.filter(l => {
+        const sourceNode = graphData.nodes.find(n => n.id === l.source);
+        const targetNode = graphData.nodes.find(n => n.id === l.target);
+        return visibleNodes.includes(sourceNode) && visibleNodes.includes(targetNode);
+      });
+    } else if (zoomLevel === 'close') {
+      // Show all nodes
+      visibleNodes = graphData.nodes;
+      visibleLinks = graphData.links;
+    }
+    
+    return { nodes: visibleNodes, links: visibleLinks };
+  }
+
+  /**
    * Limit graph data to specified number of nodes
+   * Only limits note nodes, preserves all message nodes
    */
   function limitGraphData(data, limit) {
-    // Sort nodes by connection count (val)
-    const sortedNodes = [...data.nodes].sort((a, b) => (b.val || 0) - (a.val || 0));
-    const limitedNodes = sortedNodes.slice(0, limit);
-    const nodeIds = new Set(limitedNodes.map(n => n.id));
+    // Separate note nodes from message nodes
+    const noteNodes = data.nodes.filter(n => n.nodeType === 'note' || !n.nodeType);
+    const messageNodes = data.nodes.filter(n => n.nodeType === 'message');
+    
+    // Sort note nodes by connection count (val)
+    const sortedNoteNodes = [...noteNodes].sort((a, b) => (b.val || 0) - (a.val || 0));
+    const limitedNoteNodes = sortedNoteNodes.slice(0, limit);
+    const noteIds = new Set(limitedNoteNodes.map(n => n.id));
+
+    // Keep only messages whose parent notes are in the limited set
+    const limitedMessageNodes = messageNodes.filter(m => noteIds.has(m.parentNoteId));
 
     // Filter links to only include nodes in the limited set
-    const limitedLinks = data.links.filter(link => 
-      nodeIds.has(link.source.id || link.source) && 
-      nodeIds.has(link.target.id || link.target)
-    );
+    const limitedLinks = data.links.filter(link => {
+      const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+      const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+      return (noteIds.has(sourceId) || limitedMessageNodes.some(m => m.id === sourceId)) &&
+             (noteIds.has(targetId) || limitedMessageNodes.some(m => m.id === targetId));
+    });
 
     return {
-      ...data,
-      nodes: limitedNodes,
-      links: limitedLinks
+      nodes: [...limitedNoteNodes, ...limitedMessageNodes],
+      links: limitedLinks,
+      noteNodes: limitedNoteNodes,
+      messageNodes: limitedMessageNodes
     };
   }
 
@@ -833,33 +1460,54 @@
 
     console.log('Graph node clicked:', node); // Debug
 
-    // Find the post by id or slug
-    const post = state.posts.find(p => {
-      const matchesId = p.id === node.id;
-      const matchesSlug = p.slug === node.slug;
-      return matchesId || matchesSlug;
-    });
-    
-    console.log('Found post:', post); // Debug
-    
-    if (post) {
-      // Always show modal when clicking graph node
-      console.log('Opening modal for post:', post.title); // Debug
-      openModal(post);
+    // Handle message node click
+    if (node.nodeType === 'message') {
+      if (node.post && node.message) {
+        // Open modal showing the specific message
+        openMessageModal(node.post, node.message);
+      }
+      return;
+    }
+
+    // Handle note node click - zoom in to show messages
+    if (node.nodeType === 'note' || !node.nodeType) {
+      // Set focused note and zoom in
+      state.focusedNoteId = node.id;
+      state.graphZoomLevel = 'medium';
+      
+      // Update graph to show messages for this note
+      if (state.fullGraphData) {
+        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'medium', node.id);
+        state.graph.graphData(filteredData);
+        
+        // Zoom camera closer to the node
+        if (state.graph) {
+          // Get node position and zoom to it
+          setTimeout(() => {
+            try {
+              state.graph.zoomToFit(200, 100, (n) => n.id === node.id || (n.parentNoteId === node.id));
+            } catch (e) {
+              console.warn('Error zooming to node:', e);
+            }
+          }, 100);
+        }
+      }
+      
+      // Also open the note modal
+      const post = node.post || state.posts.find(p => {
+        const matchesId = p.id === node.id;
+        const matchesSlug = p.slug === node.slug;
+        return matchesId || matchesSlug;
+      });
+
+      if (post) {
+        openModal(post);
+      }
       
       // If in "both" view, also highlight and scroll to list item
-      if (state.currentView === 'both') {
+      if (state.currentView === 'both' && post) {
         highlightPost(post.id);
         scrollToPost(post.id);
-      }
-    } else {
-      console.warn('Post not found for node:', node);
-      if (node.status === 'missing') {
-        // Handle missing node (referenced but not existing)
-        console.log('Missing note:', node.name);
-      } else {
-        console.warn('Node clicked but no matching post found. Node ID:', node.id, 'Node slug:', node.slug);
-        console.warn('Available post IDs:', state.posts.map(p => p.id));
       }
     }
   }
@@ -869,6 +1517,170 @@
    */
   function handleGraphNodeHover(node) {
     document.body.style.cursor = node ? 'pointer' : 'default';
+    
+    // Update hovered node state to trigger highlighting
+    const previousHoveredId = state.hoveredNodeId;
+    state.hoveredNodeId = node ? node.id : null;
+    
+    // Trigger re-render if hover state changed
+    if (previousHoveredId !== state.hoveredNodeId && state.graph) {
+      // Force graph to re-render by updating node colors
+      state.graph.nodeColor(state.graph.nodeColor());
+      state.graph.linkColor(state.graph.linkColor());
+    }
+  }
+
+  /**
+   * Apply graph filters to show/hide nodes
+   */
+  function applyGraphFilters() {
+    if (!state.graph || !state.fullGraphData) return;
+    
+    // Filter nodes based on active filters
+    let filteredNodes = [...state.fullGraphData.nodes];
+    let filteredLinks = [...state.fullGraphData.links];
+    
+    // Filter by tags
+    if (!state.graphFilters.tags) {
+      // Hide nodes that only have tag-based connections
+      const tagLinkIds = new Set();
+      state.fullGraphData.links.forEach(link => {
+        if (link.type === 'tag') {
+          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+          const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+          tagLinkIds.add(sourceId);
+          tagLinkIds.add(targetId);
+        }
+      });
+      // Keep nodes that have non-tag connections or are note nodes
+      filteredNodes = filteredNodes.filter(node => {
+        if (node.nodeType === 'note') return true;
+        const hasNonTagLinks = filteredLinks.some(link => {
+          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+          const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+          return (sourceId === node.id || targetId === node.id) && link.type !== 'tag';
+        });
+        return hasNonTagLinks;
+      });
+      filteredLinks = filteredLinks.filter(link => link.type !== 'tag');
+    }
+    
+    // Filter orphans
+    if (!state.graphFilters.orphans) {
+      const connectedNodeIds = new Set();
+      filteredLinks.forEach(link => {
+        const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+        const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+        connectedNodeIds.add(sourceId);
+        connectedNodeIds.add(targetId);
+      });
+      filteredNodes = filteredNodes.filter(node => connectedNodeIds.has(node.id));
+    }
+    
+    // Filter by attachments
+    if (state.graphFilters.attachments) {
+      filteredNodes = filteredNodes.filter(node => {
+        if (node.nodeType === 'message' && node.message) {
+          return node.message.attachments && node.message.attachments.length > 0;
+        }
+        if (node.nodeType === 'note' && node.post) {
+          // Check if note has any messages with attachments
+          try {
+            const content = typeof node.post.content === 'string' ? JSON.parse(node.post.content) : node.post.content;
+            if (Array.isArray(content)) {
+              return content.some(msg => msg.attachments && msg.attachments.length > 0);
+            }
+          } catch (e) {}
+        }
+        return false;
+      });
+    }
+    
+    // Update graph with filtered data
+    const filteredData = {
+      nodes: filteredNodes,
+      links: filteredLinks.filter(link => {
+        const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+        const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+        return filteredNodes.some(n => n.id === sourceId) && filteredNodes.some(n => n.id === targetId);
+      })
+    };
+    
+    state.graph.graphData(filteredData);
+  }
+
+  /**
+   * Apply graph force settings
+   * Note: 3d-force-graph uses d3-force internally, but we need d3 to be available
+   * For now, we'll use the graph's built-in cooldownTicks to restart simulation
+   */
+  function applyGraphForces() {
+    if (!state.graph) return;
+    
+    // Convert slider values (0-100) to force graph parameters
+    const centerForce = state.graphForces.center / 100;
+    const repelForce = state.graphForces.repel / 100;
+    const linkForce = state.graphForces.link / 100;
+    const linkDistance = 20 + (state.graphForces.distance / 100) * 80; // 20-100 range
+    
+    // Apply forces using d3Force if available
+    // 3d-force-graph bundles d3-force, but we need to access it correctly
+    try {
+      if (typeof state.graph.d3Force === 'function') {
+        // Try to use d3 if available globally or from the graph
+        let d3 = window.d3;
+        
+        // If d3 is not available, we'll need to load it or use alternative approach
+        if (!d3) {
+          // For now, restart the simulation to apply any changes
+          if (state.graph.cooldownTicks) {
+            state.graph.cooldownTicks(100);
+          }
+          console.log('Graph forces updated (d3 not available, using defaults)');
+          return;
+        }
+        
+        // Center force
+        if (centerForce > 0 && d3.forceCenter) {
+          state.graph.d3Force('center', d3.forceCenter().strength(centerForce * 0.1));
+        } else {
+          state.graph.d3Force('center', null);
+        }
+        
+        // Charge (repel) force
+        if (repelForce > 0 && d3.forceManyBody) {
+          state.graph.d3Force('charge', d3.forceManyBody().strength(-repelForce * 300));
+        } else {
+          state.graph.d3Force('charge', null);
+        }
+        
+        // Link force
+        if (linkForce > 0 && d3.forceLink) {
+          state.graph.d3Force('link', d3.forceLink()
+            .id(d => d.id)
+            .distance(linkDistance)
+            .strength(linkForce));
+        } else {
+          state.graph.d3Force('link', null);
+        }
+        
+        // Restart simulation
+        if (state.graph.cooldownTicks) {
+          state.graph.cooldownTicks(100);
+        }
+      } else {
+        // Fallback: restart simulation to apply changes
+        if (state.graph.cooldownTicks) {
+          state.graph.cooldownTicks(100);
+        }
+      }
+    } catch (e) {
+      console.warn('Could not apply graph forces:', e);
+      // Fallback: restart simulation
+      if (state.graph.cooldownTicks) {
+        state.graph.cooldownTicks(100);
+      }
+    }
   }
 
   /**
@@ -876,6 +1688,15 @@
    */
   function resetGraph() {
     if (state.graph) {
+      state.graphZoomLevel = 'far';
+      state.focusedNoteId = null;
+      
+      // Reset to show only note nodes
+      if (state.fullGraphData) {
+        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'far', null);
+        state.graph.graphData(filteredData);
+      }
+      
       state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
       state.graph.zoomToFit(400, 0);
     }
@@ -886,8 +1707,19 @@
    */
   function zoomGraphToFit() {
     if (state.graph) {
+      // Reset zoom state
+      state.graphZoomLevel = 'far';
+      state.focusedNoteId = null;
+      
+      // Reset camera
       state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
       state.graph.zoomToFit(400, 0);
+      
+      // Reset to show only notes
+      if (state.fullGraphData) {
+        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'far', null);
+        state.graph.graphData(filteredData);
+      }
     }
   }
 
@@ -1145,19 +1977,111 @@
     // Full content with markdown support (if marked.js is available)
     if (elements.modalContent) {
       let contentHtml = '';
-      if (window.marked) {
-        try {
-          contentHtml = window.marked.parse(post.content || '');
-        } catch (e) {
-          console.error('Markdown parsing error:', e);
-          contentHtml = escapeHtml(post.content || '');
+      
+      // Check if content is a JSON array of messages
+      let messages = [];
+      try {
+        const parsed = typeof post.content === 'string' ? JSON.parse(post.content) : post.content;
+        if (Array.isArray(parsed)) {
+          messages = parsed;
+        } else {
+          // Single content string
+          messages = [{ content: post.content, attachments: [], tags: [] }];
         }
-      } else {
-        // Fallback: plain text with line breaks
-        contentHtml = escapeHtml(post.content || '')
-          .replace(/\n/g, '<br>');
+      } catch (e) {
+        // Not JSON, treat as plain content
+        if (post.content) {
+          messages = [{ content: post.content, attachments: [], tags: [] }];
+        }
       }
-      elements.modalContent.innerHTML = contentHtml || '<p style="color: rgba(255,255,255,0.5);">No content</p>';
+
+      if (messages.length > 0) {
+        // Render messages
+        contentHtml = messages.map((msg, index) => {
+          const msgDate = msg.created_at ? formatDate(msg.created_at) : '';
+          let msgHtml = `<div class="blog-message" data-message-id="${msg.id || index}">`;
+          
+          // Message header
+          msgHtml += `<div class="blog-message-header">`;
+          if (msgDate) {
+            msgHtml += `<span class="blog-message-date">${msgDate}</span>`;
+          }
+          msgHtml += `</div>`;
+          
+          // Message content (this is where the transcript appears - as the message text)
+          if (msg.content) {
+            let content = '';
+            if (window.marked) {
+              try {
+                // Remove "# Audio Transcript" header if present
+                let cleanedContent = msg.content.replace(/^#\s*Audio\s+Transcript\s*\n*/i, '').trim();
+                content = window.marked.parse(cleanedContent, { breaks: true, gfm: true });
+              } catch (e) {
+                content = escapeHtml(msg.content).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+                content = `<p>${content}</p>`;
+              }
+            } else {
+              content = escapeHtml(msg.content).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+              content = `<p>${content}</p>`;
+            }
+            msgHtml += `<div class="blog-message-content">${content}</div>`;
+          }
+          
+          // Attachments
+          if (msg.attachments && msg.attachments.length > 0) {
+            msgHtml += `<div class="blog-message-attachments">`;
+            msg.attachments.forEach(att => {
+              if (att.type === 'image' && att.url) {
+                msgHtml += `<div class="blog-attachment-image"><img src="${escapeHtml(att.url)}" alt="${escapeHtml(att.name || 'Image')}" loading="lazy"></div>`;
+              } else if (att.type === 'audio' && att.url) {
+                msgHtml += `<div class="blog-attachment-audio"><audio controls src="${escapeHtml(att.url)}"></audio>`;
+                // Don't show transcription inline - it's already in the message content
+                // Only show a button to view formatted transcript in a modal if user wants
+                // Check if transcription exists and is different from message content
+                const hasSeparateTranscript = att.transcription && att.transcription.trim() && 
+                  msg.content && msg.content.trim() && 
+                  att.transcription.trim() !== msg.content.trim();
+                if (hasSeparateTranscript) {
+                  msgHtml += `<button type="button" class="blog-view-transcript-btn" data-transcription="${escapeHtml(att.transcription)}" aria-label="View formatted transcript">View Formatted Transcript</button>`;
+                }
+                msgHtml += `</div>`;
+              } else if (att.type === 'video' && att.url) {
+                msgHtml += `<div class="blog-attachment-video"><video controls src="${escapeHtml(att.url)}"></video></div>`;
+              } else if (att.url) {
+                msgHtml += `<div class="blog-attachment-file"><a href="${escapeHtml(att.url)}" target="_blank">${escapeHtml(att.name || 'File')}</a></div>`;
+              }
+            });
+            msgHtml += `</div>`;
+          }
+          
+          // Tags
+          if (msg.tags && msg.tags.length > 0) {
+            msgHtml += `<div class="blog-message-tags">`;
+            msg.tags.forEach(tag => {
+              const tagColor = getTagColorForBlog(tag);
+              msgHtml += `<span class="blog-message-tag" style="background-color: ${tagColor}; color: ${getContrastColorForBlog(tagColor)}">${escapeHtml(tag)}</span>`;
+            });
+            msgHtml += `</div>`;
+          }
+          
+          msgHtml += `</div>`;
+          return msgHtml;
+        }).join('');
+      } else {
+        contentHtml = '<p style="color: rgba(255,255,255,0.5);">No content</p>';
+      }
+      
+      elements.modalContent.innerHTML = contentHtml;
+      
+      // Add event listeners for transcript buttons
+      elements.modalContent.querySelectorAll('.blog-view-transcript-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const transcription = btn.getAttribute('data-transcription');
+          if (transcription) {
+            showTranscriptModal(transcription);
+          }
+        });
+      });
     }
 
     // Find and display related notes
@@ -1579,6 +2503,74 @@
     if (elements.collaboratorSigninBtn) {
       elements.collaboratorSigninBtn.addEventListener('click', () => {
         window.location.href = '/auth.html';
+      });
+    }
+    
+    // Graph sidebar section toggles
+    if (elements.graphSectionToggles) {
+      elements.graphSectionToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const section = toggle.getAttribute('data-section');
+          const content = document.getElementById(`${section}-content`);
+          const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+          
+          toggle.setAttribute('aria-expanded', !isExpanded);
+          if (content) {
+            content.hidden = isExpanded;
+          }
+        });
+      });
+    }
+    
+    // Graph filter toggles
+    if (elements.filterTags) {
+      elements.filterTags.addEventListener('change', (e) => {
+        state.graphFilters.tags = e.target.checked;
+        applyGraphFilters();
+      });
+    }
+    if (elements.filterAttachments) {
+      elements.filterAttachments.addEventListener('change', (e) => {
+        state.graphFilters.attachments = e.target.checked;
+        applyGraphFilters();
+      });
+    }
+    if (elements.filterExistingFiles) {
+      elements.filterExistingFiles.addEventListener('change', (e) => {
+        state.graphFilters.existingFilesOnly = e.target.checked;
+        applyGraphFilters();
+      });
+    }
+    if (elements.filterOrphans) {
+      elements.filterOrphans.addEventListener('change', (e) => {
+        state.graphFilters.orphans = e.target.checked;
+        applyGraphFilters();
+      });
+    }
+    
+    // Graph force sliders
+    if (elements.forceCenter) {
+      elements.forceCenter.addEventListener('input', (e) => {
+        state.graphForces.center = parseInt(e.target.value);
+        applyGraphForces();
+      });
+    }
+    if (elements.forceRepel) {
+      elements.forceRepel.addEventListener('input', (e) => {
+        state.graphForces.repel = parseInt(e.target.value);
+        applyGraphForces();
+      });
+    }
+    if (elements.forceLink) {
+      elements.forceLink.addEventListener('input', (e) => {
+        state.graphForces.link = parseInt(e.target.value);
+        applyGraphForces();
+      });
+    }
+    if (elements.forceDistance) {
+      elements.forceDistance.addEventListener('input', (e) => {
+        state.graphForces.distance = parseInt(e.target.value);
+        applyGraphForces();
       });
     }
     
