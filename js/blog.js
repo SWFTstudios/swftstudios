@@ -689,8 +689,13 @@
         .linkOpacity(0.6)
         .linkWidth(link => link.type === 'manual' ? 1.5 : 0.5)
         .backgroundColor('rgba(0, 0, 0, 0)')
-        .onNodeClick(handleGraphNodeClick)
+        .onNodeClick((node) => {
+          console.log('Graph onNodeClick triggered for node:', node); // Debug
+          handleGraphNodeClick(node);
+        })
         .onNodeHover(handleGraphNodeHover);
+      
+      console.log('Graph initialized with', graphData.nodes.length, 'nodes'); // Debug
 
       // Apply reduced motion settings
       if (prefersReducedMotion()) {
@@ -821,13 +826,25 @@
    * Handle graph node click
    */
   function handleGraphNodeClick(node) {
-    if (!node) return;
+    if (!node) {
+      console.warn('handleGraphNodeClick: node is null or undefined');
+      return;
+    }
 
-    // Find the post
-    const post = state.posts.find(p => p.id === node.id || p.slug === node.slug);
+    console.log('Graph node clicked:', node); // Debug
+
+    // Find the post by id or slug
+    const post = state.posts.find(p => {
+      const matchesId = p.id === node.id;
+      const matchesSlug = p.slug === node.slug;
+      return matchesId || matchesSlug;
+    });
+    
+    console.log('Found post:', post); // Debug
     
     if (post) {
       // Always show modal when clicking graph node
+      console.log('Opening modal for post:', post.title); // Debug
       openModal(post);
       
       // If in "both" view, also highlight and scroll to list item
@@ -835,9 +852,15 @@
         highlightPost(post.id);
         scrollToPost(post.id);
       }
-    } else if (node.status === 'missing') {
-      // Handle missing node (referenced but not existing)
-      console.log('Missing note:', node.name);
+    } else {
+      console.warn('Post not found for node:', node);
+      if (node.status === 'missing') {
+        // Handle missing node (referenced but not existing)
+        console.log('Missing note:', node.name);
+      } else {
+        console.warn('Node clicked but no matching post found. Node ID:', node.id, 'Node slug:', node.slug);
+        console.warn('Available post IDs:', state.posts.map(p => p.id));
+      }
     }
   }
 
