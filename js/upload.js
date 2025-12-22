@@ -78,6 +78,58 @@
   };
 
   // ==========================================================================
+  // Helper Functions (defined early for hoisting)
+  // ==========================================================================
+  
+  /**
+   * Get tag color from settings
+   */
+  function getTagColor(tag) {
+    if (window.Settings && window.Settings.getTagColor) {
+      return window.Settings.getTagColor(tag);
+    }
+    // Fallback to default colors
+    const defaultColors = {
+      'design': '#6366f1',
+      'idea': '#10b981',
+      'personal': '#8b5cf6',
+      'tech': '#3b82f6',
+      'business': '#f59e0b',
+      'tutorial': '#ef4444'
+    };
+    const normalizedTag = tag.toLowerCase();
+    return defaultColors[normalizedTag] || '#6366f1';
+  }
+  
+  /**
+   * Get contrast color (black or white) for text on colored background
+   */
+  function getContrastColor(hexColor) {
+    if (!hexColor) return '#000000';
+    const hex = hexColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }
+  
+  /**
+   * Escape HTML to prevent XSS
+   */
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Debug: Verify functions are defined (remove after confirming fix)
+  console.log('[Helper Functions] getTagColor defined:', typeof getTagColor === 'function');
+  console.log('[Helper Functions] getContrastColor defined:', typeof getContrastColor === 'function');
+  console.log('[Helper Functions] escapeHtml defined:', typeof escapeHtml === 'function');
+
+  // ==========================================================================
   // DOM Elements
   // ==========================================================================
   
@@ -326,6 +378,18 @@
 
   async function selectNote(noteId) {
     try {
+      // Verify helper functions are available before proceeding
+      if (typeof getTagColor !== 'function' || typeof getContrastColor !== 'function' || typeof escapeHtml !== 'function') {
+        console.error('[selectNote] Helper functions not available:', {
+          getTagColor: typeof getTagColor,
+          getContrastColor: typeof getContrastColor,
+          escapeHtml: typeof escapeHtml
+        });
+        console.warn('[selectNote] This may be a browser caching issue. Please hard refresh (Cmd+Shift+R or Ctrl+Shift+R)');
+        // Don't proceed if functions aren't available
+        return;
+      }
+
       const note = state.notes.find(n => n.id === noteId);
       if (!note) {
         // Reload note from database
@@ -343,16 +407,17 @@
 
       // Update messages from note
       state.messages = state.currentNote.messages || [];
-      
+
       // Update UI
       renderMessages();
       updateActiveNoteInSidebar(noteId);
       updateNoteHeader();
-      
+
       // Scroll to bottom
       scrollToBottom();
     } catch (error) {
       console.error('Error selecting note:', error);
+      console.error('Error stack:', error.stack);
       showError('Failed to load note');
     }
   }
@@ -394,15 +459,53 @@
     try {
       console.log('[FIX] createNewNote: Starting');
       
+      // Verify user is authenticated
+      if (!state.currentUser || !state.currentUser.id) {
+        console.error('[FIX] createNewNote: No authenticated user');
+        showError('You must be logged in to create notes');
+        return null;
+      }
+      
+      // Verify Supabase client
+      if (!state.supabase) {
+        console.error('[FIX] createNewNote: Supabase client not initialized');
+        showError('Database connection error');
+        return null;
+      }
+      
+      // Get authenticated user - this ensures the token is valid and matches auth.uid()
+      const { data: { user: authUser }, error: authError } = await state.supabase.auth.getUser();
+      if (authError) {
+        console.error('[FIX] createNewNote: Auth error:', authError);
+        showError('Authentication error. Please log in again.');
+        return null;
+      }
+      
+      if (!authUser) {
+        console.error('[FIX] createNewNote: No authenticated user');
+        showError('Session expired. Please log in again.');
+        return null;
+      }
+      
+      // Get session for email
+      const { data: { session } } = await state.supabase.auth.getSession();
+      
+      console.log('[FIX] createNewNote: Auth user ID:', authUser.id);
+      console.log('[FIX] createNewNote: Auth user email:', authUser.email);
+      console.log('[FIX] createNewNote: Session token present:', !!session?.access_token);
+      
       // Build payload WITHOUT messages column to avoid errors
+      // Use authUser.id which is guaranteed to match auth.uid() in RLS policies
       const insertPayload = {
-        user_id: state.currentUser.id,
-        user_email: state.currentUser.email,
+        user_id: authUser.id, // This MUST match auth.uid() for RLS to pass
+        user_email: authUser.email || session?.user?.email,
         title: 'New Note',
         status: 'draft'
       };
       
       console.log('[FIX] createNewNote: Inserting note with payload:', insertPayload);
+      console.log('[FIX] createNewNote: Payload user_id (UUID):', insertPayload.user_id);
+      console.log('[FIX] createNewNote: Payload user_id type:', typeof insertPayload.user_id);
       
       const { data, error } = await state.supabase
         .from('notes')
@@ -410,7 +513,14 @@
         .select()
         .single();
 
-      console.log('[FIX] createNewNote: Result:', { hasData: !!data, hasError: !!error, errorCode: error?.code });
+      console.log('[FIX] createNewNote: Result:', { 
+        hasData: !!data, 
+        hasError: !!error, 
+        errorCode: error?.code,
+        errorMessage: error?.message,
+        errorDetails: error?.details,
+        errorHint: error?.hint
+      });
 
       if (error) {
         console.error('[FIX] createNewNote: Error:', error);
@@ -573,6 +683,25 @@
   }
 
   function renderMessages() {
+    // Verify helper functions are available at the start
+    if (typeof getTagColor !== 'function' || typeof getContrastColor !== 'function' || typeof escapeHtml !== 'function') {
+      console.error('[renderMessages] Helper functions not available - this is a critical error');
+      console.error('[renderMessages] Functions status:', {
+        getTagColor: typeof getTagColor,
+        getContrastColor: typeof getContrastColor,
+        escapeHtml: typeof escapeHtml
+      });
+      // Show error to user
+      if (elements.messagesList) {
+        elements.messagesList.innerHTML = `
+          <div class="error-message" style="padding: 2rem; text-align: center; color: #ef4444;">
+            <p>Error: Helper functions not loaded. Please refresh the page (Cmd+Shift+R or Ctrl+Shift+R).</p>
+          </div>
+        `;
+      }
+      return;
+    }
+
     if (!state.currentNote) {
       renderEmptyState('no-note-selected');
       return;
@@ -626,8 +755,20 @@
             ${msg.tags && msg.tags.length > 0 ? `
               <div class="message-tags">
                 ${msg.tags.map(tag => {
-                  const tagColor = getTagColor(tag);
-                  return `<span class="message-tag" style="background-color: ${tagColor}; color: ${getContrastColor(tagColor)}">${escapeHtml(tag)}</span>`;
+                  // Defensive check: ensure functions are available
+                  const tagColor = (typeof getTagColor === 'function') 
+                    ? getTagColor(tag) 
+                    : '#6366f1'; // fallback color
+                  const contrastColor = (typeof getContrastColor === 'function')
+                    ? getContrastColor(tagColor)
+                    : '#ffffff'; // fallback to white text
+                  const safeTag = (typeof escapeHtml === 'function')
+                    ? escapeHtml(tag)
+                    : String(tag).replace(/[&<>"']/g, (m) => {
+                        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+                        return map[m];
+                      });
+                  return `<span class="message-tag" style="background-color: ${tagColor}; color: ${contrastColor}">${safeTag}</span>`;
                 }).join('')}
               </div>
             ` : ''}
@@ -1695,11 +1836,7 @@ ${content}
     });
   }
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
+  // escapeHtml is now defined earlier in the file (moved to helper functions section)
 
   // ==========================================================================
   // Event Listeners
