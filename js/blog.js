@@ -69,7 +69,7 @@
       linkColor: '#ffffff',
       highlightColor: '#5DADE2',
       nodeSize: 8, // Increased from 5 for better visibility
-      linkWidth: 1,
+      linkWidth: 0.5, // Thin lines by default
       linkStyle: 'solid'
     }
   };
@@ -464,39 +464,81 @@
       
       const supabase = window.SWFTAuth.supabase;
       
-      // Fetch published notes from Supabase
-      const { data: notes, error } = await supabase
+      // Check if user is authenticated
+      const { data: { session } } = await supabase.auth.getSession();
+      const isAuthenticated = !!session;
+      
+      // Fetch notes from Supabase
+      // If authenticated, show all notes (published + drafts)
+      // If not authenticated, show only published notes
+      let query = supabase
         .from('notes')
         .select('*')
-        .eq('status', 'published')
         .order('created_at', { ascending: false });
+      
+      if (!isAuthenticated) {
+        // For non-authenticated users, only show published notes
+        query = query.eq('status', 'published');
+      } else {
+        // For authenticated users, show all their notes (published + drafts)
+        // RLS policy will ensure they only see their own notes
+        console.log('User authenticated, loading all notes (published + drafts)');
+      }
+      
+      const { data: notes, error } = await query;
       
       if (error) throw error;
       
-      console.log(`Found ${notes.length} published notes in Supabase`);
+      console.log(`Found ${notes.length} notes in Supabase${isAuthenticated ? ' (all statuses)' : ' (published only)'}`);
       
       // Transform Supabase notes to blog post format
       const posts = notes.map(note => {
+        // Parse content - it might be a JSON string of messages or plain text
+        let content = note.content || '';
+        let messages = [];
+        
+        // Try to parse as JSON (messages array)
+        if (content && typeof content === 'string' && content.trim().startsWith('[')) {
+          try {
+            const parsed = JSON.parse(content);
+            if (Array.isArray(parsed)) {
+              messages = parsed;
+              // Extract text content from messages for description/excerpt
+              const textContent = messages
+                .map(msg => msg.content || '')
+                .filter(c => c)
+                .join(' ');
+              content = textContent || content;
+            }
+          } catch (e) {
+            // Not JSON, treat as plain text
+            console.log(`[fetchBlogData] Note ${note.id} content is not JSON, treating as plain text`);
+          }
+        }
+        
         // Extract links from content (wiki-style [[links]])
-        const links = extractLinks(note.content || '');
+        const links = extractLinks(content);
         
         return {
           id: note.id,
           slug: slugify(note.title),
           title: note.title,
-          description: extractExcerpt(note.content || '', 150),
+          description: extractExcerpt(content, 150),
           date: note.created_at ? note.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
           tags: Array.isArray(note.tags) ? note.tags : [],
           author: note.user_email ? note.user_email.split('@')[0] : 'Unknown',
           user_email: note.user_email, // Store for ownership check
           user_id: note.user_id, // Store for ownership check
           image: note.file_urls && note.file_urls.length > 0 ? note.file_urls[0] : null,
-          excerpt: extractExcerpt(note.content || '', 200),
+          excerpt: extractExcerpt(content, 200),
           links: links,
-          content: note.content || '',
+          content: note.content || '', // Keep original content for graph building
+          messages: messages, // Store parsed messages
           metaError: false
         };
       });
+      
+      console.log(`[fetchBlogData] Transformed ${posts.length} notes, total messages: ${posts.reduce((sum, p) => sum + (p.messages?.length || 0), 0)}`);
       
       return posts;
     } catch (error) {
@@ -594,16 +636,23 @@
     
     // Create note nodes
     posts.forEach(post => {
-      // Parse messages from content
-      let messages = [];
-      try {
-        const parsed = typeof post.content === 'string' ? JSON.parse(post.content) : post.content;
-        if (Array.isArray(parsed)) {
-          messages = parsed;
+      // Parse messages from content or use pre-parsed messages
+      let messages = post.messages || [];
+      
+      // If messages not pre-parsed, try parsing from content
+      if (messages.length === 0 && post.content) {
+        try {
+          const parsed = typeof post.content === 'string' ? JSON.parse(post.content) : post.content;
+          if (Array.isArray(parsed)) {
+            messages = parsed;
+          }
+        } catch (e) {
+          // Not JSON, skip messages
+          console.log(`[buildGraphData] Note ${post.id} content is not a messages array`);
         }
-      } catch (e) {
-        // Not JSON, skip messages
       }
+      
+      console.log(`[buildGraphData] Note "${post.title}" has ${messages.length} messages`);
       
       // Create note node
       const noteNode = {
@@ -736,15 +785,21 @@
    */
   async function fetchGraphData() {
     // Always build graph from posts (no fallback to static file)
-    // If no posts, return empty graph data
+    // If no posts, try fetching first
     if (!state.posts || state.posts.length === 0) {
-      console.log('No posts available, returning empty graph data');
-      state.graphData = { nodes: [], links: [] };
-      return state.graphData;
+      console.log('[fetchGraphData] No posts available, fetching...');
+      await fetchBlogData();
+      
+      if (!state.posts || state.posts.length === 0) {
+        console.log('[fetchGraphData] Still no posts after fetch, returning empty graph data');
+        state.graphData = { nodes: [], links: [] };
+        return state.graphData;
+      }
     }
     
-    console.log('Building graph from fetched posts...');
+    console.log(`[fetchGraphData] Building graph from ${state.posts.length} posts...`);
     state.graphData = buildGraphData(state.posts);
+    console.log(`[fetchGraphData] Graph built: ${state.graphData.nodes.length} nodes, ${state.graphData.links.length} links`);
     return state.graphData;
   }
 
@@ -1028,9 +1083,27 @@
    * Initialize the 3D graph
    */
   async function initGraph() {
-    // Use graph container from modal (not the hidden one)
+    // Use graph container from graph view (not modal)
     const graphContainer = document.getElementById('graph-container');
-    if (state.graphLoaded || !graphContainer) return;
+    if (state.graphLoaded || !graphContainer) {
+      console.log('[initGraph] Graph already loaded or container not found', {
+        graphLoaded: state.graphLoaded,
+        containerFound: !!graphContainer
+      });
+      return;
+    }
+    
+    // Ensure graph view is visible (should already be visible if setView('graph') was called)
+    const graphView = document.getElementById('blog-graph-view');
+    if (graphView && graphView.hidden) {
+      console.log('[initGraph] Graph view is hidden, making visible...');
+      graphView.hidden = false;
+      graphView.setAttribute('aria-hidden', 'false');
+      // Also update the data-view attribute
+      if (elements.blogContent) {
+        elements.blogContent.dataset.view = 'graph';
+      }
+    }
 
     // Check WebGL availability
     if (!isWebGLAvailable()) {
@@ -1044,18 +1117,30 @@
     }
 
     try {
+      // Ensure posts are loaded before building graph
+      if (!state.posts || state.posts.length === 0) {
+        console.log('[initGraph] No posts available, fetching...');
+        await fetchBlogData();
+        
+        if (!state.posts || state.posts.length === 0) {
+          console.warn('[initGraph] No posts found after fetch');
+          showNoNotesMessage();
+          return;
+        }
+      }
+      
       // Load library
       await loadGraphLibrary();
 
       // Fetch graph data if not already loaded
-      if (!state.graphData) {
-        console.log('[Graph] Fetching graph data...');
+      if (!state.graphData || state.graphData.nodes.length === 0) {
+        console.log('[initGraph] Fetching graph data...');
         await fetchGraphData();
       }
 
-      if (!state.graphData) {
-        console.error('[Graph] No graph data available');
-        showGraphUnavailable();
+      if (!state.graphData || !state.graphData.nodes || state.graphData.nodes.length === 0) {
+        console.error('[initGraph] No graph data available');
+        showNoNotesMessage();
         return;
       }
       
@@ -1118,12 +1203,70 @@
       // Filter graph data based on initial zoom level (show only notes initially)
       const filteredGraphData = filterGraphDataByZoom(graphData, 'far', null);
       
-      // Create graph (use container from modal)
-      const graphContainer = document.getElementById('graph-container');
-      if (!graphContainer) return;
+      console.log('[Graph] Creating graph with', filteredGraphData.nodes.length, 'nodes and', filteredGraphData.links.length, 'links');
+      console.log('[Graph] Filtered graph data:', {
+        nodes: filteredGraphData.nodes.length,
+        links: filteredGraphData.links.length,
+        nodeTypes: filteredGraphData.nodes.map(n => n.nodeType || 'note')
+      });
+      console.log('[Graph] Container element:', graphContainer);
+      console.log('[Graph] Container parent:', graphContainer?.parentElement);
       
+      if (filteredGraphData.nodes.length === 0) {
+        console.warn('[Graph] No nodes to display! Check if notes have content/messages.');
+        // Show placeholder message
+        const graphPlaceholder = document.getElementById('graph-placeholder');
+        if (graphPlaceholder) {
+          graphPlaceholder.style.display = 'block';
+          graphPlaceholder.innerHTML = `
+            <div class="blog_graph-placeholder-content">
+              <p>No graph data available</p>
+              <p class="blog_graph-hint">Create notes with content to see them in the graph</p>
+            </div>
+          `;
+        }
+        return;
+      }
+      
+      // graphContainer already declared at top of function, reuse it
+      if (!graphContainer) {
+        console.error('[Graph] Graph container not found!');
+        return;
+      }
+
+      // Wait for container to be visible and get dimensions
+      await new Promise(resolve => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            resolve();
+          });
+        });
+      });
+      
+      // Get explicit dimensions BEFORE creating graph
+      const rect = graphContainer.getBoundingClientRect();
+      const sidebar = document.getElementById('graph-sidebar');
+      const sidebarWidth = sidebar ? sidebar.offsetWidth : 280;
+      const containerWidth = rect.width || graphContainer.clientWidth || (window.innerWidth - sidebarWidth);
+      const containerHeight = rect.height || graphContainer.clientHeight || window.innerHeight;
+
+      console.log('[Graph] Initializing with dimensions:', containerWidth, 'x', containerHeight);
+      console.log('[Graph] Container rect:', rect);
+      
+      if (containerWidth === 0 || containerHeight === 0) {
+        console.error('[Graph] Container has invalid dimensions!', { containerWidth, containerHeight });
+        console.error('[Graph] Container element:', graphContainer);
+        console.error('[Graph] Container parent:', graphContainer.parentElement);
+        return;
+      }
+      
+      // Create graph instance
       state.graph = ForceGraph3D()(graphContainer)
+        .width(containerWidth)  // Set width BEFORE graphData
+        .height(containerHeight)  // Set height BEFORE graphData
         .graphData(filteredGraphData)
+        .nodeRelSize(10) // Increase sphere size multiplier for better visibility (default is 4, increased to 10)
+        .nodeVisibility(() => true) // Explicitly ensure all nodes are visible
         .nodeLabel(node => {
           if (node.nodeType === 'message') {
             return `
@@ -1172,16 +1315,23 @@
           return '#ffffff';
         })
         .nodeVal(node => {
+          // Use display settings for node sizing
+          // nodeVal controls volume, so we need larger values for visible spheres
+          const baseSize = state.graphDisplay.nodeSize || 8;
+          // Scale up significantly for better visibility (nodeRelSize will multiply this)
+          // Using 5x multiplier instead of 2x for much more visible spheres
+          const scaledSize = baseSize * 5; // Multiply by 5 for better visibility
           if (node.nodeType === 'message') {
-            return 1.5; // Increased from 0.5 for better visibility
+            return scaledSize * 0.5; // Messages are half the size of notes
           }
-          return Math.max(node.val || 3, 3); // Minimum size 3, increased from 1
+          return Math.max(scaledSize, 20); // Minimum size 20 for visibility
         })
         .nodeOpacity(node => {
+          // Increased opacity for better visibility matching example
           if (node.nodeType === 'message') {
-            return 0.7; // Slightly transparent messages
+            return 0.9; // Increased from 0.7
           }
-          return 0.9;
+          return 1.0; // Increased from 0.9 for full visibility
         })
         .linkColor(link => {
           // Default to white for all links
@@ -1210,16 +1360,22 @@
           return defaultColor;
         })
         .linkOpacity(link => {
+          // Adjusted opacity to match example style
           if (link.type === 'parent') {
-            return 0.4;
+            return 0.3;
           }
-          return 0.6;
+          return 0.4; // Reduced from 0.6 for better contrast
         })
         .linkWidth(link => {
-          if (link.type === 'manual') return 1.5;
-          if (link.type === 'parent') return 0.8;
-          if (link.type === 'tag') return 0.5;
-          return 0.5;
+          // Use display settings with type-based scaling for thin lines
+          const baseWidth = state.graphDisplay.linkWidth || 0.5;
+          // Tag links are thinnest (for tag-based connections)
+          if (link.type === 'tag') return baseWidth * 0.3; // Very thin for tag connections
+          // Parent links (message to note) are thin
+          if (link.type === 'parent') return baseWidth * 0.6;
+          // Manual links are slightly thicker
+          if (link.type === 'manual') return baseWidth * 1.2;
+          return baseWidth;
         })
         .backgroundColor('rgba(0, 0, 0, 0)')
         .onNodeClick((node) => {
@@ -1227,6 +1383,22 @@
           handleGraphNodeClick(node);
         })
         .onNodeHover(handleGraphNodeHover);
+      
+      // Apply display settings
+      applyGraphDisplay();
+      
+      // Add space background with stars (with delay to ensure THREE.js is loaded)
+      setTimeout(() => {
+        addSpaceBackground();
+      }, 1000);
+      
+      // Zoom to fit all nodes so they're visible on initial load
+      setTimeout(() => {
+        if (state.graph) {
+          console.log('[Graph] Zooming to fit all nodes');
+          state.graph.zoomToFit(400, 0);
+        }
+      }, 100);
       
       // Handle camera controls for zoom detection
       // Listen for zoom/pan events
@@ -1332,12 +1504,17 @@
         const containerWidth = graphContainerEl.clientWidth || (window.innerWidth - sidebarWidth);
         const containerHeight = graphContainerEl.clientHeight || window.innerHeight;
         
-        console.log('[Graph] Container dimensions:', { containerWidth, containerHeight, sidebarWidth });
+        console.log('[Graph] Container dimensions check:', { containerWidth, containerHeight, sidebarWidth });
+        console.log('[Graph] Container element rect:', graphContainerEl.getBoundingClientRect());
+        console.log('[Graph] Container computed style:', {
+          width: window.getComputedStyle(graphContainerEl).width,
+          height: window.getComputedStyle(graphContainerEl).height
+        });
         
         if (containerWidth > 0 && containerHeight > 0) {
           state.graph.width(containerWidth);
           state.graph.height(containerHeight);
-          console.log('[Graph] Graph initialized with size:', containerWidth, 'x', containerHeight);
+          console.log('[Graph] Graph resized to:', containerWidth, 'x', containerHeight);
         } else {
           console.warn('[Graph] Container has invalid dimensions:', { containerWidth, containerHeight });
         }
@@ -1350,21 +1527,57 @@
       setTimeout(() => {
         if (state.graph) {
           applyGraphDisplay();
-          // Resize to fit modal if modal is open
-          if (elements.graphModal && !elements.graphModal.hidden) {
-            resizeGraphForModal();
+          // Resize to fit view if graph view is active
+          if (state.currentView === 'graph') {
+            resizeGraphForView();
           }
           // Ensure graph is visible and centered
+          const camera = state.graph.camera();
+          console.log('[Graph] Camera position:', {
+            x: camera.position.x,
+            y: camera.position.y,
+            z: camera.position.z
+          });
+          
           state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-          state.graph.zoomToFit(400, 0);
+          state.graph.zoomToFit(400, 50);
+          
+          const cameraAfter = state.graph.camera();
+          console.log('[Graph] Camera position after zoom:', {
+            x: cameraAfter.position.x,
+            y: cameraAfter.position.y,
+            z: cameraAfter.position.z
+          });
         }
       }, 200);
 
       state.graphLoaded = true;
 
     } catch (error) {
-      console.error('Failed to initialize graph:', error);
-      showGraphUnavailable();
+      console.error('[initGraph] Failed to initialize graph:', error);
+      console.error('[initGraph] Error details:', {
+        message: error.message,
+        stack: error.stack,
+        graphContainer: !!graphContainer,
+        graphViewVisible: !graphView?.hidden
+      });
+      
+      // Only show unavailable if it's a WebGL issue, otherwise show error
+      if (error.message && error.message.includes('WebGL')) {
+        showGraphUnavailable();
+      } else {
+        // For other errors, try to show a more helpful message
+        const graphPlaceholder = document.getElementById('graph-placeholder');
+        if (graphPlaceholder) {
+          graphPlaceholder.style.display = 'block';
+          graphPlaceholder.innerHTML = `
+            <div class="blog_graph-placeholder-content">
+              <p>Failed to initialize graph</p>
+              <p class="blog_graph-hint">Error: ${error.message}</p>
+            </div>
+          `;
+        }
+      }
     }
   }
 
@@ -1375,18 +1588,24 @@
     if (!graphData || !graphData.nodes) {
       return { nodes: [], links: [] };
     }
-    
+
+    // Create node ID map for fast lookups
+    const nodeMap = new Map(graphData.nodes.map(n => [n.id, n]));
+
     let visibleNodes = [];
     let visibleLinks = [];
-    
+
     if (zoomLevel === 'far') {
       // Show only note nodes
       visibleNodes = graphData.nodes.filter(n => n.nodeType === 'note' || !n.nodeType);
+      const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
+      
       visibleLinks = graphData.links.filter(l => {
-        const sourceNode = graphData.nodes.find(n => n.id === l.source);
-        const targetNode = graphData.nodes.find(n => n.id === l.target);
-        return (sourceNode?.nodeType === 'note' || !sourceNode?.nodeType) && 
-               (targetNode?.nodeType === 'note' || !targetNode?.nodeType);
+        // Handle both ID string and object formats
+        const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+        const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+        
+        return visibleNodeIds.has(sourceId) && visibleNodeIds.has(targetId);
       });
     } else if (zoomLevel === 'medium') {
       // Show notes + messages for focused note
@@ -1394,10 +1613,14 @@
         n.nodeType === 'note' || !n.nodeType || 
         (n.nodeType === 'message' && n.parentNoteId === focusedNoteId)
       );
+      const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
+      
       visibleLinks = graphData.links.filter(l => {
-        const sourceNode = graphData.nodes.find(n => n.id === l.source);
-        const targetNode = graphData.nodes.find(n => n.id === l.target);
-        return visibleNodes.includes(sourceNode) && visibleNodes.includes(targetNode);
+        // Handle both ID string and object formats
+        const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+        const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+        
+        return visibleNodeIds.has(sourceId) && visibleNodeIds.has(targetId);
       });
     } else if (zoomLevel === 'close') {
       // Show all nodes
@@ -1672,6 +1895,15 @@
   function applyGraphDisplay() {
     if (!state.graph) return;
     
+    console.log('[applyGraphDisplay] Applying display settings:', {
+      nodeColor: state.graphDisplay.nodeColor,
+      linkColor: state.graphDisplay.linkColor,
+      nodeSize: state.graphDisplay.nodeSize,
+      linkWidth: state.graphDisplay.linkWidth,
+      linkStyle: state.graphDisplay.linkStyle
+    });
+    console.log('[applyGraphDisplay] Current nodeSize value:', state.graphDisplay.nodeSize);
+    
     // Always update node color function to use current display settings
     state.graph.nodeColor(node => {
       // Default to white for all nodes (balls/spheres)
@@ -1724,19 +1956,31 @@
       return defaultLinkColor;
     });
     
-    // Apply node size
-    if (state.graphDisplay.nodeSize) {
-      state.graph.nodeVal(node => {
-        if (node.nodeType === 'message') {
-          return state.graphDisplay.nodeSize * 0.5;
-        }
-        return state.graphDisplay.nodeSize;
-      });
-    }
+    // Apply node size - always update to ensure slider works
+    // nodeVal controls volume, so we scale up for visible spheres
+    state.graph.nodeVal(node => {
+      const baseSize = state.graphDisplay.nodeSize || 8;
+      // Scale up significantly for better visibility (nodeRelSize will multiply this)
+      // Using 5x multiplier instead of 2x for much more visible spheres
+      const scaledSize = baseSize * 5; // Multiply by 5 for better visibility
+      if (node.nodeType === 'message') {
+        return scaledSize * 0.5; // Messages are half the size of notes
+      }
+      return Math.max(scaledSize, 20); // Minimum size 20 for visibility
+    });
     
-    // Apply link width
+    // Apply link width with type-based scaling for thin lines
     if (state.graphDisplay.linkWidth !== undefined) {
-      state.graph.linkWidth(() => state.graphDisplay.linkWidth);
+      state.graph.linkWidth(link => {
+        const baseWidth = state.graphDisplay.linkWidth || 0.5;
+        // Tag links are thinnest (for tag-based connections)
+        if (link.type === 'tag') return baseWidth * 0.3; // Very thin for tag connections
+        // Parent links (message to note) are thin
+        if (link.type === 'parent') return baseWidth * 0.6;
+        // Manual links are slightly thicker
+        if (link.type === 'manual') return baseWidth * 1.2;
+        return baseWidth;
+      });
     }
     
     // Apply link style
@@ -1752,9 +1996,100 @@
       }
     }
     
-    // Force graph to re-render
+    // Force graph to re-render immediately for real-time updates
+    if (state.graph.refresh) {
+      state.graph.refresh();
+      console.log('[applyGraphDisplay] Graph refreshed for real-time update');
+    }
+    
+    // Also restart simulation briefly to ensure changes are visible
     if (state.graph.cooldownTicks) {
       state.graph.cooldownTicks(100);
+    }
+  }
+
+  /**
+   * Add space background with stars to the graph scene
+   */
+  function addSpaceBackground() {
+    if (!state.graph) return;
+    
+    try {
+      const scene = state.graph.scene();
+      if (!scene) {
+        console.warn('[addSpaceBackground] Scene not available');
+        return;
+      }
+      
+      // Access THREE.js - 3d-force-graph bundles it, but it might not be global
+      // Try to get it from the renderer or window
+      let THREE = window.THREE;
+      
+      // If not on window, try to access through renderer
+      if (!THREE && state.graph.renderer) {
+        try {
+          const renderer = state.graph.renderer();
+          if (renderer) {
+            // THREE.js classes are typically available through the renderer's constructor
+            // Try accessing common THREE classes to see if they're available
+            if (renderer.constructor && renderer.constructor.name === 'WebGLRenderer') {
+              // THREE might be available through the constructor's parent
+              THREE = window.THREE || renderer.constructor.THREE;
+            }
+          }
+        } catch (e) {
+          console.warn('[addSpaceBackground] Could not access renderer:', e);
+        }
+      }
+      
+      // If still not found, wait a bit and try again (THREE might load asynchronously)
+      if (!THREE) {
+        setTimeout(() => {
+          THREE = window.THREE;
+          if (THREE) {
+            addSpaceBackground();
+          } else {
+            console.warn('[addSpaceBackground] THREE.js not available after delay. Space background skipped.');
+          }
+        }, 500);
+        return;
+      }
+      
+      const starCount = 10000;
+      const starsGeometry = new THREE.BufferGeometry();
+      const positions = [];
+      
+      // Generate random star positions in 3D space
+      for (let i = 0; i < starCount; i++) {
+        positions.push(
+          THREE.MathUtils.randFloatSpread(2000),
+          THREE.MathUtils.randFloatSpread(2000),
+          THREE.MathUtils.randFloatSpread(2000)
+        );
+      }
+      
+      starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      
+      // Create star material with white/gray color
+      const starsMaterial = new THREE.PointsMaterial({ 
+        color: 0x888888, 
+        size: 0.5,
+        sizeAttenuation: false
+      });
+      
+      // Create starfield
+      const starField = new THREE.Points(starsGeometry, starsMaterial);
+      
+      // Ensure stars render behind the graph
+      starField.renderOrder = -1;
+      starField.material.depthTest = false;
+      
+      // Add to scene
+      scene.add(starField);
+      
+      console.log('[addSpaceBackground] Space background added successfully');
+    } catch (error) {
+      console.error('[addSpaceBackground] Error adding space background:', error);
     }
   }
 
@@ -1877,11 +2212,11 @@
   // ==========================================================================
   
   /**
-   * Set the current view mode (list only now, graph is modal)
+   * Set the current view mode (list or graph)
    */
-  function setView(view) {
-    // Only allow list view now
-    if (view !== 'list') {
+  async function setView(view) {
+    // Only allow list or graph view
+    if (view !== 'list' && view !== 'graph') {
       view = 'list';
     }
     
@@ -1890,6 +2225,39 @@
     // Update data attribute
     if (elements.blogContent) {
       elements.blogContent.dataset.view = view;
+    }
+
+    // Show/hide views
+    const listView = document.getElementById('blog-list-view');
+    const graphView = document.getElementById('blog-graph-view');
+    
+    if (view === 'list') {
+      if (listView) {
+        listView.hidden = false;
+        listView.setAttribute('aria-hidden', 'false');
+      }
+      if (graphView) {
+        graphView.hidden = true;
+        graphView.setAttribute('aria-hidden', 'true');
+      }
+    } else if (view === 'graph') {
+      if (listView) {
+        listView.hidden = true;
+        listView.setAttribute('aria-hidden', 'true');
+      }
+      if (graphView) {
+        graphView.hidden = false;
+        graphView.setAttribute('aria-hidden', 'false');
+      }
+      
+      // Initialize graph if not already loaded
+      if (!state.graphLoaded) {
+        console.log('[setView] Initializing graph for graph view...');
+        await initGraph();
+      } else {
+        // Resize graph to fit container
+        resizeGraphForView();
+      }
     }
 
     // Update button states
@@ -1908,59 +2276,40 @@
   }
 
   /**
-   * Open graph modal
+   * Resize graph to fit current view container
    */
-  function openGraphModal() {
-    if (!elements.graphModal) return;
-    
-    // Show modal
-    elements.graphModal.hidden = false;
-    document.body.style.overflow = 'hidden';
-    
-    // Initialize graph if not already loaded
-    if (!state.graphLoaded) {
-      initGraph();
-    } else {
-      // Resize graph to fit modal
-      resizeGraphForModal();
-    }
-  }
-
-  /**
-   * Close graph modal
-   */
-  function closeGraphModal() {
-    if (!elements.graphModal) return;
-    
-    // Hide modal
-    elements.graphModal.hidden = true;
-    document.body.style.overflow = '';
-  }
-
-  /**
-   * Resize graph to fit modal container
-   */
-  function resizeGraphForModal() {
+  function resizeGraphForView() {
     if (!state.graph) return;
     
     const graphContainer = document.getElementById('graph-container');
     if (!graphContainer) return;
     
-    setTimeout(() => {
-      if (state.graph && graphContainer) {
-        const containerWidth = graphContainer.clientWidth;
-        const containerHeight = graphContainer.clientHeight;
+    // Wait for container to be visible
+    requestAnimationFrame(() => {
+      const rect = graphContainer.getBoundingClientRect();
+      const sidebar = document.getElementById('graph-sidebar');
+      const sidebarWidth = sidebar ? sidebar.offsetWidth : 280;
+      const containerWidth = rect.width || graphContainer.clientWidth || (window.innerWidth - sidebarWidth);
+      const containerHeight = rect.height || graphContainer.clientHeight || window.innerHeight;
+      
+      console.log('[resizeGraphForView] Container dimensions:', { containerWidth, containerHeight, sidebarWidth });
+      
+      if (containerWidth > 0 && containerHeight > 0) {
+        state.graph.width(containerWidth);
+        state.graph.height(containerHeight);
+        console.log('[resizeGraphForView] Resized to:', containerWidth, 'x', containerHeight);
         
-        if (containerWidth > 0 && containerHeight > 0) {
-          state.graph.width(containerWidth);
-          state.graph.height(containerHeight);
-          
-          // Re-center and fit
-          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-          state.graph.zoomToFit(400, 0);
-        }
+        // Re-center and fit after resize
+        setTimeout(() => {
+          if (state.graph) {
+            state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
+            state.graph.zoomToFit(400, 50);
+          }
+        }, 100);
+      } else {
+        console.warn('[resizeGraphForView] Invalid dimensions:', { containerWidth, containerHeight });
       }
-    }, 100);
+    });
   }
 
   /**
@@ -2779,7 +3128,9 @@
     }
     if (elements.displayNodeSize) {
       elements.displayNodeSize.addEventListener('input', (e) => {
-        state.graphDisplay.nodeSize = parseInt(e.target.value);
+        const newSize = parseInt(e.target.value) || 8;
+        state.graphDisplay.nodeSize = newSize;
+        console.log('[Node Size Slider] Value changed to:', newSize);
         applyGraphDisplay();
       });
     }
@@ -2905,35 +3256,8 @@
     elements.viewButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const view = btn.dataset.view;
-        if (view === 'graph') {
-          // Open graph modal instead of switching views
-          openGraphModal();
-        } else {
-          // List view - just switch views
-          setView(view);
-        }
+        setView(view);
       });
-    });
-    
-    // Graph modal close handlers
-    if (elements.graphModalClose) {
-      elements.graphModalClose.addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeGraphModal();
-      });
-    }
-    
-    if (elements.graphModalBackdrop) {
-      elements.graphModalBackdrop.addEventListener('click', () => {
-        closeGraphModal();
-      });
-    }
-    
-    // ESC key to close graph modal
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && elements.graphModal && !elements.graphModal.hidden) {
-        closeGraphModal();
-      }
     });
 
     // Graph controls
@@ -3003,7 +3327,7 @@
     // Window resize - resize graph if modal is open
     window.addEventListener('resize', debounce(() => {
       if (state.graph && elements.graphModal && !elements.graphModal.hidden) {
-        resizeGraphForModal();
+        resizeGraphForView();
       }
     }, 200));
   }
@@ -3016,10 +3340,20 @@
     // Check auth state and update UI
     await checkAuthState();
     
+    // Sync initial slider values with state
+    if (elements.displayNodeSize && elements.displayNodeSize.value) {
+      state.graphDisplay.nodeSize = parseInt(elements.displayNodeSize.value) || 8;
+      console.log('[init] Synced nodeSize from slider:', state.graphDisplay.nodeSize);
+    }
+    if (elements.displayLinkWidth && elements.displayLinkWidth.value) {
+      state.graphDisplay.linkWidth = parseFloat(elements.displayLinkWidth.value) || 0.5;
+      console.log('[init] Synced linkWidth from slider:', state.graphDisplay.linkWidth);
+    }
+    
     // Setup event listeners
     setupEventListeners();
 
-    // Load view preference (default to list, graph is now modal)
+    // Load view preference (default to list)
     const preferredView = 'list'; // Always default to list view
 
     // Fetch and render posts
