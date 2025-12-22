@@ -52,10 +52,21 @@
   let state = {
     supabase: supabaseClient,
     currentUser: null,
-    messages: [],
+    notes: [], // All user notes
+    currentNote: null, // Currently selected note
+    messages: [], // Messages from current note (for backward compat)
     attachments: [],
     isSubmitting: false,
-    currentAttachmentPreview: null
+    currentAttachmentPreview: null,
+    // Voice recording state
+    isRecording: false,
+    mediaRecorder: null,
+    audioChunks: [],
+    recordingStartTime: null,
+    recordingTimer: null,
+    recognition: null, // Speech recognition
+    transcriptionSegments: [],
+    lastTranscriptionTime: null
   };
 
   // ==========================================================================
@@ -67,6 +78,7 @@
     messageInput: document.getElementById('message-input'),
     editorWrapper: document.getElementById('editor-wrapper'),
     messagesList: document.getElementById('messages-list'),
+    notesList: document.getElementById('notes-list'),
     attachmentBtn: document.getElementById('attachment-btn'),
     attachmentMenu: document.getElementById('attachment-menu'),
     attachmentsContainer: document.getElementById('message-attachments'),
@@ -82,7 +94,23 @@
     attachmentModalClose: document.getElementById('attachment-modal-close'),
     attachmentModalBody: document.getElementById('attachment-modal-body'),
     attachmentModalTitle: document.getElementById('attachment-modal-title'),
-    attachmentDownloadBtn: document.getElementById('attachment-download-btn')
+    attachmentDownloadBtn: document.getElementById('attachment-download-btn'),
+    newNoteBtn: document.getElementById('new-note-btn'),
+    currentNoteTitle: document.getElementById('current-note-title'),
+    currentNoteSubtitle: document.getElementById('current-note-subtitle'),
+    userProfile: document.getElementById('user-profile'),
+    userProfileAvatar: document.getElementById('user-profile-avatar'),
+    userProfileName: document.getElementById('user-profile-name'),
+    userProfileEmail: document.getElementById('user-profile-email'),
+    emptyStateMessage: document.getElementById('empty-state-message'),
+    // Voice recording elements
+    voiceRecordingContainer: document.getElementById('voice-recording-container'),
+    voiceRecordingIndicator: document.getElementById('voice-recording-indicator'),
+    voiceRecordingTimer: document.getElementById('voice-recording-timer'),
+    voiceRecordingStop: document.getElementById('voice-recording-stop'),
+    voiceRecordingWaveform: document.getElementById('voice-recording-waveform'),
+    voiceRecordingTranscriptionPreview: document.getElementById('voice-recording-transcription-preview'),
+    transcriptionPreviewContent: document.getElementById('transcription-preview-content')
   };
 
   // CodeMirror editor instance
@@ -125,81 +153,408 @@
   }
 
   // ==========================================================================
-  // Message Management
+  // Notes Management
   // ==========================================================================
   
-  function loadMessages() {
-    const threadId = window.ThreadManager?.currentThreadId || 'default';
-    const stored = localStorage.getItem(`swft-messages-${threadId}`);
+  async function loadNotes() {
+    try {
+      const { data, error } = await state.supabase
+        .from('notes')
+        .select('id, title, messages, updated_at, created_at, content')
+        .eq('user_id', state.currentUser.id)
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+
+      state.notes = data || [];
+      
+      // Migrate old notes: if messages is empty but content exists, create initial message
+      for (const note of state.notes) {
+        if ((!note.messages || note.messages.length === 0) && note.content) {
+          note.messages = [{
+            id: crypto.randomUUID(),
+            content: note.content,
+            attachments: [],
+            tags: [],
+            created_at: note.created_at
+          }];
+          // Update in database
+          await state.supabase
+            .from('notes')
+            .update({ messages: note.messages })
+            .eq('id', note.id);
+        }
+      }
+
+      renderNotesList();
+      
+      // If no note is selected and notes exist, select the first one
+      if (!state.currentNote && state.notes.length > 0) {
+        await selectNote(state.notes[0].id);
+      } else if (state.notes.length === 0) {
+        renderEmptyState('no-notes');
+      }
+    } catch (error) {
+      console.error('Error loading notes:', error);
+      state.notes = [];
+      renderEmptyState('no-notes');
+    }
+  }
+
+  function renderNotesList() {
+    if (!elements.notesList) return;
+
+    if (state.notes.length === 0) {
+      elements.notesList.innerHTML = `
+        <div class="thread-item" style="padding: 2rem; text-align: center; color: var(--theme-text-muted);">
+          <p>No notes yet</p>
+        </div>
+      `;
+      return;
+    }
+
+    elements.notesList.innerHTML = state.notes.map(note => {
+      const messages = note.messages || [];
+      const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+      const preview = lastMessage 
+        ? (lastMessage.content || '').substring(0, 50) + (lastMessage.content && lastMessage.content.length > 50 ? '...' : '')
+        : 'No messages yet';
+      
+      return `
+        <div class="thread-item ${note.id === state.currentNote?.id ? 'active' : ''}" 
+             data-note-id="${note.id}"
+             role="button"
+             tabindex="0">
+          <div class="thread-item-content">
+            <h3 class="thread-item-title" data-note-id="${note.id}">
+              ${escapeHtml(note.title || 'Untitled')}
+              <span class="thread-item-title-edit-icon" title="Click to edit">✎</span>
+            </h3>
+            <p class="thread-item-preview">${escapeHtml(preview)}</p>
+          </div>
+          <span class="thread-item-time">${formatTime(note.updated_at)}</span>
+        </div>
+      `;
+    }).join('');
+
+    // Attach click listeners
+    attachNoteClickListeners();
     
-    if (stored) {
-      try {
-        state.messages = JSON.parse(stored);
-        renderMessages();
-      } catch (e) {
-        console.error('Error loading messages:', e);
-        state.messages = [];
+    // Attach title edit listeners
+    attachNoteTitleEditListeners();
+  }
+
+  function attachNoteClickListeners() {
+    const noteItems = document.querySelectorAll('.thread-item[data-note-id]');
+    noteItems.forEach(item => {
+      const noteId = item.dataset.noteId;
+      
+      item.addEventListener('click', (e) => {
+        // Don't trigger if clicking on title edit icon
+        if (e.target.closest('.thread-item-title-edit-icon')) return;
+        selectNote(noteId);
+      });
+      
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectNote(noteId);
+        }
+      });
+    });
+  }
+
+  function attachNoteTitleEditListeners() {
+    const titleElements = document.querySelectorAll('.thread-item-title[data-note-id]');
+    titleElements.forEach(titleEl => {
+      const noteId = titleEl.dataset.noteId;
+      
+      titleEl.addEventListener('click', (e) => {
+        // Only trigger if clicking on the edit icon or the title itself
+        if (e.target.closest('.thread-item-title-edit-icon') || e.target === titleEl) {
+          editNoteTitle(noteId, titleEl);
+        }
+      });
+    });
+  }
+
+  async function selectNote(noteId) {
+    try {
+      const note = state.notes.find(n => n.id === noteId);
+      if (!note) {
+        // Reload note from database
+        const { data, error } = await state.supabase
+          .from('notes')
+          .select('id, title, messages, updated_at, created_at, content')
+          .eq('id', noteId)
+          .single();
+
+        if (error) throw error;
+        state.currentNote = data;
+      } else {
+        state.currentNote = note;
+      }
+
+      // Update messages from note
+      state.messages = state.currentNote.messages || [];
+      
+      // Update UI
+      renderMessages();
+      updateActiveNoteInSidebar(noteId);
+      updateNoteHeader();
+      
+      // Scroll to bottom
+      scrollToBottom();
+    } catch (error) {
+      console.error('Error selecting note:', error);
+      showError('Failed to load note');
+    }
+  }
+
+  function updateActiveNoteInSidebar(noteId) {
+    const noteItems = document.querySelectorAll('.thread-item[data-note-id]');
+    noteItems.forEach(item => {
+      if (item.dataset.noteId === noteId) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  function updateNoteHeader() {
+    if (state.currentNote) {
+      if (elements.currentNoteTitle) {
+        elements.currentNoteTitle.textContent = state.currentNote.title || 'Untitled';
+      }
+      if (elements.currentNoteSubtitle) {
+        const messageCount = (state.currentNote.messages || []).length;
+        elements.currentNoteSubtitle.textContent = 
+          messageCount === 0 
+            ? 'Start your conversation'
+            : `${messageCount} message${messageCount === 1 ? '' : 's'}`;
       }
     } else {
-      state.messages = [];
-      renderEmptyState();
-    }
-  }
-
-  function saveMessages() {
-    const threadId = window.ThreadManager?.currentThreadId || 'default';
-    localStorage.setItem(`swft-messages-${threadId}`, JSON.stringify(state.messages));
-  }
-
-  function addMessage(message) {
-    state.messages.push(message);
-    saveMessages();
-    renderMessages();
-    
-    // Update thread message count
-    if (window.ThreadManager) {
-      const thread = window.ThreadManager.getCurrentThread();
-      if (thread) {
-        window.ThreadManager.updateThread(thread.id, {
-          messageCount: state.messages.length
-        });
+      if (elements.currentNoteTitle) {
+        elements.currentNoteTitle.textContent = 'Select a note to start';
+      }
+      if (elements.currentNoteSubtitle) {
+        elements.currentNoteSubtitle.textContent = 'Create or select a note to begin your conversation';
       }
     }
+  }
+
+  async function createNewNote() {
+    try {
+      const { data, error } = await state.supabase
+        .from('notes')
+        .insert({
+          user_id: state.currentUser.id,
+          user_email: state.currentUser.email,
+          title: 'New Note',
+          messages: [],
+          status: 'draft'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Add to local state
+      state.notes.unshift(data);
+      state.currentNote = data;
+      
+      // Update UI
+      renderNotesList();
+      await selectNote(data.id);
+      
+      return data;
+    } catch (error) {
+      console.error('Error creating note:', error);
+      showError('Failed to create note');
+      return null;
+    }
+  }
+
+  async function editNoteTitle(noteId, titleElement) {
+    const note = state.notes.find(n => n.id === noteId);
+    if (!note) return;
+
+    const currentTitle = note.title || 'Untitled';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = currentTitle;
+    input.className = 'thread-item-title editing';
     
-    // Scroll to bottom
-    scrollToBottom();
+    // Store original content (including edit icon)
+    const originalContent = titleElement.innerHTML;
+    const originalText = titleElement.textContent.trim();
+    
+    // Replace title with input
+    titleElement.innerHTML = '';
+    titleElement.appendChild(input);
+    input.focus();
+    input.select();
+
+    const saveTitle = async () => {
+      const newTitle = input.value.trim() || 'Untitled';
+      if (newTitle !== originalText) {
+        try {
+          const { error } = await state.supabase
+            .from('notes')
+            .update({ title: newTitle })
+            .eq('id', noteId);
+
+          if (error) throw error;
+
+          note.title = newTitle;
+          // Update current note if it's the one being edited
+          if (state.currentNote && state.currentNote.id === noteId) {
+            state.currentNote.title = newTitle;
+            updateNoteHeader();
+          }
+          renderNotesList();
+        } catch (error) {
+          console.error('Error updating note title:', error);
+          showError('Failed to update title');
+          titleElement.innerHTML = originalContent;
+        }
+      } else {
+        titleElement.innerHTML = originalContent;
+      }
+    };
+
+    const cancelEdit = () => {
+      titleElement.innerHTML = originalContent;
+    };
+
+    input.addEventListener('blur', saveTitle);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.blur(); // Trigger save
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        cancelEdit();
+      }
+    });
+  }
+
+  async function updateNoteTitle(noteId, newTitle) {
+    try {
+      const { error } = await state.supabase
+        .from('notes')
+        .update({ title: newTitle })
+        .eq('id', noteId);
+
+      if (error) throw error;
+
+      // Update local state
+      const note = state.notes.find(n => n.id === noteId);
+      if (note) {
+        note.title = newTitle;
+        renderNotesList();
+      }
+    } catch (error) {
+      console.error('Error updating note title:', error);
+      throw error;
+    }
+  }
+
+  async function getUserProfile() {
+    try {
+      if (!state.currentUser) return null;
+      
+      // Get user metadata from auth
+      const { data: { user }, error } = await state.supabase.auth.getUser();
+      if (error) throw error;
+
+      return {
+        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+        email: user.email || state.currentUser.email
+      };
+    } catch (error) {
+      console.error('Error getting user profile:', error);
+      return {
+        name: state.currentUser.email?.split('@')[0] || 'User',
+        email: state.currentUser.email || ''
+      };
+    }
+  }
+
+  function renderUserProfile() {
+    getUserProfile().then(profile => {
+      if (!profile) return;
+
+      if (elements.userProfileName) {
+        elements.userProfileName.textContent = profile.name;
+      }
+      if (elements.userProfileEmail) {
+        elements.userProfileEmail.textContent = profile.email;
+      }
+      if (elements.userProfileAvatar) {
+        // Generate initials
+        const initials = profile.name
+          .split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase()
+          .substring(0, 2);
+        elements.userProfileAvatar.textContent = initials;
+      }
+    });
   }
 
   function renderMessages() {
-    if (state.messages.length === 0) {
-      renderEmptyState();
+    if (!state.currentNote) {
+      renderEmptyState('no-note-selected');
+      return;
+    }
+
+    const messages = state.messages || [];
+    
+    if (messages.length === 0) {
+      renderEmptyState('empty-note');
       return;
     }
     
-    elements.messagesList.innerHTML = state.messages.map(msg => `
-      <div class="message">
-        <div class="message-bubble ${msg.content ? 'has-content' : ''}">
-          <div class="message-header">
-            <span class="message-author">${escapeHtml(msg.author)}</span>
-            <span class="message-time">${formatTime(msg.timestamp)}</span>
+    elements.messagesList.innerHTML = messages.map(msg => {
+      const author = state.currentUser?.email?.split('@')[0] || 'You';
+      const timestamp = msg.created_at || msg.timestamp || new Date().toISOString();
+      
+      return `
+        <div class="message">
+          <div class="message-bubble ${msg.content ? 'has-content' : ''}">
+            <div class="message-header">
+              <span class="message-author">${escapeHtml(author)}</span>
+              <span class="message-time">${formatTime(timestamp)}</span>
+            </div>
+            
+            ${msg.content ? `<div class="message-content">${marked.parse(msg.content)}</div>` : ''}
+            
+            ${msg.attachments && msg.attachments.length > 0 ? `
+              <div class="message-attachments-list">
+                ${msg.attachments.map((att, idx) => {
+                  // Ensure transcription is included from stored message data
+                  const attachmentWithTranscription = {
+                    ...att,
+                    transcription: att.transcription || msg.transcription?.[att.url] || null,
+                    isVoiceRecording: att.isVoiceRecording || false
+                  };
+                  return renderAttachment(attachmentWithTranscription, idx);
+                }).join('')}
+              </div>
+            ` : ''}
+            
+            ${msg.tags && msg.tags.length > 0 ? `
+              <div class="message-tags">
+                ${msg.tags.map(tag => `<span class="message-tag">${escapeHtml(tag)}</span>`).join('')}
+              </div>
+            ` : ''}
           </div>
-          
-          ${msg.content ? `<div class="message-content">${marked.parse(msg.content)}</div>` : ''}
-          
-          ${msg.attachments && msg.attachments.length > 0 ? `
-            <div class="message-attachments-list">
-              ${msg.attachments.map((att, idx) => renderAttachment(att, idx)).join('')}
-            </div>
-          ` : ''}
-          
-          ${msg.tags && msg.tags.length > 0 ? `
-            <div class="message-tags">
-              ${msg.tags.map(tag => `<span class="message-tag">${escapeHtml(tag)}</span>`).join('')}
-            </div>
-          ` : ''}
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
     
     // Add click handlers for attachment previews
     elements.messagesList.querySelectorAll('.attachment-item[data-attachment-id]').forEach(item => {
@@ -213,8 +568,8 @@
           item.closest('.message')
         );
         
-        if (messageIndex >= 0 && state.messages[messageIndex]) {
-          const message = state.messages[messageIndex];
+        if (messageIndex >= 0 && messages[messageIndex]) {
+          const message = messages[messageIndex];
           if (message.attachments && message.attachments.length > 0) {
             // Find attachment by matching URL
             const img = item.querySelector('img');
@@ -239,13 +594,27 @@
     });
   }
 
-  function renderEmptyState() {
+  function renderEmptyState(type = 'no-note-selected') {
+    let message = 'Select a note or create a new one to start';
+    
+    if (type === 'no-notes') {
+      message = 'Create your first note to get started';
+    } else if (type === 'empty-note') {
+      message = 'Start your conversation';
+    } else if (type === 'no-note-selected') {
+      message = 'Select a note or create a new one to start';
+    }
+
+    if (elements.emptyStateMessage) {
+      elements.emptyStateMessage.textContent = message;
+    }
+
     elements.messagesList.innerHTML = `
-      <div class="messages-empty">
+      <div class="messages-empty" id="messages-empty-state">
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
-        <p>No messages yet. Start by sending a note!</p>
+        <p id="empty-state-message">${message}</p>
       </div>
     `;
   }
@@ -267,9 +636,31 @@
         </div>
       `;
     } else if (attachment.type === 'audio') {
+      const hasTranscription = attachment.transcription && attachment.transcription.trim();
+      const isVoiceRecording = attachment.isVoiceRecording;
+      
       return `
-        <div class="attachment-item attachment-audio">
+        <div class="attachment-item attachment-audio ${isVoiceRecording ? 'voice-recording' : ''}">
           <audio controls src="${escapeHtml(attachment.url)}"></audio>
+          ${hasTranscription ? `
+            <div class="audio-transcription">
+              <div class="audio-transcription-header">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>Transcription</span>
+              </div>
+              <div class="audio-transcription-content">
+                ${attachment.transcription.split('\n\n').map(para => 
+                  `<p>${escapeHtml(para.replace(/\n/g, ' '))}</p>`
+                ).join('')}
+              </div>
+            </div>
+          ` : ''}
           <a href="${escapeHtml(attachment.url)}" download="${escapeHtml(attachment.name || 'audio')}" class="attachment-download-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -358,6 +749,9 @@
         break;
       case 'audio':
         elements.audioFileInput.click();
+        break;
+      case 'voice-record':
+        startVoiceRecording();
         break;
       case 'video':
         elements.videoFileInput.click();
@@ -457,114 +851,119 @@
   // ==========================================================================
   
   async function submitMessage(event) {
-    console.log('submitMessage called', { event, hasEvent: !!event });
-    
     if (event) {
       event.preventDefault();
     }
 
     // Get content from editor or textarea
     const content = editor ? editor.getValue().trim() : elements.messageInput.value.trim();
-    console.log('Content check:', { content, contentLength: content.length, attachmentsCount: state.attachments.length });
     
     if (!content && state.attachments.length === 0) {
-      console.warn('Submission blocked: empty content and no attachments');
       return;
     }
 
     if (state.isSubmitting) {
-      console.warn('Submission blocked: already submitting');
       return;
     }
 
-    console.log('Starting submission...');
     state.isSubmitting = true;
     setLoading(true);
 
     try {
+      // Ensure we have a current note (create if needed)
+      if (!state.currentNote) {
+        await createNewNote();
+        if (!state.currentNote) {
+          throw new Error('Failed to create note');
+        }
+      }
+
       // Upload attachments to Supabase
       const uploadedAttachments = await uploadAttachments();
 
       // Get tags from auto-tagger
       const tags = window.AutoTagger?.getSelectedTags() || [];
 
-      // Save note directly to Supabase
-      const title = generateTitle(content);
+      // Process attachments to include transcription
+      const processedAttachments = uploadedAttachments.map(att => {
+        // Find matching attachment in state to get transcription
+        const originalAtt = state.attachments.find(a => 
+          a.file && att.name && a.file.name === att.name
+        );
+        return {
+          ...att,
+          transcription: originalAtt?.transcription,
+          isVoiceRecording: originalAtt?.isVoiceRecording
+        };
+      });
+
+      // Create new message object
+      const newMessage = {
+        id: crypto.randomUUID(),
+        content: content,
+        attachments: processedAttachments,
+        tags: tags,
+        created_at: new Date().toISOString()
+      };
+
+      // Get current messages array
+      const currentMessages = state.currentNote.messages || [];
+      const updatedMessages = [...currentMessages, newMessage];
+
+      // Generate title from first message if still "New Note"
+      let title = state.currentNote.title;
+      if (title === 'New Note' && content) {
+        title = generateTitle(content);
+      }
+
+      // Update note in Supabase
       const fileUrls = uploadedAttachments.map(att => att.url);
       const externalLinks = extractLinks(content);
       const contentType = determineContentType(content, uploadedAttachments);
-      const threadId = window.ThreadManager?.currentThreadId || null;
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:366',message:'Before Supabase insert - payload values',data:{userId:state.currentUser?.id,userEmail:state.currentUser?.email,title,contentLength:content?.length,tags:JSON.stringify(tags),contentType,fileUrls:JSON.stringify(fileUrls),externalLinks:JSON.stringify(externalLinks),threadId,status:'published'},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
-      
-      const insertPayload = {
-        user_id: state.currentUser.id,
-        user_email: state.currentUser.email,
-        title: title,
-        content: content,
-        tags: tags,
-        content_type: contentType,
-        file_urls: fileUrls,
-        external_links: externalLinks,
-        status: 'published'
-      };
-      
-      // Only include thread_id if it's a valid UUID (not null, undefined, or "default")
-      // The thread_id column doesn't exist in the database, so we exclude it entirely
-      // Only include if it's a real UUID (36 characters with dashes)
-      const isValidUUID = threadId && 
-                          typeof threadId === 'string' && 
-                          threadId !== 'default' && 
-                          threadId.length === 36 && 
-                          threadId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
-      
-      if (isValidUUID) {
-        insertPayload.thread_id = threadId;
-      } else {
-        // Explicitly exclude thread_id - column doesn't exist in database
-        // Don't include it at all, even if threadId has a value
-        delete insertPayload.thread_id;
-      }
-      
-      // Console log for debugging payload (can be removed after verification)
-      console.log('Insert payload (thread_id excluded):', JSON.stringify(insertPayload, null, 2));
-      console.log('threadId value:', threadId, 'isValidUUID:', isValidUUID);
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:392',message:'Supabase insert payload',data:{payload:JSON.stringify(insertPayload),includesThreadId:threadId!==null&&threadId!==undefined,threadIdValue:threadId},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'B'})}).catch(()=>{});
-      // #endregion
-      
-      const { data: noteData, error: noteError } = await state.supabase
+
+      // Store transcription data in message attachments
+      const messagesWithTranscription = updatedMessages.map(msg => {
+        if (msg.attachments && msg.attachments.length > 0) {
+          msg.attachments = msg.attachments.map(att => ({
+            ...att,
+            transcription: att.transcription || null,
+            isVoiceRecording: att.isVoiceRecording || false
+          }));
+        }
+        return msg;
+      });
+
+      const { data: updatedNote, error: updateError } = await state.supabase
         .from('notes')
-        .insert(insertPayload)
+        .update({
+          messages: messagesWithTranscription,
+          updated_at: new Date().toISOString(),
+          content: content, // For backward compatibility
+          title: title,
+          tags: tags,
+          content_type: contentType,
+          file_urls: fileUrls,
+          external_links: externalLinks
+        })
+        .eq('id', state.currentNote.id)
         .select()
         .single();
 
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:395',message:'Supabase insert response',data:{hasData:!!noteData,hasError:!!noteError,errorMessage:noteError?.message,errorCode:noteError?.code,errorDetails:noteError?.details,errorHint:noteError?.hint},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
+      if (updateError) throw updateError;
 
-      if (noteError) {
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:400',message:'Supabase error thrown',data:{error:JSON.stringify(noteError),message:noteError?.message,code:noteError?.code,details:noteError?.details,hint:noteError?.hint},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'D'})}).catch(()=>{});
-      // #endregion
-        throw noteError;
-      }
-
-      // Add message to local state
-      const message = {
-        id: noteData.id,
-        author: state.currentUser.email.split('@')[0],
-        content: content,
-        attachments: uploadedAttachments,
-        tags: tags,
-        timestamp: noteData.created_at
-      };
-
-      console.log('Note saved successfully:', noteData.id);
-      addMessage(message);
+      // Update local state
+      state.currentNote = updatedNote;
+      state.messages = updatedNote.messages || [];
+      
+      // Refresh notes list to update preview and timestamp
+      await loadNotes();
+      
+      // Re-render messages
+      renderMessages();
+      updateNoteHeader();
+      
+      // Scroll to bottom
+      scrollToBottom();
 
       // Clear form
       if (editor) {
@@ -577,27 +976,9 @@
       window.AutoTagger?.hideSuggestions();
 
     } catch (error) {
-      // #region agent log
-      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'upload.js:430',message:'Submit error caught',data:{errorMessage:error?.message,errorCode:error?.code,errorDetails:error?.details,errorHint:error?.hint,errorString:String(error),errorStack:error?.stack},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
       console.error('Submit error:', error);
-      console.error('Error details:', {
-        message: error?.message,
-        code: error?.code,
-        details: error?.details,
-        hint: error?.hint
-      });
-      
-      // More specific error message for thread_id column errors
-      let errorMessage = 'Failed to send message. Please try again.';
-      if (error?.code === 'PGRST204' && error?.message?.includes('thread_id')) {
-        errorMessage = 'Database schema issue detected. Please refresh the page and try again.';
-        console.error('thread_id column error - this should not happen with the current fix. Please check if the updated code is deployed.');
-      }
-      
-      showError(errorMessage);
+      showError('Failed to send message. Please try again.');
     } finally {
-      console.log('Submission finished, resetting state');
       state.isSubmitting = false;
       setLoading(false);
     }
@@ -627,7 +1008,9 @@
         uploaded.push({
           type: attachment.type,
           url: publicUrl,
-          name: attachment.file.name
+          name: attachment.file.name,
+          transcription: attachment.transcription || null,
+          isVoiceRecording: attachment.isVoiceRecording || false
         });
 
       } catch (error) {
@@ -770,6 +1153,11 @@ ${content}
         elements.messageInput.style.height = 'auto';
         elements.messageInput.style.height = elements.messageInput.scrollHeight + 'px';
 
+        // Auto-create note if typing in empty state
+        if (!state.currentNote && elements.messageInput.value.trim().length > 0) {
+          createNewNote();
+        }
+
         // Auto-suggest tags
         if (window.AutoTagger) {
           window.AutoTagger.autoSuggest(elements.messageInput.value);
@@ -802,10 +1190,39 @@ ${content}
       });
     }
 
-    // Thread switching
-    window.addEventListener('thread-switched', () => {
-      loadMessages();
-    });
+    // New note button
+    if (elements.newNoteBtn) {
+      elements.newNoteBtn.addEventListener('click', async () => {
+        await createNewNote();
+      });
+    }
+
+    // Voice recording stop button
+    if (elements.voiceRecordingStop) {
+      elements.voiceRecordingStop.addEventListener('click', () => {
+        stopVoiceRecording();
+      });
+    }
+
+    // Add click handler to close transcription preview after recording
+    // User can click outside or on a close action to dismiss the transcription view
+    if (elements.voiceRecordingContainer) {
+      document.addEventListener('click', (e) => {
+        // If clicking outside the recording container while transcription is showing, hide it
+        if (!state.isRecording && 
+            elements.voiceRecordingContainer && 
+            !elements.voiceRecordingContainer.hidden &&
+            !elements.voiceRecordingContainer.contains(e.target) &&
+            elements.voiceRecordingStop &&
+            !elements.voiceRecordingStop.contains(e.target)) {
+          // Only hide if transcription is showing (recording is done)
+          if (elements.voiceRecordingTranscriptionPreview && 
+              !elements.voiceRecordingTranscriptionPreview.hidden) {
+            elements.voiceRecordingContainer.hidden = true;
+          }
+        }
+      });
+    }
 
     // Setup attachment handlers
     setupAttachmentHandlers();
@@ -813,10 +1230,17 @@ ${content}
     // Setup auto-tagger
     if (window.AutoTagger) {
       if (editor) {
-        // Setup for CodeMirror editor
-        editor.on('change', () => {
+      // Setup for CodeMirror editor
+      editor.on('change', () => {
+        // Auto-create note if typing in empty state
+        if (!state.currentNote && editor.getValue().trim().length > 0) {
+          createNewNote();
+        }
+        
+        if (window.AutoTagger) {
           window.AutoTagger.analyzeText(editor.getValue());
-        });
+        }
+      });
       } else if (elements.messageInput) {
         window.AutoTagger.setupAutoSuggest(elements.messageInput);
       }
@@ -829,13 +1253,27 @@ ${content}
 
     // Attachment modal close
     if (elements.attachmentModalClose) {
-      elements.attachmentModalClose.addEventListener('click', hideAttachmentPreview);
+      elements.attachmentModalClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        hideAttachmentPreview();
+      });
     }
     if (elements.attachmentModal) {
       const backdrop = elements.attachmentModal.querySelector('.attachment-modal-backdrop');
       if (backdrop) {
-        backdrop.addEventListener('click', hideAttachmentPreview);
+        backdrop.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          hideAttachmentPreview();
+        });
       }
+      // Also close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !elements.attachmentModal.hidden) {
+          hideAttachmentPreview();
+        }
+      });
     }
 
     // Setup drag and drop on textarea if no editor
@@ -1061,6 +1499,360 @@ ${content}
   }
 
   // ==========================================================================
+  // Voice Recording
+  // ==========================================================================
+  
+  async function startVoiceRecording() {
+    try {
+      // Close attachment menu
+      elements.attachmentMenu.hidden = true;
+
+      // Check for browser support
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showError('Your browser does not support audio recording');
+        return;
+      }
+
+      // Request microphone access
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+      // Initialize MediaRecorder
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' :
+                      MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' :
+                      'audio/ogg';
+      
+      state.mediaRecorder = new MediaRecorder(stream, { mimeType });
+      state.audioChunks = [];
+      state.transcriptionSegments = [];
+      state.lastTranscriptionTime = Date.now();
+
+      // Collect audio chunks
+      state.mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          state.audioChunks.push(event.data);
+        }
+      };
+
+      // Initialize Speech Recognition (Web Speech API)
+      // Note: Works in Chrome, Edge, Safari. Firefox doesn't support it natively.
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        state.recognition = new SpeechRecognition();
+        state.recognition.continuous = true;
+        state.recognition.interimResults = true;
+        state.recognition.lang = 'en-US';
+        
+        // Handle errors gracefully
+        state.recognition.onend = () => {
+          // Restart if still recording (browser may auto-stop)
+          if (state.isRecording && state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+            try {
+              state.recognition.start();
+            } catch (e) {
+              console.warn('Could not restart speech recognition:', e);
+            }
+          }
+        };
+
+        state.recognition.onresult = (event) => {
+          let interimTranscript = '';
+          let finalTranscript = '';
+
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript + ' ';
+              // Store final segment with timestamp
+              const currentTime = Date.now();
+              const pauseDuration = state.lastTranscriptionTime ? 
+                (currentTime - state.lastTranscriptionTime) : 0;
+              
+              state.transcriptionSegments.push({
+                text: transcript.trim(),
+                timestamp: currentTime,
+                pauseDuration: pauseDuration
+              });
+              state.lastTranscriptionTime = currentTime;
+            } else {
+              interimTranscript += transcript;
+            }
+          }
+
+          // Don't update preview during recording - transcription will show after recording stops
+        };
+
+        state.recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          // Don't stop recording on recognition errors
+          // Some errors are recoverable (e.g., 'no-speech' when user pauses)
+          if (event.error === 'not-allowed') {
+            console.warn('Microphone permission denied for speech recognition');
+          }
+        };
+
+        try {
+          state.recognition.start();
+        } catch (error) {
+          console.warn('Could not start speech recognition:', error);
+          // Continue recording even if transcription fails
+        }
+      } else {
+        console.warn('Speech recognition not available in this browser. Recording will continue without live transcription.');
+      }
+
+      // Start recording
+      state.mediaRecorder.start(1000); // Collect data every second
+      state.isRecording = true;
+      state.recordingStartTime = Date.now();
+
+      // Show recording UI
+      if (elements.voiceRecordingContainer) {
+        elements.voiceRecordingContainer.hidden = false;
+      }
+
+      // Start timer
+      startRecordingTimer();
+
+      // Start waveform visualization
+      startWaveformVisualization(stream);
+
+      console.log('Voice recording started');
+    } catch (error) {
+      console.error('Error starting voice recording:', error);
+      showError('Failed to start recording. Please check microphone permissions.');
+      stopVoiceRecording();
+    }
+  }
+
+  function stopVoiceRecording() {
+    if (!state.isRecording) return;
+
+    state.isRecording = false;
+
+    // Stop MediaRecorder
+    if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+      state.mediaRecorder.stop();
+    }
+
+    // Stop Speech Recognition
+    if (state.recognition) {
+      state.recognition.stop();
+    }
+
+    // Stop all tracks
+    if (state.mediaRecorder && state.mediaRecorder.stream) {
+      state.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+    }
+
+    // Stop timer
+    if (state.recordingTimer) {
+      clearInterval(state.recordingTimer);
+      state.recordingTimer = null;
+    }
+
+    // Process recording
+    processVoiceRecording();
+  }
+
+  async function processVoiceRecording() {
+    try {
+      // Wait for MediaRecorder to finish
+      await new Promise((resolve) => {
+        if (state.mediaRecorder) {
+          state.mediaRecorder.onstop = resolve;
+          // If already stopped, resolve immediately
+          if (state.mediaRecorder.state === 'inactive') {
+            resolve();
+          }
+        } else {
+          resolve();
+        }
+      });
+
+      // Create audio blob
+      const audioBlob = new Blob(state.audioChunks, { type: state.mediaRecorder.mimeType });
+      
+      // Format transcription with paragraph breaks
+      const formattedTranscription = formatTranscriptionWithPauses(state.transcriptionSegments);
+
+      // Create file from blob
+      const fileExtension = state.mediaRecorder.mimeType.split('/')[1] || 'webm';
+      const fileName = `voice-recording-${Date.now()}.${fileExtension}`;
+      const audioFile = new File([audioBlob], fileName, { type: state.mediaRecorder.mimeType });
+
+      // Add to attachments with transcription
+      state.attachments.push({
+        file: audioFile,
+        type: 'audio',
+        preview: null,
+        transcription: formattedTranscription || null,
+        isVoiceRecording: true
+      });
+
+      // Show transcription preview with final formatted transcription
+      // Update the segments first so formatTranscriptionWithPauses can use them
+      if (formattedTranscription && formattedTranscription.trim()) {
+        // Update preview content directly since we already have formatted transcription
+        if (elements.voiceRecordingTranscriptionPreview && elements.transcriptionPreviewContent) {
+          elements.voiceRecordingTranscriptionPreview.hidden = false;
+          elements.transcriptionPreviewContent.innerHTML = formattedTranscription
+            .split('\n\n')
+            .map(para => {
+              const paraWithBreaks = para.replace(/\n/g, '<br>');
+              return `<p>${escapeHtml(paraWithBreaks)}</p>`;
+            })
+            .join('');
+        }
+        // Keep recording UI visible to show transcription
+      } else {
+        // Hide recording UI if no transcription
+        if (elements.voiceRecordingContainer) {
+          elements.voiceRecordingContainer.hidden = true;
+        }
+        if (elements.voiceRecordingTranscriptionPreview) {
+          elements.voiceRecordingTranscriptionPreview.hidden = true;
+        }
+      }
+
+      // Render attachments
+      renderAttachments();
+
+      // Reset state
+      state.audioChunks = [];
+      state.transcriptionSegments = [];
+      state.lastTranscriptionTime = null;
+      state.mediaRecorder = null;
+      state.recognition = null;
+
+      console.log('Voice recording processed');
+    } catch (error) {
+      console.error('Error processing voice recording:', error);
+      showError('Failed to process recording');
+    }
+  }
+
+  function formatTranscriptionWithPauses(segments) {
+    if (!segments || segments.length === 0) {
+      return '';
+    }
+
+    const PAUSE_THRESHOLD = 1500; // 1.5 seconds for paragraph break
+    const SENTENCE_PAUSE = 800; // 0.8 seconds for sentence break
+
+    let formatted = '';
+    let currentParagraph = [];
+
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
+      const pause = segment.pauseDuration || 0;
+
+      currentParagraph.push(segment.text);
+
+      // Check if we should break paragraph
+      if (pause > PAUSE_THRESHOLD && i < segments.length - 1) {
+        // End current paragraph
+        if (currentParagraph.length > 0) {
+          formatted += currentParagraph.join(' ') + '\n\n';
+          currentParagraph = [];
+        }
+      } else if (pause > SENTENCE_PAUSE && i < segments.length - 1) {
+        // Add sentence break
+        currentParagraph.push('\n');
+      }
+    }
+
+    // Add remaining paragraph
+    if (currentParagraph.length > 0) {
+      formatted += currentParagraph.join(' ');
+    }
+
+    return formatted.trim();
+  }
+
+  function updateTranscriptionPreview() {
+    if (!elements.transcriptionPreviewContent || !elements.voiceRecordingTranscriptionPreview) return;
+
+    const formatted = formatTranscriptionWithPauses(state.transcriptionSegments);
+    
+    if (formatted && formatted.trim()) {
+      elements.voiceRecordingTranscriptionPreview.hidden = false;
+      // Format with line breaks - paragraphs get <p> tags, sentence breaks get <br>
+      elements.transcriptionPreviewContent.innerHTML = formatted
+        .split('\n\n')
+        .map(para => {
+          // Replace sentence breaks (\n) with <br> tags within paragraphs
+          const paraWithBreaks = para.replace(/\n/g, '<br>');
+          return `<p>${escapeHtml(paraWithBreaks)}</p>`;
+        })
+        .join('');
+    } else {
+      // Hide if no transcription
+      elements.voiceRecordingTranscriptionPreview.hidden = true;
+      elements.transcriptionPreviewContent.innerHTML = '';
+    }
+  }
+
+  function startRecordingTimer() {
+    state.recordingStartTime = Date.now();
+    
+    state.recordingTimer = setInterval(() => {
+      if (!state.isRecording) {
+        clearInterval(state.recordingTimer);
+        return;
+      }
+
+      const elapsed = Date.now() - state.recordingStartTime;
+      const minutes = Math.floor(elapsed / 60000);
+      const seconds = Math.floor((elapsed % 60000) / 1000);
+      
+      if (elements.voiceRecordingTimer) {
+        elements.voiceRecordingTimer.textContent = 
+          `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+    }, 100);
+  }
+
+  function startWaveformVisualization(stream) {
+    if (!elements.voiceRecordingWaveform) return;
+
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioContext.createAnalyser();
+    const microphone = audioContext.createMediaStreamSource(stream);
+    
+    analyser.fftSize = 256;
+    microphone.connect(analyser);
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    function draw() {
+      if (!state.isRecording) return;
+
+      requestAnimationFrame(draw);
+      analyser.getByteFrequencyData(dataArray);
+
+      // Create simple waveform visualization
+      const bars = 20;
+      const barWidth = 100 / bars;
+      let waveformHtml = '';
+
+      for (let i = 0; i < bars; i++) {
+        const index = Math.floor((i / bars) * bufferLength);
+        const value = dataArray[index];
+        const height = (value / 255) * 100;
+        
+        waveformHtml += `<div class="waveform-bar" style="height: ${Math.max(height, 5)}%; width: ${barWidth}%;"></div>`;
+      }
+
+      if (elements.voiceRecordingWaveform) {
+        elements.voiceRecordingWaveform.innerHTML = waveformHtml;
+      }
+    }
+
+    draw();
+  }
+
+  // ==========================================================================
   // Initialization
   // ==========================================================================
   
@@ -1069,21 +1861,26 @@ ${content}
     const authorized = await checkAuth();
     if (!authorized) return;
 
-    // Initialize thread manager
-    if (window.ThreadManager) {
-      await window.ThreadManager.init(state.supabase, state.currentUser);
+    // Ensure attachment modal is hidden on initialization
+    if (elements.attachmentModal) {
+      elements.attachmentModal.hidden = true;
+      elements.attachmentModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
     }
 
     // Initialize markdown editor
     initMarkdownEditor();
 
-    // Load messages for current thread
-    loadMessages();
+    // Load notes
+    await loadNotes();
+
+    // Render user profile
+    renderUserProfile();
 
     // Setup event listeners
     setupEventListeners();
 
-    console.log('Chat interface initialized');
+    console.log('Notes interface initialized');
   }
 
   // Start when DOM is ready

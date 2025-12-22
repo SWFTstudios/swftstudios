@@ -157,6 +157,65 @@ CREATE TRIGGER update_notes_updated_at
   EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================
+-- 6. Add Messages Column for Conversation Threads
+-- ============================================================================
+
+-- Add messages JSONB column to store conversation thread
+ALTER TABLE notes ADD COLUMN IF NOT EXISTS messages JSONB DEFAULT '[]'::jsonb;
+
+-- Create GIN index on messages for efficient querying
+CREATE INDEX IF NOT EXISTS notes_messages_idx ON notes USING GIN (messages);
+
+-- Migration: Convert existing content to first message if messages is empty
+-- This ensures backward compatibility
+DO $$
+DECLARE
+  note_record RECORD;
+  attachments_json JSONB;
+  file_url TEXT;
+BEGIN
+  FOR note_record IN 
+    SELECT id, content, file_urls, tags, created_at
+    FROM notes
+    WHERE (messages IS NULL OR messages = '[]'::jsonb)
+    AND content IS NOT NULL
+    AND content != ''
+  LOOP
+    -- Build attachments array from file_urls
+    attachments_json := '[]'::jsonb;
+    
+    IF note_record.file_urls IS NOT NULL AND array_length(note_record.file_urls, 1) > 0 THEN
+      FOR file_url IN SELECT unnest(note_record.file_urls)
+      LOOP
+        attachments_json := attachments_json || jsonb_build_object(
+          'type', CASE 
+            WHEN file_url LIKE '%.mp4' OR file_url LIKE '%.mov' OR file_url LIKE '%.webm' THEN 'video'
+            WHEN file_url LIKE '%.mp3' OR file_url LIKE '%.wav' OR file_url LIKE '%.m4a' THEN 'audio'
+            WHEN file_url LIKE '%.jpg' OR file_url LIKE '%.png' OR file_url LIKE '%.webp' OR file_url LIKE '%.gif' THEN 'image'
+            ELSE 'file'
+          END,
+          'url', file_url,
+          'name', ''
+        );
+      END LOOP;
+    END IF;
+    
+    -- Update note with messages array
+    UPDATE notes
+    SET messages = jsonb_build_array(
+      jsonb_build_object(
+        'id', gen_random_uuid(),
+        'content', note_record.content,
+        'attachments', attachments_json,
+        'tags', COALESCE(note_record.tags::jsonb, '[]'::jsonb),
+        'created_at', note_record.created_at
+      )
+    )
+    WHERE id = note_record.id;
+  END LOOP;
+END $$;
+
+-- ============================================================================
 -- Setup Complete
 -- ============================================================================
 
@@ -171,3 +230,9 @@ WHERE id IN ('notes-audio', 'notes-images', 'notes-files');
 SELECT 'RLS policies created' AS status, COUNT(*) AS policy_count
 FROM pg_policies
 WHERE tablename = 'notes';
+
+SELECT 'Messages column added' AS status
+WHERE EXISTS (
+  SELECT 1 FROM information_schema.columns 
+  WHERE table_name = 'notes' AND column_name = 'messages'
+);

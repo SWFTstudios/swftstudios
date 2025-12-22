@@ -65,24 +65,28 @@
     </header>
 
     <main class="chat-main">
-      <!-- Thread Sidebar -->
+      <!-- Notes Sidebar -->
       <aside class="threads-sidebar">
         <div class="threads-header">
-          <h2 class="threads-title">Threads</h2>
-          <button type="button" id="new-thread-btn" class="new-thread-btn" aria-label="New thread">
+          <h2 class="threads-title">Notes</h2>
+          <button type="button" id="new-note-btn" class="new-thread-btn" aria-label="New note">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
+            <span class="new-note-btn-text">+ New Note</span>
           </button>
         </div>
-        <div class="threads-list" id="threads-list">
-          <div class="thread-item active" data-thread-id="default">
-            <div class="thread-item-content">
-              <h3 class="thread-item-title">General Notes</h3>
-              <p class="thread-item-preview">Your notes and ideas</p>
-            </div>
-            <span class="thread-item-time">Now</span>
+        <div class="threads-list" id="notes-list">
+          <!-- Notes will be rendered here -->
+        </div>
+        <div class="user-profile" id="user-profile">
+          <div class="user-profile-avatar" id="user-profile-avatar">
+            <!-- User initials will be inserted here -->
+          </div>
+          <div class="user-profile-info">
+            <div class="user-profile-name" id="user-profile-name">Loading...</div>
+            <div class="user-profile-email" id="user-profile-email">Loading...</div>
           </div>
         </div>
       </aside>
@@ -92,18 +96,18 @@
         <!-- Messages Header -->
         <div class="messages-header">
           <div class="messages-header-info">
-            <h1 class="messages-title" id="current-thread-name">General Notes</h1>
-            <p class="messages-subtitle">Share notes, ideas, files, and more</p>
+            <h1 class="messages-title" id="current-note-title">Select a note to start</h1>
+            <p class="messages-subtitle" id="current-note-subtitle">Create or select a note to begin your conversation</p>
           </div>
         </div>
 
         <!-- Messages List -->
         <div class="messages-list" id="messages-list">
-          <div class="messages-empty">
+          <div class="messages-empty" id="messages-empty-state">
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
-            <p>No messages yet. Start by sending a note!</p>
+            <p id="empty-state-message">Select a note or create a new one to start</p>
           </div>
         </div>
 
@@ -121,6 +125,30 @@
               </button>
             </div>
             <div class="tag-suggestions-list" id="tag-suggestions-list"></div>
+          </div>
+
+          <!-- Voice Recording UI -->
+          <div class="voice-recording-container" id="voice-recording-container" hidden>
+            <div class="voice-recording-header">
+              <div class="voice-recording-status">
+                <div class="voice-recording-indicator" id="voice-recording-indicator"></div>
+                <span id="voice-recording-timer">00:00</span>
+              </div>
+              <button type="button" class="voice-recording-stop" id="voice-recording-stop" aria-label="Stop recording">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                </svg>
+              </button>
+            </div>
+            <div class="voice-recording-waveform" id="voice-recording-waveform">
+              <!-- Waveform visualization will be inserted here -->
+            </div>
+            <div class="voice-recording-transcription-preview" id="voice-recording-transcription-preview" hidden>
+              <div class="transcription-preview-header">
+                <span>Transcription Preview</span>
+              </div>
+              <div class="transcription-preview-content" id="transcription-preview-content"></div>
+            </div>
           </div>
 
           <!-- Input Area -->
@@ -188,7 +216,16 @@
                 <line x1="12" y1="19" x2="12" y2="23"></line>
                 <line x1="8" y1="23" x2="16" y2="23"></line>
               </svg>
-              <span>Audio</span>
+              <span>Audio File</span>
+            </button>
+            <button type="button" class="attachment-menu-item" data-type="voice-record">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+              <span>Record Voice</span>
             </button>
             <button type="button" class="attachment-menu-item" data-type="video">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
