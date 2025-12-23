@@ -13,15 +13,29 @@
   // ==========================================================================
   
   const CONFIG = {
+    maxFileSize: 50 * 1024 * 1024, // 50MB for all files
     maxFileSizes: {
-      image: 10 * 1024 * 1024, // 10MB
+      image: 50 * 1024 * 1024, // 50MB
       audio: 50 * 1024 * 1024, // 50MB
-      video: 100 * 1024 * 1024  // 100MB
+      video: 50 * 1024 * 1024, // 50MB
+      file: 50 * 1024 * 1024   // 50MB
     },
     allowedTypes: {
-      image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-      audio: ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a'],
-      video: ['video/mp4', 'video/quicktime', 'video/webm']
+      image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'image/bmp', 'image/x-icon'],
+      audio: ['audio/mpeg', 'audio/mp3', 'audio/mp4', 'audio/wav', 'audio/x-m4a', 'audio/aac', 'audio/x-aac', 'audio/ogg', 'audio/flac', 'audio/x-ms-wma'],
+      video: ['video/mp4', 'video/quicktime', 'video/x-quicktime', 'video/webm', 'video/x-msvideo', 'video/x-matroska', 'video/x-flv', 'video/x-ms-wmv'],
+      document: [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation', // .pptx
+        'application/rtf',
+        'text/plain', // .txt
+        'text/markdown' // .md
+      ]
     },
     supabaseUrl: 'https://mnrteunavnzrglbozpfc.supabase.co',
     supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ucnRldW5hdm56cmdsYm96cGZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwOTM5NjUsImV4cCI6MjA4MTY2OTk2NX0.7XORw2dbCDG64i2HfiAaTt70ZJTg89BVO7DAPeSCsU8'
@@ -143,10 +157,11 @@
     githubSyncStatus: document.getElementById('github-sync-status'),
     syncStatusIcon: document.getElementById('sync-status-icon'),
     syncStatusText: document.getElementById('sync-status-text'),
+    syncStatusDetail: document.getElementById('sync-status-detail'),
+    syncTooltip: document.getElementById('sync-tooltip'),
     syncNowBtn: document.getElementById('sync-now-btn'),
-    linkGithubFromUploadBtn: document.getElementById('link-github-from-upload-btn'),
+    uploadProgressContainer: document.getElementById('upload-progress-container'),
     manualRepoCreation: document.getElementById('manual-repo-creation'),
-    linkGithubFromUploadBtn: document.getElementById('link-github-from-upload-btn'),
     attachmentBtn: document.getElementById('attachment-btn'),
     attachmentMenu: document.getElementById('attachment-menu'),
     attachmentsContainer: document.getElementById('message-attachments'),
@@ -1460,42 +1475,84 @@
   }
 
   async function handleFileSelect(event, type) {
+    console.log('[handleFileSelect] File selection started:', { type, fileCount: event.target.files?.length || 0 });
+    
     const files = event.target.files;
-    if (!files || files.length === 0) return;
+    if (!files || files.length === 0) {
+      console.log('[handleFileSelect] No files selected');
+      return;
+    }
 
-    for (const file of files) {
+    console.log('[handleFileSelect] Processing', files.length, 'file(s)');
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      console.log('[handleFileSelect] Processing file', i + 1, 'of', files.length, ':', { name: file.name, type: file.type, size: file.size });
+      
       // Validate file
       if (!validateFile(file, type)) {
-        showError(`Invalid ${type} file: ${file.name}`);
+        console.error('[handleFileSelect] File validation failed:', file.name);
         continue;
       }
 
+      console.log('[handleFileSelect] File validated, generating preview:', file.name);
+      
       // Add to attachments
       state.attachments.push({
         file: file,
         type: type,
-        preview: await generatePreview(file, type)
+        preview: await generatePreview(file, type),
+        uploadProgress: 0,
+        uploadStatus: 'pending' // pending, uploading, completed, error
       });
+      
+      console.log('[handleFileSelect] File added to attachments:', file.name);
     }
 
+    console.log('[handleFileSelect] Total attachments:', state.attachments.length);
     renderAttachments();
     
     // Clear input
     event.target.value = '';
+    console.log('[handleFileSelect] File selection completed');
   }
 
   function validateFile(file, type) {
-    const maxSize = CONFIG.maxFileSizes[type] || 10 * 1024 * 1024;
+    console.log('[validateFile] Validating file:', { name: file.name, type: file.type, size: file.size, category: type });
+    
+    // Use 50MB max for all files
+    const maxSize = CONFIG.maxFileSize || 50 * 1024 * 1024;
     
     if (file.size > maxSize) {
+      console.warn('[validateFile] File too large:', { name: file.name, size: file.size, maxSize });
+      showError(`File "${file.name}" is too large. Maximum size is 50MB.`);
       return false;
     }
 
-    if (type !== 'file' && CONFIG.allowedTypes[type]) {
-      return CONFIG.allowedTypes[type].includes(file.type);
+    // Check if it's a document type
+    if (type === 'file' && CONFIG.allowedTypes.document) {
+      const isValidDoc = CONFIG.allowedTypes.document.includes(file.type);
+      console.log('[validateFile] Document type check:', { isValidDoc, mimeType: file.type });
+      if (isValidDoc) {
+        return true;
+      }
     }
 
-    return true;
+    // Check other types
+    if (type !== 'file' && CONFIG.allowedTypes[type]) {
+      const isValid = CONFIG.allowedTypes[type].includes(file.type);
+      console.log('[validateFile] Type check:', { isValid, mimeType: file.type, allowedTypes: CONFIG.allowedTypes[type] });
+      return isValid;
+    }
+
+    // For 'file' type, allow any file if it passes size check
+    if (type === 'file') {
+      console.log('[validateFile] Generic file type, allowing:', file.name);
+      return true;
+    }
+
+    console.warn('[validateFile] File type not allowed:', { name: file.name, type: file.type, category: type });
+    return false;
   }
 
   async function generatePreview(file, type) {
@@ -1768,25 +1825,62 @@
   }
 
   async function uploadAttachments() {
+    console.log('[uploadAttachments] Starting upload of', state.attachments.length, 'attachment(s)');
+    
     const uploaded = [];
+    showUploadProgress();
 
-    for (const attachment of state.attachments) {
+    for (let i = 0; i < state.attachments.length; i++) {
+      const attachment = state.attachments[i];
+      console.log('[uploadAttachments] Uploading attachment', i + 1, 'of', state.attachments.length, ':', attachment.file.name);
+      
       try {
-        const bucket = attachment.type === 'image' ? 'notes-images' : 
-                       attachment.type === 'audio' ? 'notes-audio' :
-                       attachment.type === 'video' ? 'notes-videos' : 'notes-files';
+        // Determine bucket based on file type
+        let bucket = 'notes-files'; // default
+        if (attachment.type === 'image') {
+          bucket = 'notes-images';
+        } else if (attachment.type === 'audio') {
+          bucket = 'notes-audio';
+        } else if (attachment.type === 'video') {
+          bucket = 'notes-videos';
+        } else if (attachment.type === 'file') {
+          // Check if it's a document type
+          const isDocument = CONFIG.allowedTypes.document?.includes(attachment.file.type);
+          bucket = isDocument ? 'notes-files' : 'notes-files';
+        }
+
+        console.log('[uploadAttachments] Using bucket:', bucket, 'for file:', attachment.file.name);
 
         const fileName = `${state.currentUser.id}/${Date.now()}-${attachment.file.name}`;
+        console.log('[uploadAttachments] Uploading to:', fileName);
 
+        // Update progress
+        updateAttachmentProgress(i, 0, 'uploading');
+
+        // Upload with progress tracking
         const { data, error } = await state.supabase.storage
           .from(bucket)
-          .upload(fileName, attachment.file);
+          .upload(fileName, attachment.file, {
+            cacheControl: '3600',
+            upsert: false
+          });
 
-        if (error) throw error;
+        if (error) {
+          console.error('[uploadAttachments] Upload error:', error);
+          updateAttachmentProgress(i, 0, 'error');
+          throw error;
+        }
+
+        console.log('[uploadAttachments] Upload successful:', fileName);
+
+        // Update progress
+        updateAttachmentProgress(i, 100, 'completed');
 
         const { data: { publicUrl } } = state.supabase.storage
           .from(bucket)
           .getPublicUrl(fileName);
+
+        console.log('[uploadAttachments] Public URL:', publicUrl);
 
         uploaded.push({
           type: attachment.type,
@@ -1796,12 +1890,80 @@
           isVoiceRecording: attachment.isVoiceRecording || false
         });
 
+        console.log('[uploadAttachments] Attachment', i + 1, 'uploaded successfully');
+
       } catch (error) {
-        console.error('Upload error:', error);
+        console.error('[uploadAttachments] Error uploading attachment:', attachment.file.name, error);
+        updateAttachmentProgress(i, 0, 'error');
+        showError(`Failed to upload ${attachment.file.name}: ${error.message}`);
       }
     }
 
+    hideUploadProgress();
+    console.log('[uploadAttachments] Upload complete. Successfully uploaded', uploaded.length, 'of', state.attachments.length, 'attachment(s)');
     return uploaded;
+  }
+
+  /**
+   * Show upload progress container
+   */
+  function showUploadProgress() {
+    console.log('[showUploadProgress] Showing upload progress container');
+    if (elements.uploadProgressContainer) {
+      elements.uploadProgressContainer.hidden = false;
+    }
+  }
+
+  /**
+   * Hide upload progress container
+   */
+  function hideUploadProgress() {
+    console.log('[hideUploadProgress] Hiding upload progress container');
+    if (elements.uploadProgressContainer) {
+      elements.uploadProgressContainer.hidden = true;
+      elements.uploadProgressContainer.innerHTML = '';
+    }
+  }
+
+  /**
+   * Update attachment upload progress
+   */
+  function updateAttachmentProgress(index, percentage, status) {
+    console.log('[updateAttachmentProgress] Updating progress:', { index, percentage, status });
+    
+    if (!elements.uploadProgressContainer) return;
+
+    const attachment = state.attachments[index];
+    if (!attachment) return;
+
+    // Find or create progress item
+    let progressItem = document.getElementById(`upload-progress-${index}`);
+    if (!progressItem) {
+      progressItem = document.createElement('div');
+      progressItem.id = `upload-progress-${index}`;
+      progressItem.className = 'upload-progress-item';
+      elements.uploadProgressContainer.appendChild(progressItem);
+    }
+
+    attachment.uploadProgress = percentage;
+    attachment.uploadStatus = status;
+
+    progressItem.innerHTML = `
+      <div class="upload-progress-info">
+        <span class="upload-filename">${escapeHtml(attachment.file.name)}</span>
+        <span class="upload-status">${status === 'uploading' ? 'Uploading...' : status === 'completed' ? 'Completed' : status === 'error' ? 'Error' : 'Pending'}</span>
+      </div>
+      <div class="upload-progress-bar">
+        <div class="upload-progress-fill" style="width: ${percentage}%"></div>
+      </div>
+      <div class="upload-progress-percentage">${percentage}%</div>
+    `;
+
+    if (status === 'completed' || status === 'error') {
+      setTimeout(() => {
+        progressItem.remove();
+      }, 2000);
+    }
   }
 
   function generateMarkdown(content, attachments, tags) {
@@ -2051,9 +2213,6 @@ ${content}
     }
 
     // Link GitHub button
-    if (elements.linkGithubFromUploadBtn) {
-      elements.linkGithubFromUploadBtn.addEventListener('click', linkGitHubFromUpload);
-    }
 
     // Setup auto-tagger
     if (window.AutoTagger) {
@@ -3718,28 +3877,40 @@ ${content}
    * Sync thought session to GitHub
    */
   async function syncToGitHub(note) {
-    if (!note || !state.currentUser) return;
+    console.log('[syncToGitHub] Starting GitHub sync for note:', note?.id);
+    
+    if (!note || !state.currentUser) {
+      console.warn('[syncToGitHub] Missing note or user, aborting sync');
+      return;
+    }
 
     try {
+      console.log('[syncToGitHub] Checking GitHub connection');
       const hasGitHub = await checkGitHubConnection();
       if (!hasGitHub) {
+        console.log('[syncToGitHub] GitHub not connected');
         updateSyncStatus('not-connected');
         return;
       }
 
+      console.log('[syncToGitHub] GitHub connected, starting sync');
       // Always sync (auto-sync mode) - update even if already synced
       // Manual sync button can still trigger this function
       updateSyncStatus('syncing');
 
       // Parse messages from content if needed
       let messages = note.messages || [];
+      console.log('[syncToGitHub] Parsing messages, current count:', messages.length);
+      
       if (!messages.length && note.content) {
         try {
           const parsed = typeof note.content === 'string' ? JSON.parse(note.content) : note.content;
           if (Array.isArray(parsed)) {
             messages = parsed;
+            console.log('[syncToGitHub] Parsed messages from content:', messages.length);
           }
         } catch (e) {
+          console.warn('[syncToGitHub] Failed to parse messages from content:', e);
           // Not JSON, skip messages
         }
       }
@@ -3754,6 +3925,8 @@ ${content}
         updated_at: note.updated_at
       };
 
+      console.log('[syncToGitHub] Sending sync request:', { noteId: note.id, messageCount: messages.length, tagCount: note.tags?.length || 0 });
+
       const response = await fetch('/api/github/sync-session', {
         method: 'POST',
         headers: {
@@ -3766,12 +3939,16 @@ ${content}
         })
       });
 
+      console.log('[syncToGitHub] Sync response status:', response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('[syncToGitHub] Sync failed:', errorData);
         throw new Error(errorData.error || 'Failed to sync');
       }
 
       const result = await response.json();
+      console.log('[syncToGitHub] Sync successful:', result);
       updateSyncStatus('synced', result.repo_path);
       
       // Update local note state
@@ -3788,7 +3965,7 @@ ${content}
       }
 
     } catch (error) {
-      console.error('Sync error:', error);
+      console.error('[syncToGitHub] Sync error:', error);
       updateSyncStatus('failed', null, error.message);
     }
   }
@@ -3797,18 +3974,51 @@ ${content}
    * Update sync status UI
    */
   function updateSyncStatus(status, repoPath = null, errorMessage = null) {
-    if (!elements.githubSyncStatus || !elements.syncStatusIcon || !elements.syncStatusText) return;
+    console.log('[updateSyncStatus] Updating sync status:', { status, repoPath, errorMessage });
+    
+    if (!elements.githubSyncStatus || !elements.syncStatusIcon || !elements.syncStatusText) {
+      console.warn('[updateSyncStatus] Required elements not found');
+      return;
+    }
 
     elements.githubSyncStatus.hidden = false;
-
-    // Show/hide link GitHub button
-    if (elements.linkGithubFromUploadBtn) {
-      elements.linkGithubFromUploadBtn.hidden = status !== 'not-connected';
+    
+    // Always show "Auto-sync enabled" text
+    if (elements.syncStatusText) {
+      elements.syncStatusText.textContent = 'Auto-sync enabled';
     }
 
     // Show/hide sync button
     if (elements.syncNowBtn) {
       elements.syncNowBtn.hidden = status === 'not-connected';
+    }
+
+    // Show/hide tooltip
+    if (elements.syncTooltip) {
+      elements.syncTooltip.hidden = status !== 'not-synced';
+    }
+
+    // Update detail text
+    if (elements.syncStatusDetail) {
+      switch (status) {
+        case 'synced':
+          elements.syncStatusDetail.textContent = 'Synced';
+          break;
+        case 'syncing':
+          elements.syncStatusDetail.textContent = 'Syncing...';
+          break;
+        case 'failed':
+          elements.syncStatusDetail.textContent = errorMessage || 'Sync failed';
+          break;
+        case 'not-connected':
+          elements.syncStatusDetail.textContent = 'Not connected';
+          break;
+        case 'not-synced':
+          elements.syncStatusDetail.textContent = 'Not synced';
+          break;
+        default:
+          elements.syncStatusDetail.textContent = '';
+      }
     }
 
     switch (status) {
@@ -3819,10 +4029,17 @@ ${content}
           </svg>
         `;
         elements.syncStatusIcon.className = 'sync-status-icon synced';
-        elements.syncStatusText.textContent = repoPath ? 'Synced to GitHub' : 'Synced';
-        // Add blue outline to sync button when GitHub is linked
+        // Add blue outline and SWFT blue icon color when synced
         if (elements.syncNowBtn) {
           elements.syncNowBtn.classList.add('github-linked');
+          const svg = elements.syncNowBtn.querySelector('svg');
+          if (svg) {
+            svg.style.stroke = '#BEFFF2'; // SWFT blue
+            const path = svg.querySelector('path');
+            if (path) {
+              path.style.stroke = '#BEFFF2'; // SWFT blue
+            }
+          }
         }
         break;
       case 'syncing':
@@ -3832,7 +4049,6 @@ ${content}
           </svg>
         `;
         elements.syncStatusIcon.className = 'sync-status-icon syncing';
-        elements.syncStatusText.textContent = 'Syncing...';
         // Add blue outline when syncing
         if (elements.syncNowBtn) {
           elements.syncNowBtn.classList.add('github-linked');
@@ -3847,7 +4063,6 @@ ${content}
           </svg>
         `;
         elements.syncStatusIcon.className = 'sync-status-icon failed';
-        elements.syncStatusText.textContent = errorMessage || 'Sync failed';
         break;
       case 'not-connected':
         elements.syncStatusIcon.innerHTML = `
@@ -3856,10 +4071,17 @@ ${content}
           </svg>
         `;
         elements.syncStatusIcon.className = 'sync-status-icon not-connected';
-        elements.syncStatusText.textContent = 'Not connected';
         // Remove blue outline when not connected
         if (elements.syncNowBtn) {
           elements.syncNowBtn.classList.remove('github-linked');
+          const svg = elements.syncNowBtn.querySelector('svg');
+          if (svg) {
+            svg.style.stroke = '';
+            const path = svg.querySelector('path');
+            if (path) {
+              path.style.stroke = '';
+            }
+          }
         }
         break;
       case 'not-synced':
@@ -3871,7 +4093,6 @@ ${content}
           </svg>
         `;
         elements.syncStatusIcon.className = 'sync-status-icon not-synced';
-        elements.syncStatusText.textContent = 'Not synced';
         // Add blue outline when GitHub is linked but not synced
         if (elements.syncNowBtn) {
           elements.syncNowBtn.classList.add('github-linked');
@@ -3880,6 +4101,8 @@ ${content}
       default:
         elements.githubSyncStatus.hidden = true;
     }
+    
+    console.log('[updateSyncStatus] Status updated successfully');
   }
 
   /**

@@ -319,6 +319,30 @@ body {
 .sync-status-text {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.sync-status-detail {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 0.25rem;
+}
+
+.sync-tooltip {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--theme-bg-tertiary);
+  border: 1px solid var(--theme-border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--theme-text-secondary);
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 4px 12px var(--theme-shadow);
+  pointer-events: none;
 }
 
 .sync-btn {
@@ -353,6 +377,10 @@ body {
 
 .sync-btn.github-linked {
   border: 2px solid var(--theme-accent, #BEFFF2);
+}
+
+.sync-btn.github-linked svg path {
+  stroke: var(--theme-accent, #BEFFF2);
 }
 
 .link-github-btn {
@@ -546,7 +574,7 @@ body {
   height: 40px;
   border-radius: 50%;
   background: var(--theme-accent);
-  color: var(--theme-text-primary);
+  color: #0a0a0a !important; /* Dark color for contrast on SWFT blue */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1700,7 +1728,7 @@ body {
 .send-btn {
   background: var(--theme-accent);
   border: none;
-  color: var(--theme-text-primary);
+  color: #0a0a0a !important; /* Dark color for contrast on SWFT blue */
   cursor: pointer;
   padding: 0.625rem;
   border-radius: 50%;
@@ -1711,6 +1739,10 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 4px var(--theme-shadow);
+}
+
+.send-btn svg {
+  stroke: #0a0a0a !important; /* Dark color for contrast on SWFT blue */
 }
 
 .send-btn:hover {
