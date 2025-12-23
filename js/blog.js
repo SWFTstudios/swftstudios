@@ -856,7 +856,7 @@
       return state.posts;
     } catch (error) {
       console.error('Failed to fetch blog data:', error);
-      showError('Failed to load notes. Please try again later.');
+      showError('Failed to load Thought Sessions. Please try again later.');
       return [];
     }
   }
@@ -1404,7 +1404,7 @@
         <div class="blog_card-footer">
           ${post.tags.map(tag => `<span class="blog_card-tag">${escapeHtml(tag)}</span>`).join('')}
           ${post.links.length > 0 ? `
-            <span class="blog_card-links-count" title="${post.links.length} connected notes">
+            <span class="blog_card-links-count" title="${post.links.length} connected Thought Sessions">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
@@ -4036,7 +4036,7 @@
     if (!post) return;
     
     if (!isNoteOwner(post)) {
-      alert('You can only delete your own notes.');
+      alert('You can only delete your own Thought Sessions.');
       return;
     }
     

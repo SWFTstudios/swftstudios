@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Notes | SWFT Studios</title>
-  <meta content="Share quick notes, ideas, and files to your knowledge graph" name="description">
+  <title>Thought Sessions | SWFT Studios</title>
+  <meta content="Share quick thoughts, ideas, and files to your knowledge graph" name="description">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/components.css" rel="stylesheet" type="text/css">
@@ -58,27 +58,27 @@
               <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
             </svg>
           </button>
-          <a href="blog.html" class="chat-nav-link">View Notes</a>
+          <a href="blog.html" class="chat-nav-link">View Thought Sessions</a>
           <button type="button" id="sign-out-btn" class="chat-nav-btn">Sign Out</button>
         </nav>
       </div>
     </header>
 
     <main class="chat-main">
-      <!-- Notes Sidebar -->
+      <!-- Thought Sessions Sidebar -->
       <aside class="threads-sidebar">
         <div class="threads-header">
-          <h2 class="threads-title">Notes</h2>
-          <button type="button" id="new-note-btn" class="new-thread-btn" aria-label="New note">
+          <h2 class="threads-title">Thought Sessions</h2>
+          <button type="button" id="new-note-btn" class="new-thread-btn" aria-label="New Thought Session">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            <span class="new-note-btn-text">+ New Note</span>
+            <span class="new-note-btn-text">+ New Thought Session</span>
           </button>
         </div>
         <div class="threads-list" id="notes-list">
-          <!-- Notes will be rendered here -->
+          <!-- Thought Sessions will be rendered here -->
         </div>
         <div class="user-profile" id="user-profile">
           <div class="user-profile-avatar" id="user-profile-avatar">
@@ -96,8 +96,8 @@
         <!-- Messages Header -->
         <div class="messages-header">
           <div class="messages-header-info">
-            <h1 class="messages-title" id="current-note-title">Select a note to start</h1>
-            <p class="messages-subtitle" id="current-note-subtitle">Create or select a note to begin your conversation</p>
+            <h1 class="messages-title" id="current-note-title">Select a Thought Session to start</h1>
+            <p class="messages-subtitle" id="current-note-subtitle">Create or select a Thought Session to begin your conversation</p>
           </div>
         </div>
 
@@ -175,11 +175,13 @@
                 ></textarea>
               </div>
               
-              <!-- Markdown Preview Toggle -->
-              <button type="button" class="preview-toggle-btn" id="preview-toggle" aria-label="Toggle preview">
+              <!-- Audio Recording Button -->
+              <button type="button" class="audio-record-btn" id="audio-record-btn" aria-label="Record audio">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
                 </svg>
               </button>
 

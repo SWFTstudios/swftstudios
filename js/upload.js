@@ -306,7 +306,7 @@
     if (state.notes.length === 0) {
       elements.notesList.innerHTML = `
         <div class="thread-item" style="padding: 2rem; text-align: center; color: var(--theme-text-muted);">
-          <p>No notes yet</p>
+          <p>No Thought Sessions yet</p>
         </div>
       `;
       return;
@@ -448,10 +448,10 @@
       }
     } else {
       if (elements.currentNoteTitle) {
-        elements.currentNoteTitle.textContent = 'Select a note to start';
+        elements.currentNoteTitle.textContent = 'Select a Thought Session to start';
       }
       if (elements.currentNoteSubtitle) {
-        elements.currentNoteSubtitle.textContent = 'Create or select a note to begin your conversation';
+        elements.currentNoteSubtitle.textContent = 'Create or select a Thought Session to begin your conversation';
       }
     }
   }
@@ -463,7 +463,7 @@
       // Verify user is authenticated
       if (!state.currentUser || !state.currentUser.id) {
         console.error('[FIX] createNewNote: No authenticated user');
-        showError('You must be logged in to create notes');
+        showError('You must be logged in to create Thought Sessions');
         return null;
       }
       
@@ -500,7 +500,7 @@
       const insertPayload = {
         user_id: authUser.id, // This MUST match auth.uid() for RLS to pass
         user_email: authUser.email || session?.user?.email,
-        title: 'New Note',
+        title: 'New Thought Session',
         status: 'draft'
       };
       
@@ -549,7 +549,7 @@
       return data;
     } catch (error) {
       console.error('Error creating note:', error);
-      showError('Failed to create note');
+      showError('Failed to create Thought Session');
       return null;
     }
   }
@@ -1118,14 +1118,14 @@
   }
 
   function renderEmptyState(type = 'no-note-selected') {
-    let message = 'Select a note or create a new one to start';
+    let message = 'Select a Thought Session or create a new one to start';
     
     if (type === 'no-notes') {
-      message = 'Create your first note to get started';
+      message = 'Create your first Thought Session to get started';
     } else if (type === 'empty-note') {
       message = 'Start your conversation';
     } else if (type === 'no-note-selected') {
-      message = 'Select a note or create a new one to start';
+      message = 'Select a Thought Session or create a new one to start';
     }
 
     if (elements.emptyStateMessage) {
@@ -1545,7 +1545,7 @@
       if (!state.currentNote) {
         await createNewNote();
         if (!state.currentNote) {
-          throw new Error('Failed to create note');
+          throw new Error('Failed to create Thought Session');
         }
       }
 
@@ -1581,9 +1581,9 @@
       const currentMessages = state.currentNote.messages || [];
       const updatedMessages = [...currentMessages, newMessage];
 
-      // Generate title from first message if still "New Note"
+      // Generate title from first message if still "New Thought Session"
       let title = state.currentNote.title;
-      if (title === 'New Note' && content) {
+      if (title === 'New Thought Session' && content) {
         title = generateTitle(content);
       }
 

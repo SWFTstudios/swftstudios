@@ -50,7 +50,7 @@
       if (!threads.find(t => t.id === 'default')) {
         const defaultThread = {
           id: 'default',
-          name: 'General Notes',
+          name: 'General Thought Sessions',
           userId: this.currentUser.email,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

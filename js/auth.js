@@ -1,5 +1,5 @@
 /**
- * SWFT Notes Authentication
+ * SWFT Studios Thought Sessions Authentication
  * 
  * Handles Supabase authentication (email/password sign-in and sign-up)
  * Checks authorization and redirects users appropriately
@@ -135,8 +135,11 @@
     }
 
     try {
-      setLoading(elements.emailSubmitBtn, true);
+      // Hide any previous errors and ensure loading overlay is hidden
       hideError();
+      hideLoading();
+      // Show button loading spinner only (not full-page loading)
+      setLoading(elements.emailSubmitBtn, true);
 
       let result;
       
@@ -175,8 +178,12 @@
 
     } catch (error) {
       console.error('Auth error:', error);
+      // Ensure loading overlay is hidden on error
+      hideLoading();
+      // Show error message
       showError(error.message || `Failed to ${authMode === 'signup' ? 'create account' : 'sign in'}. Please try again.`);
     } finally {
+      // Always hide button spinner when done
       setLoading(elements.emailSubmitBtn, false);
     }
   }
@@ -354,20 +361,21 @@
    */
   function showLoading() {
     if (!elements.authLoading) return;
-    const wasHidden = elements.authLoading.hidden;
-    elements.authLoading.hidden = false;
+    // Hide error message when showing loading
+    hideError();
+    // Hide form and show loading
     if (elements.emailAuth) elements.emailAuth.hidden = true;
+    elements.authLoading.hidden = false;
   }
 
   /**
    * Hide loading overlay
    */
   function hideLoading() {
-    if (!elements.authLoading) {
-      return;
-    }
-    const wasHidden = elements.authLoading.hidden;
+    if (!elements.authLoading) return;
+    // Hide loading and restore form
     elements.authLoading.hidden = true;
+    if (elements.emailAuth) elements.emailAuth.hidden = false;
   }
 
   // ==========================================================================
@@ -415,8 +423,9 @@
       return;
     }
 
-    // Make sure loading is hidden on initial load
+    // Make sure loading and error are hidden on initial load
     hideLoading();
+    hideError();
 
     // Setup event listeners
     setupEventListeners();
