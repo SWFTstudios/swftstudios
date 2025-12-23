@@ -17,6 +17,7 @@
    ========================================================================== */
 
 .media-controls {
+  display: none; /* Hidden by default, shown only when audio is playing */
   position: fixed;
   bottom: 2rem;
   left: 50%;
@@ -387,37 +388,39 @@
   min-height: 500px;
 }
 
-/* List View Only */
-.blog_content[data-view="list"] .blog_list-view {
-  display: block;
+/* Desktop: Split View (both visible side-by-side) */
+@media (min-width: 1024px) {
+  .blog_content {
+    grid-template-columns: 1fr 1fr;
+  }
+  .blog_content .blog_list-view,
+  .blog_content .blog_graph-view {
+    display: block !important;
+  }
+  /* Hide view toggle buttons on desktop */
+  .blog_view-toggle {
+    display: none;
+  }
 }
 
-.blog_content[data-view="list"] .blog_graph-view {
-  display: none;
-}
-
-/* Graph View Only */
-.blog_content[data-view="graph"] .blog_list-view {
-  display: none;
-}
-
-.blog_content[data-view="graph"] .blog_graph-view {
-  display: block;
-}
-
-/* Both Views */
-.blog_content[data-view="both"] {
-  grid-template-columns: 1fr 1fr;
-}
-
-.blog_content[data-view="both"] .blog_list-view,
-.blog_content[data-view="both"] .blog_graph-view {
-  display: block;
-}
-
+/* Mobile: Toggle View (one at a time) */
 @media (max-width: 1023px) {
-  .blog_content[data-view="both"] {
+  .blog_content {
     grid-template-columns: 1fr;
+  }
+  .blog_content[data-view="list"] .blog_list-view {
+    display: block;
+  }
+  .blog_content[data-view="list"] .blog_graph-view {
+    display: none;
+  }
+  .blog_content[data-view="mind-map"] .blog_list-view,
+  .blog_content[data-view="graph"] .blog_list-view {
+    display: none;
+  }
+  .blog_content[data-view="mind-map"] .blog_graph-view,
+  .blog_content[data-view="graph"] .blog_graph-view {
+    display: block;
   }
 }
 
@@ -1935,4 +1938,131 @@
 .blog_delete-btn:focus-visible {
   outline: 2px solid var(--primary-color, #6366f1);
   outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Mind Map Settings Modal
+   ========================================================================== */
+
+.blog_mindmap-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.blog_mindmap-modal[hidden] {
+  display: none !important;
+}
+
+.blog_mindmap-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.blog_mindmap-modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  background: rgba(20, 20, 30, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.blog_mindmap-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.blog_mindmap-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.blog_mindmap-modal-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.blog_mindmap-modal-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.blog_mindmap-modal-close:focus-visible {
+  outline: 2px solid #5DADE2;
+  outline-offset: 2px;
+}
+
+.blog_mindmap-modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .blog_mindmap-modal {
+    padding: 0;
+  }
+  
+  .blog_mindmap-modal-content {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .blog_mindmap-modal-header {
+    padding: 1rem;
+  }
+  
+  .blog_mindmap-modal-body {
+    padding: 1rem;
+  }
+}
+
+/* Hide sidebar when using modal */
+.blog_graph-sidebar {
+  display: none !important;
+}
+
+/* Ensure graph main takes full width */
+.blog_graph-main {
+  width: 100%;
 }

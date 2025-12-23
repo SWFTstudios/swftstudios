@@ -42,7 +42,8 @@
     graph: null,
     graphLoaded: false,
     graphLibraryLoaded: false,
-    currentView: 'list',
+    currentView: 'list', // 'list' or 'mind-map' (mobile only, desktop shows both)
+    isDesktop: false, // Track if we're on desktop (split view)
     searchQuery: '',
     activeTag: null,
     activeAuthor: null,
@@ -149,9 +150,14 @@
     displayLinkWidth: document.getElementById('display-link-width'),
     orbitSpeedSlider: document.getElementById('orbit-speed-slider'),
     bloomBrightnessSlider: document.getElementById('bloom-brightness-slider'),
+    graphSidebarToggle: document.getElementById('graph-sidebar-toggle'),
     graphModal: document.getElementById('graph-modal'),
     graphModalClose: document.getElementById('graph-modal-close'),
     graphModalBackdrop: document.querySelector('.blog_graph-modal-backdrop'),
+    mindmapSettingsBtn: document.getElementById('mindmap-settings-btn'),
+    mindmapSettingsModal: document.getElementById('mindmap-settings-modal'),
+    mindmapSettingsClose: document.getElementById('mindmap-settings-close'),
+    mindmapSettingsBackdrop: document.querySelector('.blog_mindmap-modal-backdrop'),
     mediaControls: document.getElementById('media-controls'),
     mediaPlayBtn: document.getElementById('media-play-btn'),
     mediaPauseBtn: document.getElementById('media-pause-btn'),
@@ -1956,7 +1962,7 @@
       
       // Fit to canvas on window resize (no auto zoom)
       window.addEventListener('resize', debounce(() => {
-        if (state.graph && state.currentView === 'graph') {
+        if (state.graph && (state.currentView === 'mind-map' || state.isDesktop)) {
           resizeGraphForView();
         }
       }, 200));
@@ -2729,11 +2735,28 @@
   // ==========================================================================
   
   /**
-   * Set the current view mode (list or graph)
+   * Detect if we're on desktop (split view) or mobile (toggle view)
+   */
+  function detectDesktop() {
+    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+    state.isDesktop = isDesktop;
+    return isDesktop;
+  }
+
+  /**
+   * Set the current view mode (list or mind-map)
    */
   async function setView(view) {
-    // Only allow list or graph view
-    if (view !== 'list' && view !== 'graph') {
+    // On desktop, always show both views (ignore toggle)
+    const isDesktop = detectDesktop();
+    
+    // Map old 'graph' to 'mind-map'
+    if (view === 'graph') {
+      view = 'mind-map';
+    }
+    
+    // Only allow list or mind-map view
+    if (view !== 'list' && view !== 'mind-map') {
       view = 'list';
     }
     
@@ -2744,42 +2767,67 @@
       elements.blogContent.dataset.view = view;
     }
 
-    // Show/hide views
+    // Show/hide views based on device type
     const listView = document.getElementById('blog-list-view');
     const graphView = document.getElementById('blog-graph-view');
     
-    if (view === 'list') {
+    if (isDesktop) {
+      // Desktop: Show both views (split view) - ignore data-view attribute
       if (listView) {
         listView.hidden = false;
         listView.setAttribute('aria-hidden', 'false');
-      }
-      if (graphView) {
-        graphView.hidden = true;
-        graphView.setAttribute('aria-hidden', 'true');
-      }
-    } else if (view === 'graph') {
-      if (listView) {
-        listView.hidden = true;
-        listView.setAttribute('aria-hidden', 'true');
+        listView.style.display = 'block';
       }
       if (graphView) {
         graphView.hidden = false;
         graphView.setAttribute('aria-hidden', 'false');
+        graphView.style.display = 'block';
       }
       
-      // Initialize graph if not already loaded
+      // Initialize graph if not already loaded (for desktop split view)
       if (!state.graphLoaded) {
-        console.log('[setView] Initializing graph for graph view...');
+        console.log('[setView] Initializing mind map for desktop split view...');
         await initGraph();
       } else {
         // Resize graph to fit container
         resizeGraphForView();
       }
+    } else {
+      // Mobile: Toggle between views
+      if (view === 'list') {
+        if (listView) {
+          listView.hidden = false;
+          listView.setAttribute('aria-hidden', 'false');
+        }
+        if (graphView) {
+          graphView.hidden = true;
+          graphView.setAttribute('aria-hidden', 'true');
+        }
+      } else if (view === 'mind-map') {
+        if (listView) {
+          listView.hidden = true;
+          listView.setAttribute('aria-hidden', 'true');
+        }
+        if (graphView) {
+          graphView.hidden = false;
+          graphView.setAttribute('aria-hidden', 'false');
+        }
+        
+        // Initialize graph if not already loaded
+        if (!state.graphLoaded) {
+          console.log('[setView] Initializing mind map for mobile view...');
+          await initGraph();
+        } else {
+          // Resize graph to fit container
+          resizeGraphForView();
+        }
+      }
     }
 
-    // Update button states
+    // Update button states (only visible on mobile)
     elements.viewButtons.forEach(btn => {
-      const isActive = btn.dataset.view === view;
+      const btnView = btn.dataset.view === 'graph' ? 'mind-map' : btn.dataset.view;
+      const isActive = btnView === view;
       btn.classList.toggle('is-active', isActive);
       btn.setAttribute('aria-selected', isActive);
     });
@@ -3136,18 +3184,36 @@
                 }
               });
               state.currentMedia = media;
-              if (elements.mediaControls) elements.mediaControls.hidden = false;
+              // Use centralized visibility function if available
+              if (typeof window.updateMediaControlsVisibility === 'function') {
+                window.updateMediaControlsVisibility();
+              } else if (elements.mediaControls) {
+                elements.mediaControls.hidden = false;
+                elements.mediaControls.style.display = 'flex';
+              }
             });
             media.addEventListener('pause', () => {
               if (state.currentMedia === media) {
                 state.currentMedia = null;
-                if (elements.mediaControls) elements.mediaControls.hidden = true;
+                // Use centralized visibility function if available
+                if (typeof window.updateMediaControlsVisibility === 'function') {
+                  window.updateMediaControlsVisibility();
+                } else if (elements.mediaControls) {
+                  elements.mediaControls.hidden = true;
+                  elements.mediaControls.style.display = 'none';
+                }
               }
             });
             media.addEventListener('ended', () => {
               if (state.currentMedia === media) {
                 state.currentMedia = null;
-                if (elements.mediaControls) elements.mediaControls.hidden = true;
+                // Use centralized visibility function if available
+                if (typeof window.updateMediaControlsVisibility === 'function') {
+                  window.updateMediaControlsVisibility();
+                } else if (elements.mediaControls) {
+                  elements.mediaControls.hidden = true;
+                  elements.mediaControls.style.display = 'none';
+                }
               }
             });
           }
@@ -3576,6 +3642,48 @@
   }
 
   // ==========================================================================
+  // Mind Map Settings Modal
+  // ==========================================================================
+  
+  /**
+   * Open mind map settings modal
+   */
+  function openMindmapSettings() {
+    if (!elements.mindmapSettingsModal) return;
+    
+    elements.mindmapSettingsModal.hidden = false;
+    elements.mindmapSettingsModal.setAttribute('aria-hidden', 'false');
+    
+    // Focus the close button for accessibility
+    if (elements.mindmapSettingsClose) {
+      setTimeout(() => {
+        elements.mindmapSettingsClose.focus();
+      }, 100);
+    }
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+  
+  /**
+   * Close mind map settings modal
+   */
+  function closeMindmapSettings() {
+    if (!elements.mindmapSettingsModal) return;
+    
+    elements.mindmapSettingsModal.hidden = true;
+    elements.mindmapSettingsModal.setAttribute('aria-hidden', 'true');
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
+    
+    // Return focus to settings button
+    if (elements.mindmapSettingsBtn) {
+      elements.mindmapSettingsBtn.focus();
+    }
+  }
+  
+  // ==========================================================================
   // Media Controls
   // ==========================================================================
   
@@ -3584,6 +3692,11 @@
    */
   function setupMediaControls() {
     if (!elements.mediaControls || !elements.mediaPlayBtn || !elements.mediaPauseBtn || !elements.mediaStopBtn) return;
+    
+    // Ensure media controls are hidden on initialization
+    elements.mediaControls.hidden = true;
+    elements.mediaControls.style.display = 'none';
+    state.currentMedia = null;
     
     // Track all media elements on the page
     function trackMediaElements() {
@@ -3620,12 +3733,20 @@
     
     // Update media controls visibility
     function updateMediaControlsVisibility() {
+      if (!elements.mediaControls) return;
+      
+      // Only show if there's currently playing media
       if (state.currentMedia && !state.currentMedia.paused) {
         elements.mediaControls.hidden = false;
+        elements.mediaControls.style.display = 'flex';
       } else {
         elements.mediaControls.hidden = true;
+        elements.mediaControls.style.display = 'none';
       }
     }
+    
+    // Make function accessible globally for modal code
+    window.updateMediaControlsVisibility = updateMediaControlsVisibility;
     
     // Play button
     elements.mediaPlayBtn.addEventListener('click', () => {
@@ -3662,11 +3783,28 @@
         m.currentTime = 0;
       });
       state.currentMedia = null;
-      updateMediaControlsVisibility();
+      // Hide controls after stopping
+      if (elements.mediaControls) {
+        elements.mediaControls.hidden = true;
+        elements.mediaControls.style.display = 'none';
+      }
     });
     
     // Track media elements initially and after modal opens
     trackMediaElements();
+    
+    // Check for any currently playing media on page load
+    setTimeout(() => {
+      const playingMedia = state.allMediaElements.find(m => !m.paused);
+      if (playingMedia) {
+        state.currentMedia = playingMedia;
+        updateMediaControlsVisibility();
+      } else {
+        // Ensure controls are hidden if no media is playing
+        elements.mediaControls.hidden = true;
+        elements.mediaControls.style.display = 'none';
+      }
+    }, 100);
     
     // Re-track after modal content is updated
     const originalOpenModal = window.openModal || (() => {});
@@ -3678,6 +3816,14 @@
     // Use MutationObserver to track dynamically added media
     const observer = new MutationObserver(() => {
       trackMediaElements();
+      // Check if any newly added media is playing
+      setTimeout(() => {
+        const playingMedia = state.allMediaElements.find(m => !m.paused);
+        if (playingMedia && !state.currentMedia) {
+          state.currentMedia = playingMedia;
+          updateMediaControlsVisibility();
+        }
+      }, 50);
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }
@@ -3960,14 +4106,61 @@
       });
     }
 
-    // View toggle buttons
+    // View toggle buttons (mobile only)
     elements.viewButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        const view = btn.dataset.view;
-        setView(view);
+        // Only handle toggle on mobile
+        if (!detectDesktop()) {
+          let view = btn.dataset.view;
+          // Map 'graph' to 'mind-map'
+          if (view === 'graph') {
+            view = 'mind-map';
+          }
+          setView(view);
+        }
       });
     });
+    
+    // Handle window resize for responsive behavior
+    window.addEventListener('resize', debounce(() => {
+      const wasDesktop = state.isDesktop;
+      const isDesktop = detectDesktop();
+      
+      if (wasDesktop !== isDesktop) {
+        // Device type changed, update view
+        setView(state.currentView);
+      } else if (isDesktop && state.graph) {
+        // Still desktop, just resize graph
+        resizeGraphForView();
+      }
+    }, 200));
 
+    // Mind Map Settings Modal
+    if (elements.mindmapSettingsBtn) {
+      elements.mindmapSettingsBtn.addEventListener('click', () => {
+        openMindmapSettings();
+      });
+    }
+    
+    if (elements.mindmapSettingsClose) {
+      elements.mindmapSettingsClose.addEventListener('click', () => {
+        closeMindmapSettings();
+      });
+    }
+    
+    if (elements.mindmapSettingsBackdrop) {
+      elements.mindmapSettingsBackdrop.addEventListener('click', () => {
+        closeMindmapSettings();
+      });
+    }
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && elements.mindmapSettingsModal && !elements.mindmapSettingsModal.hidden) {
+        closeMindmapSettings();
+      }
+    });
+    
     // Graph controls
     if (elements.graphResetBtn) {
       elements.graphResetBtn.addEventListener('click', resetGraph);
@@ -4106,9 +4299,6 @@
     // Setup media controls
     setupMediaControls();
 
-    // Load view preference (default to list)
-    const preferredView = 'list'; // Always default to list view
-
     // Fetch and render posts
     const posts = await fetchBlogData();
     
@@ -4116,10 +4306,6 @@
     if (posts.length === 0) {
       if (elements.emptyState) {
         elements.emptyState.hidden = false;
-      }
-      // If switching to graph view, show no thoughts message
-      if (preferredView === 'graph' || preferredView === 'both') {
-        showNoNotesMessage();
       }
     } else {
       if (elements.emptyState) {
@@ -4138,8 +4324,35 @@
       }
     }
 
-    // Set initial view
-    setView(preferredView);
+    // Initialize view based on device type
+    detectDesktop();
+    const preferredView = localStorage.getItem(CONFIG.storageKey) || 'list';
+    if (state.isDesktop) {
+      // Desktop: Show both views (split view)
+      state.currentView = 'list';
+      if (elements.blogContent) {
+        elements.blogContent.dataset.view = 'list';
+      }
+      // Show both views explicitly
+      const listView = document.getElementById('blog-list-view');
+      const graphView = document.getElementById('blog-graph-view');
+      if (listView) {
+        listView.hidden = false;
+        listView.setAttribute('aria-hidden', 'false');
+        listView.style.display = 'block';
+      }
+      if (graphView) {
+        graphView.hidden = false;
+        graphView.setAttribute('aria-hidden', 'false');
+        graphView.style.display = 'block';
+      }
+      // Initialize graph for desktop split view
+      console.log('[init] Initializing mind map for desktop split view...');
+      await initGraph();
+    } else {
+      // Mobile: Use preferred view or default to list
+      await setView(preferredView === 'graph' ? 'mind-map' : preferredView);
+    }
   }
 
   // Start when DOM is ready
