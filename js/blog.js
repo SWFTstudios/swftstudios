@@ -1,10 +1,10 @@
 /**
- * SWFT Studios Blog / Notes JavaScript
+ * SWFT Studios Mind Map JavaScript
  * 
  * Features:
  * - List view with search and tag filtering
- * - 3D Graph view with lazy-loaded 3d-force-graph
- * - Modal preview for notes
+ * - 3D Mind Map view with lazy-loaded 3d-force-graph
+ * - Modal preview for Thought Sessions
  * - Responsive view toggling
  * - Accessibility: keyboard navigation, reduced motion
  * - LocalStorage for view preference persistence
@@ -38,7 +38,7 @@
   let state = {
     posts: [],
     graphData: null,
-    fullGraphData: null, // Store all nodes including messages
+    fullGraphData: null, // Store all nodes including ideas
     graph: null,
     graphLoaded: false,
     graphLibraryLoaded: false,
@@ -49,9 +49,15 @@
     sortBy: 'date-desc',
     highlightedPostId: null,
     currentUser: null, // Track current authenticated user
-    graphZoomLevel: 'far', // 'far', 'medium', 'close'
-    focusedNoteId: null, // Currently focused note for message display
+    graphZoomLevel: 'session-only', // Start with sessions only - click to expand
+    focusedSessionId: null, // Currently focused Thought Session for idea display
+    expandedSessions: new Set(), // Track which Thought Sessions are expanded to show ideas
     hoveredNodeId: null, // Currently hovered node for highlighting
+    tagColors: {}, // Cache of tag colors from database { tagName: color }
+    orbitActive: true, // Camera orbit animation state
+    orbitAngle: 0, // Current orbit angle
+    orbitInterval: null, // Interval ID for orbit animation
+    threeJsWarningLogged: false, // Track if we've logged THREE.js warning
     graphFilters: {
       tags: true,
       attachments: false,
@@ -201,12 +207,72 @@
   /**
    * Get tag color from settings
    */
+  /**
+   * Get tag color from database cache or default
+   */
   function getTagColorForBlog(tag) {
-    if (window.Settings && window.Settings.settings && window.Settings.settings.tagColors) {
-      const normalizedTag = tag.toLowerCase();
-      return window.Settings.settings.tagColors[normalizedTag] || '#6366f1';
+    if (!tag) return '#ffffff'; // Default white
+    
+    const normalizedTag = tag.toLowerCase();
+    
+    // Check database cache first
+    if (state.tagColors && state.tagColors[normalizedTag]) {
+      return state.tagColors[normalizedTag];
     }
-    return '#6366f1'; // Default color
+    
+    // Fallback to Settings (legacy)
+    if (window.Settings && window.Settings.settings && window.Settings.settings.tagColors) {
+      return window.Settings.settings.tagColors[normalizedTag] || '#ffffff';
+    }
+    
+    return '#ffffff'; // Default white
+  }
+  
+  /**
+   * Load tag colors from database
+   */
+  async function loadTagColors() {
+    try {
+      // Get supabase client from SWFTAuth
+      const supabase = window.SWFTAuth?.supabase;
+      if (!supabase) {
+        console.log('[loadTagColors] Supabase not available, skipping tag color load');
+        state.tagColors = {};
+        return;
+      }
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        state.tagColors = {};
+        return;
+      }
+      
+      const { data: tags, error } = await supabase
+        .from('tags')
+        .select('name, color')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      
+      // Build color cache
+      state.tagColors = {};
+      if (tags) {
+        tags.forEach(tag => {
+          state.tagColors[tag.name.toLowerCase()] = tag.color || '#ffffff';
+        });
+      }
+      
+      console.log('[loadTagColors] Loaded', Object.keys(state.tagColors).length, 'tag colors from database');
+      
+      // Update graph if it exists
+      if (state.graph) {
+        applyGraphDisplay();
+      }
+      
+    } catch (error) {
+      console.error('[loadTagColors] Error loading tag colors:', error);
+      state.tagColors = {};
+    }
   }
 
   /**
@@ -468,34 +534,34 @@
       const { data: { session } } = await supabase.auth.getSession();
       const isAuthenticated = !!session;
       
-      // Fetch notes from Supabase
-      // If authenticated, show all notes (published + drafts)
-      // If not authenticated, show only published notes
+      // Fetch Thought Sessions from Supabase
+      // If authenticated, show all Thought Sessions (published + drafts)
+      // If not authenticated, show only published Thought Sessions
       let query = supabase
         .from('notes')
         .select('*')
         .order('created_at', { ascending: false });
       
       if (!isAuthenticated) {
-        // For non-authenticated users, only show published notes
+        // For non-authenticated users, only show published Thought Sessions
         query = query.eq('status', 'published');
       } else {
-        // For authenticated users, show all their notes (published + drafts)
-        // RLS policy will ensure they only see their own notes
-        console.log('User authenticated, loading all notes (published + drafts)');
+        // For authenticated users, show all their Thought Sessions (published + drafts)
+        // RLS policy will ensure they only see their own Thought Sessions
+        console.log('User authenticated, loading all Thought Sessions (published + drafts)');
       }
       
       const { data: notes, error } = await query;
       
       if (error) throw error;
       
-      console.log(`Found ${notes.length} notes in Supabase${isAuthenticated ? ' (all statuses)' : ' (published only)'}`);
+      console.log(`Found ${notes.length} Thought Sessions in Supabase${isAuthenticated ? ' (all statuses)' : ' (published only)'}`);
       
-      // Transform Supabase notes to blog post format
+      // Transform Supabase Thought Sessions to blog post format
       const posts = notes.map(note => {
-        // Parse content - it might be a JSON string of messages or plain text
+        // Parse content - it might be a JSON string of ideas or plain text
         let content = note.content || '';
-        let messages = [];
+        let messages = []; // messages array contains ideas
         
         // Try to parse as JSON (messages array)
         if (content && typeof content === 'string' && content.trim().startsWith('[')) {
@@ -623,6 +689,192 @@
     return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
   }
 
+  /**
+   * Blend two hex colors
+   */
+  function blendColors(color1, color2, ratio) {
+    const hex1 = color1.replace('#', '');
+    const hex2 = color2.replace('#', '');
+    
+    const r1 = parseInt(hex1.substring(0, 2), 16);
+    const g1 = parseInt(hex1.substring(2, 4), 16);
+    const b1 = parseInt(hex1.substring(4, 6), 16);
+    
+    const r2 = parseInt(hex2.substring(0, 2), 16);
+    const g2 = parseInt(hex2.substring(2, 4), 16);
+    const b2 = parseInt(hex2.substring(4, 6), 16);
+    
+    const r = Math.round(r1 + (r2 - r1) * ratio);
+    const g = Math.round(g1 + (g2 - g1) * ratio);
+    const b = Math.round(b1 + (b2 - b1) * ratio);
+    
+    return '#' + [r, g, b].map(x => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+  }
+  
+  /**
+   * Get THREE.js instance from various sources
+   */
+  function getTHREE() {
+    // Try window first (if THREE.js is loaded globally)
+    if (window.THREE) return window.THREE;
+    
+    // Try from graph renderer (3d-force-graph bundles THREE.js)
+    if (state.graph && state.graph.renderer) {
+      try {
+        const renderer = state.graph.renderer();
+        if (renderer) {
+          // THREE.js is bundled with 3d-force-graph
+          // Try accessing from renderer constructor
+          if (renderer.constructor && renderer.constructor.THREE) {
+            return renderer.constructor.THREE;
+          }
+          // Try accessing from WebGLRenderer
+          if (renderer.domElement && renderer.domElement.__THREE__) {
+            return renderer.domElement.__THREE__;
+          }
+          // Try accessing from renderer's context
+          if (renderer.getContext) {
+            const gl = renderer.getContext();
+            if (gl && gl.constructor && gl.constructor.THREE) {
+              return gl.constructor.THREE;
+            }
+          }
+        }
+      } catch (e) {
+        // Ignore errors
+      }
+    }
+    
+    // Try accessing from ForceGraph3D namespace
+    if (window.ForceGraph3D && window.ForceGraph3D.THREE) {
+      return window.ForceGraph3D.THREE;
+    }
+    
+    // 3d-force-graph bundles THREE.js, but it's not always accessible immediately
+    // The graph needs to be fully initialized first
+    return null;
+  }
+  
+  /**
+   * Add bloom effect to the graph for visual appeal
+   */
+  function addBloomEffect() {
+    if (!state.graph) return;
+    
+    try {
+      const THREE = getTHREE();
+      if (!THREE) {
+        if (!state.threeJsWarningLogged) {
+          console.log('[addBloomEffect] THREE.js not available, skipping bloom effect');
+          state.threeJsWarningLogged = true;
+        }
+        return;
+      }
+      
+      // Try to get post-processing composer
+      const composer = state.graph.postProcessingComposer ? state.graph.postProcessingComposer() : null;
+      if (!composer) {
+        // Fallback: use tone mapping for visual enhancement
+        const renderer = state.graph.renderer();
+        if (renderer) {
+          renderer.toneMapping = THREE.ACESFilmicToneMapping;
+          renderer.toneMappingExposure = 1.2;
+          console.log('[addBloomEffect] Applied tone mapping for visual enhancement');
+        }
+        return;
+      }
+      
+      // Apply tone mapping to renderer
+      const renderer = state.graph.renderer();
+      if (renderer) {
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+      }
+      
+      // Try to add bloom pass if available
+      // Note: UnrealBloomPass may not be available in 3d-force-graph bundle
+      // This is a graceful fallback
+      if (window.UnrealBloomPass || (THREE && THREE.UnrealBloomPass)) {
+        const UnrealBloomPass = window.UnrealBloomPass || THREE.UnrealBloomPass;
+        const bloomPass = new UnrealBloomPass(
+          new THREE.Vector2(window.innerWidth, window.innerHeight),
+          1.5, // strength - subtle
+          0.4, // radius
+          0.85 // threshold
+        );
+        composer.addPass(bloomPass);
+        console.log('[addBloomEffect] Bloom effect added successfully');
+      } else {
+        console.log('[addBloomEffect] UnrealBloomPass not available, using tone mapping only');
+      }
+      
+    } catch (error) {
+      console.error('[addBloomEffect] Error adding bloom effect:', error);
+    }
+  }
+  
+  /**
+   * Get colorful color for a node based on tags or generate from ID
+   */
+  function getNodeColor(node) {
+    // Vibrant color palette for colorful spheres
+    const colorPalette = [
+      '#FF6B6B', // Coral red
+      '#4ECDC4', // Turquoise
+      '#45B7D1', // Sky blue
+      '#FFA07A', // Light salmon
+      '#98D8C8', // Mint green
+      '#F7DC6F', // Yellow
+      '#BB8FCE', // Lavender
+      '#85C1E2', // Light blue
+      '#F8B739', // Orange
+      '#52BE80', // Green
+      '#E74C3C', // Red
+      '#9B59B6', // Purple
+      '#3498DB', // Blue
+      '#1ABC9C', // Teal
+      '#F39C12', // Orange
+      '#E67E22', // Dark orange
+      '#2ECC71', // Emerald
+      '#16A085', // Dark teal
+      '#27AE60', // Forest green
+      '#2980B9', // Dark blue
+      '#8E44AD', // Dark purple
+      '#C0392B', // Dark red
+      '#D35400', // Burnt orange
+      '#7F8C8D', // Gray-blue
+      '#34495E'  // Dark gray-blue
+    ];
+    
+    // If node has tags, use first tag to determine color
+    if (node.tags && node.tags.length > 0) {
+      // Hash the tag name to get consistent color
+      const tag = node.tags[0].toLowerCase();
+      let hash = 0;
+      for (let i = 0; i < tag.length; i++) {
+        hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const index = Math.abs(hash) % colorPalette.length;
+      return colorPalette[index];
+    }
+    
+    // If no tags, use node ID to generate consistent color
+    if (node.id) {
+      let hash = 0;
+      for (let i = 0; i < node.id.length; i++) {
+        hash = node.id.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const index = Math.abs(hash) % colorPalette.length;
+      return colorPalette[index];
+    }
+    
+    // Fallback to a default vibrant color
+    return '#5DADE2'; // SWFT accent color as fallback
+  }
+  
   function buildGraphData(posts) {
     // Return empty graph if no posts
     if (!posts || posts.length === 0) {
@@ -631,8 +883,8 @@
     
     const nodes = [];
     const links = [];
-    const messageNodes = [];
-    const allMessageNodes = []; // Store all messages for tag connections
+    const ideaNodes = []; // Individual idea nodes (text, images, videos, audio, URLs)
+    const allIdeaNodes = []; // Store all ideas for tag connections
     
     // Create note nodes
     posts.forEach(post => {
@@ -654,129 +906,197 @@
       
       console.log(`[buildGraphData] Note "${post.title}" has ${messages.length} messages`);
       
-      // Create note node
-      const noteNode = {
+      // Create Thought Session node
+      const sessionNode = {
         id: post.id,
         name: post.title,
         tags: post.tags || [],
         val: post.links ? post.links.length + 1 : 1,
         // Don't set color property - let nodeColor function handle it
-        nodeType: 'note',
+        nodeType: 'session', // Changed from 'note' to 'session'
         slug: post.slug,
-        post: post // Store full post reference
+        post: post, // Store full post reference
+        hasImage: false
       };
-      nodes.push(noteNode);
+      nodes.push(sessionNode);
       
-      // Create message nodes
-      messages.forEach(msg => {
-        const messageNode = {
-          id: `message-${post.id}-${msg.id}`,
-          name: getMessagePreview(msg),
-          nodeType: 'message',
-          parentNoteId: post.id,
-          messageId: msg.id,
-          noteId: post.id,
-          tags: msg.tags || [],
-          val: 0.5, // Smaller than note nodes
-          // Don't set color property - let nodeColor function handle it
-          message: msg, // Store full message reference
-          post: post // Store parent post reference
-        };
-        messageNodes.push(messageNode);
-        allMessageNodes.push(messageNode);
+      // Create individual idea nodes for each message/idea
+      // Each idea can contain: text, URLs, images, videos, audio files
+      messages.forEach((msg, msgIndex) => {
+        const ideaId = msg.id || `idea-${post.id}-${msgIndex}`;
         
-        // Link message to parent note
-        links.push({
-          source: post.id,
-          target: messageNode.id,
-          type: 'parent',
-          weight: 1
-        });
+        // Create node for text content if present
+        if (msg.content && msg.content.trim()) {
+          const textIdeaNode = {
+            id: `idea-text-${post.id}-${ideaId}`,
+            name: msg.content.trim().substring(0, 50) + (msg.content.length > 50 ? '...' : ''),
+            nodeType: 'idea',
+            ideaType: 'text',
+            parentSessionId: post.id,
+            parentMessageId: ideaId,
+            sessionId: post.id,
+            messageId: ideaId,
+            tags: msg.tags || [],
+            val: 0.4,
+            content: msg.content,
+            message: msg,
+            post: post,
+            hasImage: false
+          };
+          ideaNodes.push(textIdeaNode);
+          allIdeaNodes.push(textIdeaNode);
+        }
+        
+        // Create nodes for attachments (images, videos, audio, files)
+        if (msg.attachments && Array.isArray(msg.attachments)) {
+          msg.attachments.forEach((att, attIndex) => {
+            const attachmentId = att.id || `att-${post.id}-${ideaId}-${attIndex}`;
+            const attachmentType = att.type || 'file';
+            
+            let ideaNode = {
+              id: `idea-${attachmentType}-${post.id}-${attachmentId}`,
+              name: att.name || att.filename || `${attachmentType} attachment`,
+              nodeType: 'idea',
+              ideaType: attachmentType, // 'image', 'video', 'audio', 'file', 'url'
+              parentSessionId: post.id,
+              parentMessageId: ideaId,
+              sessionId: post.id,
+              messageId: ideaId,
+              attachmentId: attachmentId,
+              tags: msg.tags || [],
+              val: attachmentType === 'image' || attachmentType === 'video' ? 0.6 : 0.4,
+              attachment: att,
+              message: msg,
+              post: post,
+              hasImage: attachmentType === 'image',
+              imageUrl: attachmentType === 'image' ? att.url : null
+            };
+            
+            // Add URL if it's a URL attachment
+            if (attachmentType === 'url' || att.url) {
+              ideaNode.url = att.url;
+            }
+            
+            ideaNodes.push(ideaNode);
+            allIdeaNodes.push(ideaNode);
+          });
+        }
+        
+        // Create nodes for external links if present
+        if (msg.externalLinks && Array.isArray(msg.externalLinks)) {
+          msg.externalLinks.forEach((link, linkIndex) => {
+            const linkId = `link-${post.id}-${ideaId}-${linkIndex}`;
+            const linkIdeaNode = {
+              id: `idea-url-${post.id}-${linkId}`,
+              name: link.title || link.url || 'External Link',
+              nodeType: 'idea',
+              ideaType: 'url',
+              parentSessionId: post.id,
+              parentMessageId: ideaId,
+              sessionId: post.id,
+              messageId: ideaId,
+              tags: msg.tags || [],
+              val: 0.4,
+              url: link.url,
+              link: link,
+              message: msg,
+              post: post,
+              hasImage: false
+            };
+            ideaNodes.push(linkIdeaNode);
+            allIdeaNodes.push(linkIdeaNode);
+          });
+        }
       });
     });
     
     // Create node map for lookups
     const nodeMap = new Map(nodes.map(n => [n.id, n]));
-    messageNodes.forEach(m => nodeMap.set(m.id, m));
+    ideaNodes.forEach(idea => nodeMap.set(idea.id, idea));
     
-    // Create manual links between notes (existing functionality)
-    posts.forEach(post => {
-      if (post.links && post.links.length > 0) {
-        post.links.forEach(linkId => {
-          if (nodeMap.has(linkId)) {
-            links.push({
-              source: post.id,
-              target: linkId,
-              type: 'manual'
-            });
-          }
+    // Create links between ideas and their parent sessions
+    const ideaLinks = [];
+    ideaNodes.forEach(ideaNode => {
+      if (ideaNode.parentSessionId) {
+        ideaLinks.push({
+          source: ideaNode.parentSessionId,
+          target: ideaNode.id,
+          type: 'parent' // Link from session to idea
         });
       }
     });
     
-    // Create tag-based connections between notes (existing functionality)
-    const postArray = Array.from(posts);
-    for (let i = 0; i < postArray.length; i++) {
-      for (let j = i + 1; j < postArray.length; j++) {
-        const postA = postArray[i];
-        const postB = postArray[j];
-        const sharedTags = (postA.tags || []).filter(tag => (postB.tags || []).includes(tag));
-        
-        if (sharedTags.length > 0) {
-          links.push({
-            source: postA.id,
-            target: postB.id,
-            type: 'tag',
-            weight: sharedTags.length,
-            tags: sharedTags
-          });
-        }
+    // Create links between ideas that share tags (cross-idea connections)
+    const tagMap = new Map(); // tag -> [idea nodes with that tag]
+    ideaNodes.forEach(idea => {
+      if (idea.tags && idea.tags.length > 0) {
+        idea.tags.forEach(tag => {
+          const normalizedTag = tag.toLowerCase();
+          if (!tagMap.has(normalizedTag)) {
+            tagMap.set(normalizedTag, []);
+          }
+          tagMap.get(normalizedTag).push(idea);
+        });
       }
-    }
+    });
     
-    // Create tag-based connections between messages
-    for (let i = 0; i < allMessageNodes.length; i++) {
-      for (let j = i + 1; j < allMessageNodes.length; j++) {
-        const msgA = allMessageNodes[i];
-        const msgB = allMessageNodes[j];
-        const sharedTags = (msgA.tags || []).filter(tag => (msgB.tags || []).includes(tag));
-        
-        if (sharedTags.length > 0) {
-          links.push({
-            source: msgA.id,
-            target: msgB.id,
-            type: 'tag',
-            weight: sharedTags.length,
-            tags: sharedTags
-          });
-        }
-      }
-    }
-    
-    // Create tag-based connections between messages and notes
-    allMessageNodes.forEach(msgNode => {
-      nodes.forEach(noteNode => {
-        if (noteNode.nodeType === 'note' && noteNode.id !== msgNode.parentNoteId) {
-          const sharedTags = (msgNode.tags || []).filter(tag => (noteNode.tags || []).includes(tag));
-          if (sharedTags.length > 0) {
-            links.push({
-              source: msgNode.id,
-              target: noteNode.id,
-              type: 'tag',
-              weight: sharedTags.length,
-              tags: sharedTags
+    // Create links between ideas sharing the same tag
+    tagMap.forEach((ideasWithTag, tag) => {
+      if (ideasWithTag.length > 1) {
+        // Link each idea to others with the same tag (limit to avoid too many links)
+        for (let i = 0; i < ideasWithTag.length; i++) {
+          for (let j = i + 1; j < Math.min(i + 3, ideasWithTag.length); j++) {
+            // Limit to connecting each idea to max 2 others with same tag
+            ideaLinks.push({
+              source: ideasWithTag[i].id,
+              target: ideasWithTag[j].id,
+              type: 'tag', // Link based on shared tag
+              tag: tag
             });
           }
         }
-      });
+      }
     });
     
-    // Return nodes and links (messages will be filtered by zoom level)
+    // Create links between sessions that share tags
+    // Build a map of sessions by their tags
+    const sessionTagMap = new Map(); // tag -> [session nodes with that tag]
+    nodes.forEach(session => {
+      if (session.tags && session.tags.length > 0) {
+        session.tags.forEach(tag => {
+          const normalizedTag = tag.toLowerCase();
+          if (!sessionTagMap.has(normalizedTag)) {
+            sessionTagMap.set(normalizedTag, []);
+          }
+          sessionTagMap.get(normalizedTag).push(session);
+        });
+      }
+    });
+    
+    // Create links between sessions sharing the same tag
+    sessionTagMap.forEach((sessionsWithTag, tag) => {
+      if (sessionsWithTag.length > 1) {
+        // Link each session to others with the same tag (limit to avoid too many links)
+        for (let i = 0; i < sessionsWithTag.length; i++) {
+          for (let j = i + 1; j < Math.min(i + 3, sessionsWithTag.length); j++) {
+            // Limit to connecting each session to max 2 others with same tag
+            ideaLinks.push({
+              source: sessionsWithTag[i].id,
+              target: sessionsWithTag[j].id,
+              type: 'tag', // Link based on shared tag
+              tag: tag
+            });
+          }
+        }
+      }
+    });
+    
+    // Return nodes with parent links
     return { 
-      nodes: [...nodes, ...messageNodes], 
-      links: links,
-      noteNodes: nodes,
-      messageNodes: messageNodes
+      nodes: [...nodes, ...ideaNodes], 
+      links: ideaLinks, // Links from sessions to their ideas, and between sessions/ideas with shared tags
+      sessionNodes: nodes, // Renamed from noteNodes
+      ideaNodes: ideaNodes
     };
   }
   
@@ -1160,34 +1480,36 @@
         ? CONFIG.graphNodeLimit.mobile 
         : CONFIG.graphNodeLimit.desktop;
 
-      // Apply node limit based on device (only for note nodes, messages handled by zoom)
-      const noteNodes = state.graphData.nodes.filter(n => n.nodeType === 'note' || !n.nodeType);
-      const messageNodes = state.graphData.nodes.filter(n => n.nodeType === 'message');
+      // Apply node limit based on device (only for session nodes, ideas handled by expansion)
+      const sessionNodes = state.graphData.nodes.filter(n => n.nodeType === 'session');
+      const ideaNodes = state.graphData.nodes.filter(n => n.nodeType === 'idea');
       
-      let limitedNoteNodes = noteNodes;
-      if (noteNodes.length > nodeLimit) {
-        console.log(`Limiting graph to ${nodeLimit} note nodes (${noteNodes.length} total)`);
+      let limitedSessionNodes = sessionNodes;
+      if (sessionNodes.length > nodeLimit) {
+        console.log(`Limiting graph to ${nodeLimit} session nodes (${sessionNodes.length} total)`);
         // Sort by val and limit
-        const sorted = [...noteNodes].sort((a, b) => (b.val || 0) - (a.val || 0));
-        limitedNoteNodes = sorted.slice(0, nodeLimit);
+        const sorted = [...sessionNodes].sort((a, b) => (b.val || 0) - (a.val || 0));
+        limitedSessionNodes = sorted.slice(0, nodeLimit);
       }
       
-      // Rebuild graph data with limited notes but all messages
-      const noteIds = new Set(limitedNoteNodes.map(n => n.id));
-      const filteredMessageNodes = messageNodes.filter(m => noteIds.has(m.parentNoteId));
+      // Rebuild graph data with limited sessions but all ideas (filtered by expansion state)
+      const sessionIds = new Set(limitedSessionNodes.map(n => n.id));
+      const filteredIdeaNodes = ideaNodes.filter(idea => sessionIds.has(idea.parentSessionId));
       
       // Filter links to only include visible nodes
-      const allVisibleNodes = [...limitedNoteNodes, ...filteredMessageNodes];
+      const allVisibleNodes = [...limitedSessionNodes, ...filteredIdeaNodes];
       const visibleNodeIds = new Set(allVisibleNodes.map(n => n.id));
-      const filteredLinks = state.graphData.links.filter(l => 
-        visibleNodeIds.has(l.source) && visibleNodeIds.has(l.target)
-      );
+      const filteredLinks = state.graphData.links.filter(l => {
+        const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+        const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+        return visibleNodeIds.has(sourceId) && visibleNodeIds.has(targetId);
+      });
       
       let graphData = {
         nodes: allVisibleNodes,
         links: filteredLinks,
-        noteNodes: limitedNoteNodes,
-        messageNodes: filteredMessageNodes
+        sessionNodes: limitedSessionNodes,
+        ideaNodes: filteredIdeaNodes
       };
 
       // Hide placeholder and no-notes message
@@ -1197,31 +1519,35 @@
       }
       hideNoNotesMessage();
 
-      // Store full graph data (with all messages)
+      // Store full graph data (with all ideas)
       state.fullGraphData = graphData;
       
-      // Filter graph data based on initial zoom level (show only notes initially)
-      const filteredGraphData = filterGraphDataByZoom(graphData, 'far', null);
+      // Start with session-only view (collapsed) - click to expand
+      state.graphZoomLevel = 'session-only';
+      state.expandedSessions.clear();
+      
+      // Filter graph data based on initial zoom level (show only sessions initially)
+      const filteredGraphData = filterGraphDataByZoom(graphData, 'session-only', null);
       
       console.log('[Graph] Creating graph with', filteredGraphData.nodes.length, 'nodes and', filteredGraphData.links.length, 'links');
       console.log('[Graph] Filtered graph data:', {
         nodes: filteredGraphData.nodes.length,
         links: filteredGraphData.links.length,
-        nodeTypes: filteredGraphData.nodes.map(n => n.nodeType || 'note')
+        nodeTypes: filteredGraphData.nodes.map(n => n.nodeType || 'session')
       });
       console.log('[Graph] Container element:', graphContainer);
       console.log('[Graph] Container parent:', graphContainer?.parentElement);
       
       if (filteredGraphData.nodes.length === 0) {
-        console.warn('[Graph] No nodes to display! Check if notes have content/messages.');
+        console.warn('[Graph] No nodes to display! Check if Thought Sessions have content/ideas.');
         // Show placeholder message
         const graphPlaceholder = document.getElementById('graph-placeholder');
         if (graphPlaceholder) {
           graphPlaceholder.style.display = 'block';
           graphPlaceholder.innerHTML = `
             <div class="blog_graph-placeholder-content">
-              <p>No graph data available</p>
-              <p class="blog_graph-hint">Create notes with content to see them in the graph</p>
+              <p>No Mind Map data available</p>
+              <p class="blog_graph-hint">Create Thought Sessions with ideas to see them in the Mind Map</p>
             </div>
           `;
         }
@@ -1260,145 +1586,263 @@
         return;
       }
       
-      // Create graph instance
-      state.graph = ForceGraph3D()(graphContainer)
-        .width(containerWidth)  // Set width BEFORE graphData
-        .height(containerHeight)  // Set height BEFORE graphData
+      // Check if THREE.js is available before using nodeThreeObject
+      const THREE = getTHREE();
+      const useCustomNodes = !!THREE;
+      
+      if (!useCustomNodes) {
+        console.warn('[initGraph] THREE.js not available, using default node rendering');
+      }
+      
+      // Create color scale for auto-coloring by tags
+      // Use d3 if available, otherwise use simple hash-based coloring
+      let colorScale = null;
+      if (typeof d3 !== 'undefined' && d3.scaleOrdinal) {
+        colorScale = d3.scaleOrdinal(d3.schemeCategory20);
+      }
+      
+      // Create graph instance with enhanced features
+      const graphInstance = ForceGraph3D()(graphContainer)
+        .width(containerWidth)
+        .height(containerHeight)
+        .cooldownTicks(100) // Smoother settling
         .graphData(filteredGraphData)
-        .nodeRelSize(10) // Increase sphere size multiplier for better visibility (default is 4, increased to 10)
-        .nodeVisibility(() => true) // Explicitly ensure all nodes are visible
-        .nodeLabel(node => {
-          if (node.nodeType === 'message') {
-            return `
-              <div style="background: rgba(0,0,0,0.8); padding: 6px 10px; border-radius: 4px; font-size: 12px; max-width: 200px;">
-                <strong style="color: ${node.color || '#aaa'};">${escapeHtml(node.name)}</strong>
-                ${node.tags && node.tags.length > 0 ? `<br><span style="color: #888; font-size: 11px;">${node.tags.slice(0, 3).join(', ')}</span>` : ''}
-              </div>
-            `;
+        .nodeAutoColorBy(node => {
+          // Auto-color by first tag if available
+          if (node.tags && node.tags.length > 0) {
+            const tag = node.tags[0].toLowerCase();
+            if (colorScale) {
+              return colorScale(tag);
+            }
+            // Fallback to getTagColorForBlog if d3 not available
+            return getTagColorForBlog(node.tags[0]);
           }
-          return `
-            <div style="background: rgba(0,0,0,0.8); padding: 8px 12px; border-radius: 4px; font-size: 14px;">
-              <strong>${escapeHtml(node.name)}</strong>
-              ${node.tags && node.tags.length > 0 ? `<br><span style="color: #888; font-size: 12px;">${node.tags.join(', ')}</span>` : ''}
-            </div>
-          `;
+          return '#ffffff'; // Default white
         })
-        .nodeColor(node => {
-          // Always return white by default - don't rely on state during init
-          if (node.status === 'missing') {
-            return '#666';
-          }
-          
-          // If a node is hovered, highlight it and connected nodes in accent color
-          if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
-            const isHovered = node.id === state.hoveredNodeId;
-            
-            // Check if node is connected to hovered node
-            let isConnected = false;
-            for (const link of state.fullGraphData.links) {
-              const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-              const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-              
-              if ((sourceId === state.hoveredNodeId && targetId === node.id) ||
-                  (targetId === state.hoveredNodeId && sourceId === node.id)) {
-                isConnected = true;
-                break;
-              }
+        .linkAutoColorBy(link => {
+          // Auto-color links by source node tag
+          const sourceNode = typeof link.source === 'object' ? link.source : 
+                            state.fullGraphData?.nodes.find(n => n.id === link.source);
+          if (sourceNode && sourceNode.tags && sourceNode.tags.length > 0) {
+            const tag = sourceNode.tags[0].toLowerCase();
+            if (colorScale) {
+              return colorScale(tag);
             }
-            
-            if (isHovered || isConnected) {
-              return state.graphDisplay.highlightColor || '#5DADE2'; // SWFT accent color for hovered/connected nodes
-            }
+            return getTagColorForBlog(sourceNode.tags[0]);
           }
-          
-          // Hardcode white as default - ensure nodes are always visible
           return '#ffffff';
         })
-        .nodeVal(node => {
-          // Use display settings for node sizing
-          // nodeVal controls volume, so we need larger values for visible spheres
-          const baseSize = state.graphDisplay.nodeSize || 8;
-          // Scale up significantly for better visibility (nodeRelSize will multiply this)
-          // Using 5x multiplier instead of 2x for much more visible spheres
-          const scaledSize = baseSize * 5; // Multiply by 5 for better visibility
-          if (node.nodeType === 'message') {
-            return scaledSize * 0.5; // Messages are half the size of notes
-          }
-          return Math.max(scaledSize, 20); // Minimum size 20 for visibility
-        })
-        .nodeOpacity(node => {
-          // Increased opacity for better visibility matching example
-          if (node.nodeType === 'message') {
-            return 0.9; // Increased from 0.7
-          }
-          return 1.0; // Increased from 0.9 for full visibility
-        })
-        .linkColor(link => {
-          // Default to white for all links
-          const linkColorHex = state.graphDisplay.linkColor || '#ffffff';
-          const r = parseInt(linkColorHex.slice(1, 3), 16);
-          const g = parseInt(linkColorHex.slice(3, 5), 16);
-          const b = parseInt(linkColorHex.slice(5, 7), 16);
-          const defaultColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
-          
-          // If a node is hovered, highlight connected links in accent color
-          if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
-            const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-            const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-            const isConnected = sourceId === state.hoveredNodeId || targetId === state.hoveredNodeId;
-            
-            if (isConnected) {
-              const highlightHex = state.graphDisplay.highlightColor || '#5DADE2';
-              const hr = parseInt(highlightHex.slice(1, 3), 16);
-              const hg = parseInt(highlightHex.slice(3, 5), 16);
-              const hb = parseInt(highlightHex.slice(5, 7), 16);
-              return `rgba(${hr}, ${hg}, ${hb}, 0.8)`; // SWFT accent color with higher opacity
-            }
-          }
-          
-          // Default white for all links
-          return defaultColor;
-        })
-        .linkOpacity(link => {
-          // Adjusted opacity to match example style
-          if (link.type === 'parent') {
-            return 0.3;
-          }
-          return 0.4; // Reduced from 0.6 for better contrast
-        })
-        .linkWidth(link => {
-          // Use display settings with type-based scaling for thin lines
-          const baseWidth = state.graphDisplay.linkWidth || 0.5;
-          // Tag links are thinnest (for tag-based connections)
-          if (link.type === 'tag') return baseWidth * 0.3; // Very thin for tag connections
-          // Parent links (message to note) are thin
-          if (link.type === 'parent') return baseWidth * 0.6;
-          // Manual links are slightly thicker
-          if (link.type === 'manual') return baseWidth * 1.2;
-          return baseWidth;
-        })
-        .backgroundColor('rgba(0, 0, 0, 0)')
         .onNodeClick((node) => {
-          console.log('Graph onNodeClick triggered for node:', node); // Debug
           handleGraphNodeClick(node);
         })
-        .onNodeHover(handleGraphNodeHover);
+        .onNodeHover(handleGraphNodeHover)
+        .onEngineStop(() => {
+          // Fit to canvas when simulation stops
+          if (state.graph) {
+            state.graph.zoomToFit(400);
+          }
+        });
+      
+      // Add gradient links for tagged nodes
+      const THREE = getTHREE();
+      if (THREE) {
+        // Helper function to convert hex color to RGB
+        function hexToRgb(hex) {
+          const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+          return result ? {
+            r: parseInt(result[1], 16) / 255,
+            g: parseInt(result[2], 16) / 255,
+            b: parseInt(result[3], 16) / 255
+          } : { r: 1, g: 1, b: 1 };
+        }
+        
+        // Helper function to get node color
+        function getNodeColorForLink(node) {
+          if (node && node.tags && node.tags.length > 0) {
+            const tag = node.tags[0].toLowerCase();
+            if (colorScale) {
+              return colorScale(tag);
+            }
+            return getTagColorForBlog(node.tags[0]);
+          }
+          return '#ffffff';
+        }
+        
+        graphInstance.linkThreeObject(link => {
+          const sourceNode = typeof link.source === 'object' ? link.source : 
+                            state.fullGraphData?.nodes.find(n => n.id === link.source);
+          const targetNode = typeof link.target === 'object' ? link.target : 
+                            state.fullGraphData?.nodes.find(n => n.id === link.target);
+          
+          if (!sourceNode || !targetNode) return null;
+          
+          // Get colors from source and target nodes
+          const sourceColor = getNodeColorForLink(sourceNode);
+          const targetColor = getNodeColorForLink(targetNode);
+          
+          // Convert to RGB
+          const sourceRgb = hexToRgb(sourceColor);
+          const targetRgb = hexToRgb(targetColor);
+          
+          // Create geometry for the line
+          const geometry = new THREE.BufferGeometry();
+          const positions = new Float32Array(6); // 2 vertices * 3 coordinates
+          
+          // Create color array for gradient (source color to target color)
+          const colors = new Float32Array([
+            sourceRgb.r, sourceRgb.g, sourceRgb.b, // Source color
+            targetRgb.r, targetRgb.g, targetRgb.b  // Target color
+          ]);
+          
+          geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          
+          // Create material with vertex colors
+          const material = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            linewidth: state.graphDisplay.linkWidth || 0.5
+          });
+          
+          const line = new THREE.Line(geometry, material);
+          
+          // Store link data for position updates
+          line.userData.link = link;
+          line.userData.sourceNode = sourceNode;
+          line.userData.targetNode = targetNode;
+          
+          return line;
+        });
+        
+        // Update link positions using linkPositionUpdate
+        graphInstance.linkPositionUpdate((obj, { start, end }) => {
+          if (obj.userData && obj.userData.link) {
+            const positions = obj.geometry.attributes.position.array;
+            positions[0] = start.x;
+            positions[1] = start.y;
+            positions[2] = start.z;
+            positions[3] = end.x;
+            positions[4] = end.y;
+            positions[5] = end.z;
+            obj.geometry.attributes.position.needsUpdate = true;
+          }
+        });
+        
+        // Add image nodes for nodes with images
+        graphInstance.nodeThreeObject(node => {
+          // Check if node has an image
+          if (node.hasImage && node.imageUrl) {
+            // Check if message only contains image (no text content)
+            const isImageOnly = node.message && 
+                                (!node.message.content || node.message.content.trim() === '') &&
+                                node.message.attachments && 
+                                node.message.attachments.length === 1 &&
+                                node.message.attachments[0].type === 'image';
+            
+            if (isImageOnly || node.ideaType === 'image') {
+              // Create sprite with image texture
+              const imgTexture = new THREE.TextureLoader().load(node.imageUrl);
+              imgTexture.colorSpace = THREE.SRGBColorSpace;
+              const material = new THREE.SpriteMaterial({ map: imgTexture });
+              const sprite = new THREE.Sprite(material);
+              sprite.scale.set(12, 12);
+              return sprite;
+            }
+          }
+          // Return null to use default node rendering
+          return null;
+        });
+      }
+      
+      // Store graph instance
+      state.graph = graphInstance;
       
       // Apply display settings
       applyGraphDisplay();
       
-      // Add space background with stars (with delay to ensure THREE.js is loaded)
-      setTimeout(() => {
-        addSpaceBackground();
-      }, 1000);
+      // Initialize slow camera orbit animation (like stars floating)
+      initCameraOrbit();
       
-      // Zoom to fit all nodes so they're visible on initial load
+      // Add subtle bloom effect
+      if (typeof window !== 'undefined') {
+        // Dynamically import UnrealBloomPass
+        import('https://esm.sh/three/examples/jsm/postprocessing/UnrealBloomPass.js')
+          .then(({ UnrealBloomPass }) => {
+            if (state.graph && state.graph.postProcessingComposer) {
+              const composer = state.graph.postProcessingComposer();
+              if (composer) {
+                const bloomPass = new UnrealBloomPass();
+                bloomPass.strength = 1.5; // Subtle (example uses 4)
+                bloomPass.radius = 0.8; // Subtle (example uses 1)
+                bloomPass.threshold = 0.3; // Subtle (example uses 0)
+                composer.addPass(bloomPass);
+                console.log('[Graph] Bloom effect added');
+              }
+            }
+          })
+          .catch(err => {
+            console.warn('[Graph] Could not load bloom effect:', err);
+          });
+      }
+      
+      // Set up camera with better positioning and scene background
+      if (state.graph) {
+        // Set initial camera position for better view
+        state.graph.cameraPosition({ x: 0, y: 0, z: 800 });
+        
+        // Add controls for camera movement
+        const controls = state.graph.controls();
+        if (controls) {
+          controls.enableDamping = true;
+          controls.dampingFactor = 0.1;
+          controls.enableZoom = true;
+          controls.enableRotate = true;
+          controls.enablePan = true;
+        }
+        
+        // Set scene background directly for better contrast
+        try {
+          const scene = state.graph.scene();
+          if (scene) {
+            const THREE = getTHREE();
+            if (THREE) {
+              // Dark blue-black background for contrast with white spheres
+              scene.background = new THREE.Color(0x0a0a0f);
+              console.log('[Graph] Scene background set to dark blue-black');
+            } else {
+              // Fallback: use backgroundColor method
+              state.graph.backgroundColor('#0a0a0f');
+              console.log('[Graph] Scene background set via backgroundColor method');
+            }
+          }
+        } catch (e) {
+          console.warn('[Graph] Could not set scene background directly:', e);
+          // Fallback
+          try {
+            state.graph.backgroundColor('#0a0a0f');
+          } catch (e2) {
+            console.warn('[Graph] Could not set background color:', e2);
+          }
+        }
+      }
+      
+      // Zoom to fit all nodes on initial load
       setTimeout(() => {
         if (state.graph) {
-          console.log('[Graph] Zooming to fit all nodes');
-          state.graph.zoomToFit(400, 0);
+          state.graph.zoomToFit(1000, 50);
         }
       }, 100);
+      
+      // Fit to canvas on window resize
+      window.addEventListener('resize', debounce(() => {
+        if (state.graph && state.currentView === 'graph') {
+          resizeGraphForView();
+          setTimeout(() => {
+            if (state.graph) {
+              state.graph.zoomToFit(800, 50); // 800ms transition, 50px padding
+            }
+          }, 100);
+        }
+      }, 200));
       
       // Handle camera controls for zoom detection
       // Listen for zoom/pan events
@@ -1420,26 +1864,26 @@
             const camera = state.graph.camera();
             const currentZ = camera.position.z;
             
-            let newZoomLevel = 'far';
-            let newFocusedNote = state.focusedNoteId;
+            let newZoomLevel = 'session-only';
+            let newFocusedSession = state.focusedSessionId;
             
             if (currentZ < 200) {
               newZoomLevel = 'close';
             } else if (currentZ < 350) {
               newZoomLevel = 'medium';
-              // Keep current focused note or find closest
-              if (!newFocusedNote && state.fullGraphData.noteNodes && state.fullGraphData.noteNodes.length > 0) {
-                newFocusedNote = state.fullGraphData.noteNodes[0].id;
+              // Keep current focused session or find closest
+              if (!newFocusedSession && state.fullGraphData.sessionNodes && state.fullGraphData.sessionNodes.length > 0) {
+                newFocusedSession = state.fullGraphData.sessionNodes[0].id;
               }
             } else {
-              newZoomLevel = 'far';
-              newFocusedNote = null; // Clear focus when zoomed out
+              newZoomLevel = 'session-only';
+              newFocusedSession = null; // Clear focus when zoomed out
             }
             
-            if (newZoomLevel !== state.graphZoomLevel || newFocusedNote !== state.focusedNoteId) {
+            if (newZoomLevel !== state.graphZoomLevel || newFocusedSession !== state.focusedSessionId) {
               state.graphZoomLevel = newZoomLevel;
-              state.focusedNoteId = newFocusedNote;
-              const filteredData = filterGraphDataByZoom(state.fullGraphData, newZoomLevel, newFocusedNote);
+              state.focusedSessionId = newFocusedSession;
+              const filteredData = filterGraphDataByZoom(state.fullGraphData, newZoomLevel, newFocusedSession);
               state.graph.graphData(filteredData);
             }
           } catch (e) {
@@ -1462,8 +1906,9 @@
       setTimeout(() => {
         if (state.graph) {
           // Reset zoom state
-          state.graphZoomLevel = 'far';
-          state.focusedNoteId = null;
+          state.graphZoomLevel = 'session-only'; // Start with sessions only
+          state.focusedSessionId = null;
+          state.expandedSessions.clear(); // Start with no expanded sessions
           
           // Center camera on the graph
           state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
@@ -1520,36 +1965,12 @@
         }
       }
       
-      // Apply initial display settings BEFORE marking as loaded
-      applyGraphDisplay();
-      
-      // Small delay to ensure colors are applied before graph settles
+      // Zoom to fit all nodes on initial load
       setTimeout(() => {
         if (state.graph) {
-          applyGraphDisplay();
-          // Resize to fit view if graph view is active
-          if (state.currentView === 'graph') {
-            resizeGraphForView();
-          }
-          // Ensure graph is visible and centered
-          const camera = state.graph.camera();
-          console.log('[Graph] Camera position:', {
-            x: camera.position.x,
-            y: camera.position.y,
-            z: camera.position.z
-          });
-          
-          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-          state.graph.zoomToFit(400, 50);
-          
-          const cameraAfter = state.graph.camera();
-          console.log('[Graph] Camera position after zoom:', {
-            x: cameraAfter.position.x,
-            y: cameraAfter.position.y,
-            z: cameraAfter.position.z
-          });
+          state.graph.zoomToFit(1000, 50);
         }
-      }, 200);
+      }, 100);
 
       state.graphLoaded = true;
 
@@ -1582,9 +2003,76 @@
   }
 
   /**
+   * Initialize slow camera orbit animation (like stars floating)
+   */
+  function initCameraOrbit() {
+    if (!state.graph) return;
+    
+    // Clear any existing orbit interval
+    if (state.orbitInterval) {
+      clearInterval(state.orbitInterval);
+    }
+    
+    // Get initial camera distance
+    const camera = state.graph.camera();
+    const distance = Math.sqrt(
+      camera.position.x * camera.position.x +
+      camera.position.y * camera.position.y +
+      camera.position.z * camera.position.z
+    ) || 800;
+    
+    // Very slow orbit - much slower than example (like stars floating)
+    const orbitSpeed = Math.PI / 5000; // Very slow (example uses /300)
+    
+    // Update camera position in circular orbit
+    state.orbitInterval = setInterval(() => {
+      if (!state.orbitActive || !state.graph) return;
+      
+      // Increment angle
+      state.orbitAngle += orbitSpeed;
+      
+      // Calculate circular orbit position
+      const x = distance * Math.sin(state.orbitAngle);
+      const z = distance * Math.cos(state.orbitAngle);
+      const y = camera.position.y; // Keep same height
+      
+      // Update camera position
+      state.graph.cameraPosition({ x, y, z });
+    }, 16); // ~60fps for smooth animation
+  }
+  
+  /**
+   * Toggle camera orbit animation
+   */
+  function toggleCameraOrbit() {
+    state.orbitActive = !state.orbitActive;
+    
+    // Update button text if it exists
+    const orbitBtn = document.getElementById('orbit-toggle-btn');
+    if (orbitBtn) {
+      orbitBtn.textContent = state.orbitActive ? 'Pause Orbit' : 'Play Orbit';
+    }
+    
+    console.log('[toggleCameraOrbit] Orbit', state.orbitActive ? 'active' : 'paused');
+  }
+  
+  // Set up orbit toggle button event listener
+  document.addEventListener('DOMContentLoaded', () => {
+    const orbitBtn = document.getElementById('orbit-toggle-btn');
+    if (orbitBtn) {
+      orbitBtn.addEventListener('click', toggleCameraOrbit);
+    }
+  });
+  
+  // Also set up if button is added dynamically
+  if (document.getElementById('orbit-toggle-btn')) {
+    document.getElementById('orbit-toggle-btn').addEventListener('click', toggleCameraOrbit);
+  }
+  
+  /**
    * Filter graph data based on zoom level
    */
-  function filterGraphDataByZoom(graphData, zoomLevel, focusedNoteId) {
+  function filterGraphDataByZoom(graphData, zoomLevel, focusedSessionId) {
     if (!graphData || !graphData.nodes) {
       return { nodes: [], links: [] };
     }
@@ -1595,40 +2083,72 @@
     let visibleNodes = [];
     let visibleLinks = [];
 
-    if (zoomLevel === 'far') {
-      // Show only note nodes
-      visibleNodes = graphData.nodes.filter(n => n.nodeType === 'note' || !n.nodeType);
-      const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
-      
+    if (zoomLevel === 'session-only' || zoomLevel === 'far') {
+      // Show only Thought Session nodes (sessions only, no ideas)
+      visibleNodes = graphData.nodes.filter(n => n.nodeType === 'session');
+      // Show links between sessions (tag-based connections)
+      // Filter links to only include session-to-session connections
+      const sessionIds = new Set(visibleNodes.map(n => n.id));
       visibleLinks = graphData.links.filter(l => {
-        // Handle both ID string and object formats
         const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
         const targetId = typeof l.target === 'object' ? l.target.id : l.target;
-        
-        return visibleNodeIds.has(sourceId) && visibleNodeIds.has(targetId);
+        // Include links between sessions (tag-based connections)
+        // Exclude parent-child links (session to idea)
+        return sessionIds.has(sourceId) && sessionIds.has(targetId) && l.type !== 'parent';
       });
     } else if (zoomLevel === 'medium') {
-      // Show notes + messages for focused note
-      visibleNodes = graphData.nodes.filter(n => 
-        n.nodeType === 'note' || !n.nodeType || 
-        (n.nodeType === 'message' && n.parentNoteId === focusedNoteId)
-      );
+      // Show sessions + ideas for expanded sessions
+      visibleNodes = graphData.nodes.filter(n => {
+        // Always show sessions
+        if (n.nodeType === 'session') return true;
+        // Show ideas only if their parent session is expanded
+        if (n.nodeType === 'idea' && n.parentSessionId) {
+          return state.expandedSessions.has(n.parentSessionId);
+        }
+        return false;
+      });
       const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
       
+      // Show links only for visible nodes
       visibleLinks = graphData.links.filter(l => {
-        // Handle both ID string and object formats
         const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
         const targetId = typeof l.target === 'object' ? l.target.id : l.target;
-        
         return visibleNodeIds.has(sourceId) && visibleNodeIds.has(targetId);
       });
     } else if (zoomLevel === 'close') {
-      // Show all nodes
+      // Show all nodes (sessions + all ideas)
       visibleNodes = graphData.nodes;
       visibleLinks = graphData.links;
     }
     
     return { nodes: visibleNodes, links: visibleLinks };
+  }
+  
+  /**
+   * Toggle session expansion (show/hide ideas within a session)
+   */
+  function toggleSessionExpansion(sessionId) {
+    if (state.expandedSessions.has(sessionId)) {
+      state.expandedSessions.delete(sessionId);
+      console.log('[toggleSessionExpansion] Collapsed session:', sessionId);
+    } else {
+      state.expandedSessions.add(sessionId);
+      console.log('[toggleSessionExpansion] Expanded session:', sessionId);
+    }
+    
+    // Rebuild graph data with updated expansion state
+    if (state.fullGraphData) {
+      const filteredData = filterGraphDataByZoom(state.fullGraphData, 'medium', sessionId);
+      if (state.graph) {
+        state.graph.graphData(filteredData);
+        // Zoom to fit after expansion
+        setTimeout(() => {
+          if (state.graph) {
+            state.graph.zoomToFit(400, 50);
+          }
+        }, 100);
+      }
+    }
   }
 
   /**
@@ -1636,31 +2156,31 @@
    * Only limits note nodes, preserves all message nodes
    */
   function limitGraphData(data, limit) {
-    // Separate note nodes from message nodes
-    const noteNodes = data.nodes.filter(n => n.nodeType === 'note' || !n.nodeType);
-    const messageNodes = data.nodes.filter(n => n.nodeType === 'message');
+    // Separate session nodes from idea nodes
+    const sessionNodes = data.nodes.filter(n => n.nodeType === 'session');
+    const ideaNodes = data.nodes.filter(n => n.nodeType === 'idea');
     
-    // Sort note nodes by connection count (val)
-    const sortedNoteNodes = [...noteNodes].sort((a, b) => (b.val || 0) - (a.val || 0));
-    const limitedNoteNodes = sortedNoteNodes.slice(0, limit);
-    const noteIds = new Set(limitedNoteNodes.map(n => n.id));
+    // Sort session nodes by connection count (val)
+    const sortedSessionNodes = [...sessionNodes].sort((a, b) => (b.val || 0) - (a.val || 0));
+    const limitedSessionNodes = sortedSessionNodes.slice(0, limit);
+    const sessionIds = new Set(limitedSessionNodes.map(n => n.id));
 
-    // Keep only messages whose parent notes are in the limited set
-    const limitedMessageNodes = messageNodes.filter(m => noteIds.has(m.parentNoteId));
+    // Keep only ideas whose parent sessions are in the limited set
+    const limitedIdeaNodes = ideaNodes.filter(idea => sessionIds.has(idea.parentSessionId));
 
     // Filter links to only include nodes in the limited set
     const limitedLinks = data.links.filter(link => {
       const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
       const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-      return (noteIds.has(sourceId) || limitedMessageNodes.some(m => m.id === sourceId)) &&
-             (noteIds.has(targetId) || limitedMessageNodes.some(m => m.id === targetId));
+      return (sessionIds.has(sourceId) || limitedIdeaNodes.some(idea => idea.id === sourceId)) &&
+             (sessionIds.has(targetId) || limitedIdeaNodes.some(idea => idea.id === targetId));
     });
 
     return {
-      nodes: [...limitedNoteNodes, ...limitedMessageNodes],
+      nodes: [...limitedSessionNodes, ...limitedIdeaNodes],
       links: limitedLinks,
-      noteNodes: limitedNoteNodes,
-      messageNodes: limitedMessageNodes
+      sessionNodes: limitedSessionNodes,
+      ideaNodes: limitedIdeaNodes
     };
   }
 
@@ -1678,7 +2198,7 @@
   }
   
   /**
-   * Show "no notes" message in graph view
+   * Show "no Thought Sessions" message in Mind Map view
    */
   function showNoNotesMessage() {
     // Hide graph container
@@ -1691,7 +2211,7 @@
       elements.emptyState.hidden = false;
     }
     
-    // Create or show "no notes" message in graph area
+    // Create or show "no Thought Sessions" message in Mind Map area
     let noNotesMsg = document.getElementById('graph-no-notes');
     if (!noNotesMsg && elements.graphContainer) {
       noNotesMsg = document.createElement('div');
@@ -1706,8 +2226,8 @@
             <line x1="16" y1="17" x2="8" y2="17"></line>
             <polyline points="10 9 9 9 8 9"></polyline>
           </svg>
-          <h3>No notes to show</h3>
-          <p>Create your first note to see it appear in the graph view.</p>
+          <h3>No Thought Sessions to show</h3>
+          <p>Create your first Thought Session to see it appear in the Mind Map.</p>
         </div>
       `;
       elements.graphContainer.parentElement.appendChild(noNotesMsg);
@@ -1717,7 +2237,7 @@
   }
   
   /**
-   * Hide "no notes" message
+   * Hide "no Thought Sessions" message
    */
   function hideNoNotesMessage() {
     const noNotesMsg = document.getElementById('graph-no-notes');
@@ -1737,43 +2257,52 @@
       console.warn('handleGraphNodeClick: node is null or undefined');
       return;
     }
-
-    console.log('Graph node clicked:', node); // Debug
-
-    // Handle message node click
-    if (node.nodeType === 'message') {
-      if (node.post && node.message) {
-        // Open modal showing the specific message
-        openMessageModal(node.post, node.message);
+    
+    console.log('[handleGraphNodeClick] Node clicked:', {
+      id: node.id,
+      nodeType: node.nodeType,
+      name: node.name
+    });
+    
+    // Handle session node clicks - expand/collapse to show ideas
+    if (node.nodeType === 'session') {
+      toggleSessionExpansion(node.id);
+      return;
+    }
+    
+    // Handle idea node clicks - open modal or show details
+    if (node.nodeType === 'idea') {
+      // Find the parent post/session
+      const post = node.post || state.posts.find(p => p.id === node.sessionId || p.id === node.parentSessionId);
+      
+      if (post && node.message) {
+        // Open modal showing the specific idea/message
+        openMessageModal(post, node.message);
+      } else if (post) {
+        // Open the session modal
+        openModal(post);
       }
       return;
     }
-
-    // Handle note node click - zoom in to show messages
-    if (node.nodeType === 'note' || !node.nodeType) {
-      // Set focused note and zoom in
-      state.focusedNoteId = node.id;
-      state.graphZoomLevel = 'medium';
-      
-      // Update graph to show messages for this note
-      if (state.fullGraphData) {
-        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'medium', node.id);
-        state.graph.graphData(filteredData);
-        
-        // Zoom camera closer to the node
-        if (state.graph) {
-          // Get node position and zoom to it
-          setTimeout(() => {
-            try {
-              state.graph.zoomToFit(200, 100, (n) => n.id === node.id || (n.parentNoteId === node.id));
-            } catch (e) {
-              console.warn('Error zooming to node:', e);
-            }
-          }, 100);
-        }
+    
+    // Legacy support for 'message' nodeType (backward compatibility)
+    if (node.nodeType === 'message') {
+      // Treat as idea node
+      const post = node.post || state.posts.find(p => p.id === node.sessionId || p.id === node.parentSessionId);
+      if (post && node.message) {
+        openMessageModal(post, node.message);
+      } else if (post) {
+        openModal(post);
       }
+      return;
+    }
+    
+    // Legacy support for 'note' nodeType (backward compatibility)
+    if (node.nodeType === 'note' || !node.nodeType) {
+      // Treat as session node
+      toggleSessionExpansion(node.id);
       
-      // Also open the note modal
+      // Also open the session modal
       const post = node.post || state.posts.find(p => {
         const matchesId = p.id === node.id;
         const matchesSlug = p.slug === node.slug;
@@ -1806,7 +2335,6 @@
     if (previousHoveredId !== state.hoveredNodeId && state.graph) {
       // Force graph to re-render by updating node colors
       state.graph.nodeColor(state.graph.nodeColor());
-      state.graph.linkColor(state.graph.linkColor());
     }
   }
 
@@ -1834,7 +2362,7 @@
       });
       // Keep nodes that have non-tag connections or are note nodes
       filteredNodes = filteredNodes.filter(node => {
-        if (node.nodeType === 'note') return true;
+        if (node.nodeType === 'session') return true;
         const hasNonTagLinks = filteredLinks.some(link => {
           const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
           const targetId = typeof link.target === 'object' ? link.target.id : link.target;
@@ -1863,7 +2391,7 @@
         if (node.nodeType === 'message' && node.message) {
           return node.message.attachments && node.message.attachments.length > 0;
         }
-        if (node.nodeType === 'note' && node.post) {
+        if (node.nodeType === 'session' && node.post) {
           // Check if note has any messages with attachments
           try {
             const content = typeof node.post.content === 'string' ? JSON.parse(node.post.content) : node.post.content;
@@ -1895,117 +2423,17 @@
   function applyGraphDisplay() {
     if (!state.graph) return;
     
-    console.log('[applyGraphDisplay] Applying display settings:', {
-      nodeColor: state.graphDisplay.nodeColor,
-      linkColor: state.graphDisplay.linkColor,
-      nodeSize: state.graphDisplay.nodeSize,
-      linkWidth: state.graphDisplay.linkWidth,
-      linkStyle: state.graphDisplay.linkStyle
-    });
-    console.log('[applyGraphDisplay] Current nodeSize value:', state.graphDisplay.nodeSize);
-    
-    // Always update node color function to use current display settings
-    state.graph.nodeColor(node => {
-      // Default to white for all nodes (balls/spheres)
-      if (node.status === 'missing') {
-        return '#666';
-      }
-      
-      // If a node is hovered, highlight it and connected nodes
-      if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
-        const isHovered = node.id === state.hoveredNodeId;
-        let isConnected = false;
-        for (const link of state.fullGraphData.links) {
-          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-          const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-          if ((sourceId === state.hoveredNodeId && targetId === node.id) ||
-              (targetId === state.hoveredNodeId && sourceId === node.id)) {
-            isConnected = true;
-            break;
-          }
-        }
-        if (isHovered || isConnected) {
-          return state.graphDisplay.highlightColor || '#5DADE2';
-        }
-      }
-      
-      // Use the display node color setting
-      return state.graphDisplay.nodeColor || '#ffffff';
-    });
-    
-    // Always update link color function to use current display settings
-    const linkColorHex = state.graphDisplay.linkColor || '#ffffff';
-    const r = parseInt(linkColorHex.slice(1, 3), 16);
-    const g = parseInt(linkColorHex.slice(3, 5), 16);
-    const b = parseInt(linkColorHex.slice(5, 7), 16);
-    const defaultLinkColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
-    
-    state.graph.linkColor(link => {
-      // If a node is hovered, highlight connected links
-      if (state.hoveredNodeId && state.fullGraphData && state.fullGraphData.links) {
-        const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-        const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-        if (sourceId === state.hoveredNodeId || targetId === state.hoveredNodeId) {
-          const highlightHex = state.graphDisplay.highlightColor || '#5DADE2';
-          const hr = parseInt(highlightHex.slice(1, 3), 16);
-          const hg = parseInt(highlightHex.slice(3, 5), 16);
-          const hb = parseInt(highlightHex.slice(5, 7), 16);
-          return `rgba(${hr}, ${hg}, ${hb}, 0.8)`;
-        }
-      }
-      return defaultLinkColor;
-    });
-    
-    // Apply node size - always update to ensure slider works
-    // nodeVal controls volume, so we scale up for visible spheres
-    state.graph.nodeVal(node => {
-      const baseSize = state.graphDisplay.nodeSize || 8;
-      // Scale up significantly for better visibility (nodeRelSize will multiply this)
-      // Using 5x multiplier instead of 2x for much more visible spheres
-      const scaledSize = baseSize * 5; // Multiply by 5 for better visibility
-      if (node.nodeType === 'message') {
-        return scaledSize * 0.5; // Messages are half the size of notes
-      }
-      return Math.max(scaledSize, 20); // Minimum size 20 for visibility
-    });
-    
-    // Apply link width with type-based scaling for thin lines
-    if (state.graphDisplay.linkWidth !== undefined) {
-      state.graph.linkWidth(link => {
-        const baseWidth = state.graphDisplay.linkWidth || 0.5;
-        // Tag links are thinnest (for tag-based connections)
-        if (link.type === 'tag') return baseWidth * 0.3; // Very thin for tag connections
-        // Parent links (message to note) are thin
-        if (link.type === 'parent') return baseWidth * 0.6;
-        // Manual links are slightly thicker
-        if (link.type === 'manual') return baseWidth * 1.2;
-        return baseWidth;
-      });
+    // Basic node and link styling - simple setup
+    if (state.graph.nodeColor) {
+      state.graph.nodeColor(state.graphDisplay.nodeColor || '#ffffff');
+    }
+    if (state.graph.linkColor) {
+      state.graph.linkColor(state.graphDisplay.linkColor || '#ffffff');
+    }
+    if (state.graph.linkWidth) {
+      state.graph.linkWidth(state.graphDisplay.linkWidth || 0.5);
     }
     
-    // Apply link style
-    if (state.graphDisplay.linkStyle) {
-      if (state.graphDisplay.linkStyle === 'dashed') {
-        state.graph.linkDirectionalParticles(2);
-        state.graph.linkDirectionalParticleWidth(1);
-      } else if (state.graphDisplay.linkStyle === 'dotted') {
-        state.graph.linkDirectionalParticles(4);
-        state.graph.linkDirectionalParticleWidth(0.5);
-      } else {
-        state.graph.linkDirectionalParticles(0);
-      }
-    }
-    
-    // Force graph to re-render immediately for real-time updates
-    if (state.graph.refresh) {
-      state.graph.refresh();
-      console.log('[applyGraphDisplay] Graph refreshed for real-time update');
-    }
-    
-    // Also restart simulation briefly to ensure changes are visible
-    if (state.graph.cooldownTicks) {
-      state.graph.cooldownTicks(100);
-    }
   }
 
   /**
@@ -2070,10 +2498,10 @@
       
       starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
       
-      // Create star material with white/gray color
+      // Create star material with brighter white/gray color for better visibility
       const starsMaterial = new THREE.PointsMaterial({ 
-        color: 0x888888, 
-        size: 0.5,
+        color: 0xaaaaaa, // Brighter gray for better contrast
+        size: 1.0, // Slightly larger stars
         sizeAttenuation: false
       });
       
@@ -2084,10 +2512,13 @@
       starField.renderOrder = -1;
       starField.material.depthTest = false;
       
+      // Set scene background to dark blue-black for contrast
+      scene.background = new THREE.Color(0x0a0a0f);
+      
       // Add to scene
       scene.add(starField);
       
-      console.log('[addSpaceBackground] Space background added successfully');
+      console.log('[addSpaceBackground] Space background added successfully with dark background');
     } catch (error) {
       console.error('[addSpaceBackground] Error adding space background:', error);
     }
@@ -2172,17 +2603,23 @@
    */
   function resetGraph() {
     if (state.graph) {
-      state.graphZoomLevel = 'far';
-      state.focusedNoteId = null;
+      state.graphZoomLevel = 'session-only';
+      state.focusedSessionId = null;
+      state.expandedSessions.clear();
       
-      // Reset to show only note nodes
+      // Reset to show only session nodes
       if (state.fullGraphData) {
-        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'far', null);
+        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'session-only', null);
         state.graph.graphData(filteredData);
       }
       
-      state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-      state.graph.zoomToFit(400, 0);
+      // Reset camera and fit to canvas
+      state.graph.cameraPosition({ x: 0, y: 0, z: 800 });
+      setTimeout(() => {
+        if (state.graph) {
+          state.graph.zoomToFit(1000, 50); // 1000ms transition, 50px padding
+        }
+      }, 100);
     }
   }
 
@@ -2192,18 +2629,25 @@
   function zoomGraphToFit() {
     if (state.graph) {
       // Reset zoom state
-      state.graphZoomLevel = 'far';
-      state.focusedNoteId = null;
+      state.graphZoomLevel = 'session-only';
+      state.focusedSessionId = null;
+      state.expandedSessions.clear();
       
       // Reset camera
-      state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-      state.graph.zoomToFit(400, 0);
+      state.graph.cameraPosition({ x: 0, y: 0, z: 800 });
       
-      // Reset to show only notes
+      // Reset to show only sessions
       if (state.fullGraphData) {
-        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'far', null);
+        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'session-only', null);
         state.graph.graphData(filteredData);
       }
+      
+      // Fit to canvas with padding
+      setTimeout(() => {
+        if (state.graph) {
+          state.graph.zoomToFit(1000, 50); // 1000ms transition, 50px padding
+        }
+      }, 100);
     }
   }
 
@@ -2661,7 +3105,7 @@
           });
         });
       } else {
-        elements.modalRelatedNotes.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 0.875rem;">No related notes found</p>';
+        elements.modalRelatedNotes.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 0.875rem;">No related thoughts found</p>';
       }
     }
 
@@ -3340,6 +3784,29 @@
     // Check auth state and update UI
     await checkAuthState();
     
+    // Load tag colors from database
+    await loadTagColors();
+    
+    // Listen for tag color updates from settings
+    window.addEventListener('tag-color-updated', async (e) => {
+      const { tagName, color } = e.detail;
+      state.tagColors[tagName.toLowerCase()] = color;
+      // Update graph if it exists
+      if (state.graph) {
+        applyGraphDisplay();
+      }
+    });
+    
+    window.addEventListener('tag-converted', async () => {
+      // Reload all tag colors when a tag is converted
+      await loadTagColors();
+    });
+    
+    window.addEventListener('tag-deleted', async () => {
+      // Reload all tag colors when a tag is deleted
+      await loadTagColors();
+    });
+    
     // Sync initial slider values with state
     if (elements.displayNodeSize && elements.displayNodeSize.value) {
       state.graphDisplay.nodeSize = parseInt(elements.displayNodeSize.value) || 8;
@@ -3364,7 +3831,7 @@
       if (elements.emptyState) {
         elements.emptyState.hidden = false;
       }
-      // If switching to graph view, show no notes message
+      // If switching to graph view, show no thoughts message
       if (preferredView === 'graph' || preferredView === 'both') {
         showNoNotesMessage();
       }

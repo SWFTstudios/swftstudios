@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Notes & Knowledge Graph | SWFT Studios</title>
-  <meta content="Explore interconnected ideas, insights, and learnings through an interactive knowledge graph. Notes on tech, design, business, and creative workflows." name="description">
-  <meta content="Notes & Knowledge Graph | SWFT Studios" property="og:title">
-  <meta content="Explore interconnected ideas, insights, and learnings through an interactive knowledge graph." property="og:description">
+  <title>Think Tank | SWFT Studios</title>
+  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Think Tank. Connect your dreams and creations in a dynamic thought network." name="description">
+  <meta content="Think Tank | SWFT Studios" property="og:title">
+  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Think Tank. Connect your dreams and creations." property="og:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
   <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -47,15 +47,16 @@ body {
     
     <!-- Navigation -->
     <footer class="navbar">
-      <div data-animation="default" data-collapse="small" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="nav_component w-nav">
+      <div data-w-id="0b21113b-7a5c-4699-b99e-7ce5cdc09a0a" data-animation="default" data-collapse="small" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="nav_component w-nav">
         <div class="padding-global">
           <div class="container-large">
             <div class="padding-vertical padding-medium">
               <div class="w-layout-grid nav_left-wrapper">
-                <div class="nav_logo-wrapper">
+                <div id="w-node-_72e7b742-8f80-63ea-696b-bd8d8b666d36-8b666d31" class="nav_logo-wrapper">
                   <a href="index.html" class="nav_logo-link w-nav-brand">
                     <div class="nav_logo">SWFT <span class="skinny">STUDIOS</span></div>
                   </a>
+                  <link rel="prefetch" href="/">
                   <div class="max-width-xsmall">
                     <p class="text-size-small">You Dream It, We Create It</p>
                   </div>
@@ -72,7 +73,7 @@ body {
                     </div>
                   </div>
                 </div>
-                <nav role="navigation" class="nav_menu w-nav-menu">
+                <nav role="navigation" id="w-node-_0b21113b-7a5c-4699-b99e-7ce5cdc09a0d-8b666d31" class="nav_menu w-nav-menu">
                   <div class="nav_menu-block">
                     <div class="nav_link-list">
                       <div class="margin-bottom margin-medium">
@@ -80,12 +81,13 @@ body {
                       </div>
                       <a href="websites.html" class="nav_link">Websites</a>
                       <a href="#" class="nav_link is-muted">Mobile Apps (Coming Soon)</a>
+                      <a href="index.html" class="nav_link is-muted"></a>
                     </div>
                     <div class="nav_link-list">
                       <div class="margin-bottom margin-medium">
                         <div class="nav_title">Resources</div>
                       </div>
-                      <a href="blog.html" aria-current="page" class="nav_link w--current">Notes</a>
+                      <a href="blog.html" aria-current="page" class="nav_link w--current">Think Tank</a>
                       <a href="#" class="nav_link is-muted">Videos (Coming Soon)</a>
                     </div>
                     <div class="nav_link-list">
@@ -115,14 +117,14 @@ body {
               <div class="blog_header">
                 <div class="blog_header-content">
                   <div class="margin-bottom margin-small">
-                    <div class="text-size-small text-color-green">Knowledge Graph</div>
+                    <div class="text-size-small text-color-green">Think Tank</div>
                   </div>
                   <div class="margin-bottom margin-small">
                     <div class="max-width-large">
-                      <h1 class="text-weight-medium">Notes & Ideas</h1>
+                      <h1 class="text-weight-medium">Think Tank</h1>
                     </div>
                   </div>
-                  <p class="text-size-small blog_description">Interconnected thoughts on tech, design, business, and creative workflows. Explore the graph to see how ideas connect.</p>
+                  <p class="text-size-small blog_description">Visualize your thoughts, dreams, and ideas as an interconnected network. Explore the 3D Mind Map to see how your mind connects concepts, insights, and creative visions.</p>
                 </div>
                 
                 <!-- Subtle Collaborator Sign In (bottom-right corner, low opacity) -->
@@ -140,7 +142,7 @@ body {
                 <div class="blog_auth-actions" id="blog-auth-actions" style="display: none;">
                   <a href="upload.html" class="button is-course w-inline-block">
                     <div class="button_bg"></div>
-                    <div class="button_text">New Note</div>
+                    <div class="button_text">New Thought</div>
                   </a>
                   <button type="button" id="blog-sign-out" class="blog_sign-out-btn">Sign Out</button>
                 </div>
@@ -149,7 +151,7 @@ body {
                 <div class="blog_controls">
                   <!-- Search Input -->
                   <div class="blog_search-wrapper">
-                    <input type="text" id="blog-search" class="blog_search-input" placeholder="Search notes..." aria-label="Search notes">
+                    <input type="text" id="blog-search" class="blog_search-input" placeholder="Search thoughts..." aria-label="Search thoughts">
                     <svg class="blog_search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="11" cy="11" r="8"></circle>
                       <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -196,7 +198,7 @@ body {
                       aria-selected="false"
                       aria-controls="blog-graph-view"
                       id="graph-toggle-btn"
-                      aria-label="Switch to graph view"
+                      aria-label="Switch to Mind Map view"
                     >
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"></circle>
@@ -234,7 +236,7 @@ body {
                     <!-- Posts will be rendered by JavaScript -->
                     <div class="blog_loading">
                       <div class="blog_loading-spinner"></div>
-                      <p>Loading notes...</p>
+                      <p>Loading thoughts...</p>
                     </div>
                   </div>
                 </div>
@@ -245,7 +247,7 @@ body {
                     <!-- Graph Sidebar -->
                     <aside class="blog_graph-sidebar" id="graph-sidebar">
                       <div class="blog_graph-sidebar-header">
-                        <h3 class="blog_graph-sidebar-title">Graph view</h3>
+                        <h3 class="blog_graph-sidebar-title">Mind Map</h3>
                       </div>
                       
                       <!-- Filters Section -->
@@ -291,6 +293,19 @@ body {
                         </button>
                         <div class="blog_graph-section-content" id="groups-content" hidden>
                           <!-- Groups content will be populated by JavaScript -->
+                        </div>
+                      </div>
+                      
+                      <!-- Camera Controls Section -->
+                      <div class="blog_graph-sidebar-section">
+                        <button type="button" class="blog_graph-section-toggle" data-section="camera" aria-expanded="false">
+                          <span class="blog_graph-section-icon">►</span>
+                          <span class="blog_graph-section-title">Camera</span>
+                        </button>
+                        <div class="blog_graph-section-content" id="camera-content" hidden>
+                          <button type="button" id="orbit-toggle-btn" class="blog_graph-button" style="width: 100%; margin-bottom: 10px;">
+                            Pause Orbit
+                          </button>
                         </div>
                       </div>
                       
@@ -384,13 +399,13 @@ body {
                               <line x1="9.5" y1="9.5" x2="7" y2="7"></line>
                               <line x1="14.5" y1="14.5" x2="17" y2="17"></line>
                             </svg>
-                            <p>Click a node to explore connections</p>
+                            <p>Click a Thought Session to explore connections</p>
                             <p class="blog_graph-hint">Drag to rotate • Scroll to zoom</p>
                           </div>
                         </div>
                       </div>
                       <div class="blog_graph-controls">
-                        <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset graph view">
+                        <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset Think Tank view">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
                             <path d="M3 3v5h5"></path>
@@ -418,7 +433,7 @@ body {
                 <div class="blog_modal-backdrop"></div>
                 <div class="blog_modal-content">
                   <div class="blog_modal-header">
-                    <h2 class="blog_modal-title" id="edit-modal-title">Edit Note</h2>
+                    <h2 class="blog_modal-title" id="edit-modal-title">Edit Thought</h2>
                     <button type="button" class="blog_modal-close" id="edit-note-close" aria-label="Close modal">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -435,7 +450,7 @@ body {
                         name="title" 
                         class="blog_edit-input" 
                         required
-                        placeholder="Note title"
+                        placeholder="Thought title"
                       >
                     </div>
                     <div class="blog_edit-field">
@@ -445,7 +460,7 @@ body {
                         name="content" 
                         class="blog_edit-textarea" 
                         rows="10"
-                        placeholder="Note content (Markdown supported)"
+                        placeholder="Thought content (Markdown supported)"
                       ></textarea>
                     </div>
                     <div class="blog_edit-field">
@@ -470,7 +485,7 @@ body {
                 <div class="blog_modal-backdrop"></div>
                 <div class="blog_modal-content">
                   <div class="blog_modal-header">
-                    <h2 class="blog_modal-title" id="modal-title">Note Title</h2>
+                    <h2 class="blog_modal-title" id="modal-title">Thought</h2>
                     <button type="button" class="blog_modal-close" aria-label="Close modal">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -487,7 +502,7 @@ body {
                       <!-- Full content will be rendered here -->
                     </div>
                     <div class="blog_modal-related">
-                      <h4 class="blog_modal-related-title">Related Notes</h4>
+                      <h4 class="blog_modal-related-title">Related Thought Sessions</h4>
                       <div class="blog_modal-related-list" id="modal-related-notes"></div>
                     </div>
                   </div>
@@ -500,13 +515,13 @@ body {
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <p>No notes found</p>
+                <p>No thoughts found</p>
                 <button type="button" class="blog_empty-reset" id="clear-filters">Clear filters</button>
               </div>
 
               <!-- Graph Unavailable Notice -->
               <div class="blog_graph-unavailable" id="graph-unavailable" hidden>
-                <p>Graph view is not available on this device.</p>
+                <p>Think Tank view is not available on this device.</p>
               </div>
 
             </div>
@@ -530,7 +545,7 @@ body {
         <!-- Graph Sidebar -->
         <aside class="blog_graph-sidebar" id="graph-sidebar">
           <div class="blog_graph-sidebar-header">
-            <h3 class="blog_graph-sidebar-title" id="graph-modal-title">Graph view</h3>
+            <h3 class="blog_graph-sidebar-title" id="graph-modal-title">Mind Map</h3>
           </div>
           
           <!-- Filters Section -->
