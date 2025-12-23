@@ -17,7 +17,7 @@
    ========================================================================== */
 
 .media-controls {
-  display: none; /* Hidden by default, shown only when audio is playing */
+  display: none;
   position: fixed;
   bottom: 2rem;
   left: 50%;
