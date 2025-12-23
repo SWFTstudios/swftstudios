@@ -89,34 +89,192 @@ async function commitFile(owner, repo, path, content, message, token, sha = null
   return await response.json();
 }
 
+// Helper to get file type label from filename or URL
+function getFileTypeLabel(filename, url) {
+  const name = filename || url || '';
+  const ext = name.split('.').pop().toLowerCase();
+  
+  const typeMap = {
+    // Documents
+    'pdf': 'PDF Document',
+    'docx': 'Word Document',
+    'doc': 'Word Document',
+    'xlsx': 'Excel Spreadsheet',
+    'xls': 'Excel Spreadsheet',
+    'pptx': 'PowerPoint Presentation',
+    'ppt': 'PowerPoint Presentation',
+    'txt': 'Text Document',
+    'rtf': 'Rich Text Format',
+    'odt': 'OpenDocument Text',
+    'ods': 'OpenDocument Spreadsheet',
+    'odp': 'OpenDocument Presentation',
+    // Images
+    'jpg': 'Image',
+    'jpeg': 'Image',
+    'png': 'Image',
+    'gif': 'Image',
+    'webp': 'Image',
+    'svg': 'Image',
+    'bmp': 'Image',
+    'ico': 'Image',
+    // Videos
+    'mp4': 'Video',
+    'mov': 'Video',
+    'webm': 'Video',
+    'avi': 'Video',
+    'mkv': 'Video',
+    'flv': 'Video',
+    'wmv': 'Video',
+    // Audio
+    'mp3': 'Audio',
+    'wav': 'Audio',
+    'm4a': 'Audio',
+    'aac': 'Audio',
+    'ogg': 'Audio',
+    'flac': 'Audio',
+    'wma': 'Audio',
+  };
+  
+  return typeMap[ext] || 'File';
+}
+
+// Helper to determine primary category from attachments
+function getPrimaryCategory(attachments, content) {
+  if (!attachments || attachments.length === 0) {
+    return content ? 'text' : 'text';
+  }
+  
+  // Count attachment types
+  const typeCounts = {};
+  attachments.forEach(att => {
+    const type = att.type || 'file';
+    typeCounts[type] = (typeCounts[type] || 0) + 1;
+  });
+  
+  // Return most common type
+  const sorted = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
+  return sorted[0]?.[0] || 'file';
+}
+
 // Generate markdown for a message
 function generateMessageMarkdown(message, index) {
-  let md = `# Message ${index + 1}\n\n`;
-  md += `**Created:** ${new Date(message.created_at).toISOString()}\n\n`;
+  const timestamp = message.created_at ? new Date(message.created_at).toISOString() : new Date().toISOString();
+  const primaryCategory = getPrimaryCategory(message.attachments, message.content);
   
-  if (message.content) {
-    md += `${message.content}\n\n`;
-  }
-
+  // Collect file types from attachments
+  const fileTypes = [];
   if (message.attachments && message.attachments.length > 0) {
-    md += `## Attachments\n\n`;
-    message.attachments.forEach((att, idx) => {
-      if (att.type === 'image' && att.url) {
-        md += `![${att.name || `Image ${idx + 1}`}](${att.url})\n\n`;
-      } else if (att.type === 'audio' && att.url) {
-        md += `[Audio: ${att.name || `Audio ${idx + 1}`}](${att.url})\n\n`;
-      } else if (att.type === 'video' && att.url) {
-        md += `[Video: ${att.name || `Video ${idx + 1}`}](${att.url})\n\n`;
-      } else if (att.url) {
-        md += `[${att.name || `File ${idx + 1}`}](${att.url})\n\n`;
-      }
-      
-      if (att.transcription) {
-        md += `**Transcription:**\n${att.transcription}\n\n`;
+    message.attachments.forEach(att => {
+      const fileType = getFileTypeLabel(att.name, att.url);
+      if (fileType && !fileTypes.includes(fileType)) {
+        fileTypes.push(fileType);
       }
     });
   }
-
+  
+  let md = `# Message ${index + 1}\n\n`;
+  md += `**Timestamp:** ${timestamp}\n`;
+  md += `**Category:** ${primaryCategory}\n`;
+  if (fileTypes.length > 0) {
+    md += `**File Types:** ${fileTypes.join(', ')}\n`;
+  }
+  md += `\n`;
+  
+  // Content section
+  if (message.content) {
+    md += `## Content\n\n`;
+    md += `${message.content}\n\n`;
+  }
+  
+  // Attachments section - organized by type
+  if (message.attachments && message.attachments.length > 0) {
+    md += `## Attachments\n\n`;
+    
+    // Group attachments by type
+    const images = [];
+    const videos = [];
+    const audio = [];
+    const files = [];
+    const urls = [];
+    
+    message.attachments.forEach(att => {
+      const type = att.type || 'file';
+      if (type === 'image') {
+        images.push(att);
+      } else if (type === 'video') {
+        videos.push(att);
+      } else if (type === 'audio') {
+        audio.push(att);
+      } else if (type === 'url' || att.url?.startsWith('http')) {
+        urls.push(att);
+      } else {
+        files.push(att);
+      }
+    });
+    
+    // Images
+    if (images.length > 0) {
+      md += `### Images\n\n`;
+      images.forEach((att, idx) => {
+        const fileType = getFileTypeLabel(att.name, att.url);
+        md += `- ![${att.name || `Image ${idx + 1}`}](${att.url})`;
+        if (att.name) {
+          md += ` - ${att.name}`;
+        }
+        md += ` (${fileType})\n\n`;
+      });
+    }
+    
+    // Videos
+    if (videos.length > 0) {
+      md += `### Videos\n\n`;
+      videos.forEach((att, idx) => {
+        const fileType = getFileTypeLabel(att.name, att.url);
+        const duration = att.duration ? ` - ${att.duration}` : '';
+        md += `- [Video: ${att.name || `Video ${idx + 1}`}](${att.url})${duration} (${fileType})\n\n`;
+      });
+    }
+    
+    // Audio
+    if (audio.length > 0) {
+      md += `### Audio\n\n`;
+      audio.forEach((att, idx) => {
+        const fileType = getFileTypeLabel(att.name, att.url);
+        const duration = att.duration ? ` - ${att.duration}` : '';
+        md += `- [Audio: ${att.name || `Audio ${idx + 1}`}](${att.url})${duration} (${fileType})\n\n`;
+      });
+    }
+    
+    // Files
+    if (files.length > 0) {
+      md += `### Files\n\n`;
+      files.forEach((att, idx) => {
+        const fileType = getFileTypeLabel(att.name, att.url);
+        md += `- [${att.name || `File ${idx + 1}`}](${att.url}) - ${fileType}\n\n`;
+      });
+    }
+    
+    // URLs
+    if (urls.length > 0) {
+      md += `### URLs\n\n`;
+      urls.forEach((att, idx) => {
+        const title = att.name || att.title || att.url || `URL ${idx + 1}`;
+        md += `- [${title}](${att.url})\n\n`;
+      });
+    }
+  }
+  
+  // Transcription section
+  if (message.attachments && message.attachments.some(att => att.transcription)) {
+    md += `## Transcription\n\n`;
+    message.attachments.forEach(att => {
+      if (att.transcription) {
+        md += `${att.transcription}\n\n`;
+      }
+    });
+  }
+  
+  // Tags
   if (message.tags && message.tags.length > 0) {
     md += `**Tags:** ${message.tags.map(t => `\`${t}\``).join(', ')}\n\n`;
   }
@@ -136,13 +294,16 @@ function generateSessionReadme(noteData) {
 
   md += `## Messages\n\n`;
   md += `This thought session contains ${noteData.messages?.length || 0} message(s).\n\n`;
-  md += `Each message is stored in the \`messages/\` directory.\n\n`;
+  md += `Each message is stored as a timestamped markdown file in this directory.\n\n`;
   
   if (noteData.messages && noteData.messages.length > 0) {
     md += `### Message List\n\n`;
     noteData.messages.forEach((msg, idx) => {
+      const timestamp = msg.created_at ? new Date(msg.created_at).toISOString() : new Date().toISOString();
+      const timestampStr = timestamp.replace(/[:.]/g, '-').replace('T', '-').split('.')[0];
+      const filename = `message-${timestampStr}-${idx}.md`;
       const preview = msg.content ? msg.content.substring(0, 100).replace(/\n/g, ' ') : 'No content';
-      md += `${idx + 1}. [Message ${idx + 1}](./messages/message-${idx + 1}.md) - ${preview}...\n`;
+      md += `${idx + 1}. [Message ${idx + 1}](./${filename}) - ${preview}...\n`;
     });
   }
 
@@ -210,9 +371,8 @@ export async function onRequestPost(context) {
       }));
     }
 
-    // Create folder structure: thought-sessions/{session-id}/
-    const sessionFolder = `thought-sessions/${note_id}`;
-    const messagesFolder = `${sessionFolder}/messages`;
+    // Create folder structure: Thought Sessions/{session-id}/
+    const sessionFolder = `Thought Sessions/${note_id}`;
     const assetsFolder = `${sessionFolder}/assets`;
 
     const commits = [];
@@ -234,12 +394,16 @@ export async function onRequestPost(context) {
     );
     commits.push(readmeCommit.commit.sha);
 
-    // 2. Create/update message files
+    // 2. Create/update message files with timestamped filenames
     if (note_data.messages && note_data.messages.length > 0) {
       for (let i = 0; i < note_data.messages.length; i++) {
         const message = note_data.messages[i];
+        const timestamp = message.created_at ? new Date(message.created_at).toISOString() : new Date().toISOString();
+        // Format timestamp for filename: YYYY-MM-DDTHH-mm-ss-sssZ
+        const timestampStr = timestamp.replace(/[:.]/g, '-').replace('T', '-').split('.')[0] + 'Z';
+        const messageFilename = `message-${timestampStr}-${i}.md`;
         const messageContent = generateMessageMarkdown(message, i);
-        const messagePath = `${messagesFolder}/message-${i + 1}.md`;
+        const messagePath = `${sessionFolder}/${messageFilename}`;
         const messageSha = await getFileSha(github_username, repo_name, messagePath, github_access_token);
 
         const messageCommit = await commitFile(

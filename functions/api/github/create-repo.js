@@ -121,17 +121,22 @@ This repository is automatically synced from your SWFT Studios Thought Sessions.
 ## Structure
 
 \`\`\`
-thought-sessions/
+Thought Sessions/
   {session-id}/
     README.md (session metadata)
-    messages/
-      message-1.md
-      message-2.md
+    message-{timestamp}-{index}.md (individual messages)
     assets/
-      image-1.webp
-      audio-1.mp3
-      file-1.pdf
+      images/
+        (image files)
+      videos/
+        (video files)
+      audio/
+        (audio files)
+      files/
+        (PDF, Word, Excel, PowerPoint, etc.)
 \`\`\`
+
+Each thought session is automatically synced when created or updated. Messages are timestamped and can contain multiple content types (text, images, videos, audio, URLs, and various file types).
 
 ## Privacy
 

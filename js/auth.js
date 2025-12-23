@@ -463,15 +463,26 @@
     }
 
     try {
+      const redirectUrl = `${window.location.origin}/auth.html?github_link=true`;
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: `${window.location.origin}/auth.html?github_link=true`,
-          scopes: 'repo'
+          redirectTo: redirectUrl,
+          scopes: 'repo user:email',
+          queryParams: {
+            redirect_to: redirectUrl
+          }
         }
       });
 
       if (error) throw error;
+      
+      // If data.url exists, Supabase will redirect automatically
+      // Otherwise, handle manually
+      if (data?.url) {
+        window.location.href = data.url;
+      }
     } catch (error) {
       console.error('GitHub OAuth error:', error);
       showError('Failed to connect GitHub account. Please try again.');
@@ -485,9 +496,30 @@
     if (!supabase) return;
 
     const urlParams = new URLSearchParams(window.location.search);
-    const isGitHubLink = urlParams.get('github_link') === 'true';
+    const urlHash = new URLSearchParams(window.location.hash.substring(1));
+    
+    // Check for GitHub link flag in query params or hash
+    const isGitHubLink = urlParams.get('github_link') === 'true' || urlHash.get('github_link') === 'true';
+    
+    // Also check for OAuth code/tokens in hash (Supabase redirects to hash)
+    const hasOAuthCode = urlHash.has('access_token') || urlHash.has('code') || urlParams.has('code');
 
-    if (!isGitHubLink) return;
+    // If we have OAuth tokens but no github_link flag, check if session has GitHub provider
+    if (!isGitHubLink && hasOAuthCode) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && session.provider_token && session.user.user_metadata?.provider === 'github') {
+          // This is a GitHub OAuth callback, process it
+          console.log('Detected GitHub OAuth callback via hash');
+        } else {
+          return; // Not a GitHub OAuth callback
+        }
+      } catch (e) {
+        return; // Can't verify, skip
+      }
+    }
+
+    if (!isGitHubLink && !hasOAuthCode) return;
 
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -586,10 +618,18 @@
           .eq('user_id', session.user.id);
 
         // Show success and refresh connection status
-        checkGitHubConnection();
+        await checkGitHubConnection();
         
-        // Remove query param
-        window.history.replaceState({}, '', '/auth.html');
+        // Clean up URL - remove hash and query params
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl);
+        
+        // Redirect to upload page if linking from auth page
+        if (window.location.pathname === '/auth.html') {
+          setTimeout(() => {
+            window.location.href = '/upload.html';
+          }, 1000);
+        }
       } catch (repoError) {
         console.error('Error creating repo:', repoError);
         const errorMessage = repoError.message || 'Failed to create repository';
@@ -600,11 +640,54 @@
         } else {
           showError(`GitHub account linked, but failed to create repository: ${errorMessage}. Create "swft-thought-sessions" manually at https://github.com/new`);
         }
-        checkGitHubConnection();
+        await checkGitHubConnection();
       }
     } catch (error) {
       console.error('GitHub callback error:', error);
       showError('Failed to complete GitHub connection. Please try again.');
+      
+      // Clean up URL even on error
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, '', cleanUrl);
+    }
+  }
+
+  /**
+   * Check for OAuth callback in URL hash (Supabase redirects to hash)
+   */
+  async function checkForOAuthCallback() {
+    if (!supabase) return;
+
+    const urlHash = window.location.hash.substring(1);
+    if (!urlHash) return;
+
+    const hashParams = new URLSearchParams(urlHash);
+    
+    // Check if this is an OAuth callback
+    if (hashParams.has('access_token') || hashParams.has('code')) {
+      try {
+        // Get session to verify OAuth completed
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session after OAuth:', error);
+          return;
+        }
+
+        if (session && session.provider_token) {
+          // Check if this is a GitHub OAuth
+          const provider = session.user.user_metadata?.provider || 
+                          session.user.app_metadata?.provider;
+          
+          if (provider === 'github') {
+            console.log('GitHub OAuth callback detected, processing...');
+            // Process the callback
+            await handleGitHubCallback();
+          }
+        }
+      } catch (error) {
+        console.error('Error checking OAuth callback:', error);
+      }
     }
   }
 
@@ -697,7 +780,10 @@
     // Setup auth state listener
     setupAuthListener();
 
-    // Handle GitHub OAuth callback if present
+    // Check for OAuth callback in URL hash first (Supabase redirects to hash)
+    await checkForOAuthCallback();
+    
+    // Handle GitHub OAuth callback if present (query params)
     await handleGitHubCallback();
 
     // Check GitHub connection status if user is authenticated

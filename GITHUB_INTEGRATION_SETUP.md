@@ -28,7 +28,32 @@ This guide explains how to set up the GitHub integration for Thought Sessions, a
 
 ## 2. GitHub OAuth Configuration
 
-### Step 1: Verify GitHub OAuth App in Supabase
+### Step 1: Configure Site URL and Redirect URLs in Supabase
+
+**CRITICAL**: Supabase requires redirect URLs to be whitelisted before OAuth will work.
+
+1. Go to: https://supabase.com/dashboard/project/mnrteunavnzrglbozpfc/auth/url-configuration
+
+2. **Set Site URL** (if not already set):
+   - Set **Site URL** to: `https://swftstudios.com`
+   - This is the default redirect URL used when no redirect URL is specified
+
+3. Under **"Redirect URLs"**, add the following URLs:
+   - `https://swftstudios.com/upload.html`
+   - `https://swftstudios.com/auth.html`
+   - `http://localhost:5500/upload.html` (for local development)
+   - `http://localhost:5500/auth.html` (for local development)
+   - `http://localhost:8000/upload.html` (for local development if using port 8000)
+   - `http://localhost:8000/auth.html` (for local development if using port 8000)
+
+4. Click **"Save changes"** button at the bottom
+
+**Note**: Without these URLs configured, GitHub OAuth will complete but users won't be redirected back to your site. If you're stuck on GitHub's loading screen, verify:
+- Site URL is set correctly
+- All redirect URLs are added and saved
+- GitHub OAuth app callback URL matches: `https://mnrteunavnzrglbozpfc.supabase.co/auth/v1/callback`
+
+### Step 2: Verify GitHub OAuth App in Supabase
 
 1. Go to: https://supabase.com/dashboard/project/mnrteunavnzrglbozpfc/auth/providers
 2. Find **"GitHub"** in the list
@@ -80,14 +105,35 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 Each thought session is stored as:
 
 ```
-thought-sessions/
+Thought Sessions/
   {session-id}/
     README.md (session metadata)
-    messages/
-      message-1.md
-      message-2.md
+    message-{timestamp}-{index}.md (individual messages with timestamps)
     assets/
-      (small files stored here)
+      images/ (image files)
+      videos/ (video files)
+      audio/ (audio files)
+      files/ (PDF, Word, Excel, PowerPoint, etc.)
+```
+
+### Auto-Sync Behavior
+
+- **Automatic sync**: All thought sessions are automatically synced to GitHub when:
+  - A new session is created
+  - A message is added or updated
+  - Session title or tags are updated
+- **Manual sync**: Users can manually trigger sync using the sync button in the UI
+- **Sync status**: Each session shows its sync status (synced, syncing, not-synced)
+
+### Message Format
+
+Each message file includes:
+- **Timestamp**: ISO format timestamp
+- **Category**: Primary content category (text, audio, video, photo, file, url)
+- **File Types**: Labels for all file types in the message (PDF Document, Word Document, etc.)
+- **Content**: Text content
+- **Attachments**: Organized by type (Images, Videos, Audio, Files, URLs)
+- **Transcription**: Audio/video transcriptions if available
 ```
 
 ### File Storage Strategy
