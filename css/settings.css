@@ -2,6 +2,7 @@
  * Settings Modal Styles
  * 
  * Customization options for tags and 3D graph
+ * Tag Management for persistent and auto tags
  */
 
 /* ==========================================================================
@@ -166,7 +167,7 @@
 }
 
 .color-picker-input:hover {
-  border-color: #6366f1;
+  border-color: #BEFFF2;
 }
 
 .color-picker-preview {
@@ -241,7 +242,7 @@
 
 .slider-value {
   font-weight: 500;
-  color: #6366f1;
+  color: #BEFFF2;
 }
 
 .slider-input {
@@ -260,7 +261,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #6366f1;
+  background: #BEFFF2;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -274,7 +275,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #6366f1;
+  background: #BEFFF2;
   cursor: pointer;
   border: none;
   transition: all 0.2s;
@@ -308,7 +309,7 @@
 
 .select-control:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #BEFFF2;
 }
 
 /* ==========================================================================
@@ -334,7 +335,7 @@
 }
 
 .settings-button.primary {
-  background: #6366f1;
+  background: #BEFFF2;
   color: #fff;
 }
 
@@ -351,6 +352,133 @@
 .settings-button.secondary:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
+}
+
+/* ==========================================================================
+   Tag Management
+   ========================================================================== */
+
+.tag-management-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tag-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tag-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.tag-management-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.tag-management-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.tag-item-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.tag-item-name {
+  font-size: 0.9375rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.tag-item-badge {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: rgba(99, 102, 241, 0.2);
+  color: #BEFFF2;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.tag-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tag-color-picker {
+  width: 40px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.tag-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.tag-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.tag-color-picker::-moz-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.tag-convert-btn,
+.tag-delete-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag-convert-btn:hover {
+  color: #BEFFF2;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.tag-delete-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.settings-hint {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 1rem;
 }
 
 .settings-button.danger {
@@ -398,6 +526,6 @@
 .color-picker-input:focus-visible,
 .slider-input:focus-visible,
 .select-control:focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #BEFFF2;
   outline-offset: 2px;
 }

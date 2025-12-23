@@ -1,7 +1,8 @@
 /**
- * SWFT Notes Chat Interface
+ * SWFT Thought Sessions Chat Interface
  * 
- * Chat messenger-style note upload with threads, auto-tagging, and multi-format support
+ * Chat messenger-style Thought Session creation with threads, auto-tagging, and multi-format support
+ * Messages are called "Ideas" - individual text, URLs, images, videos, and audio files
  */
 
 (function() {
@@ -90,7 +91,7 @@
     }
     // Fallback to default colors
     const defaultColors = {
-      'design': '#6366f1',
+      'design': '#BEFFF2',
       'idea': '#10b981',
       'personal': '#8b5cf6',
       'tech': '#3b82f6',
@@ -98,7 +99,7 @@
       'tutorial': '#ef4444'
     };
     const normalizedTag = tag.toLowerCase();
-    return defaultColors[normalizedTag] || '#6366f1';
+    return defaultColors[normalizedTag] || '#BEFFF2';
   }
   
   /**
@@ -145,7 +146,7 @@
     sendBtn: document.getElementById('send-btn'),
     signOutBtn: document.getElementById('sign-out-btn'),
     settingsBtn: document.getElementById('settings-btn'),
-    previewToggle: document.getElementById('preview-toggle'),
+    audioRecordBtn: document.getElementById('audio-record-btn'),
     imageFileInput: document.getElementById('image-file-input'),
     audioFileInput: document.getElementById('audio-file-input'),
     videoFileInput: document.getElementById('video-file-input'),
@@ -758,7 +759,7 @@
                   // Defensive check: ensure functions are available
                   const tagColor = (typeof getTagColor === 'function') 
                     ? getTagColor(tag) 
-                    : '#6366f1'; // fallback color
+                    : '#BEFFF2'; // fallback color
                   const contrastColor = (typeof getContrastColor === 'function')
                     ? getContrastColor(tagColor)
                     : '#ffffff'; // fallback to white text
@@ -2002,9 +2003,15 @@ ${content}
       }
     }
 
-    // Preview toggle
-    if (elements.previewToggle) {
-      elements.previewToggle.addEventListener('click', togglePreview);
+    // Audio recording button (replaced preview toggle)
+    if (elements.audioRecordBtn) {
+      elements.audioRecordBtn.addEventListener('click', () => {
+        if (state.isRecording) {
+          stopVoiceRecording();
+        } else {
+          startVoiceRecording();
+        }
+      });
     }
 
     // Attachment modal close
@@ -3108,6 +3115,12 @@ ${content}
       state.isRecording = true;
       state.recordingStartTime = Date.now();
 
+      // Update recording button state
+      if (elements.audioRecordBtn) {
+        elements.audioRecordBtn.classList.add('recording');
+        elements.audioRecordBtn.setAttribute('aria-label', 'Stop recording');
+      }
+
       // Show recording UI
       if (elements.voiceRecordingContainer) {
         elements.voiceRecordingContainer.hidden = false;
@@ -3131,6 +3144,12 @@ ${content}
     if (!state.isRecording) return;
 
     state.isRecording = false;
+
+    // Update recording button state
+    if (elements.audioRecordBtn) {
+      elements.audioRecordBtn.classList.remove('recording');
+      elements.audioRecordBtn.setAttribute('aria-label', 'Record audio');
+    }
 
     // Stop MediaRecorder
     if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {

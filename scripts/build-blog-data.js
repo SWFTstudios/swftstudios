@@ -32,7 +32,7 @@ const CONFIG = {
   outputDir: 'data',
   excerptLength: 200,
   tagColors: {
-    'default': '#6366f1',
+    'default': '#BEFFF2',
     'tech': '#3b82f6',
     'design': '#ec4899',
     'business': '#10b981',

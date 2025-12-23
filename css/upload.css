@@ -15,15 +15,15 @@
   --theme-bg-secondary: rgba(255, 255, 255, 0.02);
   --theme-bg-tertiary: rgba(255, 255, 255, 0.05);
   --theme-bg-hover: rgba(255, 255, 255, 0.08);
-  --theme-bg-active: rgba(93, 173, 226, 0.15);
+  --theme-bg-active: rgba(190, 255, 242, 0.15);
   --theme-text-primary: #ffffff;
   --theme-text-secondary: rgba(255, 255, 255, 0.7);
   --theme-text-tertiary: rgba(255, 255, 255, 0.5);
   --theme-text-muted: rgba(255, 255, 255, 0.4);
   --theme-border: rgba(255, 255, 255, 0.08);
   --theme-border-hover: rgba(255, 255, 255, 0.12);
-  --theme-accent: #5DADE2;
-  --theme-accent-hover: #3498DB;
+  --theme-accent: #BEFFF2;
+  --theme-accent-hover: #A8FFE8;
   --theme-shadow: rgba(0, 0, 0, 0.5);
   --theme-backdrop: rgba(0, 0, 0, 0.8);
 }
@@ -48,8 +48,8 @@ body {
   --theme-text-muted: #adb5bd;
   --theme-border: rgba(0, 0, 0, 0.1);
   --theme-border-hover: rgba(0, 0, 0, 0.15);
-  --theme-accent: #5DADE2;
-  --theme-accent-hover: #3498DB;
+  --theme-accent: #BEFFF2;
+  --theme-accent-hover: #A8FFE8;
   --theme-shadow: rgba(0, 0, 0, 0.1);
   --theme-backdrop: rgba(0, 0, 0, 0.5);
 }
@@ -1010,7 +1010,7 @@ body {
 
 .attachment-thumbnail-icon.file-icon.text-file {
   background: rgba(52, 152, 219, 0.1);
-  color: #3498db;
+  color: #BEFFF2;
 }
 
 .attachment-thumbnail:hover .attachment-thumbnail-icon.file-icon {
@@ -1019,7 +1019,7 @@ body {
 }
 
 .attachment-thumbnail:hover .attachment-thumbnail-icon.file-icon.text-file {
-  background: #3498db;
+  background: #BEFFF2;
   color: white;
 }
 
@@ -1063,7 +1063,7 @@ body {
 
 .attachment-file-icon.text-file {
   background: rgba(52, 152, 219, 0.1);
-  color: #3498db;
+  color: #BEFFF2;
 }
 
 .attachment-file-icon.code-file {
@@ -1369,8 +1369,8 @@ body {
   color: var(--theme-text-muted);
 }
 
-/* Preview Toggle Button */
-.preview-toggle-btn {
+/* Audio Recording Button */
+.audio-record-btn {
   background: none;
   border: none;
   color: var(--theme-text-tertiary);
@@ -1383,14 +1383,26 @@ body {
   justify-content: center;
 }
 
-.preview-toggle-btn:hover {
+.audio-record-btn:hover {
   color: var(--theme-accent);
   background: var(--theme-bg-active);
 }
 
-.preview-toggle-btn.active {
-  color: var(--theme-accent);
-  background: var(--theme-bg-active);
+.audio-record-btn.recording {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  animation: pulse-recording 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-recording {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
 }
 
 /* Markdown Preview */
@@ -2182,7 +2194,7 @@ body {
 .thread-item:focus-visible,
 .attachment-menu-item:focus-visible,
 .tag-suggestion:focus-visible,
-.preview-toggle-btn:focus-visible,
+.audio-record-btn:focus-visible,
 #theme-toggle:focus-visible,
 .voice-recording-stop:focus-visible {
   outline: 2px solid var(--theme-accent);

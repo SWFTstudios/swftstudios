@@ -56,7 +56,7 @@
 
 .media-control-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(93, 173, 226, 0.5);
+  border-color: rgba(190, 255, 242, 0.5);
   transform: scale(1.05);
 }
 
@@ -73,9 +73,48 @@
    Blog Section Container
    ========================================================================== */
 
+/* Prevent horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.page-wrapper {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.main-wrapper {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 .section_blog {
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.padding-global {
+  max-width: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: clamp(1rem, 4vw, 1.5rem);
+  padding-right: clamp(1rem, 4vw, 1.5rem);
+}
+
+.container-large {
+  max-width: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Ensure padding-section doesn't cause overflow */
+.padding-section-large {
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
@@ -185,7 +224,7 @@
 
 .blog_search-input:focus {
   outline: none;
-  border-color: var(--primary-color, #6366f1);
+  border-color: var(--primary-color, #BEFFF2);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -232,7 +271,7 @@
 }
 
 .blog_view-btn:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -279,7 +318,33 @@
 }
 
 .blog_sort-select:focus {
-  border-color: var(--primary-color, #6366f1);
+  border-color: var(--primary-color, #BEFFF2);
+}
+
+/* Clear Filters Button */
+.blog_clear-filters-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+  white-space: nowrap;
+}
+
+.blog_clear-filters-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.blog_clear-filters-btn:focus {
+  border-color: var(--primary-color, #BEFFF2);
+  outline: 2px solid var(--primary-color, #BEFFF2);
+  outline-offset: 2px;
 }
 
 /* ==========================================================================
@@ -309,13 +374,13 @@
 }
 
 .blog_tag-btn.is-active {
-  background: var(--primary-color, #6366f1);
-  border-color: var(--primary-color, #6366f1);
+  background: var(--primary-color, #BEFFF2);
+  border-color: var(--primary-color, #BEFFF2);
   color: #fff;
 }
 
 .blog_tag-btn:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -361,12 +426,12 @@
 
 .blog_author-btn.is-active {
   background: rgba(99, 102, 241, 0.2);
-  border-color: var(--primary-color, #6366f1);
-  color: var(--primary-color, #6366f1);
+  border-color: var(--primary-color, #BEFFF2);
+  color: var(--primary-color, #BEFFF2);
 }
 
 .blog_author-btn:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -493,13 +558,13 @@
 }
 
 .blog_card:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
 .blog_card.is-highlighted {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: var(--primary-color, #6366f1);
+  background: rgba(190, 255, 242, 0.1);
+  border-color: var(--primary-color, #BEFFF2);
 }
 
 .blog_card-header {
@@ -637,15 +702,68 @@
 }
 
 .blog_graph-modal-close:focus-visible {
-  outline: 2px solid #5DADE2;
+  outline: 2px solid #BEFFF2;
   outline-offset: 2px;
 }
 
 /* Graph Layout with Sidebar */
 .blog_graph-layout {
   display: flex;
+  flex-direction: column;
   height: 100%;
   min-height: 500px;
+  position: relative;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Sidebar positioning - overlay on all screens when visible */
+.blog_graph-sidebar:not([hidden]) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  max-width: min(85vw, 280px);
+  z-index: 200;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  background: rgba(20, 20, 30, 0.95);
+  backdrop-filter: blur(8px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Adjust graph main when sidebar is visible */
+.blog_graph-layout.sidebar-visible .blog_graph-main {
+  margin-left: 280px;
+}
+
+@media (max-width: 767px) {
+  .blog_graph-layout.sidebar-visible .blog_graph-main {
+    margin-left: 0;
+  }
+  
+  .blog_graph-sidebar:not([hidden]) {
+    width: min(280px, 85vw);
+    max-width: min(85vw, 280px);
+  }
+}
+
+/* Ensure graph layout doesn't overflow */
+.blog_graph-layout {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.blog_graph-view {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.blog_content {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .blog_graph-sidebar {
@@ -658,6 +776,18 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: relative;
+  z-index: 100;
+}
+
+/* Ensure sidebar is visible when not hidden */
+.blog_graph-sidebar:not([hidden]) {
+  display: flex !important;
+}
+
+/* Hide sidebar when hidden attribute is present */
+.blog_graph-sidebar[hidden] {
+  display: none !important;
 }
 
 .blog_graph-sidebar-header {
@@ -733,7 +863,7 @@
 
 .blog_graph-search-input:focus {
   outline: none;
-  border-color: rgba(93, 173, 226, 0.5);
+  border-color: rgba(190, 255, 242, 0.5);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -787,13 +917,35 @@
 
 .blog_graph-toggle input[type="checkbox"]:checked + .blog_graph-toggle-slider::before {
   transform: translateX(20px);
-  background: #5DADE2;
+  background: #BEFFF2;
 }
 
 .blog_graph-toggle-label {
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.7);
   transition: color 0.2s;
+}
+
+.blog_graph-button {
+  padding: 0.5rem 1rem;
+  background: rgba(93, 173, 226, 0.2);
+  border: 1px solid rgba(93, 173, 226, 0.4);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blog_graph-button:hover {
+  background: rgba(93, 173, 226, 0.3);
+  border-color: rgba(93, 173, 226, 0.6);
+  color: #fff;
+}
+
+.blog_graph-button:focus-visible {
+  outline: 2px solid #BEFFF2;
+  outline-offset: 2px;
 }
 
 .blog_graph-toggle:hover .blog_graph-toggle-label {
@@ -833,7 +985,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #5DADE2;
+  background: #BEFFF2;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -846,7 +998,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #5DADE2;
+  background: #BEFFF2;
   cursor: pointer;
   border: none;
   transition: background 0.2s;
@@ -885,7 +1037,7 @@
 }
 
 .blog_graph-color-input:hover {
-  border-color: rgba(93, 173, 226, 0.5);
+  border-color: rgba(190, 255, 242, 0.5);
 }
 
 .blog_graph-select-group {
@@ -919,7 +1071,7 @@
 
 .blog_graph-select:focus {
   outline: none;
-  border-color: rgba(93, 173, 226, 0.5);
+  border-color: rgba(190, 255, 242, 0.5);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -953,6 +1105,28 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Graph control buttons when directly in blog_graph-main */
+.blog_graph-main > .blog_graph-control-btn {
+  position: absolute;
+  top: 1rem;
+  z-index: 10;
+}
+
+.blog_graph-main > .blog_graph-control-btn:first-of-type {
+  right: calc(1rem + 140px); /* Position first button (settings) to the left */
+}
+
+.blog_graph-main > .blog_graph-control-btn:nth-of-type(2) {
+  right: calc(1rem + 70px); /* Position second button (reset) in middle */
+}
+
+.blog_graph-main > .blog_graph-control-btn:nth-of-type(3) {
+  right: 1rem; /* Position third button (fit) at right */
 }
 
 .blog_graph-container {
@@ -960,6 +1134,9 @@
   height: 100%;
   flex: 1;
   min-height: 500px;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Graph Placeholder */
@@ -1020,10 +1197,21 @@
     display: none;
   }
   
+  /* Keep Settings label visible on mobile */
+  #graph-settings-toggle .blog_graph-control-label {
+    display: inline-block;
+  }
+  
   .blog_graph-control-btn {
     padding: 0.5rem;
     min-width: 44px;
     justify-content: center;
+  }
+  
+  /* Settings button needs more width on mobile to accommodate text */
+  #graph-settings-toggle {
+    min-width: auto;
+    padding: 0.5rem 0.75rem;
   }
 }
 
@@ -1033,7 +1221,7 @@
 }
 
 .blog_graph-control-btn:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -1055,7 +1243,7 @@
   width: 32px;
   height: 32px;
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--primary-color, #6366f1);
+  border-top-color: var(--primary-color, #BEFFF2);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -1070,7 +1258,7 @@
    ========================================================================== */
 
 .blog_empty {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -1219,7 +1407,7 @@
 }
 
 .blog_modal-close:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -1339,7 +1527,7 @@
 }
 
 .blog-message-content a {
-  color: #5DADE2;
+  color: #BEFFF2;
   text-decoration: underline;
 }
 
@@ -1376,7 +1564,7 @@
   background: rgba(93, 173, 226, 0.1);
   border: 1px solid rgba(93, 173, 226, 0.3);
   border-radius: 6px;
-  color: #5DADE2;
+  color: #BEFFF2;
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -1384,7 +1572,7 @@
 
 .blog-view-transcript-btn:hover {
   background: rgba(93, 173, 226, 0.2);
-  border-color: rgba(93, 173, 226, 0.5);
+  border-color: rgba(190, 255, 242, 0.5);
 }
 
 /* PDF-like Transcript Modal */
@@ -1665,7 +1853,7 @@
   background: rgba(99, 102, 241, 0.1);
   border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: 4px;
-  color: var(--primary-color, #6366f1);
+  color: var(--primary-color, #BEFFF2);
   font-size: 0.875rem;
   text-decoration: none;
   cursor: pointer;
@@ -1718,7 +1906,7 @@
 }
 
 .blog_related-note-tile:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -1856,7 +2044,7 @@
    ========================================================================== */
 
 .blog_card:focus-within {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -1920,7 +2108,7 @@
 .blog_edit-input:focus,
 .blog_edit-textarea:focus {
   outline: none;
-  border-color: var(--primary-color, #6366f1);
+  border-color: var(--primary-color, #BEFFF2);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -1963,12 +2151,12 @@
 }
 
 .blog_edit-btn-save {
-  background: var(--primary-color, #6366f1);
+  background: var(--primary-color, #BEFFF2);
   color: #fff;
 }
 
 .blog_edit-btn-save:hover {
-  background: var(--primary-color-hover, #4f46e5);
+  background: var(--primary-color-hover, #A8FFE8);
 }
 
 .blog_edit-btn-save:disabled {
@@ -2014,7 +2202,7 @@
 
 .blog_edit-btn:focus-visible,
 .blog_delete-btn:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 
@@ -2100,7 +2288,7 @@
 }
 
 .blog_mindmap-modal-close:focus-visible {
-  outline: 2px solid #5DADE2;
+  outline: 2px solid #BEFFF2;
   outline-offset: 2px;
 }
 

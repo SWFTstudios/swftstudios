@@ -99,7 +99,7 @@
 
 .auth-toggle-btn.active {
   background: rgba(99, 102, 241, 0.2);
-  color: #6366f1;
+  color: #BEFFF2;
 }
 
 .auth-method {
@@ -141,7 +141,7 @@
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary-color, #6366f1);
+  border-color: var(--primary-color, #BEFFF2);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -174,9 +174,9 @@
 }
 
 .auth-button.primary {
-  background: var(--primary-color, #6366f1);
+  background: var(--primary-color, #BEFFF2);
   color: #fff;
-  border-color: var(--primary-color, #6366f1);
+  border-color: var(--primary-color, #BEFFF2);
 }
 
 .auth-button.primary:hover:not(:disabled) {
@@ -313,7 +313,7 @@
 }
 
 .auth-link {
-  color: var(--primary-color, #6366f1);
+  color: var(--primary-color, #BEFFF2);
   text-decoration: none;
   transition: color 0.2s;
 }
@@ -352,7 +352,7 @@
 .auth-button:focus-visible,
 .form-input:focus-visible,
 .auth-link:focus-visible {
-  outline: 2px solid var(--primary-color, #6366f1);
+  outline: 2px solid var(--primary-color, #BEFFF2);
   outline-offset: 2px;
 }
 

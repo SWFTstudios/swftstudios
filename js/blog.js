@@ -58,7 +58,13 @@
     orbitActive: true, // Camera orbit animation state
     orbitAngle: 0, // Current orbit angle
     orbitInterval: null, // Interval ID for orbit animation
-    orbitSpeed: Math.PI / 5000, // Orbit speed (adjustable via slider)
+    orbitSpeed: 180, // Orbit speed (0-360 scale, 0=no orbit, 360=full speed)
+    currentOrbitSpeed: 180, // Current actual orbit speed (for easing)
+    targetOrbitSpeed: 180, // Target orbit speed (for easing)
+    orbitAnimationFrame: null, // RequestAnimationFrame ID
+    orbitEasingStartTime: null, // Easing start timestamp
+    orbitEasingFromSpeed: 180, // Speed when easing started
+    orbitIsEasing: false, // Whether currently easing
     bloomPass: null, // Reference to bloom pass for brightness control
     threeJsWarningLogged: false, // Track if we've logged THREE.js warning
     currentMedia: null, // Currently playing audio/video element
@@ -78,14 +84,17 @@
     graphDisplay: {
       nodeColor: '#ffffff',
       linkColor: '#ffffff',
-      highlightColor: '#5DADE2',
+      highlightColor: '#BEFFF2',
       linkWidth: 0.5, // Thin lines by default
-      sessionColor: '#5da3ff',
+      sessionColor: '#BEFFF2',
       messageColor: '#ffffff',
       tagOverrides: {}
     },
     orbitResumeTimer: null,
-    autoFitTimer: null
+    autoFitTimer: null,
+    lastNodeClick: null, // Track last clicked node for double-click detection
+    lastNodeClickTime: 0, // Timestamp of last node click
+    orbitAutoResumeTimer: null // Timer for auto-resuming orbit after 90 seconds of inactivity when paused
   };
 
   // ==========================================================================
@@ -105,6 +114,8 @@
     graphToggleBtn: document.getElementById('graph-toggle-btn'),
     graphResetBtn: document.getElementById('graph-reset'),
     graphZoomFitBtn: document.getElementById('graph-zoom-fit'),
+    graphSettingsToggle: document.getElementById('graph-settings-toggle'),
+    graphSettingsSave: document.getElementById('graph-settings-save'),
     graphUnavailable: document.getElementById('graph-unavailable'),
     emptyState: document.getElementById('blog-empty'),
     clearFiltersBtn: document.getElementById('clear-filters'),
@@ -210,6 +221,126 @@
     } catch (e) {
       console.warn('Failed to save color prefs', e);
     }
+  }
+
+  /**
+   * Save all graph settings to localStorage
+   */
+  function saveGraphSettings() {
+    try {
+      const settings = {
+        graphDisplay: {
+          nodeColor: state.graphDisplay.nodeColor,
+          linkColor: state.graphDisplay.linkColor,
+          highlightColor: state.graphDisplay.highlightColor,
+          linkWidth: state.graphDisplay.linkWidth,
+          sessionColor: state.graphDisplay.sessionColor,
+          messageColor: state.graphDisplay.messageColor,
+          tagOverrides: state.graphDisplay.tagOverrides
+        },
+        graphForces: {
+          center: state.graphForces.center,
+          repel: state.graphForces.repel,
+          link: state.graphForces.link,
+          distance: state.graphForces.distance
+        },
+        orbitSpeed: state.orbitSpeed,
+        bloomBrightness: state.bloomPass ? state.bloomPass.strength : 1.5
+      };
+      localStorage.setItem('graphSettings', JSON.stringify(settings));
+      // Also save color prefs for backward compatibility
+      saveColorPrefs();
+    } catch (e) {
+      console.warn('Failed to save graph settings', e);
+    }
+  }
+
+  /**
+   * Load all graph settings from localStorage
+   */
+  function loadGraphSettings() {
+    try {
+      const saved = localStorage.getItem('graphSettings');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.graphDisplay) {
+          Object.assign(state.graphDisplay, parsed.graphDisplay);
+          // Update UI controls
+          if (elements.displayNodeColor) elements.displayNodeColor.value = state.graphDisplay.nodeColor;
+          if (elements.displayLinkColor) elements.displayLinkColor.value = state.graphDisplay.linkColor;
+          if (elements.displayHighlightColor) elements.displayHighlightColor.value = state.graphDisplay.highlightColor;
+          if (elements.displayLinkWidth) elements.displayLinkWidth.value = state.graphDisplay.linkWidth;
+          if (elements.displaySessionColor) elements.displaySessionColor.value = state.graphDisplay.sessionColor;
+          if (elements.displayMessageColor) elements.displayMessageColor.value = state.graphDisplay.messageColor;
+        }
+        if (parsed.graphForces) {
+          Object.assign(state.graphForces, parsed.graphForces);
+          // Update UI controls
+          if (elements.forceCenter) elements.forceCenter.value = state.graphForces.center;
+          if (elements.forceRepel) elements.forceRepel.value = state.graphForces.repel;
+          if (elements.forceLink) elements.forceLink.value = state.graphForces.link;
+          if (elements.forceDistance) elements.forceDistance.value = state.graphForces.distance;
+        }
+        if (parsed.orbitSpeed !== undefined) {
+          state.orbitSpeed = parsed.orbitSpeed;
+          if (elements.orbitSpeedSlider) elements.orbitSpeedSlider.value = parsed.orbitSpeed;
+        } else {
+          // Default to 180 (half speed) if not saved
+          state.orbitSpeed = 180;
+        }
+        if (parsed.bloomBrightness !== undefined) {
+          if (state.bloomPass) {
+            state.bloomPass.strength = parsed.bloomBrightness;
+          }
+          if (elements.bloomBrightnessSlider) elements.bloomBrightnessSlider.value = parsed.bloomBrightness;
+        }
+      }
+      // Also load color prefs for backward compatibility
+      loadColorPrefs();
+    } catch (e) {
+      console.warn('Failed to load graph settings', e);
+      // Fallback to color prefs only
+      loadColorPrefs();
+    }
+  }
+
+  /**
+   * Check if sidebar is visible and log its state
+   */
+  function checkSidebarVisibility() {
+    const sidebar = elements.graphSidebar;
+    if (!sidebar) {
+      console.log('[Settings Debug] Sidebar element not found');
+      return false;
+    }
+    
+    const isHidden = sidebar.hasAttribute('hidden');
+    const computedStyle = window.getComputedStyle(sidebar);
+    const zIndex = computedStyle.zIndex;
+    const display = computedStyle.display;
+    const visibility = computedStyle.visibility;
+    const opacity = computedStyle.opacity;
+    const rect = sidebar.getBoundingClientRect();
+    
+    const isVisible = !isHidden && display !== 'none' && visibility !== 'hidden' && opacity !== '0';
+    
+    console.log('[Settings Debug] Sidebar visibility check:', {
+      isHidden: isHidden,
+      display: display,
+      visibility: visibility,
+      opacity: opacity,
+      zIndex: zIndex,
+      isVisible: isVisible,
+      boundingRect: {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height
+      },
+      isInViewport: rect.width > 0 && rect.height > 0 && rect.top >= 0 && rect.left >= 0
+    });
+    
+    return isVisible;
   }
 
   /**
@@ -960,7 +1091,7 @@
     }
     
     // Fallback to a default vibrant color
-    return '#5DADE2'; // SWFT accent color as fallback
+    return '#BEFFF2'; // SWFT accent color as fallback
   }
   
   function buildGraphData(posts) {
@@ -1215,6 +1346,12 @@
     console.log(`[fetchGraphData] Building graph from ${state.posts.length} posts...`);
     state.graphData = buildGraphData(state.posts);
     console.log(`[fetchGraphData] Graph built: ${state.graphData.nodes.length} nodes, ${state.graphData.links.length} links`);
+    
+    // Hide empty state if graph has nodes (console shows nodes > 0 means we have posts)
+    if (state.graphData.nodes.length > 0 && elements.emptyState) {
+      elements.emptyState.hidden = true;
+    }
+    
     return state.graphData;
   }
 
@@ -1232,14 +1369,23 @@
     let filteredPosts = filterPosts(posts);
     filteredPosts = sortPosts(filteredPosts);
 
-    // Show/hide empty state
-    if (filteredPosts.length === 0) {
-      elements.emptyState.hidden = false;
+    // Show/hide empty state - only show if there are NO posts at all in state.posts (actual loaded posts)
+    // Check state.posts.length, not posts.length, because posts parameter might be filtered
+    if (!state.posts || state.posts.length === 0) {
+      if (elements.emptyState) {
+        elements.emptyState.hidden = false;
+      }
       elements.blogList.innerHTML = '';
       return;
     }
 
-    elements.emptyState.hidden = true;
+    // Hide empty state if we have posts
+    if (elements.emptyState) {
+      elements.emptyState.hidden = true;
+    }
+    
+    // Show/hide clear filters button based on active filters
+    updateClearFiltersButtonVisibility();
 
     // Render posts
     elements.blogList.innerHTML = filteredPosts.map(post => `
@@ -1749,7 +1895,13 @@
         .onNodeClick((node) => {
           handleGraphNodeClick(node);
         })
-        .onNodeHover(handleGraphNodeHover);
+        .onNodeHover(handleGraphNodeHover)
+        .onBackgroundClick(() => {
+          // This fires when clicking on empty space (not on nodes)
+          console.log('[Orbit] Background clicked via onBackgroundClick - gradually stopping orbit');
+          handleUserInteraction(); // Track user interaction for auto-resume timer
+          handleCanvasBackgroundClick();
+        });
       
       // Add gradient links for tagged nodes
       // Reuse THREE from earlier declaration (line 1590)
@@ -1774,7 +1926,7 @@
             return getTagColorForBlog(node.tags[0]);
           }
           if (node && node.nodeType === 'session') {
-            return state.graphDisplay.sessionColor || '#5da3ff';
+            return state.graphDisplay.sessionColor || '#BEFFF2';
           }
           return state.graphDisplay.messageColor || '#ffffff';
         }
@@ -1870,12 +2022,26 @@
       // Apply display settings
       applyGraphDisplay();
       
-      // Pause orbit on user interaction and resume after idle
+      // Pause orbit only on canvas click (not on other interactions)
       const graphCanvasEl = graphContainer;
-      const interactionEvents = ['wheel', 'mousedown', 'pointerdown', 'touchstart', 'keydown', 'mousemove'];
-      interactionEvents.forEach(evt => {
-        graphCanvasEl.addEventListener(evt, handleUserInteraction);
-      });
+      
+      // Wait for graph to initialize, then attach click handler to the actual canvas
+      setTimeout(() => {
+        // Find the actual canvas element created by 3d-force-graph
+        const canvas = graphContainer.querySelector('canvas');
+        if (canvas) {
+          console.log('[Orbit] Attaching click handler to canvas element');
+          canvas.addEventListener('mousedown', handleCanvasClick, true); // Use capture phase
+          canvas.addEventListener('pointerdown', handleCanvasClick, true);
+          canvas.addEventListener('touchstart', handleCanvasClick, true);
+        } else {
+          // Fallback to container
+          console.log('[Orbit] Canvas not found, using container');
+          graphCanvasEl.addEventListener('mousedown', handleCanvasClick, true);
+          graphCanvasEl.addEventListener('pointerdown', handleCanvasClick, true);
+          graphCanvasEl.addEventListener('touchstart', handleCanvasClick, true);
+        }
+      }, 500);
       
       // Initialize slow camera orbit animation (like stars floating)
       initCameraOrbit();
@@ -1968,6 +2134,11 @@
       }, 200));
       
       console.log('Graph initialized with', graphData.nodes.length, 'nodes'); // Debug
+      
+      // Hide empty state if graph has nodes (console shows nodes > 0 means we have posts)
+      if (graphData.nodes.length > 0 && elements.emptyState) {
+        elements.emptyState.hidden = true;
+      }
 
       // Apply reduced motion settings
       if (prefersReducedMotion()) {
@@ -2048,54 +2219,199 @@
   }
 
   /**
-   * Initialize slow camera orbit animation (like stars floating)
+   * Easing function for smooth transitions (ease-out)
+   */
+  function easeOut(t) {
+    return 1 - Math.pow(1 - t, 3); // Cubic ease-out
+  }
+
+  /**
+   * Easing function for smooth transitions (ease-in)
+   */
+  function easeIn(t) {
+    return t * t * t; // Cubic ease-in
+  }
+
+  /**
+   * Initialize camera orbit animation around the graph
+   * 0 = no orbit, 360 = full rotation per second
+   * Uses gradual easing for smooth start/stop
    */
   function initCameraOrbit() {
     if (!state.graph) return;
     
-    // Clear any existing orbit interval
+    // Cancel any existing animation frame
+    if (state.orbitAnimationFrame) {
+      cancelAnimationFrame(state.orbitAnimationFrame);
+    }
+    
+    // Clear any existing interval
     if (state.orbitInterval) {
       clearInterval(state.orbitInterval);
     }
     
+    // Initialize speeds
+    state.currentOrbitSpeed = state.orbitSpeed;
+    state.targetOrbitSpeed = state.orbitSpeed;
+    
     // Get initial camera distance
     const camera = state.graph.camera();
-    const distance = Math.sqrt(
+    let distance = Math.sqrt(
       camera.position.x * camera.position.x +
       camera.position.y * camera.position.y +
       camera.position.z * camera.position.z
     ) || 800;
     
-    // Use orbit speed from state (adjustable via slider)
-    // Update camera position in circular orbit
-    state.orbitInterval = setInterval(() => {
-      if (!state.orbitActive || !state.graph) return;
+    // Easing duration
+    const easingDuration = 1000; // 1 second for easing
+    
+    // Animation loop using requestAnimationFrame for smooth animation
+    function animateOrbit(timestamp) {
+      if (!state.graph) return;
       
-      // Increment angle using state.orbitSpeed
-      state.orbitAngle += state.orbitSpeed;
+      // Initialize timestamp if not provided
+      const currentTime = timestamp || performance.now();
       
-      // Calculate circular orbit position
-      const x = distance * Math.sin(state.orbitAngle);
-      const z = distance * Math.cos(state.orbitAngle);
-      const y = camera.position.y; // Keep same height
+      // Update camera distance (may change due to zoom)
+      const currentCamera = state.graph.camera();
+      distance = Math.sqrt(
+        currentCamera.position.x * currentCamera.position.x +
+        currentCamera.position.y * currentCamera.position.y +
+        currentCamera.position.z * currentCamera.position.z
+      ) || 800;
       
-      // Update camera position
-      state.graph.cameraPosition({ x, y, z });
-    }, 50); // Reduced to ~20fps to save CPU/RAM
+      // Handle easing transitions
+      if (Math.abs(state.currentOrbitSpeed - state.targetOrbitSpeed) > 0.1) {
+        if (!state.orbitIsEasing) {
+          state.orbitIsEasing = true;
+          state.orbitEasingStartTime = currentTime;
+          state.orbitEasingFromSpeed = state.currentOrbitSpeed;
+          console.log('[Orbit] Starting ease transition from', state.orbitEasingFromSpeed, 'to', state.targetOrbitSpeed);
+        }
+        
+        const elapsed = currentTime - state.orbitEasingStartTime;
+        const progress = Math.min(elapsed / easingDuration, 1);
+        
+        if (state.targetOrbitSpeed === 0) {
+          // Easing out (stopping)
+          const easedProgress = easeOut(progress);
+          state.currentOrbitSpeed = state.orbitEasingFromSpeed * (1 - easedProgress);
+        } else if (state.orbitEasingFromSpeed === 0) {
+          // Easing in (starting)
+          const easedProgress = easeIn(progress);
+          state.currentOrbitSpeed = state.targetOrbitSpeed * easedProgress;
+        } else {
+          // Transitioning between speeds
+          const easedProgress = easeOut(progress);
+          state.currentOrbitSpeed = state.orbitEasingFromSpeed + (state.targetOrbitSpeed - state.orbitEasingFromSpeed) * easedProgress;
+        }
+        
+        if (progress >= 1) {
+          state.currentOrbitSpeed = state.targetOrbitSpeed;
+          state.orbitIsEasing = false;
+          console.log('[Orbit] Ease transition complete. Current speed:', state.currentOrbitSpeed);
+        }
+      } else {
+        state.currentOrbitSpeed = state.targetOrbitSpeed;
+        state.orbitIsEasing = false;
+      }
+      
+      // Only update camera if speed is significant
+      if (state.currentOrbitSpeed > 0.1) {
+        // Convert current speed (0-360) to radians per frame
+        // Assuming ~60fps for requestAnimationFrame
+        const degreesPerSecond = state.currentOrbitSpeed;
+        const radiansPerSecond = (degreesPerSecond / 360) * (Math.PI * 2);
+        const radiansPerFrame = radiansPerSecond / 60; // ~60fps
+        
+        // Increment angle using current speed
+        state.orbitAngle += radiansPerFrame;
+        
+        // Calculate circular orbit position
+        const x = distance * Math.sin(state.orbitAngle);
+        const z = distance * Math.cos(state.orbitAngle);
+        const y = currentCamera.position.y; // Keep same height
+        
+        // Update camera position
+        state.graph.cameraPosition({ x, y, z });
+      }
+      
+      // Continue animation loop
+      state.orbitAnimationFrame = requestAnimationFrame(animateOrbit);
+    }
+    
+    // Start animation loop
+    state.orbitAnimationFrame = requestAnimationFrame(animateOrbit);
   }
 
   /**
-   * Handle any user interaction: pause orbit, schedule resume and auto-fit
+   * Handle canvas background click: gradually stop orbit
+   * Called from onBackgroundClick callback or direct canvas click
+   */
+  function handleCanvasBackgroundClick() {
+    console.log('[Orbit] Canvas background clicked - gradually stopping orbit');
+    console.log('[Orbit] Current speed:', state.currentOrbitSpeed, 'Target speed:', state.targetOrbitSpeed);
+    
+    // Track user interaction (resets auto-resume timer if orbit is paused)
+    handleUserInteraction();
+    
+    // Set target speed to 0 for gradual stop
+    state.targetOrbitSpeed = 0;
+    
+    // Clear any resume timer
+    if (state.orbitResumeTimer) {
+      clearTimeout(state.orbitResumeTimer);
+      state.orbitResumeTimer = null;
+    }
+    
+    // Schedule gradual restart after 3 seconds of being stopped
+    state.orbitResumeTimer = setTimeout(() => {
+      console.log('[Orbit] Gradually restarting orbit');
+      console.log('[Orbit] Setting target speed to:', state.orbitSpeed);
+      // Set target speed back to current orbit speed setting
+      state.targetOrbitSpeed = state.orbitSpeed;
+    }, 3000);
+  }
+
+  /**
+   * Handle canvas click: gradually stop orbit
+   * Only triggers on empty canvas space, not on nodes
+   */
+  function handleCanvasClick(e) {
+    // Track user interaction (resets auto-resume timer if orbit is paused)
+    handleUserInteraction();
+    
+    // Log for debugging
+    console.log('[Orbit] Click detected:', {
+      target: e.target,
+      targetTag: e.target.tagName,
+      targetId: e.target.id,
+      targetClass: e.target.className,
+      currentTarget: e.currentTarget
+    });
+    
+    // Check if click is on the canvas element itself (not on nodes or other elements)
+    // The 3d-force-graph library creates a canvas element, so we check for that
+    const target = e.target;
+    const isCanvasElement = target.tagName === 'CANVAS';
+    const isContainerClick = target.id === 'graph-container' || 
+                            target.classList.contains('blog_graph-container');
+    
+    // Stop orbit if clicking directly on canvas or container background
+    // Don't stop if clicking on buttons, nodes, or other interactive elements
+    if (isCanvasElement || isContainerClick) {
+      handleCanvasBackgroundClick();
+    } else {
+      console.log('[Orbit] Click ignored - not on canvas background');
+    }
+  }
+
+  /**
+   * Handle any user interaction: schedule auto-fit and reset orbit auto-resume timer
    */
   function handleUserInteraction() {
-    state.orbitActive = false;
-    if (state.orbitResumeTimer) clearTimeout(state.orbitResumeTimer);
+    // Clear auto-fit timer
     if (state.autoFitTimer) clearTimeout(state.autoFitTimer);
-
-    // Resume orbit after 20s idle
-    state.orbitResumeTimer = setTimeout(() => {
-      state.orbitActive = true;
-    }, 20000);
 
     // Auto-fit only after 90s idle
     state.autoFitTimer = setTimeout(() => {
@@ -2103,6 +2419,12 @@
         state.graph.zoomToFit(800, 50);
       }
     }, 90000);
+    
+    // If orbit is paused, reset the auto-resume timer
+    if (!state.orbitActive) {
+      clearOrbitAutoResumeTimer();
+      startOrbitAutoResumeTimer();
+    }
   }
   
   /**
@@ -2111,6 +2433,24 @@
   function toggleCameraOrbit() {
     state.orbitActive = !state.orbitActive;
     
+    // Actually pause/resume by setting target speed
+    if (state.orbitActive) {
+      // Resume: set target speed back to current orbit speed setting
+      state.targetOrbitSpeed = state.orbitSpeed;
+      // Clear auto-resume timer since we're manually resuming
+      if (state.orbitAutoResumeTimer) {
+        clearTimeout(state.orbitAutoResumeTimer);
+        state.orbitAutoResumeTimer = null;
+      }
+      console.log('[toggleCameraOrbit] Orbit resumed - target speed:', state.orbitSpeed);
+    } else {
+      // Pause: set target speed to 0
+      state.targetOrbitSpeed = 0;
+      // Start 90-second timer for auto-resume
+      startOrbitAutoResumeTimer();
+      console.log('[toggleCameraOrbit] Orbit paused - auto-resume in 90 seconds');
+    }
+    
     // Update button text if it exists
     const orbitBtn = document.getElementById('orbit-toggle-btn');
     if (orbitBtn) {
@@ -2118,6 +2458,47 @@
     }
     
     console.log('[toggleCameraOrbit] Orbit', state.orbitActive ? 'active' : 'paused');
+  }
+  
+  /**
+   * Start timer to auto-resume orbit after 90 seconds of inactivity when paused
+   */
+  function startOrbitAutoResumeTimer() {
+    // Clear any existing timer
+    if (state.orbitAutoResumeTimer) {
+      clearTimeout(state.orbitAutoResumeTimer);
+      state.orbitAutoResumeTimer = null;
+    }
+    
+    // Only start timer if orbit is paused
+    if (!state.orbitActive) {
+      state.orbitAutoResumeTimer = setTimeout(() => {
+        // Check if still paused (user might have manually resumed)
+        if (!state.orbitActive) {
+          console.log('[Orbit] Auto-resuming orbit after 90 seconds of inactivity');
+          // Resume orbit
+          state.orbitActive = true;
+          state.targetOrbitSpeed = state.orbitSpeed;
+          
+          // Update button text
+          const orbitBtn = document.getElementById('orbit-toggle-btn');
+          if (orbitBtn) {
+            orbitBtn.textContent = 'Pause Orbit';
+          }
+        }
+        state.orbitAutoResumeTimer = null;
+      }, 90000); // 90 seconds
+    }
+  }
+  
+  /**
+   * Clear auto-resume timer (called on user interaction)
+   */
+  function clearOrbitAutoResumeTimer() {
+    if (state.orbitAutoResumeTimer) {
+      clearTimeout(state.orbitAutoResumeTimer);
+      state.orbitAutoResumeTimer = null;
+    }
   }
   
   // Set up orbit toggle button event listener
@@ -2302,7 +2683,28 @@
     
     // Handle session node clicks - expand/collapse to show ideas
     if (node.nodeType === 'session') {
-      toggleSessionExpansion(node.id);
+      const now = Date.now();
+      const isDoubleClick = state.lastNodeClick === node.id && 
+                          (now - state.lastNodeClickTime) < 300; // 300ms double-click window
+      
+      // Update tracking state
+      state.lastNodeClick = node.id;
+      state.lastNodeClickTime = now;
+      
+      if (isDoubleClick) {
+        // Double-click: open the thought session modal (like clicking on blog_card)
+        console.log('[handleGraphNodeClick] Double-click detected on session node:', node.id);
+        const post = node.post || state.posts.find(p => p.id === node.id || p.slug === node.slug);
+        if (post) {
+          openModal(post);
+        }
+        // Reset tracking to prevent triple-click from triggering again
+        state.lastNodeClick = null;
+        state.lastNodeClickTime = 0;
+      } else {
+        // Single-click: expand/collapse to show ideas
+        toggleSessionExpansion(node.id);
+      }
       return;
     }
     
@@ -2464,10 +2866,10 @@
       state.graph.nodeColor(node => {
         // Highlight on hover
         if (state.hoveredNodeId && node.id === state.hoveredNodeId) {
-          return state.graphDisplay.highlightColor || '#5DADE2';
+          return state.graphDisplay.highlightColor || '#BEFFF2';
         }
         if (node.nodeType === 'session') {
-          return state.graphDisplay.sessionColor || '#5da3ff';
+          return state.graphDisplay.sessionColor || '#BEFFF2';
         }
         if (node.tags && node.tags.length > 0) {
           return getTagColorForBlog(node.tags[0]);
@@ -2495,7 +2897,7 @@
 
     legendItems.push({
       label: 'Thought Sessions',
-      color: state.graphDisplay.sessionColor || '#5da3ff'
+      color: state.graphDisplay.sessionColor || '#BEFFF2'
     });
     legendItems.push({
       label: 'Messages',
@@ -2687,18 +3089,25 @@
    * Reset graph view
    */
   function resetGraph() {
+    console.log('[Button Debug] resetGraph() function called');
     if (state.graph) {
+      console.log('[Button Debug] Resetting graph state...');
       state.graphZoomLevel = 'session-only';
       state.focusedSessionId = null;
       state.expandedSessions.clear();
       
       // Reset to show only session nodes
       if (state.fullGraphData) {
+        console.log('[Button Debug] Resetting graph data to session-only view');
         state.graph.graphData(filterGraphDataByZoom(state.fullGraphData));
       }
       
       // Reset camera only (no auto zoom)
+      console.log('[Button Debug] Resetting camera position to (0, 0, 600)');
       state.graph.cameraPosition({ x: 0, y: 0, z: 600 });
+      console.log('[Button Debug] ✓ Reset action completed');
+    } else {
+      console.warn('[Button Debug] Cannot reset: graph not initialized');
     }
   }
 
@@ -2706,27 +3115,35 @@
    * Zoom graph to fit all nodes
    */
   function zoomGraphToFit() {
+    console.log('[Button Debug] zoomGraphToFit() function called');
     if (state.graph) {
+      console.log('[Button Debug] Fitting graph to view...');
       // Reset zoom state
       state.graphZoomLevel = 'session-only';
       state.focusedSessionId = null;
       state.expandedSessions.clear();
       
       // Reset camera
+      console.log('[Button Debug] Setting camera position to (0, 0, 800)');
       state.graph.cameraPosition({ x: 0, y: 0, z: 800 });
       
       // Reset to show only sessions
       if (state.fullGraphData) {
+        console.log('[Button Debug] Resetting graph data to session-only view');
         const filteredData = filterGraphDataByZoom(state.fullGraphData);
         state.graph.graphData(filteredData);
       }
       
       // Fit to canvas with padding
+      console.log('[Button Debug] Calling zoomToFit()...');
       setTimeout(() => {
         if (state.graph) {
           state.graph.zoomToFit(1000, 50); // 1000ms transition, 50px padding
+          console.log('[Button Debug] ✓ Fit action completed');
         }
       }, 100);
+    } else {
+      console.warn('[Button Debug] Cannot fit: graph not initialized');
     }
   }
 
@@ -3353,6 +3770,7 @@
   const handleSearch = debounce((query) => {
     state.searchQuery = query;
     renderListView(state.posts);
+    updateClearFiltersButtonVisibility();
   }, CONFIG.debounceDelay);
 
   /**
@@ -3371,6 +3789,7 @@
 
     // Re-render list
     renderListView(state.posts);
+    updateClearFiltersButtonVisibility();
   }
 
   /**
@@ -3389,6 +3808,17 @@
 
     // Re-render list
     renderListView(state.posts);
+    updateClearFiltersButtonVisibility();
+  }
+
+  /**
+   * Update clear filters button visibility
+   */
+  function updateClearFiltersButtonVisibility() {
+    const hasFilters = state.searchQuery || state.activeTag || state.activeAuthor;
+    if (elements.clearFiltersBtn) {
+      elements.clearFiltersBtn.style.display = hasFilters ? 'block' : 'none';
+    }
   }
 
   /**
@@ -3406,6 +3836,7 @@
     renderTagFilters(state.posts);
     renderAuthorFilters(state.posts);
     renderListView(state.posts);
+    updateClearFiltersButtonVisibility();
   }
 
   // ==========================================================================
@@ -3913,24 +4344,28 @@
       elements.forceCenter.addEventListener('input', (e) => {
         state.graphForces.center = parseInt(e.target.value);
         applyGraphForces();
+        saveGraphSettings();
       });
     }
     if (elements.forceRepel) {
       elements.forceRepel.addEventListener('input', (e) => {
         state.graphForces.repel = parseInt(e.target.value);
         applyGraphForces();
+        saveGraphSettings();
       });
     }
     if (elements.forceLink) {
       elements.forceLink.addEventListener('input', (e) => {
         state.graphForces.link = parseInt(e.target.value);
         applyGraphForces();
+        saveGraphSettings();
       });
     }
     if (elements.forceDistance) {
       elements.forceDistance.addEventListener('input', (e) => {
         state.graphForces.distance = parseInt(e.target.value);
         applyGraphForces();
+        saveGraphSettings();
       });
     }
     
@@ -3939,30 +4374,35 @@
       elements.displayNodeColor.addEventListener('input', (e) => {
         state.graphDisplay.nodeColor = e.target.value;
         applyGraphDisplay();
+        saveGraphSettings();
       });
     }
     if (elements.displayLinkColor) {
       elements.displayLinkColor.addEventListener('input', (e) => {
         state.graphDisplay.linkColor = e.target.value;
         applyGraphDisplay();
+        saveGraphSettings();
       });
     }
     if (elements.displayHighlightColor) {
       elements.displayHighlightColor.addEventListener('input', (e) => {
         state.graphDisplay.highlightColor = e.target.value;
         applyGraphDisplay();
+        saveGraphSettings();
       });
     }
     if (elements.displaySessionColor) {
       elements.displaySessionColor.addEventListener('input', (e) => {
         state.graphDisplay.sessionColor = e.target.value;
         applyGraphDisplay();
+        saveGraphSettings();
       });
     }
     if (elements.displayMessageColor) {
       elements.displayMessageColor.addEventListener('input', (e) => {
         state.graphDisplay.messageColor = e.target.value;
         applyGraphDisplay();
+        saveGraphSettings();
       });
     }
     if (elements.tagOverrideAdd) {
@@ -3971,7 +4411,7 @@
         const color = elements.tagOverrideColor?.value || '#ffffff';
         if (!name) return;
         state.graphDisplay.tagOverrides[name.toLowerCase()] = color;
-        saveColorPrefs();
+        saveGraphSettings();
         updateLegend();
         applyGraphDisplay();
         // clear name input for convenience
@@ -3982,17 +4422,18 @@
       elements.displayLinkWidth.addEventListener('input', (e) => {
         state.graphDisplay.linkWidth = parseFloat(e.target.value);
         applyGraphDisplay();
+        saveGraphSettings();
       });
     }
     
-    // Orbit speed slider
+    // Orbit speed slider (0-360 scale)
     if (elements.orbitSpeedSlider) {
       elements.orbitSpeedSlider.addEventListener('input', (e) => {
-        state.orbitSpeed = parseFloat(e.target.value);
-        // Restart orbit with new speed
-        if (state.graph) {
-          initCameraOrbit();
-        }
+        const newSpeed = parseInt(e.target.value);
+        state.orbitSpeed = newSpeed;
+        state.targetOrbitSpeed = newSpeed; // Update target for gradual transition
+        console.log('[Orbit] Orbit speed set to:', state.orbitSpeed, '(0=no orbit, 360=full speed)');
+        saveGraphSettings();
       });
     }
     
@@ -4002,6 +4443,7 @@
         if (state.bloomPass) {
           state.bloomPass.strength = parseFloat(e.target.value);
         }
+        saveGraphSettings();
       });
     }
     
@@ -4167,10 +4609,104 @@
     
     // Graph controls
     if (elements.graphResetBtn) {
-      elements.graphResetBtn.addEventListener('click', resetGraph);
+      elements.graphResetBtn.addEventListener('click', () => {
+        console.log('[Button Debug] Reset button clicked');
+        resetGraph();
+      });
     }
     if (elements.graphZoomFitBtn) {
-      elements.graphZoomFitBtn.addEventListener('click', zoomGraphToFit);
+      elements.graphZoomFitBtn.addEventListener('click', () => {
+        console.log('[Button Debug] Fit button clicked');
+        zoomGraphToFit();
+      });
+    }
+    if (elements.graphSettingsToggle) {
+      elements.graphSettingsToggle.addEventListener('click', () => {
+        console.log('[Settings Debug] Settings button tapped');
+        
+        const sidebar = elements.graphSidebar;
+        if (!sidebar) {
+          console.error('[Settings Debug] Sidebar element not found');
+          return;
+        }
+        
+        // Check current state
+        const wasHidden = sidebar.hasAttribute('hidden');
+        const wasVisible = checkSidebarVisibility();
+        
+        console.log('[Settings Debug] Sidebar state before toggle:', {
+          wasHidden: wasHidden,
+          wasVisible: wasVisible
+        });
+        
+        const layout = sidebar.closest('.blog_graph-layout');
+        
+        if (wasHidden) {
+          // Show sidebar
+          console.log('[Settings Debug] Opening settings view...');
+          sidebar.removeAttribute('hidden');
+          sidebar.style.display = 'flex'; // Explicitly set display
+          if (layout) layout.classList.add('sidebar-visible');
+          elements.graphSettingsToggle.setAttribute('aria-expanded', 'true');
+          
+          // Verify it's visible after opening
+          setTimeout(() => {
+            const isNowVisible = checkSidebarVisibility();
+            console.log('[Settings Debug] Settings view opened. Is visible:', isNowVisible);
+            if (isNowVisible) {
+              console.log('[Settings Debug] ✓ Settings view is displaying and visible to user');
+              console.log('[Settings Debug] Sidebar position:', sidebar.getBoundingClientRect());
+            } else {
+              console.warn('[Settings Debug] ✗ Settings view may be covered or not visible');
+              console.warn('[Settings Debug] Sidebar computed style:', window.getComputedStyle(sidebar));
+            }
+          }, 100);
+        } else {
+          // Hide sidebar
+          console.log('[Settings Debug] Closing settings view...');
+          sidebar.setAttribute('hidden', '');
+          sidebar.style.display = 'none'; // Explicitly set display
+          if (layout) layout.classList.remove('sidebar-visible');
+          elements.graphSettingsToggle.setAttribute('aria-expanded', 'false');
+          
+          // Verify it's hidden after closing
+          setTimeout(() => {
+            const isNowHidden = sidebar.hasAttribute('hidden');
+            const isNowVisible = checkSidebarVisibility();
+            console.log('[Settings Debug] Settings view closed. Is hidden:', isNowHidden, 'Is visible:', isNowVisible);
+            console.log('[Settings Debug] ✓ Settings button recognizes settings view is closed');
+          }, 100);
+        }
+      });
+    }
+    if (elements.graphSettingsSave) {
+      elements.graphSettingsSave.addEventListener('click', () => {
+        console.log('[Button Debug] Save Settings button clicked');
+        
+        // Save settings
+        saveGraphSettings();
+        console.log('[Settings Debug] Settings saved to localStorage');
+        
+        // Close settings view
+        const sidebar = elements.graphSidebar;
+        if (sidebar) {
+          console.log('[Settings Debug] Closing settings view after save...');
+          const layout = sidebar.closest('.blog_graph-layout');
+          sidebar.setAttribute('hidden', '');
+          sidebar.style.display = 'none'; // Explicitly set display
+          if (layout) layout.classList.remove('sidebar-visible');
+          elements.graphSettingsToggle.setAttribute('aria-expanded', 'false');
+          
+          // Verify it's closed
+          setTimeout(() => {
+            const isNowHidden = sidebar.hasAttribute('hidden');
+            const isNowVisible = checkSidebarVisibility();
+            console.log('[Settings Debug] Settings view closed after save. Is hidden:', isNowHidden, 'Is visible:', isNowVisible);
+            console.log('[Settings Debug] ✓ Settings view is closed');
+            console.log('[Settings Debug] ✓ Settings button recognizes settings view is closed');
+          }, 100);
+        }
+      });
     }
 
     // Modal close button - use event delegation on document for reliability
@@ -4245,8 +4781,8 @@
     // Check auth state and update UI
     await checkAuthState();
     
-    // Load saved color preferences
-    loadColorPrefs();
+    // Load saved color preferences and graph settings
+    loadGraphSettings();
     
     // Load tag colors from database
     await loadTagColors();
@@ -4277,8 +4813,10 @@
       console.log('[init] Synced linkWidth from slider:', state.graphDisplay.linkWidth);
     }
     if (elements.orbitSpeedSlider && elements.orbitSpeedSlider.value) {
-      state.orbitSpeed = parseFloat(elements.orbitSpeedSlider.value) || Math.PI / 5000;
-      console.log('[init] Synced orbitSpeed from slider:', state.orbitSpeed);
+      state.orbitSpeed = parseInt(elements.orbitSpeedSlider.value) || 180;
+      console.log('[init] Synced orbitSpeed from slider:', state.orbitSpeed, '(0-360 scale)');
+    } else {
+      state.orbitSpeed = 180; // Default to half speed
     }
     if (elements.bloomBrightnessSlider && elements.bloomBrightnessSlider.value) {
       const brightness = parseFloat(elements.bloomBrightnessSlider.value) || 1.5;
@@ -4288,7 +4826,7 @@
       console.log('[init] Synced bloom brightness from slider:', brightness);
     }
     if (elements.displaySessionColor) {
-      elements.displaySessionColor.value = state.graphDisplay.sessionColor || '#5da3ff';
+      elements.displaySessionColor.value = state.graphDisplay.sessionColor || '#BEFFF2';
     }
     if (elements.displayMessageColor) {
       elements.displayMessageColor.value = state.graphDisplay.messageColor || '#ffffff';
@@ -4306,25 +4844,28 @@
     // Fetch and render posts
     const posts = await fetchBlogData();
     
-    // If no posts, show empty state
-    if (posts.length === 0) {
-      if (elements.emptyState) {
-        elements.emptyState.hidden = false;
-      }
-    } else {
-      if (elements.emptyState) {
-        elements.emptyState.hidden = true;
-      }
+    // Update state.posts (renderListView will check this)
+    state.posts = posts || [];
+    
+    // Hide empty state if we have posts (renderListView will handle visibility)
+    if (elements.emptyState && state.posts.length > 0) {
+      elements.emptyState.hidden = true;
     }
     
-    if (posts.length > 0) {
-      renderTagFilters(posts);
-      renderAuthorFilters(posts);
-      renderListView(posts);
+    if (state.posts.length > 0) {
+      renderTagFilters(state.posts);
+      renderAuthorFilters(state.posts);
+      renderListView(state.posts);
       
       // Build graph data from fetched posts
       if (isWebGLAvailable() && !prefersReducedMotion()) {
         await fetchGraphData(); // This will build from posts if available
+        // fetchGraphData will hide empty state if nodes exist
+      }
+    } else {
+      // No posts loaded - show empty state
+      if (elements.emptyState) {
+        elements.emptyState.hidden = false;
       }
     }
 

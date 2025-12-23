@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title>Thought Sessions | SWFT Studios</title>
-  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Thought Sessions graph. Connect your dreams and creations in a dynamic network." name="description">
+  <meta content="Explore the ideas, insights, and creative processes behind SWFT Studios' work. Discover how our team connects concepts and see how unexpected ideas spark innovation through an interactive 3D mind map." name="description">
   <meta content="Thought Sessions | SWFT Studios" property="og:title">
-  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Thought Sessions graph. Connect your dreams and creations." property="og:description">
+  <meta content="Explore the ideas, insights, and creative processes behind SWFT Studios' work. Discover how our team connects concepts and see how unexpected ideas spark innovation." property="og:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
   <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -117,14 +117,14 @@ body {
               <div class="blog_header">
                 <div class="blog_header-content">
                   <div class="margin-bottom margin-small">
-                  <div class="text-size-small text-color-green">Blog Posts and articles</div>
+                  <div class="text-size-small text-color-green">Insights from the creators</div>
                   </div>
                   <div class="margin-bottom margin-small">
                     <div class="max-width-large">
                       <h1 class="text-weight-medium">Thought Sessions</h1>
                     </div>
                   </div>
-                  <p class="text-size-small blog_description">Visualize your thoughts, dreams, and ideas as an interconnected network. Explore the 3D Mind Map to see how your mind connects concepts, insights, and creative visions.</p>
+                  <p class="text-size-small blog_description">Explore the ideas, insights, and creative processes behind our work. Discover how our team connects concepts, how unexpected ideas spark new products and tools, and see the thinking that drives innovation at SWFT Studios. Filter by author to dive deep into individual creative journeys.</p>
                 </div>
                 
                 <!-- Subtle Collaborator Sign In (bottom-right corner, low opacity) -->
@@ -169,6 +169,11 @@ body {
                       <option value="author-desc">Author Z-A</option>
                     </select>
                   </div>
+                  
+                  <!-- Clear Filters Button -->
+                  <button type="button" class="blog_clear-filters-btn" id="clear-filters" aria-label="Clear all filters" style="display: none;">
+                    Clear filters
+                  </button>
                   
                   <!-- View Toggle Buttons -->
                   <div class="blog_view-toggle" role="tablist" aria-label="View options">
@@ -246,6 +251,29 @@ body {
                   <div class="blog_graph-layout">
                     <!-- Graph Container -->
                     <div class="blog_graph-main">
+                      <button type="button" class="blog_graph-control-btn" id="graph-settings-toggle" aria-label="Toggle Mind Map Settings" aria-expanded="false">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="3"></circle>
+                          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span class="blog_graph-control-label">Settings</span>
+                      </button>
+                      <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset Thought Sessions view">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                          <path d="M3 3v5h5"></path>
+                        </svg>
+                        Reset
+                      </button>
+                      <button type="button" class="blog_graph-control-btn" id="graph-zoom-fit" aria-label="Fit graph to view">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M15 3h6v6"></path>
+                          <path d="M9 21H3v-6"></path>
+                          <path d="M21 3l-7 7"></path>
+                          <path d="M3 21l7-7"></path>
+                        </svg>
+                        Fit
+                      </button>
                       <div class="blog_graph-container" id="graph-container">
                         <!-- 3D Graph will be rendered here -->
                         <div class="blog_graph-placeholder" id="graph-placeholder">
@@ -266,36 +294,18 @@ body {
                           </div>
                         </div>
                       </div>
-                      <div class="blog_graph-controls">
-                        <button type="button" class="blog_graph-control-btn" id="mindmap-settings-btn" aria-label="Mind Map Settings" title="Mind Map Settings">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
-                          </svg>
-                          <span class="blog_graph-control-label">Settings</span>
-                        </button>
-                        <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset Thought Sessions view">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                            <path d="M3 3v5h5"></path>
-                          </svg>
-                        </button>
-                        <button type="button" class="blog_graph-control-btn" id="graph-zoom-fit" aria-label="Fit graph to view">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-                          </svg>
-                        </button>
-                      </div>
                     </div>
                     
                     <!-- Hidden Sidebar (moved to modal) -->
                     <aside class="blog_graph-sidebar" id="graph-sidebar" hidden>
                       <div class="blog_graph-sidebar-header">
                         <h3 class="blog_graph-sidebar-title">Mind Map</h3>
-                        <button type="button" class="blog_graph-sidebar-toggle" id="graph-sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="true">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 18l6-6-6-6"/>
-                          </svg>
+                      </div>
+                      
+                      <!-- Save Button -->
+                      <div class="blog_graph-sidebar-section">
+                        <button type="button" id="graph-settings-save" class="blog_graph-button" style="width: 100%; margin-top: 0; margin-bottom: 1rem; padding: 0.75rem;">
+                          Save and Close
                         </button>
                       </div>
                       
@@ -358,7 +368,7 @@ body {
                           <div class="blog_graph-slider-group">
                             <label class="blog_graph-slider-label">
                               <span>Orbit Speed</span>
-                              <input type="range" id="orbit-speed-slider" class="blog_graph-slider" min="0.0001" max="0.01" step="0.0001" value="0.000628">
+                              <input type="range" id="orbit-speed-slider" class="blog_graph-slider" min="0" max="360" step="1" value="180">
                             </label>
                             <label class="blog_graph-slider-label">
                               <span>Glow Brightness</span>
@@ -386,7 +396,7 @@ body {
                             </label>
                             <label class="blog_graph-color-label">
                               <span>Highlight Color</span>
-                              <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#5DADE2">
+                              <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#BEFFF2">
                             </label>
                           </div>
                           <div class="blog_graph-slider-group">
@@ -408,7 +418,7 @@ body {
                         <div class="blog_graph-color-group">
                           <label class="blog_graph-color-label">
                             <span>Thought Session Color</span>
-                            <input type="color" id="display-session-color" class="blog_graph-color-input" value="#5da3ff">
+                            <input type="color" id="display-session-color" class="blog_graph-color-input" value="#BEFFF2">
                           </label>
                           <label class="blog_graph-color-label">
                             <span>Message Color</span>
@@ -458,48 +468,6 @@ body {
                         </div>
                       </div>
                     </aside>
-                    
-                    <!-- Graph Container -->
-                    <div class="blog_graph-main">
-                      <div class="blog_graph-container" id="graph-container">
-                        <!-- 3D Graph will be rendered here -->
-                        <div class="blog_graph-placeholder" id="graph-placeholder">
-                          <div class="blog_graph-placeholder-content">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
-                              <circle cx="12" cy="12" r="3"></circle>
-                              <circle cx="19" cy="5" r="2"></circle>
-                              <circle cx="5" cy="19" r="2"></circle>
-                              <circle cx="5" cy="5" r="2"></circle>
-                              <circle cx="19" cy="19" r="2"></circle>
-                              <line x1="14.5" y1="9.5" x2="17" y2="7"></line>
-                              <line x1="9.5" y1="14.5" x2="7" y2="17"></line>
-                              <line x1="9.5" y1="9.5" x2="7" y2="7"></line>
-                              <line x1="14.5" y1="14.5" x2="17" y2="17"></line>
-                            </svg>
-                            <p>Click a Thought Session to explore connections</p>
-                            <p class="blog_graph-hint">Drag to rotate • Scroll to zoom</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="blog_graph-controls">
-                        <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset Thought Sessions view">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                            <path d="M3 3v5h5"></path>
-                          </svg>
-                          Reset
-                        </button>
-                        <button type="button" class="blog_graph-control-btn" id="graph-zoom-fit" aria-label="Fit graph to view">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M15 3h6v6"></path>
-                            <path d="M9 21H3v-6"></path>
-                            <path d="M21 3l-7 7"></path>
-                            <path d="M3 21l7-7"></path>
-                          </svg>
-                          Fit
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -593,7 +561,6 @@ body {
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <p>No thoughts found</p>
-                <button type="button" class="blog_empty-reset" id="clear-filters">Clear filters</button>
               </div>
 
               <!-- Graph Unavailable Notice -->
@@ -689,7 +656,7 @@ body {
                 </label>
                 <label class="blog_graph-color-label">
                   <span>Highlight Color</span>
-                  <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#5DADE2">
+                  <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#BEFFF2">
                 </label>
               </div>
               <div class="blog_graph-slider-group">
@@ -887,7 +854,7 @@ body {
               </label>
               <label class="blog_graph-color-label">
                 <span>Highlight Color</span>
-                <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#5DADE2">
+                <input type="color" id="display-highlight-color" class="blog_graph-color-input" value="#BEFFF2">
               </label>
             </div>
             <div class="blog_graph-slider-group">
@@ -909,7 +876,7 @@ body {
             <div class="blog_graph-color-group">
               <label class="blog_graph-color-label">
                 <span>Thought Session Color</span>
-                <input type="color" id="display-session-color" class="blog_graph-color-input" value="#5da3ff">
+                <input type="color" id="display-session-color" class="blog_graph-color-input" value="#BEFFF2">
               </label>
               <label class="blog_graph-color-label">
                 <span>Message Color</span>

@@ -14,7 +14,7 @@
   
   const DEFAULT_SETTINGS = {
     tagColors: {
-      'design': '#6366f1',
+      'design': '#BEFFF2',
       'idea': '#10b981',
       'personal': '#8b5cf6',
       'tech': '#3b82f6',
@@ -22,14 +22,14 @@
       'tutorial': '#ef4444'
     },
     graph: {
-      nodeColor: '#6366f1',
+      nodeColor: '#BEFFF2',
       linkColor: 'rgba(99, 102, 241, 0.3)',
       highlightColor: '#f59e0b',
       nodeSize: 5,
       linkWidth: 1,
       linkStyle: 'solid',
       particleWidth: 1,
-      particleColor: '#6366f1'
+      particleColor: '#BEFFF2'
     }
   };
 
@@ -217,8 +217,32 @@
             </div>
             
             <div class="settings-body">
-              <!-- Tag Colors Section -->
+              <!-- Tag Management Section -->
               <div class="settings-section">
+                <h3 class="settings-section-title">Tag Management</h3>
+                <p class="settings-section-description">Manage auto tags and create persistent tags with custom colors</p>
+                
+                <!-- Create New Persistent Tag -->
+                <div class="settings-group">
+                  <button type="button" class="settings-button secondary" id="create-persistent-tag-btn" style="width: 100%; margin-bottom: 1rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Create New Persistent Tag
+                  </button>
+                </div>
+                
+                <!-- Tags List -->
+                <div class="settings-group">
+                  <div class="tag-management-list" id="tag-management-list">
+                    <p class="settings-hint">Loading tags...</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Tag Colors Section (Legacy - for backward compatibility) -->
+              <div class="settings-section" style="display: none;">
                 <h3 class="settings-section-title">Tag Colors</h3>
                 <p class="settings-section-description">Customize colors for your tags</p>
                 
@@ -333,7 +357,10 @@
     // ==========================================================================
     
     populateForm() {
-      // Tag colors
+      // Tag management (load from database)
+      this.loadAndRenderTags();
+      
+      // Tag colors (legacy)
       this.renderTagColorList();
       
       // Graph settings
@@ -380,7 +407,7 @@
       `).join('') + `
         <div class="tag-color-item tag-color-add">
           <input type="text" class="tag-color-add-input" placeholder="Tag name" id="new-tag-name">
-          <input type="color" class="color-picker-input" id="new-tag-color" value="#6366f1">
+          <input type="color" class="color-picker-input" id="new-tag-color" value="#BEFFF2">
           <button type="button" class="tag-color-add-btn" id="add-tag-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -552,7 +579,7 @@
     rgbaToHex(rgba) {
       // Extract RGB values from rgba string
       const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-      if (!match) return '#6366f1'; // Default
+      if (!match) return '#BEFFF2'; // Default
       
       const r = parseInt(match[1]).toString(16).padStart(2, '0');
       const g = parseInt(match[2]).toString(16).padStart(2, '0');
@@ -564,6 +591,301 @@
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
+    },
+    
+    // ==========================================================================
+    // Tag Management (Database Integration)
+    // ==========================================================================
+    
+    async loadAndRenderTags() {
+      const listEl = document.getElementById('tag-management-list');
+      if (!listEl) return;
+      
+      listEl.innerHTML = '<p class="settings-hint">Loading tags...</p>';
+      
+      try {
+        // Load persistent tags from database
+        const { data: persistentTags, error: tagsError } = await this.supabase
+          .from('tags')
+          .select('*')
+          .order('name', { ascending: true });
+        
+        if (tagsError) throw tagsError;
+        
+        // Load auto tags from existing notes/ideas
+        const { data: notes } = await this.supabase
+          .from('notes')
+          .select('content, tags')
+          .eq('user_id', this.currentUser.id);
+        
+        const autoTags = new Set();
+        if (notes) {
+          notes.forEach(note => {
+            // Extract tags from note tags array
+            if (Array.isArray(note.tags)) {
+              note.tags.forEach(tag => autoTags.add(tag));
+            }
+            
+            // Extract tags from ideas within content
+            try {
+              const content = typeof note.content === 'string' ? JSON.parse(note.content) : note.content;
+              if (Array.isArray(content)) {
+                content.forEach(idea => {
+                  if (idea.tags && Array.isArray(idea.tags)) {
+                    idea.tags.forEach(tag => autoTags.add(tag));
+                  }
+                });
+              }
+            } catch (e) {
+              // Content might not be JSON
+            }
+          });
+        }
+        
+        // Combine and render
+        const persistentTagNames = new Set((persistentTags || []).map(t => t.name));
+        const allAutoTags = Array.from(autoTags).filter(t => !persistentTagNames.has(t));
+        
+        this.renderTagManagementList(persistentTags || [], allAutoTags);
+        
+      } catch (error) {
+        console.error('Error loading tags:', error);
+        listEl.innerHTML = '<p class="settings-hint" style="color: #ef4444;">Error loading tags. Please try again.</p>';
+      }
+    },
+    
+    renderTagManagementList(persistentTags, autoTags) {
+      const listEl = document.getElementById('tag-management-list');
+      if (!listEl) return;
+      
+      let html = '';
+      
+      // Persistent Tags Section
+      if (persistentTags.length > 0) {
+        html += '<div class="tag-section"><h4 class="tag-section-title">Persistent Tags</h4>';
+        persistentTags.forEach(tag => {
+          html += this.renderTagItem(tag, true);
+        });
+        html += '</div>';
+      }
+      
+      // Auto Tags Section
+      if (autoTags.length > 0) {
+        html += '<div class="tag-section"><h4 class="tag-section-title">Auto Tags</h4>';
+        autoTags.forEach(tagName => {
+          html += this.renderTagItem({ name: tagName, color: '#ffffff', is_auto: true }, false);
+        });
+        html += '</div>';
+      }
+      
+      if (!html) {
+        html = '<p class="settings-hint">No tags found. Create your first persistent tag or add tags to your ideas.</p>';
+      }
+      
+      listEl.innerHTML = html;
+      
+      // Attach event listeners
+      this.attachTagManagementListeners();
+    },
+    
+    renderTagItem(tag, isPersistent) {
+      const tagName = typeof tag === 'string' ? tag : tag.name;
+      const tagColor = typeof tag === 'string' ? '#ffffff' : (tag.color || '#ffffff');
+      const tagId = typeof tag === 'string' ? null : tag.id;
+      
+      return `
+        <div class="tag-management-item" data-tag-name="${this.escapeHtml(tagName)}" data-tag-id="${tagId || ''}" data-is-persistent="${isPersistent}">
+          <div class="tag-item-info">
+            <span class="tag-item-name">${this.escapeHtml(tagName)}</span>
+            ${!isPersistent ? '<span class="tag-item-badge">Auto</span>' : ''}
+          </div>
+          <div class="tag-item-controls">
+            <input type="color" class="tag-color-picker" value="${tagColor}" data-tag-name="${this.escapeHtml(tagName)}">
+            ${!isPersistent ? `
+              <button type="button" class="tag-convert-btn" data-tag-name="${this.escapeHtml(tagName)}" title="Convert to persistent tag">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </button>
+            ` : `
+              <button type="button" class="tag-delete-btn" data-tag-id="${tagId}" title="Delete persistent tag">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            `}
+          </div>
+        </div>
+      `;
+    },
+    
+    attachTagManagementListeners() {
+      // Color picker changes
+      document.querySelectorAll('.tag-color-picker').forEach(picker => {
+        picker.addEventListener('change', async (e) => {
+          const tagName = e.target.dataset.tagName;
+          const color = e.target.value;
+          await this.updateTagColor(tagName, color);
+        });
+      });
+      
+      // Convert auto tag to persistent
+      document.querySelectorAll('.tag-convert-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const tagName = e.target.closest('.tag-convert-btn').dataset.tagName;
+          const colorPicker = e.target.closest('.tag-management-item').querySelector('.tag-color-picker');
+          const color = colorPicker.value;
+          await this.convertAutoTagToPersistent(tagName, color);
+        });
+      });
+      
+      // Delete persistent tag
+      document.querySelectorAll('.tag-delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const tagId = e.target.closest('.tag-delete-btn').dataset.tagId;
+          if (confirm('Delete this persistent tag? This will remove the color assignment but keep the tag on ideas.')) {
+            await this.deletePersistentTag(tagId);
+          }
+        });
+      });
+      
+      // Create new persistent tag button
+      const createBtn = document.getElementById('create-persistent-tag-btn');
+      if (createBtn) {
+        createBtn.addEventListener('click', () => {
+          this.showCreateTagDialog();
+        });
+      }
+    },
+    
+    async updateTagColor(tagName, color) {
+      try {
+        // Check if tag exists as persistent
+        const { data: existingTag } = await this.supabase
+          .from('tags')
+          .select('id')
+          .eq('user_id', this.currentUser.id)
+          .eq('name', tagName)
+          .single();
+        
+        if (existingTag) {
+          // Update existing persistent tag
+          const { error } = await this.supabase
+            .from('tags')
+            .update({ color, updated_at: new Date().toISOString() })
+            .eq('id', existingTag.id);
+          
+          if (error) throw error;
+        } else {
+          // Create new persistent tag
+          const { error } = await this.supabase
+            .from('tags')
+            .insert({
+              user_id: this.currentUser.id,
+              name: tagName,
+              color,
+              is_auto: false
+            });
+          
+          if (error) throw error;
+        }
+        
+        // Reload tags
+        await this.loadAndRenderTags();
+        
+        // Dispatch event for graph updates
+        window.dispatchEvent(new CustomEvent('tag-color-updated', {
+          detail: { tagName, color }
+        }));
+        
+      } catch (error) {
+        console.error('Error updating tag color:', error);
+        alert('Failed to update tag color. Please try again.');
+      }
+    },
+    
+    async convertAutoTagToPersistent(tagName, color) {
+      try {
+        // Check if already exists
+        const { data: existing } = await this.supabase
+          .from('tags')
+          .select('id')
+          .eq('user_id', this.currentUser.id)
+          .eq('name', tagName)
+          .single();
+        
+        if (existing) {
+          // Just update color
+          await this.updateTagColor(tagName, color);
+          return;
+        }
+        
+        // Create persistent tag
+        const { error } = await this.supabase
+          .from('tags')
+          .insert({
+            user_id: this.currentUser.id,
+            name: tagName,
+            color,
+            is_auto: true // Mark as converted from auto
+          });
+        
+        if (error) throw error;
+        
+        // Reload tags
+        await this.loadAndRenderTags();
+        
+        // Dispatch event
+        window.dispatchEvent(new CustomEvent('tag-converted', {
+          detail: { tagName, color }
+        }));
+        
+      } catch (error) {
+        console.error('Error converting tag:', error);
+        alert('Failed to convert tag. Please try again.');
+      }
+    },
+    
+    async deletePersistentTag(tagId) {
+      try {
+        const { error } = await this.supabase
+          .from('tags')
+          .delete()
+          .eq('id', tagId)
+          .eq('user_id', this.currentUser.id);
+        
+        if (error) throw error;
+        
+        // Reload tags
+        await this.loadAndRenderTags();
+        
+        // Dispatch event
+        window.dispatchEvent(new CustomEvent('tag-deleted', {
+          detail: { tagId }
+        }));
+        
+      } catch (error) {
+        console.error('Error deleting tag:', error);
+        alert('Failed to delete tag. Please try again.');
+      }
+    },
+    
+    showCreateTagDialog() {
+      const tagName = prompt('Enter tag name:');
+      if (!tagName || !tagName.trim()) return;
+      
+      const normalizedName = tagName.trim().toLowerCase();
+      
+      // Check if already exists
+      const existingItem = document.querySelector(`[data-tag-name="${normalizedName}"]`);
+      if (existingItem) {
+        alert('This tag already exists.');
+        return;
+      }
+      
+      // Create with default white color
+      this.convertAutoTagToPersistent(normalizedName, '#ffffff');
     }
   };
   
