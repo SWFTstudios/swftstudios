@@ -57,7 +57,11 @@
     orbitActive: true, // Camera orbit animation state
     orbitAngle: 0, // Current orbit angle
     orbitInterval: null, // Interval ID for orbit animation
+    orbitSpeed: Math.PI / 5000, // Orbit speed (adjustable via slider)
+    bloomPass: null, // Reference to bloom pass for brightness control
     threeJsWarningLogged: false, // Track if we've logged THREE.js warning
+    currentMedia: null, // Currently playing audio/video element
+    allMediaElements: [], // Track all audio/video elements on page
     graphFilters: {
       tags: true,
       attachments: false,
@@ -74,10 +78,13 @@
       nodeColor: '#ffffff',
       linkColor: '#ffffff',
       highlightColor: '#5DADE2',
-      nodeSize: 8, // Increased from 5 for better visibility
       linkWidth: 0.5, // Thin lines by default
-      linkStyle: 'solid'
-    }
+      sessionColor: '#5da3ff',
+      messageColor: '#ffffff',
+      tagOverrides: {}
+    },
+    orbitResumeTimer: null,
+    autoFitTimer: null
   };
 
   // ==========================================================================
@@ -133,12 +140,22 @@
     displayNodeColor: document.getElementById('display-node-color'),
     displayLinkColor: document.getElementById('display-link-color'),
     displayHighlightColor: document.getElementById('display-highlight-color'),
-    displayNodeSize: document.getElementById('display-node-size'),
+    displaySessionColor: document.getElementById('display-session-color'),
+    displayMessageColor: document.getElementById('display-message-color'),
+    tagOverrideName: document.getElementById('tag-override-name'),
+    tagOverrideColor: document.getElementById('tag-override-color'),
+    tagOverrideAdd: document.getElementById('tag-override-add'),
+    legendList: document.getElementById('legend-list'),
     displayLinkWidth: document.getElementById('display-link-width'),
-    displayLinkStyle: document.getElementById('display-link-style'),
+    orbitSpeedSlider: document.getElementById('orbit-speed-slider'),
+    bloomBrightnessSlider: document.getElementById('bloom-brightness-slider'),
     graphModal: document.getElementById('graph-modal'),
     graphModalClose: document.getElementById('graph-modal-close'),
-    graphModalBackdrop: document.querySelector('.blog_graph-modal-backdrop')
+    graphModalBackdrop: document.querySelector('.blog_graph-modal-backdrop'),
+    mediaControls: document.getElementById('media-controls'),
+    mediaPlayBtn: document.getElementById('media-play-btn'),
+    mediaPauseBtn: document.getElementById('media-pause-btn'),
+    mediaStopBtn: document.getElementById('media-stop-btn')
   };
 
   // ==========================================================================
@@ -154,6 +171,39 @@
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => func.apply(this, args), delay);
     };
+  }
+
+  /**
+   * Load graph display colors from localStorage
+   */
+  function loadColorPrefs() {
+    try {
+      const saved = localStorage.getItem('graphColorPrefs');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        state.graphDisplay.sessionColor = parsed.sessionColor || state.graphDisplay.sessionColor;
+        state.graphDisplay.messageColor = parsed.messageColor || state.graphDisplay.messageColor;
+        state.graphDisplay.tagOverrides = parsed.tagOverrides || {};
+      }
+    } catch (e) {
+      console.warn('Failed to load color prefs', e);
+    }
+  }
+
+  /**
+   * Save graph display colors to localStorage
+   */
+  function saveColorPrefs() {
+    try {
+      const payload = {
+        sessionColor: state.graphDisplay.sessionColor,
+        messageColor: state.graphDisplay.messageColor,
+        tagOverrides: state.graphDisplay.tagOverrides
+      };
+      localStorage.setItem('graphColorPrefs', JSON.stringify(payload));
+    } catch (e) {
+      console.warn('Failed to save color prefs', e);
+    }
   }
 
   /**
@@ -214,6 +264,11 @@
     if (!tag) return '#ffffff'; // Default white
     
     const normalizedTag = tag.toLowerCase();
+    
+    // Check user overrides first
+    if (state.graphDisplay.tagOverrides && state.graphDisplay.tagOverrides[normalizedTag]) {
+      return state.graphDisplay.tagOverrides[normalizedTag];
+    }
     
     // Check database cache first
     if (state.tagColors && state.tagColors[normalizedTag]) {
@@ -520,6 +575,9 @@
    * Fetch blog posts data from Supabase
    */
   async function fetchBlogDataFromSupabase() {
+    // #region agent log
+    fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'blog.js:522',message:'fetchBlogDataFromSupabase entry',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
     try {
       // Initialize Supabase client if not already available
       if (!window.SWFTAuth || !window.SWFTAuth.supabase) {
@@ -533,6 +591,9 @@
       // Check if user is authenticated
       const { data: { session } } = await supabase.auth.getSession();
       const isAuthenticated = !!session;
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'blog.js:535',message:'Auth check result',data:{isAuthenticated,hasSession:!!session,userId:session?.user?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
       
       // Fetch Thought Sessions from Supabase
       // If authenticated, show all Thought Sessions (published + drafts)
@@ -547,15 +608,33 @@
         query = query.eq('status', 'published');
       } else {
         // For authenticated users, show all their Thought Sessions (published + drafts)
-        // RLS policy will ensure they only see their own Thought Sessions
+        // Explicitly filter by user_id to ensure we get all user's sessions
+        const userId = session?.user?.id;
+        if (userId) {
+          query = query.eq('user_id', userId);
+          // #region agent log
+          fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'blog.js:555',message:'Added user_id filter',data:{userId},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'C'})}).catch(()=>{});
+          // #endregion
+        }
         console.log('User authenticated, loading all Thought Sessions (published + drafts)');
       }
       
       const { data: notes, error } = await query;
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'blog.js:554',message:'Query result BEFORE error check',data:{notesCount:notes?.length||0,hasError:!!error,errorCode:error?.code,errorMessage:error?.message,isAuthenticated},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
       
-      if (error) throw error;
+      if (error) {
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'blog.js:556',message:'Query error thrown',data:{errorCode:error.code,errorMessage:error.message,errorDetails:error},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+        throw error;
+      }
       
       console.log(`Found ${notes.length} Thought Sessions in Supabase${isAuthenticated ? ' (all statuses)' : ' (published only)'}`);
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'blog.js:559',message:'Notes fetched successfully',data:{notesCount:notes.length,noteIds:notes.map(n=>n.id),statuses:notes.map(n=>n.status)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
       
       // Transform Supabase Thought Sessions to blog post format
       const posts = notes.map(note => {
@@ -605,6 +684,9 @@
       });
       
       console.log(`[fetchBlogData] Transformed ${posts.length} notes, total messages: ${posts.reduce((sum, p) => sum + (p.messages?.length || 0), 0)}`);
+      // #region agent log
+      fetch('http://127.0.0.1:7244/ingest/d96b9dad-13b4-4f43-9321-0f9f21accf4b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'blog.js:607',message:'Posts transformed',data:{postsCount:posts.length,postIds:posts.map(p=>p.id),inputNotesCount:notes.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+      // #endregion
       
       return posts;
     } catch (error) {
@@ -906,12 +988,19 @@
       
       console.log(`[buildGraphData] Note "${post.title}" has ${messages.length} messages`);
       
-      // Create Thought Session node
+      // Create Thought Session node - size based on message count (like planets)
+      // More messages = bigger node
+      const messageCount = messages.length;
+      const baseSize = 4; // Minimum size
+      const sizeMultiplier = 2; // Size per message
+      const sessionVal = baseSize + (messageCount * sizeMultiplier);
+      
       const sessionNode = {
         id: post.id,
         name: post.title,
         tags: post.tags || [],
-        val: post.links ? post.links.length + 1 : 1,
+        val: sessionVal, // Size based on message count
+        messageCount: messageCount, // Store for reference
         // Don't set color property - let nodeColor function handle it
         nodeType: 'session', // Changed from 'note' to 'session'
         slug: post.slug,
@@ -1527,7 +1616,7 @@
       state.expandedSessions.clear();
       
       // Filter graph data based on initial zoom level (show only sessions initially)
-      const filteredGraphData = filterGraphDataByZoom(graphData, 'session-only', null);
+      const filteredGraphData = filterGraphDataByZoom(graphData);
       
       console.log('[Graph] Creating graph with', filteredGraphData.nodes.length, 'nodes and', filteredGraphData.links.length, 'links');
       console.log('[Graph] Filtered graph data:', {
@@ -1605,8 +1694,13 @@
       const graphInstance = ForceGraph3D()(graphContainer)
         .width(containerWidth)
         .height(containerHeight)
-        .cooldownTicks(100) // Smoother settling
+        .cooldownTicks(80) // slightly lower to reduce CPU
         .graphData(filteredGraphData)
+        .nodeVal(node => {
+          // Use node.val property (set based on message count for sessions)
+          // This makes sessions with more messages appear larger (like planets)
+          return node.val || 4;
+        })
         .nodeAutoColorBy(node => {
           // Auto-color by first tag if available
           if (node.tags && node.tags.length > 0) {
@@ -1632,19 +1726,27 @@
           }
           return '#ffffff';
         })
+        .nodeLabel(node => {
+          if (node.nodeType === 'session') {
+            return `<div style="padding:6px 8px; max-width:240px;"><strong>${escapeHtml(node.name || '')}</strong></div>`;
+          }
+          const raw = (node.message && node.message.content) || node.name || '';
+          const text = (raw || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+          const snippet = text.length > 200 ? text.slice(0, 200) + '…' : text;
+          return `
+            <div style="padding:6px 8px; max-width:260px;">
+              <div style="font-weight:600; margin-bottom:4px;">${escapeHtml(node.name || 'Message')}</div>
+              <div style="font-size:12px; line-height:1.4;">${escapeHtml(snippet)}</div>
+            </div>
+          `;
+        })
         .onNodeClick((node) => {
           handleGraphNodeClick(node);
         })
-        .onNodeHover(handleGraphNodeHover)
-        .onEngineStop(() => {
-          // Fit to canvas when simulation stops
-          if (state.graph) {
-            state.graph.zoomToFit(400);
-          }
-        });
+        .onNodeHover(handleGraphNodeHover);
       
       // Add gradient links for tagged nodes
-      const THREE = getTHREE();
+      // Reuse THREE from earlier declaration (line 1590)
       if (THREE) {
         // Helper function to convert hex color to RGB
         function hexToRgb(hex) {
@@ -1665,7 +1767,10 @@
             }
             return getTagColorForBlog(node.tags[0]);
           }
-          return '#ffffff';
+          if (node && node.nodeType === 'session') {
+            return state.graphDisplay.sessionColor || '#5da3ff';
+          }
+          return state.graphDisplay.messageColor || '#ffffff';
         }
         
         graphInstance.linkThreeObject(link => {
@@ -1749,7 +1854,7 @@
             }
           }
           // Return null to use default node rendering
-          return null;
+            return null;
         });
       }
       
@@ -1759,22 +1864,29 @@
       // Apply display settings
       applyGraphDisplay();
       
+      // Pause orbit on user interaction and resume after idle
+      const graphCanvasEl = graphContainer;
+      const interactionEvents = ['wheel', 'mousedown', 'pointerdown', 'touchstart', 'keydown', 'mousemove'];
+      interactionEvents.forEach(evt => {
+        graphCanvasEl.addEventListener(evt, handleUserInteraction);
+      });
+      
       // Initialize slow camera orbit animation (like stars floating)
       initCameraOrbit();
       
-      // Add subtle bloom effect
+      // Add bloom effect for glowing star-like nodes
       if (typeof window !== 'undefined') {
-        // Dynamically import UnrealBloomPass
         import('https://esm.sh/three/examples/jsm/postprocessing/UnrealBloomPass.js')
           .then(({ UnrealBloomPass }) => {
             if (state.graph && state.graph.postProcessingComposer) {
               const composer = state.graph.postProcessingComposer();
               if (composer) {
                 const bloomPass = new UnrealBloomPass();
-                bloomPass.strength = 1.5; // Subtle (example uses 4)
-                bloomPass.radius = 0.8; // Subtle (example uses 1)
-                bloomPass.threshold = 0.3; // Subtle (example uses 0)
+                bloomPass.strength = 1.5; // Initial brightness
+                bloomPass.radius = 0.8;
+                bloomPass.threshold = 0.3;
                 composer.addPass(bloomPass);
+                state.bloomPass = bloomPass; // Store reference for brightness control
                 console.log('[Graph] Bloom effect added');
               }
             }
@@ -1799,18 +1911,35 @@
           controls.enablePan = true;
         }
         
-        // Set scene background directly for better contrast
+        // Set scene background with space void gradient
         try {
           const scene = state.graph.scene();
           if (scene) {
-            const THREE = getTHREE();
-            if (THREE) {
-              // Dark blue-black background for contrast with white spheres
-              scene.background = new THREE.Color(0x0a0a0f);
-              console.log('[Graph] Scene background set to dark blue-black');
+            const sceneTHREE = THREE || getTHREE();
+            if (sceneTHREE) {
+              // Create radial gradient texture for space void effect
+              const canvas = document.createElement('canvas');
+              canvas.width = 512;
+              canvas.height = 512;
+              const ctx = canvas.getContext('2d');
+              
+              // Create radial gradient from slightly lighter center to pure black edges
+              const gradient = ctx.createRadialGradient(256, 256, 0, 256, 256, 256);
+              gradient.addColorStop(0, '#050505'); // Very dark center
+              gradient.addColorStop(0.3, '#020202'); // Darker
+              gradient.addColorStop(0.6, '#010101'); // Almost black
+              gradient.addColorStop(1, '#000000'); // Pure black edges
+              
+              ctx.fillStyle = gradient;
+              ctx.fillRect(0, 0, 512, 512);
+              
+              const texture = new sceneTHREE.CanvasTexture(canvas);
+              texture.needsUpdate = true;
+              scene.background = texture;
+              console.log('[Graph] Scene background set to space void gradient');
             } else {
-              // Fallback: use backgroundColor method
-              state.graph.backgroundColor('#0a0a0f');
+              // Fallback: use pure black
+              state.graph.backgroundColor('#000000');
               console.log('[Graph] Scene background set via backgroundColor method');
             }
           }
@@ -1818,82 +1947,19 @@
           console.warn('[Graph] Could not set scene background directly:', e);
           // Fallback
           try {
-            state.graph.backgroundColor('#0a0a0f');
+            state.graph.backgroundColor('#000000');
           } catch (e2) {
             console.warn('[Graph] Could not set background color:', e2);
           }
         }
       }
       
-      // Zoom to fit all nodes on initial load
-      setTimeout(() => {
-        if (state.graph) {
-          state.graph.zoomToFit(1000, 50);
-        }
-      }, 100);
-      
-      // Fit to canvas on window resize
+      // Fit to canvas on window resize (no auto zoom)
       window.addEventListener('resize', debounce(() => {
         if (state.graph && state.currentView === 'graph') {
           resizeGraphForView();
-          setTimeout(() => {
-            if (state.graph) {
-              state.graph.zoomToFit(800, 50); // 800ms transition, 50px padding
-            }
-          }, 100);
         }
       }, 200));
-      
-      // Handle camera controls for zoom detection
-      // Listen for zoom/pan events
-      if (state.graph) {
-        // Track camera changes via periodic check
-        let lastUpdate = Date.now();
-        const updateGraphOnZoom = () => {
-          if (Date.now() - lastUpdate > 300) { // Throttle updates
-            checkZoomAndUpdate();
-            lastUpdate = Date.now();
-          }
-        };
-        
-        // Check zoom on any graph interaction
-        const checkZoomAndUpdate = () => {
-          if (!state.graph || !state.fullGraphData) return;
-          
-          try {
-            const camera = state.graph.camera();
-            const currentZ = camera.position.z;
-            
-            let newZoomLevel = 'session-only';
-            let newFocusedSession = state.focusedSessionId;
-            
-            if (currentZ < 200) {
-              newZoomLevel = 'close';
-            } else if (currentZ < 350) {
-              newZoomLevel = 'medium';
-              // Keep current focused session or find closest
-              if (!newFocusedSession && state.fullGraphData.sessionNodes && state.fullGraphData.sessionNodes.length > 0) {
-                newFocusedSession = state.fullGraphData.sessionNodes[0].id;
-              }
-            } else {
-              newZoomLevel = 'session-only';
-              newFocusedSession = null; // Clear focus when zoomed out
-            }
-            
-            if (newZoomLevel !== state.graphZoomLevel || newFocusedSession !== state.focusedSessionId) {
-              state.graphZoomLevel = newZoomLevel;
-              state.focusedSessionId = newFocusedSession;
-              const filteredData = filterGraphDataByZoom(state.fullGraphData, newZoomLevel, newFocusedSession);
-              state.graph.graphData(filteredData);
-            }
-          } catch (e) {
-            // Ignore errors
-          }
-        };
-        
-        // Check periodically
-        setInterval(checkZoomAndUpdate, 500);
-      }
       
       console.log('Graph initialized with', graphData.nodes.length, 'nodes'); // Debug
 
@@ -1902,42 +1968,15 @@
         state.graph.cooldownTicks(0);
       }
 
-      // Center the graph and ensure all nodes are visible
+      // Start session-only view and center camera (no auto zoom-to-fit)
       setTimeout(() => {
         if (state.graph) {
-          // Reset zoom state
-          state.graphZoomLevel = 'session-only'; // Start with sessions only
+          state.graphZoomLevel = 'session-only';
           state.focusedSessionId = null;
-          state.expandedSessions.clear(); // Start with no expanded sessions
-          
-          // Center camera on the graph
-          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-          // Zoom to fit all nodes - use longer delay to ensure graph is rendered
-          setTimeout(() => {
-            if (state.graph) {
-              state.graph.zoomToFit(400, 0);
-            }
-          }, 200);
+          state.expandedSessions.clear();
+          state.graph.cameraPosition({ x: 0, y: 0, z: 600 });
         }
-      }, 100);
-
-      // Ensure all nodes are visible after graph renders
-      setTimeout(() => {
-        if (state.graph) {
-          // Force zoom to fit all nodes
-          state.graph.zoomToFit(400, 0);
-        }
-      }, 500);
-
-      // Stop simulation after settling
-      setTimeout(() => {
-        if (state.graph) {
-          state.graph.cooldownTicks(0);
-          // Re-center after simulation settles and ensure all nodes visible
-          state.graph.cameraPosition({ x: 0, y: 0, z: 500 });
-          state.graph.zoomToFit(400, 0);
-        }
-      }, 30000);
+      }, 150);
 
       // Set initial size for graph container
       const graphContainerEl = document.getElementById('graph-container');
@@ -2021,15 +2060,13 @@
       camera.position.z * camera.position.z
     ) || 800;
     
-    // Very slow orbit - much slower than example (like stars floating)
-    const orbitSpeed = Math.PI / 5000; // Very slow (example uses /300)
-    
+    // Use orbit speed from state (adjustable via slider)
     // Update camera position in circular orbit
     state.orbitInterval = setInterval(() => {
       if (!state.orbitActive || !state.graph) return;
       
-      // Increment angle
-      state.orbitAngle += orbitSpeed;
+      // Increment angle using state.orbitSpeed
+      state.orbitAngle += state.orbitSpeed;
       
       // Calculate circular orbit position
       const x = distance * Math.sin(state.orbitAngle);
@@ -2038,7 +2075,28 @@
       
       // Update camera position
       state.graph.cameraPosition({ x, y, z });
-    }, 16); // ~60fps for smooth animation
+    }, 50); // Reduced to ~20fps to save CPU/RAM
+  }
+
+  /**
+   * Handle any user interaction: pause orbit, schedule resume and auto-fit
+   */
+  function handleUserInteraction() {
+    state.orbitActive = false;
+    if (state.orbitResumeTimer) clearTimeout(state.orbitResumeTimer);
+    if (state.autoFitTimer) clearTimeout(state.autoFitTimer);
+
+    // Resume orbit after 20s idle
+    state.orbitResumeTimer = setTimeout(() => {
+      state.orbitActive = true;
+    }, 20000);
+
+    // Auto-fit only after 90s idle
+    state.autoFitTimer = setTimeout(() => {
+      if (state.graph) {
+        state.graph.zoomToFit(800, 50);
+      }
+    }, 90000);
   }
   
   /**
@@ -2068,59 +2126,35 @@
   if (document.getElementById('orbit-toggle-btn')) {
     document.getElementById('orbit-toggle-btn').addEventListener('click', toggleCameraOrbit);
   }
-  
+
   /**
-   * Filter graph data based on zoom level
+   * Filter graph data: always show sessions; show messages only for expanded sessions
    */
-  function filterGraphDataByZoom(graphData, zoomLevel, focusedSessionId) {
+  function filterGraphDataByZoom(graphData) {
     if (!graphData || !graphData.nodes) {
       return { nodes: [], links: [] };
     }
 
-    // Create node ID map for fast lookups
-    const nodeMap = new Map(graphData.nodes.map(n => [n.id, n]));
+    // Sessions always visible
+    const sessionNodes = graphData.nodes.filter(n => n.nodeType === 'session');
+    const sessionIds = new Set(sessionNodes.map(n => n.id));
 
-    let visibleNodes = [];
-    let visibleLinks = [];
+    // Ideas only for expanded sessions
+    const ideaNodes = graphData.nodes.filter(
+      n => n.nodeType === 'idea' && n.parentSessionId && state.expandedSessions.has(n.parentSessionId)
+    );
+    const visibleNodes = [...sessionNodes, ...ideaNodes];
+    const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
 
-    if (zoomLevel === 'session-only' || zoomLevel === 'far') {
-      // Show only Thought Session nodes (sessions only, no ideas)
-      visibleNodes = graphData.nodes.filter(n => n.nodeType === 'session');
-      // Show links between sessions (tag-based connections)
-      // Filter links to only include session-to-session connections
-      const sessionIds = new Set(visibleNodes.map(n => n.id));
-      visibleLinks = graphData.links.filter(l => {
-        const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
-        const targetId = typeof l.target === 'object' ? l.target.id : l.target;
-        // Include links between sessions (tag-based connections)
-        // Exclude parent-child links (session to idea)
-        return sessionIds.has(sourceId) && sessionIds.has(targetId) && l.type !== 'parent';
-      });
-    } else if (zoomLevel === 'medium') {
-      // Show sessions + ideas for expanded sessions
-      visibleNodes = graphData.nodes.filter(n => {
-        // Always show sessions
-        if (n.nodeType === 'session') return true;
-        // Show ideas only if their parent session is expanded
-        if (n.nodeType === 'idea' && n.parentSessionId) {
-          return state.expandedSessions.has(n.parentSessionId);
-        }
-        return false;
-      });
-      const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
-      
-      // Show links only for visible nodes
-      visibleLinks = graphData.links.filter(l => {
-        const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
-        const targetId = typeof l.target === 'object' ? l.target.id : l.target;
-        return visibleNodeIds.has(sourceId) && visibleNodeIds.has(targetId);
-      });
-    } else if (zoomLevel === 'close') {
-      // Show all nodes (sessions + all ideas)
-      visibleNodes = graphData.nodes;
-      visibleLinks = graphData.links;
-    }
-    
+    // Links: session-session always; parent/idea links only when both ends visible
+    const visibleLinks = graphData.links.filter(l => {
+      const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+      const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+      const sourceVisible = visibleNodeIds.has(sourceId);
+      const targetVisible = visibleNodeIds.has(targetId);
+      return sourceVisible && targetVisible;
+    });
+
     return { nodes: visibleNodes, links: visibleLinks };
   }
   
@@ -2138,15 +2172,9 @@
     
     // Rebuild graph data with updated expansion state
     if (state.fullGraphData) {
-      const filteredData = filterGraphDataByZoom(state.fullGraphData, 'medium', sessionId);
+      const filteredData = filterGraphDataByZoom(state.fullGraphData);
       if (state.graph) {
         state.graph.graphData(filteredData);
-        // Zoom to fit after expansion
-        setTimeout(() => {
-          if (state.graph) {
-            state.graph.zoomToFit(400, 50);
-          }
-        }, 100);
       }
     }
   }
@@ -2257,6 +2285,8 @@
       console.warn('handleGraphNodeClick: node is null or undefined');
       return;
     }
+    
+    handleUserInteraction();
     
     console.log('[handleGraphNodeClick] Node clicked:', {
       id: node.id,
@@ -2423,9 +2453,21 @@
   function applyGraphDisplay() {
     if (!state.graph) return;
     
-    // Basic node and link styling - simple setup
+    // Node colors with session/message colors and tag overrides
     if (state.graph.nodeColor) {
-      state.graph.nodeColor(state.graphDisplay.nodeColor || '#ffffff');
+      state.graph.nodeColor(node => {
+        // Highlight on hover
+        if (state.hoveredNodeId && node.id === state.hoveredNodeId) {
+          return state.graphDisplay.highlightColor || '#5DADE2';
+        }
+        if (node.nodeType === 'session') {
+          return state.graphDisplay.sessionColor || '#5da3ff';
+        }
+        if (node.tags && node.tags.length > 0) {
+          return getTagColorForBlog(node.tags[0]);
+        }
+        return state.graphDisplay.messageColor || '#ffffff';
+      });
     }
     if (state.graph.linkColor) {
       state.graph.linkColor(state.graphDisplay.linkColor || '#ffffff');
@@ -2433,7 +2475,44 @@
     if (state.graph.linkWidth) {
       state.graph.linkWidth(state.graphDisplay.linkWidth || 0.5);
     }
-    
+
+    updateLegend();
+    saveColorPrefs();
+  }
+
+  /**
+   * Update legend UI with current colors and tags
+   */
+  function updateLegend() {
+    if (!elements.legendList) return;
+    const legendItems = [];
+
+    legendItems.push({
+      label: 'Thought Sessions',
+      color: state.graphDisplay.sessionColor || '#5da3ff'
+    });
+    legendItems.push({
+      label: 'Messages',
+      color: state.graphDisplay.messageColor || '#ffffff'
+    });
+
+    // Tag overrides
+    if (state.graphDisplay.tagOverrides) {
+      Object.entries(state.graphDisplay.tagOverrides).forEach(([tag, color]) => {
+        legendItems.push({
+          label: `Tag: ${tag}`,
+          color
+        });
+      });
+    }
+
+    // Render
+    elements.legendList.innerHTML = legendItems.map(item => `
+      <div class="legend-item">
+        <span class="legend-swatch" style="background:${item.color};"></span>
+        <span class="legend-label">${item.label}</span>
+      </div>
+    `).join('');
   }
 
   /**
@@ -2512,8 +2591,8 @@
       starField.renderOrder = -1;
       starField.material.depthTest = false;
       
-      // Set scene background to dark blue-black for contrast
-      scene.background = new THREE.Color(0x0a0a0f);
+      // Set scene background to pure black (space void)
+      scene.background = new THREE.Color(0x000000);
       
       // Add to scene
       scene.add(starField);
@@ -2609,17 +2688,11 @@
       
       // Reset to show only session nodes
       if (state.fullGraphData) {
-        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'session-only', null);
-        state.graph.graphData(filteredData);
+        state.graph.graphData(filterGraphDataByZoom(state.fullGraphData));
       }
       
-      // Reset camera and fit to canvas
-      state.graph.cameraPosition({ x: 0, y: 0, z: 800 });
-      setTimeout(() => {
-        if (state.graph) {
-          state.graph.zoomToFit(1000, 50); // 1000ms transition, 50px padding
-        }
-      }, 100);
+      // Reset camera only (no auto zoom)
+      state.graph.cameraPosition({ x: 0, y: 0, z: 600 });
     }
   }
 
@@ -2638,7 +2711,7 @@
       
       // Reset to show only sessions
       if (state.fullGraphData) {
-        const filteredData = filterGraphDataByZoom(state.fullGraphData, 'session-only', null);
+        const filteredData = filterGraphDataByZoom(state.fullGraphData);
         state.graph.graphData(filteredData);
       }
       
@@ -3011,7 +3084,7 @@
               if (att.type === 'image' && att.url) {
                 msgHtml += `<div class="blog-attachment-image"><img src="${escapeHtml(att.url)}" alt="${escapeHtml(att.name || 'Image')}" loading="lazy"></div>`;
               } else if (att.type === 'audio' && att.url) {
-                msgHtml += `<div class="blog-attachment-audio"><audio controls src="${escapeHtml(att.url)}"></audio>`;
+                msgHtml += `<div class="blog-attachment-audio"><audio controls class="media-element" src="${escapeHtml(att.url)}"></audio>`;
                 // Don't show transcription inline - it's already in the message content
                 // Only show a button to view formatted transcript in a modal if user wants
                 // Check if transcription exists and is different from message content
@@ -3023,7 +3096,7 @@
                 }
                 msgHtml += `</div>`;
               } else if (att.type === 'video' && att.url) {
-                msgHtml += `<div class="blog-attachment-video"><video controls src="${escapeHtml(att.url)}"></video></div>`;
+                msgHtml += `<div class="blog-attachment-video"><video controls class="media-element" src="${escapeHtml(att.url)}"></video></div>`;
               } else if (att.url) {
                 msgHtml += `<div class="blog-attachment-file"><a href="${escapeHtml(att.url)}" target="_blank">${escapeHtml(att.name || 'File')}</a></div>`;
               }
@@ -3049,6 +3122,37 @@
       }
       
       elements.modalContent.innerHTML = contentHtml;
+      
+      // Re-track media elements after modal content is updated
+      setTimeout(() => {
+        const mediaElements = Array.from(document.querySelectorAll('audio.media-element, video.media-element'));
+        mediaElements.forEach(media => {
+          if (!state.allMediaElements.includes(media)) {
+            state.allMediaElements.push(media);
+            media.addEventListener('play', () => {
+              state.allMediaElements.forEach(m => {
+                if (m !== media && !m.paused) {
+                  m.pause();
+                }
+              });
+              state.currentMedia = media;
+              if (elements.mediaControls) elements.mediaControls.hidden = false;
+            });
+            media.addEventListener('pause', () => {
+              if (state.currentMedia === media) {
+                state.currentMedia = null;
+                if (elements.mediaControls) elements.mediaControls.hidden = true;
+              }
+            });
+            media.addEventListener('ended', () => {
+              if (state.currentMedia === media) {
+                state.currentMedia = null;
+                if (elements.mediaControls) elements.mediaControls.hidden = true;
+              }
+            });
+          }
+        });
+      }, 100);
       
       // Add event listeners for transcript buttons
       elements.modalContent.querySelectorAll('.blog-view-transcript-btn').forEach(btn => {
@@ -3472,6 +3576,113 @@
   }
 
   // ==========================================================================
+  // Media Controls
+  // ==========================================================================
+  
+  /**
+   * Setup media controls for audio/video playback
+   */
+  function setupMediaControls() {
+    if (!elements.mediaControls || !elements.mediaPlayBtn || !elements.mediaPauseBtn || !elements.mediaStopBtn) return;
+    
+    // Track all media elements on the page
+    function trackMediaElements() {
+      state.allMediaElements = Array.from(document.querySelectorAll('audio.media-element, video.media-element'));
+      
+      // Add event listeners to all media elements
+      state.allMediaElements.forEach(media => {
+        media.addEventListener('play', () => {
+          // Stop any other playing media
+          state.allMediaElements.forEach(m => {
+            if (m !== media && !m.paused) {
+              m.pause();
+            }
+          });
+          state.currentMedia = media;
+          updateMediaControlsVisibility();
+        });
+        
+        media.addEventListener('pause', () => {
+          if (state.currentMedia === media) {
+            state.currentMedia = null;
+            updateMediaControlsVisibility();
+          }
+        });
+        
+        media.addEventListener('ended', () => {
+          if (state.currentMedia === media) {
+            state.currentMedia = null;
+            updateMediaControlsVisibility();
+          }
+        });
+      });
+    }
+    
+    // Update media controls visibility
+    function updateMediaControlsVisibility() {
+      if (state.currentMedia && !state.currentMedia.paused) {
+        elements.mediaControls.hidden = false;
+      } else {
+        elements.mediaControls.hidden = true;
+      }
+    }
+    
+    // Play button
+    elements.mediaPlayBtn.addEventListener('click', () => {
+      if (state.currentMedia) {
+        state.currentMedia.play();
+      } else {
+        // Find first paused media element
+        const pausedMedia = state.allMediaElements.find(m => m.paused);
+        if (pausedMedia) {
+          pausedMedia.play();
+        }
+      }
+    });
+    
+    // Pause button
+    elements.mediaPauseBtn.addEventListener('click', () => {
+      if (state.currentMedia) {
+        state.currentMedia.pause();
+      } else {
+        // Pause all playing media
+        state.allMediaElements.forEach(m => {
+          if (!m.paused) {
+            m.pause();
+          }
+        });
+      }
+    });
+    
+    // Stop button
+    elements.mediaStopBtn.addEventListener('click', () => {
+      // Stop all media
+      state.allMediaElements.forEach(m => {
+        m.pause();
+        m.currentTime = 0;
+      });
+      state.currentMedia = null;
+      updateMediaControlsVisibility();
+    });
+    
+    // Track media elements initially and after modal opens
+    trackMediaElements();
+    
+    // Re-track after modal content is updated
+    const originalOpenModal = window.openModal || (() => {});
+    window.openModal = function(...args) {
+      originalOpenModal(...args);
+      setTimeout(trackMediaElements, 100);
+    };
+    
+    // Use MutationObserver to track dynamically added media
+    const observer = new MutationObserver(() => {
+      trackMediaElements();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+  
+  // ==========================================================================
   // Event Listeners
   // ==========================================================================
   
@@ -3486,14 +3697,36 @@
     // Graph sidebar section toggles
     if (elements.graphSectionToggles) {
       elements.graphSectionToggles.forEach(toggle => {
+        // Initialize accordion state based on aria-expanded attribute
+        const section = toggle.getAttribute('data-section');
+        const content = document.getElementById(`${section}-content`);
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        const icon = toggle.querySelector('.blog_graph-section-icon');
+        
+        // Set initial state
+        if (content) {
+          content.hidden = !isExpanded;
+        }
+        if (icon) {
+          icon.textContent = isExpanded ? '▼' : '►';
+        }
+        
+        // Add click handler
         toggle.addEventListener('click', () => {
-          const section = toggle.getAttribute('data-section');
-          const content = document.getElementById(`${section}-content`);
-          const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+          const currentExpanded = toggle.getAttribute('aria-expanded') === 'true';
+          const newExpanded = !currentExpanded;
           
-          toggle.setAttribute('aria-expanded', !isExpanded);
+          // Update aria-expanded
+          toggle.setAttribute('aria-expanded', newExpanded);
+          
+          // Update content visibility (when expanding, hide=false)
           if (content) {
-            content.hidden = isExpanded;
+            content.hidden = !newExpanded;
+          }
+          
+          // Update icon (► when collapsed, ▼ when expanded)
+          if (icon) {
+            icon.textContent = newExpanded ? '▼' : '►';
           }
         });
       });
@@ -3570,12 +3803,29 @@
         applyGraphDisplay();
       });
     }
-    if (elements.displayNodeSize) {
-      elements.displayNodeSize.addEventListener('input', (e) => {
-        const newSize = parseInt(e.target.value) || 8;
-        state.graphDisplay.nodeSize = newSize;
-        console.log('[Node Size Slider] Value changed to:', newSize);
+    if (elements.displaySessionColor) {
+      elements.displaySessionColor.addEventListener('input', (e) => {
+        state.graphDisplay.sessionColor = e.target.value;
         applyGraphDisplay();
+      });
+    }
+    if (elements.displayMessageColor) {
+      elements.displayMessageColor.addEventListener('input', (e) => {
+        state.graphDisplay.messageColor = e.target.value;
+        applyGraphDisplay();
+      });
+    }
+    if (elements.tagOverrideAdd) {
+      elements.tagOverrideAdd.addEventListener('click', () => {
+        const name = elements.tagOverrideName?.value?.trim();
+        const color = elements.tagOverrideColor?.value || '#ffffff';
+        if (!name) return;
+        state.graphDisplay.tagOverrides[name.toLowerCase()] = color;
+        saveColorPrefs();
+        updateLegend();
+        applyGraphDisplay();
+        // clear name input for convenience
+        if (elements.tagOverrideName) elements.tagOverrideName.value = '';
       });
     }
     if (elements.displayLinkWidth) {
@@ -3584,10 +3834,24 @@
         applyGraphDisplay();
       });
     }
-    if (elements.displayLinkStyle) {
-      elements.displayLinkStyle.addEventListener('change', (e) => {
-        state.graphDisplay.linkStyle = e.target.value;
-        applyGraphDisplay();
+    
+    // Orbit speed slider
+    if (elements.orbitSpeedSlider) {
+      elements.orbitSpeedSlider.addEventListener('input', (e) => {
+        state.orbitSpeed = parseFloat(e.target.value);
+        // Restart orbit with new speed
+        if (state.graph) {
+          initCameraOrbit();
+        }
+      });
+    }
+    
+    // Bloom brightness slider
+    if (elements.bloomBrightnessSlider) {
+      elements.bloomBrightnessSlider.addEventListener('input', (e) => {
+        if (state.bloomPass) {
+          state.bloomPass.strength = parseFloat(e.target.value);
+        }
       });
     }
     
@@ -3784,6 +4048,9 @@
     // Check auth state and update UI
     await checkAuthState();
     
+    // Load saved color preferences
+    loadColorPrefs();
+    
     // Load tag colors from database
     await loadTagColors();
     
@@ -3808,17 +4075,36 @@
     });
     
     // Sync initial slider values with state
-    if (elements.displayNodeSize && elements.displayNodeSize.value) {
-      state.graphDisplay.nodeSize = parseInt(elements.displayNodeSize.value) || 8;
-      console.log('[init] Synced nodeSize from slider:', state.graphDisplay.nodeSize);
-    }
     if (elements.displayLinkWidth && elements.displayLinkWidth.value) {
       state.graphDisplay.linkWidth = parseFloat(elements.displayLinkWidth.value) || 0.5;
       console.log('[init] Synced linkWidth from slider:', state.graphDisplay.linkWidth);
     }
+    if (elements.orbitSpeedSlider && elements.orbitSpeedSlider.value) {
+      state.orbitSpeed = parseFloat(elements.orbitSpeedSlider.value) || Math.PI / 5000;
+      console.log('[init] Synced orbitSpeed from slider:', state.orbitSpeed);
+    }
+    if (elements.bloomBrightnessSlider && elements.bloomBrightnessSlider.value) {
+      const brightness = parseFloat(elements.bloomBrightnessSlider.value) || 1.5;
+      if (state.bloomPass) {
+        state.bloomPass.strength = brightness;
+      }
+      console.log('[init] Synced bloom brightness from slider:', brightness);
+    }
+    if (elements.displaySessionColor) {
+      elements.displaySessionColor.value = state.graphDisplay.sessionColor || '#5da3ff';
+    }
+    if (elements.displayMessageColor) {
+      elements.displayMessageColor.value = state.graphDisplay.messageColor || '#ffffff';
+    }
+    
+    // Render initial legend
+    updateLegend();
     
     // Setup event listeners
     setupEventListeners();
+    
+    // Setup media controls
+    setupMediaControls();
 
     // Load view preference (default to list)
     const preferredView = 'list'; // Always default to list view

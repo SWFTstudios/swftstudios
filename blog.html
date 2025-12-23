@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Think Tank | SWFT Studios</title>
-  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Think Tank. Connect your dreams and creations in a dynamic thought network." name="description">
-  <meta content="Think Tank | SWFT Studios" property="og:title">
-  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Think Tank. Connect your dreams and creations." property="og:description">
+  <title>Thought Sessions | SWFT Studios</title>
+  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Thought Sessions graph. Connect your dreams and creations in a dynamic network." name="description">
+  <meta content="Thought Sessions | SWFT Studios" property="og:title">
+  <meta content="Visualize your thoughts, ideas, and insights through an interactive 3D Thought Sessions graph. Connect your dreams and creations." property="og:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
   <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -87,7 +87,7 @@ body {
                       <div class="margin-bottom margin-medium">
                         <div class="nav_title">Resources</div>
                       </div>
-                      <a href="blog.html" aria-current="page" class="nav_link w--current">Think Tank</a>
+                    <a href="blog.html" aria-current="page" class="nav_link w--current">Thought Sessions</a>
                       <a href="#" class="nav_link is-muted">Videos (Coming Soon)</a>
                     </div>
                     <div class="nav_link-list">
@@ -117,11 +117,11 @@ body {
               <div class="blog_header">
                 <div class="blog_header-content">
                   <div class="margin-bottom margin-small">
-                    <div class="text-size-small text-color-green">Think Tank</div>
+                  <div class="text-size-small text-color-green">Blog Posts and articles</div>
                   </div>
                   <div class="margin-bottom margin-small">
                     <div class="max-width-large">
-                      <h1 class="text-weight-medium">Think Tank</h1>
+                      <h1 class="text-weight-medium">Thought Sessions</h1>
                     </div>
                   </div>
                   <p class="text-size-small blog_description">Visualize your thoughts, dreams, and ideas as an interconnected network. Explore the 3D Mind Map to see how your mind connects concepts, insights, and creative visions.</p>
@@ -306,6 +306,16 @@ body {
                           <button type="button" id="orbit-toggle-btn" class="blog_graph-button" style="width: 100%; margin-bottom: 10px;">
                             Pause Orbit
                           </button>
+                          <div class="blog_graph-slider-group">
+                            <label class="blog_graph-slider-label">
+                              <span>Orbit Speed</span>
+                              <input type="range" id="orbit-speed-slider" class="blog_graph-slider" min="0.0001" max="0.01" step="0.0001" value="0.000628">
+                            </label>
+                            <label class="blog_graph-slider-label">
+                              <span>Glow Brightness</span>
+                              <input type="range" id="bloom-brightness-slider" class="blog_graph-slider" min="0" max="5" step="0.1" value="1.5">
+                            </label>
+                          </div>
                         </div>
                       </div>
                       
@@ -332,27 +342,45 @@ body {
                           </div>
                           <div class="blog_graph-slider-group">
                             <label class="blog_graph-slider-label">
-                              <span>Node Size</span>
-                              <input type="range" id="display-node-size" class="blog_graph-slider" min="1" max="20" value="8">
-                            </label>
-                            <label class="blog_graph-slider-label">
                               <span>Link Width</span>
                               <input type="range" id="display-link-width" class="blog_graph-slider" min="0.1" max="3" step="0.1" value="0.5">
-                            </label>
-                          </div>
-                          <div class="blog_graph-select-group">
-                            <label class="blog_graph-select-label">
-                              <span>Link Style</span>
-                              <select id="display-link-style" class="blog_graph-select">
-                                <option value="solid">Solid</option>
-                                <option value="dashed">Dashed</option>
-                                <option value="dotted">Dotted</option>
-                              </select>
                             </label>
                           </div>
                         </div>
                       </div>
                       
+                    <!-- Styles & Legend Section -->
+                    <div class="blog_graph-sidebar-section">
+                      <button type="button" class="blog_graph-section-toggle" data-section="styles" aria-expanded="false">
+                        <span class="blog_graph-section-icon">►</span>
+                        <span class="blog_graph-section-title">Styles &amp; Legend</span>
+                      </button>
+                      <div class="blog_graph-section-content" id="styles-content" hidden>
+                        <div class="blog_graph-color-group">
+                          <label class="blog_graph-color-label">
+                            <span>Thought Session Color</span>
+                            <input type="color" id="display-session-color" class="blog_graph-color-input" value="#5da3ff">
+                          </label>
+                          <label class="blog_graph-color-label">
+                            <span>Message Color</span>
+                            <input type="color" id="display-message-color" class="blog_graph-color-input" value="#ffffff">
+                          </label>
+                        </div>
+                        <div class="blog_graph-color-group">
+                          <label class="blog_graph-color-label">
+                            <span>Tag Name</span>
+                            <input type="text" id="tag-override-name" class="blog_graph-search-input" placeholder="e.g. design">
+                          </label>
+                          <label class="blog_graph-color-label">
+                            <span>Tag Color</span>
+                            <input type="color" id="tag-override-color" class="blog_graph-color-input" value="#ff6b6b">
+                          </label>
+                          <button type="button" id="tag-override-add" class="blog_graph-button" style="width:100%; margin-top:8px;">Save Tag Color</button>
+                        </div>
+                        <div class="blog_graph-legend" id="legend-list" aria-label="Legend of colors"></div>
+                      </div>
+                    </div>
+                    
                       <!-- Forces Section -->
                       <div class="blog_graph-sidebar-section">
                         <button type="button" class="blog_graph-section-toggle" data-section="forces" aria-expanded="true">
@@ -405,7 +433,7 @@ body {
                         </div>
                       </div>
                       <div class="blog_graph-controls">
-                        <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset Think Tank view">
+                        <button type="button" class="blog_graph-control-btn" id="graph-reset" aria-label="Reset Thought Sessions view">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
                             <path d="M3 3v5h5"></path>
@@ -521,7 +549,7 @@ body {
 
               <!-- Graph Unavailable Notice -->
               <div class="blog_graph-unavailable" id="graph-unavailable" hidden>
-                <p>Think Tank view is not available on this device.</p>
+                <p>Thought Sessions view is not available on this device.</p>
               </div>
 
             </div>
@@ -617,22 +645,10 @@ body {
               </div>
               <div class="blog_graph-slider-group">
                 <label class="blog_graph-slider-label">
-                  <span>Node Size</span>
-                  <input type="range" id="display-node-size" class="blog_graph-slider" min="1" max="20" value="8">
                 </label>
                 <label class="blog_graph-slider-label">
                   <span>Link Width</span>
                               <input type="range" id="display-link-width" class="blog_graph-slider" min="0.1" max="3" step="0.1" value="0.5">
-                </label>
-              </div>
-              <div class="blog_graph-select-group">
-                <label class="blog_graph-select-label">
-                  <span>Link Style</span>
-                  <select id="display-link-style" class="blog_graph-select">
-                    <option value="solid">Solid</option>
-                    <option value="dashed">Dashed</option>
-                    <option value="dotted">Dotted</option>
-                  </select>
                 </label>
               </div>
             </div>
@@ -720,5 +736,27 @@ body {
   <script src="js/settings.js" type="text/javascript"></script>
   <script src="js/graph-customizer.js" type="text/javascript"></script>
   <script src="js/blog.js" type="text/javascript"></script>
+  
+  <!-- Fixed Media Controls -->
+  <div id="media-controls" class="media-controls" hidden>
+    <div class="media-controls-content">
+      <button type="button" id="media-play-btn" class="media-control-btn" aria-label="Play">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+      </button>
+      <button type="button" id="media-pause-btn" class="media-control-btn" aria-label="Pause">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="4" width="4" height="16"></rect>
+          <rect x="14" y="4" width="4" height="16"></rect>
+        </svg>
+      </button>
+      <button type="button" id="media-stop-btn" class="media-control-btn" aria-label="Stop">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="6" width="12" height="12"></rect>
+        </svg>
+      </button>
+    </div>
+  </div>
 </body>
 </html>

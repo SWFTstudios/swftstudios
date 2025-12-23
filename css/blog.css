@@ -9,7 +9,65 @@
  * - Modal for note preview
  * - Responsive breakpoints
  * - Accessibility: focus states, reduced motion
+ * - Fixed media controls
  */
+
+/* ==========================================================================
+   Media Controls (Fixed Bottom Center)
+   ========================================================================== */
+
+.media-controls {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: rgba(20, 20, 22, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.media-controls-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.media-control-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.media-control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(93, 173, 226, 0.5);
+  transform: scale(1.05);
+}
+
+.media-control-btn:active {
+  transform: scale(0.95);
+}
+
+.media-control-btn svg {
+  width: 20px;
+  height: 20px;
+}
 
 /* ==========================================================================
    Blog Section Container
@@ -468,7 +526,7 @@
    ========================================================================== */
 
 .blog_graph-view {
-  display: none; /* Hidden by default, graph shown in modal */
+  display: none; /* Hidden by default, shown when data-view="graph" */
 }
 
 /* ==========================================================================
@@ -818,6 +876,26 @@
   outline: none;
   border-color: rgba(93, 173, 226, 0.5);
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* Legend */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #e6e6e6;
+  font-size: 13px;
+}
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: inline-block;
+}
+.legend-label {
+  flex: 1;
 }
 
 .blog_graph-select option {
