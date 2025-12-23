@@ -408,19 +408,62 @@
   .blog_content {
     grid-template-columns: 1fr;
   }
+  
+  /* List view - single column, continuous scroll */
   .blog_content[data-view="list"] .blog_list-view {
     display: block;
+    width: 100%;
   }
   .blog_content[data-view="list"] .blog_graph-view {
-    display: none;
+    display: none !important;
   }
+  
+  /* Mind map view - full width, max 60vh */
   .blog_content[data-view="mind-map"] .blog_list-view,
   .blog_content[data-view="graph"] .blog_list-view {
-    display: none;
+    display: none !important;
   }
   .blog_content[data-view="mind-map"] .blog_graph-view,
   .blog_content[data-view="graph"] .blog_graph-view {
     display: block;
+    width: 100%;
+    max-height: 60vh;
+    overflow: hidden;
+  }
+  
+  /* Ensure list is single column on mobile with continuous scroll */
+  .blog_content[data-view="list"] .blog_list-view {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .blog_list {
+    grid-template-columns: 1fr !important;
+    display: grid;
+    gap: 1rem;
+    padding: 1rem 0;
+    width: 100%;
+  }
+  
+  /* Mind map container height constraint on mobile */
+  .blog_content[data-view="mind-map"] .blog_graph-layout,
+  .blog_content[data-view="graph"] .blog_graph-layout {
+    max-height: 60vh;
+    overflow: hidden;
+  }
+  
+  .blog_content[data-view="mind-map"] .blog_graph-main,
+  .blog_content[data-view="graph"] .blog_graph-main {
+    max-height: 60vh;
+    overflow: hidden;
+  }
+  
+  .blog_content[data-view="mind-map"] .blog_graph-container,
+  .blog_content[data-view="graph"] .blog_graph-container {
+    max-height: 60vh;
+    height: 60vh;
   }
 }
 
@@ -1725,16 +1768,35 @@
     justify-content: center;
   }
   
+  /* List view - single column, continuous scroll */
   .blog_list {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    display: grid;
+    gap: 1rem;
+    padding: 1rem 0;
   }
   
+  /* Mind map on mobile - max 60vh, full width */
   .blog_graph-view {
-    min-height: 400px;
+    max-height: 60vh;
+    min-height: auto;
+    width: 100%;
+  }
+  
+  .blog_graph-layout {
+    max-height: 60vh;
+    overflow: hidden;
+  }
+  
+  .blog_graph-main {
+    max-height: 60vh;
+    overflow: hidden;
   }
   
   .blog_graph-container {
-    min-height: 400px;
+    max-height: 60vh;
+    height: 60vh;
+    min-height: auto;
   }
   
   .blog_modal-related-list {

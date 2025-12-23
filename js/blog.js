@@ -2793,24 +2793,28 @@
         resizeGraphForView();
       }
     } else {
-      // Mobile: Toggle between views
+      // Mobile: Toggle between views (only one visible at a time)
       if (view === 'list') {
         if (listView) {
           listView.hidden = false;
           listView.setAttribute('aria-hidden', 'false');
+          listView.style.display = 'block';
         }
         if (graphView) {
           graphView.hidden = true;
           graphView.setAttribute('aria-hidden', 'true');
+          graphView.style.display = 'none';
         }
       } else if (view === 'mind-map') {
         if (listView) {
           listView.hidden = true;
           listView.setAttribute('aria-hidden', 'true');
+          listView.style.display = 'none';
         }
         if (graphView) {
           graphView.hidden = false;
           graphView.setAttribute('aria-hidden', 'false');
+          graphView.style.display = 'block';
         }
         
         // Initialize graph if not already loaded
@@ -2818,7 +2822,7 @@
           console.log('[setView] Initializing mind map for mobile view...');
           await initGraph();
         } else {
-          // Resize graph to fit container
+          // Resize graph to fit container (60vh on mobile)
           resizeGraphForView();
         }
       }
