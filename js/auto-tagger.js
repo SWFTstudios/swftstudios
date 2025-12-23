@@ -211,18 +211,66 @@
     },
     
     /**
-     * Update tag button states
+     * Update tag button states with proper contrast
      */
     updateTagButtons() {
       const buttons = document.querySelectorAll('.tag-suggestion');
       buttons.forEach(btn => {
         const tag = btn.dataset.tag;
-        if (this.selectedTags.has(tag)) {
+        const isSelected = this.selectedTags.has(tag);
+        
+        if (isSelected) {
           btn.classList.add('selected');
+          
+          // Get custom tag color if available
+          let tagColor = null;
+          if (window.Settings && window.Settings.getTagColor) {
+            tagColor = window.Settings.getTagColor(tag);
+          }
+          
+          // Always apply color with proper contrast (including default SWFT blue)
+          const contrastColor = this.getContrastColor(tagColor || '#BEFFF2');
+          btn.style.backgroundColor = tagColor || '#BEFFF2';
+          btn.style.color = contrastColor;
+          btn.style.borderColor = tagColor || '#BEFFF2';
         } else {
           btn.classList.remove('selected');
+          // Reset inline styles when not selected
+          btn.style.backgroundColor = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
         }
       });
+    },
+    
+    /**
+     * Calculate relative luminance for WCAG contrast ratio
+     */
+    getRelativeLuminance(r, g, b) {
+      const [rs, gs, bs] = [r, g, b].map(val => {
+        val = val / 255;
+        return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    },
+    
+    /**
+     * Get contrast color (black or white) for text on colored background
+     */
+    getContrastColor(hexColor) {
+      if (!hexColor) return '#000000';
+      
+      const hex = hexColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      
+      // Calculate luminance
+      const luminance = this.getRelativeLuminance(r, g, b);
+      
+      // Return black for light backgrounds, white for dark backgrounds
+      // Using 0.5 threshold for better contrast
+      return luminance > 0.5 ? '#000000' : '#ffffff';
     },
     
     // ==========================================================================

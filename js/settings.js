@@ -151,7 +151,9 @@
     // ==========================================================================
     
     getTagColor(tag) {
-      return this.settings.tagColors[tag] || DEFAULT_SETTINGS.tagColors.design;
+      if (!tag) return DEFAULT_SETTINGS.tagColors.design;
+      const normalizedTag = tag.toLowerCase();
+      return this.settings.tagColors[normalizedTag] || DEFAULT_SETTINGS.tagColors.design;
     },
     
     setTagColor(tag, color) {
@@ -174,12 +176,44 @@
       // (handled by graph-customizer.js)
     },
     
+    /**
+     * Calculate relative luminance for WCAG contrast ratio
+     */
+    getRelativeLuminance(r, g, b) {
+      const [rs, gs, bs] = [r, g, b].map(val => {
+        val = val / 255;
+        return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    },
+    
+    /**
+     * Get contrast color (black or white) for text on colored background
+     */
+    getContrastColor(hexColor) {
+      if (!hexColor) return '#000000';
+      
+      const hex = hexColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      
+      // Calculate luminance
+      const luminance = this.getRelativeLuminance(r, g, b);
+      
+      // Return black for light backgrounds, white for dark backgrounds
+      return luminance > 0.5 ? '#000000' : '#ffffff';
+    },
+    
     applyTagColors() {
       const style = document.getElementById('tag-color-styles') || document.createElement('style');
       style.id = 'tag-color-styles';
       
       let css = '';
       Object.entries(this.settings.tagColors).forEach(([tag, color]) => {
+        // Calculate contrast color for selected tag suggestions
+        const contrastColor = this.getContrastColor(color);
+        
         css += `
           .message-tag[data-tag="${tag}"],
           .blog_tag-btn[data-tag="${tag}"].is-active,
@@ -187,6 +221,13 @@
             background: ${color}20;
             border-color: ${color};
             color: ${color};
+          }
+          
+          /* Tag suggestions with custom colors - ensure proper contrast when selected */
+          .tag-suggestion.selected[data-tag="${tag}"] {
+            background: ${color} !important;
+            color: ${contrastColor} !important;
+            border-color: ${color} !important;
           }
         `;
       });

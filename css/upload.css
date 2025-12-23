@@ -1483,8 +1483,13 @@ body {
 
 .tag-suggestion.selected {
   background: var(--theme-accent);
-  color: var(--theme-text-primary);
+  color: var(--theme-bg-primary); /* Dark text on SWFT blue for better contrast */
   border-color: var(--theme-accent);
+}
+
+/* Custom tag colors with proper contrast - applied via JavaScript */
+.tag-suggestion.selected[data-tag-color] {
+  /* Inline styles will override this, but this ensures fallback */
 }
 
 .message-input-form {

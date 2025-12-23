@@ -2158,11 +2158,14 @@
       // Set initial size for graph container
       const graphContainerEl = document.getElementById('graph-container');
       if (graphContainerEl && state.graph) {
-        // Get dimensions from modal container
+        // Get dimensions from container (accounting for split view on desktop)
         const sidebar = document.getElementById('graph-sidebar');
-        const sidebarWidth = sidebar ? sidebar.offsetWidth : 280;
+        const sidebarWidth = sidebar && !sidebar.hidden ? sidebar.offsetWidth : 0;
         
-        const containerWidth = graphContainerEl.clientWidth || (window.innerWidth - sidebarWidth);
+        // On desktop split view, use half the viewport width minus sidebar
+        const isDesktop = detectDesktop();
+        const baseWidth = isDesktop ? window.innerWidth / 2 : window.innerWidth;
+        const containerWidth = graphContainerEl.clientWidth || (baseWidth - sidebarWidth);
         const containerHeight = graphContainerEl.clientHeight || window.innerHeight;
         
         console.log('[Graph] Container dimensions check:', { containerWidth, containerHeight, sidebarWidth });
@@ -3016,7 +3019,55 @@
    * Note: 3d-force-graph uses d3-force internally, but we need d3 to be available
    * For now, we'll use the graph's built-in cooldownTicks to restart simulation
    */
-  function applyGraphForces() {
+  /**
+   * Load d3 library dynamically if not available
+   * d3 includes d3-force which we need for force controls
+   */
+  async function loadD3() {
+    if (window.d3 && window.d3.forceCenter) {
+      return window.d3;
+    }
+    
+    // Check if already loading
+    if (window._d3Loading) {
+      return new Promise((resolve) => {
+        const checkInterval = setInterval(() => {
+          if (window.d3 && window.d3.forceCenter) {
+            clearInterval(checkInterval);
+            resolve(window.d3);
+          } else if (!window._d3Loading) {
+            clearInterval(checkInterval);
+            resolve(null);
+          }
+        }, 100);
+      });
+    }
+    
+    window._d3Loading = true;
+    
+    return new Promise((resolve) => {
+      // Load d3 from CDN (includes d3-force)
+      const script = document.createElement('script');
+      script.src = 'https://d3js.org/d3.v7.min.js';
+      script.onload = () => {
+        window._d3Loading = false;
+        if (window.d3 && window.d3.forceCenter) {
+          resolve(window.d3);
+        } else {
+          console.warn('[applyGraphForces] d3 loaded but forceCenter not available');
+          resolve(null);
+        }
+      };
+      script.onerror = () => {
+        window._d3Loading = false;
+        console.warn('[applyGraphForces] Could not load d3, forces will use defaults');
+        resolve(null);
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  async function applyGraphForces() {
     if (!state.graph) return;
     
     // Convert slider values (0-100) to force graph parameters
@@ -3026,58 +3077,68 @@
     const linkDistance = 20 + (state.graphForces.distance / 100) * 80; // 20-100 range
     
     // Apply forces using d3Force if available
-    // 3d-force-graph bundles d3-force, but we need to access it correctly
     try {
       if (typeof state.graph.d3Force === 'function') {
-        // Try to use d3 if available globally or from the graph
+        // Try to use d3 if available globally
         let d3 = window.d3;
         
-        // If d3 is not available, we'll need to load it or use alternative approach
-        if (!d3) {
-          // For now, restart the simulation to apply any changes
+        // If d3 is not available, try to load it
+        if (!d3 || !d3.forceCenter) {
+          d3 = await loadD3();
+        }
+        
+        if (d3 && d3.forceCenter) {
+          // Center force - pulls nodes toward center
+          if (centerForce > 0) {
+            state.graph.d3Force('center', d3.forceCenter().strength(centerForce * 0.1));
+          } else {
+            state.graph.d3Force('center', null);
+          }
+          
+          // Charge (repel) force - pushes nodes apart
+          if (repelForce > 0) {
+            state.graph.d3Force('charge', d3.forceManyBody().strength(-repelForce * 300));
+          } else {
+            state.graph.d3Force('charge', null);
+          }
+          
+          // Link force - controls link strength and distance
+          if (linkForce > 0) {
+            state.graph.d3Force('link', d3.forceLink()
+              .id(d => d.id)
+              .distance(linkDistance)
+              .strength(linkForce));
+          } else {
+            state.graph.d3Force('link', null);
+          }
+          
+          // Restart simulation to apply changes
           if (state.graph.cooldownTicks) {
             state.graph.cooldownTicks(100);
           }
-          console.log('Graph forces updated (d3 not available, using defaults)');
-          return;
-        }
-        
-        // Center force
-        if (centerForce > 0 && d3.forceCenter) {
-          state.graph.d3Force('center', d3.forceCenter().strength(centerForce * 0.1));
+          
+          console.log('[applyGraphForces] Forces applied:', {
+            center: centerForce,
+            repel: repelForce,
+            link: linkForce,
+            distance: linkDistance
+          });
         } else {
-          state.graph.d3Force('center', null);
-        }
-        
-        // Charge (repel) force
-        if (repelForce > 0 && d3.forceManyBody) {
-          state.graph.d3Force('charge', d3.forceManyBody().strength(-repelForce * 300));
-        } else {
-          state.graph.d3Force('charge', null);
-        }
-        
-        // Link force
-        if (linkForce > 0 && d3.forceLink) {
-          state.graph.d3Force('link', d3.forceLink()
-            .id(d => d.id)
-            .distance(linkDistance)
-            .strength(linkForce));
-        } else {
-          state.graph.d3Force('link', null);
-        }
-        
-        // Restart simulation
-        if (state.graph.cooldownTicks) {
-          state.graph.cooldownTicks(100);
+          // Fallback: restart simulation (forces use defaults)
+          if (state.graph.cooldownTicks) {
+            state.graph.cooldownTicks(100);
+          }
+          console.warn('[applyGraphForces] d3-force not available, using default forces');
         }
       } else {
         // Fallback: restart simulation to apply changes
         if (state.graph.cooldownTicks) {
           state.graph.cooldownTicks(100);
         }
+        console.warn('[applyGraphForces] d3Force method not available on graph');
       }
     } catch (e) {
-      console.warn('Could not apply graph forces:', e);
+      console.warn('[applyGraphForces] Could not apply graph forces:', e);
       // Fallback: restart simulation
       if (state.graph.cooldownTicks) {
         state.graph.cooldownTicks(100);
@@ -3274,9 +3335,11 @@
     requestAnimationFrame(() => {
       const rect = graphContainer.getBoundingClientRect();
       const sidebar = document.getElementById('graph-sidebar');
-      const sidebarWidth = sidebar ? sidebar.offsetWidth : 280;
-      const containerWidth = rect.width || graphContainer.clientWidth || (window.innerWidth - sidebarWidth);
-      const containerHeight = rect.height || graphContainer.clientHeight || window.innerHeight;
+      const sidebarWidth = sidebar && !sidebar.hidden ? sidebar.offsetWidth : 0;
+      
+      // Use actual container dimensions (getBoundingClientRect accounts for split view)
+      const containerWidth = rect.width || graphContainer.clientWidth;
+      const containerHeight = rect.height || graphContainer.clientHeight;
       
       console.log('[resizeGraphForView] Container dimensions:', { containerWidth, containerHeight, sidebarWidth });
       

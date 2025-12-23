@@ -456,11 +456,35 @@ html, body {
 @media (min-width: 1024px) {
   .blog_content {
     grid-template-columns: 1fr 1fr;
+    display: grid;
+    gap: 2rem;
   }
+  
+  /* Force both views to be visible on desktop, even if hidden attribute is present */
   .blog_content .blog_list-view,
   .blog_content .blog_graph-view {
     display: block !important;
+    visibility: visible !important;
   }
+  
+  /* Remove hidden attribute styling on desktop */
+  .blog_content .blog_list-view[hidden],
+  .blog_content .blog_graph-view[hidden] {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Ensure both views take equal space */
+  .blog_content .blog_list-view {
+    min-height: 77svh;
+    overflow-y: auto;
+  }
+  
+  .blog_content .blog_graph-view {
+    min-height: 77svh;
+    position: relative;
+  }
+  
   /* Hide view toggle buttons on desktop */
   .blog_view-toggle {
     display: none;
@@ -759,6 +783,48 @@ html, body {
 .blog_graph-view {
   max-width: 100%;
   overflow-x: hidden;
+  height: 100%;
+  min-height: 77svh;
+}
+
+/* Ensure graph layout fills container on desktop */
+@media (min-width: 1024px) {
+  .blog_graph-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 77svh;
+  }
+  
+  .blog_graph-layout {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  
+  .blog_graph-main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .blog_graph-container {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden; /* Ensure canvas stays within container */
+  }
+  
+  /* Ensure canvas stays within graph container */
+  .blog_graph-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
 .blog_content {
@@ -1135,8 +1201,9 @@ html, body {
   flex: 1;
   min-height: 500px;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow: hidden; /* Changed from overflow-x: hidden to overflow: hidden */
   box-sizing: border-box;
+  position: relative; /* Ensure canvas positioning is relative to this container */
 }
 
 /* Graph Placeholder */

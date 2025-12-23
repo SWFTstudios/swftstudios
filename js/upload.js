@@ -117,16 +117,61 @@
   }
   
   /**
+   * Calculate relative luminance for WCAG contrast ratio
+   * Based on WCAG 2.1 guidelines: https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html
+   */
+  function getRelativeLuminance(r, g, b) {
+    const [rs, gs, bs] = [r, g, b].map(val => {
+      val = val / 255;
+      return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+  }
+
+  /**
+   * Calculate contrast ratio between two colors
+   * Returns a value between 1 (no contrast) and 21 (maximum contrast)
+   */
+  function getContrastRatio(color1, color2) {
+    const getRGB = (hex) => {
+      const hexClean = hex.replace('#', '');
+      const r = parseInt(hexClean.substring(0, 2), 16);
+      const g = parseInt(hexClean.substring(2, 4), 16);
+      const b = parseInt(hexClean.substring(4, 6), 16);
+      return [r, g, b];
+    };
+
+    const [r1, g1, b1] = getRGB(color1);
+    const [r2, g2, b2] = getRGB(color2);
+    
+    const lum1 = getRelativeLuminance(r1, g1, b1);
+    const lum2 = getRelativeLuminance(r2, g2, b2);
+    
+    const lighter = Math.max(lum1, lum2);
+    const darker = Math.min(lum1, lum2);
+    
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  /**
    * Get contrast color (black or white) for text on colored background
+   * Uses WCAG contrast ratio for accurate results
    */
   function getContrastColor(hexColor) {
     if (!hexColor) return '#000000';
+    
     const hex = hexColor.replace('#', '');
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.5 ? '#000000' : '#ffffff';
+    
+    // Calculate contrast ratio with black and white
+    const contrastWithBlack = getContrastRatio(hexColor, '#000000');
+    const contrastWithWhite = getContrastRatio(hexColor, '#ffffff');
+    
+    // WCAG AA requires at least 4.5:1 for normal text, 3:1 for large text
+    // Choose the color with better contrast
+    return contrastWithWhite > contrastWithBlack ? '#ffffff' : '#000000';
   }
   
   /**
@@ -271,7 +316,12 @@
             try {
               const parsed = JSON.parse(note.content);
               if (Array.isArray(parsed)) {
-                messages = parsed;
+                // Ensure all messages have IDs
+                messages = parsed.map(msg => ({
+                  ...msg,
+                  id: msg.id || crypto.randomUUID(),
+                  created_at: msg.created_at || note.created_at
+                }));
               } else {
                 // Content is plain text, create a message from it
                 messages = [{
@@ -473,7 +523,7 @@
         const messageCount = (state.currentNote.messages || []).length;
         elements.currentNoteSubtitle.textContent = 
           messageCount === 0 
-            ? 'Start your conversation'
+            ? 'Share what\'s on your mind'
             : `${messageCount} message${messageCount === 1 ? '' : 's'}`;
       }
     } else {
@@ -1199,7 +1249,7 @@
     if (type === 'no-notes') {
       message = 'Create your first Thought Session to get started';
     } else if (type === 'empty-note') {
-      message = 'Start your conversation';
+      message = 'share what\'s on your mind';
     } else if (type === 'no-note-selected') {
       message = 'Select a Thought Session or create a new one to start';
     }
@@ -1690,11 +1740,14 @@
         };
       });
 
-      // Create new message object
+      // Create new message object with guaranteed ID
       const newMessage = {
-        id: crypto.randomUUID(),
+        id: crypto.randomUUID(), // Always generate UUID for new messages
         content: content,
-        attachments: processedAttachments,
+        attachments: processedAttachments.map(att => ({
+          ...att,
+          id: att.id || crypto.randomUUID() // Ensure attachments have IDs too
+        })),
         tags: tags,
         created_at: new Date().toISOString()
       };
@@ -1714,17 +1767,17 @@
       const externalLinks = extractLinks(content);
       const contentType = determineContentType(content, uploadedAttachments);
 
-      // Store transcription data in message attachments
-      const messagesWithTranscription = updatedMessages.map(msg => {
-        if (msg.attachments && msg.attachments.length > 0) {
-          msg.attachments = msg.attachments.map(att => ({
-            ...att,
-            transcription: att.transcription || null,
-            isVoiceRecording: att.isVoiceRecording || false
-          }));
-        }
-        return msg;
-      });
+      // Store transcription data in message attachments and ensure all messages/attachments have IDs
+      const messagesWithTranscription = updatedMessages.map(msg => ({
+        ...msg,
+        id: msg.id || crypto.randomUUID(), // Ensure message has ID
+        attachments: msg.attachments ? msg.attachments.map(att => ({
+          ...att,
+          id: att.id || crypto.randomUUID(), // Ensure attachment has ID
+          transcription: att.transcription || null,
+          isVoiceRecording: att.isVoiceRecording || false
+        })) : []
+      }));
 
       // Update WITHOUT messages column to avoid errors
       // Store messages array as JSON string in content field for persistence
@@ -3905,8 +3958,13 @@ ${content}
       if (!messages.length && note.content) {
         try {
           const parsed = typeof note.content === 'string' ? JSON.parse(note.content) : note.content;
-          if (Array.isArray(parsed)) {
-            messages = parsed;
+              if (Array.isArray(parsed)) {
+                // Ensure all messages have IDs
+                messages = parsed.map(msg => ({
+                  ...msg,
+                  id: msg.id || crypto.randomUUID(),
+                  created_at: msg.created_at || note.created_at
+                }));
             console.log('[syncToGitHub] Parsed messages from content:', messages.length);
           }
         } catch (e) {
@@ -3941,13 +3999,30 @@ ${content}
 
       console.log('[syncToGitHub] Sync response status:', response.status);
 
+      // Read response text once
+      const responseText = await response.text();
+      
       if (!response.ok) {
-        const errorData = await response.json();
+        // Check if response has content before parsing
+        let errorData;
+        try {
+          errorData = responseText ? JSON.parse(responseText) : { error: 'Unknown error' };
+        } catch (e) {
+          errorData = { error: responseText || `HTTP ${response.status}` };
+        }
         console.error('[syncToGitHub] Sync failed:', errorData);
         throw new Error(errorData.error || 'Failed to sync');
       }
 
-      const result = await response.json();
+      // Parse successful response
+      let result;
+      try {
+        result = responseText ? JSON.parse(responseText) : { repo_path: null };
+      } catch (e) {
+        console.error('[syncToGitHub] Failed to parse response:', e, 'Response text:', responseText);
+        throw new Error('Invalid response from sync service');
+      }
+      
       console.log('[syncToGitHub] Sync successful:', result);
       updateSyncStatus('synced', result.repo_path);
       
@@ -4530,10 +4605,7 @@ ${content}
     // Setup event listeners
     setupEventListeners();
 
-    // Check for OAuth callback in URL hash first (Supabase redirects to hash)
-    await checkForOAuthCallback();
-    
-    // Handle GitHub OAuth callback if present (query params)
+    // Handle GitHub OAuth callback if present (query params or hash)
     await handleGitHubCallbackOnUpload();
 
     // Check GitHub connection status and show UI
