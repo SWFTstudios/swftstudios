@@ -29,7 +29,6 @@
   border-radius: 12px;
   padding: 0.75rem 1rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  display: flex;
   align-items: center;
   gap: 0.5rem;
 }
