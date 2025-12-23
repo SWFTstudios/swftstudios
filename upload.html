@@ -52,13 +52,7 @@
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </button>
-          <button type="button" id="settings-btn" class="chat-nav-btn" aria-label="Settings">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
-            </svg>
-          </button>
-          <a href="blog.html" class="chat-nav-link">View Thought Sessions</a>
+          <a href="blog.html" class="chat-nav-link">View Published Sessions</a>
           <button type="button" id="sign-out-btn" class="chat-nav-btn">Sign Out</button>
         </nav>
       </div>
@@ -74,7 +68,7 @@
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            <span class="new-note-btn-text">+ New Thought Session</span>
+            <span class="new-note-btn-text">New Session</span>
           </button>
         </div>
         <div class="threads-list" id="notes-list">
@@ -98,6 +92,23 @@
           <div class="messages-header-info">
             <h1 class="messages-title" id="current-note-title">Select a Thought Session to start</h1>
             <p class="messages-subtitle" id="current-note-subtitle">Create or select a Thought Session to begin your conversation</p>
+          </div>
+          <div class="messages-header-actions">
+            <div class="github-sync-status" id="github-sync-status" hidden>
+              <span class="sync-status-icon" id="sync-status-icon"></span>
+              <span class="sync-status-text" id="sync-status-text"></span>
+              <button type="button" class="sync-btn" id="sync-now-btn" title="Sync to GitHub">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+              </button>
+              <button type="button" class="link-github-btn" id="link-github-from-upload-btn" title="Link GitHub Account" hidden>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+                <span>Link GitHub</span>
+              </button>
+            </div>
           </div>
         </div>
 

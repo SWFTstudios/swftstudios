@@ -53,7 +53,12 @@
     authError: document.getElementById('auth-error'),
     errorMessage: document.getElementById('error-message'),
     authLoading: document.getElementById('auth-loading'),
-    emailAuth: document.getElementById('email-auth')
+    emailAuth: document.getElementById('email-auth'),
+    githubConnection: document.getElementById('github-connection'),
+    githubRepoUrl: document.getElementById('github-repo-url'),
+    githubDisconnectBtn: document.getElementById('github-disconnect-btn'),
+    githubLinkSection: document.getElementById('github-link-section'),
+    linkGithubBtn: document.getElementById('link-github-btn')
   };
   
   let authMode = 'signin'; // 'signin' or 'signup'
@@ -379,6 +384,255 @@
   }
 
   // ==========================================================================
+  // GitHub Integration
+  // ==========================================================================
+
+  /**
+   * Check if user has GitHub account linked
+   */
+  async function checkGitHubConnection() {
+    if (!supabase) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session || !session.user) {
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('user_github_accounts')
+        .select('github_username, repo_name, repo_url')
+        .eq('user_id', session.user.id)
+        .eq('is_active', true)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        console.error('Error checking GitHub connection:', error);
+        return;
+      }
+
+      if (data) {
+        showGitHubConnected(data);
+      } else {
+        showGitHubLinkSection();
+      }
+    } catch (error) {
+      console.error('Error checking GitHub connection:', error);
+    }
+  }
+
+  /**
+   * Show GitHub connected status
+   */
+  function showGitHubConnected(data) {
+    if (!elements.githubConnection || !elements.githubRepoUrl) return;
+    
+    elements.githubConnection.hidden = false;
+    if (elements.githubLinkSection) {
+      elements.githubLinkSection.hidden = true;
+    }
+    
+    if (data.repo_url) {
+      elements.githubRepoUrl.textContent = data.repo_url;
+      elements.githubRepoUrl.href = data.repo_url;
+      elements.githubRepoUrl.target = '_blank';
+    } else {
+      elements.githubRepoUrl.textContent = `@${data.github_username}`;
+    }
+  }
+
+  /**
+   * Show GitHub link section
+   */
+  function showGitHubLinkSection() {
+    if (!elements.githubLinkSection) return;
+    
+    elements.githubLinkSection.hidden = false;
+    if (elements.githubConnection) {
+      elements.githubConnection.hidden = true;
+    }
+  }
+
+  /**
+   * Link GitHub account via OAuth
+   */
+  async function linkGitHubAccount() {
+    if (!supabase) {
+      showError('Authentication service unavailable');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth.html?github_link=true`,
+          scopes: 'repo'
+        }
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('GitHub OAuth error:', error);
+      showError('Failed to connect GitHub account. Please try again.');
+    }
+  }
+
+  /**
+   * Handle GitHub OAuth callback and create repo
+   */
+  async function handleGitHubCallback() {
+    if (!supabase) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const isGitHubLink = urlParams.get('github_link') === 'true';
+
+    if (!isGitHubLink) return;
+
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) throw sessionError;
+      if (!session || !session.user) return;
+
+      // Get GitHub provider token from session
+      const providerToken = session.provider_token;
+      const providerRefreshToken = session.provider_refresh_token;
+
+      if (!providerToken) {
+        console.error('No GitHub token found in session');
+        return;
+      }
+
+      // Get GitHub username from user metadata
+      const githubUsername = session.user.user_metadata?.user_name || 
+                            session.user.user_metadata?.preferred_username ||
+                            session.user.user_metadata?.full_name;
+
+      if (!githubUsername) {
+        console.error('No GitHub username found');
+        return;
+      }
+
+      // Get GitHub email from session (for matching)
+      const githubEmail = session.user.email || session.user.user_metadata?.email;
+
+      // Check if GitHub account exists by email (for matching)
+      let existingAccount = null;
+      if (githubEmail) {
+        const { data: existingData } = await supabase
+          .from('user_github_accounts')
+          .select('*')
+          .eq('github_email', githubEmail)
+          .eq('is_active', true)
+          .single();
+        
+        if (existingData) {
+          existingAccount = existingData;
+        }
+      }
+
+      // Store GitHub account info (update existing or create new)
+      const accountData = {
+        user_id: session.user.id,
+        github_username: githubUsername,
+        github_access_token: providerToken, // In production, encrypt this
+        is_active: true
+      };
+
+      if (githubEmail) {
+        accountData.github_email = githubEmail;
+      }
+
+      const { error: insertError } = await supabase
+        .from('user_github_accounts')
+        .upsert(accountData, {
+          onConflict: 'user_id'
+        });
+
+      if (insertError) {
+        console.error('Error storing GitHub account:', insertError);
+        showError('Failed to save GitHub connection. Please try again.');
+        return;
+      }
+
+      // Create GitHub repo via Cloudflare Function
+      try {
+        const response = await fetch('/api/github/create-repo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            github_token: providerToken,
+            github_username: githubUsername
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create repository');
+        }
+
+        const repoData = await response.json();
+        
+        // Update database with repo info
+        await supabase
+          .from('user_github_accounts')
+          .update({
+            repo_name: repoData.repo_name,
+            repo_url: repoData.repo_url
+          })
+          .eq('user_id', session.user.id);
+
+        // Show success and refresh connection status
+        checkGitHubConnection();
+        
+        // Remove query param
+        window.history.replaceState({}, '', '/auth.html');
+      } catch (repoError) {
+        console.error('Error creating repo:', repoError);
+        const errorMessage = repoError.message || 'Failed to create repository';
+        
+        // Check if it's a network/CORS error (function not deployed)
+        if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError') || errorMessage.includes('CORS') || errorMessage.includes('not available')) {
+          showError('GitHub account linked successfully! To complete setup, create a repository named "swft-thought-sessions" on GitHub. Go to https://github.com/new and create it manually.');
+        } else {
+          showError(`GitHub account linked, but failed to create repository: ${errorMessage}. Create "swft-thought-sessions" manually at https://github.com/new`);
+        }
+        checkGitHubConnection();
+      }
+    } catch (error) {
+      console.error('GitHub callback error:', error);
+      showError('Failed to complete GitHub connection. Please try again.');
+    }
+  }
+
+  /**
+   * Disconnect GitHub account
+   */
+  async function disconnectGitHub() {
+    if (!supabase) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session || !session.user) return;
+
+      const { error } = await supabase
+        .from('user_github_accounts')
+        .update({ is_active: false })
+        .eq('user_id', session.user.id);
+
+      if (error) throw error;
+
+      showGitHubLinkSection();
+    } catch (error) {
+      console.error('Error disconnecting GitHub:', error);
+      showError('Failed to disconnect GitHub account. Please try again.');
+    }
+  }
+
+  // ==========================================================================
   // Event Listeners
   // ==========================================================================
   
@@ -410,6 +664,16 @@
     if (elements.signupToggle) {
       elements.signupToggle.addEventListener('click', () => setAuthMode('signup'));
     }
+
+    // GitHub link button
+    if (elements.linkGithubBtn) {
+      elements.linkGithubBtn.addEventListener('click', linkGitHubAccount);
+    }
+
+    // GitHub disconnect button
+    if (elements.githubDisconnectBtn) {
+      elements.githubDisconnectBtn.addEventListener('click', disconnectGitHub);
+    }
   }
 
   // ==========================================================================
@@ -432,6 +696,12 @@
 
     // Setup auth state listener
     setupAuthListener();
+
+    // Handle GitHub OAuth callback if present
+    await handleGitHubCallback();
+
+    // Check GitHub connection status if user is authenticated
+    await checkGitHubConnection();
 
     // Check for existing session
     await checkSession();

@@ -266,6 +266,239 @@ body {
   transition: color 0.3s;
 }
 
+/* ==========================================================================
+   GitHub Sync Status
+   ========================================================================== */
+
+.messages-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.github-sync-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.sync-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.sync-status-icon.synced {
+  color: #10b981;
+}
+
+.sync-status-icon.syncing {
+  color: var(--theme-accent, #BEFFF2);
+}
+
+.sync-status-icon.syncing svg.spinning {
+  animation: spin 1s linear infinite;
+}
+
+.sync-status-icon.failed {
+  color: #ef4444;
+}
+
+.sync-status-icon.not-connected {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sync-status-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+}
+
+.sync-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sync-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--theme-accent, #BEFFF2);
+}
+
+.sync-btn:active {
+  transform: scale(0.95);
+}
+
+.sync-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sync-btn.github-linked {
+  border: 2px solid var(--theme-accent, #BEFFF2);
+}
+
+.link-github-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.link-github-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--theme-accent, #BEFFF2);
+}
+
+.link-github-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Manual Repository Creation Instructions */
+.manual-repo-creation {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: var(--theme-bg-secondary);
+  border: 1px solid var(--theme-border);
+  border-radius: 12px;
+  position: relative;
+}
+
+.manual-repo-content h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--theme-text-primary);
+}
+
+.manual-repo-content p {
+  margin: 0 0 1rem 0;
+  color: var(--theme-text-secondary);
+  font-size: 0.9375rem;
+}
+
+.manual-repo-content ol {
+  margin: 0 0 1.5rem 0;
+  padding-left: 1.5rem;
+  color: var(--theme-text-secondary);
+  font-size: 0.9375rem;
+}
+
+.manual-repo-content ol li {
+  margin-bottom: 0.5rem;
+}
+
+.manual-repo-content code {
+  background: var(--theme-bg-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: var(--theme-accent);
+}
+
+.manual-repo-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-create-repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--theme-accent);
+  color: #000;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.btn-create-repo:hover {
+  background: var(--theme-accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-link-repo {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text-primary);
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-link-repo:hover {
+  background: var(--theme-bg-tertiary);
+  border-color: var(--theme-accent);
+}
+
+.btn-close-manual {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--theme-text-secondary);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-close-manual:hover {
+  background: var(--theme-bg-tertiary);
+  color: var(--theme-text-primary);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Note Title Editing */
 .thread-item-title {
   position: relative;
@@ -724,6 +957,13 @@ body {
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.video-duration {
+  font-variant-numeric: tabular-nums;
 }
 
 .attachment-item.attachment-audio {
@@ -759,8 +999,8 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--theme-accent);
-  color: white;
+  background: var(--theme-bg-tertiary);
+  color: var(--theme-text-primary);
   flex-shrink: 0;
   transition: background 0.3s;
 }
@@ -777,8 +1017,8 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--theme-accent);
-  color: white;
+  background: var(--theme-bg-tertiary);
+  color: var(--theme-text-primary);
   border: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -787,7 +1027,7 @@ body {
 }
 
 .audio-play-btn:hover {
-  background: var(--theme-accent-hover);
+  background: var(--theme-bg-hover);
   transform: scale(1.05);
 }
 

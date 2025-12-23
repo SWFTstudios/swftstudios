@@ -140,6 +140,13 @@
     editorWrapper: document.getElementById('editor-wrapper'),
     messagesList: document.getElementById('messages-list'),
     notesList: document.getElementById('notes-list'),
+    githubSyncStatus: document.getElementById('github-sync-status'),
+    syncStatusIcon: document.getElementById('sync-status-icon'),
+    syncStatusText: document.getElementById('sync-status-text'),
+    syncNowBtn: document.getElementById('sync-now-btn'),
+    linkGithubFromUploadBtn: document.getElementById('link-github-from-upload-btn'),
+    manualRepoCreation: document.getElementById('manual-repo-creation'),
+    linkGithubFromUploadBtn: document.getElementById('link-github-from-upload-btn'),
     attachmentBtn: document.getElementById('attachment-btn'),
     attachmentMenu: document.getElementById('attachment-menu'),
     attachmentsContainer: document.getElementById('message-attachments'),
@@ -413,6 +420,14 @@
       renderMessages();
       updateActiveNoteInSidebar(noteId);
       updateNoteHeader();
+
+      // Check GitHub sync status
+      if (state.currentNote.github_synced) {
+        updateSyncStatus('synced', state.currentNote.github_path);
+      } else {
+        const hasGitHub = await checkGitHubConnection();
+        updateSyncStatus(hasGitHub ? 'not-synced' : 'not-connected');
+      }
 
       // Scroll to bottom
       scrollToBottom();
@@ -1068,6 +1083,46 @@
       });
     });
 
+    // Add event listeners for video elements to show duration and enable playback
+    elements.messagesList.querySelectorAll('video').forEach(video => {
+      video.addEventListener('loadedmetadata', () => {
+        const durationEl = elements.messagesList.querySelector(`.video-duration[data-video-id="${video.id}"]`);
+        if (durationEl && !isNaN(video.duration)) {
+          const minutes = Math.floor(video.duration / 60);
+          const seconds = Math.floor(video.duration % 60);
+          durationEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+      });
+
+      // Enable video playback on click
+      const videoContainer = video.closest('.attachment-item.attachment-video');
+      if (videoContainer) {
+        videoContainer.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (video.paused) {
+            video.play();
+            video.muted = false; // Unmute when playing
+            const playIcon = videoContainer.querySelector('.attachment-video-play-icon');
+            if (playIcon) playIcon.style.display = 'none';
+          } else {
+            video.pause();
+            const playIcon = videoContainer.querySelector('.attachment-video-play-icon');
+            if (playIcon) playIcon.style.display = 'flex';
+          }
+        });
+
+        video.addEventListener('play', () => {
+          const playIcon = videoContainer.querySelector('.attachment-video-play-icon');
+          if (playIcon) playIcon.style.display = 'none';
+        });
+
+        video.addEventListener('pause', () => {
+          const playIcon = videoContainer.querySelector('.attachment-video-play-icon');
+          if (playIcon) playIcon.style.display = 'flex';
+        });
+      }
+    });
+
     // Add click handlers for transcript buttons
     elements.messagesList.querySelectorAll('.audio-transcript-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -1288,16 +1343,20 @@
         </div>
       `;
     } else if (attachment.type === 'video') {
+      const videoId = `video-${attachmentId}`;
       return `
         <div class="attachment-item attachment-video" data-attachment-id="${attachmentId}" role="button" tabindex="0">
           <div class="attachment-video-thumbnail">
-            <video src="${escapeHtml(attachment.url)}" preload="metadata" muted></video>
+            <video id="${videoId}" src="${escapeHtml(attachment.url)}" preload="metadata" muted></video>
             <div class="attachment-video-play-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
               </svg>
             </div>
-            <div class="attachment-video-label">Video</div>
+            <div class="attachment-video-label">
+              <span>Video</span>
+              <span class="video-duration" data-video-id="${videoId}">--:--</span>
+            </div>
           </div>
           <div class="attachment-overlay">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1666,6 +1725,9 @@
       
       console.log('[FIX] submitMessage: Message submitted successfully');
 
+      // Sync to GitHub if connected
+      await syncToGitHub(updatedNote);
+
       // Clear form (unless editing a message)
       if (!state.editingMessage) {
         if (editor) {
@@ -1976,6 +2038,16 @@ ${content}
 
     // Setup attachment handlers
     setupAttachmentHandlers();
+
+    // Sync button
+    if (elements.syncNowBtn) {
+      elements.syncNowBtn.addEventListener('click', handleManualSync);
+    }
+
+    // Link GitHub button
+    if (elements.linkGithubFromUploadBtn) {
+      elements.linkGithubFromUploadBtn.addEventListener('click', linkGitHubFromUpload);
+    }
 
     // Setup auto-tagger
     if (window.AutoTagger) {
@@ -3596,6 +3668,544 @@ ${content}
   }
 
   // ==========================================================================
+  // GitHub Sync Functions
+  // ==========================================================================
+
+  /**
+   * Check if user has GitHub account linked
+   */
+  async function checkGitHubConnection() {
+    if (!state.supabase || !state.currentUser) return false;
+
+    try {
+      const { data, error } = await state.supabase
+        .from('user_github_accounts')
+        .select('github_username, repo_name, repo_url')
+        .eq('user_id', state.currentUser.id)
+        .eq('is_active', true)
+        .single();
+
+      // PGRST116 = no rows returned (not an error)
+      // PGRST205 = table doesn't exist (migration not run yet)
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // No GitHub account linked - this is normal
+          return false;
+        } else if (error.code === 'PGRST205') {
+          // Table doesn't exist - migration not run yet
+          console.warn('GitHub integration tables not found. Please run the SQL migration in Supabase.');
+          return false;
+        } else {
+          console.error('Error checking GitHub connection:', error);
+          return false;
+        }
+      }
+
+      return !!data;
+    } catch (error) {
+      console.error('Error checking GitHub connection:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Sync thought session to GitHub
+   */
+  async function syncToGitHub(note) {
+    if (!note || !state.currentUser) return;
+
+    try {
+      const hasGitHub = await checkGitHubConnection();
+      if (!hasGitHub) {
+        updateSyncStatus('not-connected');
+        return;
+      }
+
+      // Check if already synced
+      if (note.github_synced) {
+        updateSyncStatus('synced', note.github_path);
+        return;
+      }
+
+      updateSyncStatus('syncing');
+
+      // Parse messages from content if needed
+      let messages = note.messages || [];
+      if (!messages.length && note.content) {
+        try {
+          const parsed = typeof note.content === 'string' ? JSON.parse(note.content) : note.content;
+          if (Array.isArray(parsed)) {
+            messages = parsed;
+          }
+        } catch (e) {
+          // Not JSON, skip messages
+        }
+      }
+
+      // Prepare note data for sync
+      const noteData = {
+        id: note.id,
+        title: note.title,
+        messages: messages,
+        tags: note.tags || [],
+        created_at: note.created_at,
+        updated_at: note.updated_at
+      };
+
+      const response = await fetch('/api/github/sync-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: state.currentUser.id,
+          note_id: note.id,
+          note_data: noteData
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to sync');
+      }
+
+      const result = await response.json();
+      updateSyncStatus('synced', result.repo_path);
+      
+      // Update local note state
+      if (state.currentNote && state.currentNote.id === note.id) {
+        state.currentNote.github_synced = true;
+        state.currentNote.github_path = result.repo_path;
+      }
+
+      // Update note in notes array
+      const noteIndex = state.notes.findIndex(n => n.id === note.id);
+      if (noteIndex !== -1) {
+        state.notes[noteIndex].github_synced = true;
+        state.notes[noteIndex].github_path = result.repo_path;
+      }
+
+    } catch (error) {
+      console.error('Sync error:', error);
+      updateSyncStatus('failed', null, error.message);
+    }
+  }
+
+  /**
+   * Update sync status UI
+   */
+  function updateSyncStatus(status, repoPath = null, errorMessage = null) {
+    if (!elements.githubSyncStatus || !elements.syncStatusIcon || !elements.syncStatusText) return;
+
+    elements.githubSyncStatus.hidden = false;
+
+    // Show/hide link GitHub button
+    if (elements.linkGithubFromUploadBtn) {
+      elements.linkGithubFromUploadBtn.hidden = status !== 'not-connected';
+    }
+
+    // Show/hide sync button
+    if (elements.syncNowBtn) {
+      elements.syncNowBtn.hidden = status === 'not-connected';
+    }
+
+    switch (status) {
+      case 'synced':
+        elements.syncStatusIcon.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+        elements.syncStatusIcon.className = 'sync-status-icon synced';
+        elements.syncStatusText.textContent = repoPath ? 'Synced to GitHub' : 'Synced';
+        // Add blue outline to sync button when GitHub is linked
+        if (elements.syncNowBtn) {
+          elements.syncNowBtn.classList.add('github-linked');
+        }
+        break;
+      case 'syncing':
+        elements.syncStatusIcon.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinning">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+        `;
+        elements.syncStatusIcon.className = 'sync-status-icon syncing';
+        elements.syncStatusText.textContent = 'Syncing...';
+        // Add blue outline when syncing
+        if (elements.syncNowBtn) {
+          elements.syncNowBtn.classList.add('github-linked');
+        }
+        break;
+      case 'failed':
+        elements.syncStatusIcon.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        `;
+        elements.syncStatusIcon.className = 'sync-status-icon failed';
+        elements.syncStatusText.textContent = errorMessage || 'Sync failed';
+        break;
+      case 'not-connected':
+        elements.syncStatusIcon.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+        `;
+        elements.syncStatusIcon.className = 'sync-status-icon not-connected';
+        elements.syncStatusText.textContent = 'Not connected';
+        // Remove blue outline when not connected
+        if (elements.syncNowBtn) {
+          elements.syncNowBtn.classList.remove('github-linked');
+        }
+        break;
+      case 'not-synced':
+        elements.syncStatusIcon.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        `;
+        elements.syncStatusIcon.className = 'sync-status-icon not-synced';
+        elements.syncStatusText.textContent = 'Not synced';
+        // Add blue outline when GitHub is linked but not synced
+        if (elements.syncNowBtn) {
+          elements.syncNowBtn.classList.add('github-linked');
+        }
+        break;
+      default:
+        elements.githubSyncStatus.hidden = true;
+    }
+  }
+
+  /**
+   * Manual sync button handler
+   */
+  async function handleManualSync() {
+    if (!state.currentNote) {
+      showError('No thought session selected');
+      return;
+    }
+
+    await syncToGitHub(state.currentNote);
+  }
+
+  /**
+   * Show manual repository creation instructions
+   */
+  function showManualRepoCreationInstructions() {
+    if (!elements.manualRepoCreation) {
+      // Create the manual repo creation section if it doesn't exist
+      const manualSection = document.createElement('div');
+      manualSection.id = 'manual-repo-creation';
+      manualSection.className = 'manual-repo-creation';
+      manualSection.hidden = true;
+      manualSection.innerHTML = `
+        <div class="manual-repo-content">
+          <h3>Manual Repository Setup</h3>
+          <p>To complete GitHub integration, create your repository manually:</p>
+          <ol>
+            <li>Click the button below to open GitHub</li>
+            <li>Repository name: <code>swft-thought-sessions</code></li>
+            <li>Make sure it's set to <strong>Private</strong></li>
+            <li>Click "Create repository"</li>
+          </ol>
+          <div class="manual-repo-actions">
+            <a href="https://github.com/new" target="_blank" rel="noopener noreferrer" class="btn-create-repo">
+              Create Repository on GitHub
+            </a>
+            <button type="button" class="btn-link-repo" id="link-repo-manually-btn">
+              I've Created It - Link Now
+            </button>
+          </div>
+          <button type="button" class="btn-close-manual" id="close-manual-repo-btn">×</button>
+        </div>
+      `;
+      
+      // Insert after github-sync-status
+      if (elements.githubSyncStatus && elements.githubSyncStatus.parentNode) {
+        elements.githubSyncStatus.parentNode.insertBefore(manualSection, elements.githubSyncStatus.nextSibling);
+      } else {
+        document.body.appendChild(manualSection);
+      }
+      
+      elements.manualRepoCreation = manualSection;
+      
+      // Add event listeners
+      const linkRepoBtn = document.getElementById('link-repo-manually-btn');
+      const closeBtn = document.getElementById('close-manual-repo-btn');
+      
+      if (linkRepoBtn) {
+        linkRepoBtn.addEventListener('click', async () => {
+          await linkRepoManually();
+        });
+      }
+      
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          hideManualRepoCreationInstructions();
+        });
+      }
+    }
+    
+    elements.manualRepoCreation.hidden = false;
+    elements.manualRepoCreation.style.display = 'block';
+  }
+
+  /**
+   * Hide manual repository creation instructions
+   */
+  function hideManualRepoCreationInstructions() {
+    if (elements.manualRepoCreation) {
+      elements.manualRepoCreation.hidden = true;
+      elements.manualRepoCreation.style.display = 'none';
+    }
+  }
+
+  /**
+   * Link repository manually after user creates it
+   */
+  async function linkRepoManually() {
+    if (!state.supabase || !state.currentUser) {
+      showError('Authentication required');
+      return;
+    }
+
+    const repoUrl = prompt('Enter your repository URL (e.g., https://github.com/yourusername/swft-thought-sessions):');
+    if (!repoUrl) return;
+
+    // Extract repo name and owner from URL
+    const urlMatch = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+    if (!urlMatch) {
+      showError('Invalid GitHub repository URL');
+      return;
+    }
+
+    const [, owner, repoName] = urlMatch;
+
+    if (repoName !== 'swft-thought-sessions') {
+      const confirm = window.confirm(`Repository name should be "swft-thought-sessions" but you entered "${repoName}". Continue anyway?`);
+      if (!confirm) return;
+    }
+
+    try {
+      // Update database with repo info
+      const { error: updateError } = await state.supabase
+        .from('user_github_accounts')
+        .update({
+          repo_name: repoName,
+          repo_url: repoUrl
+        })
+        .eq('user_id', state.currentUser.id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      showSuccess('Repository linked successfully!');
+      hideManualRepoCreationInstructions();
+      await checkGitHubConnection();
+      if (state.currentNote) {
+        updateSyncStatus('not-synced');
+      }
+    } catch (error) {
+      console.error('Error linking repo:', error);
+      showError('Failed to link repository. Please try again.');
+    }
+  }
+
+  /**
+   * Link GitHub from upload page
+   */
+  async function linkGitHubFromUpload() {
+    if (!state.supabase) {
+      showError('Authentication service unavailable');
+      return;
+    }
+
+    try {
+      const { data, error } = await state.supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/upload.html?github_link=true`,
+          scopes: 'repo'
+        }
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('GitHub OAuth error:', error);
+      showError('Failed to connect GitHub account. Please try again.');
+    }
+  }
+
+  /**
+   * Handle GitHub OAuth callback on upload page
+   */
+  async function handleGitHubCallbackOnUpload() {
+    if (!state.supabase) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const isGitHubLink = urlParams.get('github_link') === 'true';
+
+    if (!isGitHubLink) return;
+
+    try {
+      const { data: { session }, error: sessionError } = await state.supabase.auth.getSession();
+      
+      if (sessionError) throw sessionError;
+      if (!session || !session.user) return;
+
+      const providerToken = session.provider_token;
+      if (!providerToken) {
+        console.error('No GitHub token found in session');
+        return;
+      }
+
+      const githubUsername = session.user.user_metadata?.user_name || 
+                            session.user.user_metadata?.preferred_username ||
+                            session.user.user_metadata?.full_name;
+
+      if (!githubUsername) {
+        console.error('No GitHub username found');
+        return;
+      }
+
+      // Get GitHub email from session (for matching)
+      const githubEmail = session.user.email || session.user.user_metadata?.email;
+
+      // Check if GitHub account exists by email (for matching)
+      let existingAccount = null;
+      if (githubEmail) {
+        const { data: existingData } = await state.supabase
+          .from('user_github_accounts')
+          .select('*')
+          .eq('github_email', githubEmail)
+          .eq('is_active', true)
+          .single();
+        
+        if (existingData) {
+          existingAccount = existingData;
+        }
+      }
+
+      // Store GitHub account info (update existing or create new)
+      const accountData = {
+        user_id: session.user.id,
+        github_username: githubUsername,
+        github_access_token: providerToken,
+        is_active: true
+      };
+
+      if (githubEmail) {
+        accountData.github_email = githubEmail;
+      }
+
+      const { error: insertError } = await state.supabase
+        .from('user_github_accounts')
+        .upsert(accountData, {
+          onConflict: 'user_id'
+        });
+
+      if (insertError) {
+        console.error('Error storing GitHub account:', insertError);
+        showError('Failed to save GitHub connection. Please try again.');
+        return;
+      }
+
+      // Create GitHub repo
+      try {
+        const response = await fetch('/api/github/create-repo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            github_token: providerToken,
+            github_username: githubUsername,
+            user_id: session.user.id
+          })
+        });
+
+        // Check if function is not available (404 or network error)
+        if (response.status === 404 || response.status === 0 || !response.ok && response.type === 'error') {
+          console.warn('Cloudflare Function not available locally. Showing manual repo creation instructions.');
+          showManualRepoCreationInstructions();
+          await checkGitHubConnection();
+          window.history.replaceState({}, '', '/upload.html');
+          return;
+        }
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch (e) {
+            errorData = { error: errorText };
+          }
+          
+          console.error('Repo creation failed:', {
+            status: response.status,
+            statusText: response.statusText,
+            error: errorData
+          });
+          
+          throw new Error(errorData.error || `Failed to create repository: ${response.status} ${response.statusText}`);
+        }
+
+        const repoData = await response.json();
+        
+        // Update database with repo info
+        const { error: updateError } = await state.supabase
+          .from('user_github_accounts')
+          .update({
+            repo_name: repoData.repo_name,
+            repo_url: repoData.repo_url
+          })
+          .eq('user_id', session.user.id);
+
+        if (updateError) {
+          console.error('Error updating repo info:', updateError);
+        }
+
+        // Update sync status
+        await checkGitHubConnection();
+        if (state.currentNote) {
+          updateSyncStatus('not-synced');
+        } else {
+          updateSyncStatus('not-synced');
+        }
+        
+        // Show success message
+        showSuccess('GitHub account linked! Repository created successfully.');
+        
+        // Remove query param
+        window.history.replaceState({}, '', '/upload.html');
+      } catch (repoError) {
+        console.error('Error creating repo:', repoError);
+        const errorMessage = repoError.message || 'Failed to create repository';
+        
+        // Check if it's a network/CORS error (function not deployed)
+        if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError') || errorMessage.includes('CORS') || errorMessage.includes('not available')) {
+          showManualRepoCreationInstructions();
+        } else {
+          showError(`GitHub account linked, but failed to create repository: ${errorMessage}.`);
+          showManualRepoCreationInstructions();
+        }
+        
+        await checkGitHubConnection();
+        window.history.replaceState({}, '', '/upload.html');
+      }
+    } catch (error) {
+      console.error('GitHub callback error:', error);
+      showError('Failed to complete GitHub connection. Please try again.');
+    }
+  }
+
+  // ==========================================================================
   // Initialization
   // ==========================================================================
   
@@ -3622,6 +4232,29 @@ ${content}
 
     // Setup event listeners
     setupEventListeners();
+
+    // Handle GitHub OAuth callback if present
+    await handleGitHubCallbackOnUpload();
+
+    // Check GitHub connection status and show UI
+    const hasGitHub = await checkGitHubConnection();
+    if (state.currentNote) {
+      if (hasGitHub) {
+        // Check if note is synced
+        if (state.currentNote.github_synced) {
+          updateSyncStatus('synced', state.currentNote.github_path);
+        } else {
+          updateSyncStatus('not-synced');
+        }
+      } else {
+        updateSyncStatus('not-connected');
+      }
+    } else {
+      // No note selected, but still show GitHub status
+      if (!hasGitHub) {
+        updateSyncStatus('not-connected');
+      }
+    }
 
     console.log('Notes interface initialized');
   }
