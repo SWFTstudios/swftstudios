@@ -30,6 +30,169 @@
 body{
   overscroll-behavior: none;
   }
+
+/* Password Protected Overlay Styles */
+.construction-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #141416 50%, #1a1a1c 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  overflow: hidden;
+}
+
+.construction-overlay::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle at 50% 50%, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
+  animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+.construction-content {
+  position: relative;
+  text-align: center;
+  color: #ffffff;
+  max-width: 500px;
+  padding: 40px;
+  z-index: 1;
+}
+
+.construction-logo {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 40px;
+  color: #ffffff;
+}
+
+.construction-logo .skinny {
+  font-weight: 300;
+}
+
+.construction-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.construction-text {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 15px 0;
+  line-height: 1.6;
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.password-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  outline: none;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.password-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.password-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.password-button {
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  background: #4caf50;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+}
+
+.password-button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+.password-button:active {
+  transform: translateY(0);
+}
+
+.error-message {
+  color: #ff5252;
+  font-size: 14px;
+  margin-top: 15px;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 767px) {
+  .construction-content {
+    padding: 30px 20px;
+  }
+  
+  .construction-logo {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+  
+  .construction-title {
+    font-size: 36px;
+  }
+  
+  .construction-text {
+    font-size: 14px;
+  }
+  
+  .password-input,
+  .password-button {
+    font-size: 14px;
+    padding: 14px 18px;
+  }
+}
+
+/* Hide overlay when authenticated */
+.construction-overlay.hidden {
+  display: none;
+}
 </style>
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -48,6 +211,27 @@ body{
   </script>
 </head>
 <body>
+  <!-- Password Protected Overlay -->
+  <div id="construction-overlay" class="construction-overlay">
+    <div class="construction-content">
+      <div class="construction-logo">SWFT <span class="skinny">STUDIOS</span></div>
+      <h1 class="construction-title">Under Construction</h1>
+      <p class="construction-text">We're putting the finishing touches on something special.</p>
+      <p class="construction-text">Enter the password to preview:</p>
+      <form id="password-form" class="password-form">
+        <input 
+          type="password" 
+          id="password-input" 
+          class="password-input" 
+          placeholder="Enter password"
+          autocomplete="off"
+        >
+        <button type="submit" class="password-button">Enter</button>
+      </form>
+      <p id="error-message" class="error-message" style="display: none;">Incorrect password. Please try again.</p>
+    </div>
+  </div>
+
   <div class="page-wrapper">
     <div class="hide w-embed">
       <style>
@@ -804,6 +988,86 @@ tippy('.nav_link.is-muted', {
   interactive: false,
   delay: 0,
 });
+</script>
+
+  <!-- Password Protection Script -->
+  <script>
+(function() {
+  // The password
+  const CORRECT_PASSWORD = 'let5getSWFTYswftstudios!';
+  const SESSION_KEY = 'swft_authenticated';
+  
+  // Get elements
+  const overlay = document.getElementById('construction-overlay');
+  const form = document.getElementById('password-form');
+  const input = document.getElementById('password-input');
+  const errorMsg = document.getElementById('error-message');
+  
+  // Check if user is already authenticated in this session
+  function checkAuth() {
+    return sessionStorage.getItem(SESSION_KEY) === 'true';
+  }
+  
+  // Hide overlay
+  function hideOverlay() {
+    overlay.style.transition = 'opacity 0.5s ease, visibility 0.5s ease';
+    overlay.style.opacity = '0';
+    overlay.style.visibility = 'hidden';
+    
+    setTimeout(() => {
+      overlay.classList.add('hidden');
+      // Enable scrolling
+      document.body.style.overflow = '';
+    }, 500);
+  }
+  
+  // Show overlay
+  function showOverlay() {
+    overlay.classList.remove('hidden');
+    overlay.style.opacity = '1';
+    overlay.style.visibility = 'visible';
+    // Disable scrolling
+    document.body.style.overflow = 'hidden';
+  }
+  
+  // Handle form submission
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const enteredPassword = input.value;
+    
+    if (enteredPassword === CORRECT_PASSWORD) {
+      // Correct password
+      sessionStorage.setItem(SESSION_KEY, 'true');
+      hideOverlay();
+      errorMsg.style.display = 'none';
+    } else {
+      // Incorrect password
+      errorMsg.style.display = 'block';
+      input.value = '';
+      input.focus();
+      
+      // Shake animation on error
+      input.style.animation = 'shake 0.4s ease';
+      setTimeout(() => {
+        input.style.animation = '';
+      }, 400);
+    }
+  });
+  
+  // Initialize on page load
+  if (checkAuth()) {
+    hideOverlay();
+  } else {
+    showOverlay();
+    input.focus();
+  }
+  
+  // Prevent body scrolling when overlay is visible
+  if (!checkAuth()) {
+    document.body.style.overflow = 'hidden';
+  }
+})();
 </script>
 </body>
 </html>
