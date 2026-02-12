@@ -9,6 +9,7 @@
       "intro",
       "personal"
     ],
+    "author": null,
     "image": null,
     "excerpt": "Welcome to the SWFT Notes knowledge graph! This is where ideas, projects, and learnings come together. Check out web-development for tech insights or design-thinking for creative processes. This syste...",
     "links": [
@@ -27,6 +28,7 @@
       "tech",
       "tutorial"
     ],
+    "author": null,
     "image": null,
     "excerpt": "Web Development Notes Modern web development involves: - Frontend: HTML, CSS, JavaScript - Backend: Node.js, APIs - Infrastructure: Cloudflare, Vercel See also: javascript-tips and design-thinking for...",
     "links": [
@@ -45,6 +47,7 @@
       "design",
       "business"
     ],
+    "author": null,
     "image": null,
     "excerpt": "Design Thinking A methodology for creative problem-solving: 1. Empathize - Understand the user 2. Define - Frame the problem 3. Ideate - Generate solutions 4. Prototype - Build to learn 5. Test - Vali...",
     "links": [
@@ -62,6 +65,7 @@
       "tech",
       "tutorial"
     ],
+    "author": null,
     "image": null,
     "excerpt": "JavaScript Tips  Async/Await javascript async function fetchData() {   const response = await fetch('/api/data');   return response.json(); }  Destructuring javascript const { name, age } = user; Part...",
     "links": [
@@ -79,6 +83,7 @@
       "idea",
       "project"
     ],
+    "author": null,
     "image": null,
     "excerpt": "Project Ideas  Knowledge Graph Blog A blog system with interactive graph visualization. See welcome for the current implementation.  AI Assistant Building on web-development skills to create helpful t...",
     "links": [
