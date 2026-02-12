@@ -1402,6 +1402,10 @@ figcaption {
   height: 100vh;
 }
 
+.section_gallery {
+  overflow: hidden;
+}
+
 .gallery_component {
   flex-direction: column;
   align-items: flex-start;
@@ -6071,6 +6075,10 @@ figcaption {
 
   .projects-marquee-container {
     width: 200vw;
+  }
+
+  .projects-wrapper, .marquee-wrapper {
+    overflow: visible;
   }
 
   .paragraph-2 {
