@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "swftstudios",
+  "compatibility_date": "2026-03-09",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    "exclude": [
+      ".git",
+      "**/.git/**",
+      ".wrangler",
+      "**/.wrangler/**",
+      ".cursor",
+      "**/.cursor/**",
+      "node_modules",
+      "**/node_modules/**"
+    ]
+  }
+}
+
