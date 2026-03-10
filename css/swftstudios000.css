@@ -6596,7 +6596,7 @@ figcaption {
 
 .uui-badge {
   grid-column-gap: .375rem;
-  background-color: var(--untitled-ui--gray100);
+  background-color: transparent;
   color: var(--untitled-ui--gray700);
   white-space: nowrap;
   border-radius: 10rem;
@@ -6607,21 +6607,19 @@ figcaption {
   font-weight: 500;
   line-height: 1.5;
   text-decoration: none;
+  border: 1px solid currentColor;
   display: flex;
 }
 
 .uui-badge.is-primary {
-  background-color: var(--untitled-ui--primary50);
   color: var(--untitled-ui--primary700);
 }
 
 .uui-badge.is-pink {
-  background-color: var(--untitled-ui--pink50);
   color: var(--untitled-ui--pink700);
 }
 
 .uui-badge.is-indigo {
-  background-color: var(--untitled-ui--indigo50);
   color: var(--untitled-ui--indigo700);
 }
 
