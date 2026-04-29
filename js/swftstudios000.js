@@ -63,3 +63,194 @@
     setupNavbarMenu(document);
   }
 })();
+
+/* SWFT Dynamic Articles */
+(function(){
+  var articlePaths = [
+    "case-study/ai-answer-engine-optimization-2026.html",
+    "case-study/digital-marketing-blind-spots-2026.html",
+    "case-study/google-business-profile-local-seo-2026.html",
+    "case-study/reputation-management-2026.html",
+    "case-study/social-media-content-2026.html",
+    "case-study/blurred-lines-entertainment.html",
+    "case-study/snooze-lane.html",
+    "case-study/hamper.html",
+    "case-study/roller-reels.html",
+    "case-study/hawthorne-global-ministries.html",
+    "case-study/built-by-me-ez.html"
+  ];
+
+  function textFromNode(node){
+    return node ? (node.textContent || "").trim() : "";
+  }
+
+  function cleanTitle(raw){
+    return raw.replace(/\s*\|\s*SWFT Studios\s*$/i, "").trim();
+  }
+
+  function extractArticleDoc(html, path){
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var titleNode = doc.querySelector("title");
+    var title = cleanTitle(textFromNode(titleNode)) || path;
+    var excerptNode = doc.querySelector(".uui-text-rich-text p") || doc.querySelector("p");
+    var excerpt = textFromNode(excerptNode);
+    var imageNode = doc.querySelector(".uui-text-rich-text img") || doc.querySelector("img");
+
+    return {
+      url: path,
+      category: "Article",
+      title: title,
+      excerpt: excerpt,
+      image: imageNode ? imageNode.getAttribute("src") : "",
+      imageAlt: imageNode ? (imageNode.getAttribute("alt") || title) : title
+    };
+  }
+
+  function normalizeImagePath(src){
+    if(!src) return "";
+    if(src.indexOf("http://") === 0 || src.indexOf("https://") === 0 || src.indexOf("/") === 0){
+      return src;
+    }
+    return src.replace(/^\.\.\//, "");
+  }
+
+  function applyToCaseStudies(articles){
+    var cards = document.querySelectorAll(".uui-blog01_item");
+    if(!cards.length) return;
+
+    cards.forEach(function(card, index){
+      var article = articles[index % articles.length];
+      var imageLink = card.querySelector(".uui-blog01_image-link");
+      var categoryLink = card.querySelector(".uui-blog01_category-link");
+      var titleLink = card.querySelector(".uui-blog01_title-link");
+      var titleNode = card.querySelector(".uui-heading-xsmall");
+      var excerptNode = card.querySelector(".uui-text-size-medium");
+      var imageNode = card.querySelector(".uui-blog01_image");
+      var categoryNode = categoryLink ? categoryLink.querySelector("div") : null;
+
+      [imageLink, categoryLink, titleLink].forEach(function(link){
+        if(link) link.setAttribute("href", article.url);
+      });
+      if(titleNode) titleNode.textContent = article.title;
+      if(excerptNode) excerptNode.textContent = article.excerpt;
+      if(categoryNode) categoryNode.textContent = article.category;
+      if(imageNode && article.image){
+        imageNode.setAttribute("src", normalizeImagePath(article.image));
+        imageNode.setAttribute("alt", article.imageAlt);
+      }
+    });
+  }
+
+  function applyToHomepage(articles){
+    var cards = document.querySelectorAll(".articles-wrapper.articles .projects_item");
+    if(!cards.length) return;
+
+    cards.forEach(function(card, index){
+      var article = articles[index % articles.length];
+      var link = card.querySelector(".projects_link");
+      var categoryNode = card.querySelector(".projects_heading.is-2");
+      var titleNode = card.querySelector("h2.projects_heading");
+      var excerptNode = card.querySelector(".projects_p");
+
+      if(link) link.setAttribute("href", article.url);
+      if(categoryNode) categoryNode.textContent = article.category;
+      if(titleNode) titleNode.textContent = article.title;
+      if(excerptNode) excerptNode.textContent = article.excerpt;
+    });
+  }
+
+  function loadArticles(){
+    return Promise.all(articlePaths.map(function(path){
+      return fetch(path).then(function(res){
+        if(!res.ok) throw new Error("Failed to load article: " + path);
+        return res.text();
+      }).then(function(html){
+        return extractArticleDoc(html, path);
+      });
+    }));
+  }
+
+  function boot(){
+    if(!document.querySelector(".uui-blog01_item, .articles-wrapper.articles .projects_item")) return;
+    loadArticles().then(function(articles){
+      if(!articles || !articles.length) return;
+      applyToCaseStudies(articles);
+      applyToHomepage(articles);
+    }).catch(function(err){
+      console.warn("[SWFT] Dynamic articles failed to load.", err);
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  }else{
+    boot();
+  }
+})();
+
+
+/* SWFT Navbar Toggle V2 */
+(function(){
+  function setupMenu(scope){
+    var menuWrap = scope.querySelector('.heading-menu-wrap');
+    if(!menuWrap) return;
+
+    var trigger = menuWrap.querySelector('.header-menu-link');
+    var panel = null;
+    Array.prototype.forEach.call(menuWrap.children, function(el){
+      if(el.classList && el.classList.contains('header-menu-wrap')) panel = el;
+    });
+    if(!trigger || !panel) return;
+
+    var isOpen = false;
+
+    function render(){
+      panel.style.display = isOpen ? 'block' : 'none';
+      menuWrap.classList.toggle('is-menu-open', isOpen);
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function closeMenu(){
+      if(!isOpen) return;
+      isOpen = false;
+      render();
+    }
+
+    trigger.setAttribute('aria-controls', 'site-menu-panel');
+    panel.id = panel.id || 'site-menu-panel';
+    isOpen = false;
+    render();
+
+    trigger.addEventListener('click', function(e){
+      e.preventDefault();
+      isOpen = !isOpen;
+      render();
+    });
+
+    panel.querySelectorAll('.menu-link').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('click', function(e){
+      if(!isOpen) return;
+      if(menuWrap.contains(e.target)) return;
+      closeMenu();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeMenu();
+    });
+  }
+
+  function boot(){
+    document.querySelectorAll('.header.section-3').forEach(function(section){
+      setupMenu(section);
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{
+    boot();
+  }
+})();
