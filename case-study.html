@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--  Last Published: Mon Mar 09 2026 18:49:59 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html><!--  Last Published: Wed Apr 29 2026 12:02:13 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="69af156b22e948329a942dfe" data-wf-site="688e7554265d8089278ca76e" lang="en">
 <head>
   <meta charset="utf-8">
@@ -47,52 +47,57 @@ body{
     </div>
     <div class="global-styles w-embed">
       <style>
-/* Make text look crisper and more legible in all browsers */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-/* Focus state style for keyboard navigation for the focusable elements */
-*[tabindex]:focus-visible,
-  input[type="file"]:focus-visible {
-   outline: 0.125rem solid #4d65ff;
-   outline-offset: 0.125rem;
-}
-/* Get rid of top margin on first element in any rich text element */
-.w-richtext > :not(div):first-child, .w-richtext > div:first-child > :first-child {
-  margin-top: 0 !important;
-}
-/* Get rid of bottom margin on last element in any rich text element */
-.w-richtext>:last-child, .w-richtext ol li:last-child, .w-richtext ul li:last-child {
-	margin-bottom: 0 !important;
-}
-/* Prevent all click and hover interaction with an element */
-.pointer-events-off {
-	pointer-events: none;
-}
-/* Enables all click and hover interaction with an element */
-.pointer-events-on {
-  pointer-events: auto;
-}
-/* Create a class of .div-square which maintains a 1:1 dimension of a div */
-.div-square::after {
-	content: "";
-	display: block;
-	padding-bottom: 100%;
-}
-/* Make sure containers never lose their center alignment */
-.container-medium,.container-small, .container-large {
-	margin-right: auto !important;
-  margin-left: auto !important;
-}
-/* 
+  /* Make text look crisper and more legible in all browsers */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Focus state style for keyboard navigation for the focusable elements */
+  *[tabindex]:focus-visible,
+  input[type='file']:focus-visible {
+    outline: 0.125rem solid #4d65ff;
+    outline-offset: 0.125rem;
+  }
+  /* Get rid of top margin on first element in any rich text element */
+  .w-richtext > :not(div):first-child,
+  .w-richtext > div:first-child > :first-child {
+    margin-top: 0 !important;
+  }
+  /* Get rid of bottom margin on last element in any rich text element */
+  .w-richtext > :last-child,
+  .w-richtext ol li:last-child,
+  .w-richtext ul li:last-child {
+    margin-bottom: 0 !important;
+  }
+  /* Prevent all click and hover interaction with an element */
+  .pointer-events-off {
+    pointer-events: none;
+  }
+  /* Enables all click and hover interaction with an element */
+  .pointer-events-on {
+    pointer-events: auto;
+  }
+  /* Create a class of .div-square which maintains a 1:1 dimension of a div */
+  .div-square::after {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
+  /* Make sure containers never lose their center alignment */
+  .container-medium,
+  .container-small,
+  .container-large {
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+  /* 
 Make the following elements inherit typography styles from the parent and not have hardcoded values. 
 Important: You will not be able to style for example "All Links" in Designer with this CSS applied.
 Uncomment this CSS to use it in the project. Leave this message for future hand-off.
 */
-/*
+  /*
 a,
 .w-input,
 .w-select,
@@ -106,178 +111,204 @@ a,
   font-size: inherit;
 }
 */
-/* Apply "..." after 3 lines of text */
-.text-style-3lines {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-}
-/* Apply "..." after 2 lines of text */
-.text-style-2lines {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-}
-/* Adds inline flex display */
-.display-inlineflex {
-  display: inline-flex;
-}
-/* These classes are never overwritten */
-.hide {
-  display: none !important;
-}
-@media screen and (max-width: 991px) {
-    .hide, .hide-tablet {
-        display: none !important;
+  /* Apply "..." after 3 lines of text */
+  .text-style-3lines {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  /* Apply "..." after 2 lines of text */
+  .text-style-2lines {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  /* Adds inline flex display */
+  .display-inlineflex {
+    display: inline-flex;
+  }
+  /* These classes are never overwritten */
+  .hide {
+    display: none !important;
+  }
+  @media screen and (max-width: 991px) {
+    .hide,
+    .hide-tablet {
+      display: none !important;
     }
-}
+  }
   @media screen and (max-width: 767px) {
-    .hide-mobile-landscape{
+    .hide-mobile-landscape {
       display: none !important;
     }
-}
+  }
   @media screen and (max-width: 479px) {
-    .hide-mobile{
+    .hide-mobile {
       display: none !important;
     }
-}
-.margin-0 {
-  margin: 0rem !important;
-}
-.padding-0 {
-  padding: 0rem !important;
-}
-.spacing-clean {
-padding: 0rem !important;
-margin: 0rem !important;
-}
-.margin-top {
-  margin-right: 0rem !important;
-  margin-bottom: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-top {
-  padding-right: 0rem !important;
-  padding-bottom: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-right {
-  margin-top: 0rem !important;
-  margin-bottom: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-right {
-  padding-top: 0rem !important;
-  padding-bottom: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-bottom {
-  margin-top: 0rem !important;
-  margin-right: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-bottom {
-  padding-top: 0rem !important;
-  padding-right: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-left {
-  margin-top: 0rem !important;
-  margin-right: 0rem !important;
-  margin-bottom: 0rem !important;
-}
-.padding-left {
-  padding-top: 0rem !important;
-  padding-right: 0rem !important;
-  padding-bottom: 0rem !important;
-}
-.margin-horizontal {
-  margin-top: 0rem !important;
-  margin-bottom: 0rem !important;
-}
-.padding-horizontal {
-  padding-top: 0rem !important;
-  padding-bottom: 0rem !important;
-}
-.margin-vertical {
-  margin-right: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-vertical {
-  padding-right: 0rem !important;
-  padding-left: 0rem !important;
-}
-/* Custom Styles */
-.gallery_item:hover .gallery_image{
- transform: scale(1.00);
-}
-.button:hover .button_bg{
- width: 100%;
-}
+  }
+  .margin-0 {
+    margin: 0rem !important;
+  }
+  .padding-0 {
+    padding: 0rem !important;
+  }
+  .spacing-clean {
+    padding: 0rem !important;
+    margin: 0rem !important;
+  }
+  .margin-top {
+    margin-right: 0rem !important;
+    margin-bottom: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-top {
+    padding-right: 0rem !important;
+    padding-bottom: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  .margin-right {
+    margin-top: 0rem !important;
+    margin-bottom: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-right {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  .margin-bottom {
+    margin-top: 0rem !important;
+    margin-right: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-bottom {
+    padding-top: 0rem !important;
+    padding-right: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  .margin-left {
+    margin-top: 0rem !important;
+    margin-right: 0rem !important;
+    margin-bottom: 0rem !important;
+  }
+  .padding-left {
+    padding-top: 0rem !important;
+    padding-right: 0rem !important;
+    padding-bottom: 0rem !important;
+  }
+  .margin-horizontal {
+    margin-top: 0rem !important;
+    margin-bottom: 0rem !important;
+  }
+  .padding-horizontal {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+  }
+  .margin-vertical {
+    margin-right: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-vertical {
+    padding-right: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  /* Custom Styles */
+  .gallery_item:hover .gallery_image {
+    transform: scale(1);
+  }
+  .button:hover .button_bg {
+    width: 100%;
+  }
+  /* Project Marquee Animation*/
+  .projects_marquee-list {
+    animation: marquee 20s linear infinite;
+    animation-delay: 0.2s;
+  }
+  .projects_marquee:hover .projects_marquee-list {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  /* Project Marquee Animation*/
+  .faq:first-child {
+    padding-top: 0;
+    border: none;
+  }
+  @media (max-width: 992px) {
+    .menu_button-mobile {
+      display: flex !important;
+    }
+    .menu_button-mobile.w--open .menu_button-icon {
+      display: none;
+    }
+    .menu_button-mobile.w--open .menu_button-icon.is-close {
+      display: block;
+    }
+  }
 </style>
     </div>
-    <footer class="navbar">
-      <div data-w-id="0b21113b-7a5c-4699-b99e-7ce5cdc09a0a" data-animation="default" data-collapse="small" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="nav_component w-nav">
-        <div class="padding-global">
-          <div class="container-large">
-            <div class="padding-vertical padding-medium">
-              <div class="w-layout-grid nav_left-wrapper">
-                <div id="w-node-_72e7b742-8f80-63ea-696b-bd8d8b666d36-8b666d31" class="nav_logo-wrapper">
-                  <a href="index.html" class="nav_logo-link w-nav-brand">
-                    <div class="nav_logo">SWFT <span class="skinny">STUD</span><span class="highlight-2">IO</span><span class="skinny">S</span></div>
-                  </a>
-                  <link rel="prefetch" href="/">
-                  <div class="max-width-xsmall">
-                    <p class="text-size-small">You Dream It, We Create It</p>
+    <section class="header section-3">
+      <div class="w-layout-blockcontainer header-container w-container">
+        <div class="header-row">
+          <div class="header-logo-wrap">
+            <div data-animation="default" data-collapse="all" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="header-wrapper w-nav">
+              <a href="index.html" class="header-logo-link w-nav-brand"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
+            </div>
+          </div>
+          <div class="heading-menu-wrap">
+            <div data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc3d" class="heading-menu-box">
+              <a href="#" class="header-menu-link w-inline-block"><img loading="lazy" src="images/Frame_1Frame.png" alt="Blue plus sign icon on transparent background." class="heading-menu-img">
+                <div class="heading-text">Menu</div>
+              </a>
+            </div>
+            <div class="header-menu-wrap">
+              <div class="header-menu-item-wrapper">
+                <div class="header-menu-img-wrap">
+                  <a href="index.html" class="header-logo-link w-nav-brand"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
+                </div>
+                <div class="header-menu-text-wrap">
+                  <div class="heading-menu-item-wrap">
+                    <a href="index.html" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc49" class="menu-link">Home</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="index.html#services" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc4c" class="menu-link">Services</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="websites.html" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc52" class="menu-link">Projects</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="case-studies.html" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc58" class="menu-link">Articles</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="index.html#Get-in-touch" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc5b" class="menu-link">Contact</a>
                   </div>
                 </div>
-                <div class="nav_menu-button w-nav-button">
-                  <div class="menu-icon4">
-                    <div class="menu-icon4_wrapper">
-                      <div class="menu-icon4_line-top"></div>
-                      <div class="menu-icon4_line-middle">
-                        <div class="menu-icon_line-middle-top"></div>
-                        <div class="menu-icon_line-middle-base"></div>
-                      </div>
-                      <div class="menu-icon4_line-bottom"></div>
-                    </div>
-                  </div>
-                </div>
-                <nav role="navigation" id="w-node-_0b21113b-7a5c-4699-b99e-7ce5cdc09a0d-8b666d31" class="nav_menu w-nav-menu">
-                  <div class="nav_menu-block">
-                    <div class="nav_link-list">
-                      <div class="margin-bottom margin-medium">
-                        <div class="nav_title">Services</div>
-                      </div>
-                      <a href="websites.html" class="nav_link">Sites</a>
-                      <a href="apps.html" class="nav_link">Apps</a>
-                      <a href="videos.html" class="nav_link">Media</a>
-                      <a href="index.html" class="nav_link is-muted"></a>
-                    </div>
-                    <div class="nav_link-list">
-                      <div class="margin-bottom margin-medium">
-                        <div class="nav_title">Resources</div>
-                      </div>
-                      <a href="case-studies.html" class="nav_link">Case Studies</a>
-                      <a href="#" class="nav_link">Site Audit</a>
-                    </div>
-                    <div class="nav_link-list">
-                      <div class="margin-bottom margin-medium">
-                        <div class="nav_title">Contact</div>
-                      </div>
-                      <a href="mailto:elombe@swftstudios.com?subject=Inquiry%20for%20SWFT%20Studios" class="nav_link">hello@swftstudios.com</a>
-                      <a href="https://instagram.com/swft_studios" target="_blank" class="nav_link">IG: @swft_studios</a>
-                    </div>
-                  </div>
-                </nav>
               </div>
+            </div>
+          </div>
+          <div class="heading-right-content-wrap">
+            <div class="heading-right-fast-content">
+              <p class="heading-right-p">Free 30-minute strategy call. No obligations.</p>
+            </div>
+            <div class="heading-right-second-content"><img loading="lazy" src="images/portfolio-website-hero-selfie.png" alt="Elombe Kisala Headshot
+" sizes="(max-width: 256px) 100vw, 256px" srcset="images/portfolio-website-hero-selfie-p-500.png 500w, images/portfolio-website-hero-selfie-p-800.png 800w, images/portfolio-website-hero-selfie.png 844w" class="heading-right-img">
+              <a href="tel:+8801516373474" class="header-call-link w-inline-block">
+                <div class="heading-right-phone-call"><img loading="lazy" src="images/Right-Phone_1Right-Phone.png" alt="Icon of a stylized smartphone with a curved screen on the right side." class="right-phone"></div>
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </footer>
+    </section>
     <main class="main-wrapper">
       <div class="background_component">
         <div class="background_image-container">
@@ -285,7 +316,7 @@ margin: 0rem !important;
             <div class="background_gradient"></div>
           </div>
           <div class="background_edge-gradient"></div>
-          <div class="background_image-wrappe"><img src="images/swft-thumbnail.webp" loading="eager" alt="" class="background_image"></div>
+          <div class="background_image-wrappe"><img src="images/swft-thumbnail.webp" loading="eager" sizes="(max-width: 3156px) 100vw, 3156px" srcset="images/swft-thumbnail-p-500.webp 500w, images/swft-thumbnail-p-800.webp 800w, images/swft-thumbnail-p-1080.webp 1080w, images/swft-thumbnail-p-1600.webp 1600w, images/swft-thumbnail-p-2000.webp 2000w, images/swft-thumbnail-p-2600.webp 2600w, images/swft-thumbnail.webp 3156w" alt="" class="background_image"></div>
           <div class="background_image-gradient"></div>
         </div>
       </div>
@@ -297,13 +328,13 @@ margin: 0rem !important;
                 <div class="w-layout-grid course_component is-flex">
                   <div id="w-node-_8934f37e-af8f-f8cd-214f-b358479c4d84-9a942dfe" class="course_content">
                     <div class="margin-bottom margin-small">
-                      <div class="text-size-small text-color-green">Case Study</div>
+                      <div class="text-size-small text-color-green">Case StudY Template</div>
                     </div>
                     <div class="margin-bottom margin-small">
-                      <h1 class="text-weight-normal">Client / Project Name</h1>
+                      <h1 class="text-weight-normal">Article Title</h1>
                     </div>
                     <div class="max-width-small">
-                      <p class="text-size-small">One-line description of what SWFT delivered for this client.</p>
+                      <p class="text-size-small">Stay up-to-date on my reviews by following along on x.com/swft_studios. </p>
                     </div>
                   </div>
                 </div>
@@ -343,24 +374,25 @@ margin: 0rem !important;
                               <div class="uui-max-width-large-2 align-center-3">
                                 <div class="uui-blogpost01_title-wrapper">
                                   <div class="uui-blogpost01_breadcrumb">
-                                    <a href="case-studies.html" class="uui-breadcrumb-link w-inline-block">
-                                      <div>Case Studies</div>
+                                    <a href="#" class="uui-breadcrumb-link w-inline-block">
+                                      <div>All posts</div>
                                     </a>
                                     <div class="uui-breadcrumb-divider w-embed"><svg width="16" height="16" viewbox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6 3L11 8L6 13" stroke="CurrentColor" stroke-width="1.5"></path>
                                       </svg></div>
-                                    <a href="case-studies.html" class="uui-breadcrumb-link w-inline-block">
+                                    <a href="#" class="uui-breadcrumb-link w-inline-block">
                                       <div>Category</div>
                                     </a>
                                   </div>
-                                  <h1 class="uui-heading-large-2">Client / Project Name</h1>
+                                  <h1 class="uui-heading-large-2">Our top 10 Javascript frameworks to use in 2022</h1>
                                   <div class="uui-blogpost01_content-top">
                                     <div class="uui-blogpost01_author-wrapper">
-                                      <div class="uui-blogpost01_author-image-wrapper"><img src="images/Avatar-Image-6.png" loading="lazy" alt="" class="uui-blogpost01_author-image"></div>
+                                      <div class="uui-blogpost01_author-image-wrapper"><img src="images/portfolio-website-hero-selfie.png" loading="lazy" sizes="(max-width: 844px) 100vw, 844px" srcset="images/portfolio-website-hero-selfie-p-500.png 500w, images/portfolio-website-hero-selfie-p-800.png 800w, images/portfolio-website-hero-selfie.png 844w" alt="Elombe Kisala Headshot
+" class="author-image"></div>
                                       <div class="uui-blogpost01_author-text">
-                                        <div class="uui-blogpost01_author-heading">SWFT Studios</div>
+                                        <div class="uui-blogpost01_author-heading">Elombe Kisala</div>
                                         <div class="uui-blogpost01_date-wrapper">
-                                          <div class="uui-text-size-medium-2">Case Study</div>
+                                          <div class="uui-text-size-medium-2">11 Jan 2022</div>
                                           <div class="uui-text-divider-2">•</div>
                                           <div class="uui-text-size-medium-2">5 min read</div>
                                         </div>
@@ -399,32 +431,25 @@ margin: 0rem !important;
                                   </div>
                                 </div>
                               </div>
-                              <div class="uui-blogpost01_image-wrapper"><img src="images/Blog-Image-9.jpg" loading="lazy" alt="Office setting" class="uui-blogpost01_image"></div>
+                              <div class="uui-blogpost01_image-wrapper"><img srcset="images/Blog-Image-9-p-1080.jpeg 1080w, images/Blog-Image-9-p-1600.jpeg 1600w, images/Blog-Image-9.jpg 1680w" loading="lazy" sizes="(max-width: 1680px) 100vw, 1680px" src="images/Blog-Image-9.jpg" alt="Office setting" class="uui-blogpost01_image"></div>
                               <div class="uui-max-width-large-2 align-center-3">
                                 <div class="uui-blogpost01_content">
                                   <div class="uui-text-rich-text w-richtext">
-                                    <h2>Overview</h2>
-                                    <p>Client context and what SWFT delivered—website, app, video, or strategy. Replace with case-specific copy.</p>
-                                    <h2>The Problem</h2>
-                                    <ul>
-                                      <li>Key challenge 1 (e.g. weak digital presence, low traffic)</li>
-                                      <li>Key challenge 2</li>
-                                      <li>Key challenge 3</li>
-                                    </ul>
-                                    <h2>The Solution</h2>
-                                    <p>What SWFT built and what makes it unique—e.g. website experience, media/videography, or app features. Use subsections or bullets as needed.</p>
-                                    <h2>Project Timeline</h2>
-                                    <ul>
-                                      <li>Discovery</li>
-                                      <li>Design</li>
-                                      <li>Build</li>
-                                      <li>Launch</li>
-                                    </ul>
-                                    <p>Total duration: e.g. X weeks/months.</p>
-                                    <h2>The Outcome</h2>
-                                    <p>Results: traffic, leads, sales, or engagement. Use bullets or a short paragraph; qualitative is fine if no metrics.</p>
-                                    <h2>Closing</h2>
-                                    <p>One short paragraph tying the work to the client’s goals.</p>
+                                    <h5>Introduction</h5>
+                                    <p>Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam suspendisse morbi eleifend faucibus eget vestibulum felis. Dictum quis montes, sit sit. Tellus aliquam enim urna, etiam. Mauris posuere vulputate arcu amet, vitae nisi, tellus tincidunt. At feugiat sapien varius id.</p>
+                                    <p>Eget quis mi enim, leo lacinia pharetra, semper. Eget in volutpat mollis at volutpat lectus velit, sed auctor. Porttitor fames arcu quis fusce augue enim. Quis at habitant diam at. Suscipit tristique risus, at donec. In turpis vel et quam imperdiet. Ipsum molestie aliquet sodales id est ac volutpat.</p>
+                                    <figure style="max-width:1680pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image">
+                                      <div><img src="images/Blog-Image-3.jpg" loading="lazy" alt="Man pinning images on wall"></div>
+                                      <figcaption>Image caption goes here</figcaption>
+                                    </figure>
+                                    <h6>Dolor enim eu tortor urna sed duis nulla. Aliquam vestibulum, nulla odio nisl vitae. In aliquet pellentesque aenean hac vestibulum turpis mi bibendum diam. Tempor integer aliquam in vitae malesuada fringilla.</h6>
+                                    <p>Elit nisi in eleifend sed nisi. Pulvinar at orci, proin imperdiet commodo consectetur convallis risus. Sed condimentum enim dignissim adipiscing faucibus consequat, urna. Viverra purus et erat auctor aliquam. Risus, volutpat vulputate posuere purus sit congue convallis aliquet. Arcu id augue ut feugiat donec porttitor neque. Mauris, neque ultricies eu vestibulum, bibendum quam lorem id. Dolor lacus, eget nunc lectus in tellus, pharetra, porttitor.</p>
+                                    <blockquote>&quot;Ipsum sit mattis nulla quam nulla. Gravida id gravida ac enim mauris id. Non pellentesque congue eget consectetur turpis. Sapien, dictum molestie sem tempor. Diam elit, orci, tincidunt aenean tempus.&quot;</blockquote>
+                                    <p>Tristique odio senectus nam posuere ornare leo metus, ultricies. Blandit duis ultricies vulputate morbi feugiat cras placerat elit. Aliquam tellus lorem sed ac. Montes, sed mattis pellentesque suscipit accumsan. Cursus viverra aenean magna risus elementum faucibus molestie pellentesque. Arcu ultricies sed mauris vestibulum.</p>
+                                    <h5>Conclusion</h5>
+                                    <p>Morbi sed imperdiet in ipsum, adipiscing elit dui lectus. Tellus id scelerisque est ultricies ultricies. Duis est sit sed leo nisl, blandit elit sagittis. Quisque tristique consequat quam sed. Nisl at scelerisque amet nulla purus habitasse.</p>
+                                    <p>Nunc sed faucibus bibendum feugiat sed interdum. Ipsum egestas condimentum mi massa. In tincidunt pharetra consectetur sed duis facilisis metus. Etiam egestas in nec sed et. Quis lobortis at sit dictum eget nibh tortor commodo cursus.</p>
+                                    <p>Odio felis sagittis, morbi feugiat tortor vitae feugiat fusce aliquet. Nam elementum urna nisi aliquet erat dolor enim. Ornare id morbi eget ipsum. Aliquam senectus neque ut id eget consectetur dictum. Donec posuere pharetra odio consequat scelerisque et, nunc tortor. Nulla adipiscing erat a erat. Condimentum lorem posuere gravida enim posuere cursus diam.</p>
                                   </div>
                                 </div>
                                 <div class="uui-blogpost01_content-bottom">
@@ -463,22 +488,26 @@ margin: 0rem !important;
                                   </div>
                                   <div class="uui-blogpost01_tag-list-wrapper">
                                     <div class="uui-blogpost01_tag-list">
-                                      <a href="case-studies.html" class="uui-badge is-primary w-inline-block">
-                                        <div>Website</div>
+                                      <a href="#" class="uui-badge is-primary w-inline-block">
+                                        <div>Design</div>
                                       </a>
-                                      <a href="case-studies.html" class="uui-badge is-indigo w-inline-block">
-                                        <div>Media</div>
+                                      <a href="#" class="uui-badge w-inline-block">
+                                        <div>Product</div>
+                                      </a>
+                                      <a href="#" class="uui-badge w-inline-block">
+                                        <div>Research</div>
                                       </a>
                                     </div>
                                   </div>
                                 </div>
                                 <div class="uui-blogpost01_divider"></div>
                                 <div class="uui-blogpost01_author-wrapper">
-                                  <div class="uui-blogpost01_author-image-wrapper"><img src="images/Avatar-Image-6.png" loading="lazy" alt="" class="uui-blogpost01_author-image"></div>
+                                  <div class="uui-blogpost01_author-image-wrapper"><img src="images/portfolio-website-hero-selfie.png" loading="lazy" sizes="(max-width: 844px) 100vw, 844px" srcset="images/portfolio-website-hero-selfie-p-500.png 500w, images/portfolio-website-hero-selfie-p-800.png 800w, images/portfolio-website-hero-selfie.png 844w" alt="Elombe Kisala Headshot
+" class="author-image"></div>
                                   <div class="uui-blogpost01_author-text">
-                                    <div class="uui-blogpost01_author-heading">SWFT Studios</div>
+                                    <div class="uui-blogpost01_author-heading">Elombe Kisala</div>
                                     <div class="uui-blogpost01_date-wrapper">
-                                      <div class="uui-text-size-medium-2">Case Study</div>
+                                      <div class="uui-text-size-medium-2">11 Jan 2022</div>
                                       <div class="uui-text-divider-2">•</div>
                                       <div class="uui-text-size-medium-2">5 min read</div>
                                     </div>
@@ -504,8 +533,7 @@ margin: 0rem !important;
         <div class="bottom-margin---40px">
           <h2 class="xl-header white-text slide-into-view center-align">Let’s Connect!</h2>
         </div>
-        <a href="mailto:elombekisala@gmail.com?subject=I&#x27;d%20like%20to%20work%20together..." class="button-2 bigger-padding slide-into-view w-button">elombe@swftstudios.com</a>
-        <div class="container absolute footer"></div>
+        <a href="mailto:elombekisala@gmail.com?subject=I&#x27;d%20like%20to%20work%20together..." class="button-2 bigger-padding slide-into-view w-button">hello@swftstudios.com</a>
       </div>
       <div class="padding-global">
         <div class="container-large">
@@ -514,7 +542,7 @@ margin: 0rem !important;
               <div class="footer_wrapper">
                 <p>Thanks for looking around. <br>Stay in touch.</p>
                 <div class="nav_link-list">
-                  <a href="mailto:hey@dannpetty.com" class="nav_link">hello@swftstudios.com</a>
+                  <a href="mailto:hey@dannpetty.com" class="nav_link">EMAIL: hello@swftstudios.com</a>
                   <a href="https://twitter.com/DannPetty" target="_blank" class="nav_link">IG: @swft_studios</a>
                 </div>
               </div>
