@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--  Last Published: Mon Mar 09 2026 18:49:59 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html><!--  Last Published: Wed Apr 29 2026 12:02:13 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="688e7554265d8089278ca766" data-wf-site="688e7554265d8089278ca76e" lang="en">
 <head>
   <meta charset="utf-8">
@@ -53,7 +53,6 @@ body{
   to { transform: translateX(0%); }
 }
 </style>
-<link href="css/themes.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
@@ -94,52 +93,57 @@ body{
     </div>
     <div class="global-styles w-embed">
       <style>
-/* Make text look crisper and more legible in all browsers */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-/* Focus state style for keyboard navigation for the focusable elements */
-*[tabindex]:focus-visible,
-  input[type="file"]:focus-visible {
-   outline: 0.125rem solid #4d65ff;
-   outline-offset: 0.125rem;
-}
-/* Get rid of top margin on first element in any rich text element */
-.w-richtext > :not(div):first-child, .w-richtext > div:first-child > :first-child {
-  margin-top: 0 !important;
-}
-/* Get rid of bottom margin on last element in any rich text element */
-.w-richtext>:last-child, .w-richtext ol li:last-child, .w-richtext ul li:last-child {
-	margin-bottom: 0 !important;
-}
-/* Prevent all click and hover interaction with an element */
-.pointer-events-off {
-	pointer-events: none;
-}
-/* Enables all click and hover interaction with an element */
-.pointer-events-on {
-  pointer-events: auto;
-}
-/* Create a class of .div-square which maintains a 1:1 dimension of a div */
-.div-square::after {
-	content: "";
-	display: block;
-	padding-bottom: 100%;
-}
-/* Make sure containers never lose their center alignment */
-.container-medium,.container-small, .container-large {
-	margin-right: auto !important;
-  margin-left: auto !important;
-}
-/* 
+  /* Make text look crisper and more legible in all browsers */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Focus state style for keyboard navigation for the focusable elements */
+  *[tabindex]:focus-visible,
+  input[type='file']:focus-visible {
+    outline: 0.125rem solid #4d65ff;
+    outline-offset: 0.125rem;
+  }
+  /* Get rid of top margin on first element in any rich text element */
+  .w-richtext > :not(div):first-child,
+  .w-richtext > div:first-child > :first-child {
+    margin-top: 0 !important;
+  }
+  /* Get rid of bottom margin on last element in any rich text element */
+  .w-richtext > :last-child,
+  .w-richtext ol li:last-child,
+  .w-richtext ul li:last-child {
+    margin-bottom: 0 !important;
+  }
+  /* Prevent all click and hover interaction with an element */
+  .pointer-events-off {
+    pointer-events: none;
+  }
+  /* Enables all click and hover interaction with an element */
+  .pointer-events-on {
+    pointer-events: auto;
+  }
+  /* Create a class of .div-square which maintains a 1:1 dimension of a div */
+  .div-square::after {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
+  /* Make sure containers never lose their center alignment */
+  .container-medium,
+  .container-small,
+  .container-large {
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+  /* 
 Make the following elements inherit typography styles from the parent and not have hardcoded values. 
 Important: You will not be able to style for example "All Links" in Designer with this CSS applied.
 Uncomment this CSS to use it in the project. Leave this message for future hand-off.
 */
-/*
+  /*
 a,
 .w-input,
 .w-select,
@@ -153,116 +157,149 @@ a,
   font-size: inherit;
 }
 */
-/* Apply "..." after 3 lines of text */
-.text-style-3lines {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-}
-/* Apply "..." after 2 lines of text */
-.text-style-2lines {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-}
-/* Adds inline flex display */
-.display-inlineflex {
-  display: inline-flex;
-}
-/* These classes are never overwritten */
-.hide {
-  display: none !important;
-}
-@media screen and (max-width: 991px) {
-    .hide, .hide-tablet {
-        display: none !important;
+  /* Apply "..." after 3 lines of text */
+  .text-style-3lines {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  /* Apply "..." after 2 lines of text */
+  .text-style-2lines {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  /* Adds inline flex display */
+  .display-inlineflex {
+    display: inline-flex;
+  }
+  /* These classes are never overwritten */
+  .hide {
+    display: none !important;
+  }
+  @media screen and (max-width: 991px) {
+    .hide,
+    .hide-tablet {
+      display: none !important;
     }
-}
+  }
   @media screen and (max-width: 767px) {
-    .hide-mobile-landscape{
+    .hide-mobile-landscape {
       display: none !important;
     }
-}
+  }
   @media screen and (max-width: 479px) {
-    .hide-mobile{
+    .hide-mobile {
       display: none !important;
     }
-}
-.margin-0 {
-  margin: 0rem !important;
-}
-.padding-0 {
-  padding: 0rem !important;
-}
-.spacing-clean {
-padding: 0rem !important;
-margin: 0rem !important;
-}
-.margin-top {
-  margin-right: 0rem !important;
-  margin-bottom: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-top {
-  padding-right: 0rem !important;
-  padding-bottom: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-right {
-  margin-top: 0rem !important;
-  margin-bottom: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-right {
-  padding-top: 0rem !important;
-  padding-bottom: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-bottom {
-  margin-top: 0rem !important;
-  margin-right: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-bottom {
-  padding-top: 0rem !important;
-  padding-right: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-left {
-  margin-top: 0rem !important;
-  margin-right: 0rem !important;
-  margin-bottom: 0rem !important;
-}
-.padding-left {
-  padding-top: 0rem !important;
-  padding-right: 0rem !important;
-  padding-bottom: 0rem !important;
-}
-.margin-horizontal {
-  margin-top: 0rem !important;
-  margin-bottom: 0rem !important;
-}
-.padding-horizontal {
-  padding-top: 0rem !important;
-  padding-bottom: 0rem !important;
-}
-.margin-vertical {
-  margin-right: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-vertical {
-  padding-right: 0rem !important;
-  padding-left: 0rem !important;
-}
-/* Custom Styles */
-.gallery_item:hover .gallery_image{
- transform: scale(1.00);
-}
-.button:hover .button_bg{
- width: 100%;
-}
+  }
+  .margin-0 {
+    margin: 0rem !important;
+  }
+  .padding-0 {
+    padding: 0rem !important;
+  }
+  .spacing-clean {
+    padding: 0rem !important;
+    margin: 0rem !important;
+  }
+  .margin-top {
+    margin-right: 0rem !important;
+    margin-bottom: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-top {
+    padding-right: 0rem !important;
+    padding-bottom: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  .margin-right {
+    margin-top: 0rem !important;
+    margin-bottom: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-right {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  .margin-bottom {
+    margin-top: 0rem !important;
+    margin-right: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-bottom {
+    padding-top: 0rem !important;
+    padding-right: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  .margin-left {
+    margin-top: 0rem !important;
+    margin-right: 0rem !important;
+    margin-bottom: 0rem !important;
+  }
+  .padding-left {
+    padding-top: 0rem !important;
+    padding-right: 0rem !important;
+    padding-bottom: 0rem !important;
+  }
+  .margin-horizontal {
+    margin-top: 0rem !important;
+    margin-bottom: 0rem !important;
+  }
+  .padding-horizontal {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+  }
+  .margin-vertical {
+    margin-right: 0rem !important;
+    margin-left: 0rem !important;
+  }
+  .padding-vertical {
+    padding-right: 0rem !important;
+    padding-left: 0rem !important;
+  }
+  /* Custom Styles */
+  .gallery_item:hover .gallery_image {
+    transform: scale(1);
+  }
+  .button:hover .button_bg {
+    width: 100%;
+  }
+  /* Project Marquee Animation*/
+  .projects_marquee-list {
+    animation: marquee 20s linear infinite;
+    animation-delay: 0.2s;
+  }
+  .projects_marquee:hover .projects_marquee-list {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  /* Project Marquee Animation*/
+  .faq:first-child {
+    padding-top: 0;
+    border: none;
+  }
+  @media (max-width: 992px) {
+    .menu_button-mobile {
+      display: flex !important;
+    }
+    .menu_button-mobile.w--open .menu_button-icon {
+      display: none;
+    }
+    .menu_button-mobile.w--open .menu_button-icon.is-close {
+      display: block;
+    }
+  }
 </style>
     </div>
     <div class="global-styles w-embed">
@@ -438,89 +475,59 @@ margin: 0rem !important;
 }
 </style>
     </div>
-    <footer class="navbar">
-      <div data-w-id="0b21113b-7a5c-4699-b99e-7ce5cdc09a0a" data-animation="default" data-collapse="small" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="nav_component w-nav">
-        <div class="padding-global">
-          <div class="container-large">
-            <div class="padding-vertical padding-medium">
-              <div class="w-layout-grid nav_left-wrapper">
-                <div id="w-node-_72e7b742-8f80-63ea-696b-bd8d8b666d36-8b666d31" class="nav_logo-wrapper">
-                  <a href="index.html" aria-current="page" class="nav_logo-link w-nav-brand w--current">
-                    <div class="nav_logo">SWFT <span class="skinny">STUD</span><span class="highlight-2">IO</span><span class="skinny">S</span></div>
-                  </a>
-                  <link rel="prefetch" href="/">
-                  <div class="max-width-xsmall">
-                    <p class="text-size-small">You Dream It, We Create It</p>
+    <section class="header section-3">
+      <div class="w-layout-blockcontainer header-container w-container">
+        <div class="header-row">
+          <div class="header-logo-wrap">
+            <div data-animation="default" data-collapse="all" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="header-wrapper w-nav">
+              <a href="index.html" aria-current="page" class="header-logo-link w-nav-brand w--current"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
+            </div>
+          </div>
+          <div class="heading-menu-wrap">
+            <div data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc3d" class="heading-menu-box">
+              <a href="#" class="header-menu-link w-inline-block"><img loading="lazy" src="images/Frame_1Frame.png" alt="Blue plus sign icon on transparent background." class="heading-menu-img">
+                <div class="heading-text">Menu</div>
+              </a>
+            </div>
+            <div class="header-menu-wrap">
+              <div class="header-menu-item-wrapper">
+                <div class="header-menu-img-wrap">
+                  <a href="index.html" aria-current="page" class="header-logo-link w-nav-brand w--current"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
+                </div>
+                <div class="header-menu-text-wrap">
+                  <div class="heading-menu-item-wrap">
+                    <a href="#" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc49" class="menu-link">Home</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="#" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc4c" class="menu-link">Services</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="#" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc52" class="menu-link">Our Work</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="#" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc58" class="menu-link">Articles</a>
+                  </div>
+                  <div class="heading-menu-item-wrap">
+                    <a href="#" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc5b" class="menu-link">Work With Us</a>
                   </div>
                 </div>
-                <div class="nav_menu-button w-nav-button">
-                  <div class="menu-icon4">
-                    <div class="menu-icon4_wrapper">
-                      <div class="menu-icon4_line-top"></div>
-                      <div class="menu-icon4_line-middle">
-                        <div class="menu-icon_line-middle-top"></div>
-                        <div class="menu-icon_line-middle-base"></div>
-                      </div>
-                      <div class="menu-icon4_line-bottom"></div>
-                    </div>
-                  </div>
-                </div>
-                <nav role="navigation" id="w-node-_0b21113b-7a5c-4699-b99e-7ce5cdc09a0d-8b666d31" class="nav_menu w-nav-menu">
-                  <div class="nav_menu-block">
-                    <div class="nav_link-list">
-                      <div class="margin-bottom margin-medium">
-                        <div class="nav_title">Services</div>
-                      </div>
-                      <a href="websites.html" class="nav_link">Sites</a>
-                      <a href="apps.html" class="nav_link">Apps</a>
-                      <a href="videos.html" class="nav_link">Media</a>
-                      <a href="index.html" aria-current="page" class="nav_link is-muted w--current"></a>
-                    </div>
-                    <div class="nav_link-list">
-                      <div class="margin-bottom margin-medium">
-                        <div class="nav_title">Resources</div>
-                      </div>
-                      <a href="case-studies.html" class="nav_link">Case Studies</a>
-                      <a href="#" class="nav_link">Site Audit</a>
-                    </div>
-                    <div class="nav_link-list">
-                      <div class="margin-bottom margin-medium">
-                        <div class="nav_title">Contact</div>
-                      </div>
-                      <a href="mailto:elombe@swftstudios.com?subject=Inquiry%20for%20SWFT%20Studios" class="nav_link">hello@swftstudios.com</a>
-                      <a href="https://instagram.com/swft_studios" target="_blank" class="nav_link">IG: @swft_studios</a>
-                    </div>
-                  </div>
-                </nav>
               </div>
+            </div>
+          </div>
+          <div class="heading-right-content-wrap">
+            <div class="heading-right-fast-content">
+              <p class="heading-right-p">Free 30-minute strategy call. No obligations.</p>
+            </div>
+            <div class="heading-right-second-content"><img loading="lazy" src="images/portfolio-website-hero-selfie.png" alt="Elombe Kisala Headshot
+" sizes="(max-width: 256px) 100vw, 256px" srcset="images/portfolio-website-hero-selfie-p-500.png 500w, images/portfolio-website-hero-selfie-p-800.png 800w, images/portfolio-website-hero-selfie.png 844w" class="heading-right-img">
+              <a href="tel:+12014914088" class="header-call-link w-inline-block">
+                <div class="heading-right-phone-call"><img loading="lazy" src="images/Right-Phone_1Right-Phone.png" alt="Icon of a stylized smartphone with a curved screen on the right side." class="right-phone"></div>
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </footer>
-    <div id="w-node-b1a6aa5f-0ef2-b4ac-a1ee-ac11d0c6bd1c-278ca766" style="opacity:1" class="message_block_mobile">
-      <div class="message_image-wrapper">
-        <div data-poster-url="videos/swft_cube_night_watch_low_bit_rate-720p-poster-00001.jpg" data-video-urls="videos/swft_cube_night_watch_low_bit_rate-720p-transcode.mp4,videos/swft_cube_night_watch_low_bit_rate-720p-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" class="message_image w-background-video w-background-video-atom"><video id="c0cb0d2f-83fc-6957-05c8-1051dee60a18-video" autoplay="" loop="" style="background-image:url(&quot;videos/swft_cube_night_watch_low_bit_rate-720p-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-            <source src="videos/swft_cube_night_watch_low_bit_rate-720p-transcode.mp4" data-wf-ignore="true">
-            <source src="videos/swft_cube_night_watch_low_bit_rate-720p-transcode.webm" data-wf-ignore="true">
-          </video><img src="images/swft-thumbnail.webp" loading="lazy" sizes="(max-width: 3156px) 100vw, 3156px" srcset="images/swft-thumbnail-p-500.webp 500w, images/swft-thumbnail-p-800.webp 800w, images/swft-thumbnail-p-1080.webp 1080w, images/swft-thumbnail-p-1600.webp 1600w, images/swft-thumbnail-p-2000.webp 2000w, images/swft-thumbnail-p-2600.webp 2600w, images/swft-thumbnail.webp 3156w" alt=""></div>
-      </div>
-      <div class="message_bottom">
-        <div class="margin-bottom margin-small">
-          <h3 class="text-size-medium text-weight-medium text-align-center popup-text">Ready to transform your idea into reality?<br></h3>
-        </div>
-        <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-black w-inline-block">
-          <div class="button_bg is-white"></div>
-          <div class="button_text is-message">Learn How</div>
-        </a>
-      </div>
-      <div data-w-id="1e74bacd-a7bd-899e-7084-c657bf1c1722" class="close-popup-button">
-        <div class="x-container">
-          <div class="x-line"></div>
-          <div class="x-line _2"></div>
-        </div>
-      </div>
-    </div>
+    </section>
     <main class="main-wrapper">
       <div class="background_component">
         <div class="background_image-container">
@@ -579,24 +586,28 @@ margin: 0rem !important;
       <section class="section_gallery">
         <div class="padding-global">
           <div class="container-large">
-            <div>
+            <div class="div-block-3">
               <div class="margin-bottom margin-xlarge">
                 <div class="w-layout-grid course_component">
                   <div id="w-node-_8934f37e-af8f-f8cd-214f-b358479c4d84-278ca766" class="course_content">
                     <div class="margin-bottom margin-small">
-                      <div class="text-size-small text-color-green">Smart Websites &amp; Tools</div>
+                      <div class="text-size-small text-color-green">Serving NYC &amp; Jersey City</div>
                     </div>
                     <div class="margin-bottom margin-small">
                       <div class="max-width-large">
                         <h1 class="text-weight-medium">For Brands That <br>Dream Big &amp; Build Smart</h1>
                       </div>
                     </div>
-                    <p class="text-size-small">We help creators, service pros, and founders turn vision into reality through strategy, automation, and digital systems that scale.</p>
+                    <p class="testimonial-text">We help creators, service pros, and founders turn vision into reality through strategy, automation, and digital systems that scale.</p>
                     <div class="margin-top margin-medium">
                       <div class="button-group is-course">
                         <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
                           <div class="button_text">Work With Us</div>
+                        </a>
+                        <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-course outlined w-inline-block">
+                          <div class="button_bg"></div>
+                          <div class="button_text">Learn More</div>
                         </a>
                       </div>
                     </div>
@@ -606,6 +617,18 @@ margin: 0rem !important;
               </div>
               <section>
                 <div class="projects-wrapper">
+                  <div class="home-hero_projects">
+                    <div class="projects_marquee">
+                      <div class="projects_marquee-list">
+                        <a href="https://corehome.com" aria-label="project item link" target="_blank" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3024px) 100vw, 3024px" srcset="images/core_home_desktop_thumbnail.jpg 500w, images/core_home_desktop_thumbnail.jpg 800w, images/core_home_desktop_thumbnail.jpg 1080w, images/core_home_desktop_thumbnail.jpg 1600w, images/core_home_desktop_thumbnail.jpg 2000w, images/core_home_desktop_thumbnail.jpg 2600w, images/core_home_desktop_thumbnail.jpg 3024w" alt="" loading="lazy" src="images/core_home_desktop_thumbnail.jpg" class="project_marquee-img"></a>
+                        <a href="https://blurredlinesentertainment.com" aria-label="project item link" target="_blank" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail-p-1600.webp 1600w, images/BLE_SWFT_thumbnail-p-2000.webp 2000w, images/BLE_SWFT_thumbnail-p-2600.webp 2600w, images/BLE_SWFT_thumbnail-p-3200.webp 3200w, images/BLE_SWFT_thumbnail.webp 3600w" alt="" loading="lazy" src="images/BLE_SWFT_thumbnail.webp" class="project_marquee-img"></a>
+                        <a href="https://builtbymeez.com" aria-label="project item link" target="_blank" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail-p-1600.webp 1600w, images/built_by_me_ez_thumbnail-p-2000.webp 2000w, images/built_by_me_ez_thumbnail-p-2600.webp 2600w, images/built_by_me_ez_thumbnail-p-3200.webp 3200w, images/built_by_me_ez_thumbnail.webp 3600w" alt="" loading="lazy" src="images/built_by_me_ez_thumbnail.webp" class="project_marquee-img"></a>
+                        <a href="https://hawthorneglobalministries.org" aria-label="project item link" target="_blank" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w" alt="" loading="lazy" src="images/Hawthorne_Global_Ministries_thumbnail.webp" class="project_marquee-img"></a>
+                        <a href="https://rollerreels.com" aria-label="project item link" target="_blank" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w, images/Roller_Reels_thumbnail-p-1600.webp 1600w, images/Roller_Reels_thumbnail-p-2000.webp 2000w, images/Roller_Reels_thumbnail-p-2600.webp 2600w, images/Roller_Reels_thumbnail-p-3200.webp 3200w, images/Roller_Reels_thumbnail.webp 3600w" alt="" loading="lazy" src="images/Roller_Reels_thumbnail.webp" class="project_marquee-img"></a>
+                        <a href="https://snoozelaneapp.com" aria-label="project item link" target="_blank" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3552px) 100vw, 3552px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail-p-1080.webp 1080w, images/Snooze-Lane-Desktop-thumbnail-p-1600.webp 1600w, images/Snooze-Lane-Desktop-thumbnail-p-2000.webp 2000w, images/Snooze-Lane-Desktop-thumbnail-p-2600.webp 2600w, images/Snooze-Lane-Desktop-thumbnail-p-3200.webp 3200w, images/Snooze-Lane-Desktop-thumbnail.webp 3552w" alt="" loading="lazy" src="images/Snooze-Lane-Desktop-thumbnail.webp" class="project_marquee-img"></a>
+                      </div>
+                    </div>
+                  </div>
                   <div class="marquee-wrapper">
                     <div class="marquee-track">
                       <a href="https://hawthorneglobalministries.org" target="_blank" class="marquee-list w-inline-block">
@@ -636,7 +659,7 @@ margin: 0rem !important;
                       </a>
                       <a href="https://snoozelaneapp.com/" target="_blank" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img loading="lazy" src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3552px) 100vw, 3552px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail-p-1080.webp 1080w, images/Snooze-Lane-Desktop-thumbnail-p-1600.webp 1600w, images/Snooze-Lane-Desktop-thumbnail-p-2000.webp 2000w, images/Snooze-Lane-Desktop-thumbnail-p-2600.webp 2600w, images/Snooze-Lane-Desktop-thumbnail-p-3200.webp 3200w, images/Snooze-Lane-Desktop-thumbnail.webp 3552w" alt="" src="images/Snooze-Lane-Desktop-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                     </div>
@@ -675,7 +698,7 @@ margin: 0rem !important;
                       </div>
                     </div>
                     <div class="gallery_item">
-                      <a href="https://whp-digital.webflow.io/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/whp_desktop_screenshot.webp" loading="lazy" sizes="100vw" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="" class="gallery_image"></a>
+                      <a href="https://whp-digital.webflow.io/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/whp_desktop_screenshot.webp" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="" class="gallery_image"></a>
                       <div class="gallery_content-wrapper">
                         <div class="margin-bottom">
                           <div class="gallery_category">Website </div>
@@ -734,7 +757,7 @@ margin: 0rem !important;
                       </div>
                     </div>
                     <div class="gallery_item">
-                      <a href="https://flarenj.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/Screenshot-2025-09-12-at-10.57.19-PM.png" loading="lazy" sizes="100vw" srcset="images/Screenshot-2025-09-12-at-10.57.19-PM-p-500.png 500w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-800.png 800w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-1080.png 1080w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-1600.png 1600w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-2000.png 2000w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-2600.png 2600w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-3200.png 3200w, images/Screenshot-2025-09-12-at-10.57.19-PM.png 3600w" alt="" class="gallery_image"></a>
+                      <a href="https://flarenj.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/Screenshot-2025-09-12-at-10.57.19-PM.png" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Screenshot-2025-09-12-at-10.57.19-PM-p-500.png 500w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-800.png 800w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-1080.png 1080w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-1600.png 1600w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-2000.png 2000w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-2600.png 2600w, images/Screenshot-2025-09-12-at-10.57.19-PM-p-3200.png 3200w, images/Screenshot-2025-09-12-at-10.57.19-PM.png 3600w" alt="" class="gallery_image"></a>
                       <div class="gallery_content-wrapper">
                         <div class="margin-bottom">
                           <div class="gallery_category">Website </div>
@@ -825,7 +848,7 @@ pointer-events:none;
             <div data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead36b7" class="animated-text-holder">
               <div class="animated-text-container">
                 <div class="gradient-text"></div>
-                <div class="animated-text">We create <a href="#website-service" class="text_link"><span class="highlight-2">websites</span></a> and <a href="#" class="text_link"><span class="highlight-2">SWFT tools</span></a> designed to <span class="highlight-2">save you time</span> by streamlining your operations. Our solutions give you more freedom to focus on expanding your business. Take a look at our <a href="#use-cases" class="text_link"><span class="highlight-2">use cases</span></a>, <a href="#use-cases" class="text_link"><span class="highlight-2">demo videos</span></a>, or <a href="#" class="text_link"><span class="highlight-2">schedule a call</span></a> and prepare to elevate your business this year.</div>
+                <div class="animated-text">We are a creative <span class="highlight-2">digital</span> agency helping businesses build <span class="highlight-2">powerful</span> brands, <span class="highlight-2">modern</span> websites, and <span class="highlight-2">meaningful</span> experiences.</div>
               </div>
             </div>
             <div class="features-wrapper">
@@ -837,14 +860,14 @@ pointer-events:none;
                     </div>
                     <div class="feature-app-content">
                       <div class="fade-in-on-scroll">
-                        <div class="tag">Agency</div>
+                        <div class="tag">Services</div>
                       </div>
                       <div class="fade-in-on-scroll">
-                        <h3>Smart Websites</h3>
+                        <h3>Websites</h3>
                       </div>
                       <div class="fade-in-on-scroll">
                         <div class="mobile-app-description">
-                          <p>Get a beautiful site that maxixmizes your visibility on search engines and AI chats.</p>
+                          <p class="testimonial-text">Get a beautiful site that maxixmizes your visibility on search engines and get people to your door.</p>
                           <div class="bottom-margin---16px-2">
                             <ul role="list" class="video-category-list">
                               <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
@@ -882,21 +905,24 @@ pointer-events:none;
                         <div class="tag">PRODUCTS</div>
                       </div>
                       <div class="fade-in-on-scroll">
-                        <h3>Smart Apps &amp; Tools</h3>
+                        <h3>Tools</h3>
                       </div>
                       <div class="fade-in-on-scroll">
                         <div class="mobile-app-description">
-                          <p>Create an entire sales team to help you acquire customers on auto-pilot. Provide them with quality customer service at scale and never face burnout or bottle necks again.</p>
+                          <p class="testimonial-text">Get tools built to help manage and mantain your transformed business without feeling burnout </p>
                           <div class="bottom-margin---16px-2">
                             <ul role="list" class="video-category-list">
                               <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">cRM Management</div>
+                                <div class="text-block-5">Content Management</div>
                               </li>
                               <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">Blog &amp; Content Management</div>
+                                <div class="text-block-5">Reputation Management</div>
                               </li>
                               <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
                                 <div class="text-block-5">Production Management</div>
+                              </li>
+                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
+                                <div class="text-block-5">Daily Life Enhancement</div>
                               </li>
                             </ul>
                           </div>
@@ -1151,9 +1177,9 @@ pointer-events:none;
                       <div class="mobile-app-description">
                         <p>Explore our collection of concise videos, informative articles, and real-world use cases, all designed to enhance your understanding and application of our service.</p>
                         <div class="margin-top-2 _20px">
-                          <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-course w-inline-block">
+                          <a href="case-studies.html" target="_blank" class="button is-course w-inline-block">
                             <div class="button_bg"></div>
-                            <div class="button_text">See Case Studies</div>
+                            <div class="button_text">View Case Studies</div>
                           </a>
                         </div>
                       </div>
@@ -1206,10 +1232,10 @@ pointer-events:none;
                           <div class="project-tag">Facilitating</div>
                           <div class="project-tag">Transformation</div>
                         </div>
-                        <p class="project-description">We’ve spent years building systems not just for clients, but for ourselves out of necessity. And realized, what used to take big teams and big budgets is now possible for solo creators and small brands. SWFT exists to give people like us—who are <span>still evolving</span>—the tools to execute, the space to dream, and the systems to grow without burning out.</p>
+                        <p class="testimonial-text">We’ve spent years building systems not just for clients, but for ourselves out of necessity. And realized, what used to take big teams and big budgets is now possible for solo creators and small brands. SWFT exists to give people like us—who are <span>still evolving</span>—the tools to execute, the space to dream, and the systems to grow without burning out.</p>
                         <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
-                          <div class="button_text">Learn More</div>
+                          <div class="button_text">View Our Work</div>
                         </a>
                         <a href="#" class="project-link w-inline-block">
                           <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
@@ -1231,17 +1257,17 @@ pointer-events:none;
                         <h2 class="project-title">What We Do</h2>
                         <div class="project-tag-container">
                           <div class="project-tag">Branding</div>
-                          <div class="project-tag">Software Development</div>
-                          <div class="project-tag">Cinimetography</div>
+                          <div class="project-tag">Web Development</div>
+                          <div class="project-tag">Mobile Development</div>
                           <div class="project-tag">And More...</div>
                         </div>
-                        <p class="project-description">We take your vision and craft the foundation to support it: your brand’s look, feel, and function. That means the visuals, yes, but also the automations, the flows, the strategy. <span class="highlight">Because a pretty site without a purpose is just noise.</span> What we build is meant to <em>move you forward.</em></p>
+                        <p class="testimonial-text">We take your vision and craft the foundation to support it: your brand’s look, feel, and function. That means the visuals, yes, but also the automations, the flows, the strategy. <span class="highlight">Because a pretty site without a purpose is just noise.</span> What we build is meant to <em>move you forward.</em></p>
                         <a href="#" class="project-link w-inline-block">
                           <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
                         </a>
                         <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
-                          <div class="button_text">Work With Us</div>
+                          <div class="button_text">Read Case Studies</div>
                         </a>
                       </div>
                       <div class="project-image-container"><img sizes="(max-width: 2237px) 100vw, 2237px" srcset="images/Frame-13-p-500.jpg 500w, images/Frame-13-p-800.jpg 800w, images/Frame-13-p-1080.jpg 1080w, images/Frame-13-p-1600.jpg 1600w, images/Frame-13-p-2000.jpg 2000w, images/Frame-13.jpg 2237w" alt="" src="images/Frame-13.jpg" loading="lazy" class="about-video-thumbnail no-border"></div>
@@ -1256,7 +1282,7 @@ pointer-events:none;
                           <div class="project-tag">Solo-Entrepreneurs</div>
                           <div class="project-tag">Small-Medium Businesses</div>
                         </div>
-                        <p class="project-description">We work with people who are creative, resourceful, and already doing the work, but they’re ready for that next elevation. You might be tired of duct-taping tools together or waiting for the “right time.” If you’ve got the spark, We’ll help you turn it into something tangible and magnetic—without trying to make you someone you’re not.</p>
+                        <p class="testimonial-text">We work with people who are creative, resourceful, and already doing the work, but they’re ready for that next elevation. You might be tired of duct-taping tools together or waiting for the “right time.” If you’ve got the spark, We’ll help you turn it into something tangible and magnetic—without trying to make you someone you’re not.</p>
                         <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
                           <div class="button_text">Work With Us</div>
@@ -1265,7 +1291,7 @@ pointer-events:none;
                           <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
                         </a>
                       </div>
-                      <div class="project-image-container"><img sizes="100vw" srcset="images/SWFT-Customer-Logos-p-500.webp 500w, images/SWFT-Customer-Logos-p-800.webp 800w, images/SWFT-Customer-Logos-p-1080.webp 1080w, images/SWFT-Customer-Logos-p-1600.webp 1600w, images/SWFT-Customer-Logos-p-2000.webp 2000w, images/SWFT-Customer-Logos-p-2600.webp 2600w, images/SWFT-Customer-Logos.webp 3000w" alt="" src="images/SWFT-Customer-Logos.webp" loading="lazy" class="about-video-thumbnail no-border"></div>
+                      <div class="project-image-container"><img sizes="(max-width: 3000px) 100vw, 3000px" srcset="images/SWFT-Customer-Logos-p-500.webp 500w, images/SWFT-Customer-Logos-p-800.webp 800w, images/SWFT-Customer-Logos-p-1080.webp 1080w, images/SWFT-Customer-Logos-p-1600.webp 1600w, images/SWFT-Customer-Logos-p-2000.webp 2000w, images/SWFT-Customer-Logos-p-2600.webp 2600w, images/SWFT-Customer-Logos.webp 3000w" alt="" src="images/SWFT-Customer-Logos.webp" loading="lazy" class="about-video-thumbnail no-border"></div>
                     </div>
                   </div>
                   <div class="w-slide">
@@ -1277,7 +1303,7 @@ pointer-events:none;
                           <div class="project-tag">Strategize</div>
                           <div class="project-tag">Create</div>
                         </div>
-                        <p class="project-description">You’ve got the vision. Maybe even a few scattered attempts to start. But things still feel stuck in your head. That’s where we come in.<br>We&#x27;ll help you shape your idea into something real, build the structure underneath it, and give you the momentum to finally move. I’m not here to tell you what to do—I’m here to help you get it done.</p>
+                        <p class="testimonial-text">You’ve got the vision. Maybe even a few scattered attempts to start. But things still feel stuck in your head. That’s where we come in.<br>We&#x27;ll help you shape your idea into something real, build the structure underneath it, and give you the momentum to finally move. I’m not here to tell you what to do—I’m here to help you get it done.</p>
                         <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
                           <div class="button_text">Work With Us</div>
@@ -1286,7 +1312,7 @@ pointer-events:none;
                           <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
                         </a>
                       </div>
-                      <div class="project-image-container"><img sizes="100vw" srcset="images/AdobeStock_1431669061-p-500.jpeg 500w, images/AdobeStock_1431669061-p-800.jpeg 800w, images/AdobeStock_1431669061-p-1080.jpeg 1080w, images/AdobeStock_1431669061-p-1600.jpeg 1600w, images/AdobeStock_1431669061-p-2000.jpeg 2000w, images/AdobeStock_1431669061-p-2600.jpeg 2600w, images/AdobeStock_1431669061-p-3200.jpeg 3200w, images/AdobeStock_1431669061.jpeg 4080w" alt="" src="images/AdobeStock_1431669061.jpeg" loading="lazy" class="about-video-thumbnail no-border"></div>
+                      <div class="project-image-container"><img sizes="(max-width: 4080px) 100vw, 4080px" srcset="images/AdobeStock_1431669061-p-500.jpeg 500w, images/AdobeStock_1431669061-p-800.jpeg 800w, images/AdobeStock_1431669061-p-1080.jpeg 1080w, images/AdobeStock_1431669061-p-1600.jpeg 1600w, images/AdobeStock_1431669061-p-2000.jpeg 2000w, images/AdobeStock_1431669061-p-2600.jpeg 2600w, images/AdobeStock_1431669061-p-3200.jpeg 3200w, images/AdobeStock_1431669061.jpeg 4080w" alt="" src="images/AdobeStock_1431669061.jpeg" loading="lazy" class="about-video-thumbnail no-border"></div>
                     </div>
                   </div>
                 </div>
@@ -1302,119 +1328,6 @@ pointer-events:none;
           </div>
         </div>
       </section>
-      <div id="Testimonials" class="section-2 grey-section">
-        <div class="testimonails-wrapper">
-          <div class="container-2">
-            <div class="center-text">
-              <div class="title-holder">
-                <div class="title-container">
-                  <h2 class="title">Our community has spoken.</h2>
-                </div>
-                <div class="paragraph-holder">
-                  <p>Lorem ipsum dolor sit amet consectetur. Elementum sollicitudin sollicitudin</p>
-                </div>
-              </div>
-            </div>
-            <div class="testimonail-slider-holder">
-              <div class="testimonail-slider-container">
-                <div data-delay="4000" data-animation="slide" class="testimonial-slider-2 w-slider" data-autoplay="false" data-easing="ease" data-hide-arrows="false" data-disable-swipe="false" data-autoplay-limit="0" data-nav-spacing="3" data-duration="700" data-infinite="false">
-                  <div class="testimonial-mask w-slider-mask">
-                    <div class="testimonial-slide w-slide">
-                      <div data-w-id="e8393153-27b4-aec7-030f-76d4e707c212" class="testimonail-card-holder">
-                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c213-278ca766" class="testimonial-content-holder">
-                          <div class="testimonial-text">They captured the vision I have for my brand perfectly and created a website that helped me pack venues and book more gigs.</div>
-                          <div class="testimonail-user">
-                            <div class="testimonial-user-wrapper">
-                              <div class="user-image-holder"><img loading="lazy" src="images/Animoji-2.png" alt="" class="user-image"></div>
-                              <div class="user-content-holder">
-                                <div class="user-name">
-                                  <div>Yanko Hernando</div>
-                                </div>
-                                <div class="user-job-position">
-                                  <div>Owner - <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Blurred lines entertainment</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="testimonial-slide w-slide">
-                      <div class="testimonail-card-holder">
-                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c227-278ca766" class="testimonial-content-holder">
-                          <div class="testimonial-text">“...I&#x27;ve always wanted my own website. Especially something professionally done... and then I got lucky. I found you...&quot;<span class="white-text"></span></div>
-                          <div class="testimonail-user">
-                            <div class="testimonial-user-wrapper">
-                              <div class="user-image-holder"><img sizes="100vw" srcset="images/Animoji-5-p-500.png 500w, images/Animoji-5-p-800.png 800w, images/Animoji-5-p-1080.png 1080w, images/Animoji-5-p-1600.png 1600w, images/Animoji-5.png 1720w" alt="" src="images/Animoji-5.png" loading="lazy" class="user-image"></div>
-                              <div class="user-content-holder">
-                                <div class="user-name">
-                                  <div>Victor Garcia</div>
-                                </div>
-                                <div class="user-job-position">
-                                  <div>Owner- <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Victor boxing &amp; Fitness</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="testimonial-slide w-slide">
-                      <div class="testimonail-card-holder">
-                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c23c-278ca766" class="testimonial-content-holder">
-                          <div class="testimonial-text">I now have a sleek and modern platform to show my Instagram and TikTok videos to potential clients. And with the added ability to sell courses online, I feel like I&#x27;ve taken my personal training business to the next level!</div>
-                          <div class="testimonail-user">
-                            <div class="testimonial-user-wrapper">
-                              <div class="user-image-holder"><img loading="lazy" src="images/Animoji-2.png" alt="" class="user-image"></div>
-                              <div class="user-content-holder">
-                                <div class="user-name">
-                                  <div>Omar</div>
-                                </div>
-                                <div class="user-job-position">
-                                  <div>Fitness Coach, <br>Owner of Builit by me ez</div>
-                                </div>
-                              </div>
-                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="testimonial-slide w-slide">
-                      <div class="testimonail-card-holder">
-                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c24d-278ca766" class="testimonial-content-holder">
-                          <div class="testimonial-text">I am extremely impressed with the redesign of my website&#x27;s home page! The updated layout and security features have made my clients feel much more confident in trusting my business</div>
-                          <div class="testimonail-user">
-                            <div class="testimonial-user-wrapper">
-                              <div class="user-image-holder"><img loading="lazy" src="images/Animoji-3.png" alt="" class="user-image"></div>
-                              <div class="user-content-holder">
-                                <div class="user-name">
-                                  <div>Richard Morrow</div>
-                                </div>
-                                <div class="user-job-position">
-                                  <div>Owner of AHA Consulting Services</div>
-                                </div>
-                              </div>
-                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="left-arrow-slider w-slider-arrow-left">
-                    <div class="arrow-holder"><img loading="lazy" src="images/Left-Arrow.svg" alt="" class="arrow"></div>
-                  </div>
-                  <div class="right-arrow-slider w-slider-arrow-right">
-                    <div class="arrow-holder"><img loading="lazy" src="images/Right-Arrow.svg" alt="" class="arrow"></div>
-                  </div>
-                  <div class="hide-2 w-slider-nav w-round"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="section-2">
         <div class="content-container flex-vertical w-container">
           <div data-w-id="b8abefdb-d7b8-3c7c-63e7-0c574cad4b78" style="-webkit-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="brix---inner-container-574px---center">
@@ -1422,7 +1335,7 @@ pointer-events:none;
               <div class="brix---text-center">
                 <div class="brix---mg-bottom-16px">
                   <div class="brix---color-neutral-800">
-                    <h1 class="section-heading">Hear what clients had to say</h1>
+                    <h1 class="section-heading">what clients had to say</h1>
                     <p class="paragraph-5 centered">We aim to build long term relationships.</p>
                   </div>
                 </div>
@@ -1455,55 +1368,102 @@ pointer-events:none;
             <div class="brix---content-inside-card-testimonial-video"><img sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 900px" srcset="images/BLE-no-bg-p-500.png 500w, images/BLE-no-bg-p-800.png 800w, images/BLE-no-bg.png 900w" alt="" src="images/BLE-no-bg.png" class="testimonial-business-logo">
               <div class="brix---mg-bottom-24px">
                 <div class="brix---color-neutral-600">
-                  <p class="paragraph-5 quote">“It&#x27;s just so great how Mantis is a one-stop-shop for video production and website building... why go to two different parties instead of going to one who knows everything about what you&#x27;re trying to accomplish.&quot;</p>
+                  <p class="testimonial-text">“It&#x27;s just so great how SWFT is a one-stop-shop for video production and website building... why go to two different parties instead of going to one who knows everything about what you&#x27;re trying to accomplish.&quot;</p>
                 </div>
               </div>
               <div>
-                <div class="brix---color-neutral-800">
-                  <div class="paragraph-5 left-align client-name">Yanko Hernando</div>
+                <div class="user-content-holder">
+                  <div class="user-name">
+                    <div>Yanko Hernando</div>
+                  </div>
+                  <div class="user-job-position">
+                    <div>Owner - <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Blurred lines entertainment</a>
+                    </div>
+                  </div>
                 </div>
-                <a href="https://blurredlinesentertainment.com/" target="_blank" class="client-website-link-block w-inline-block">
-                  <div class="paragraph-5 left-align business-link">Owner of Blurred Lines Entertainment</div>
-                </a>
               </div>
             </div>
           </div>
-          <div data-w-id="b8abefdb-d7b8-3c7c-63e7-0c574cad4b95" style="-webkit-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="brix---card-testimonial-video-left">
-            <div class="brix---testimonial-video-wrapper">
-              <div class="brix---testimonial-video-image-wrapper"><img width="566" sizes="(max-width: 767px) 100vw, 566px" alt="" src="images/Victor-Garcia-Trstimonial-Thumbnail.png" srcset="images/Victor-Garcia-Trstimonial-Thumbnail-p-500.png 500w, images/Victor-Garcia-Trstimonial-Thumbnail-p-800.png 800w, images/Victor-Garcia-Trstimonial-Thumbnail.png 925w" class="brix---video-bg-image-testimonial">
-                <div class="brix---bg-overlay">
-                  <a href="#" data-w-id="b8abefdb-d7b8-3c7c-63e7-0c574cad4b9a" style="-webkit-transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="brix---lightbox-video-icon-wrapper w-inline-block w-lightbox"><img alt="Play Icon - Elements Webflow Library - BRIX Templates" src="images/play-button-large-brix-templates.svg" class="brix---play-button-100px">
-                    <script type="application/json" class="w-json">{
-  "items": [
-    {
-      "url": "https://vimeo.com/637694652",
-      "originalUrl": "https://vimeo.com/637694652",
-      "width": 940,
-      "height": 529,
-      "thumbnailUrl": "https://i.vimeocdn.com/video/1281168216-8480a2b34128cda6287af0cbc0c8b746885784c7ce0459224_1280",
-      "html": "<iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fplayer.vimeo.com%2Fvideo%2F637694652%3Fh%3D533d13a9de%26app_id%3D122963&dntp=1&display_name=Vimeo&url=https%3A%2F%2Fvimeo.com%2F637694652&image=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F1281168216-8480a2b34128cda6287af0cbc0c8b746885784c7ce0459224_1280&key=96f1f04c5f4143bcb0f2e68c87d65feb&type=text%2Fhtml&schema=vimeo\" width=\"940\" height=\"529\" scrolling=\"no\" title=\"Vimeo embed\" frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen=\"true\"></iframe>",
-      "type": "video"
-    }
-  ],
-  "group": "Testimonials"
-}</script>
-                  </a>
+        </div>
+      </div>
+      <div id="Testimonials" class="section-2 grey-section">
+        <div class="testimonails-wrapper">
+          <div class="container-2">
+            <div class="testimonail-slider-holder">
+              <div class="testimonail-slider-container">
+                <div data-delay="4000" data-animation="slide" class="testimonial-slider-2 w-slider" data-autoplay="true" data-easing="ease" data-hide-arrows="false" data-disable-swipe="false" data-autoplay-limit="0" data-nav-spacing="3" data-duration="700" data-infinite="false">
+                  <div class="testimonial-mask w-slider-mask">
+                    <div class="testimonial-slide w-slide">
+                      <div data-w-id="e8393153-27b4-aec7-030f-76d4e707c212" class="testimonail-card-holder">
+                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c213-278ca766" class="testimonial-content-holder">
+                          <div class="testimonial-text">They captured the vision I have for my brand perfectly and created a website that helped me pack venues and book more gigs.</div>
+                          <div class="testimonail-user">
+                            <div class="testimonial-user-wrapper">
+                              <div class="user-image-holder"><img loading="lazy" src="images/Animoji-2.png" alt="" class="user-image"></div>
+                              <div class="user-content-holder">
+                                <div class="user-name">
+                                  <div>Yanko Hernando</div>
+                                </div>
+                                <div class="user-job-position">
+                                  <div>Owner - <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Blurred lines entertainment</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="testimonial-slide w-slide">
+                      <div class="testimonail-card-holder">
+                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c227-278ca766" class="testimonial-content-holder">
+                          <div class="testimonial-text">“...I&#x27;ve always wanted my own website. Especially something professionally done... and then I got lucky. I found you...&quot;<span class="white-text"></span></div>
+                          <div class="testimonail-user">
+                            <div class="testimonial-user-wrapper">
+                              <div class="user-image-holder"><img sizes="(max-width: 1720px) 100vw, 1720px" srcset="images/Animoji-5-p-500.png 500w, images/Animoji-5-p-800.png 800w, images/Animoji-5-p-1080.png 1080w, images/Animoji-5-p-1600.png 1600w, images/Animoji-5.png 1720w" alt="" src="images/Animoji-5.png" loading="lazy" class="user-image"></div>
+                              <div class="user-content-holder">
+                                <div class="user-name">
+                                  <div>Omar Ndiye</div>
+                                </div>
+                                <div class="user-job-position">
+                                  <div>Owner- <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Built By Me Ez</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="testimonial-slide w-slide">
+                      <div class="testimonail-card-holder">
+                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c24d-278ca766" class="testimonial-content-holder">
+                          <div class="testimonial-text">I am extremely impressed with the redesign of my website&#x27;s home page! The updated layout and security features have made my clients feel much more confident in trusting my business</div>
+                          <div class="testimonail-user">
+                            <div class="testimonial-user-wrapper">
+                              <div class="user-image-holder"><img loading="lazy" src="images/Animoji-3.png" alt="" class="user-image"></div>
+                              <div class="user-content-holder">
+                                <div class="user-name">
+                                  <div>Richard M</div>
+                                </div>
+                                <div class="user-job-position">
+                                  <div>Owner - AHA Consulting Services</div>
+                                </div>
+                              </div>
+                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="left-arrow-slider w-slider-arrow-left">
+                    <div class="arrow-holder"><img loading="lazy" src="images/Left-Arrow.svg" alt="" class="arrow"></div>
+                  </div>
+                  <div class="right-arrow-slider w-slider-arrow-right">
+                    <div class="arrow-holder"><img loading="lazy" src="images/Right-Arrow.svg" alt="" class="arrow"></div>
+                  </div>
+                  <div class="hide-2 w-slider-nav w-round"></div>
                 </div>
-              </div>
-            </div>
-            <div class="brix---content-inside-card-testimonial-video"><img alt="" src="https://uploads-ssl.webflow.com/64725a4b651cee234d40b346/64726e49628c867ed5e108b1_testimonial%20logo%20victor%20boxing%20bw.PNG" class="testimonial-business-logo">
-              <div class="brix---mg-bottom-24px">
-                <div class="brix---color-neutral-600">
-                  <p class="paragraph-5 quote">“I needed to step up my game for advertisement. All I had was literally Instagram. That’s all I had and I always wanted my own website. Especially something professionally done and then I got lucky, I landed you guys...&quot;</p>
-                </div>
-              </div>
-              <div>
-                <div class="brix---color-neutral-800">
-                  <div class="paragraph-5 left-align client-name">Victor Garcia</div>
-                </div>
-                <a href="https://www.victorboxingandfitness.com/" target="_blank" class="client-website-link-block w-inline-block">
-                  <div class="paragraph-5 left-align business-link">Owner of Victor Boxing and Fitness</div>
-                </a>
               </div>
             </div>
           </div>
@@ -1546,24 +1506,24 @@ pointer-events:none;
             <div class="process-content-container">
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d1d" style="opacity:0" class="section-title-container">
                 <h2 class="section-title">First impressions matter, so your website should look great and perform perfectly</h2>
-                <div>How we, together, build the perfect website</div>
+                <div class="testimonial-text">How we, together, build the perfect website</div>
               </div>
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d22" style="opacity:0" class="process-card-container">
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d23" class="process-card">
                   <div class="process-card-title">1. Strategize</div>
-                  <p class="process-card-paragraph">We start with deep clarity. Whether you’re building a brand, launching a product, or transitioning from DMs to digital systems, we define your goals, audience, and monetization model.</p>
+                  <p class="testimonial-text">We start with deep clarity. Whether you’re building a brand, launching a product, or transitioning from DMs to digital systems, we define your goals, audience, and monetization model.</p>
                 </div>
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d28" class="process-card">
                   <div class="process-card-title">2. Wire &amp; Style</div>
-                  <p class="process-card-paragraph">Once your offer and audience are clear, we sketch the customer journey and design a layout that reflects your energy. Think of it as your brand’s digital lifestyle on display.</p>
+                  <p class="testimonial-text">Once your offer and audience are clear, we sketch the customer journey and design a layout that reflects your energy. Think of it as your brand’s digital lifestyle on display.</p>
                 </div>
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d2d" class="process-card">
                   <div class="process-card-title">3. Flow &amp; Build</div>
-                  <p class="process-card-paragraph">Using Webflow, Shopify, Airtable, and other tools, we bring your site to life with automation, bookings, payments, and backend logic. <br>Custom-built for how you run your business.</p>
+                  <p class="testimonial-text">Using Webflow, Shopify, Airtable, and other tools, we bring your site to life with automation, bookings, payments, and backend logic. <br>Custom-built for how you run your business.</p>
                 </div>
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d32" class="process-card">
                   <div class="process-card-title">4. Transfer &amp; Scale</div>
-                  <p class="process-card-paragraph">Once complete, we hand off your complete system. Documented, mobile-optimized, and ready to go. Optionally, if you want ongoing support, we offer retainer options to help with content updates, AI enhancements, system scaling, or brand pivots.</p>
+                  <p class="testimonial-text">Once complete, we hand off your complete system. Documented, mobile-optimized, and ready to go. Optionally, if you want ongoing support, we offer retainer options to help with content updates, AI enhancements, system scaling, or brand pivots.</p>
                 </div>
               </div>
             </div>
@@ -1580,15 +1540,15 @@ pointer-events:none;
             <div class="contact-content-container">
               <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2f4" style="opacity:0" class="section-title-container">
                 <h2 class="section-title-2">Have a project in mind?</h2>
-                <div>Fill out the form and we’ll get back to you within 24 hours... or email us at <a href="mailto:elombe@swftstudios.com?subject=Inquiry%20from%20SWFT%20Studios" class="highlight">hello@swftstudios.com</a>
+                <div class="testimonial-text">Fill out the form and we’ll get back to you within 24 hours... or email us at <a href="mailto:elombe@swftstudios.com?subject=Inquiry%20from%20SWFT%20Studios" class="highlight">hello@swftstudios.com</a>
                 </div>
               </div>
               <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2fb" style="opacity:0" class="contact-form-container">
                 <div class="form-block w-form">
                   <form id="wf-form-Contact-Form" name="wf-form-Contact-Form" data-name="Contact Form" action="https://formsubmit.co/elombe@swftstudios.com" method="post" class="form" data-wf-page-id="688e7554265d8089278ca766" data-wf-element-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2fd">
-                    <div class="field-container"><label for="name" class="field-label">What&#x27;s your name?</label><input class="text-field w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"></div>
-                    <div class="field-container"><label for="name-2" class="field-label">What&#x27;s your email?</label><input class="text-field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="text" id="name-2"></div>
-                    <div class="field-container"><label for="name-4" class="field-label">Describe your project</label><textarea id="Project-description" name="Project-description" maxlength="5000" data-name="field" placeholder="" required="" class="textarea w-input"></textarea></div>
+                    <div class="field-container"><label for="name" class="testimonial-text">What&#x27;s your name?</label><input class="text-field w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"></div>
+                    <div class="field-container"><label for="name-2" class="testimonial-text">What&#x27;s your email?</label><input class="text-field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="text" id="name-2"></div>
+                    <div class="field-container"><label for="name-4" class="testimonial-text">Describe your project</label><textarea id="Project-description" name="Project-description" maxlength="5000" data-name="field" placeholder="" required="" class="textarea w-input"></textarea></div>
                     <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb30e" class="magnetic-element">
                       <a href="#" class="button is-form-submit w-inline-block">
                         <div class="button_bg"></div>
@@ -2595,6 +2555,5 @@ tl.to(".page-loader_text-fill", {
     ease: CustomEase.create("custom", customEase)
 }, 0);
 </script>
-<script src="js/theme-switcher.js" type="text/javascript"></script>
 </body>
 </html>

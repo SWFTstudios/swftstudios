@@ -88,3 +88,11 @@ Every Webflow export should follow this branch-based workflow:
 - For **Webflow imports**, always follow the import workflow above and never paste a full export directly on `main`.
 - Treat `archive/*` branches as read-only history references.
 
+### 6. Changelog
+
+- **2026-04-29 — export baseline alignment**
+  - Imported approved Webflow-replaceable pages from `swftstudios000.webflow`.
+  - Synced Webflow CSS (`normalize.css`, `components.css`, `swftstudios000.css`) plus `fonts/` and `images/`.
+  - Preserved protected files: case-study pages/routes, Worker config, repo config, and `js/swftstudios000.js`.
+  - Added `docs/WEBFLOW_ELEMENT_MAP.md` as a page-level section/heading checklist for post-import verification.
+
