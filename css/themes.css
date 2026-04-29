@@ -1,0 +1,361 @@
+/* ============================================================
+   SWFT Studios — Theme Switcher
+   5 design themes mapped from docs/*.md files.
+   Apply data-theme="<id>" to <html> to activate a theme.
+   No theme attribute = original SWFT look.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400&display=swap');
+
+/* ────────────────────────────────────────────────────────────
+   Theme 1 — Aura Echo Forest
+   Electric green (#00FF66) on deep black. Inter. Pill buttons.
+   ──────────────────────────────────────────────────────────── */
+[data-theme="aura-echo"] {
+  --black:       #000000;
+  --charcoal:    #0a0a0a;
+  --white:       #ffffff;
+  --green:       #00ff66;
+  --glass_edge:  rgba(255, 255, 255, 0.5);
+  --glow:        rgba(0, 255, 102, 0.1);
+  --green-glow:  rgba(0, 255, 102, 0.1);
+}
+
+[data-theme="aura-echo"] body {
+  font-family: Inter, sans-serif;
+  letter-spacing: 0;
+}
+
+[data-theme="aura-echo"] h1 {
+  font-size: clamp(4rem, 9vw, 9rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+[data-theme="aura-echo"] h2 {
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+[data-theme="aura-echo"] p,
+[data-theme="aura-echo"] .nav-link,
+[data-theme="aura-echo"] .menu-link {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+[data-theme="aura-echo"] .button,
+[data-theme="aura-echo"] .button-5,
+[data-theme="aura-echo"] .navbar-button {
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="aura-echo"] .button.is-course {
+  border-radius: 9999px;
+}
+
+[data-theme="aura-echo"] .card_item,
+[data-theme="aura-echo"] .parallax-wrapper {
+  border-radius: 0px;
+  border: 1px solid #ffffff;
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   Theme 2 — Scalable Computing Tiers
+   Navy (#0F172A) + blue (#3B82F6). Roboto. Sharp 0px corners.
+   ──────────────────────────────────────────────────────────── */
+[data-theme="scalable"] {
+  --black:       #0f172a;
+  --charcoal:    #1e293b;
+  --white:       #cbd5e1;
+  --green:       #3b82f6;
+  --glass_edge:  rgba(30, 58, 138, 0.5);
+  --glow:        rgba(59, 130, 246, 0.15);
+  --green-glow:  rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="scalable"] body {
+  font-family: 'Roboto', sans-serif;
+}
+
+[data-theme="scalable"] h1 {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 200;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+[data-theme="scalable"] h2 {
+  font-weight: 200;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="scalable"] p {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+[data-theme="scalable"] .button,
+[data-theme="scalable"] .button-5,
+[data-theme="scalable"] .navbar-button {
+  border-radius: 0px;
+  background-color: #0f172a;
+  color: #cbd5e1;
+  border: 1px solid rgba(30, 41, 59, 0.6);
+}
+
+[data-theme="scalable"] .button.is-course {
+  border-radius: 0px;
+}
+
+[data-theme="scalable"] .card_item,
+[data-theme="scalable"] .parallax-wrapper {
+  border-radius: 0px;
+  background-color: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   Theme 3 — Instant Digital Content
+   Gray (#9CA3AF) on black. System font. Pill buttons. Minimal.
+   ──────────────────────────────────────────────────────────── */
+[data-theme="instant"] {
+  --black:       #000000;
+  --charcoal:    #0a0a0a;
+  --white:       #ffffff;
+  --green:       #9ca3af;
+  --glass_edge:  rgba(255, 255, 255, 0.4);
+  --glow:        rgba(156, 163, 175, 0.08);
+  --green-glow:  rgba(156, 163, 175, 0.06);
+}
+
+[data-theme="instant"] body {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #9ca3af;
+}
+
+[data-theme="instant"] h1 {
+  font-size: clamp(4rem, 8vw, 6rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+[data-theme="instant"] h2 {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+[data-theme="instant"] .button,
+[data-theme="instant"] .button-5,
+[data-theme="instant"] .navbar-button {
+  border-radius: 9999px;
+  background-color: #000000;
+  color: #9ca3af;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="instant"] .button.is-course {
+  border-radius: 9999px;
+}
+
+[data-theme="instant"] .card_item,
+[data-theme="instant"] .parallax-wrapper {
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   Theme 4 — Aethel Adaptive Edge
+   Cyan (#06B6D4) on black. System font. Full pill radius.
+   ──────────────────────────────────────────────────────────── */
+[data-theme="aethel"] {
+  --black:       #000000;
+  --charcoal:    #050505;
+  --white:       #ffffff;
+  --green:       #06b6d4;
+  --glass_edge:  rgba(6, 182, 212, 0.3);
+  --glow:        rgba(6, 182, 212, 0.12);
+  --green-glow:  rgba(6, 182, 212, 0.08);
+}
+
+[data-theme="aethel"] body {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+[data-theme="aethel"] h1 {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+[data-theme="aethel"] h2 {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="aethel"] p {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  color: #9ca3af;
+}
+
+[data-theme="aethel"] .button,
+[data-theme="aethel"] .button-5,
+[data-theme="aethel"] .navbar-button {
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="aethel"] .button.is-course {
+  border-radius: 9999px;
+}
+
+[data-theme="aethel"] .card_item,
+[data-theme="aethel"] .parallax-wrapper {
+  border-radius: 9999px;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   Theme 5 — Spectral Dynamics
+   Warm cream (#F2EAD3) accent on black. Geist thin. 23px cards.
+   ──────────────────────────────────────────────────────────── */
+[data-theme="spectral"] {
+  --black:       #000000;
+  --charcoal:    #0a0a0a;
+  --white:       #ffffff;
+  --green:       #f2ead3;
+  --glass_edge:  rgba(242, 234, 211, 0.3);
+  --glow:        rgba(242, 234, 211, 0.06);
+  --green-glow:  rgba(242, 234, 211, 0.04);
+}
+
+[data-theme="spectral"] body {
+  font-family: 'Geist', system-ui, sans-serif;
+}
+
+[data-theme="spectral"] h1 {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 100;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+[data-theme="spectral"] h2 {
+  font-weight: 100;
+  letter-spacing: -0.04em;
+}
+
+[data-theme="spectral"] p {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 28px;
+}
+
+[data-theme="spectral"] .button,
+[data-theme="spectral"] .button-5,
+[data-theme="spectral"] .navbar-button {
+  border-radius: 9999px;
+  background-color: #f2ead3;
+  color: #000000;
+  border: none;
+}
+
+[data-theme="spectral"] .button.is-secondary {
+  background-color: transparent;
+  color: #f2ead3;
+  border: 1px solid #f2ead3;
+}
+
+[data-theme="spectral"] .button.is-course {
+  border-radius: 9999px;
+}
+
+[data-theme="spectral"] .card_item,
+[data-theme="spectral"] .parallax-wrapper {
+  background-color: #171717;
+  border-radius: 23px;
+  border: none;
+  box-shadow: rgba(255, 255, 255, 0.02) 0px 0px 40px 0px inset;
+}
+
+
+/* ============================================================
+   Theme Switcher Bar UI
+   ============================================================ */
+.theme-switcher-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.theme-btn:hover {
+  color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-btn.is-active {
+  color: #000;
+  background: var(--btn-dot-color, #fff);
+  border-color: transparent;
+}
+
+.theme-btn-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--btn-dot-color, #fff);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.theme-btn.is-active .theme-btn-dot {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.theme-btn:hover .theme-btn-dot {
+  transform: scale(1.3);
+}
