@@ -1,12 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
   "name": "swftstudios",
+  "main": "src/worker.ts",
   "compatibility_date": "2026-03-09",
   "observability": {
     "enabled": true
   },
+  "ai": {
+    "binding": "AI"
+  },
   "assets": {
     "directory": ".",
+    "binding": "ASSETS",
     "exclude": [
       ".git",
       "**/.git/**",
@@ -15,8 +20,12 @@
       ".cursor",
       "**/.cursor/**",
       "node_modules",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "src",
+      "**/src/**",
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json"
     ]
   }
 }
-

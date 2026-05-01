@@ -2766,6 +2766,8 @@ figcaption {
 .project-title {
   margin-top: 0;
   margin-bottom: 10px;
+  letter-spacing: -.02em;
+  text-wrap: balance;
 }
 
 .slide-nav {
@@ -2882,6 +2884,18 @@ figcaption {
   max-width: 520px;
   line-height: 1.6em;
   display: flex;
+}
+
+.project-info-container .testimonial-text {
+  color: #f2f4f7;
+  font-size: 1.24rem;
+  line-height: 1.58;
+  letter-spacing: -.01em;
+}
+
+.project-info-container .highlight {
+  color: #8ef9cf;
+  font-weight: 500;
 }
 
 .project-slider {
@@ -3775,6 +3789,9 @@ figcaption {
 .animated-text {
   font-size: 42px;
   font-weight: 200;
+  letter-spacing: -.02em;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 .popup_visual {
@@ -5245,6 +5262,8 @@ figcaption {
 
 .heading {
   font-size: 27px;
+  letter-spacing: -.015em;
+  line-height: 1.2;
 }
 
 .image-2 {
@@ -5454,6 +5473,14 @@ figcaption {
   margin-top: 20px;
 }
 
+.mobile-app-container.slider .mobile-app-description p {
+  color: #e8ecf3;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  letter-spacing: -.01em;
+  max-width: 62ch;
+}
+
 .process-item-2 {
   background-color: #111;
   border: 1px solid #323338;
@@ -5583,7 +5610,8 @@ figcaption {
 
 .highlight-2 {
   color: var(--green);
-  font-weight: 400;
+  font-weight: 500;
+  text-shadow: 0 0 18px #2cd19a2e;
 }
 
 .hero-section-mac-holder {

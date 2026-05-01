@@ -1,0 +1,123 @@
+[
+  {
+    "type": "article",
+    "name": "Snooze Lane",
+    "slug": "snooze-lane",
+    "href": "case-study/snooze-lane.html",
+    "image": "images/Snooze-Lane-Desktop-thumbnail.webp",
+    "details": "How SWFT translated a clever commuter app into a product story people could trust, understand, and share.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Roller Reels",
+    "slug": "roller-reels",
+    "href": "case-study/roller-reels.html",
+    "image": "images/Roller_Reels_thumbnail.webp",
+    "details": "A focused look at positioning and web presence for a reels-forward brand.",
+    "branding": true,
+    "website": true,
+    "film": true
+  },
+  {
+    "type": "article",
+    "name": "Built By Me EZ",
+    "slug": "built-by-me-ez",
+    "href": "case-study/built-by-me-ez.html",
+    "image": "images/built_by_me_ez_thumbnail.webp",
+    "details": "Product story and site experience for a DIY builder audience.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Hamper",
+    "slug": "hamper",
+    "href": "case-study/hamper.html",
+    "image": "images/hamper_app_website_thumbnail.webp",
+    "details": "App and web case study for Hamper.",
+    "branding": false,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Hawthorne Global Ministries",
+    "slug": "hawthorne-global-ministries",
+    "href": "case-study/hawthorne-global-ministries.html",
+    "image": "images/Hawthorne_Global_Ministries_thumbnail.webp",
+    "details": "Brand and digital presence for a global ministries organization.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Blurred Lines Entertainment",
+    "slug": "blurred-lines-entertainment",
+    "href": "case-study/blurred-lines-entertainment.html",
+    "image": "images/BLE_SWFT_thumbnail.webp",
+    "details": "Entertainment brand storytelling and web experience.",
+    "branding": true,
+    "website": true,
+    "film": true
+  },
+  {
+    "type": "article",
+    "name": "Google Business Profile and Local SEO in 2026",
+    "slug": "google-business-profile-local-seo-2026",
+    "href": "case-study/google-business-profile-local-seo-2026.html",
+    "image": "images/swft-thumbnail.webp",
+    "details": "Why Google Business Profile and local SEO still drive real actions for service businesses in 2026.",
+    "branding": false,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Social Media Content Creation in 2026",
+    "slug": "social-media-content-2026",
+    "href": "case-study/social-media-content-2026.html",
+    "image": "images/swft-thumbnail.webp",
+    "details": "Turning shoots and campaigns into reusable short-form and long-form assets.",
+    "branding": true,
+    "website": true,
+    "film": true
+  },
+  {
+    "type": "article",
+    "name": "AI Answer Engine Optimization in 2026",
+    "slug": "ai-answer-engine-optimization-2026",
+    "href": "case-study/ai-answer-engine-optimization-2026.html",
+    "image": "images/swft-thumbnail.webp",
+    "details": "Structuring pages so AI systems can extract clean answers and cite your brand.",
+    "branding": false,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Reputation Management in 2026",
+    "slug": "reputation-management-2026",
+    "href": "case-study/reputation-management-2026.html",
+    "image": "images/swft-thumbnail.webp",
+    "details": "Reviews as conversion, trust, and AI credibility signals.",
+    "branding": false,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "What Most Brands Still Miss About Websites and Digital Marketing in 2026",
+    "slug": "digital-marketing-blind-spots-2026",
+    "href": "case-study/digital-marketing-blind-spots-2026.html",
+    "image": "images/swft-thumbnail.webp",
+    "details": "Websites as conversion systems, AI citation sources, local trust hubs, and distribution anchors.",
+    "branding": true,
+    "website": true,
+    "film": false
+  }
+]

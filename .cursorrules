@@ -147,6 +147,32 @@ Before finalizing any feature:
 
 ---
 
+## GIT + WEBFLOW WORKFLOW (SWFT STUDIOS)
+
+Follow this repo’s branch and file contract so Webflow imports and custom code coexist safely.
+
+### Branches
+- **main**: Single source of truth for the current marketing site. Do not rebase, squash, or force-push unless explicitly agreed.
+- **archive/\***: Read-only history markers (`archive/pre-redesign`, `archive/github-thought-sessions`, `archive/blog-graph-views`). Do not merge into or delete them without explicit instruction.
+- **webflow/import-\***: Short-lived branches for Webflow exports only. Create from `main`, copy only approved files, then merge to `main` and delete the branch.
+- **feat/\***, **fix/\***: Use for non-Webflow work; always branch from `main`.
+
+### Protected files (never overwrite from Webflow)
+- `case-studies.html`, `case-study/`, `case-study.html`, `detail_project.html`, `detail_video.html`
+- `wrangler.jsonc`, `.gitignore`, `.deploy-trigger`
+- `js/swftstudios000.js` (if adding Webflow JS, use a separate file)
+
+### Webflow-replaceable files (safe to overwrite from export)
+- `index.html`, `404.html`, `401.html`, `websites.html`, `apps.html`, `media.html`, `website-pricing.html`, `resources.html`, `portfolio-review.html`, `style-guide.html`, `swft-tv.html`, `videos.html`
+
+### When assisting Webflow imports
+- Never paste raw Webflow export directly onto `main`.
+- Create `webflow/import-<description>` from `main`, copy only the replaceable HTML/CSS/images from the export, fix links (case-studies.html, case-study/<slug>.html), then commit with message `webflow: import <description> (...)` and merge to `main` after review.
+- Use `css/webflow-export.css` for Webflow styles; leave `css/swftstudios000.css` for custom and case-study styles.
+- Canonical reference: [docs/WEBFLOW_WORKFLOW.md](docs/WEBFLOW_WORKFLOW.md).
+
+---
+
 ## GOAL
 
 Your mission is to help:

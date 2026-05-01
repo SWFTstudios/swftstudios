@@ -1,0 +1,9 @@
+{
+  "name": "swftstudios-site",
+  "private": true,
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250525.0",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.45.0"
+  }
+}
