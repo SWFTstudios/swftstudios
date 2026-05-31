@@ -132,8 +132,10 @@
     .sm-goal { position: relative; }
     .sm-goal input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
     .sm-goal span { display: flex; align-items: center; gap: 0.7rem; padding: 1rem; border-radius: 14px; cursor: pointer; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.85); font-size: 0.95rem; font-weight: 600; transition: all 0.18s; }
-    .sm-goal span .emo { font-size: 1.3rem; }
+    .sm-goal-ico { flex: 0 0 22px; width: 22px; height: 22px; color: #fff; transition: color 0.18s; }
+    .sm-goal-ico svg { width: 100%; height: 100%; display: block; }
     .sm-goal input:checked + span { border-color: var(--sm-green); background: rgba(127,255,229,0.1); color: #fff; }
+    .sm-goal input:checked + span .sm-goal-ico { color: var(--sm-green); }
     .sm-goal input:focus-visible + span { outline: 2px solid var(--sm-green); outline-offset: 2px; }
 
     /* Feature checkboxes */
@@ -330,12 +332,12 @@
               <div class="sm-field">
                 <label class="sm-q">Your main goal for the website</label>
                 <div class="sm-goal-grid">
-                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Get more sales / orders" required><span><span class="emo">🛍️</span>Get more sales / orders</span></label>
-                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Get bookings / appointments"><span><span class="emo">📅</span>Get bookings / appointments</span></label>
-                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Collect leads / inquiries"><span><span class="emo">📨</span>Collect leads / inquiries</span></label>
-                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Grow an email / SMS list"><span><span class="emo">📈</span>Grow an email / SMS list</span></label>
-                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Look professional & credible"><span><span class="emo">✨</span>Look professional &amp; credible</span></label>
-                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Sell digital products / courses"><span><span class="emo">💻</span>Sell digital products / courses</span></label>
+                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Get more sales / orders" required><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>Get more sales / orders</span></label>
+                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Get bookings / appointments"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Get bookings / appointments</span></label>
+                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Collect leads / inquiries"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>Collect leads / inquiries</span></label>
+                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Grow an email / SMS list"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>Grow an email / SMS list</span></label>
+                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Look professional & credible"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.09 4.26L18.5 8l-3.5 3.41.83 4.84L12 14l-3.83 2.25.83-4.84L5.5 8l4.41-.74Z"/></svg></span>Look professional &amp; credible</span></label>
+                  <label class="sm-goal"><input type="radio" name="Main Goal" value="Sell digital products / courses"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>Sell digital products / courses</span></label>
                 </div>
               </div>
               <div class="sm-field"><label class="sm-q" for="success">What would make this a win in the first month?</label><textarea id="success" name="What Success Looks Like" class="sm-textarea" placeholder="e.g. 10 new bookings a week, or my first online orders..."></textarea></div>
@@ -451,7 +453,7 @@
           </form>
 
           <div class="sm-done w-form-done" style="display:none;">
-            <h3>You're in. 🎉</h3>
+            <h3>You're in.</h3>
             <p>Thanks — we've got your build plan and your selected option. We'll review everything and reach out shortly to kick off your build and get your site live in 7 days or less.</p>
           </div>
           <div class="sm-fail w-form-fail" style="display:none; text-align:center; color:#ffb4b4; padding:1rem;">Something went wrong. Please try again, or email us at hello@swftstudios.com.</div>
