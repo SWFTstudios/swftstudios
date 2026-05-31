@@ -4,11 +4,24 @@ The "Order Your Website" booking flow (`swft-method.html`) submits to the Worker
 endpoint **`POST /api/build-request`** (in `src/worker.ts`). That endpoint:
 
 1. **Stores the lead in Airtable** (best-effort).
-2. **Starts a Stripe Checkout session** for the chosen plan and returns its URL,
+2. **Emails the team a notification + sends the visitor a confirmation**
+   (a 48-hour-reply autoresponse) via FormSubmit (best-effort, in the background).
+3. **Starts a Stripe Checkout session** for the chosen plan and returns its URL,
    which the page redirects the visitor to.
 
 If a visitor has JavaScript disabled — or the endpoint errors — the form falls
 back to its `formsubmit.co` action so the lead still reaches email.
+
+### Email recipient + confirmation
+- Lead notifications go to **hello@swftstudios.com** (override with the
+  `FORMSUBMIT_EMAIL` var). Both funnel forms (`swft-method.html`, `contact.html`)
+  also post directly to `formsubmit.co/hello@swftstudios.com` on the no-JS path.
+- The visitor's confirmation email (FormSubmit `_autoresponse`) tells them we
+  received their request and will **reach out within 48 hours**.
+- **One-time activation required:** the first time an address receives a
+  FormSubmit submission, FormSubmit emails it an activation link that must be
+  clicked once. Submit the form once (or trigger the Worker) and confirm the
+  email to **hello@swftstudios.com** to activate. Until then, emails won't send.
 
 ---
 
