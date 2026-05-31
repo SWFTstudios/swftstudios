@@ -53,6 +53,7 @@ body{
   to { transform: translateX(0%); }
 }
 </style>
+  <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
@@ -475,65 +476,28 @@ margin: 0rem !important;
 }
 </style>
     </div>
-    <section class="header section-3">
-      <div class="w-layout-blockcontainer header-container w-container">
-        <div class="header-row">
-          <div class="header-logo-wrap">
-            <div data-animation="default" data-collapse="all" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="header-wrapper w-nav">
-              <a href="index.html" aria-current="page" class="header-logo-link w-nav-brand w--current"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
-            </div>
-          </div>
-          <div class="heading-menu-wrap">
-            <div data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc3d" class="heading-menu-box">
-              <a href="#" class="header-menu-link w-inline-block"><img loading="lazy" src="images/Frame_1Frame.png" alt="Blue plus sign icon on transparent background." class="heading-menu-img">
-                <div class="heading-text">Menu</div>
-              </a>
-            </div>
-            <div class="header-menu-wrap">
-              <div class="header-menu-item-wrapper">
-                <div class="header-menu-img-wrap">
-                  <a href="index.html" aria-current="page" class="header-logo-link w-nav-brand w--current"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
-                </div>
-                <div class="header-menu-text-wrap">
-                  <div class="heading-menu-item-wrap">
-                    <a href="index.html" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc49" class="menu-link">Home</a>
-                  </div>
-                  <div class="heading-menu-item-wrap">
-                    <a href="index.html#services" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc4c" class="menu-link">Services</a>
-                  </div>
-                  <div class="heading-menu-item-wrap">
-                    <a href="website-pricing.html" class="menu-link">Pricing</a>
-                  </div>
-                  <div class="heading-menu-item-wrap">
-                    <a href="tools.html" class="menu-link">Tools</a>
-                  </div>
-                  <div class="heading-menu-item-wrap">
-                    <a href="websites.html" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc52" class="menu-link">Our Work</a>
-                  </div>
-                  <div class="heading-menu-item-wrap">
-                    <a href="case-studies.html" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc58" class="menu-link">Articles</a>
-                  </div>
-                  <div class="heading-menu-item-wrap">
-                    <a href="index.html#Get-in-touch" data-w-id="d3676e6a-66ad-60f9-4a22-2dc86fc0bc5b" class="menu-link">Work With Us</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="heading-right-content-wrap">
-            <div class="heading-right-fast-content">
-              <p class="heading-right-p">Free 30-minute strategy call. No obligations.</p>
-            </div>
-            <div class="heading-right-second-content"><img loading="lazy" src="images/portfolio-website-hero-selfie.png" alt="Elombe Kisala Headshot
-" sizes="(max-width: 256px) 100vw, 256px" srcset="images/portfolio-website-hero-selfie-p-500.png 500w, images/portfolio-website-hero-selfie-p-800.png 800w, images/portfolio-website-hero-selfie.png 844w" class="heading-right-img">
-              <a href="tel:+12014914088" class="header-call-link w-inline-block">
-                <div class="heading-right-phone-call"><img loading="lazy" src="images/Right-Phone_1Right-Phone.png" alt="Icon of a stylized smartphone with a curved screen on the right side." class="right-phone"></div>
-              </a>
-            </div>
-          </div>
-        </div>
+    <nav class="sn-nav">
+      <a href="index.html" class="sn-brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></a>
+      <div class="sn-links">
+        <a href="index.html" class="sn-link">Home</a>
+        <a href="website-pricing.html" class="sn-link">Pricing</a>
+        <a href="websites.html" class="sn-link">Our Work</a>
+        <a href="case-studies.html" class="sn-link">Articles</a>
+        <a href="contact.html" class="sn-link">Contact</a>
+        <a href="swft-method.html" class="sn-cta">Order Your Website &#8594;</a>
       </div>
-    </section>
+      <button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="sn-scrim" id="sn-scrim"></div>
+    <aside class="sn-panel" id="sn-panel" aria-hidden="true">
+      <button class="sn-close" id="sn-close" aria-label="Close menu">&#215;</button>
+      <a href="index.html">Home</a>
+      <a href="website-pricing.html">Pricing</a>
+      <a href="websites.html">Our Work</a>
+      <a href="case-studies.html">Articles</a>
+      <a href="contact.html">Contact</a>
+      <a href="swft-method.html" class="sn-panel-cta">Order Your Website &#8594;</a>
+    </aside>
     <main class="main-wrapper">
       <div class="background_component">
         <div class="background_image-container">
@@ -607,13 +571,13 @@ margin: 0rem !important;
                     <p class="testimonial-text">We build your website and set up the tools that keep your phone ringing, your calendar full, and your business running &mdash; even when you&#x27;re not at your desk.</p>
                     <div class="margin-top margin-medium">
                       <div class="button-group is-course">
-                        <a href="contact.html" target="_blank" class="button is-course w-inline-block">
+                        <a href="swft-method.html" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
-                          <div class="button_text">Work With Us</div>
+                          <div class="button_text">Order Your Website</div>
                         </a>
                         <a href="contact.html" target="_blank" class="button is-course outlined w-inline-block">
                           <div class="button_bg"></div>
-                          <div class="button_text">Learn More</div>
+                          <div class="button_text">Work With Us</div>
                         </a>
                       </div>
                     </div>
@@ -2561,5 +2525,6 @@ tl.to(".page-loader_text-fill", {
     ease: CustomEase.create("custom", customEase)
 }, 0);
 </script>
+  <script src="js/swft-nav.js"></script>
 </body>
 </html>

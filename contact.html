@@ -30,10 +30,61 @@
 body{
   overscroll-behavior: none;
   }
+
+/* ===== Shared clean nav ===== */
+:root { --sm-green: #7fffe5; }
+.sn-nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0.9rem clamp(1rem, 4vw, 2.5rem); background: rgba(1,1,1,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+.sn-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.04em; color: #fff; text-decoration: none; white-space: nowrap; }
+.sn-brand .sk { font-weight: 400; }
+.sn-brand .hl { color: var(--sm-green); }
+.sn-links { display: flex; align-items: center; gap: 1.6rem; }
+.sn-link { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.18s; }
+.sn-link:hover { color: #fff; }
+.sn-cta { background: var(--sm-green); color: #010101; font-weight: 700; font-size: 0.9rem; padding: 0.6rem 1.1rem; border-radius: 999px; text-decoration: none; white-space: nowrap; transition: transform 0.18s; }
+.sn-cta:hover { transform: translateY(-1px); }
+.sn-burger { display: none; flex-direction: column; gap: 5px; width: 30px; height: 30px; justify-content: center; align-items: center; background: none; border: none; cursor: pointer; }
+.sn-burger span { display: block; width: 24px; height: 2px; background: #fff; }
+.sn-panel { display: none; }
+@media (max-width: 860px) {
+  .sn-links { display: none; }
+  .sn-burger { display: flex; }
+  .sn-panel { position: fixed; inset: 0 0 0 auto; width: min(82vw, 340px); z-index: 110; background: #0c0c0c; border-left: 1px solid rgba(255,255,255,0.1); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; padding: 5rem 1.75rem 2rem; }
+  .sn-panel.open { display: flex; transform: translateX(0); }
+  .sn-panel a { color: #fff; text-decoration: none; font-size: 1.15rem; font-weight: 600; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sn-panel a.sn-panel-cta { margin-top: 1.5rem; border: none; background: var(--sm-green); color: #010101; text-align: center; border-radius: 999px; padding: 1rem; }
+  .sn-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 105; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .sn-scrim.open { opacity: 1; pointer-events: auto; }
+  .sn-close { position: absolute; top: 1.4rem; right: 1.5rem; background: none; border: none; color: #fff; font-size: 1.8rem; cursor: pointer; line-height: 1; }
+}
+/* ===== Contact page edge padding ===== */
+.page-section .page-padding { padding-left: clamp(1.15rem, 5vw, 4rem); padding-right: clamp(1.15rem, 5vw, 4rem); }
 </style>
 </head>
 <body>
   <div class="page-wrapper">
+    <!-- ===== NAV ===== -->
+    <nav class="sn-nav">
+      <a href="index.html" class="sn-brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></a>
+      <div class="sn-links">
+        <a href="index.html" class="sn-link">Home</a>
+        <a href="website-pricing.html" class="sn-link">Pricing</a>
+        <a href="websites.html" class="sn-link">Our Work</a>
+        <a href="case-studies.html" class="sn-link">Articles</a>
+        <a href="contact.html" class="sn-link">Contact</a>
+        <a href="swft-method.html" class="sn-cta">Order Your Website →</a>
+      </div>
+      <button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="sn-scrim" id="sn-scrim"></div>
+    <aside class="sn-panel" id="sn-panel" aria-hidden="true">
+      <button class="sn-close" id="sn-close" aria-label="Close menu">×</button>
+      <a href="index.html">Home</a>
+      <a href="website-pricing.html">Pricing</a>
+      <a href="websites.html">Our Work</a>
+      <a href="case-studies.html">Articles</a>
+      <a href="contact.html">Contact</a>
+      <a href="swft-method.html" class="sn-panel-cta">Order Your Website →</a>
+    </aside>
     <div class="hide w-embed">
       <style>
 @media screen and (max-width: 1280px) and (min-width: 950px) {
@@ -429,6 +480,21 @@ tippy('.nav_link.is-muted', {
 });
 </script>
 
+<script>
+(function () {
+  var burger=document.getElementById('sn-burger');
+  var panel=document.getElementById('sn-panel');
+  var scrim=document.getElementById('sn-scrim');
+  var close=document.getElementById('sn-close');
+  if(!burger) return;
+  function open(){ panel.classList.add('open'); scrim.classList.add('open'); burger.setAttribute('aria-expanded','true'); panel.setAttribute('aria-hidden','false'); }
+  function shut(){ panel.classList.remove('open'); scrim.classList.remove('open'); burger.setAttribute('aria-expanded','false'); panel.setAttribute('aria-hidden','true'); }
+  burger.addEventListener('click',open);
+  close.addEventListener('click',shut);
+  scrim.addEventListener('click',shut);
+  panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',shut); });
+})();
+</script>
 <script>
 (function(){
   const form=document.getElementById('contact-discovery-form');
