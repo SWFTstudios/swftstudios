@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html data-wf-site="688e7554265d8089278ca76e" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Turn Your Instagram Into an Online Business in 7 Days | SWFT Studios</title>
+  <meta content="The SWFT Method turns your Instagram into a real online business in 7 days or less. Tell us about your business and the site you want — we build a custom website you publish and add to your bio to get customers and sales." name="description">
+  <meta content="Turn Your Instagram Into an Online Business in 7 Days | SWFT Studios" property="og:title">
+  <meta content="Tell us about your business and the website you want. We turn it into a custom site you publish and add to your bio to get customers and sales — in 7 days or less." property="og:description">
+  <meta content="Turn Your Instagram Into an Online Business in 7 Days | SWFT Studios" property="twitter:title">
+  <meta content="Tell us about your business and the website you want. We turn it into a custom site you publish and add to your bio to get customers and sales — in 7 days or less." property="twitter:description">
+  <meta property="og:type" content="website">
+  <meta content="summary_large_image" name="twitter:card">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/components.css" rel="stylesheet" type="text/css">
+  <link href="css/swftstudios000.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
+  <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.webp" rel="apple-touch-icon">
+  <style>
+    body { overscroll-behavior: none; }
+
+    /* ---- SWFT Method landing / booking flow ---- */
+    .sm-header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: rgba(1,1,1,0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sm-logo { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.02em; color: #fff; text-decoration: none; }
+    .sm-logo .skinny { font-weight: 400; }
+    .sm-logo .highlight-2 { color: var(--green, #7fffe5); }
+    .sm-header-cta {
+      font-size: 0.85rem; font-weight: 600; color: #010101;
+      background: var(--green, #7fffe5);
+      padding: 0.6rem 1.1rem; border-radius: 999px; text-decoration: none;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .sm-header-cta:hover { transform: translateY(-1px); opacity: 0.9; }
+
+    .sm-hero { position: relative; overflow: hidden; }
+    .sm-hero-glow {
+      position: absolute; top: -25%; left: 50%; transform: translateX(-50%);
+      width: 70rem; max-width: 120vw; height: 45rem;
+      background: radial-gradient(circle at 50% 40%, rgba(127,255,229,0.18), rgba(1,1,1,0) 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .sm-hero-inner { position: relative; z-index: 1; }
+    .sm-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--green, #7fffe5);
+      border: 1px solid rgba(127,255,229,0.35);
+      padding: 0.4rem 0.85rem; border-radius: 999px;
+    }
+    .sm-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green, #7fffe5); box-shadow: 0 0 10px var(--green, #7fffe5); }
+    .sm-h1 { font-size: clamp(2.4rem, 6vw, 4.25rem); line-height: 1.02; font-weight: 700; color: #fff; margin: 0; }
+    .sm-h1 .hl { color: var(--green, #7fffe5); }
+    .sm-sub { font-size: clamp(1rem, 2vw, 1.25rem); color: rgba(255,255,255,0.72); max-width: 44rem; }
+
+    .sm-cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .sm-btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-weight: 700; color: #010101; background: var(--green, #7fffe5);
+      padding: 1rem 1.6rem; border-radius: 999px; text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .sm-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(127,255,229,0.25); }
+    .sm-btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-weight: 600; color: #fff; background: transparent;
+      padding: 1rem 1.6rem; border-radius: 999px; text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: border-color 0.2s ease;
+    }
+    .sm-btn-ghost:hover { border-color: rgba(127,255,229,0.6); }
+
+    /* How it works strip */
+    .sm-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .sm-step-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 1.25rem;
+    }
+    .sm-step-num { font-size: 0.8rem; font-weight: 700; color: var(--green, #7fffe5); letter-spacing: 0.05em; }
+    .sm-step-title { color: #fff; font-weight: 700; margin: 0.5rem 0 0.35rem; font-size: 1.05rem; }
+    .sm-step-text { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin: 0; line-height: 1.45; }
+
+    /* Form / booking flow */
+    .sm-form-shell {
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 24px; padding: 2rem; max-width: 800px; margin: 0 auto;
+    }
+    .sm-progress-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .sm-progress-label { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+    .sm-progress-count { font-size: 0.8rem; font-weight: 700; color: var(--green, #7fffe5); }
+    .sm-progress-track { height: 6px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; margin-bottom: 1.75rem; }
+    .sm-progress-fill { height: 100%; width: 16%; background: var(--green, #7fffe5); border-radius: 999px; transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+
+    .sm-step-heading { color: #fff; font-size: 1.5rem; font-weight: 700; margin: 0 0 0.35rem; }
+    .sm-step-desc { color: rgba(255,255,255,0.6); font-size: 0.95rem; margin: 0 0 1.5rem; }
+
+    .sm-field { margin-bottom: 1.25rem; }
+    .sm-field label.sm-q { display: block; color: #fff; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
+    .sm-field .sm-hint { display: block; color: rgba(255,255,255,0.45); font-size: 0.8rem; margin-bottom: 0.55rem; }
+    .sm-input, .sm-textarea, .sm-select {
+      width: 100%; background: rgba(255,255,255,0.04); color: #fff;
+      border: 1px solid rgba(255,255,255,0.14); border-radius: 12px;
+      padding: 0.85rem 1rem; font-size: 0.95rem; font-family: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .sm-textarea { min-height: 110px; resize: vertical; }
+    .sm-input:focus, .sm-textarea:focus, .sm-select:focus { outline: none; border-color: var(--green, #7fffe5); background: rgba(127,255,229,0.05); }
+    .sm-input::placeholder, .sm-textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .sm-select option { background: #0c0c0c; color: #fff; }
+
+    .sm-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* Choice pills (radio) */
+    .sm-choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .sm-choice { position: relative; }
+    .sm-choice input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+    .sm-choice span {
+      display: block; padding: 0.85rem 1rem; border-radius: 12px; cursor: pointer;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.8); font-size: 0.92rem; transition: all 0.18s ease;
+    }
+    .sm-choice input:checked + span { border-color: var(--green, #7fffe5); background: rgba(127,255,229,0.1); color: #fff; }
+    .sm-choice input:focus-visible + span { outline: 2px solid var(--green, #7fffe5); outline-offset: 2px; }
+
+    /* Feature checkboxes */
+    .sm-feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+    .sm-feature { position: relative; }
+    .sm-feature input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+    .sm-feature span {
+      display: flex; align-items: center; gap: 0.4rem; height: 100%;
+      padding: 0.85rem 0.9rem; border-radius: 12px; cursor: pointer;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.8); font-size: 0.88rem; line-height: 1.25; transition: all 0.18s ease;
+    }
+    .sm-feature span::before {
+      content: ""; flex: 0 0 16px; width: 16px; height: 16px; border-radius: 5px;
+      border: 1px solid rgba(255,255,255,0.35); transition: all 0.18s ease;
+    }
+    .sm-feature input:checked + span { border-color: var(--green, #7fffe5); background: rgba(127,255,229,0.1); color: #fff; }
+    .sm-feature input:checked + span::before { background: var(--green, #7fffe5); border-color: var(--green, #7fffe5); box-shadow: inset 0 0 0 3px #0c0c0c; }
+    .sm-feature input:focus-visible + span { outline: 2px solid var(--green, #7fffe5); outline-offset: 2px; }
+
+    .sm-nav-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
+    .sm-btn-back {
+      background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff;
+      padding: 0.85rem 1.4rem; border-radius: 999px; font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+    .sm-btn-back:hover { border-color: rgba(127,255,229,0.6); }
+    .sm-btn-next {
+      background: var(--green, #7fffe5); border: none; color: #010101;
+      padding: 0.85rem 1.6rem; border-radius: 999px; font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: transform 0.2s ease;
+    }
+    .sm-btn-next:hover { transform: translateY(-2px); }
+
+    .sm-trust { display: flex; flex-wrap: wrap; gap: 1.25rem; color: rgba(255,255,255,0.5); font-size: 0.82rem; }
+    .sm-trust span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .sm-trust .tick { color: var(--green, #7fffe5); }
+
+    .sm-done {
+      text-align: center; background: rgba(127,255,229,0.06);
+      border: 1px solid rgba(127,255,229,0.3); border-radius: 20px; padding: 2.5rem 1.5rem;
+    }
+    .sm-done h3 { color: #fff; font-size: 1.6rem; margin: 0 0 0.6rem; }
+    .sm-done p { color: rgba(255,255,255,0.7); margin: 0 auto; max-width: 30rem; }
+    .sm-fail { text-align: center; color: #ffb4b4; padding: 1rem; }
+
+    @media (max-width: 767px) {
+      .sm-steps { grid-template-columns: 1fr 1fr; }
+      .sm-feature-grid { grid-template-columns: 1fr 1fr; }
+      .sm-choice-grid { grid-template-columns: 1fr; }
+      .sm-grid-2 { grid-template-columns: 1fr; }
+      .sm-form-shell { padding: 1.4rem; }
+    }
+    @media (max-width: 479px) {
+      .sm-steps { grid-template-columns: 1fr; }
+      .sm-feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper" style="background:#010101;">
+
+    <!-- Header -->
+    <header class="sm-header">
+      <a href="index.html" class="sm-logo">SWFT <span class="skinny">STUD</span><span class="highlight-2">IO</span><span class="skinny">S</span></a>
+      <a href="#start" class="sm-header-cta">Start my build brief</a>
+    </header>
+
+    <main class="main-wrapper">
+
+      <!-- Hero -->
+      <section class="page-section sm-hero">
+        <div class="sm-hero-glow"></div>
+        <div class="page-padding">
+          <div class="container-large">
+            <div class="padding-vertical padding-xhuge sm-hero-inner">
+              <div style="display:flex; flex-direction:column; gap:1.5rem; max-width:48rem;">
+                <div><span class="sm-eyebrow"><span class="dot"></span>The SWFT Method</span></div>
+                <h1 class="sm-h1">Turn your Instagram into an <span class="hl">online business</span> in 7 days or less.</h1>
+                <p class="sm-sub">You already have the audience. We give you the storefront. Tell us about your business and the website you want — and we'll build you a custom site you can publish and drop straight into your bio to start getting customers and sales.</p>
+                <div class="sm-cta-row">
+                  <a href="#start" class="sm-btn-primary">Build my website brief →</a>
+                  <a href="#how" class="sm-btn-ghost">See how it works</a>
+                </div>
+                <div class="sm-trust">
+                  <span><span class="tick">✓</span> 7 days or less</span>
+                  <span><span class="tick">✓</span> Custom, not a template</span>
+                  <span><span class="tick">✓</span> Built to convert followers into customers</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section id="how" class="page-section">
+        <div class="page-padding">
+          <div class="container-large">
+            <div class="padding-vertical padding-large">
+              <div class="section-tag-container">
+                <div>How the SWFT Method works</div>
+                <div class="section-tag-line"></div>
+              </div>
+              <div style="max-width:42rem; margin:1rem 0 2rem;">
+                <p class="sm-sub">Four simple steps from "just an Instagram page" to a real website that does business for you.</p>
+              </div>
+              <div class="sm-steps">
+                <div class="sm-step-card">
+                  <div class="sm-step-num">STEP 01</div>
+                  <h4 class="sm-step-title">You tell us</h4>
+                  <p class="sm-step-text">Fill out the brief below — your business, your goals, the look you want, and the features you need.</p>
+                </div>
+                <div class="sm-step-card">
+                  <div class="sm-step-num">STEP 02</div>
+                  <h4 class="sm-step-title">We plan</h4>
+                  <p class="sm-step-text">Your answers become a build doc — a clear blueprint we use to design a site that fits your brand.</p>
+                </div>
+                <div class="sm-step-card">
+                  <div class="sm-step-num">STEP 03</div>
+                  <h4 class="sm-step-title">We build</h4>
+                  <p class="sm-step-text">We design and build your custom website fast — within 7 days — and send it for your review.</p>
+                </div>
+                <div class="sm-step-card">
+                  <div class="sm-step-num">STEP 04</div>
+                  <h4 class="sm-step-title">You publish</h4>
+                  <p class="sm-step-text">We launch it and you add the link to your bio. Now your followers can become customers.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Booking flow / intake -->
+      <section id="start" class="page-section">
+        <div class="page-padding">
+          <div class="container-large">
+            <div class="padding-vertical padding-xhuge">
+              <div class="section-title-container" style="max-width:760px; margin:0 auto 2rem; text-align:center;">
+                <h2 class="section-title" style="color:#fff;">Let's build your website brief</h2>
+                <div class="sm-sub" style="margin:0.75rem auto 0;">Answer a few focused questions about your business and the site you want. It takes about 3 minutes — and everything you share becomes the guide we use to build your custom website.</div>
+              </div>
+
+              <div class="sm-form-shell">
+                <div class="form-block w-form">
+                  <!-- Progress -->
+                  <div class="sm-progress-head">
+                    <div class="sm-progress-label" id="sm-step-label">About you</div>
+                    <div class="sm-progress-count"><span id="sm-current">1</span> / 6</div>
+                  </div>
+                  <div class="sm-progress-track"><div class="sm-progress-fill" id="sm-progress"></div></div>
+
+                  <form id="swft-method-form" action="https://formsubmit.co/elombe@swftstudios.com" method="POST">
+                    <input type="hidden" name="_subject" value="New SWFT Method Build Brief — Instagram → Online Business">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_autoresponse" value="Thanks for starting your SWFT build brief! We've got your details and we'll be in touch shortly with the next steps to turn your Instagram into a website in 7 days or less. — SWFT Studios">
+
+                    <!-- STEP 1: About you -->
+                    <div class="sm-step" data-step="1">
+                      <h3 class="sm-step-heading">First, the basics</h3>
+                      <p class="sm-step-desc">So we know who we're building for and how to reach you.</p>
+                      <div class="sm-grid-2">
+                        <div class="sm-field">
+                          <label class="sm-q" for="name">Your name</label>
+                          <input id="name" name="Name" type="text" class="sm-input" placeholder="Jordan Smith" required>
+                        </div>
+                        <div class="sm-field">
+                          <label class="sm-q" for="email">Email</label>
+                          <input id="email" name="Email" type="email" class="sm-input" placeholder="you@email.com" required>
+                        </div>
+                      </div>
+                      <div class="sm-grid-2">
+                        <div class="sm-field">
+                          <label class="sm-q" for="instagram">Instagram handle</label>
+                          <input id="instagram" name="Instagram Handle" type="text" class="sm-input" placeholder="@yourbusiness" required>
+                        </div>
+                        <div class="sm-field">
+                          <label class="sm-q" for="phone">Phone / WhatsApp <span class="sm-hint" style="display:inline;">(optional)</span></label>
+                          <input id="phone" name="Phone" type="tel" class="sm-input" placeholder="So we can reach you faster">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- STEP 2: Your business -->
+                    <div class="sm-step" data-step="2" style="display:none;">
+                      <h3 class="sm-step-heading">Tell us about your business</h3>
+                      <p class="sm-step-desc">The clearer this is, the better your website will sell for you.</p>
+                      <div class="sm-field">
+                        <label class="sm-q" for="business-name">Business name</label>
+                        <input id="business-name" name="Business Name" type="text" class="sm-input" placeholder="What's it called?" required>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="what-you-do">What do you sell or offer?</label>
+                        <span class="sm-hint">Products, services, packages — describe it in plain words.</span>
+                        <textarea id="what-you-do" name="What You Sell or Offer" class="sm-textarea" placeholder="e.g. I do custom nail art and sell press-on nail kits..." required></textarea>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="ideal-customer">Who is your ideal customer?</label>
+                        <textarea id="ideal-customer" name="Ideal Customer" class="sm-textarea" placeholder="Who buys from you (or who you wish would)? Where are they?"></textarea>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="how-sell-now">How do you sell right now?</label>
+                        <span class="sm-hint">DMs, in person, a link in bio, nothing yet — be honest.</span>
+                        <input id="how-sell-now" name="How They Sell Now" type="text" class="sm-input" placeholder="e.g. Mostly through Instagram DMs">
+                      </div>
+                    </div>
+
+                    <!-- STEP 3: Goals -->
+                    <div class="sm-step" data-step="3" style="display:none;">
+                      <h3 class="sm-step-heading">What do you want this site to do?</h3>
+                      <p class="sm-step-desc">We design every page around your #1 goal.</p>
+                      <div class="sm-field">
+                        <label class="sm-q">Your main goal for the website</label>
+                        <div class="sm-choice-grid">
+                          <label class="sm-choice"><input type="radio" name="Main Goal" value="Get more sales / orders" required><span>Get more sales / orders</span></label>
+                          <label class="sm-choice"><input type="radio" name="Main Goal" value="Get bookings / appointments"><span>Get bookings / appointments</span></label>
+                          <label class="sm-choice"><input type="radio" name="Main Goal" value="Collect leads / inquiries"><span>Collect leads / inquiries</span></label>
+                          <label class="sm-choice"><input type="radio" name="Main Goal" value="Grow an email / SMS list"><span>Grow an email / SMS list</span></label>
+                          <label class="sm-choice"><input type="radio" name="Main Goal" value="Look professional / credible"><span>Look professional &amp; credible</span></label>
+                          <label class="sm-choice"><input type="radio" name="Main Goal" value="Sell digital products / courses"><span>Sell digital products / courses</span></label>
+                        </div>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="success">What would make this a win in the first month?</label>
+                        <textarea id="success" name="What Success Looks Like" class="sm-textarea" placeholder="e.g. 10 new bookings a week, or my first online orders..."></textarea>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="revenue-goal">Monthly revenue goal <span class="sm-hint" style="display:inline;">(optional)</span></label>
+                        <input id="revenue-goal" name="Revenue Goal" type="text" class="sm-input" placeholder="e.g. $5k/month">
+                      </div>
+                    </div>
+
+                    <!-- STEP 4: The look & feel -->
+                    <div class="sm-step" data-step="4" style="display:none;">
+                      <h3 class="sm-step-heading">How should it look &amp; feel?</h3>
+                      <p class="sm-step-desc">Your website should feel like your brand the second someone lands.</p>
+                      <div class="sm-field">
+                        <label class="sm-q" for="vibe">Describe the vibe you want</label>
+                        <span class="sm-hint">e.g. clean &amp; minimal, bold &amp; colorful, luxury, fun, earthy, high-energy...</span>
+                        <textarea id="vibe" name="Look and Feel" class="sm-textarea" placeholder="Tell us the mood and style you're going for..." required></textarea>
+                      </div>
+                      <div class="sm-grid-2">
+                        <div class="sm-field">
+                          <label class="sm-q" for="colors">Brand colors <span class="sm-hint" style="display:inline;">(optional)</span></label>
+                          <input id="colors" name="Brand Colors" type="text" class="sm-input" placeholder="e.g. black, cream, gold">
+                        </div>
+                        <div class="sm-field">
+                          <label class="sm-q">Do you have a logo?</label>
+                          <div class="sm-choice-grid" style="grid-template-columns:1fr 1fr;">
+                            <label class="sm-choice"><input type="radio" name="Has Logo" value="Yes, I have one"><span>Yes</span></label>
+                            <label class="sm-choice"><input type="radio" name="Has Logo" value="No, I need one"><span>I need one</span></label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="inspiration">Websites or accounts you love</label>
+                        <span class="sm-hint">Drop 1–3 links or names so we can match the energy.</span>
+                        <textarea id="inspiration" name="Inspiration" class="sm-textarea" placeholder="e.g. @brandname, somesite.com — I love how clean their shop is"></textarea>
+                      </div>
+                    </div>
+
+                    <!-- STEP 5: Features -->
+                    <div class="sm-step" data-step="5" style="display:none;">
+                      <h3 class="sm-step-heading">What features do you want?</h3>
+                      <p class="sm-step-desc">Pick everything you'd like on your site — we'll advise on what matters most.</p>
+                      <div class="sm-field">
+                        <div class="sm-feature-grid">
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Online store / shop"><span>Online store / shop</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Booking / appointments"><span>Booking / appointments</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Checkout / payments"><span>Checkout / payments</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Contact form"><span>Contact form</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Email / SMS signup"><span>Email / SMS signup</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Photo / video gallery"><span>Photo / video gallery</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Services & pricing"><span>Services &amp; pricing</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Testimonials / reviews"><span>Testimonials / reviews</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="About / my story"><span>About / my story</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Link-in-bio hub"><span>Link-in-bio hub</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="WhatsApp / DM button"><span>WhatsApp / DM button</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Blog / content"><span>Blog / content</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="FAQ"><span>FAQ section</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Digital products / downloads"><span>Digital downloads</span></label>
+                          <label class="sm-feature"><input type="checkbox" name="Features" value="Instagram feed embed"><span>Instagram feed</span></label>
+                        </div>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="must-have">Any must-have feature we didn't list?</label>
+                        <input id="must-have" name="Other Must-Have Feature" type="text" class="sm-input" placeholder="Tell us anything specific you need">
+                      </div>
+                    </div>
+
+                    <!-- STEP 6: Content & launch -->
+                    <div class="sm-step" data-step="6" style="display:none;">
+                      <h3 class="sm-step-heading">Content &amp; launch</h3>
+                      <p class="sm-step-desc">Last step — this helps us hit the 7-day timeline.</p>
+                      <div class="sm-field">
+                        <label class="sm-q">Do you have photos / content ready?</label>
+                        <div class="sm-choice-grid">
+                          <label class="sm-choice"><input type="radio" name="Content Ready" value="Yes, plenty of content"><span>Yes, plenty</span></label>
+                          <label class="sm-choice"><input type="radio" name="Content Ready" value="Some, but need help"><span>Some, need help</span></label>
+                          <label class="sm-choice"><input type="radio" name="Content Ready" value="No, starting from scratch"><span>No, from scratch</span></label>
+                          <label class="sm-choice"><input type="radio" name="Content Ready" value="It's all on my Instagram"><span>It's on my Instagram</span></label>
+                        </div>
+                      </div>
+                      <div class="sm-grid-2">
+                        <div class="sm-field">
+                          <label class="sm-q">Do you have a domain name?</label>
+                          <div class="sm-choice-grid" style="grid-template-columns:1fr 1fr;">
+                            <label class="sm-choice"><input type="radio" name="Has Domain" value="Yes, I own one"><span>Yes</span></label>
+                            <label class="sm-choice"><input type="radio" name="Has Domain" value="No, need help"><span>Need one</span></label>
+                          </div>
+                        </div>
+                        <div class="sm-field">
+                          <label class="sm-q" for="timeline">When do you want to launch?</label>
+                          <input id="timeline" name="Launch Timeline" type="text" class="sm-input" placeholder="ASAP, this week, this month...">
+                        </div>
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="budget">Budget range <span class="sm-hint" style="display:inline;">(optional)</span></label>
+                        <input id="budget" name="Budget" type="text" class="sm-input" placeholder="Helps us recommend the right package">
+                      </div>
+                      <div class="sm-field">
+                        <label class="sm-q" for="anything-else">Anything else we should know?</label>
+                        <textarea id="anything-else" name="Anything Else" class="sm-textarea" placeholder="Dreams, deadlines, worries — tell us everything."></textarea>
+                      </div>
+                      <div class="sm-trust" style="margin-top:0.5rem;">
+                        <span><span class="tick">✓</span> Your answers become your build brief</span>
+                        <span><span class="tick">✓</span> No spam, ever</span>
+                      </div>
+                    </div>
+
+                    <!-- Nav -->
+                    <div class="sm-nav-row">
+                      <button type="button" id="sm-back" class="sm-btn-back" style="visibility:hidden;">← Back</button>
+                      <button type="button" id="sm-next" class="sm-btn-next">Next →</button>
+                      <button type="submit" id="sm-submit" class="sm-btn-next" style="display:none;">Send my build brief →</button>
+                    </div>
+                  </form>
+
+                  <div class="sm-done w-form-done" style="display:none;">
+                    <h3>You're in. 🎉</h3>
+                    <p>Thanks — we've got your build brief. We'll review it and reach out with the next steps to turn your Instagram into an online business in 7 days or less.</p>
+                  </div>
+                  <div class="sm-fail w-form-fail" style="display:none;">Something went wrong. Please try again, or email us at hello@swftstudios.com.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer_component">
+      <div class="page-section footer">
+        <h4 class="white-text">Ready to turn followers into customers?</h4>
+        <div class="bottom-margin---40px">
+          <h2 class="xl-header white-text center-align">Let's build it.</h2>
+        </div>
+        <a href="#start" class="button-2 bigger-padding w-button">Start my build brief</a>
+      </div>
+      <div class="padding-global">
+        <div class="container-large">
+          <div class="footer_content-wrapper">
+            <div class="padding-vertical padding-xlarge max-width-full">
+              <div class="footer_wrapper">
+                <p>The SWFT Method by SWFT Studios. <br>You Dream It, We Create It.</p>
+                <div class="nav_link-list">
+                  <a href="mailto:elombe@swftstudios.com?subject=SWFT%20Method%20Inquiry" class="nav_link">EMAIL: hello@swftstudios.com</a>
+                  <a href="https://instagram.com/swft_studios" target="_blank" class="nav_link">IG: @swft_studios</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+  (function () {
+    var form = document.getElementById('swft-method-form');
+    if (!form) return;
+    var steps = Array.prototype.slice.call(form.querySelectorAll('.sm-step'));
+    var labels = ['About you', 'Your business', 'Your goals', 'Look & feel', 'Features', 'Content & launch'];
+    var back = document.getElementById('sm-back');
+    var next = document.getElementById('sm-next');
+    var submit = document.getElementById('sm-submit');
+    var fill = document.getElementById('sm-progress');
+    var counter = document.getElementById('sm-current');
+    var stepLabel = document.getElementById('sm-step-label');
+    var current = 0;
+
+    function stepValid(step) {
+      var fields = Array.prototype.slice.call(step.querySelectorAll('input, textarea, select'))
+        .filter(function (el) { return el.hasAttribute('required'); });
+      for (var i = 0; i < fields.length; i++) {
+        if (!fields[i].reportValidity()) return false;
+      }
+      return true;
+    }
+
+    function render() {
+      steps.forEach(function (s, i) { s.style.display = i === current ? 'block' : 'none'; });
+      back.style.visibility = current === 0 ? 'hidden' : 'visible';
+      var last = current === steps.length - 1;
+      next.style.display = last ? 'none' : 'inline-flex';
+      submit.style.display = last ? 'inline-flex' : 'none';
+      fill.style.width = ((current + 1) / steps.length * 100) + '%';
+      counter.textContent = current + 1;
+      stepLabel.textContent = labels[current];
+      var shell = document.getElementById('start');
+      if (shell && current > 0) { /* keep view stable */ }
+    }
+
+    next.addEventListener('click', function () {
+      if (!stepValid(steps[current])) return;
+      if (current < steps.length - 1) { current += 1; render(); }
+    });
+    back.addEventListener('click', function () {
+      if (current > 0) { current -= 1; render(); }
+    });
+    form.addEventListener('submit', function (e) {
+      if (!stepValid(steps[current])) e.preventDefault();
+    });
+    render();
+  })();
+  </script>
+</body>
+</html>
