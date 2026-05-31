@@ -597,14 +597,52 @@
       if (e.target.name === 'features' && current === steps.length - 1) renderSummary();
     });
 
+    function showDone() {
+      form.style.display = 'none';
+      dotsWrap.style.display = 'none';
+      var ph = document.querySelector('.sm-progress-head'); if (ph) ph.style.display = 'none';
+      var pt = document.querySelector('.sm-progress-track'); if (pt) pt.style.display = 'none';
+      var done = document.querySelector('.sm-done'); if (done) { done.style.display = 'block'; done.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }
+
     form.addEventListener('submit', function (e) {
-      if (!stepValid(steps[current])) { e.preventDefault(); return; }
+      e.preventDefault();
+      if (!stepValid(steps[current])) return;
       var plan = val('Plan Choice');
+      var maint = document.getElementById('sm-maint').checked;
+      // hidden fields for the no-JS email fallback
       document.getElementById('hf-plan').value = plan || 'Not selected';
-      document.getElementById('hf-maint').value = document.getElementById('sm-maint').checked ? 'Yes (+$99/mo)' : 'No';
+      document.getElementById('hf-maint').value = maint ? 'Yes (+$99/mo)' : 'No';
+
+      var payload = {
+        name: val('Name'), email: val('Email'), instagram: val('Instagram Handle'), phone: val('Phone'),
+        businessName: val('Business Name'), whatYouSell: val('What You Sell or Offer'),
+        idealCustomer: val('Ideal Customer'), mainGoal: val('Main Goal'), lookAndFeel: val('Look and Feel'),
+        features: document.getElementById('hf-features').value || selectedFeatures().map(function (f) { return f.value; }).join(', '),
+        plan: plan, maintenance: maint, oneTimeAmount: oneTimeTotal(),
+        contentReady: val('Content Ready'), hasDomain: val('Has Domain'),
+        timeline: val('Launch Timeline'), anythingElse: val('Anything Else')
+      };
+
+      var btn = document.getElementById('sm-submit');
+      btn.disabled = true; btn.textContent = 'Processing…';
+
+      fetch('/api/build-request', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (res) {
+          if (res && res.checkoutUrl) { window.location.href = res.checkoutUrl; return; }
+          if (res && res.ok) { showDone(); return; }
+          form.submit(); // fall back to email capture
+        })
+        .catch(function () { form.submit(); });
     });
 
     render();
+
+    // Returning from Stripe Checkout
+    var sp = new URLSearchParams(location.search);
+    if (sp.get('status') === 'success') { showDone(); }
   })();
   </script>
 </body>

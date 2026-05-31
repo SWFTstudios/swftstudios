@@ -5,7 +5,23 @@
 export interface Env {
   ASSETS: Fetcher;
   AI?: { run(model: string, opts: { messages: { role: string; content: string }[] }): Promise<unknown> };
+  /* Secrets — set with `wrangler secret put` (or in the Cloudflare dashboard) */
+  STRIPE_SECRET_KEY?: string;
+  AIRTABLE_TOKEN?: string;
+  /* Non-secret config — safe defaults baked in; override via vars if needed */
+  STRIPE_PRICE_MONTHLY?: string;
+  STRIPE_PRICE_MAINTENANCE?: string;
+  AIRTABLE_BASE_ID?: string;
+  AIRTABLE_TABLE?: string;
 }
+
+/* Defaults for the resources provisioned for SWFT Studios. Override via env vars. */
+const DEFAULTS = {
+  STRIPE_PRICE_MONTHLY: "price_1Td9xhAF4d9gCyuNnjPgqkho", // $299/mo SWFT Monthly Website Plan
+  STRIPE_PRICE_MAINTENANCE: "price_1Td9xiAF4d9gCyuN6rUc25R0", // $99/mo SWFT Website Maintenance
+  AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
+  AIRTABLE_TABLE: "tbl30H9M2CC7p6MqY",
+};
 
 type CaseStudyInput = {
   title: string;
@@ -148,13 +164,176 @@ async function tryAiMatch(
   }
 }
 
+/* ============================================================
+   Website build-request intake: store lead in Airtable +
+   start a Stripe Checkout session for the chosen plan.
+   ============================================================ */
+
+type BuildRequestBody = Record<string, unknown>;
+
+const str = (v: unknown, max = 2000): string => String(v ?? "").trim().slice(0, max);
+
+/** Create a Stripe Checkout Session via the REST API. Returns the hosted URL or null. */
+async function createStripeCheckout(
+  env: Env,
+  data: {
+    plan: string;
+    oneTimeAmount: number; // dollars
+    maintenance: boolean;
+    email: string;
+    businessName: string;
+    origin: string;
+  }
+): Promise<string | null> {
+  const key = env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+
+  const params = new URLSearchParams();
+  const successUrl = `${data.origin}/swft-method.html?status=success`;
+  const cancelUrl = `${data.origin}/swft-method.html?status=cancel#start`;
+  params.set("success_url", successUrl);
+  params.set("cancel_url", cancelUrl);
+  if (data.email) params.set("customer_email", data.email);
+  params.set("metadata[plan]", data.plan);
+  params.set("metadata[business]", data.businessName.slice(0, 200));
+  params.set("metadata[maintenance]", data.maintenance ? "yes" : "no");
+
+  if (data.plan === "Monthly Plan") {
+    const monthly = env.STRIPE_PRICE_MONTHLY || DEFAULTS.STRIPE_PRICE_MONTHLY;
+    params.set("mode", "subscription");
+    params.set("line_items[0][price]", monthly);
+    params.set("line_items[0][quantity]", "1");
+  } else {
+    // One-Time Build — dynamic amount for the custom build.
+    const cents = Math.max(0, Math.round(data.oneTimeAmount * 100));
+    params.set("mode", "payment");
+    params.set("line_items[0][price_data][currency]", "usd");
+    params.set("line_items[0][price_data][unit_amount]", String(cents));
+    params.set("line_items[0][price_data][product_data][name]", "SWFT Custom Website Build (7-day)");
+    params.set("line_items[0][quantity]", "1");
+  }
+
+  try {
+    const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params.toString(),
+    });
+    if (!res.ok) return null;
+    const json = (await res.json()) as { url?: string };
+    return json.url ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Write the lead to Airtable. Returns true on success. */
+async function writeToAirtable(env: Env, fields: Record<string, unknown>): Promise<boolean> {
+  const token = env.AIRTABLE_TOKEN;
+  if (!token) return false;
+  const baseId = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
+  const table = env.AIRTABLE_TABLE || DEFAULTS.AIRTABLE_TABLE;
+  try {
+    const res = await fetch(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ records: [{ fields }], typecast: true }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
 
-    if (request.method === "OPTIONS" && url.pathname === "/api/case-study-match") {
+    if (request.method === "OPTIONS" && (url.pathname === "/api/case-study-match" || url.pathname === "/api/build-request")) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/build-request") {
+      pruneRateBuckets();
+      const clientIp =
+        request.headers.get("CF-Connecting-IP") ||
+        request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
+        "unknown";
+      if (!checkRateLimit(clientIp)) {
+        return new Response(JSON.stringify({ ok: false, error: "Too many requests. Try again in a minute." }), {
+          status: 429,
+          headers: { "Content-Type": "application/json", "Retry-After": "60", ...corsHeaders(origin) },
+        });
+      }
+
+      let body: BuildRequestBody;
+      try {
+        const raw = await request.text();
+        if (raw.length > 100_000) {
+          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
+            status: 413,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          });
+        }
+        body = JSON.parse(raw) as BuildRequestBody;
+      } catch {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const email = str(body.email, 320);
+      const plan = str(body.plan, 40) === "Monthly Plan" ? "Monthly Plan" : "One-Time Build";
+      const maintenance = body.maintenance === true || str(body.maintenance) === "Yes";
+      const oneTimeAmount = Math.max(0, Math.min(100000, Number(body.oneTimeAmount) || 0));
+      const businessName = str(body.businessName, 200);
+
+      // Build a same-origin redirect base from the request URL (so success/cancel land back here).
+      const reqOrigin = `${url.protocol}//${url.host}`;
+
+      // 1) Store the lead (best-effort).
+      const airtableFields: Record<string, unknown> = {
+        Name: str(body.name, 200),
+        Email: email,
+        Instagram: str(body.instagram, 120),
+        Phone: str(body.phone, 60),
+        "Business Name": businessName,
+        "What They Sell": str(body.whatYouSell, 4000),
+        "Ideal Customer": str(body.idealCustomer, 4000),
+        "Main Goal": str(body.mainGoal, 200),
+        "Look and Feel": str(body.lookAndFeel, 4000),
+        Features: str(body.features, 4000),
+        "Plan Choice": plan,
+        "One-Time Price": oneTimeAmount,
+        "Maintenance Add-On": maintenance ? "Yes" : "No",
+        "Monthly Price": "$299/mo",
+        "Content Ready": str(body.contentReady, 200),
+        "Has Domain": str(body.hasDomain, 200),
+        Timeline: str(body.timeline, 200),
+        "Anything Else": str(body.anythingElse, 4000),
+        Status: "New",
+        "Submitted At": new Date().toISOString(),
+      };
+      const stored = await writeToAirtable(env, airtableFields);
+
+      // 2) Start Stripe Checkout (best-effort).
+      const checkoutUrl = await createStripeCheckout(env, {
+        plan,
+        oneTimeAmount,
+        maintenance,
+        email,
+        businessName,
+        origin: reqOrigin,
+      });
+
+      return new Response(JSON.stringify({ ok: true, stored, checkoutUrl }), {
+        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      });
     }
 
     if (request.method === "POST" && url.pathname === "/api/case-study-match") {
