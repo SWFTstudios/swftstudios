@@ -59,53 +59,32 @@
       .cta-bar { flex-direction: column; align-items: flex-start; }
     }
   </style>
+  <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
-    <section class="header section-3">
-      <div class="w-layout-blockcontainer header-container w-container">
-        <div class="header-row">
-          <div class="header-logo-wrap">
-            <div data-animation="default" data-collapse="all" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="header-wrapper w-nav">
-              <a href="index.html" class="header-logo-link w-nav-brand"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
-            </div>
-          </div>
-          <div class="heading-menu-wrap">
-            <div class="heading-menu-box">
-              <a href="#" class="header-menu-link w-inline-block"><img loading="lazy" src="images/Frame_1Frame.png" alt="menu" class="heading-menu-img">
-                <div class="heading-text">Menu</div>
-              </a>
-            </div>
-            <div class="header-menu-wrap">
-              <div class="header-menu-item-wrapper">
-                <div class="header-menu-img-wrap">
-                  <a href="index.html" class="header-logo-link w-nav-brand"><img alt="" src="images/SWFT_Black_1SWFT_Black.avif" class="header-logo inverse"></a>
-                </div>
-                <div class="header-menu-text-wrap">
-                  <div class="heading-menu-item-wrap"><a href="index.html" class="menu-link">Home</a></div>
-                  <div class="heading-menu-item-wrap"><a href="index.html#services" class="menu-link">Services</a></div>
-                  <div class="heading-menu-item-wrap"><a href="swft-method.html" class="menu-link" style="color:#7fffe5;">Website in 7 Days</a></div><div class="heading-menu-item-wrap"><a href="website-pricing.html" aria-current="page" class="menu-link w--current">Pricing</a></div>
-                  <div class="heading-menu-item-wrap"><a href="tools.html" class="menu-link">Tools</a></div>
-                  <div class="heading-menu-item-wrap"><a href="websites.html" class="menu-link">Projects</a></div>
-                  <div class="heading-menu-item-wrap"><a href="case-studies.html" class="menu-link">Articles</a></div>
-                  <div class="heading-menu-item-wrap"><a href="contact.html" class="menu-link">Contact</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="heading-right-content-wrap">
-            <div class="heading-right-fast-content">
-              <p class="heading-right-p">Transparent pricing. Real systems. Results-focused execution.</p>
-            </div>
-            <div class="heading-right-second-content"><img loading="lazy" src="images/portfolio-website-hero-selfie.png" alt="" class="heading-right-img">
-              <a href="tel:+12014914088" class="header-call-link w-inline-block">
-                <div class="heading-right-phone-call"><img loading="lazy" src="images/Right-Phone_1Right-Phone.png" alt="" class="right-phone"></div>
-              </a>
-            </div>
-          </div>
-        </div>
+    <nav class="sn-nav">
+      <a href="index.html" class="sn-brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></a>
+      <div class="sn-links">
+        <a href="index.html" class="sn-link">Home</a>
+        <a href="website-pricing.html" class="sn-link">Pricing</a>
+        <a href="websites.html" class="sn-link">Our Work</a>
+        <a href="case-studies.html" class="sn-link">Articles</a>
+        <a href="contact.html" class="sn-link">Contact</a>
+        <a href="swft-method.html" class="sn-cta">Order Your Website &#8594;</a>
       </div>
-    </section>
+      <button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </nav>
+    <div class="sn-scrim" id="sn-scrim"></div>
+    <aside class="sn-panel" id="sn-panel" aria-hidden="true">
+      <button class="sn-close" id="sn-close" aria-label="Close menu">&#215;</button>
+      <a href="index.html">Home</a>
+      <a href="website-pricing.html">Pricing</a>
+      <a href="websites.html">Our Work</a>
+      <a href="case-studies.html">Articles</a>
+      <a href="contact.html">Contact</a>
+      <a href="swft-method.html" class="sn-panel-cta">Order Your Website &#8594;</a>
+    </aside>
 
     <main class="pricing-main">
       <div class="pricing-shell">
@@ -272,5 +251,6 @@
       updateRecommendation();
     })();
   </script>
+  <script src="js/swft-nav.js"></script>
 </body>
 </html>
