@@ -13,6 +13,7 @@ export interface Env {
   STRIPE_PRICE_MAINTENANCE?: string;
   AIRTABLE_BASE_ID?: string;
   AIRTABLE_TABLE?: string;
+  FORMSUBMIT_EMAIL?: string;
 }
 
 /* Defaults for the resources provisioned for SWFT Studios. Override via env vars. */
@@ -230,6 +231,44 @@ async function createStripeCheckout(
   }
 }
 
+/* Where lead notifications are emailed. Override with the FORMSUBMIT_EMAIL var. */
+const NOTIFY_EMAIL_DEFAULT = "hello@swftstudios.com";
+
+/**
+ * Send the team a notification email and the visitor a confirmation
+ * (autoresponse) via FormSubmit's AJAX endpoint. Best-effort.
+ * Note: FormSubmit requires a one-time activation of each recipient address.
+ */
+async function sendFormSubmitEmail(
+  env: Env,
+  data: { email: string; name: string; fields: Record<string, unknown> }
+): Promise<boolean> {
+  const to = env.FORMSUBMIT_EMAIL || NOTIFY_EMAIL_DEFAULT;
+  const autoresponse =
+    "Thanks for your website request — we've got it! Our team will review your " +
+    "build plan and reach out within 48 hours with your next steps to get your site " +
+    "live in 7 days or less. If it's urgent, email us anytime at hello@swftstudios.com. — SWFT Studios";
+  const payload: Record<string, unknown> = {
+    _subject: "New SWFT Build Plan — Instagram → Online Business",
+    _template: "table",
+    _captcha: "false",
+    _autoresponse: autoresponse,
+    name: data.name,
+    email: data.email, // FormSubmit sends the autoresponse to this address
+    ...data.fields,
+  };
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 /** Write the lead to Airtable. Returns true on success. */
 async function writeToAirtable(env: Env, fields: Record<string, unknown>): Promise<boolean> {
   const token = env.AIRTABLE_TOKEN;
@@ -249,7 +288,7 @@ async function writeToAirtable(env: Env, fields: Record<string, unknown>): Promi
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
 
@@ -321,7 +360,31 @@ export default {
       };
       const stored = await writeToAirtable(env, airtableFields);
 
-      // 2) Start Stripe Checkout (best-effort).
+      // 2) Email the team a notification + send the visitor a confirmation
+      //    (48-hour autoresponse). Runs in the background so it never blocks
+      //    the response / Stripe redirect.
+      ctx.waitUntil(
+        sendFormSubmitEmail(env, {
+          email,
+          name: str(body.name, 200),
+          fields: {
+            Instagram: str(body.instagram, 120),
+            Phone: str(body.phone, 60),
+            "Business Name": businessName,
+            "What They Sell": str(body.whatYouSell, 4000),
+            "Main Goal": str(body.mainGoal, 200),
+            Features: str(body.features, 4000),
+            "Plan Choice": plan,
+            "One-Time Price": `$${oneTimeAmount}`,
+            "Maintenance Add-On": maintenance ? "Yes" : "No",
+            "Monthly Price": "$299/mo",
+            Timeline: str(body.timeline, 200),
+            "Anything Else": str(body.anythingElse, 4000),
+          },
+        })
+      );
+
+      // 3) Start Stripe Checkout (best-effort).
       const checkoutUrl = await createStripeCheckout(env, {
         plan,
         oneTimeAmount,

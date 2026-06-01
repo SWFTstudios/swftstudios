@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html data-wf-site="688e7554265d8089278ca76e" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Meet the Team | SWFT Studios</title>
+  <meta content="Meet the team behind SWFT Studios — Elombe Kisala and Stephen Iezzi. We pair fast, custom web design with real AI and automation engineering to help local businesses grow online." name="description">
+  <meta content="Meet the Team | SWFT Studios" property="og:title">
+  <meta content="The team behind SWFT Studios: custom web design meets real AI and automation engineering." property="og:description">
+  <meta content="Meet the Team | SWFT Studios" property="twitter:title">
+  <meta content="The team behind SWFT Studios: custom web design meets real AI and automation engineering." property="twitter:description">
+  <meta property="og:type" content="website">
+  <meta content="summary_large_image" name="twitter:card">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/components.css" rel="stylesheet" type="text/css">
+  <link href="css/swftstudios000.css" rel="stylesheet" type="text/css">
+  <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
+  <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.webp" rel="apple-touch-icon">
+  <style>
+    :root { --sm-green: #7fffe5; }
+    * { box-sizing: border-box; }
+    body { overscroll-behavior: none; background: #010101; }
+
+    .tm-wrap { padding-left: clamp(1.15rem, 5vw, 4rem); padding-right: clamp(1.15rem, 5vw, 4rem); }
+    .tm-container { max-width: 1100px; margin: 0 auto; }
+
+    /* Hero */
+    .tm-hero { position: relative; overflow: hidden; padding: clamp(3rem, 9vw, 6.5rem) 0 clamp(2rem, 5vw, 3.5rem); }
+    .tm-hero-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 60rem; max-width: 130vw; height: 38rem; background: radial-gradient(circle at 50% 40%, rgba(127,255,229,0.16), rgba(1,1,1,0) 60%); pointer-events: none; }
+    .tm-hero-inner { position: relative; z-index: 1; max-width: 52rem; display: flex; flex-direction: column; gap: 1.2rem; }
+    .tm-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sm-green); border: 1px solid rgba(127,255,229,0.35); padding: 0.4rem 0.85rem; border-radius: 999px; width: fit-content; }
+    .tm-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sm-green); box-shadow: 0 0 10px var(--sm-green); }
+    .tm-h1 { font-size: clamp(2.2rem, 6vw, 4rem); line-height: 1.03; font-weight: 800; color: #fff; margin: 0; }
+    .tm-h1 .hl { color: var(--sm-green); }
+    .tm-sub { font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,0.72); max-width: 44rem; line-height: 1.55; margin: 0; }
+
+    /* Stats strip */
+    .tm-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: clamp(1.5rem, 4vw, 2.5rem) 0 0; }
+    .tm-stat { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.25rem; }
+    .tm-stat-num { color: var(--sm-green); font-size: 1.7rem; font-weight: 800; line-height: 1; }
+    .tm-stat-label { color: rgba(255,255,255,0.62); font-size: 0.9rem; margin-top: 0.4rem; line-height: 1.4; }
+
+    /* Team cards */
+    .tm-section { padding: clamp(2.5rem, 6vw, 4.5rem) 0; }
+    .tm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .tm-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.09); border-radius: 22px; padding: 1.6rem; display: flex; flex-direction: column; }
+    .tm-card-top { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 1.1rem; }
+    .tm-photo { flex: 0 0 88px; width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(127,255,229,0.5); background: #0c0c0c; }
+    .tm-name { color: #fff; font-size: 1.3rem; font-weight: 800; margin: 0; }
+    .tm-role { color: var(--sm-green); font-size: 0.9rem; font-weight: 600; margin: 0.2rem 0 0; }
+    .tm-loc { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin: 0.2rem 0 0; }
+    .tm-bio { color: rgba(255,255,255,0.78); font-size: 0.96rem; line-height: 1.6; margin: 0 0 1.1rem; }
+    .tm-bio p { margin: 0 0 0.8rem; }
+    .tm-bio p:last-child { margin-bottom: 0; }
+    .tm-skills { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.2rem; }
+    .tm-skill { font-size: 0.78rem; color: rgba(255,255,255,0.8); background: rgba(127,255,229,0.08); border: 1px solid rgba(127,255,229,0.25); border-radius: 999px; padding: 0.3rem 0.7rem; }
+    .tm-links { display: flex; gap: 0.6rem; margin-top: auto; }
+    .tm-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 600; color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 0.5rem 0.95rem; transition: border-color 0.18s, color 0.18s; }
+    .tm-link:hover { border-color: var(--sm-green); color: var(--sm-green); }
+    .tm-link svg { width: 16px; height: 16px; }
+
+    /* Why us */
+    .tm-tag { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .tm-tag div:first-child { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); white-space: nowrap; }
+    .tm-tag .line { height: 1px; flex: 1; background: rgba(255,255,255,0.14); }
+    .tm-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .tm-why { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.4rem; }
+    .tm-why-ico { width: 26px; height: 26px; color: var(--sm-green); margin-bottom: 0.8rem; }
+    .tm-why h4 { color: #fff; margin: 0 0 0.4rem; font-size: 1.05rem; }
+    .tm-why p { color: rgba(255,255,255,0.62); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+
+    /* CTA buttons */
+    .tm-cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.6rem; }
+    .tm-btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #010101; background: var(--sm-green); padding: 1rem 1.6rem; border-radius: 999px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+    .tm-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(127,255,229,0.25); }
+    .tm-btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: #fff; background: transparent; padding: 1rem 1.6rem; border-radius: 999px; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); transition: border-color 0.2s; }
+    .tm-btn-ghost:hover { border-color: rgba(127,255,229,0.6); }
+
+    /* Footer */
+    .tm-footer { border-top: 1px solid rgba(255,255,255,0.08); margin-top: 2rem; }
+    .tm-footer-cta { text-align: center; padding: clamp(3rem, 7vw, 5rem) 1.5rem; }
+    .tm-footer-cta h4 { color: rgba(255,255,255,0.6); font-weight: 500; margin: 0 0 0.5rem; font-size: 1rem; }
+    .tm-footer-cta h2 { color: #fff; font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 800; margin: 0 0 1.5rem; }
+    .tm-footer-bottom { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+    .tm-footer-bottom a { color: rgba(255,255,255,0.7); text-decoration: none; margin-left: 1.25rem; }
+
+    @media (max-width: 767px) {
+      .tm-stats { grid-template-columns: 1fr; }
+      .tm-grid { grid-template-columns: 1fr; }
+      .tm-why-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="sn-nav">
+    <a href="index.html" class="sn-brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></a>
+    <div class="sn-links">
+      <a href="index.html" class="sn-link">Home</a>
+      <a href="website-pricing.html" class="sn-link">Pricing</a>
+      <a href="websites.html" class="sn-link">Our Work</a>
+      <a href="team.html" class="sn-link">Team</a>
+      <a href="contact.html" class="sn-link">Contact</a>
+      <a href="swft-method.html" class="sn-cta">Order Your Website &#8594;</a>
+    </div>
+    <button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="sn-scrim" id="sn-scrim"></div>
+  <aside class="sn-panel" id="sn-panel" aria-hidden="true">
+    <button class="sn-close" id="sn-close" aria-label="Close menu">&#215;</button>
+    <a href="index.html">Home</a>
+    <a href="website-pricing.html">Pricing</a>
+    <a href="websites.html">Our Work</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+    <a href="swft-method.html" class="sn-panel-cta">Order Your Website &#8594;</a>
+  </aside>
+
+  <main>
+    <!-- HERO -->
+    <section class="tm-hero tm-wrap">
+      <div class="tm-hero-glow"></div>
+      <div class="tm-container tm-hero-inner">
+        <span class="tm-eyebrow"><span class="dot"></span>Meet the team</span>
+        <h1 class="tm-h1">The people who <span class="hl">build &amp; automate</span> your business online.</h1>
+        <p class="tm-sub">SWFT Studios is a small, senior team by design. You work directly with the people doing the work — no account managers, no hand-offs, no outsourcing. We pair fast, custom web design with real AI and automation engineering so your website doesn't just look good, it actually brings in customers.</p>
+        <div class="tm-stats">
+          <div class="tm-stat"><div class="tm-stat-num">7 days</div><div class="tm-stat-label">Typical turnaround from brief to launch</div></div>
+          <div class="tm-stat"><div class="tm-stat-num">2 specialists</div><div class="tm-stat-label">Design &amp; build + AI/automation — direct access to both</div></div>
+          <div class="tm-stat"><div class="tm-stat-num">Real clients</div><div class="tm-stat-label">Live sites shipped for local brands &amp; creators</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM CARDS -->
+    <section class="tm-section tm-wrap">
+      <div class="tm-container">
+        <div class="tm-grid">
+
+          <!-- Elombe -->
+          <article class="tm-card">
+            <div class="tm-card-top">
+              <img class="tm-photo" src="images/portfolio-website-hero-selfie.png" alt="Elombe Kisala" loading="lazy">
+              <div>
+                <h3 class="tm-name">Elombe Kisala</h3>
+                <p class="tm-role">Founder &amp; Lead Designer / Developer</p>
+                <p class="tm-loc">Jersey City &amp; NYC</p>
+              </div>
+            </div>
+            <div class="tm-bio">
+              <p>Elombe founded SWFT Studios on a simple belief: a small business should be able to get a website that looks world-class and actually works to bring in customers — without waiting months or paying agency prices.</p>
+              <p>A developer by background, he builds across the stack — from clean, fast, custom websites to the apps and automations that run behind them. That technical depth is why SWFT sites are built, not just templated: every page is shaped around how your business actually makes money. He's shipped live, in-production sites for brands and creators including Roller Reels, Blurred Lines Entertainment, and Core Home.</p>
+              <p>If you work with SWFT, Elombe is who you'll talk to, and who'll make sure your site ships on time and does its job.</p>
+            </div>
+            <div class="tm-skills">
+              <span class="tm-skill">Web Design</span>
+              <span class="tm-skill">Front-End Development</span>
+              <span class="tm-skill">App Development</span>
+              <span class="tm-skill">Brand &amp; UX</span>
+              <span class="tm-skill">Automation</span>
+            </div>
+            <div class="tm-links">
+              <a class="tm-link" href="https://github.com/elombekisala" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 .1.8 1.8 2.6 1.3.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+                GitHub
+              </a>
+              <a class="tm-link" href="mailto:hello@swftstudios.com?subject=Project%20inquiry%20for%20Elombe">Email</a>
+            </div>
+          </article>
+
+          <!-- Stephen -->
+          <article class="tm-card">
+            <div class="tm-card-top">
+              <img class="tm-photo" src="https://github.com/stephen-iezzi.png" alt="Stephen Iezzi" loading="lazy">
+              <div>
+                <h3 class="tm-name">Stephen Iezzi</h3>
+                <p class="tm-role">Machine Learning &amp; Automation Engineer</p>
+                <p class="tm-loc">United States</p>
+              </div>
+            </div>
+            <div class="tm-bio">
+              <p>Stephen is a machine learning engineer who turns the buzzwords other agencies sell into systems that actually run. Where most web shops stop at a pretty page, he builds the intelligence behind it — the automations that capture leads, answer customers, and follow up while you sleep.</p>
+              <p>His work spans deep learning, generative AI, and retrieval-augmented (RAG) search — including building AI tools that search and answer questions over large content libraries. That means SWFT can offer real, working AI: smart chat assistants, automated lead handling, content engines, and review tooling — engineered properly, not bolted on.</p>
+              <p>For your business, Stephen is the difference between a website that sits there and one that works for you 24/7.</p>
+            </div>
+            <div class="tm-skills">
+              <span class="tm-skill">Machine Learning</span>
+              <span class="tm-skill">Generative AI</span>
+              <span class="tm-skill">RAG / Search</span>
+              <span class="tm-skill">Python</span>
+              <span class="tm-skill">Automation Systems</span>
+            </div>
+            <div class="tm-links">
+              <a class="tm-link" href="https://github.com/stephen-iezzi" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 .1.8 1.8 2.6 1.3.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+                GitHub
+              </a>
+              <a class="tm-link" href="mailto:hello@swftstudios.com?subject=AI%20%26%20automation%20inquiry">Email</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY US -->
+    <section class="tm-section tm-wrap">
+      <div class="tm-container">
+        <div class="tm-tag"><div>Why work with us</div><div class="line"></div></div>
+        <div class="tm-why-grid">
+          <div class="tm-why">
+            <svg class="tm-why-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            <h4>Fast, not rushed</h4>
+            <p>Most builds launch in 7 days or less. You get senior work at startup speed because the people you hire are the people who build.</p>
+          </div>
+          <div class="tm-why">
+            <svg class="tm-why-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
+            <h4>Custom &amp; conversion-first</h4>
+            <p>No cookie-cutter templates. Every site is designed around your customer and your goals — built to turn visitors and followers into sales.</p>
+          </div>
+          <div class="tm-why">
+            <svg class="tm-why-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+            <h4>Design + real AI</h4>
+            <p>You get both skill sets in one team: beautiful, fast websites and genuine AI/automation engineering that keeps working after launch.</p>
+          </div>
+        </div>
+        <div class="tm-cta-row">
+          <a href="swft-method.html" class="tm-btn-primary">Order Your Website &#8594;</a>
+          <a href="contact.html" class="tm-btn-ghost">Book a strategy call</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="tm-footer tm-wrap">
+    <div class="tm-footer-cta">
+      <h4>Ready to build with a team that ships?</h4>
+      <h2>Let's get to work.</h2>
+      <a href="swft-method.html" class="tm-btn-primary">Order Your Website &#8594;</a>
+    </div>
+    <div class="tm-container">
+      <div class="tm-footer-bottom">
+        <div>SWFT Studios — You Dream It, We Create It.</div>
+        <div>
+          <a href="mailto:hello@swftstudios.com?subject=SWFT%20Studios%20Inquiry">hello@swftstudios.com</a>
+          <a href="https://instagram.com/swft_studios" target="_blank" rel="noopener">@swft_studios</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/swft-nav.js"></script>
+</body>
+</html>
