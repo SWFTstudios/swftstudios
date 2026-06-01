@@ -21,42 +21,6 @@
     * { box-sizing: border-box; }
     body { overscroll-behavior: none; background: #010101; }
 
-    /* ============ Shared clean nav ============ */
-    .sn-nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
-      background: rgba(1,1,1,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .sn-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.04em; color: #fff; text-decoration: none; white-space: nowrap; }
-    .sn-brand .sk { font-weight: 400; }
-    .sn-brand .hl { color: var(--sm-green); }
-    .sn-links { display: flex; align-items: center; gap: 1.6rem; }
-    .sn-link { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.18s; }
-    .sn-link:hover { color: #fff; }
-    .sn-cta { background: var(--sm-green); color: #010101; font-weight: 700; font-size: 0.9rem; padding: 0.6rem 1.1rem; border-radius: 999px; text-decoration: none; white-space: nowrap; transition: transform 0.18s; }
-    .sn-cta:hover { transform: translateY(-1px); }
-    .sn-burger { display: none; flex-direction: column; gap: 5px; width: 30px; height: 30px; justify-content: center; align-items: center; background: none; border: none; cursor: pointer; }
-    .sn-burger span { display: block; width: 24px; height: 2px; background: #fff; transition: transform 0.25s, opacity 0.25s; }
-    .sn-panel { display: none; }
-    @media (max-width: 860px) {
-      .sn-links { display: none; }
-      .sn-burger { display: flex; }
-      .sn-panel {
-        position: fixed; inset: 0 0 0 auto; width: min(82vw, 340px); z-index: 110;
-        background: #0c0c0c; border-left: 1px solid rgba(255,255,255,0.1);
-        transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-        display: flex; flex-direction: column; padding: 5rem 1.75rem 2rem;
-      }
-      .sn-panel.open { display: flex; transform: translateX(0); }
-      .sn-panel a { color: #fff; text-decoration: none; font-size: 1.15rem; font-weight: 600; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
-      .sn-panel a.sn-panel-cta { margin-top: 1.5rem; border: none; background: var(--sm-green); color: #010101; text-align: center; border-radius: 999px; padding: 1rem; }
-      .sn-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 105; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-      .sn-scrim.open { opacity: 1; pointer-events: auto; }
-      .sn-close { position: absolute; top: 1.4rem; right: 1.5rem; background: none; border: none; color: #fff; font-size: 1.8rem; cursor: pointer; line-height: 1; }
-    }
-
     /* ============ Page shell / padding ============ */
     .sm-wrap { padding-left: clamp(1.15rem, 5vw, 4rem); padding-right: clamp(1.15rem, 5vw, 4rem); }
     .sm-container { max-width: 1100px; margin: 0 auto; }
@@ -211,35 +175,11 @@
       .sm-feature-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <!-- ============ NAV ============ -->
-  <nav class="sn-nav">
-    <a href="index.html" class="sn-brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></a>
-    <div class="sn-links">
-      <a href="index.html" class="sn-link">Home</a>
-      <a href="website-pricing.html" class="sn-link">Pricing</a>
-      <a href="websites.html" class="sn-link">Our Work</a>
-        <a href="team.html" class="sn-link">Team</a>
-      <a href="case-studies.html" class="sn-link">Articles</a>
-      <a href="contact.html" class="sn-link">Contact</a>
-      <a href="#start" class="sn-cta">Order Your Website →</a>
-    </div>
-    <button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-  <div class="sn-scrim" id="sn-scrim"></div>
-  <aside class="sn-panel" id="sn-panel" aria-hidden="true">
-    <button class="sn-close" id="sn-close" aria-label="Close menu">×</button>
-    <a href="index.html">Home</a>
-    <a href="website-pricing.html">Pricing</a>
-    <a href="websites.html">Our Work</a>
-      <a href="team.html">Team</a>
-    <a href="case-studies.html">Articles</a>
-    <a href="contact.html">Contact</a>
-    <a href="#start" class="sn-panel-cta">Order Your Website →</a>
-  </aside>
+  <div id="swft-nav" data-active=""></div>
 
   <main>
     <!-- ============ HERO ============ -->
@@ -291,11 +231,7 @@
           </div>
           <div class="sm-progress-track"><div class="sm-progress-fill" id="sm-progress"></div></div>
 
-          <form id="swft-method-form" action="https://formsubmit.co/hello@swftstudios.com" method="POST">
-            <input type="hidden" name="_subject" value="New SWFT Build Plan — Instagram → Online Business">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_autoresponse" value="Thanks for your website request — we've got it! Our team will review your build plan and reach out within 48 hours with your next steps to get your site live in 7 days or less. If it's urgent, email us anytime at hello@swftstudios.com. — SWFT Studios">
+          <form id="swft-method-form" action="/api/build-request" method="POST">
             <!-- computed fields populated on review -->
             <input type="hidden" name="Selected Plan" id="hf-plan" value="">
             <input type="hidden" name="One-Time Build Price" id="hf-onetime" value="">
@@ -456,9 +392,9 @@
 
           <div class="sm-done w-form-done" style="display:none;">
             <h3>You're in.</h3>
-            <p>Thanks — we've got your build plan and your selected option. Check your inbox for a confirmation email. We'll review everything and reach out within 48 hours to kick off your build and get your site live in 7 days or less.</p>
+            <p>Thanks — we've got your build plan and your selected option. We'll review everything and reach out within 48 hours to kick off your build and get your site live in 7 days or less.</p>
           </div>
-          <div class="sm-fail w-form-fail" style="display:none; text-align:center; color:#ffb4b4; padding:1rem;">Something went wrong. Please try again, or email us at hello@swftstudios.com.</div>
+          <div class="sm-fail w-form-fail" style="display:none; text-align:center; color:#ffb4b4; padding:1rem;">We couldn't submit your plan just now. Please try again in a moment — or email your details to <a href="mailto:hello@swftstudios.com?subject=My%20website%20build%20plan" style="color:#7fffe5;">hello@swftstudios.com</a> and we'll take it from there.</div>
         </div>
       </div>
     </section>
@@ -483,20 +419,6 @@
   </main>
 
   <script>
-  /* ---------- Mobile nav ---------- */
-  (function () {
-    var burger = document.getElementById('sn-burger');
-    var panel = document.getElementById('sn-panel');
-    var scrim = document.getElementById('sn-scrim');
-    var close = document.getElementById('sn-close');
-    function open() { panel.classList.add('open'); scrim.classList.add('open'); burger.setAttribute('aria-expanded', 'true'); panel.setAttribute('aria-hidden', 'false'); }
-    function shut() { panel.classList.remove('open'); scrim.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); panel.setAttribute('aria-hidden', 'true'); }
-    burger.addEventListener('click', open);
-    close.addEventListener('click', shut);
-    scrim.addEventListener('click', shut);
-    panel.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', shut); });
-  })();
-
   /* ---------- Booking flow ---------- */
   (function () {
     var form = document.getElementById('swft-method-form');
@@ -629,7 +551,14 @@
       };
 
       var btn = document.getElementById('sm-submit');
+      var fail = document.querySelector('.sm-fail');
+      if (fail) fail.style.display = 'none';
       btn.disabled = true; btn.textContent = 'Processing…';
+
+      function failed() {
+        btn.disabled = false; btn.textContent = 'Book my build →';
+        if (fail) fail.style.display = 'block';
+      }
 
       fetch('/api/build-request', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
@@ -637,9 +566,9 @@
         .then(function (res) {
           if (res && res.checkoutUrl) { window.location.href = res.checkoutUrl; return; }
           if (res && res.ok) { showDone(); return; }
-          form.submit(); // fall back to email capture
+          failed();
         })
-        .catch(function () { form.submit(); });
+        .catch(failed);
     });
 
     render();
@@ -649,5 +578,6 @@
     if (sp.get('status') === 'success') { showDone(); }
   })();
   </script>
+  <script src="js/swft-nav.js"></script>
 </body>
 </html>
