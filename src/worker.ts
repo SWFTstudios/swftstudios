@@ -13,6 +13,7 @@ export interface Env {
   STRIPE_PRICE_MAINTENANCE?: string;
   AIRTABLE_BASE_ID?: string;
   AIRTABLE_TABLE?: string;
+  AIRTABLE_TABLE_CONTACT?: string;
   FORMSUBMIT_EMAIL?: string;
 }
 
@@ -21,7 +22,8 @@ const DEFAULTS = {
   STRIPE_PRICE_MONTHLY: "price_1Td9xhAF4d9gCyuNnjPgqkho", // $299/mo SWFT Monthly Website Plan
   STRIPE_PRICE_MAINTENANCE: "price_1Td9xiAF4d9gCyuN6rUc25R0", // $99/mo SWFT Website Maintenance
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
-  AIRTABLE_TABLE: "tbl30H9M2CC7p6MqY",
+  AIRTABLE_TABLE: "tbl30H9M2CC7p6MqY", // Website Build Requests
+  AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L", // Discovery Calls
 };
 
 type CaseStudyInput = {
@@ -269,12 +271,11 @@ async function sendFormSubmitEmail(
   }
 }
 
-/** Write the lead to Airtable. Returns true on success. */
-async function writeToAirtable(env: Env, fields: Record<string, unknown>): Promise<boolean> {
+/** Write a record to an Airtable table. Returns true on success. */
+async function writeToAirtable(env: Env, table: string, fields: Record<string, unknown>): Promise<boolean> {
   const token = env.AIRTABLE_TOKEN;
   if (!token) return false;
   const baseId = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
-  const table = env.AIRTABLE_TABLE || DEFAULTS.AIRTABLE_TABLE;
   try {
     const res = await fetch(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`, {
       method: "POST",
@@ -292,7 +293,12 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
 
-    if (request.method === "OPTIONS" && (url.pathname === "/api/case-study-match" || url.pathname === "/api/build-request")) {
+    if (
+      request.method === "OPTIONS" &&
+      (url.pathname === "/api/case-study-match" ||
+        url.pathname === "/api/build-request" ||
+        url.pathname === "/api/contact")
+    ) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
@@ -358,7 +364,8 @@ export default {
         Status: "New",
         "Submitted At": new Date().toISOString(),
       };
-      const stored = await writeToAirtable(env, airtableFields);
+      const buildTable = env.AIRTABLE_TABLE || DEFAULTS.AIRTABLE_TABLE;
+      const stored = await writeToAirtable(env, buildTable, airtableFields);
 
       // 2) Email the team a notification + send the visitor a confirmation
       //    (48-hour autoresponse). Runs in the background so it never blocks
@@ -395,6 +402,54 @@ export default {
       });
 
       return new Response(JSON.stringify({ ok: true, stored, checkoutUrl }), {
+        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/contact") {
+      pruneRateBuckets();
+      const clientIp =
+        request.headers.get("CF-Connecting-IP") ||
+        request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
+        "unknown";
+      if (!checkRateLimit(clientIp)) {
+        return new Response(JSON.stringify({ ok: false, error: "Too many requests. Try again in a minute." }), {
+          status: 429,
+          headers: { "Content-Type": "application/json", "Retry-After": "60", ...corsHeaders(origin) },
+        });
+      }
+
+      let body: BuildRequestBody;
+      try {
+        const raw = await request.text();
+        if (raw.length > 100_000) {
+          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
+            status: 413,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          });
+        }
+        body = JSON.parse(raw) as BuildRequestBody;
+      } catch {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
+      const fields: Record<string, unknown> = {
+        Name: str(body.name, 200),
+        Email: str(body.email, 320),
+        "Business Type": str(body.businessType, 200),
+        "Primary Goal": str(body.primaryGoal, 4000),
+        Timeline: str(body.timeline, 200),
+        Budget: str(body.budget, 200),
+        Details: str(body.details, 4000),
+        Status: "New",
+        "Submitted At": new Date().toISOString(),
+      };
+      const stored = await writeToAirtable(env, contactTable, fields);
+      return new Response(JSON.stringify({ ok: true, stored }), {
         headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
       });
     }

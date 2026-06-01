@@ -1,27 +1,28 @@
 # SWFT — Booking Flow Integrations (Airtable + Stripe)
 
-The "Order Your Website" booking flow (`swft-method.html`) submits to the Worker
-endpoint **`POST /api/build-request`** (in `src/worker.ts`). That endpoint:
+**Submissions go straight to Airtable** — no more FormSubmit (their service was
+returning 521 errors). Both forms post to the Worker, which writes the record to
+your Airtable base so you can see every lead in a grid and start the build.
 
-1. **Stores the lead in Airtable** (best-effort).
-2. **Emails the team a notification + sends the visitor a confirmation**
-   (a 48-hour-reply autoresponse) via FormSubmit (best-effort, in the background).
-3. **Starts a Stripe Checkout session** for the chosen plan and returns its URL,
-   which the page redirects the visitor to.
+| Form | Worker endpoint | Airtable table |
+|---|---|---|
+| `swft-method.html` (Order Your Website) | `POST /api/build-request` | "Website Build Requests" |
+| `contact.html` (Discovery) | `POST /api/contact` | "Discovery Calls" |
 
-If a visitor has JavaScript disabled — or the endpoint errors — the form falls
-back to its `formsubmit.co` action so the lead still reaches email.
+`/api/build-request` also **starts a Stripe Checkout session** for the chosen plan
+and returns its URL, which the page redirects the visitor to (only if a Stripe key
+is set).
 
-### Email recipient + confirmation
-- Lead notifications go to **hello@swftstudios.com** (override with the
-  `FORMSUBMIT_EMAIL` var). Both funnel forms (`swft-method.html`, `contact.html`)
-  also post directly to `formsubmit.co/hello@swftstudios.com` on the no-JS path.
-- The visitor's confirmation email (FormSubmit `_autoresponse`) tells them we
-  received their request and will **reach out within 48 hours**.
-- **One-time activation required:** the first time an address receives a
-  FormSubmit submission, FormSubmit emails it an activation link that must be
-  clicked once. Submit the form once (or trigger the Worker) and confirm the
-  email to **hello@swftstudios.com** to activate. Until then, emails won't send.
+Both forms are multi-step and require JavaScript to operate; on a submit error the
+page now shows an inline "try again / email us" message instead of bouncing the
+visitor to a third-party error page.
+
+### Confirmation emails (optional)
+The Worker still makes a best-effort background call to FormSubmit to email a
+confirmation — but since that service is flaky, the **recommended** way to send a
+reliable "we got your request, we'll reply within 48 hours" email is an **Airtable
+automation**: in the base, add *Automation → When record created → Send email* to
+the record's Email field. That sends from Airtable's infrastructure, no extra keys.
 
 ---
 
@@ -34,37 +35,51 @@ do **not** need to set them unless you want to point at different ones.
 |---|---|
 | Airtable base — "SWFT Website Leads" | `appjwRgcgS0BD4lT7` |
 | Airtable table — "Website Build Requests" | `tbl30H9M2CC7p6MqY` |
+| Airtable table — "Discovery Calls" | `tblGCvDi4RdGkK96L` |
 | Stripe price — Monthly Plan ($299/mo) | `price_1Td9xhAF4d9gCyuNnjPgqkho` |
 | Stripe price — Maintenance ($99/mo) | `price_1Td9xiAF4d9gCyuN6rUc25R0` |
+
+The base lives in your **SWFT Studios Workspace** on Airtable (account
+`elombe@swftstudios.com`). A sample row ("SAMPLE — Jane's Bakery") was added so you
+can see the layout — delete it anytime.
 
 > The Stripe products were created in **live mode**. Real cards will be charged.
 > Test first with a test key if you want to dry-run the flow.
 
 ---
 
-## Secrets you must set (one-time)
+## Setup — the ONE thing to do
 
-Only **two** secrets are required. Set them on the Worker:
+To see submissions land in Airtable, set a single secret on the Worker:
 
 ```bash
-# Stripe secret key (sk_live_... or sk_test_...)
-npx wrangler secret put STRIPE_SECRET_KEY
-
-# Airtable Personal Access Token with data.records:write on the base above
+# Airtable Personal Access Token with data.records:write on the base
 npx wrangler secret put AIRTABLE_TOKEN
 ```
 
-- Create the Airtable token at https://airtable.com/create/tokens
-  (scope: `data.records:write`, access: the "SWFT Website Leads" base).
-- Until each secret is set, that integration is simply skipped:
-  - No `STRIPE_SECRET_KEY` → no checkout link is returned; the page shows the
-    "You're in" confirmation instead.
-  - No `AIRTABLE_TOKEN` → the lead isn't written to Airtable (still gets the
-    email fallback / Stripe metadata).
+1. Create the token at **https://airtable.com/create/tokens** while signed in as
+   `elombe@swftstudios.com`.
+2. Scope: **`data.records:write`** (add `data.records:read` too if you like).
+3. Access: the **"SWFT Website Leads"** base.
+4. Copy the token (starts with `pat...`) and paste it when `wrangler secret put`
+   prompts. You can also set it in the Cloudflare dashboard:
+   *Workers → swftstudios → Settings → Variables and Secrets → Add (Secret)*.
+
+That's it — every booking + contact submission then appears in your Airtable.
+
+### Stripe (optional — only needed to take payment)
+```bash
+npx wrangler secret put STRIPE_SECRET_KEY   # sk_live_... or sk_test_...
+```
+Without it, the booking flow still saves to Airtable and shows the on-page
+confirmation — it just won't open a checkout page.
+
+> Until `AIRTABLE_TOKEN` is set, the Worker accepts the submission and shows the
+> visitor a success message, but the record isn't saved. Set the token first.
 
 ### Optional overrides (vars, not secrets)
-Set these only to point at different resources:
-`STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_MAINTENANCE`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE`.
+`STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_MAINTENANCE`, `AIRTABLE_BASE_ID`,
+`AIRTABLE_TABLE`, `AIRTABLE_TABLE_CONTACT`, `FORMSUBMIT_EMAIL`.
 
 ---
 

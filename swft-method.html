@@ -231,11 +231,7 @@
           </div>
           <div class="sm-progress-track"><div class="sm-progress-fill" id="sm-progress"></div></div>
 
-          <form id="swft-method-form" action="https://formsubmit.co/hello@swftstudios.com" method="POST">
-            <input type="hidden" name="_subject" value="New SWFT Build Plan — Instagram → Online Business">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_autoresponse" value="Thanks for your website request — we've got it! Our team will review your build plan and reach out within 48 hours with your next steps to get your site live in 7 days or less. If it's urgent, email us anytime at hello@swftstudios.com. — SWFT Studios">
+          <form id="swft-method-form" action="/api/build-request" method="POST">
             <!-- computed fields populated on review -->
             <input type="hidden" name="Selected Plan" id="hf-plan" value="">
             <input type="hidden" name="One-Time Build Price" id="hf-onetime" value="">
@@ -396,9 +392,9 @@
 
           <div class="sm-done w-form-done" style="display:none;">
             <h3>You're in.</h3>
-            <p>Thanks — we've got your build plan and your selected option. Check your inbox for a confirmation email. We'll review everything and reach out within 48 hours to kick off your build and get your site live in 7 days or less.</p>
+            <p>Thanks — we've got your build plan and your selected option. We'll review everything and reach out within 48 hours to kick off your build and get your site live in 7 days or less.</p>
           </div>
-          <div class="sm-fail w-form-fail" style="display:none; text-align:center; color:#ffb4b4; padding:1rem;">Something went wrong. Please try again, or email us at hello@swftstudios.com.</div>
+          <div class="sm-fail w-form-fail" style="display:none; text-align:center; color:#ffb4b4; padding:1rem;">We couldn't submit your plan just now. Please try again in a moment — or email your details to <a href="mailto:hello@swftstudios.com?subject=My%20website%20build%20plan" style="color:#7fffe5;">hello@swftstudios.com</a> and we'll take it from there.</div>
         </div>
       </div>
     </section>
@@ -555,7 +551,14 @@
       };
 
       var btn = document.getElementById('sm-submit');
+      var fail = document.querySelector('.sm-fail');
+      if (fail) fail.style.display = 'none';
       btn.disabled = true; btn.textContent = 'Processing…';
+
+      function failed() {
+        btn.disabled = false; btn.textContent = 'Book my build →';
+        if (fail) fail.style.display = 'block';
+      }
 
       fetch('/api/build-request', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
@@ -563,9 +566,9 @@
         .then(function (res) {
           if (res && res.checkoutUrl) { window.location.href = res.checkoutUrl; return; }
           if (res && res.ok) { showDone(); return; }
-          form.submit(); // fall back to email capture
+          failed();
         })
-        .catch(function () { form.submit(); });
+        .catch(failed);
     });
 
     render();
