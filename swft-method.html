@@ -56,29 +56,34 @@ html.lenis { height: auto; }
     .sm-wrap { padding-left: clamp(1rem, 5vw, 4rem); padding-right: clamp(1rem, 5vw, 4rem); }
     .sm-container { max-width: 1100px; margin: 0 auto; }
 
-    /* ── Standalone Nav ── */
+    /* ── Standalone Nav (matches 2025 Webflow floating-navbar) ── */
     .sm-nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(8,8,8,0.88); backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--sm-border);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      background: transparent;
+      margin-top: 1.125rem;
+      padding: 0 5%;
     }
     .sm-nav-inner {
       display: flex; align-items: center; justify-content: space-between;
-      max-width: 1200px; margin: 0 auto;
-      padding: 0.9rem clamp(1rem, 5vw, 2.5rem);
+      max-width: 80rem; margin: 0 auto;
+      padding: 1.25rem 2rem;
       gap: 1rem;
+      background-color: #ffffffbf;
+      background-image: linear-gradient(149deg, #32658a, transparent 47%);
+      -webkit-backdrop-filter: blur(15px);
+      backdrop-filter: blur(15px);
+      border-radius: 1rem;
     }
-    .sm-nav-logo { display: flex; align-items: center; flex-shrink: 0; }
-    .sm-logo-img { height: 28px; width: auto; filter: invert(1); display: block; }
+    .sm-nav-logo { display: flex; align-items: center; flex-shrink: 0; width: 11rem; }
+    .sm-logo-img { height: 28px; width: auto; display: block; }
     .sm-nav-links {
       display: flex; gap: 1.75rem; align-items: center;
     }
     .sm-nav-links a {
-      color: rgba(255,255,255,0.65); font-size: 0.88rem; font-weight: 500;
+      color: #1a1a2e; font-size: 1rem; font-weight: 500;
       text-decoration: none; transition: color 0.18s; white-space: nowrap;
     }
-    .sm-nav-links a:hover { color: #fff; }
+    .sm-nav-links a:hover { color: #000; }
     .sm-nav-cta {
       display: inline-flex; align-items: center;
       background: var(--sm-accent); color: #080808 !important;
@@ -86,7 +91,7 @@ html.lenis { height: auto; }
       border-radius: 999px; text-decoration: none; white-space: nowrap;
       transition: transform 0.2s, box-shadow 0.2s; flex-shrink: 0;
     }
-    .sm-nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(127,255,229,0.25); }
+    .sm-nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(127,255,229,0.35); }
     .sm-burger {
       display: none; flex-direction: column; gap: 5px;
       background: transparent; border: none; cursor: pointer;
@@ -94,25 +99,30 @@ html.lenis { height: auto; }
     }
     .sm-burger span {
       display: block; width: 22px; height: 2px;
-      background: #fff; border-radius: 2px;
+      background: #1a1a2e; border-radius: 2px;
       transition: all 0.25s;
     }
     .sm-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     .sm-burger.open span:nth-child(2) { transform: translateY(-7px) rotate(-45deg); }
     .sm-mobile-menu {
       display: none; flex-direction: column;
-      padding: 0 clamp(1rem, 5vw, 2.5rem) 1.25rem;
-      border-top: 1px solid var(--sm-border);
+      margin: 0.5rem 0 0;
+      padding: 1rem 1.5rem 1.25rem;
+      background-color: #ffffffbf;
+      background-image: linear-gradient(149deg, #32658a, transparent 47%);
+      -webkit-backdrop-filter: blur(15px);
+      backdrop-filter: blur(15px);
+      border-radius: 1rem;
     }
     .sm-mobile-menu.open { display: flex; }
     .sm-mobile-menu a {
-      color: rgba(255,255,255,0.75); text-decoration: none;
-      font-size: 1.1rem; font-weight: 600;
-      padding: 0.85rem 0; border-bottom: 1px solid var(--sm-border);
+      color: #1a1a2e; text-decoration: none;
+      font-size: 1.05rem; font-weight: 600;
+      padding: 0.8rem 0; border-bottom: 1px solid rgba(26,26,46,0.12);
       transition: color 0.18s;
     }
     .sm-mobile-menu a:last-child { border-bottom: none; }
-    .sm-mobile-menu a:hover { color: #fff; }
+    .sm-mobile-menu a:hover { color: #000; }
     .sm-mobile-cta {
       margin-top: 0.75rem; text-align: center;
       background: var(--sm-accent); color: #080808 !important;
@@ -121,7 +131,7 @@ html.lenis { height: auto; }
     }
 
     /* ── Nav top offset ── */
-    .sm-hero { padding-top: clamp(5.5rem, 14vw, 9rem) !important; }
+    .sm-hero { padding-top: clamp(6rem, 15vw, 10rem) !important; }
 
     @media (max-width: 767px) {
       .sm-nav-links, .sm-nav-cta { display: none; }
