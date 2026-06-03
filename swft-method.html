@@ -228,6 +228,44 @@ html.lenis { height: auto; }
     .sm-done h3 { font-family: "Krona One", sans-serif; font-size: 1.75rem; font-weight: 400; color: #fff; margin: 0 0 0.75rem; }
     .sm-done p { color: rgba(255,255,255,0.65); margin: 0 auto; max-width: 32rem; line-height: 1.65; }
 
+    /* Brand personality chips */
+    .sm-chip-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .sm-chip { position: relative; }
+    .sm-chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+    .sm-chip span {
+      display: inline-block; padding: 0.55rem 1rem; border-radius: 999px; cursor: pointer;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 600;
+      transition: all 0.18s; white-space: nowrap; user-select: none;
+    }
+    .sm-chip input:checked + span { border-color: var(--sm-accent); background: rgba(127,255,229,0.1); color: #fff; }
+
+    /* Price / revenue range cards */
+    .sm-range-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; }
+    .sm-range { position: relative; }
+    .sm-range input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+    .sm-range span {
+      display: flex; flex-direction: column; gap: 0.2rem;
+      padding: 1rem 1.1rem; border-radius: 14px; cursor: pointer;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.13);
+      transition: all 0.18s;
+    }
+    .sm-range .rv { color: #fff; font-weight: 700; font-size: 0.95rem; }
+    .sm-range .rl { color: rgba(255,255,255,0.45); font-size: 0.75rem; }
+    .sm-range input:checked + span { border-color: var(--sm-accent); background: rgba(127,255,229,0.09); }
+    .sm-range input:checked + span .rv { color: var(--sm-accent); }
+
+    /* How-they-sell cards */
+    .sm-sell-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+
+    /* Insight callout */
+    .sm-insight {
+      background: rgba(127,255,229,0.05); border: 1px solid rgba(127,255,229,0.18);
+      border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 1.25rem;
+      font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.55;
+    }
+    .sm-insight strong { color: var(--sm-accent); }
+
     /* Responsive */
     @media (max-width: 767px) {
       .sm-steps-grid { grid-template-columns: 1fr 1fr; }
@@ -236,10 +274,13 @@ html.lenis { height: auto; }
       .sm-goal-grid { grid-template-columns: 1fr; }
       .sm-grid-2 { grid-template-columns: 1fr; }
       .sm-plans { grid-template-columns: 1fr; }
+      .sm-range-grid { grid-template-columns: repeat(2, 1fr); }
+      .sm-sell-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 479px) {
       .sm-steps-grid { grid-template-columns: 1fr; }
       .sm-feature-grid { grid-template-columns: 1fr; }
+      .sm-range-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -346,7 +387,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
           <div class="sm-container">
             <div class="sm-form-head">
               <h2 class="sm-h2">Build your website plan</h2>
-              <p class="sm-sub" style="margin:0 auto;">Answer a few focused questions — takes about 3 minutes. At the end you'll see exactly what we'll build and what it costs.</p>
+              <p class="sm-sub" style="margin:0 auto;">7 focused questions — about 5 minutes. The more you share, the better your site will perform. At the end you'll see exactly what we'll build and what it costs.</p>
             </div>
 
             <div class="sm-form-shell">
@@ -363,104 +404,211 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
                 <input type="hidden" name="Maintenance Add-On" id="hf-maint" value="No">
                 <input type="hidden" name="Monthly Plan Price" id="hf-monthly" value="$299/mo">
                 <input type="hidden" name="Selected Features" id="hf-features" value="">
+                <input type="hidden" name="Brand Personality" id="hf-personality" value="">
 
-                <!-- STEP 1 -->
-                <div class="sm-step" data-step="1" data-label="ABOUT YOU">
-                  <h3 class="sm-step-heading">First, the basics</h3>
-                  <p class="sm-step-desc">So we know who we're building for and how to reach you.</p>
+                <!-- STEP 1: YOUR VISION -->
+                <div class="sm-step" data-step="1" data-label="YOUR VISION">
+                  <h3 class="sm-step-heading">Let's start with you.</h3>
+                  <p class="sm-step-desc">Before we talk websites, we want to understand the life you're building — not just the business.</p>
                   <div class="sm-grid-2">
                     <div class="sm-field"><label class="sm-q" for="name">Your name</label><input id="name" name="Name" type="text" class="sm-input" placeholder="Jordan Smith" required></div>
                     <div class="sm-field"><label class="sm-q" for="email">Email</label><input id="email" name="Email" type="email" class="sm-input" placeholder="you@email.com" required></div>
                   </div>
                   <div class="sm-grid-2">
                     <div class="sm-field"><label class="sm-q" for="instagram">Instagram handle</label><input id="instagram" name="Instagram Handle" type="text" class="sm-input" placeholder="@yourbusiness" required></div>
-                    <div class="sm-field"><label class="sm-q" for="phone">Phone / WhatsApp <span class="sm-hint" style="display:inline;">(optional)</span></label><input id="phone" name="Phone" type="tel" class="sm-input" placeholder="So we can reach you faster"></div>
+                    <div class="sm-field"><label class="sm-q" for="phone">Phone / WhatsApp <span class="sm-hint" style="display:inline;">(optional)</span></label><input id="phone" name="Phone" type="tel" class="sm-input" placeholder="Faster back-and-forth"></div>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="ideal-day">Picture it's 6 months from now — your online business is fully running. What does a typical Tuesday look like?</label>
+                    <span class="sm-hint">Where are you working from? How many hours? What's changed vs. today?</span>
+                    <textarea id="ideal-day" name="Ideal Day Vision" class="sm-textarea" placeholder="e.g. I wake up at 9, check my orders over coffee, fulfil a few packages in an hour, then spend the rest of the day creating content — no chasing clients in DMs anymore..." required></textarea>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="bottleneck">What's the single biggest thing holding your business back right now?</label>
+                    <span class="sm-hint">Be honest — this shapes everything we build.</span>
+                    <input id="bottleneck" name="Current Bottleneck" type="text" class="sm-input" placeholder="e.g. I have no way for people to buy from me without going through DMs">
                   </div>
                 </div>
 
-                <!-- STEP 2 -->
-                <div class="sm-step" data-step="2" data-label="YOUR BUSINESS" style="display:none;">
-                  <h3 class="sm-step-heading">Tell us about your business</h3>
-                  <p class="sm-step-desc">The clearer this is, the better your website will sell for you.</p>
-                  <div class="sm-field"><label class="sm-q" for="business-name">Business name</label><input id="business-name" name="Business Name" type="text" class="sm-input" placeholder="What's it called?" required></div>
-                  <div class="sm-field"><label class="sm-q" for="what-you-do">What do you sell or offer?</label><span class="sm-hint">Products, services, packages — describe it in plain words.</span><textarea id="what-you-do" name="What You Sell or Offer" class="sm-textarea" placeholder="e.g. I do custom nail art and sell press-on nail kits..." required></textarea></div>
-                  <div class="sm-field"><label class="sm-q" for="ideal-customer">Who is your ideal customer?</label><textarea id="ideal-customer" name="Ideal Customer" class="sm-textarea" placeholder="Who buys from you (or who you wish would)? Where are they?"></textarea></div>
-                  <div class="sm-field"><label class="sm-q" for="how-sell-now">How do you sell right now?</label><span class="sm-hint">DMs, in person, a link in bio, nothing yet — be honest.</span><input id="how-sell-now" name="How They Sell Now" type="text" class="sm-input" placeholder="e.g. Mostly through Instagram DMs"></div>
+                <!-- STEP 2: YOUR OFFER & EDGE -->
+                <div class="sm-step" data-step="2" data-label="YOUR OFFER" style="display:none;">
+                  <h3 class="sm-step-heading">What do you do — and why you?</h3>
+                  <p class="sm-step-desc">The best websites don't just list what you sell. They make it obvious why you're the only choice.</p>
+                  <div class="sm-grid-2">
+                    <div class="sm-field"><label class="sm-q" for="business-name">Business name</label><input id="business-name" name="Business Name" type="text" class="sm-input" placeholder="What's it called?" required></div>
+                    <div class="sm-field">
+                      <label class="sm-q">What's your price point?</label>
+                      <div class="sm-choice-grid">
+                        <label class="sm-choice"><input type="radio" name="Price Range" value="Under $50"><span>Under $50</span></label>
+                        <label class="sm-choice"><input type="radio" name="Price Range" value="$50–$200"><span>$50–$200</span></label>
+                        <label class="sm-choice"><input type="radio" name="Price Range" value="$200–$500"><span>$200–$500</span></label>
+                        <label class="sm-choice"><input type="radio" name="Price Range" value="$500+"><span>$500+</span></label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="what-you-do">What exactly do you sell or offer?</label>
+                    <span class="sm-hint">Be specific — products, services, packages, experiences. Name them.</span>
+                    <textarea id="what-you-do" name="What You Sell or Offer" class="sm-textarea" placeholder="e.g. I sell custom press-on nail sets ($35–$85), 1:1 nail appointments ($120), and a DIY nail kit with tutorial ($55)..." required></textarea>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="transformation">What transformation or result do you create?</label>
+                    <span class="sm-hint">What changes for your customer after they buy from you — emotionally, practically, visually?</span>
+                    <textarea id="transformation" name="Transformation You Create" class="sm-textarea" placeholder="e.g. My clients go from feeling basic and unstyled to feeling put-together and confident every day — without spending $100 at a salon every 2 weeks..."></textarea>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="unique-edge">What makes you the only logical choice?</label>
+                    <span class="sm-hint">What do you do that no one else does exactly like you? Your background, method, personality, results?</span>
+                    <textarea id="unique-edge" name="Unique Edge" class="sm-textarea" placeholder="e.g. I've been doing nails for 10 years and I'm the only one in my city offering a subscription box with custom sets every month..."></textarea>
+                  </div>
                 </div>
 
-                <!-- STEP 3 -->
-                <div class="sm-step" data-step="3" data-label="YOUR GOALS" style="display:none;">
-                  <h3 class="sm-step-heading">What do you want this site to do?</h3>
-                  <p class="sm-step-desc">We design every page around your #1 goal.</p>
+                <!-- STEP 3: YOUR IDEAL CLIENT -->
+                <div class="sm-step" data-step="3" data-label="YOUR CLIENT" style="display:none;">
+                  <h3 class="sm-step-heading">Tell us about who you serve.</h3>
+                  <p class="sm-step-desc">A site that converts speaks directly to one person. Let's get inside their head.</p>
                   <div class="sm-field">
-                    <label class="sm-q">Your main goal for the website</label>
+                    <label class="sm-q" for="dream-client">Describe your dream client in vivid detail.</label>
+                    <span class="sm-hint">Not just age and location — what do they want, fear, spend money on, talk about? What keeps them up at night?</span>
+                    <textarea id="dream-client" name="Ideal Customer" class="sm-textarea" placeholder="e.g. She's 24–32, works a 9–5 but wants to look polished. She cares about how she presents herself but doesn't have time or money for weekly salon appointments. She's on TikTok and Pinterest constantly saving nail inspo she'll never get done..."></textarea>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="client-problem">What problem brings them to you — and what have they already tried?</label>
+                    <span class="sm-hint">What's the gap between what's out there and what you offer?</span>
+                    <textarea id="client-problem" name="Client Problem and Prior Attempts" class="sm-textarea" placeholder="e.g. They've tried the drugstore press-ons that never fit right and look cheap. They want something that actually looks done but they can apply at home..."></textarea>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="client-words">What do your best clients say about you in their own words?</label>
+                    <span class="sm-hint">A real quote, a DM, a review — copy-paste it. This is gold for your website copy.</span>
+                    <textarea id="client-words" name="Client Social Proof" class="sm-textarea" placeholder="e.g. 'I've been ordering from her for 6 months and I literally get compliments every single week. I'll never go back to the salon'..."></textarea>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q">How do clients currently find and buy from you?</label>
+                    <div class="sm-sell-grid">
+                      <label class="sm-choice"><input type="radio" name="How They Sell Now" value="Instagram DMs"><span>Instagram DMs</span></label>
+                      <label class="sm-choice"><input type="radio" name="How They Sell Now" value="Word of mouth / referrals"><span>Word of mouth / referrals</span></label>
+                      <label class="sm-choice"><input type="radio" name="How They Sell Now" value="In person / events"><span>In person / events</span></label>
+                      <label class="sm-choice"><input type="radio" name="How They Sell Now" value="Link in bio / existing site"><span>Link in bio / existing site</span></label>
+                      <label class="sm-choice"><input type="radio" name="How They Sell Now" value="TikTok / other platform"><span>TikTok / other platform</span></label>
+                      <label class="sm-choice"><input type="radio" name="How They Sell Now" value="Not consistently yet"><span>Not consistently yet</span></label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 4: YOUR GOALS -->
+                <div class="sm-step" data-step="4" data-label="YOUR GOALS" style="display:none;">
+                  <h3 class="sm-step-heading">What do you want this site to do for you?</h3>
+                  <p class="sm-step-desc">Every page, every button, every word we write is designed around your #1 goal.</p>
+                  <div class="sm-field">
+                    <label class="sm-q">Primary goal for the website</label>
                     <div class="sm-goal-grid">
                       <label class="sm-goal"><input type="radio" name="Main Goal" value="Get more sales / orders" required><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>Get more sales / orders</span></label>
                       <label class="sm-goal"><input type="radio" name="Main Goal" value="Get bookings / appointments"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Get bookings / appointments</span></label>
                       <label class="sm-goal"><input type="radio" name="Main Goal" value="Collect leads / inquiries"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>Collect leads / inquiries</span></label>
-                      <label class="sm-goal"><input type="radio" name="Main Goal" value="Grow an email / SMS list"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>Grow an email / SMS list</span></label>
-                      <label class="sm-goal"><input type="radio" name="Main Goal" value="Look professional & credible"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.09 4.26L18.5 8l-3.5 3.41.83 4.84L12 14l-3.83 2.25.83-4.84L5.5 8l4.41-.74Z"/></svg></span>Look professional &amp; credible</span></label>
-                      <label class="sm-goal"><input type="radio" name="Main Goal" value="Sell digital products / courses"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>Sell digital products / courses</span></label>
+                      <label class="sm-goal"><input type="radio" name="Main Goal" value="Sell digital products or courses"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>Sell digital products / courses</span></label>
+                      <label class="sm-goal"><input type="radio" name="Main Goal" value="Build authority and credibility"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.09 4.26L18.5 8l-3.5 3.41.83 4.84L12 14l-3.83 2.25.83-4.84L5.5 8l4.41-.74Z"/></svg></span>Build authority &amp; credibility</span></label>
+                      <label class="sm-goal"><input type="radio" name="Main Goal" value="Grow an email / SMS list"><span><span class="sm-goal-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>Grow my email / SMS list</span></label>
                     </div>
                   </div>
-                  <div class="sm-field"><label class="sm-q" for="success">What would make this a win in the first month?</label><textarea id="success" name="What Success Looks Like" class="sm-textarea" placeholder="e.g. 10 new bookings a week, or my first online orders..."></textarea></div>
-                  <div class="sm-field"><label class="sm-q" for="revenue-goal">Monthly revenue goal <span class="sm-hint" style="display:inline;">(optional)</span></label><input id="revenue-goal" name="Revenue Goal" type="text" class="sm-input" placeholder="e.g. $5k/month"></div>
-                </div>
-
-                <!-- STEP 4 -->
-                <div class="sm-step" data-step="4" data-label="LOOK & FEEL" style="display:none;">
-                  <h3 class="sm-step-heading">How should it look &amp; feel?</h3>
-                  <p class="sm-step-desc">Your website should feel like your brand the second someone lands.</p>
-                  <div class="sm-field"><label class="sm-q" for="vibe">Describe the vibe you want</label><span class="sm-hint">e.g. clean &amp; minimal, bold &amp; colorful, luxury, fun, earthy, high-energy...</span><textarea id="vibe" name="Look and Feel" class="sm-textarea" placeholder="Tell us the mood and style you're going for..." required></textarea></div>
-                  <div class="sm-grid-2">
-                    <div class="sm-field"><label class="sm-q" for="colors">Brand colors <span class="sm-hint" style="display:inline;">(optional)</span></label><input id="colors" name="Brand Colors" type="text" class="sm-input" placeholder="e.g. black, cream, gold"></div>
-                    <div class="sm-field"><label class="sm-q">Do you have a logo?</label><div class="sm-choice-grid" style="grid-template-columns:1fr 1fr;"><label class="sm-choice"><input type="radio" name="Has Logo" value="Yes, I have one"><span>Yes</span></label><label class="sm-choice"><input type="radio" name="Has Logo" value="No, I need one"><span>I need one</span></label></div></div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="ninety-day-win">What does winning look like for you in the next 90 days? Be specific.</label>
+                    <span class="sm-hint">Numbers are helpful — orders per week, monthly revenue, bookings filled, etc.</span>
+                    <textarea id="ninety-day-win" name="90-Day Win" class="sm-textarea" placeholder="e.g. I want to be consistently making $3k/month from my shop without relying on DMs. If I can get 20 orders a month I'm good..."></textarea>
                   </div>
-                  <div class="sm-field"><label class="sm-q" for="inspiration">Websites or accounts you love</label><span class="sm-hint">Drop 1–3 links or names so we can match the energy.</span><textarea id="inspiration" name="Inspiration" class="sm-textarea" placeholder="e.g. @brandname, somesite.com — I love how clean their shop is"></textarea></div>
+                  <div class="sm-field">
+                    <label class="sm-q">Monthly revenue target for your online business</label>
+                    <div class="sm-range-grid">
+                      <label class="sm-range"><input type="radio" name="Revenue Goal" value="First $1k/mo"><span><span class="rv">First $1k</span><span class="rl">Just getting started</span></span></label>
+                      <label class="sm-range"><input type="radio" name="Revenue Goal" value="$1k–$3k/mo"><span><span class="rv">$1k–$3k</span><span class="rl">Side income</span></span></label>
+                      <label class="sm-range"><input type="radio" name="Revenue Goal" value="$3k–$5k/mo"><span><span class="rv">$3k–$5k</span><span class="rl">Replace my job</span></span></label>
+                      <label class="sm-range"><input type="radio" name="Revenue Goal" value="$5k–$10k/mo"><span><span class="rv">$5k–$10k</span><span class="rl">Full lifestyle business</span></span></label>
+                      <label class="sm-range"><input type="radio" name="Revenue Goal" value="$10k+/mo"><span><span class="rv">$10k+</span><span class="rl">Scaling up</span></span></label>
+                      <label class="sm-range"><input type="radio" name="Revenue Goal" value="Not focused on a number yet"><span><span class="rv">Not yet</span><span class="rl">Just want it live</span></span></label>
+                    </div>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="blocker">What has stopped you from having a proper online presence until now?</label>
+                    <span class="sm-hint">No judgment — time, money, not knowing where to start, imposter syndrome?</span>
+                    <input id="blocker" name="What Stopped You" type="text" class="sm-input" placeholder="e.g. I didn't know where to start and every web designer I talked to wanted $5k+">
+                  </div>
                 </div>
 
-                <!-- STEP 5 -->
-                <div class="sm-step" data-step="5" data-label="FEATURES" style="display:none;">
-                  <h3 class="sm-step-heading">What features do you want?</h3>
-                  <p class="sm-step-desc">Pick everything you'd like — your price updates based on what you choose.</p>
+                <!-- STEP 5: YOUR BRAND -->
+                <div class="sm-step" data-step="5" data-label="YOUR BRAND" style="display:none;">
+                  <h3 class="sm-step-heading">What should your brand feel like?</h3>
+                  <p class="sm-step-desc">Your site should feel like you — instantly. The right look and feel turns a visitor into a buyer before they read a single word.</p>
+                  <div class="sm-field">
+                    <label class="sm-q">Pick words that describe your brand personality <span class="sm-hint" style="display:inline;">(select all that fit)</span></label>
+                    <div class="sm-chip-wrap" id="personality-chips">
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Bold"><span>Bold</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Clean"><span>Clean</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Luxe"><span>Luxe</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Minimal"><span>Minimal</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Warm"><span>Warm</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Edgy"><span>Edgy</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Raw &amp; Authentic"><span>Raw &amp; Authentic</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Playful"><span>Playful</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Professional"><span>Professional</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Feminine"><span>Feminine</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Dark &amp; Moody"><span>Dark &amp; Moody</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Bright &amp; Vibrant"><span>Bright &amp; Vibrant</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Street / Urban"><span>Street / Urban</span></label>
+                      <label class="sm-chip"><input type="checkbox" name="personality[]" value="Natural &amp; Earthy"><span>Natural &amp; Earthy</span></label>
+                    </div>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="vibe">Describe the vibe in your own words</label>
+                    <span class="sm-hint">Think about how you'd describe your Instagram feed to someone who hasn't seen it.</span>
+                    <textarea id="vibe" name="Look and Feel" class="sm-textarea" placeholder="e.g. Think dark, editorial, high-contrast — like a fashion lookbook mixed with street photography. Not corporate. Not pastel. Just real and visually striking..." required></textarea>
+                  </div>
+                  <div class="sm-grid-2">
+                    <div class="sm-field"><label class="sm-q" for="colors">Brand colors <span class="sm-hint" style="display:inline;">(optional)</span></label><input id="colors" name="Brand Colors" type="text" class="sm-input" placeholder="e.g. black, cream, dusty rose"></div>
+                    <div class="sm-field"><label class="sm-q">Do you have a logo?</label>
+                      <div class="sm-choice-grid" style="grid-template-columns:1fr 1fr;">
+                        <label class="sm-choice"><input type="radio" name="Has Logo" value="Yes, I have one"><span>Yes, I have one</span></label>
+                        <label class="sm-choice"><input type="radio" name="Has Logo" value="No, I need one"><span>No, I need one</span></label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sm-field">
+                    <label class="sm-q" for="inspiration">Accounts or websites you love the look of</label>
+                    <span class="sm-hint">Drop 1–3 links or handles — even if they're in a totally different industry. We just want the energy.</span>
+                    <textarea id="inspiration" name="Inspiration" class="sm-textarea" placeholder="e.g. @brandname on IG — I love how dark and editorial it is. Also somesite.com — the way they use white space is everything."></textarea>
+                  </div>
+                </div>
+
+                <!-- STEP 6: FEATURES -->
+                <div class="sm-step" data-step="6" data-label="FEATURES" style="display:none;">
+                  <h3 class="sm-step-heading">What does your site need to do?</h3>
+                  <p class="sm-step-desc">Check everything you want — your price updates live based on what you choose. Don't hold back; we'll make it work.</p>
+                  <div class="sm-insight"><strong>Pro tip:</strong> Focus on what serves your customer's journey, not just what looks impressive. The best sites do one thing exceptionally well.</div>
                   <div class="sm-field">
                     <div class="sm-feature-grid">
                       <label class="sm-feature"><input type="checkbox" name="features" value="Online store / shop" data-price="700"><span>Online store / shop<span class="price-tag">+$700</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Booking / appointments" data-price="300"><span>Booking / appointments<span class="price-tag">+$300</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Checkout / payments" data-price="400"><span>Checkout / payments<span class="price-tag">+$400</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Digital products / downloads" data-price="300"><span>Digital downloads<span class="price-tag">+$300</span></span></label>
-                      <label class="sm-feature"><input type="checkbox" name="features" value="Email / SMS signup" data-price="100"><span>Email / SMS signup<span class="price-tag">+$100</span></span></label>
+                      <label class="sm-feature"><input type="checkbox" name="features" value="Membership / subscription" data-price="500"><span>Membership / subscription<span class="price-tag">+$500</span></span></label>
+                      <label class="sm-feature"><input type="checkbox" name="features" value="Email / SMS list capture" data-price="100"><span>Email / SMS signup<span class="price-tag">+$100</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Photo / video gallery" data-price="100"><span>Photo / video gallery<span class="price-tag">+$100</span></span></label>
-                      <label class="sm-feature"><input type="checkbox" name="features" value="Services & pricing" data-price="100"><span>Services &amp; pricing<span class="price-tag">+$100</span></span></label>
-                      <label class="sm-feature"><input type="checkbox" name="features" value="Blog / content" data-price="200"><span>Blog / content<span class="price-tag">+$200</span></span></label>
+                      <label class="sm-feature"><input type="checkbox" name="features" value="Services & pricing page" data-price="100"><span>Services &amp; pricing<span class="price-tag">+$100</span></span></label>
+                      <label class="sm-feature"><input type="checkbox" name="features" value="Blog / content hub" data-price="200"><span>Blog / content hub<span class="price-tag">+$200</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Instagram feed embed" data-price="100"><span>Instagram feed<span class="price-tag">+$100</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Link-in-bio hub" data-price="100"><span>Link-in-bio hub<span class="price-tag">+$100</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Testimonials / reviews" data-price="75"><span>Testimonials / reviews<span class="price-tag">+$75</span></span></label>
-                      <label class="sm-feature"><input type="checkbox" name="features" value="FAQ" data-price="50"><span>FAQ section<span class="price-tag">+$50</span></span></label>
+                      <label class="sm-feature"><input type="checkbox" name="features" value="FAQ section" data-price="50"><span>FAQ section<span class="price-tag">+$50</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="WhatsApp / DM button" data-price="50"><span>WhatsApp / DM button<span class="price-tag">+$50</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="About / my story" data-price="0"><span>About / my story<span class="price-tag">incl.</span></span></label>
                       <label class="sm-feature"><input type="checkbox" name="features" value="Contact form" data-price="0"><span>Contact form<span class="price-tag">incl.</span></span></label>
                     </div>
                   </div>
-                  <div class="sm-field"><label class="sm-q" for="must-have">Any must-have feature we didn't list?</label><input id="must-have" name="Other Must-Have Feature" type="text" class="sm-input" placeholder="Tell us anything specific you need"></div>
-                </div>
-
-                <!-- STEP 6 -->
-                <div class="sm-step" data-step="6" data-label="CONTENT & LAUNCH" style="display:none;">
-                  <h3 class="sm-step-heading">Content &amp; launch</h3>
-                  <p class="sm-step-desc">Last details before your plan — this helps us hit the 7-day timeline.</p>
-                  <div class="sm-field"><label class="sm-q">Do you have photos / content ready?</label><div class="sm-choice-grid"><label class="sm-choice"><input type="radio" name="Content Ready" value="Yes, plenty of content"><span>Yes, plenty</span></label><label class="sm-choice"><input type="radio" name="Content Ready" value="Some, but need help"><span>Some, need help</span></label><label class="sm-choice"><input type="radio" name="Content Ready" value="No, starting from scratch"><span>No, from scratch</span></label><label class="sm-choice"><input type="radio" name="Content Ready" value="It's all on my Instagram"><span>It's on my Instagram</span></label></div></div>
-                  <div class="sm-grid-2">
-                    <div class="sm-field"><label class="sm-q">Do you have a domain name?</label><div class="sm-choice-grid" style="grid-template-columns:1fr 1fr;"><label class="sm-choice"><input type="radio" name="Has Domain" value="Yes, I own one"><span>Yes</span></label><label class="sm-choice"><input type="radio" name="Has Domain" value="No, need help"><span>Need one</span></label></div></div>
-                    <div class="sm-field"><label class="sm-q" for="timeline">When do you want to launch?</label><input id="timeline" name="Launch Timeline" type="text" class="sm-input" placeholder="ASAP, this week, this month..."></div>
-                  </div>
-                  <div class="sm-field"><label class="sm-q" for="anything-else">Anything else we should know?</label><textarea id="anything-else" name="Anything Else" class="sm-textarea" placeholder="Dreams, deadlines, worries — tell us everything."></textarea></div>
+                  <div class="sm-field"><label class="sm-q" for="must-have">Any must-have feature not listed?</label><input id="must-have" name="Other Must-Have Feature" type="text" class="sm-input" placeholder="e.g. A quiz, a waitlist, an affiliate programme..."></div>
                 </div>
 
                 <!-- STEP 7: BUILD PLAN -->
                 <div class="sm-step" data-step="7" data-label="YOUR BUILD PLAN" style="display:none;">
                   <h3 class="sm-step-heading">Your build plan</h3>
-                  <p class="sm-step-desc">Here's what we'll build and what it costs. Pick the option that fits — then send it to lock in your spot.</p>
+                  <p class="sm-step-desc">Here's exactly what we'll build and what it costs. Pick the option that fits — then send it over to lock in your spot.</p>
                   <div class="sm-summary-card" id="sm-summary"></div>
                   <label class="sm-q" style="display:block; margin-bottom:0.85rem;">Choose how you want to work with us</label>
                   <div class="sm-plans">
@@ -475,9 +623,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
                           <li>Everything in your plan above</li>
                           <li>1 round of revisions</li>
                           <li>Launch &amp; bio-link setup</li>
+                          <li>30-day post-launch support</li>
                         </ul>
                         <div class="sm-addon">
-                          <label><input type="checkbox" id="sm-maint" name="_maint_ui"><span>Add <strong>monthly maintenance</strong> — <strong>$99/mo</strong>. We handle updates, small changes &amp; upkeep so your site stays current.</span></label>
+                          <label><input type="checkbox" id="sm-maint" name="_maint_ui"><span>Add <strong>monthly maintenance</strong> — <strong>$99/mo</strong>. Updates, small changes &amp; upkeep so your site never gets stale.</span></label>
                         </div>
                       </div>
                     </label>
@@ -491,16 +640,18 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
                         <ul class="sm-plan-list">
                           <li>Custom website built in 7 days</li>
                           <li>Everything in your plan above</li>
-                          <li><strong>Updates included</strong> — ongoing tweaks &amp; changes</li>
-                          <li><strong>2× 30-min check-in calls</strong> every month</li>
+                          <li><strong>Unlimited small updates</strong> every month</li>
+                          <li><strong>2× 30-min strategy calls</strong> per month</li>
+                          <li>We help you optimise it as you grow</li>
                           <li>Priority support · cancel anytime</li>
                         </ul>
                       </div>
                     </label>
                   </div>
                   <div class="sm-trust2">
-                    <span><span class="sm-tick">✓</span> No payment taken now — this just starts your build</span>
-                    <span><span class="sm-tick">✓</span> We'll confirm your final quote before anything's charged</span>
+                    <span><span class="sm-tick">✓</span> No payment taken now — this just starts the conversation</span>
+                    <span><span class="sm-tick">✓</span> We'll confirm every detail before anything is charged</span>
+                    <span><span class="sm-tick">✓</span> 7-day build guarantee or we keep working until you're happy</span>
                   </div>
                 </div>
 
@@ -682,17 +833,25 @@ barba.init({
   function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
   }
+  function personalityChips() {
+    var checked = Array.prototype.slice.call(form.querySelectorAll('input[name="personality[]"]:checked'));
+    return checked.map(function (el) { return el.value; }).join(', ');
+  }
   function renderSummary() {
     var feats = selectedFeatures().map(function (el) { return el.value; });
     var featText = feats.length ? feats.join(', ') : 'Core site (About + Contact)';
+    var personality = personalityChips();
     var ot = oneTimeTotal();
+    // write personality into hidden field
+    document.getElementById('hf-personality').value = personality;
     var rows = [
       ['Business', val('Business Name') || '—'],
-      ['What you sell', val('What You Sell or Offer') || '—'],
+      ['Price range', val('Price Range') || '—'],
+      ['What you offer', val('What You Sell or Offer') || '—'],
       ['Main goal', val('Main Goal') || '—'],
-      ['Look &amp; feel', val('Look and Feel') || '—'],
-      ['Features', featText],
-      ['Timeline', val('Launch Timeline') || 'To be confirmed']
+      ['Revenue target', val('Revenue Goal') || '—'],
+      ['Brand feel', personality || val('Look and Feel') || '—'],
+      ['Features', featText]
     ];
     var html = rows.map(function (r) {
       return '<div class="sm-summary-row"><span class="k">' + r[0] + '</span><span class="v">' + escapeHtml(r[1]) + '</span></div>';
@@ -748,12 +907,19 @@ barba.init({
     document.getElementById('hf-maint').value = maint ? 'Yes (+$99/mo)' : 'No';
     var payload = {
       name: val('Name'), email: val('Email'), instagram: val('Instagram Handle'), phone: val('Phone'),
-      businessName: val('Business Name'), whatYouSell: val('What You Sell or Offer'),
-      idealCustomer: val('Ideal Customer'), mainGoal: val('Main Goal'), lookAndFeel: val('Look and Feel'),
+      idealDayVision: val('Ideal Day Vision'), currentBottleneck: val('Current Bottleneck'),
+      businessName: val('Business Name'), priceRange: val('Price Range'),
+      whatYouSell: val('What You Sell or Offer'),
+      transformation: val('Transformation You Create'), uniqueEdge: val('Unique Edge'),
+      idealCustomer: val('Ideal Customer'), clientProblem: val('Client Problem and Prior Attempts'),
+      clientSocialProof: val('Client Social Proof'), howTheySellNow: val('How They Sell Now'),
+      mainGoal: val('Main Goal'), ninetyDayWin: val('90-Day Win'),
+      revenueGoal: val('Revenue Goal'), whatStoppedYou: val('What Stopped You'),
+      brandPersonality: personalityChips(), lookAndFeel: val('Look and Feel'),
+      brandColors: val('Brand Colors'), hasLogo: val('Has Logo'), inspiration: val('Inspiration'),
       features: document.getElementById('hf-features').value || selectedFeatures().map(function (f) { return f.value; }).join(', '),
-      plan: plan, maintenance: maint, oneTimeAmount: oneTimeTotal(),
-      contentReady: val('Content Ready'), hasDomain: val('Has Domain'),
-      timeline: val('Launch Timeline'), anythingElse: val('Anything Else')
+      mustHaveFeature: val('Other Must-Have Feature'),
+      plan: plan, maintenance: maint, oneTimeAmount: oneTimeTotal()
     };
     var btn = document.getElementById('sm-submit');
     var fail = document.getElementById('sm-fail');
