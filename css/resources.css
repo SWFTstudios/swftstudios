@@ -1,0 +1,175 @@
+/* ============================================================
+   SWFT Studios — Resources Hub 2025
+   Styles for the /resources.html page.
+   ============================================================ */
+
+/* ── Filter tabs ─────────────────────────────────────────── */
+.resources-filter {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.rf-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.5rem 1.15rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s;
+  letter-spacing: 0.03em;
+  outline: none;
+  line-height: 1.4;
+}
+
+.rf-btn:hover {
+  border-color: rgba(127,255,229,0.35);
+  color: #7fffe5;
+  background: rgba(127,255,229,0.06);
+}
+
+.rf-btn.is-active {
+  background: rgba(127,255,229,0.1);
+  border-color: rgba(127,255,229,0.45);
+  color: #7fffe5;
+}
+
+/* ── Count label ─────────────────────────────────────────── */
+.resources-count {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.28);
+  margin-bottom: 1.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ── Resource grid ───────────────────────────────────────── */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.15rem;
+}
+
+/* Override square aspect ratio for resources page */
+.resources-grid .case-study_item {
+  aspect-ratio: 4/3;
+  width: 100%;
+}
+
+/* ── Category badge on each card ─────────────────────────── */
+.resource-category-badge {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  z-index: 10;
+  background: rgba(5,5,5,0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 999px;
+  padding: 0.18rem 0.65rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.resource-category-badge.is-case-study {
+  border-color: rgba(127,255,229,0.28);
+  color: #7fffe5;
+}
+
+.resource-category-badge.is-article {
+  border-color: rgba(255,100,150,0.28);
+  color: rgba(255,140,175,0.9);
+}
+
+/* ── Filter hide state ───────────────────────────────────── */
+.case-study_item[data-hidden="true"] {
+  display: none;
+}
+
+/* ── Hub callout (link back to AI match page) ────────────── */
+.resources-hub-callout {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(127,255,229,0.06);
+  border: 1px solid rgba(127,255,229,0.18);
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.5rem;
+  margin-top: 2.5rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.resources-hub-callout:hover {
+  background: rgba(127,255,229,0.1);
+  border-color: rgba(127,255,229,0.32);
+}
+
+.resources-hub-callout__icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.resources-hub-callout__text {
+  flex: 1;
+}
+
+.resources-hub-callout__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #7fffe5;
+  margin-bottom: 0.15rem;
+}
+
+.resources-hub-callout__desc {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.4;
+}
+
+.resources-hub-callout__arrow {
+  color: rgba(127,255,229,0.6);
+  font-size: 1rem;
+  transition: transform 0.18s;
+}
+
+.resources-hub-callout:hover .resources-hub-callout__arrow {
+  transform: translateX(3px);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .resources-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 479px) {
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resources-grid .case-study_item {
+    aspect-ratio: 16/9;
+  }
+
+  .resources-hub-callout {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
