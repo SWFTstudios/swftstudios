@@ -143,6 +143,8 @@ html.lenis { height: auto; }
     @media (max-width: 767px) {
       .sm-nav-links, .sm-nav-cta { display: none; }
       .sm-burger { display: flex; }
+      .sm-sticky-progress { display: block; }
+      .sm-bundle-grid { grid-template-columns: 1fr; }
     }
 
     /* ── Hero ── */
@@ -238,8 +240,45 @@ html.lenis { height: auto; }
     .sm-progress-count { font-size: 0.8rem; font-weight: 700; color: var(--sm-navy-muted); }
     .sm-progress-track { height: 4px; width: 100%; background: rgba(13,27,62,0.1); border-radius: 999px; overflow: hidden; margin-bottom: 2rem; }
     .sm-progress-fill { height: 100%; width: 14%; background: var(--sm-accent); border-radius: 999px; transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+    .sm-progress-pct { font-family: "Inconsolata", monospace; font-size: 0.72rem; color: var(--sm-accent-text); font-weight: 700; }
+
+    .sm-sticky-progress {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 120;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sm-border);
+      padding: 0.65rem 1rem;
+      margin: -1rem -1rem 1.25rem;
+    }
+    .sm-sticky-progress__row { display: flex; justify-content: space-between; font-family: "Inconsolata", monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sm-navy-muted); margin-bottom: 0.4rem; }
+    .sm-sticky-progress__track { height: 3px; background: rgba(13,27,62,0.1); border-radius: 999px; overflow: hidden; }
+    .sm-sticky-progress__fill { height: 100%; width: 14%; background: var(--sm-accent); border-radius: 999px; transition: width 0.4s ease; }
+
+    .sm-bundle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .sm-bundle-card {
+      border: 1px solid rgba(13,27,62,0.13);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.7);
+      padding: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      font-family: "Space Grotesk", sans-serif;
+    }
+    .sm-bundle-card:hover, .sm-bundle-card.is-selected { border-color: var(--sm-accent-text); transform: translateY(-2px); }
+    .sm-bundle-card__name { font-weight: 700; color: var(--sm-navy); font-size: 0.9rem; margin: 0 0 0.25rem; }
+    .sm-bundle-card__price { font-family: "Inconsolata", monospace; font-size: 0.75rem; color: var(--sm-accent-text); }
+    .sm-brief-ready { background: rgba(0,137,123,0.08); border: 1px solid rgba(0,137,123,0.2); border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+    .sm-brief-ready h4 { margin: 0 0 0.5rem; color: var(--sm-navy); font-size: 1rem; }
+    .sm-brief-ready p { margin: 0; color: var(--sm-text); font-size: 0.88rem; line-height: 1.5; }
+
+    .sm-step { transition: opacity 0.25s ease; }
 
     .sm-step-heading { font-family: "Krona One", sans-serif; font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 400; color: var(--sm-navy); margin: 0 0 0.4rem; }
+    .sm-step-desc { color: var(--sm-text); font-size: 0.92rem; margin: 0 0 1.75rem; line-height: 1.55; }
     .sm-step-desc { color: var(--sm-text); font-size: 0.92rem; margin: 0 0 1.75rem; line-height: 1.55; }
 
     /* Fields */
@@ -494,10 +533,17 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
             </div>
 
             <div class="sm-form-shell">
+              <div class="sm-sticky-progress" id="sm-sticky-progress" aria-hidden="true">
+                <div class="sm-sticky-progress__row">
+                  <span id="sm-sticky-label">Step 1 of 7</span>
+                  <span id="sm-sticky-pct">14%</span>
+                </div>
+                <div class="sm-sticky-progress__track"><div class="sm-sticky-progress__fill" id="sm-sticky-fill"></div></div>
+              </div>
               <div class="sm-dots" id="sm-dots"></div>
               <div class="sm-progress-head">
                 <div class="sm-eystep" id="sm-eystep">STEP 1 / ABOUT YOU</div>
-                <div class="sm-progress-count"><span id="sm-current">1</span> / 7</div>
+                <div class="sm-progress-count"><span id="sm-current">1</span> / 7 · <span class="sm-progress-pct" id="sm-pct">14%</span></div>
               </div>
               <div class="sm-progress-track"><div class="sm-progress-fill" id="sm-progress"></div></div>
 
@@ -712,6 +758,24 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
                 <div class="sm-step" data-step="7" data-label="YOUR BUILD PLAN" style="display:none;">
                   <h3 class="sm-step-heading">Your build plan</h3>
                   <p class="sm-step-desc">Here's exactly what we'll build and what it costs. Pick the option that fits — then send it over to lock in your spot.</p>
+                  <div class="sm-brief-ready" id="sm-brief-ready">
+                    <h4>Your site plan is taking shape.</h4>
+                    <p id="sm-brief-text">Answer the steps above and we'll translate your goals into a clear build plan.</p>
+                  </div>
+                  <div class="sm-bundle-grid" id="sm-bundle-quick">
+                    <button type="button" class="sm-bundle-card" data-bundle="starter">
+                      <p class="sm-bundle-card__name">Starter Site</p>
+                      <p class="sm-bundle-card__price">From $800 · core pages</p>
+                    </button>
+                    <button type="button" class="sm-bundle-card" data-bundle="sales">
+                      <p class="sm-bundle-card__name">Sales System</p>
+                      <p class="sm-bundle-card__price">Booking + payments + CRM</p>
+                    </button>
+                    <button type="button" class="sm-bundle-card" data-bundle="monthly">
+                      <p class="sm-bundle-card__name">Monthly Plan</p>
+                      <p class="sm-bundle-card__price">$299/mo · build + grow</p>
+                    </button>
+                  </div>
                   <div class="sm-summary-card" id="sm-summary"></div>
                   <label class="sm-q" style="display:block; margin-bottom:0.85rem;">Choose how you want to work with us</label>
                   <div class="sm-plans">
@@ -806,7 +870,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
 
   <script>
-/* ── Booking flow ── */
+/* ── Booking flow (guided planner) ── */
 (function () {
   var form = document.getElementById('swft-method-form');
   if (!form) return;
@@ -815,11 +879,23 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   var next = document.getElementById('sm-next');
   var submit = document.getElementById('sm-submit');
   var fill = document.getElementById('sm-progress');
+  var stickyFill = document.getElementById('sm-sticky-fill');
   var counter = document.getElementById('sm-current');
+  var pctEl = document.getElementById('sm-pct');
+  var stickyPct = document.getElementById('sm-sticky-pct');
+  var stickyLabel = document.getElementById('sm-sticky-label');
   var eystep = document.getElementById('sm-eystep');
   var dotsWrap = document.getElementById('sm-dots');
+  var briefText = document.getElementById('sm-brief-text');
+  var bundleQuick = document.getElementById('sm-bundle-quick');
   var current = 0;
-  var BASE = 800, CAP = 2500, MONTHLY = 299, MAINT = 99;
+  var BASE = 800, CAP = 2500, MONTHLY = 299;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var BUNDLE_PRESETS = {
+    starter: ['About / my story', 'Contact form', 'Services & pricing page', 'Testimonials / reviews', 'FAQ section'],
+    sales: ['Booking / appointments', 'Checkout / payments', 'Email / SMS list capture', 'Services & pricing page', 'Testimonials / reviews', 'WhatsApp / DM button', 'About / my story', 'Contact form']
+  };
+  var BUNDLE_LABELS = { starter: 'Starter Site', sales: 'Sales System', monthly: 'Monthly Plan' };
 
   steps.forEach(function () {
     var d = document.createElement('div');
@@ -845,68 +921,163 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
   }
   function personalityChips() {
-    var checked = Array.prototype.slice.call(form.querySelectorAll('input[name="personality[]"]:checked'));
-    return checked.map(function (el) { return el.value; }).join(', ');
+    return Array.prototype.slice.call(form.querySelectorAll('input[name="personality[]"]:checked')).map(function (el) { return el.value; }).join(', ');
+  }
+  function recommendBundle() {
+    var goal = (val('Main Goal') || '').toLowerCase();
+    var feats = selectedFeatures().length;
+    if (goal.indexOf('grow') >= 0 || goal.indexOf('scale') >= 0 || feats > 6) return 'monthly';
+    if (goal.indexOf('book') >= 0 || goal.indexOf('sell') >= 0 || goal.indexOf('client') >= 0 || goal.indexOf('revenue') >= 0) return 'sales';
+    return 'starter';
+  }
+  function buildBriefSummary() {
+    var biz = val('Business Name') || 'your business';
+    var audience = val('Ideal Customer') || 'your ideal audience';
+    var goal = val('Main Goal') || 'build credibility and convert visitors';
+    var tone = personalityChips() || val('Look and Feel') || 'on-brand';
+    var feats = selectedFeatures().map(function (el) { return el.value; });
+    var featText = feats.length ? feats.join(', ') : 'About, Contact, and core pages';
+    var bundle = recommendBundle();
+    return 'A ' + tone + ' website for ' + biz + ' speaking to ' + audience + '. Primary goal: ' + goal + '. Build focus: ' + featText + '. Recommended path: ' + BUNDLE_LABELS[bundle] + '.';
+  }
+  function setProgressWidth(pct) {
+    var w = pct + '%';
+    fill.style.width = w;
+    if (stickyFill) stickyFill.style.width = w;
+    if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+    if (stickyPct) stickyPct.textContent = Math.round(pct) + '%';
+  }
+  function highlightRecommendedBundle() {
+    if (!bundleQuick) return;
+    var rec = recommendBundle();
+    Array.prototype.forEach.call(bundleQuick.querySelectorAll('.sm-bundle-card'), function (card) {
+      card.classList.toggle('is-selected', card.getAttribute('data-bundle') === rec);
+    });
+  }
+  function applyBundlePreset(key) {
+    if (BUNDLE_PRESETS[key]) {
+      form.querySelectorAll('input[name="features"]').forEach(function (el) {
+        el.checked = BUNDLE_PRESETS[key].indexOf(el.value) >= 0;
+      });
+    }
+    if (key === 'monthly') {
+      var monthly = form.querySelector('input[name="Plan Choice"][value="Monthly Plan"]');
+      if (monthly) monthly.checked = true;
+    } else {
+      var ot = form.querySelector('input[name="Plan Choice"][value="One-Time Build"]');
+      if (ot) ot.checked = true;
+    }
+    Array.prototype.forEach.call(bundleQuick.querySelectorAll('.sm-bundle-card'), function (card) {
+      card.classList.toggle('is-selected', card.getAttribute('data-bundle') === key);
+    });
+    renderSummary();
   }
   function renderSummary() {
     var feats = selectedFeatures().map(function (el) { return el.value; });
     var featText = feats.length ? feats.join(', ') : 'Core site (About + Contact)';
     var personality = personalityChips();
     var ot = oneTimeTotal();
-    // write personality into hidden field
+    var bundle = recommendBundle();
+    var brief = buildBriefSummary();
     document.getElementById('hf-personality').value = personality;
+    if (briefText) briefText.textContent = brief;
+    var briefReady = document.querySelector('#sm-brief-ready h4');
+    if (briefReady) briefReady.textContent = 'Your site plan is ready.';
     var rows = [
       ['Business', val('Business Name') || '—'],
-      ['Price range', val('Price Range') || '—'],
-      ['What you offer', val('What You Sell or Offer') || '—'],
+      ['Audience', val('Ideal Customer') || '—'],
       ['Main goal', val('Main Goal') || '—'],
-      ['Revenue target', val('Revenue Goal') || '—'],
+      ['90-day win', val('90-Day Win') || '—'],
       ['Brand feel', personality || val('Look and Feel') || '—'],
+      ['Recommended bundle', BUNDLE_LABELS[bundle]],
       ['Features', featText]
     ];
-    var html = rows.map(function (r) {
+    document.getElementById('sm-summary').innerHTML = rows.map(function (r) {
       return '<div class="sm-summary-row"><span class="k">' + r[0] + '</span><span class="v">' + escapeHtml(r[1]) + '</span></div>';
     }).join('');
-    document.getElementById('sm-summary').innerHTML = html;
     document.getElementById('sm-onetime-price').textContent = money(ot);
     document.getElementById('hf-onetime').value = money(ot);
     document.getElementById('hf-features').value = featText;
     document.getElementById('hf-monthly').value = '$' + MONTHLY + '/mo';
+    highlightRecommendedBundle();
   }
   function stepValid(step) {
     var fields = Array.prototype.slice.call(step.querySelectorAll('input, textarea, select')).filter(function (el) { return el.hasAttribute('required'); });
     for (var i = 0; i < fields.length; i++) { if (!fields[i].reportValidity()) return false; }
     return true;
   }
-  function render() {
-    steps.forEach(function (s, i) { s.style.display = i === current ? 'block' : 'none'; });
+  function render(animate) {
+    var pct = ((current + 1) / steps.length) * 100;
+    var label = steps[current].getAttribute('data-label') || '';
+    steps.forEach(function (s, i) {
+      if (i !== current) s.style.display = 'none';
+    });
+    var active = steps[current];
+    active.style.display = 'block';
+    if (animate && typeof gsap !== 'undefined' && !reduceMotion) {
+      gsap.fromTo(active, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.35, ease: 'power2.out' });
+    } else {
+      active.style.opacity = '1';
+    }
     back.style.visibility = current === 0 ? 'hidden' : 'visible';
     var last = current === steps.length - 1;
     next.style.display = last ? 'none' : 'inline-flex';
     submit.style.display = last ? 'inline-flex' : 'none';
-    fill.style.width = ((current + 1) / steps.length * 100) + '%';
+    setProgressWidth(pct);
     counter.textContent = current + 1;
-    eystep.textContent = 'STEP ' + (current + 1) + ' / ' + steps[current].getAttribute('data-label');
+    eystep.textContent = 'STEP ' + (current + 1) + ' / ' + label;
+    if (stickyLabel) stickyLabel.textContent = 'Step ' + (current + 1) + ' of ' + steps.length;
     dots.forEach(function (d, i) {
       d.className = 'sm-dot' + (i === current ? ' active' : (i < current ? ' done' : ''));
     });
     if (last) renderSummary();
   }
+  function changeStep(dir) {
+    var nextIdx = current + dir;
+    if (nextIdx < 0 || nextIdx >= steps.length) return;
+    var old = steps[current];
+    if (typeof gsap !== 'undefined' && !reduceMotion) {
+      gsap.to(old, {
+        autoAlpha: 0,
+        y: dir > 0 ? -10 : 10,
+        duration: 0.2,
+        onComplete: function () {
+          old.style.display = 'none';
+          current = nextIdx;
+          render(true);
+          document.getElementById('start').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        }
+      });
+    } else {
+      current = nextIdx;
+      render(false);
+      document.getElementById('start').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   next.addEventListener('click', function () {
     if (!stepValid(steps[current])) return;
-    if (current < steps.length - 1) { current += 1; render(); document.getElementById('start').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    if (current < steps.length - 1) changeStep(1);
   });
   back.addEventListener('click', function () {
-    if (current > 0) { current -= 1; render(); document.getElementById('start').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    if (current > 0) changeStep(-1);
   });
   form.addEventListener('change', function (e) {
     if (e.target.name === 'features' && current === steps.length - 1) renderSummary();
+    if (current >= 4 && briefText) briefText.textContent = buildBriefSummary();
   });
+  if (bundleQuick) {
+    bundleQuick.addEventListener('click', function (e) {
+      var card = e.target.closest('.sm-bundle-card');
+      if (!card) return;
+      applyBundlePreset(card.getAttribute('data-bundle'));
+    });
+  }
   function showDone() {
     form.style.display = 'none';
     dotsWrap.style.display = 'none';
     var ph = document.querySelector('.sm-progress-head'); if (ph) ph.style.display = 'none';
     var pt = document.querySelector('.sm-progress-track'); if (pt) pt.style.display = 'none';
+    var sp = document.getElementById('sm-sticky-progress'); if (sp) sp.style.display = 'none';
     var done = document.querySelector('.sm-done'); if (done) { done.style.display = 'block'; done.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
   }
   form.addEventListener('submit', function (e) {
@@ -916,6 +1087,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     var maint = document.getElementById('sm-maint').checked;
     document.getElementById('hf-plan').value = plan || 'Not selected';
     document.getElementById('hf-maint').value = maint ? 'Yes (+$99/mo)' : 'No';
+    var recBundle = BUNDLE_LABELS[recommendBundle()];
+    var brief = buildBriefSummary();
     var payload = {
       name: val('Name'), email: val('Email'), instagram: val('Instagram Handle'), phone: val('Phone'),
       idealDayVision: val('Ideal Day Vision'), currentBottleneck: val('Current Bottleneck'),
@@ -930,7 +1103,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       brandColors: val('Brand Colors'), hasLogo: val('Has Logo'), inspiration: val('Inspiration'),
       features: document.getElementById('hf-features').value || selectedFeatures().map(function (f) { return f.value; }).join(', '),
       mustHaveFeature: val('Other Must-Have Feature'),
-      plan: plan, maintenance: maint, oneTimeAmount: oneTimeTotal()
+      plan: plan, maintenance: maint, oneTimeAmount: oneTimeTotal(),
+      recommendedBundle: recBundle,
+      websiteBriefSummary: brief
     };
     var btn = document.getElementById('sm-submit');
     var fail = document.getElementById('sm-fail');
@@ -946,7 +1121,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       })
       .catch(failed);
   });
-  render();
+  render(false);
   var sp = new URLSearchParams(location.search);
   if (sp.get('status') === 'success') { showDone(); }
 })();

@@ -1,5 +1,38 @@
 # Changelog
 
+## 2026-06-14 — Linoxa Polish Pass
+
+### Visual system
+- Extended `css/swft-studio.css` with editorial layouts: `.section--editorial`, `.studio-marquee`, `.image-panel`, `.project-shot`, `.sticky-copy-grid`, `.project-feature`, `.horizontal-scroll-track`, `.method-progress-shell`, `.method-bundle-grid`
+- Stronger card depth, parallax-ready image panels, responsive project shot aspect ratios
+
+### Motion
+- Upgraded `js/swft-studio.js` with `gsap.matchMedia()`, hero timeline entrances, `ScrollTrigger.batch()` reveals, scrubbed parallax on `.parallax-panel`, desktop pin on `[data-pin-copy]`, and `prefers-reduced-motion` fallbacks
+
+### Project thumbnails
+- Added `data/projects.json` as single source of truth for portfolio cards
+- Added `images/project-thumbnails/` with 9 branded SVG preview assets (hybrid approach: polished mocks; live URLs noted in case studies)
+- `work.html`, homepage Selected Work carousel, and venture cards now use real `<img>` thumbnails
+
+### SWFT Method booking flow
+- Redesigned `swft-method.html` guided planner: sticky mobile progress + percentage bar, GSAP step transitions, bundle quick-select cards (Starter / Sales System / Monthly), auto-generated website brief summary, recommended bundle output
+- Payload now sends `recommendedBundle` and `websiteBriefSummary` to `/api/build-request`
+
+### Worker / Airtable
+- `src/worker.ts` persists richer planner fields: Ideal Day Vision, Current Bottleneck, Transformation, Unique Edge, Client Problem, Client Social Proof, How They Sell Now, 90-Day Win, Revenue Goal, Brand Personality, Recommended Bundle, Website Brief Summary
+
+### CTAs
+- Primary funnel CTA updated to **Build Your Website** → `swft-method.html` in nav (`js/swft-nav.js`), pricing, homepage, services, ventures, and method pages
+- `start-a-project.html` retained for general inquiries
+
+### Failure behavior
+- GSAP/ScrollTrigger load failure: static layout, all content visible
+- `prefers-reduced-motion`: no pin/scrub; instant step changes in SWFT Method
+- `/api/build-request` or Stripe failure: inline error + `hello@swftstudios.com` fallback; Airtable lead preserved when token is set
+- Missing project JSON: graceful fallback copy on work page
+
+---
+
 ## 2026-06-14 — Full Site Redesign (Venture Studio)
 
 ### Added
