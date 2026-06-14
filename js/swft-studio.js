@@ -22,12 +22,21 @@
         }
 
         var heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        heroTl
-          .from('.hero__eyebrow', { autoAlpha: 0, y: 20, duration: 0.5 })
-          .from('.hero__title', { autoAlpha: 0, y: 36, duration: 0.8 }, '-=0.2')
-          .from('.hero__sub', { autoAlpha: 0, y: 24, duration: 0.6 }, '-=0.45')
-          .from('.hero__actions', { autoAlpha: 0, y: 20, duration: 0.5 }, '-=0.35')
-          .from('.hero__visual', { autoAlpha: 0, scale: 0.96, duration: 0.9 }, '-=0.6');
+        if (document.querySelector('.hero--immersive')) {
+          heroTl
+            .from('.hero__eyebrow', { autoAlpha: 0, y: 20, duration: 0.5 })
+            .from('.hero__title', { autoAlpha: 0, y: 48, duration: 0.9 }, '-=0.2')
+            .from('.hero__sub', { autoAlpha: 0, y: 24, duration: 0.6 }, '-=0.5')
+            .from('.hero__actions', { autoAlpha: 0, y: 20, duration: 0.5 }, '-=0.35')
+            .from('.hero__scroll', { autoAlpha: 0, y: 12, duration: 0.4 }, '-=0.2');
+        } else {
+          heroTl
+            .from('.hero__eyebrow', { autoAlpha: 0, y: 20, duration: 0.5 })
+            .from('.hero__title', { autoAlpha: 0, y: 36, duration: 0.8 }, '-=0.2')
+            .from('.hero__sub', { autoAlpha: 0, y: 24, duration: 0.6 }, '-=0.45')
+            .from('.hero__actions', { autoAlpha: 0, y: 20, duration: 0.5 }, '-=0.35')
+            .from('.hero__visual', { autoAlpha: 0, scale: 0.96, duration: 0.9 }, '-=0.6');
+        }
 
         ScrollTrigger.batch('.reveal', {
           start: 'top 88%',
@@ -186,8 +195,19 @@
     });
   }
 
+  function initHeroNav() {
+    var nav = document.getElementById('swft-nav');
+    if (!nav || !nav.hasAttribute('data-hero-nav')) return;
+    function onScroll() {
+      nav.classList.toggle('is-scrolled', window.scrollY > 48);
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
   function init() {
     initMotion();
+    initHeroNav();
     initProjects();
     initForm();
   }

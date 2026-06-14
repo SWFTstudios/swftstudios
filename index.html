@@ -18,32 +18,40 @@
   <link href="css/swft-studio.css" rel="stylesheet">
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.webp" rel="apple-touch-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Krona+One&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
   <script type="module" src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"></script>
 </head>
-<body>
-  <div id="swft-nav" data-active="home"></div>
+<body class="page-home">
+  <div id="swft-nav" data-active="home" data-hero-nav></div>
 
   <main>
-    <!-- 01 Hero -->
-    <section class="section hero">
-      <div class="container">
-        <div class="hero__content reveal">
-          <p class="text-label hero__eyebrow">Built for founders, creators &amp; businesses ready to launch</p>
-          <h1 class="text-display hero__title">We build digital businesses from the inside out.</h1>
-          <p class="text-body hero__sub">SWFT Studios creates its own apps, ecommerce brands, booking systems, and digital products — then uses the same strategy, design, development, and automation stack to help clients launch faster.</p>
-          <div class="hero__actions">
-            <a href="swft-method.html" class="btn btn-primary">Build Your Website</a>
-            <a href="ventures.html" class="btn btn-secondary">View Our Ventures</a>
+    <!-- 01 Hero — full-viewport Spline background -->
+    <section class="hero hero--immersive" id="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <spline-viewer url="https://prod.spline.design/kP4978sbQ3RjFb6B/scene.splinecode" loading-anim-type="spinner-small-dark"></spline-viewer>
+      </div>
+      <div class="hero__scrim" aria-hidden="true"></div>
+      <div class="hero__inner">
+        <div class="container hero__layout">
+          <p class="hero__section-num" aria-hidden="true">01</p>
+          <div class="hero__content reveal">
+            <p class="text-label hero__eyebrow">Built for founders, creators &amp; businesses ready to launch</p>
+            <h1 class="hero__title">We build digital businesses from the inside out.</h1>
+            <p class="text-body hero__sub">SWFT Studios creates its own apps, ecommerce brands, booking systems, and digital products — then uses the same strategy, design, development, and automation stack to help clients launch faster.</p>
+            <div class="hero__actions">
+              <a href="swft-method.html" class="btn btn-primary">Build Your Website</a>
+              <a href="ventures.html" class="btn btn-secondary btn-secondary--glass">View Our Ventures</a>
+            </div>
           </div>
         </div>
-        <div class="hero__visual reveal">
-          <spline-viewer url="https://prod.spline.design/kP4978sbQ3RjFb6B/scene.splinecode" loading-anim-type="spinner-small-dark"></spline-viewer>
-          <div class="hero__visual-placeholder" aria-hidden="true">
-            <span>SWFT 3D Studio Visual</span>
-          </div>
-        </div>
+        <a href="#thesis" class="hero__scroll" aria-label="Scroll to content">
+          <span class="hero__scroll-line"></span>
+          <span class="hero__scroll-label">Scroll</span>
+        </a>
       </div>
     </section>
 
@@ -55,13 +63,15 @@
     </div>
 
     <!-- 02 Studio Thesis -->
-    <section class="section section--editorial" id="thesis">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="text-label">02 — Studio Thesis</span>
-          <h2 class="text-heading section-header__title">We don't just design. We launch.</h2>
-          <p class="text-body section-header__sub">Most agencies only show client work. SWFT builds its own apps, ecommerce brands, booking systems, and digital products — then brings those same systems to founders, creators, and businesses.</p>
-        </div>
+    <section class="section section--editorial split-editorial" id="thesis">
+      <div class="container split-editorial__grid">
+        <aside class="split-editorial__aside reveal">
+          <p class="section-num">02</p>
+          <span class="text-label">Studio Thesis</span>
+        </aside>
+        <div class="split-editorial__main">
+          <h2 class="editorial-title reveal">We don't just design. We launch.</h2>
+          <p class="editorial-lead reveal">Most agencies only show client work. SWFT builds its own apps, ecommerce brands, booking systems, and digital products — then brings those same systems to founders, creators, and businesses.</p>
         <div class="grid-4 reveal-stagger">
           <div class="stat-card reveal">
             <p class="stat-card__value">4+</p>
@@ -86,20 +96,20 @@
           <div class="acronym__item"><span class="acronym__letter">F</span><span class="acronym__word">Facilitating</span></div>
           <div class="acronym__item"><span class="acronym__letter">T</span><span class="acronym__word">Transformation</span></div>
         </div>
+        </div>
       </div>
     </section>
 
     <!-- 03 Ventures Preview -->
-    <section class="section" id="ventures">
-      <div class="container">
-        <div class="section-header section-header--row reveal">
-          <div>
-            <span class="text-label">03 — Ventures</span>
-            <h2 class="text-heading section-header__title">Our ventures are our proof.</h2>
-          </div>
-          <a href="ventures.html" class="btn btn-ghost">Explore Ventures →</a>
-        </div>
-        <div class="grid-4 reveal-stagger">
+    <section class="section split-editorial" id="ventures">
+      <div class="container split-editorial__grid split-editorial__grid--sticky">
+        <aside class="split-editorial__aside reveal">
+          <p class="section-num">03</p>
+          <span class="text-label">Ventures</span>
+          <h2 class="editorial-title editorial-title--sm">Our ventures are our proof.</h2>
+          <a href="ventures.html" class="btn btn-ghost" style="margin-top:1.5rem">Explore Ventures →</a>
+        </aside>
+        <div class="split-editorial__main venture-showcase reveal-stagger">
           <article class="venture-card reveal">
             <div class="project-shot parallax-panel"><img src="images/project-thumbnails/snooze-lane.svg" alt="Snooze Lane app preview" loading="lazy" width="1280" height="800"></div>
             <div class="venture-card__body">
@@ -117,7 +127,7 @@
             </div>
           </article>
           <article class="venture-card reveal">
-            <div class="project-shot parallax-panel"><img src="images/project-thumbnails/roller-reels.svg" alt="Roller Reels booking flow preview" loading="lazy" width="1280" height="800"></div>
+            <div class="project-shot parallax-panel"><img src="images/project-thumbnails/roller-reels.jpg" alt="Roller Reels website preview" loading="lazy" width="1440" height="900"></div>
             <div class="venture-card__body">
               <p class="card__meta">Booking System</p>
               <h3 class="card__title">Roller Reels</h3>
