@@ -1,0 +1,156 @@
+{
+  "collectionId": "688e7554265d8089278ca797",
+  "siteId": "688e7554265d8089278ca76e",
+  "items": [
+    {
+      "id": "69f52238a9fa1ab9f438e925",
+      "fieldData": {
+        "slug": "roller-reels",
+        "name": "Roller Reels",
+        "description": "Positioning and web presence for a reels-forward brand.",
+        "project-url": "https://rollerreels.com",
+        "design-team": "SWFT Studios",
+        "sorting-order": 3,
+        "thumbnail": {
+          "fileId": "69f526b22573ece41279d584",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b22573ece41279d584_Roller_Reels_thumbnail.webp"
+        }
+      }
+    },
+    {
+      "id": "69f52238a9fa1ab9f438e90b",
+      "fieldData": {
+        "slug": "snooze-lane",
+        "name": "Snooze Lane",
+        "description": "Commuter app product story \u2014 brand and web.",
+        "project-url": "https://snoozelaneapp.com",
+        "design-team": "SWFT Studios",
+        "sorting-order": 2,
+        "thumbnail": {
+          "fileId": "69f526a8d1e54e77d5d6f7f5",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526a8d1e54e77d5d6f7f5_Snooze-Lane-Desktop-thumbnail.webp"
+        }
+      }
+    },
+    {
+      "id": "69f522395e625aa34a726ed0",
+      "fieldData": {
+        "slug": "built-by-me-ez",
+        "name": "Built By Me EZ",
+        "description": "Product story and site experience for a DIY builder audience.",
+        "project-url": "https://builtbymeez.com",
+        "design-team": "SWFT Studios",
+        "sorting-order": 4,
+        "thumbnail": {
+          "fileId": "69f526b32573ece41279d5a3",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b32573ece41279d5a3_built_by_me_ez_thumbnail.webp"
+        }
+      }
+    },
+    {
+      "id": "69f52238a9fa1ab9f438e8f1",
+      "fieldData": {
+        "slug": "core-home",
+        "name": "Core Home",
+        "description": "Live marketing site for Core Home \u2014 placeholder until full write-up.",
+        "project-url": "https://corehome.com",
+        "design-team": "SWFT Studios",
+        "sorting-order": 1,
+        "thumbnail": {
+          "fileId": "69f526b32573ece41279d5a0",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b32573ece41279d5a0_core_home_desktop_thumbnail.jpeg"
+        }
+      }
+    },
+    {
+      "id": "69f52245f1770f961ecf7e2b",
+      "fieldData": {
+        "slug": "hamper",
+        "name": "Hamper",
+        "description": "App and web case study for Hamper.",
+        "project-url": "https://hamperapp.webflow.io",
+        "design-team": "SWFT Studios",
+        "sorting-order": 7,
+        "thumbnail": {
+          "fileId": "69f526beff570d4f4802eb87",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526beff570d4f4802eb87_hamper_app_website_thumbnail.webp"
+        }
+      }
+    },
+    {
+      "id": "69f522395e625aa34a726f02",
+      "fieldData": {
+        "slug": "hawthorne-global-ministries",
+        "name": "Hawthorne Global Ministries",
+        "description": "Brand and digital presence for a global ministries organization.",
+        "project-url": "https://hawthorneglobalministries.org",
+        "design-team": "SWFT Studios",
+        "sorting-order": 5,
+        "thumbnail": {
+          "fileId": "69f526b32573ece41279d597",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b32573ece41279d597_Hawthorne_Global_Ministries_thumbnail.webp"
+        }
+      }
+    },
+    {
+      "id": "69f52244f1770f961ecf7e11",
+      "fieldData": {
+        "slug": "blurred-lines-entertainment",
+        "name": "Blurred Lines Entertainment",
+        "description": "Entertainment brand storytelling and web experience.",
+        "project-url": "https://blurredlinesentertainment.com",
+        "design-team": "SWFT Studios",
+        "sorting-order": 6,
+        "thumbnail": {
+          "fileId": "69f526b32573ece41279d590",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b32573ece41279d590_BLE_SWFT_thumbnail.webp"
+        }
+      }
+    },
+    {
+      "id": "69f522452ccecd2a22536499",
+      "fieldData": {
+        "slug": "scribble-and-scribe",
+        "name": "Scribble & Scribe",
+        "description": "Web presence for Scribble & Scribe \u2014 placeholder until full write-up.",
+        "project-url": "https://scribbleandscribe.webflow.io",
+        "design-team": "SWFT Studios",
+        "sorting-order": 8,
+        "thumbnail": {
+          "fileId": "69f526bfff570d4f4802ebc1",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526bfff570d4f4802ebc1_scribble_scribe_thumbnsail.png"
+        }
+      }
+    },
+    {
+      "id": "69f5224570d3cce2a2fae7e3",
+      "fieldData": {
+        "slug": "whp-digital",
+        "name": "WHP Digital",
+        "description": "Digital presence for WHP \u2014 placeholder until full write-up.",
+        "project-url": "https://whp-digital.webflow.io",
+        "design-team": "SWFT Studios",
+        "sorting-order": 9,
+        "thumbnail": {
+          "fileId": "69f526beff570d4f4802eb91",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526beff570d4f4802eb91_whp_desktop_screenshot.webp"
+        }
+      }
+    },
+    {
+      "id": "69f5224588179f527d16d2b8",
+      "fieldData": {
+        "slug": "flare-nj",
+        "name": "Flare NJ",
+        "description": "Web project for Flare NJ \u2014 placeholder until full write-up.",
+        "project-url": "https://flarenj.com",
+        "design-team": "SWFT Studios",
+        "sorting-order": 10,
+        "thumbnail": {
+          "fileId": "69f526bfff570d4f4802ebc4",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526bfff570d4f4802ebc4_Screenshot-2025-09-12-at-10.57.19-PM.png"
+        }
+      }
+    }
+  ]
+}

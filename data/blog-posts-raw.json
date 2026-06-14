@@ -1,0 +1,259 @@
+{
+  "collectionId": "69f521cf3246ec07037d9d43",
+  "siteId": "688e7554265d8089278ca76e",
+  "items": [
+    {
+      "id": "69f522041605a7eb754ae2b4",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.676Z",
+      "lastUpdated": "2026-05-02T00:05:30.676Z",
+      "createdOn": "2026-05-01T21:58:28.266Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f5375576d91024330ed3d5",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f5375576d91024330ed3d5_swft-thumbnail.webp",
+          "alt": "SWFT Studios article thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Most businesses still treat their website like a destination and their marketing like a set of separate channels. In 2026, that thinking leaves money on the table. Websites now have to work as conversion systems, AI citation sources, local trust hubs, and content distribution anchors all at once.</p><p>The brands growing fastest are not necessarily publishing the most. They are building tighter relationships between search, social, reputation, and conversion design. That is the real blind spot: growth now comes from how well those systems reinforce each other.</p><h2>What People Still Overlook</h2><ul><li>They optimize for rankings but forget AI citation visibility and answer extraction.</li><li>They post on social but do not turn content into reusable search, sales, and remarketing assets.</li><li>They claim local SEO matters but leave Google Business Profile stale for months.</li><li>They ask for reviews but do not build a response process that protects trust at scale.</li></ul><h2>Why It Matters In 2026</h2><p>Search is becoming more answer-led, social is becoming more search-like, and local trust signals are becoming more visible at the exact moment users are ready to act. That means the website has to support all three. If the site is thin, unclear, or disconnected from the rest of the brand ecosystem, every other acquisition channel becomes less efficient.</p><h3>2026 Blind Spot Snapshot</h3><p><em>Current market signals showing where brands lose visibility and trust.</em></p><ul><li><strong>Google searches with local intent</strong>: 46%</li><li><strong>US informational searches showing AI Overviews</strong>: 40-60%</li><li><strong>Consumers influenced by online reviews</strong>: 93%</li><li><strong>Marketers prioritizing SEO updates for AI search</strong>: 40.6%</li></ul><h2>The Four Areas Smart Teams Are Fixing</h2><p><strong>Answer engine optimization:</strong> Pages need to be structured so AI systems can extract clean answers, identify the entity behind the content, and trust the source enough to cite it.</p><p><strong>Social media content creation:</strong> Content production works best when every shoot, interview, or webinar becomes a reusable library of short-form clips, quote graphics, landing-page ideas, and email hooks.</p><p><strong>Google Business Profile and local SEO:</strong> For many service businesses, the local pack now drives more real business actions than the website homepage.</p><p><strong>Reputation management:</strong> Reviews are no longer just social proof. They shape conversion, trust, and even AI interpretation of brand credibility.</p><h2>What To Do Next</h2><ul><li>Audit your top money pages for answer-first formatting and clear entity signals.</li><li>Turn every core campaign into reusable short-form content assets.</li><li>Update your Google Business Profile weekly, not quarterly.</li><li>Build a review-response cadence with owners, deadlines, and tone guidelines.</li></ul><h2>Closing</h2><p>In 2026, the winners are not the brands with the most channels. They are the ones with the most connected systems.</p>",
+        "branding": true,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "What Most Brands Still Miss About Websites and Digital Marketing in 2026",
+        "slug": "digital-marketing-blind-spots-2026"
+      }
+    },
+    {
+      "id": "69f522039dc34e096f54f97d",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.671Z",
+      "lastUpdated": "2026-05-02T00:05:30.671Z",
+      "createdOn": "2026-05-01T21:58:27.858Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f5375576d91024330ed3d8",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f5375576d91024330ed3d8_swft-thumbnail.webp",
+          "alt": "SWFT Studios article thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Reputation management in 2026 is not just about protecting brand image after something goes wrong. It is part of everyday conversion strategy. Buyers check reviews, response behavior, and public trust signals before they book, buy, or even reply to outreach.</p><h2>What Brands Still Underestimate</h2><ul><li>They collect reviews but do not manage response speed or tone.</li><li>They focus on star ratings while ignoring the stories buyers read inside written reviews.</li><li>They forget that user-generated photos and videos often influence trust more than polished brand assets.</li><li>They lack an internal owner for review monitoring, escalation, and follow-up.</li></ul><h2>What The Data Says In 2026</h2><h3>2026 Reputation Snapshot</h3><p><em>Current review and trust benchmarks shaping buyer behavior.</em></p><ul><li><strong>Consumers influenced by online reviews</strong>: 93%</li><li><strong>Consumers who trust reviews like personal recommendations</strong>: 84%</li><li><strong>Conversion lift from positive reviews</strong>: 31%</li><li><strong>Expected response window</strong>: Within 3 days</li></ul><h2>What Strong Reputation Management Looks Like</h2><ul><li>Every review platform has an owner, a response SLA, and a tone standard.</li><li>Happy-customer feedback is requested consistently, not opportunistically.</li><li>Negative reviews are answered calmly, specifically, and quickly enough to show the business is paying attention.</li><li>Review language is mined for messaging cues that can improve your site, ads, and onboarding.</li></ul><h2>Closing</h2><p>The businesses that win trust in 2026 are not always the ones with perfect reviews. They are the ones that show they are active, responsive, and accountable in public.</p>",
+        "branding": false,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "Reputation Management in 2026",
+        "slug": "reputation-management-2026"
+      }
+    },
+    {
+      "id": "69f5220361e6068ec85d0f8c",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.660Z",
+      "lastUpdated": "2026-05-02T00:05:30.660Z",
+      "createdOn": "2026-05-01T21:58:27.370Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f5375576d91024330ed3d0",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f5375576d91024330ed3d0_swft-thumbnail.webp",
+          "alt": "SWFT Studios article thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Answer engine optimization is what happens when search stops being only about ten blue links and starts becoming a citation economy. In 2026, AI Overviews and assistant-style search experiences often decide which brands get mentioned before a user ever reaches a website.</p><p>You are no longer optimizing only for clicks. You are optimizing for extraction, attribution, and repeated mention across AI-assisted search surfaces.</p><h2>What Most Teams Get Wrong</h2><ul><li>They still write content to rank broadly instead of answer specific questions cleanly.</li><li>They obsess over backlinks but ignore entity clarity, authorship, and brand citation patterns.</li><li>They publish long pages with weak structure, making it harder for AI systems to quote them.</li><li>They update key pages too slowly, which lowers freshness signals in fast-moving answer results.</li></ul><h2>What Actually Matters In 2026</h2><p><strong>Answer-first formatting:</strong> Important questions should be answered early, often within the first 40 to 60 words of a section.</p><p><strong>Structured hierarchy:</strong> H2s, H3s, lists, tables, FAQs, and concise definitions make extraction easier.</p><p><strong>Entity authority:</strong> Brands need consistent signals across their site, third-party mentions, author pages, and trusted platforms.</p><p><strong>Freshness:</strong> Strong pages now need active maintenance, not annual refreshes.</p><h3>2026 AEO Snapshot</h3><p><em>Industry indicators shaping answer-engine visibility this year.</em></p><ul><li><strong>US informational searches showing AI Overviews</strong>: 40-60%</li><li><strong>Google searches ending without a click</strong>: 60%</li><li><strong>AI search sessions ending without a website visit</strong>: 93%</li><li><strong>Pages updated within 60 days are more likely to appear in AI answers</strong>: 1.9x more likely</li></ul><h2>How To Structure Pages For AI Citation</h2><ul><li>Lead with direct definitions and crisp summaries.</li><li>Use subheads that mirror the way people actually ask questions.</li><li>Include supporting bullets, frameworks, and comparisons that can be quoted easily.</li><li>Strengthen author, company, and service entity signals across the site.</li><li>Refresh important pages on a measured cadence.</li></ul><h2>Closing</h2><p>AEO is not a replacement for SEO. It is the next layer of it, and the brands that build answer-ready content now will be far easier to discover, cite, and trust.</p>",
+        "branding": false,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "AI Answer Engine Optimization in 2026",
+        "slug": "ai-answer-engine-optimization-2026"
+      }
+    },
+    {
+      "id": "69f52202c5f0db1d588fa804",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.703Z",
+      "lastUpdated": "2026-05-02T00:05:30.703Z",
+      "createdOn": "2026-05-01T21:58:26.248Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f5375576d91024330ed3ca",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f5375576d91024330ed3ca_swft-thumbnail.webp",
+          "alt": "SWFT Studios article thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>In 2026, social media content creation is less about posting constantly and more about building a content operating system. The strongest brands are not creating one-off posts. They are creating reusable source material that can be repurposed across Reels, Shorts, TikTok, LinkedIn, landing pages, email, and paid creative.</p><h2>What People Still Miss</h2><ul><li>They create content platform by platform instead of building a source-first workflow.</li><li>They focus on volume without designing for hooks, retention, and comment interaction.</li><li>They overlook how social content supports SEO, remarketing, and sales enablement.</li><li>They cross-post low-effort assets instead of adapting content natively.</li></ul><h2>What Is Working In 2026</h2><p><strong>Short-form video</strong> still carries the highest ROI because it creates fast feedback loops and broad reach.</p><p><strong>Repurposing</strong> lets one solid source asset become dozens of smaller posts.</p><p><strong>Community interaction</strong> now outperforms passive publishing for many brands.</p><h3>2026 Social Content Snapshot</h3><p><em>Current social performance signals shaping content strategy.</em></p><ul><li><strong>Instagram Reels engagement vs. static posts</strong>: 50% higher</li><li><strong>Average daily TikTok usage</strong>: 52 minutes</li><li><strong>Production time reduction through AI repurposing</strong>: Up to 90%</li><li><strong>Marketers prioritizing SEO updates for AI search</strong>: 40.6%</li></ul><h2>How Smart Teams Are Building Content Systems</h2><ul><li>Record interviews, testimonials, and behind-the-scenes footage as source libraries.</li><li>Cut those assets into platform-native clips, quotes, and carousels.</li><li>Use top-performing social hooks to improve landing-page headlines and ad creative.</li><li>Respond to audience comments in ways that generate the next wave of content ideas.</li></ul><h2>Closing</h2><p>Social media content in 2026 works best when it is treated like a distribution engine for your brand story, not a daily obligation you scramble to satisfy.</p>",
+        "branding": true,
+        "website": true,
+        "film": true,
+        "automation": false,
+        "name": "Social Media Content Creation in 2026",
+        "slug": "social-media-content-2026"
+      }
+    },
+    {
+      "id": "69f522019529a2e2de14d4e6",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.695Z",
+      "lastUpdated": "2026-05-02T00:05:30.695Z",
+      "createdOn": "2026-05-01T21:58:25.948Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f5375576d91024330ed3cd",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f5375576d91024330ed3cd_swft-thumbnail.webp",
+          "alt": "SWFT Studios article thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>For local and service-led businesses, Google Business Profile has become more than a directory listing. In 2026, it acts like a mini conversion surface where calls, direction requests, bookings, and trust checks often happen before the user ever clicks through to the website.</p><h2>What Businesses Still Overlook</h2><ul><li>They optimize their site once and treat Google Business Profile like a set-and-forget asset.</li><li>They focus on total reviews but ignore review velocity and response quality.</li><li>They leave outdated photos, services, and hours live for too long.</li><li>They fail to align website messaging with profile categories, services, and local signals.</li></ul><h2>What Is Driving Local Visibility In 2026</h2><p><strong>Freshness, review consistency, rich media, and website-profile alignment</strong> are now shaping local pack performance more than many businesses realize.</p><h3>2026 Local SEO Snapshot</h3><p><em>Benchmarks shaping local-pack visibility and profile performance.</em></p><ul><li><strong>Google searches with local intent</strong>: 46%</li><li><strong>Average reviews for top-3 local pack listings</strong>: 250+</li><li><strong>Engagement lift from profiles with 10+ photos</strong>: 2x</li><li><strong>Healthy review velocity benchmark</strong>: 2-5 new reviews per month</li></ul><h2>What To Prioritize Right Now</h2><ul><li>Audit categories, services, hours, and NAP consistency across your site and citations.</li><li>Add new photos and profile updates on a regular schedule.</li><li>Build a review-collection process tied to completed jobs or appointments.</li><li>Make sure your location pages reinforce the same entity and service language as the profile.</li></ul><h2>Closing</h2><p>In 2026, Google Business Profile is not a maintenance chore. It is one of the clearest signals of whether a business is active, trusted, and worth contacting.</p>",
+        "branding": false,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "Google Business Profile and Local SEO in 2026",
+        "slug": "google-business-profile-local-seo-2026"
+      }
+    },
+    {
+      "id": "69f521f4a9fa1ab9f438c05d",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.651Z",
+      "lastUpdated": "2026-05-02T00:05:30.651Z",
+      "createdOn": "2026-05-01T21:58:12.689Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f526b32573ece41279d590",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b32573ece41279d590_BLE_SWFT_thumbnail.webp",
+          "alt": "Blurred Lines Entertainment thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Blurred Lines Entertainment is a wedding entertainment company selling trust, energy, and once-in-a-lifetime experiences, not just playlists and equipment. For a business like this, the website has to do more than look polished. It has to reassure couples quickly, show personality, and make premium service feel worth reaching out for.</p><p>SWFT Studios rebuilt the digital experience around that reality. We paired a stronger website structure with media that helped the brand feel personal, proven, and high-touch from the first click, giving Blurred Lines a better system for turning social proof and referrals into qualified inquiries.</p><h2>The Problem</h2><p>Blurred Lines already had the ingredients of a strong business: a clear mission, a personality-led founder story, and happy clients who remembered the experience. The issue was that the digital experience was not doing enough to convert that credibility into consistent demand.</p><ul><li>The website needed to communicate premium value faster to couples comparing multiple vendors.</li><li>The brand story and service differentiation were getting buried instead of leading the conversation.</li><li>Testimonials, process, and featured services were present, but they needed stronger presentation to build confidence and move visitors toward contact.</li><li>Media content had to work harder as a sales asset, not just a visual extra.</li></ul><p>For a wedding entertainment business, hesitation is expensive. If the site does not make trust, style, and professionalism obvious right away, couples move on to the next option.</p><h2>The Solution</h2><p><strong>Website experience:</strong> SWFT Studios structured the site around buyer confidence. Instead of asking visitors to dig for reasons to trust the brand, we brought the mission, featured services, founder credibility, testimonials, and planning process forward so the value of working with Blurred Lines becomes easy to understand in minutes.</p><p><strong>Conversion strategy:</strong> We treated every section as part of a sales journey. The homepage helps visitors answer the questions that matter most: What makes this team different? What kind of events do they elevate? What will the planning process feel like? Why should I reach out now?</p><p><strong>Media integration:</strong> Strong visuals and video were used to sell emotion, energy, and polish. For a service business built on atmosphere and experience, that kind of storytelling is a direct business lever because it helps prospects imagine their own event before they ever get on a call.</p><p><strong>Brand positioning:</strong> The final experience gives Blurred Lines a stronger premium feel without losing warmth. That balance matters because couples want expertise, but they also want to feel like they are hiring people who understand their vision.</p><h2>Project Timeline</h2><ul><li>Week 1: Discovery, offer positioning, and audit of the current customer journey</li><li>Week 2: Messaging refinement, service hierarchy, and wireframing</li><li>Week 3-4: Visual design, media integration, and page buildout</li><li>Week 5: CTA refinement, mobile optimization, and launch prep</li><li>Week 6: Launch, polish, and post-launch review</li></ul><p>Total timeline: 6 weeks from strategy through launch.</p><h2>The Outcome</h2><p>The result is a site at <a href=\"http://blurredlinesentertainment.com/\" target=\"_blank\" rel=\"noopener\">blurredlinesentertainment.com</a> that behaves more like a closer than a brochure. Visitors can now understand the brand promise faster, see the emotional payoff of the experience, and move toward inquiry with less friction.</p><ul><li>The site gives Blurred Lines a stronger foundation for converting referrals and social traffic into booked conversations.</li><li>The founder story, testimonials, and service mix work together more clearly to justify premium positioning.</li><li>Media now supports the sales process by helping couples feel the experience, not just read about it.</li><li>The business has a more scalable digital presence that can support future campaigns, partnerships, and higher-volume demand.</li></ul><p>Most importantly, Blurred Lines now has a digital presence that reflects how the business actually operates: high-energy, thoughtful, and built around unforgettable client experiences.</p><h2>Growth Scorecard</h2><p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p><ul><li><strong>Trust signals</strong>: 52 to 90 / 100</li><li><strong>Premium positioning</strong>: 47 to 88 / 100</li><li><strong>Inquiry readiness</strong>: 41 to 86 / 100</li><li><strong>Content leverage</strong>: 36 to 82 / 100</li></ul><h2>Closing</h2><p>SWFT Studios helped Blurred Lines Entertainment move from having a good reputation to presenting that reputation with real commercial power online, turning brand personality and experience into a stronger engine for trust, inquiries, and growth.</p>",
+        "branding": true,
+        "website": true,
+        "film": true,
+        "automation": false,
+        "name": "Blurred Lines Entertainment",
+        "slug": "blurred-lines-entertainment"
+      }
+    },
+    {
+      "id": "69f521f2e86cb4c38a7bb8a7",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.625Z",
+      "lastUpdated": "2026-05-02T00:05:30.625Z",
+      "createdOn": "2026-05-01T21:58:10.627Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f526b32573ece41279d597",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b32573ece41279d597_Hawthorne_Global_Ministries_thumbnail.webp",
+          "alt": "Hawthorne Global Ministries thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Hawthorne Global Ministries does not just need a website for information. It needs a platform that can build trust, communicate mission, and help supporters understand where they fit into the work. For ministries and nonprofits, digital clarity is not optional. It directly affects engagement, donations, partnerships, and ongoing community participation.</p><p>SWFT Studios designed and built a website experience that gives Hawthorne a stronger voice online, making it easier for visitors to understand the mission, see the impact, and take meaningful next steps.</p><h2>The Problem</h2><p>Mission-driven organizations often carry powerful stories, but those stories lose momentum when the digital experience is unclear or dated. Hawthorne needed a website that could represent the heart of the ministry while also functioning as a practical communication and support tool.</p><ul><li>The existing web presence needed to reflect the credibility and care behind the organization's work.</li><li>Visitors needed a clearer path to learn about the mission, stay informed, and get involved.</li><li>The site had to support trust-sensitive actions like donations and outreach without feeling overwhelming.</li><li>The ministry needed a stronger digital foundation for ongoing updates, events, and supporter communication.</li></ul><p>When faith-based organizations are hard to understand online, they do not just lose traffic. They lose opportunities for connection, support, and long-term community building.</p><h2>The Solution</h2><p><strong>Mission-first messaging:</strong> SWFT Studios structured the experience so the purpose of the organization is easier to grasp immediately. Visitors can understand what Hawthorne stands for, what work it is doing, and why that work matters without having to piece the story together themselves.</p><p><strong>Trust-building website design:</strong> The site was designed to feel welcoming, credible, and accessible. Clear layout, better content hierarchy, and thoughtful calls to action help the ministry feel more established and easier to support.</p><p><strong>Supporter journey:</strong> We treated the site as a relationship tool. The goal was to help people move naturally from awareness to prayer, updates, giving, or direct connection, depending on how they want to engage with the mission.</p><p><strong>Long-term usability:</strong> The final build gives Hawthorne a stronger platform for ongoing communication, which matters because ministries grow through repeated contact, not one-time visits.</p><h2>Project Timeline</h2><ul><li>Week 1: Discovery, mission audit, and audience goals</li><li>Week 2: Content hierarchy, page planning, and supporter journey mapping</li><li>Week 3-4: Visual design, responsive build, and content integration</li><li>Week 5: Accessibility review, CTA refinement, and launch preparation</li><li>Week 6: Launch and handoff</li></ul><p>Total timeline: 6 weeks from strategy through launch.</p><h2>The Outcome</h2><p>The website at <a href=\"https://www.hawthorneglobalministries.org/\" target=\"_blank\" rel=\"noopener\">hawthorneglobalministries.org</a> now gives Hawthorne Global Ministries a stronger digital ministry front door. It helps the organization communicate more clearly, invite support more confidently, and maintain a more professional presence with both existing and new audiences.</p><ul><li>The mission is easier to understand for first-time visitors.</li><li>The site creates better conditions for donations, updates, and supporter involvement.</li><li>The ministry now has a more trustworthy and organized communication hub.</li><li>The platform is better prepared to support future outreach, storytelling, and growth.</li></ul><p>In practical terms, that means the website is now helping Hawthorne do more of what it exists to do: connect people to the mission and make that mission easier to support.</p><h2>Growth Scorecard</h2><p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p><ul><li><strong>Mission clarity</strong>: 46 to 88 / 100</li><li><strong>Supporter path</strong>: 39 to 81 / 100</li><li><strong>Trust and credibility</strong>: 50 to 87 / 100</li><li><strong>Donation readiness</strong>: 34 to 79 / 100</li></ul><h2>Closing</h2><p>SWFT Studios helped Hawthorne Global Ministries turn its website into a more faithful reflection of the work behind it, creating a digital experience that strengthens trust, deepens engagement, and gives the mission more room to grow.</p>",
+        "branding": true,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "Hawthorne Global Ministries",
+        "slug": "hawthorne-global-ministries"
+      }
+    },
+    {
+      "id": "69f521f261e6068ec85d029d",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.645Z",
+      "lastUpdated": "2026-05-02T00:05:30.645Z",
+      "createdOn": "2026-05-01T21:58:10.230Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f526beff570d4f4802eb84",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526beff570d4f4802eb84_hamper_app_website_thumbnail.webp",
+          "alt": "Hamper app and website thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Hamper operates in a category where convenience is the product. Users are not looking for novelty. They are looking for a service that feels dependable, easy to understand, and worth trusting with a recurring household task.</p><p>That is why the digital experience matters so much. If the app or landing experience feels confusing, overcomplicated, or unfinished, adoption drops before the service has a chance to prove itself. SWFT Studios helped Hamper simplify the story, clarify the user flow, and make the brand feel more like a reliable everyday solution than just another on-demand app concept.</p><h2>The Problem</h2><p>Hamper needed to solve two challenges at once: explain the service clearly and remove enough friction that trying it for the first time felt easy. That is harder than it sounds in a service category where trust, pricing expectations, and repeat behavior all shape growth.</p><ul><li>The product experience needed a clearer path from awareness to first order.</li><li>The web presence had to explain pickup, delivery, and convenience in a way that felt simple rather than operationally messy.</li><li>The brand needed stronger trust signals to support adoption and repeat usage.</li><li>The overall experience had to reduce cognitive load because busy users will abandon anything that feels harder than doing laundry the usual way.</li></ul><p>For convenience businesses, growth is won in the small moments. Every unclear step, weak CTA, or confusing explanation lowers the chance of first conversion and makes repeat revenue harder to earn.</p><h2>The Solution</h2><p><strong>App experience:</strong> SWFT Studios focused the product flow around ease. Scheduling, onboarding, and action paths were framed to feel straightforward, lowering the mental effort required to become a customer.</p><p><strong>Website support:</strong> We shaped the supporting web experience at <a href=\"https://hamperapp.webflow.io/\" target=\"_blank\" rel=\"noopener\">hamperapp.webflow.io</a> to work as an acquisition surface, clarifying the offer, reinforcing the convenience angle, and helping users understand why Hamper is worth trying.</p><p><strong>Trust and clarity:</strong> Messaging, layout, and CTA placement were used to reinforce reliability. In categories like laundry and pickup, people are not just buying speed. They are buying confidence that the service will fit neatly into their routine.</p><p><strong>Retention thinking:</strong> The experience was built with repeat behavior in mind. The goal was not just app downloads, but a product journey that makes the first use feel smooth enough to create habit.</p><h2>Project Timeline</h2><ul><li>Week 1: User-flow mapping, service positioning, and friction audit</li><li>Week 2: Messaging, website structure, and UX direction</li><li>Week 3-4: Product and landing experience buildout</li><li>Week 5: Conversion refinement, trust cues, and mobile optimization</li><li>Week 6: Launch and iteration planning</li></ul><p>Total timeline: 6 weeks from discovery through launch readiness.</p><h2>The Outcome</h2><p>Hamper came out of the project with a clearer digital system for acquisition and adoption. The brand now presents itself more like a practical, reliable service and less like an idea users still have to decode.</p><ul><li>The offer is easier to understand for first-time visitors.</li><li>The app and website work together more effectively to support downloads and first orders.</li><li>The experience better reinforces trust, convenience, and repeat-use potential.</li><li>Hamper has a stronger base for growth because the digital touchpoints now support behavior change instead of creating extra friction.</li></ul><p>That matters because service apps do not scale on hype alone. They scale when the product feels so easy and dependable that customers want to keep using it.</p><h2>Growth Scorecard</h2><p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p><ul><li><strong>Task clarity</strong>: 43 to 89 / 100</li><li><strong>Trust cues</strong>: 40 to 83 / 100</li><li><strong>First-order readiness</strong>: 37 to 84 / 100</li><li><strong>Repeat-use potential</strong>: 35 to 79 / 100</li></ul><h2>Closing</h2><p>SWFT Studios helped Hamper make convenience feel credible, translating a useful service idea into a cleaner customer journey that supports adoption, trust, and stronger long-term product growth.</p>",
+        "branding": false,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "Hamper",
+        "slug": "hamper"
+      }
+    },
+    {
+      "id": "69f521f1aea0b447ee2010e8",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.638Z",
+      "lastUpdated": "2026-05-02T00:05:30.638Z",
+      "createdOn": "2026-05-01T21:58:09.492Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f526b32573ece41279d59d",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b32573ece41279d59d_built_by_me_ez_thumbnail.webp",
+          "alt": "Built By Me EZ project thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Built By Me EZ is the kind of business that depends on credibility, clarity, and a strong sense of practical value. Whether the visitor is evaluating a service, a program, or a brand promise rooted in helping people build with confidence, the website needs to establish authority quickly and make next steps obvious.</p><p>SWFT Studios rebuilt that digital foundation so the brand could present itself more clearly, speak to the right audience with more conviction, and convert site traffic into higher-intent conversations instead of passive interest.</p><h2>The Problem</h2><p>Before a brand like Built By Me EZ can scale awareness, it has to solve a positioning problem: visitors need to understand what the business offers, who it helps, and why it is worth trusting. If that message is fuzzy, traffic does not become leads.</p><ul><li>The business needed a more professional website that better matched the value of its offer.</li><li>The brand story and practical benefits had to be easier to understand on first visit.</li><li>The site needed a clearer conversion path for visitors ready to learn more or reach out.</li><li>The platform had to be flexible enough to support future campaigns, content, and growth initiatives.</li></ul><p>This is a common challenge for founder-led brands: the value is real, but the website is not packaging that value in a way that scales beyond word of mouth.</p><h2>The Solution</h2><p><strong>Clearer brand communication:</strong> SWFT Studios shaped the website around understanding first. We organized the experience to answer the core questions visitors bring with them: What is this? Who is it for? Why should I care? What should I do next?</p><p><strong>Conversion-aware structure:</strong> Instead of treating the site like a static presentation, we treated it like a sales and trust tool. Messaging, hierarchy, and calls to action were designed to move people from awareness into inquiry more intentionally.</p><p><strong>Professional presentation:</strong> Visual polish, layout clarity, and responsive performance all help reinforce authority. When a service or founder brand looks organized online, it immediately feels more investable, more established, and more referral-ready.</p><p><strong>Growth-ready foundation:</strong> The finished site gives Built By Me EZ a stronger base for SEO, content expansion, and campaign traffic, which is critical when the goal is not just to launch a site, but to build a business asset that keeps working over time.</p><h2>Project Timeline</h2><ul><li>Week 1: Discovery, audience understanding, and messaging audit</li><li>Week 2: Site architecture and conversion planning</li><li>Week 3-4: Visual design, content integration, and responsive build</li><li>Week 5: CTA refinement, polish, and launch QA</li><li>Week 6: Launch and handoff</li></ul><p>Total timeline: 6 weeks from audit through launch.</p><h2>The Outcome</h2><p>The result is a stronger online presence at <a href=\"http://builtbymeez.com/\" target=\"_blank\" rel=\"noopener\">builtbymeez.com</a> that gives the business a more serious platform for growth. Visitors now get a clearer understanding of the brand, a stronger first impression, and a better path toward taking action.</p><ul><li>The site supports lead generation more effectively by making the offer easier to understand.</li><li>The brand presentation feels more professional and trustworthy.</li><li>Built By Me EZ now has a more scalable base for future marketing and search visibility.</li><li>The website works harder as a business asset instead of acting only as a placeholder presence.</li></ul><p>That shift is where a lot of growth begins. When a brand can explain itself clearly online, everything from referrals to organic traffic starts converting better.</p><h2>Growth Scorecard</h2><p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p><ul><li><strong>Message clarity</strong>: 41 to 86 / 100</li><li><strong>Authority signals</strong>: 44 to 82 / 100</li><li><strong>Lead capture readiness</strong>: 33 to 80 / 100</li><li><strong>SEO readiness</strong>: 36 to 78 / 100</li></ul><h2>Closing</h2><p>SWFT Studios helped Built By Me EZ turn its digital presence into a clearer expression of the business itself, giving the brand a stronger voice, stronger authority, and a stronger platform for long-term growth.</p>",
+        "branding": true,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "Built By Me EZ",
+        "slug": "built-by-me-ez"
+      }
+    },
+    {
+      "id": "69f521f1b6e12f515e3d9dc6",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.666Z",
+      "lastUpdated": "2026-05-02T00:05:30.666Z",
+      "createdOn": "2026-05-01T21:58:09.224Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f526b22573ece41279d584",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526b22573ece41279d584_Roller_Reels_thumbnail.webp",
+          "alt": "Roller Reels brand and web thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Roller Reels is in a business where the work has to sell itself fast. Prospective clients are not reading long explanations first. They are scanning for proof of taste, range, professionalism, and whether this team feels capable of elevating their brand on screen.</p><p>SWFT Studios helped Roller Reels sharpen that first impression. We rebuilt the website and supporting media presentation so the brand could showcase its portfolio more strategically, reduce friction for prospects, and present itself like the kind of production partner serious clients want to brief, not just browse.</p><h2>The Problem</h2><p>Many creative studios have excellent work but weak packaging. That gap costs them. If the site does not organize the portfolio clearly, frame services well, and communicate confidence quickly, even great work can feel harder to buy than it should.</p><ul><li>The brand needed a cleaner digital home for reels, projects, and service positioning.</li><li>Prospective clients needed a faster way to understand what Roller Reels does best.</li><li>The site had to support inquiries and sales conversations, not just passive viewing.</li><li>Visual quality and performance both mattered because media-heavy brands lose trust when the experience feels clunky.</li></ul><p>For a production company, the website is part portfolio, part pitch deck, and part filter for better clients. It has to perform all three roles at once.</p><h2>The Solution</h2><p><strong>Portfolio-led website structure:</strong> SWFT Studios organized the experience around discoverability and confidence. Visitors can get to the work faster, understand the brand faster, and connect the creative output to a credible production partner faster.</p><p><strong>Clearer positioning:</strong> We helped shape a stronger presentation of what Roller Reels offers so the work is not floating without context. Instead, the site supports the business case behind the visuals, making it easier for brands and collaborators to picture the fit.</p><p><strong>Media-first UX:</strong> The design was tuned to let visuals lead while still protecting usability, load performance, and mobile experience. That balance is critical because a media brand cannot afford a site that looks stylish but hides the work or slows the user down.</p><p><strong>Lead support:</strong> Calls to action and page flow were treated as business tools. The goal was not just admiration, but motion toward inquiry, conversation, and project opportunities.</p><h2>Project Timeline</h2><ul><li>Week 1: Brand review, portfolio audit, and audience alignment</li><li>Week 2: Site structure, service framing, and content hierarchy</li><li>Week 3-4: Visual design, media integration, and responsive build</li><li>Week 5: Optimization for performance, navigation, and inquiry flow</li><li>Week 6: Launch and handoff</li></ul><p>Total timeline: 6 weeks from audit through launch.</p><h2>The Outcome</h2><p>The site at <a href=\"https://rollerreels.com/\" target=\"_blank\" rel=\"noopener\">rollerreels.com</a> now functions as a stronger growth asset. It showcases the work with more clarity, presents the company with more authority, and helps prospects move from inspiration to action with less friction.</p><ul><li>Roller Reels has a cleaner platform for sharing projects, reels, and capabilities.</li><li>The brand feels more intentional and premium, which helps attract better-fit clients.</li><li>The portfolio is easier to navigate and easier to remember after a visit.</li><li>The site now supports business development instead of acting only as a showcase.</li></ul><p>That shift matters because creative brands grow faster when their presentation matches the quality of the work itself.</p><h2>Growth Scorecard</h2><p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p><ul><li><strong>Portfolio discoverability</strong>: 45 to 90 / 100</li><li><strong>Service clarity</strong>: 39 to 84 / 100</li><li><strong>Inquiry flow</strong>: 42 to 80 / 100</li><li><strong>Mobile media performance</strong>: 34 to 76 / 100</li></ul><h2>Closing</h2><p>SWFT Studios helped Roller Reels tighten the gap between creative output and commercial presentation, turning a strong body of work into a more effective engine for trust, inquiries, and future production opportunities.</p>",
+        "branding": true,
+        "website": true,
+        "film": true,
+        "automation": false,
+        "name": "Roller Reels",
+        "slug": "roller-reels"
+      }
+    },
+    {
+      "id": "69f521f0ae2106351d56b646",
+      "cmsLocaleId": "688e7554265d8089278ca771",
+      "lastPublished": "2026-05-02T00:05:30.632Z",
+      "lastUpdated": "2026-05-02T00:05:30.632Z",
+      "createdOn": "2026-05-01T21:58:08.812Z",
+      "isArchived": false,
+      "isDraft": false,
+      "fieldData": {
+        "image": {
+          "fileId": "69f526a8d1e54e77d5d6f7f5",
+          "url": "https://cdn.prod.website-files.com/688e7554265d8089278ca795/69f526a8d1e54e77d5d6f7f5_Snooze-Lane-Desktop-thumbnail.webp",
+          "alt": "Snooze Lane app and website thumbnail"
+        },
+        "details": "<h2>Overview</h2><p>Snooze Lane sits in an interesting category: it is not just a utility app, and it is not just a lifestyle brand. It solves a very specific commuter anxiety, the fear of falling asleep and missing your stop, while also asking users to trust a relatively new product with a real-world moment that matters.</p><p>That means the business challenge is bigger than shipping features. The product has to feel intuitive, credible, and instantly understandable. SWFT Studios helped Snooze Lane build that bridge by clarifying the product story, shaping the website around conversion, and making the app feel like a believable daily-use solution instead of a clever idea people forget about after first contact.</p><h2>The Problem</h2><p>Novel products rarely fail because the idea is weak. They fail because the market does not understand them quickly enough. Snooze Lane needed to explain what it does, why it matters, and why commuters should trust it all within a short attention window.</p><ul><li>The product value proposition was strong, but it needed sharper positioning for first-time visitors.</li><li>The website had to educate and convert at the same time, which is difficult when users are unfamiliar with the category.</li><li>The brand needed a cleaner path from curiosity to signup to app usage.</li><li>The app and website had to feel like one cohesive growth system, not two disconnected touchpoints.</li></ul><p>For a product like this, clarity is the product. If people do not instantly understand the outcome, they will not download. If they do not trust the experience, they will not stick.</p><h2>The Solution</h2><p><strong>Positioning and messaging:</strong> SWFT Studios centered the story on the real user outcome rather than the technical mechanism. Instead of leading with complexity, we led with relief: commuters can rest with confidence and regain time that would otherwise feel stressful or wasted.</p><p><strong>Website experience:</strong> We built a conversion-focused marketing site that explains the problem, introduces the product simply, and reinforces credibility through clean flow, strong headlines, mobile-friendly presentation, and clear calls to action. The website works as the first salesperson for the product.</p><p><strong>App-to-web alignment:</strong> The digital experience was designed so the promise made on the site feels consistent with the experience inside the app. That consistency matters because early-stage products earn growth through trust, retention, and word-of-mouth, not just traffic spikes.</p><p><strong>Growth mechanics:</strong> Promotional hooks like premium access for early signups were framed within a clearer acquisition journey, helping Snooze Lane turn launch energy into a more intentional signup engine.</p><h2>Project Timeline</h2><ul><li>Week 1: Product positioning, audience framing, and growth-goal alignment</li><li>Week 2: Website structure, messaging hierarchy, and conversion planning</li><li>Week 3-4: Design system, build, and launch asset creation</li><li>Week 5: CTA refinement, mobile QA, and app-store journey alignment</li><li>Week 6: Launch and post-launch iteration</li></ul><p>Total timeline: 6 weeks from strategy through launch readiness.</p><h2>The Outcome</h2><p>The site at <a href=\"https://snoozelaneapp.com/\" target=\"_blank\" rel=\"noopener\">snoozelaneapp.com</a> now does the hard work that early-stage products need most: it teaches the market how to understand the product, trust the product, and take action. That gives Snooze Lane a much stronger base for acquisition, activation, and long-term retention.</p><ul><li>The product story is easier to grasp for commuters discovering the brand for the first time.</li><li>The website creates a clearer funnel from awareness to signup and app download.</li><li>The brand feels more credible, which is essential for a product asking users to rely on it during daily travel.</li><li>Snooze Lane now has a better foundation for future growth through referrals, launch campaigns, and feature expansion.</li></ul><p>What changed most is not just presentation. The business now has a clearer language for selling the product and a stronger digital system for turning attention into actual users.</p><h2>Growth Scorecard</h2><p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p><ul><li><strong>Product clarity</strong>: 38 to 91 / 100</li><li><strong>App-download readiness</strong>: 44 to 87 / 100</li><li><strong>Mobile conversion flow</strong>: 49 to 89 / 100</li><li><strong>Retention setup</strong>: 35 to 78 / 100</li></ul><h2>Closing</h2><p>SWFT Studios helped Snooze Lane move from an interesting app concept to a sharper, more market-ready product experience, proving that great growth design is often about making the right idea feel obvious, trustworthy, and worth acting on.</p>",
+        "branding": true,
+        "website": true,
+        "film": false,
+        "automation": false,
+        "name": "Snooze Lane",
+        "slug": "snooze-lane"
+      }
+    }
+  ]
+}

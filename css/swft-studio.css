@@ -736,6 +736,7 @@ button, input, select, textarea {
 .venture-card,
 .service-card,
 .case-card,
+.insight-card,
 .pricing-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -744,9 +745,33 @@ button, input, select, textarea {
   transition: border-color var(--transition), transform var(--transition);
 }
 
+.insight-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.insight-card__visual {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+
+.insight-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.insight-card__body {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
 .venture-card:hover,
 .service-card:hover,
 .case-card:hover,
+.insight-card:hover,
 .pricing-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-3px);

@@ -111,7 +111,45 @@
     );
   }
 
-  function initProjects() {
+  function initBlogPosts() {
+    var mount = document.getElementById('intelligence-hub-grid');
+    var resources = document.getElementById('blog-posts-grid');
+    if (!mount && !resources) return;
+
+    fetch('data/blog-posts.json')
+      .then(function (r) { return r.json(); })
+      .then(function (posts) {
+        var list = posts.filter(function (p) { return p.isInsight; }).slice(0, 6);
+        if (!list.length) list = posts.slice(0, 6);
+
+        var html = list.map(function (post) {
+          var img = post.image || 'images/swft-thumbnail.webp';
+          return (
+            '<article class="insight-card reveal">' +
+              '<a href="' + post.href + '" class="insight-card__link">' +
+                '<div class="insight-card__visual">' +
+                  '<img src="' + img + '" alt="" loading="lazy" width="640" height="400">' +
+                '</div>' +
+                '<div class="insight-card__body">' +
+                  '<p class="text-label">Insight</p>' +
+                  '<h3 class="card__title">' + post.name + '</h3>' +
+                  '<p class="card__desc">' + post.excerpt + '</p>' +
+                  '<span class="card__link">Read Article →</span>' +
+                '</div>' +
+              '</a>' +
+            '</article>'
+          );
+        }).join('');
+
+        if (mount) mount.innerHTML = html;
+        if (resources) resources.innerHTML = html;
+        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+      })
+      .catch(function () {
+        if (mount) mount.innerHTML = '<p class="text-body">Insights loading soon.</p>';
+      });
+  }
+
     var mount = document.getElementById('projects-grid');
     var featured = document.getElementById('projects-featured');
     var carousel = document.getElementById('projects-carousel');
@@ -209,6 +247,7 @@
     initMotion();
     initHeroNav();
     initProjects();
+    initBlogPosts();
     initForm();
   }
 

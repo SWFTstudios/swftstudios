@@ -1,0 +1,186 @@
+{
+  "pulledAt": "2026-06-14",
+  "sites": [
+    {
+      "siteId": "676080bdaff718521e956a12",
+      "siteName": "SWFT 2025 FINAL",
+      "pages": [
+        {
+          "id": "6878cf2e81ba9e244990520a",
+          "title": "Sign Up",
+          "slug": "sign-up",
+          "seo": {
+            "title": "SWFT Studios | Sign Up",
+            "description": "STRATEGIC WORKFLOWS FACILITATING TRANSFORMATION"
+          },
+          "publishedPath": "/sign-up"
+        },
+        {
+          "id": "6878ce5bc1263528c0d32958",
+          "title": "Sign In",
+          "slug": "sign-in",
+          "seo": {
+            "title": "SWFT Studios Playground | Sign In",
+            "description": "STRATEGIC WORKFLOWS FACILITATING TRANSFORMATION"
+          },
+          "publishedPath": "/sign-in"
+        },
+        {
+          "id": "6878cc00e940d4d71e539c76",
+          "title": "Start A Project",
+          "slug": "start-a-project",
+          "seo": {
+            "title": "SWFT Studios | Start A Project",
+            "description": "STRATEGIC WORKFLOWS FACILITATING TRANSFORMATION"
+          },
+          "publishedPath": "/start-a-project"
+        },
+        {
+          "id": "68753a08620e8edac584f386",
+          "title": "Contact Us",
+          "slug": "contact-us",
+          "seo": {
+            "title": "SWFT Studios | Contact Us",
+            "description": "STRATEGIC WORKFLOWS FACILITATING TRANSFORMATION"
+          },
+          "publishedPath": "/contact-us"
+        },
+        {
+          "id": "678c85b7a95808fdf88011f3",
+          "title": "Services",
+          "slug": "services",
+          "seo": {
+            "title": "Services"
+          },
+          "publishedPath": "/services"
+        },
+        {
+          "id": "678c8531dbbed3f790e082f9",
+          "title": "About Us",
+          "slug": "about-us",
+          "seo": {
+            "title": "About Us"
+          },
+          "publishedPath": "/about-us"
+        },
+        {
+          "id": "678593093f2ef0c10c8c43d7",
+          "title": "Resources",
+          "slug": "resources",
+          "seo": {
+            "title": "Resources"
+          },
+          "publishedPath": "/resources"
+        },
+        {
+          "id": "676080bdaff718521e956aa1",
+          "title": "Style Guide",
+          "slug": "style-guide",
+          "seo": {
+            "title": "Style Guide"
+          },
+          "publishedPath": "/style-guide"
+        },
+        {
+          "id": "676080bdaff718521e956aa0",
+          "title": "Home",
+          "slug": "",
+          "seo": {
+            "title": "SWFT STUDIOS",
+            "description": "STRATEGIC WORKFLOWS FACILITATING TRANSFORMATION"
+          },
+          "publishedPath": "/"
+        }
+      ]
+    },
+    {
+      "siteId": "688e7554265d8089278ca76e",
+      "siteName": "SWFT STUDIOS 000 FINAL FOREVER",
+      "note": "Primary CMS source for Projects, Videos, and Articles collections",
+      "pages": [
+        {
+          "title": "Home",
+          "slug": "",
+          "seo": {
+            "title": "SWFT Studios \u2014 Websites & Growth Systems for Service Businesses",
+            "description": "We build the website and the system that makes it produce."
+          },
+          "publishedPath": "/"
+        },
+        {
+          "title": "Case Studies",
+          "slug": "case-studies",
+          "seo": {
+            "title": "Case Studies | SWFT Studios"
+          },
+          "publishedPath": "/case-studies"
+        },
+        {
+          "title": "Articles",
+          "slug": "articles-index",
+          "seo": {
+            "title": "Articles | SWFT Studios",
+            "description": "Articles, case studies, and insights from SWFT Studios."
+          },
+          "publishedPath": "/articles-index"
+        },
+        {
+          "title": "Websites",
+          "slug": "websites",
+          "seo": {
+            "title": "Websites"
+          },
+          "publishedPath": "/websites"
+        },
+        {
+          "title": "Pricing",
+          "slug": "pricing",
+          "seo": {
+            "title": "Pricing \u2014 The SWFT Growth System | SWFT Studios"
+          },
+          "publishedPath": "/pricing"
+        },
+        {
+          "title": "Services",
+          "slug": "services",
+          "seo": {
+            "title": "Services \u2014 What We Build | SWFT Studios"
+          },
+          "publishedPath": "/services"
+        },
+        {
+          "title": "Contact",
+          "slug": "contact",
+          "seo": {
+            "title": "Contact SWFT Studios \u2014 Book a Free Audit"
+          },
+          "publishedPath": "/contact"
+        }
+      ]
+    }
+  ],
+  "collections": [
+    {
+      "id": "688e7554265d8089278ca797",
+      "slug": "project",
+      "displayName": "Projects",
+      "siteId": "688e7554265d8089278ca76e"
+    },
+    {
+      "id": "688e7554265d8089278ca7ac",
+      "slug": "video",
+      "displayName": "Videos",
+      "siteId": "688e7554265d8089278ca76e"
+    },
+    {
+      "id": "69f521cf3246ec07037d9d43",
+      "slug": "articles",
+      "displayName": "Articles",
+      "siteId": "688e7554265d8089278ca76e"
+    }
+  ],
+  "notes": [
+    "Site 676080bdaff718521e956a12 (SWFT 2025 FINAL) has no CMS collections; marketing pages only.",
+    "CMS content pulled from site 688e7554265d8089278ca76e (SWFT STUDIOS 000 FINAL FOREVER)."
+  ]
+}
