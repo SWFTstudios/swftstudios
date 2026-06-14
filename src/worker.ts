@@ -361,6 +361,18 @@ export default {
         "Has Domain": str(body.hasDomain, 200),
         Timeline: str(body.timeline, 200),
         "Anything Else": str(body.anythingElse, 4000),
+        "Ideal Day Vision": str(body.idealDayVision, 4000),
+        "Current Bottleneck": str(body.currentBottleneck, 4000),
+        "Transformation": str(body.transformation, 4000),
+        "Unique Edge": str(body.uniqueEdge, 4000),
+        "Client Problem": str(body.clientProblem, 4000),
+        "Client Social Proof": str(body.clientSocialProof, 4000),
+        "How They Sell Now": str(body.howTheySellNow, 4000),
+        "90-Day Win": str(body.ninetyDayWin, 4000),
+        "Revenue Goal": str(body.revenueGoal, 4000),
+        "Brand Personality": str(body.brandPersonality, 4000),
+        "Recommended Bundle": str(body.recommendedBundle, 200),
+        "Website Brief Summary": str(body.websiteBriefSummary, 8000),
         Status: "New",
         "Submitted At": new Date().toISOString(),
       };
@@ -387,6 +399,8 @@ export default {
             "Monthly Price": "$299/mo",
             Timeline: str(body.timeline, 200),
             "Anything Else": str(body.anythingElse, 4000),
+            "Recommended Bundle": str(body.recommendedBundle, 200),
+            "Website Brief Summary": str(body.websiteBriefSummary, 4000),
           },
         })
       );

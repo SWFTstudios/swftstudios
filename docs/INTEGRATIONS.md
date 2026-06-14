@@ -83,6 +83,29 @@ confirmation — it just won't open a checkout page.
 
 ---
 
+## SWFT Method payload (build planner)
+
+`POST /api/build-request` accepts the multi-step planner JSON from `swft-method.html`. In addition to contact + plan fields, the polish pass sends:
+
+| JSON field | Airtable column |
+|---|---|
+| `idealDayVision` | Ideal Day Vision |
+| `currentBottleneck` | Current Bottleneck |
+| `transformation` | Transformation |
+| `uniqueEdge` | Unique Edge |
+| `clientProblem` | Client Problem |
+| `clientSocialProof` | Client Social Proof |
+| `howTheySellNow` | How They Sell Now |
+| `ninetyDayWin` | 90-Day Win |
+| `revenueGoal` | Revenue Goal |
+| `brandPersonality` | Brand Personality |
+| `recommendedBundle` | Recommended Bundle |
+| `websiteBriefSummary` | Website Brief Summary |
+
+The page also shows **bundle quick-select** cards (Starter Site, Sales System, Monthly Plan). Selection pre-fills feature checkboxes and plan choice; totals still use dynamic one-time `price_data` (base $800 + features, cap $2,500) or the configured `$299/mo` subscription price.
+
+---
+
 ## How each plan is charged
 
 - **Monthly Plan** → Stripe Checkout in `subscription` mode using the $299/mo price.

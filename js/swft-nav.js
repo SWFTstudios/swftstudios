@@ -8,7 +8,7 @@
     { label: 'Method', href: '/method.html', key: 'method' },
     { label: 'Pricing', href: '/pricing.html', key: 'pricing' }
   ];
-  var CTA = { label: 'Start a Project', href: '/start-a-project.html' };
+  var CTA = { label: 'Build Your Website', href: '/swft-method.html' };
   var BRAND = 'SWFT <span class="hl">STUDIOS</span>';
 
   function navHTML(active) {
