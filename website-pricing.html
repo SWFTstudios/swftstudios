@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html data-wf-page="swft-pricing-v3" data-wf-site="688e7554265d8089278ca76e" lang="en">
+<html data-wf-page="swft-pricing-v4" data-wf-site="688e7554265d8089278ca76e" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Pricing — SWFT Growth System | SWFT Studios</title>
-  <meta content="Transparent pricing for SWFT Growth System: one-time Webflow builds from $799 and monthly retainers from $399/mo. Hosting, CRM, automations, and local SEO for brands investing $2k–$5k/mo in marketing." name="description">
-  <meta content="Pricing — SWFT Growth System | SWFT Studios" property="og:title">
-  <meta content="One-time website build + monthly Growth System retainer. Technical stack: Webflow, Cloudflare, GoHighLevel, Twilio." property="og:description">
+  <title>Pricing — SWFT Studios</title>
+  <meta content="Service Pro and Ecommerce Brand websites built to earn. Starting at $1,500 build. DIY in Webflow or Shopify, or managed monthly from $399." name="description">
+  <meta content="Pricing — SWFT Studios" property="og:title">
+  <meta content="Two site types: Service Pros (Webflow) and Ecommerce Brands (Shopify). Starting-at build. Manage it yourself or let SWFT run it." property="og:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
   <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -26,148 +26,56 @@
     <main>
       <div class="pricing-shell">
         <header class="pricing-hero">
-          <p class="pricing-eyebrow">Solo builder · Growth System</p>
-          <h1 class="pricing-hero-title">Build once. Run the stack monthly.</h1>
-          <p class="pricing-hero-lead">One technical partner for service brands and ecommerce operators already spending <strong>$2k–$5k/mo on marketing</strong>. Productized Webflow launch, then a monthly retainer that keeps hosting, CRM, and automations running — without agency handoffs or Slack chaos.</p>
-          <div class="pricing-hero-cta">
-            <a href="contact.html" class="button is-course w-inline-block">
-              <div class="button_bg"></div>
-              <div class="button_text">Book a stack audit</div>
-            </a>
-            <a href="https://cal.com/rollerreels/swft-meeting" target="_blank" rel="noopener noreferrer" class="button is-black w-inline-block">
-              <div class="button_text">Schedule a call</div>
-            </a>
-          </div>
-          <div id="pricing-summary" class="pricing-summary" aria-live="polite">
-            <strong>Your stack:</strong> $799 setup (Growth System Launch) + $399/mo Core Engine.
-          </div>
+          <p class="pricing-eyebrow">SWFT Studios</p>
+          <h1 id="hero-title" class="pricing-hero-title">Websites built to earn — for service pros and product brands.</h1>
+          <p id="hero-lead" class="pricing-hero-lead">Starting-at build. Manage it yourself or let me run it.</p>
         </header>
 
-        <div class="pricing-tabs-wrap">
-          <div class="pricing-tablist" role="tablist" aria-label="Pricing sections">
-            <button type="button" class="pricing-tab" role="tab" id="tab-build" data-tab="build" aria-controls="panel-build" aria-selected="true">Website Build</button>
-            <button type="button" class="pricing-tab" role="tab" id="tab-retainer" data-tab="retainer" aria-controls="panel-retainer" aria-selected="false" tabindex="-1">Monthly Retainer</button>
-            <button type="button" class="pricing-tab" role="tab" id="tab-stack" data-tab="stack" aria-controls="panel-stack" aria-selected="false" tabindex="-1">Tech Stack</button>
-            <button type="button" class="pricing-tab" role="tab" id="tab-workflow" data-tab="workflow" aria-controls="panel-workflow" aria-selected="false" tabindex="-1">How We Work</button>
-          </div>
-        </div>
-
-        <section id="panel-build" class="pricing-panel is-active" role="tabpanel" aria-labelledby="tab-build" tabindex="0">
-          <h2 id="build">One-time website build</h2>
-          <p class="panel-lead">Launch with a productized Growth System site or scope a custom service / ecommerce build. Setup covers architecture, build, and launch — ongoing ops live on the monthly retainer.</p>
-          <div id="build-cards" class="pricing-card-grid" aria-label="Build tiers"></div>
+        <section id="pricing" aria-label="Pricing offers">
+          <div id="offer-grid" class="offer-grid"></div>
         </section>
 
-        <section id="panel-retainer" class="pricing-panel" role="tabpanel" aria-labelledby="tab-retainer" hidden tabindex="0">
-          <h2 id="retainer">Monthly Growth System retainer</h2>
-          <p class="panel-lead">Hosting, monitoring, CRM upkeep, and queued updates — priced for sustainable solo-operator economics. Pause or cancel anytime. One active request at a time.</p>
-
-          <div class="billing-toggle" role="group" aria-label="Billing period">
-            <button type="button" data-billing="monthly" aria-pressed="true">Monthly</button>
-            <button type="button" data-billing="annual" aria-pressed="false">Annual (save ~12%)</button>
-          </div>
-
-          <div id="retainer-cards" class="pricing-card-grid" aria-label="Retainer tiers"></div>
-
-          <div class="policy-list" aria-label="Retainer policies">
-            <article class="policy-card">
-              <h4>Pause or cancel anytime</h4>
-              <p>31-day billing cycle. Unused days roll forward if you pause mid-cycle — no lock-in contracts.</p>
+        <section class="path-section" aria-labelledby="path-heading">
+          <h2 id="path-heading">Run it yourself or I run it for you</h2>
+          <div class="path-grid">
+            <article class="path-card">
+              <h3>Run it yourself</h3>
+              <ul id="diy-list"></ul>
             </article>
-            <article class="policy-card">
-              <h4>One request queue</h4>
-              <p>Structured async board after onboarding. No open Slack channel — gated communication keeps focus.</p>
-            </article>
-            <article class="policy-card">
-              <h4>Limited roster</h4>
-              <p>I work with a small number of clients at a time so your stack gets real attention, not ticket routing.</p>
+            <article class="path-card">
+              <h3>I run it for you</h3>
+              <ul id="managed-list"></ul>
             </article>
           </div>
+          <p id="path-hormozi" class="path-hormozi"></p>
         </section>
 
-        <section id="panel-stack" class="pricing-panel" role="tabpanel" aria-labelledby="tab-stack" hidden tabindex="0">
-          <h2>Tech stack comparison</h2>
-          <p class="panel-lead">What actually runs every month: Webflow CMS, Cloudflare Pages + Workers, GoHighLevel pipelines, Twilio SMS, review routing, and reporting — not a generic “website maintenance” line item.</p>
-
-          <div id="baseline-chips" class="baseline-chips" aria-label="Included on every plan"></div>
-
-          <div class="compare-wrap">
-            <table class="compare-table" aria-label="Feature comparison by tier">
-              <thead>
-                <tr>
-                  <th scope="col">Capability</th>
-                  <th scope="col">Build only</th>
-                  <th scope="col">Core $399</th>
-                  <th scope="col">Growth $799</th>
-                  <th scope="col">Partner $1,499</th>
-                </tr>
-              </thead>
-              <tbody id="compare-table-body"></tbody>
-            </table>
-          </div>
-
-          <div id="compare-mobile" class="compare-mobile" aria-label="Mobile feature comparison"></div>
-
-          <article class="workflow-card" style="margin-top:1.25rem">
-            <h3>What runs every month</h3>
-            <p>Your retainer absorbs infrastructure: Cloudflare delivery, form routing, SMS send costs for configured automations, CRM seat upkeep, and monitoring. You get one invoice and one builder — not six SaaS logins to babysit.</p>
-          </article>
+        <section class="value-section" aria-labelledby="value-heading">
+          <h2 id="value-heading">What you'd pay elsewhere</h2>
+          <div id="value-stacks" class="value-stacks"></div>
         </section>
 
-        <section id="panel-workflow" class="pricing-panel" role="tabpanel" aria-labelledby="tab-workflow" hidden tabindex="0">
-          <h2>How we work</h2>
-          <p class="panel-lead">Designjoy-style async delivery, Upstream-style technical depth — built for operators who want outcomes, not meetings.</p>
-
-          <div class="workflow-grid">
-            <article class="workflow-card">
-              <h3>One builder, end to end</h3>
-              <p>You work directly with Elombe — strategy, build, automations, and monthly ops. No account managers or offshore handoffs.</p>
-            </article>
-            <article class="workflow-card">
-              <h3>Async request board</h3>
-              <p>After onboarding you get a structured request board (not a public Trello integration). Submit one active task at a time with context and assets attached.</p>
-            </article>
-            <article class="workflow-card">
-              <h3>Queue discipline</h3>
-              <p>One request in flight prevents burnout and keeps turnaround predictable — typically 2–3 business days for queued updates.</p>
-            </article>
-            <article class="workflow-card">
-              <h3>Technical ownership</h3>
-              <p>DNS, Cloudflare, Webflow, GHL, and Twilio live in a documented stack you own. I operate it; you’re never held hostage.</p>
-            </article>
-          </div>
-
-          <div class="fit-grid">
-            <article class="fit-card good">
-              <h3>Great fit if you…</h3>
-              <ul>
-                <li>Spend $2k–$5k/mo on marketing and want one technical partner</li>
-                <li>Run a service brand or ecommerce store that lives on leads + reviews</li>
-                <li>Prefer async updates over standing weekly calls</li>
-              </ul>
-            </article>
-            <article class="fit-card bad">
-              <h3>Not a fit if you…</h3>
-              <ul>
-                <li>Need unlimited same-day revisions or 24/7 Slack access</li>
-                <li>Want a full creative agency for brand film and media buying only</li>
-                <li>Are optimizing for the cheapest one-pager on the internet</li>
-              </ul>
-            </article>
-          </div>
+        <section class="benefits-section" aria-labelledby="benefits-heading">
+          <h2 id="benefits-heading">Why owners choose SWFT</h2>
+          <div id="benefits-grid" class="benefits-grid"></div>
         </section>
 
-        <section class="pricing-faq" aria-labelledby="faq-heading" style="margin-top:2.5rem">
+        <section class="pricing-faq" aria-labelledby="faq-heading">
           <h2 id="faq-heading">FAQ</h2>
           <div id="faq-list" class="faq-list"></div>
         </section>
 
         <section class="pricing-footer-cta">
-          <p>Want the exact stack mapped (Cloudflare + Twilio + GoHighLevel + automations) before you choose a tier? Book a call and we’ll scope it live.</p>
-          <a href="contact.html" class="button is-course w-inline-block">
-            <div class="button_bg"></div>
-            <div class="button_text">Book a pricing call</div>
-          </a>
+          <p>Ready to build a site that works as hard as you do?</p>
+          <div class="pricing-footer-cta__actions">
+            <a href="contact.html" class="button is-course w-inline-block">
+              <div class="button_bg"></div>
+              <div class="button_text">Start a project</div>
+            </a>
+            <a href="https://cal.com/rollerreels/swft-meeting" target="_blank" rel="noopener noreferrer" class="button is-black w-inline-block">
+              <div class="button_text">Book 15-min call</div>
+            </a>
+          </div>
         </section>
       </div>
     </main>
