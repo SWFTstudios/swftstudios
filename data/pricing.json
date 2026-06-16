@@ -1,0 +1,171 @@
+{
+  "annualDiscountPercent": 12,
+  "buildTiers": [
+    {
+      "id": "growth-launch",
+      "name": "Growth System Launch",
+      "price": 799,
+      "priceLabel": "$799",
+      "suffix": "setup",
+      "featured": true,
+      "audience": "Flagship productized Webflow site with intake and launch playbook.",
+      "timeline": "Live in 4–6 weeks",
+      "includes": [
+        "Custom Webflow site (mobile-first)",
+        "Conversion-focused page architecture",
+        "Intake doc + kickoff call",
+        "One revision round before launch",
+        "Schema + foundational SEO setup"
+      ],
+      "excludes": [
+        "Custom software or app builds",
+        "Unlimited revision cycles",
+        "Paid media management"
+      ]
+    },
+    {
+      "id": "service-site",
+      "name": "Service Site",
+      "price": 1500,
+      "priceLabel": "$1,500+",
+      "suffix": "setup",
+      "featured": false,
+      "audience": "Service businesses that need stronger positioning and inquiry workflows.",
+      "timeline": "6–8 weeks typical",
+      "includes": [
+        "Multi-page service architecture",
+        "Authority + proof sections",
+        "CRM-ready forms and routing",
+        "Appointment / inquiry flows"
+      ],
+      "excludes": [
+        "Full ecommerce catalog",
+        "Ongoing campaign execution (retainer)"
+      ]
+    },
+    {
+      "id": "ecommerce-site",
+      "name": "Ecommerce Site",
+      "price": 2000,
+      "priceLabel": "$2,000+",
+      "suffix": "setup",
+      "featured": false,
+      "audience": "Product brands that need storefront, checkout, and post-purchase automation.",
+      "timeline": "6–10 weeks typical",
+      "includes": [
+        "Product catalog architecture",
+        "Checkout and payment setup",
+        "Cart recovery foundations",
+        "Launch QA on purchase flows"
+      ],
+      "excludes": [
+        "Product photography production",
+        "Inventory / ERP integrations"
+      ]
+    }
+  ],
+  "retainerTiers": [
+    {
+      "id": "core",
+      "name": "Core Engine",
+      "monthly": 399,
+      "annualMonthly": 351,
+      "featured": true,
+      "tagline": "Hosting, monitoring, CRM upkeep, and monthly reporting.",
+      "includes": [
+        "Cloudflare Pages hosting + SSL",
+        "GoHighLevel CRM maintenance",
+        "Monthly performance report",
+        "Uptime and form monitoring",
+        "Minor site updates (queued)"
+      ]
+    },
+    {
+      "id": "growth",
+      "name": "Growth Ops",
+      "monthly": 799,
+      "annualMonthly": 703,
+      "featured": false,
+      "tagline": "Core + acquisition automations and pipeline optimization.",
+      "includes": [
+        "Everything in Core Engine",
+        "Missed-call text-back (Twilio)",
+        "Review engine + private feedback routing",
+        "Booking reminders and follow-up SMS",
+        "Pipeline optimization each month"
+      ]
+    },
+    {
+      "id": "partner",
+      "name": "Partner",
+      "monthly": 1499,
+      "annualMonthly": 1319,
+      "featured": false,
+      "tagline": "Full growth stack for brands investing $2k–$5k/mo in marketing.",
+      "includes": [
+        "Everything in Growth Ops",
+        "Campaign execution support",
+        "GBP optimization + local landing pages",
+        "Priority queue placement",
+        "Quarterly strategy review"
+      ]
+    }
+  ],
+  "baselineIncluded": [
+    "SSL + CDN delivery",
+    "Automated backups mindset",
+    "Security headers via Cloudflare",
+    "Direct access to your builder"
+  ],
+  "featureMatrix": [
+    {
+      "group": "Infrastructure",
+      "features": [
+        { "name": "Webflow site + CMS", "build": true, "core": true, "growth": true, "partner": true },
+        { "name": "Cloudflare Pages hosting", "build": false, "core": true, "growth": true, "partner": true },
+        { "name": "Worker routing / forms", "build": false, "core": true, "growth": true, "partner": true },
+        { "name": "Schema + technical SEO", "build": true, "core": true, "growth": true, "partner": true }
+      ]
+    },
+    {
+      "group": "Acquisition",
+      "features": [
+        { "name": "Google Business Profile optimization", "build": false, "core": false, "growth": true, "partner": true },
+        { "name": "Per-city local landing pages", "build": false, "core": false, "growth": false, "partner": true },
+        { "name": "Missed-call text-back (Twilio)", "build": false, "core": false, "growth": true, "partner": true },
+        { "name": "Review automation", "build": false, "core": false, "growth": true, "partner": true }
+      ]
+    },
+    {
+      "group": "CRM & Operations",
+      "features": [
+        { "name": "GoHighLevel CRM + pipelines", "build": false, "core": true, "growth": true, "partner": true },
+        { "name": "Booking + reminder SMS", "build": false, "core": false, "growth": true, "partner": true },
+        { "name": "Lead follow-up sequences", "build": false, "core": false, "growth": true, "partner": true },
+        { "name": "Monthly performance report", "build": false, "core": true, "growth": true, "partner": true }
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Can I pause my retainer?",
+      "a": "Yes. Billing runs on a 31-day cycle. If you pause mid-cycle, unused days stay on your account for when you return — same model as Designjoy-style subscriptions."
+    },
+    {
+      "q": "What's included in setup vs monthly?",
+      "a": "Setup is the one-time website build and launch. Monthly retainer covers hosting, monitoring, CRM upkeep, automations, and ongoing optimization. You need both for the full Growth System."
+    },
+    {
+      "q": "Do you replace my marketing agency?",
+      "a": "For many service brands spending $2k–$5k/mo, yes — we replace the website vendor + CRM ops + local SEO tinkerer with one technical partner. Paid media buying is not included unless scoped on Partner."
+    },
+    {
+      "q": "How fast do requests turn around?",
+      "a": "One active request at a time. Most queued updates ship within 2–3 business days. Larger builds are scheduled, not squeezed into Slack threads."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long-term contract. Month-to-month after launch. Cancel anytime with 30 days notice on retainer."
+    }
+  ]
+}
