@@ -1,0 +1,544 @@
+/* SWFT Pricing — revenue system, monthly/one-time toggle */
+.pricing-page {
+  --pp-bg: #010101;
+  --pp-surface: #12151a;
+  --pp-border: #2a313c;
+  --pp-text: #e8edf4;
+  --pp-muted: #9aa6b8;
+  --pp-accent: #7fffe5;
+  --pp-accent-dim: #78f3cb;
+  background: var(--pp-bg);
+  color: var(--pp-text);
+  font-family: "Inter Display", Inter, system-ui, sans-serif;
+}
+
+.pricing-page main {
+  padding: 6.5rem 5vw 4rem;
+}
+
+.pricing-shell {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.pricing-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.pricing-eyebrow {
+  color: var(--pp-accent-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  margin-bottom: 0.65rem;
+}
+
+.pricing-hero-title {
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+  margin: 0 auto 0.75rem;
+  color: #fff;
+}
+
+.pricing-hero-lead {
+  color: var(--pp-muted);
+  margin: 0 auto;
+  max-width: 48ch;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.section-heading {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  color: #fff;
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+#pricing {
+  scroll-margin-top: 5rem;
+}
+
+/* Billing toggle */
+.billing-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 1px solid var(--pp-border);
+  border-radius: 999px;
+  padding: 0.25rem;
+  margin: 0 auto 1rem;
+  width: fit-content;
+  max-width: 100%;
+  background: #0e1115;
+}
+
+.billing-toggle__btn {
+  border: 0;
+  background: transparent;
+  color: var(--pp-muted);
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.billing-toggle__btn[aria-pressed="true"] {
+  background: #1a2622;
+  color: #fff;
+}
+
+.billing-toggle__btn:focus-visible {
+  outline: 2px solid var(--pp-accent);
+  outline-offset: 2px;
+}
+
+.pricing-summary {
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  background: #11151a;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  color: #d5dde8;
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* Offer cards */
+.offer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.offer-card {
+  border: 1px solid var(--pp-border);
+  border-radius: 18px;
+  background: linear-gradient(165deg, #151a20, #0f1216);
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.offer-card__tag {
+  display: inline-block;
+  width: fit-content;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pp-accent-dim);
+  border: 1px solid #2f4a42;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+}
+
+.offer-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #fff;
+}
+
+.offer-card__platform {
+  margin: 0;
+  color: var(--pp-muted);
+  font-size: 0.88rem;
+}
+
+.offer-card__outcome {
+  margin: 0;
+  color: #d5dde8;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.offer-card__prices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--pp-border);
+  border-bottom: 1px solid var(--pp-border);
+}
+
+.offer-card__price-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.offer-card__price {
+  font-size: 2rem;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.offer-card__price-label {
+  font-size: 0.8rem;
+  color: var(--pp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.offer-card__revision {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--pp-accent-dim);
+}
+
+.offer-card ul,
+.tier-includes {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #d2dae6;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.offer-card__note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--pp-muted);
+}
+
+.offer-card .button {
+  margin-top: auto;
+}
+
+/* Monthly tier stack */
+.tier-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tier-option {
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  background: #11151a;
+  padding: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  width: 100%;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.tier-option.is-selected {
+  border-color: var(--pp-accent);
+  background: #14221e;
+  box-shadow: 0 0 0 1px rgba(127, 255, 229, 0.2) inset;
+}
+
+.tier-option:focus-visible {
+  outline: 2px solid var(--pp-accent);
+  outline-offset: 2px;
+}
+
+.tier-option__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.45rem;
+}
+
+.tier-option__name {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.tier-option__price {
+  color: var(--pp-accent-dim);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.tier-option__features {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.82rem;
+  color: var(--pp-muted);
+  line-height: 1.45;
+}
+
+/* Leakage */
+.leakage-section {
+  margin-top: 2.5rem;
+}
+
+.leakage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.leakage-card {
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  padding: 1rem;
+  background: #11151a;
+}
+
+.leakage-card__pain {
+  margin: 0 0 0.35rem;
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.leakage-card__fix {
+  margin: 0;
+  color: var(--pp-accent-dim);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+/* DIY / Managed */
+.path-section {
+  margin-top: 2.5rem;
+}
+
+.path-section[hidden] {
+  display: none;
+}
+
+.path-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.path-card {
+  border: 1px solid var(--pp-border);
+  border-radius: 14px;
+  padding: 1.1rem;
+  background: #11151a;
+}
+
+.path-card h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.path-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--pp-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.path-hormozi {
+  margin: 1rem auto 0;
+  text-align: center;
+  color: #b8c5d6;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+/* Value stacks */
+.value-section {
+  margin-top: 2.5rem;
+}
+
+.value-stacks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.value-stack {
+  border: 1px solid var(--pp-border);
+  border-radius: 14px;
+  padding: 1.1rem;
+  background: #0e1115;
+}
+
+.value-stack h3 {
+  margin: 0 0 0.35rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.value-stack__disclaimer {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  color: var(--pp-muted);
+}
+
+.value-stack table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.value-stack th,
+.value-stack td {
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #222831;
+  text-align: left;
+}
+
+.value-stack th {
+  color: var(--pp-muted);
+  font-weight: 400;
+}
+
+.value-stack td:last-child {
+  text-align: right;
+  color: #fff;
+}
+
+.value-stack__totals {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--pp-border);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #d5dde8;
+}
+
+.value-stack__totals strong {
+  color: var(--pp-accent-dim);
+}
+
+.value-stack__payoff {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--pp-muted);
+}
+
+/* Benefits */
+.benefits-section {
+  margin-top: 2.5rem;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.benefit-pill {
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  padding: 0.9rem;
+  background: #11151a;
+}
+
+.benefit-pill h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  color: #fff;
+}
+
+.benefit-pill p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--pp-muted);
+  line-height: 1.45;
+}
+
+/* FAQ */
+.pricing-faq {
+  margin-top: 2.5rem;
+}
+
+.faq-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.faq-item {
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  padding: 1rem;
+  background: #11151a;
+}
+
+.faq-item h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.faq-item p {
+  margin: 0;
+  color: var(--pp-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Footer CTA */
+.pricing-footer-cta {
+  margin-top: 2.5rem;
+  border: 1px solid #2f4a42;
+  border-radius: 16px;
+  padding: 1.25rem;
+  background: linear-gradient(160deg, #14221e, #0f1412);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pricing-footer-cta p {
+  margin: 0;
+  max-width: 48ch;
+  line-height: 1.5;
+  color: #d9f5ec;
+  font-size: 0.95rem;
+}
+
+.pricing-footer-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+@media (max-width: 991px) {
+  .offer-grid,
+  .path-grid,
+  .value-stacks,
+  .leakage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .billing-toggle {
+    flex-wrap: wrap;
+    border-radius: 14px;
+    width: 100%;
+  }
+
+  .billing-toggle__btn {
+    flex: 1 1 auto;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 560px) {
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-footer-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
