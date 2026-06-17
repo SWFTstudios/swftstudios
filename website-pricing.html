@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html data-wf-page="swft-pricing-v4" data-wf-site="688e7554265d8089278ca76e" lang="en">
+<html data-wf-page="swft-pricing-v5" data-wf-site="688e7554265d8089278ca76e" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Pricing — SWFT Studios</title>
-  <meta content="Service Pro and Ecommerce Brand websites built to earn. Starting at $1,500 build. DIY in Webflow or Shopify, or managed monthly from $399." name="description">
-  <meta content="Pricing — SWFT Studios" property="og:title">
-  <meta content="Two site types: Service Pros (Webflow) and Ecommerce Brands (Shopify). Starting-at build. Manage it yourself or let SWFT run it." property="og:description">
+  <title>Pricing — Revenue Systems | SWFT Studios</title>
+  <meta content="Stop losing leads after the click. Service Pro and Ecommerce revenue systems — monthly subscription or one-time build. Starting at $1,500." name="description">
+  <meta content="Pricing — Revenue Systems | SWFT Studios" property="og:title">
+  <meta content="Monthly subscription or one-time build. Service Pros on Webflow, Ecommerce on Shopify. Essential and Growth tiers." property="og:description">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
   <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -27,16 +27,30 @@
       <div class="pricing-shell">
         <header class="pricing-hero">
           <p class="pricing-eyebrow">SWFT Studios</p>
-          <h1 id="hero-title" class="pricing-hero-title">Websites built to earn — for service pros and product brands.</h1>
-          <p id="hero-lead" class="pricing-hero-lead">Starting-at build. Manage it yourself or let me run it.</p>
+          <h1 id="hero-title" class="pricing-hero-title">Stop losing leads after the click.</h1>
+          <p id="hero-lead" class="pricing-hero-lead">Revenue systems for service pros and ecommerce brands — built, launched, and optionally managed by one builder.</p>
         </header>
 
-        <section id="pricing" aria-label="Pricing offers">
-          <div id="offer-grid" class="offer-grid"></div>
+        <section id="pricing" aria-labelledby="section-pricing">
+          <h2 id="section-pricing" class="section-heading">Pick your system</h2>
+
+          <div class="billing-toggle" role="group" aria-label="Billing type">
+            <button type="button" class="billing-toggle__btn" data-billing="monthly" aria-pressed="true">Monthly Subscription</button>
+            <button type="button" class="billing-toggle__btn" data-billing="oneTime" aria-pressed="false">One-Time Build</button>
+          </div>
+
+          <p id="pricing-summary" class="pricing-summary" aria-live="polite"></p>
+
+          <div id="offer-grid" class="offer-grid" aria-label="Pricing offers"></div>
         </section>
 
-        <section class="path-section" aria-labelledby="path-heading">
-          <h2 id="path-heading">Run it yourself or I run it for you</h2>
+        <section id="leakage-section" class="leakage-section" aria-labelledby="section-leakage">
+          <h2 id="section-leakage" class="section-heading">Where businesses lose money</h2>
+          <div id="leakage-grid" class="leakage-grid"></div>
+        </section>
+
+        <section id="path-section" class="path-section" aria-labelledby="section-path">
+          <h2 id="section-path" class="section-heading">Run it yourself or I run it for you</h2>
           <div class="path-grid">
             <article class="path-card">
               <h3>Run it yourself</h3>
@@ -50,23 +64,23 @@
           <p id="path-hormozi" class="path-hormozi"></p>
         </section>
 
-        <section class="value-section" aria-labelledby="value-heading">
-          <h2 id="value-heading">What you'd pay elsewhere</h2>
+        <section class="value-section" aria-labelledby="section-value">
+          <h2 id="section-value" class="section-heading">Typical cost if you bought piece by piece</h2>
           <div id="value-stacks" class="value-stacks"></div>
         </section>
 
-        <section class="benefits-section" aria-labelledby="benefits-heading">
-          <h2 id="benefits-heading">Why owners choose SWFT</h2>
+        <section class="benefits-section" aria-labelledby="section-benefits">
+          <h2 id="section-benefits" class="section-heading">Why owners choose SWFT</h2>
           <div id="benefits-grid" class="benefits-grid"></div>
         </section>
 
-        <section class="pricing-faq" aria-labelledby="faq-heading">
-          <h2 id="faq-heading">FAQ</h2>
+        <section class="pricing-faq" aria-labelledby="section-faq">
+          <h2 id="section-faq" class="section-heading">FAQ</h2>
           <div id="faq-list" class="faq-list"></div>
         </section>
 
         <section class="pricing-footer-cta">
-          <p>Ready to build a site that works as hard as you do?</p>
+          <p id="footer-cta-text">Ready to stop leaking leads?</p>
           <div class="pricing-footer-cta__actions">
             <a href="contact.html" class="button is-course w-inline-block">
               <div class="button_bg"></div>
