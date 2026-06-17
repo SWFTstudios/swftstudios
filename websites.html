@@ -32,6 +32,8 @@ body{
   }
 </style>
   <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
+  <!-- SWFT custom: do not overwrite on Webflow import -->
+  <link href="css/work-filter.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="page-wrapper">
@@ -332,92 +334,36 @@ a,
                 <div class="margin-bottom margin-small">
                   <h2 class="text-size-small text-weight-normal">Work Gallery</h2>
                 </div>
+                <!-- SWFT custom: do not overwrite on Webflow import -->
+                <div class="work-filter-bar" role="toolbar" aria-label="Filter and sort projects">
+                  <div class="work-filter-buttons">
+                    <button type="button" class="work-filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
+                    <button type="button" class="work-filter-btn" data-filter="ecommerce" aria-pressed="false">Ecommerce Brands</button>
+                    <button type="button" class="work-filter-btn" data-filter="service" aria-pressed="false">Service Pro Websites</button>
+                    <button type="button" class="work-filter-btn" data-filter="app" aria-pressed="false">App Landing Pages</button>
+                  </div>
+                  <div class="work-sort">
+                    <label for="work-sort-select">Sort by</label>
+                    <select id="work-sort-select" aria-label="Sort projects">
+                      <option value="featured">Featured</option>
+                      <option value="name-asc">Name A-Z</option>
+                      <option value="name-desc">Name Z-A</option>
+                    </select>
+                  </div>
+                </div>
                 <div class="collection-list-wrapper">
                   <div class="gallery_list">
-                    <div class="gallery_item">
-                      <a href="https://scribbleandscribe.webflow.io/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/hamper_app_website_thumbnail.webp" loading="lazy" sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/hamper_app_website_thumbnail-p-500.webp 500w, images/hamper_app_website_thumbnail-p-800.webp 800w, images/hamper_app_website_thumbnail-p-1080.webp 1080w, images/hamper_app_website_thumbnail-p-1600.webp 1600w, images/hamper_app_website_thumbnail-p-2000.webp 2000w, images/hamper_app_website_thumbnail-p-2600.webp 2600w, images/hamper_app_website_thumbnail.webp 3124w" alt="" class="gallery_image"></a>
+                    <div class="gallery_item" data-category="ecommerce" data-name="Brooklyn Steel Co." data-order="1">
+                      <a href="case-study/brooklyn-steel.html" class="gallery_image-wrapper w-inline-block"><img src="images/brooklyn-steel-thumbnail.webp" loading="lazy" alt="Brooklyn Steel Co." class="gallery_image"></a>
                       <div class="gallery_content-wrapper">
                         <div class="margin-bottom">
-                          <div class="gallery_category">Website + iOS App</div>
-                          <h3 class="text-size-small">Hamper</h3>
+                          <div class="gallery_category">Website + E-Commerce</div>
+                          <h3 class="text-size-small">Brooklyn Steel Co.</h3>
                         </div>
                       </div>
                     </div>
-                    <div class="gallery_item">
-                      <a href="https://scribbleandscribe.webflow.io/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/scribble_scribe_thumbnsail.png" loading="lazy" sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/scribble_scribe_thumbnsail-p-500.png 500w, images/scribble_scribe_thumbnsail-p-800.png 800w, images/scribble_scribe_thumbnsail-p-1080.png 1080w, images/scribble_scribe_thumbnsail-p-1600.png 1600w, images/scribble_scribe_thumbnsail-p-2000.png 2000w, images/scribble_scribe_thumbnsail-p-2600.png 2600w, images/scribble_scribe_thumbnsail.png 3124w" alt="" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website </div>
-                          <h3 class="text-size-small">Scribble &amp; Scribe</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://whp-digital.webflow.io/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/whp_desktop_screenshot.webp" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website </div>
-                          <h3 class="text-size-small">Western HP</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://whp-digital.webflow.io/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/Snooze-Lane-Desktop-thumbnail.webp" loading="lazy" sizes="(max-width: 3552px) 100vw, 3552px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail-p-1080.webp 1080w, images/Snooze-Lane-Desktop-thumbnail-p-1600.webp 1600w, images/Snooze-Lane-Desktop-thumbnail-p-2000.webp 2000w, images/Snooze-Lane-Desktop-thumbnail-p-2600.webp 2600w, images/Snooze-Lane-Desktop-thumbnail-p-3200.webp 3200w, images/Snooze-Lane-Desktop-thumbnail.webp 3552w" alt="" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website + iOS App</div>
-                          <h3 class="text-size-small">Snooze Lane</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://rollerreels.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/Roller_Reels_thumbnail.webp" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w, images/Roller_Reels_thumbnail-p-1600.webp 1600w, images/Roller_Reels_thumbnail-p-2000.webp 2000w, images/Roller_Reels_thumbnail-p-2600.webp 2600w, images/Roller_Reels_thumbnail-p-3200.webp 3200w, images/Roller_Reels_thumbnail.webp 3600w" alt="" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website + Media</div>
-                          <h3 class="text-size-small">Roller Reels</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://www.hawthorneglobalministries.org/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/Hawthorne_Global_Ministries_thumbnail.webp" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w" alt="" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website </div>
-                          <h3 class="text-size-small">Hawthorne Global Ministries</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://builtbymeez.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/built_by_me_ez_thumbnail.webp" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail-p-1600.webp 1600w, images/built_by_me_ez_thumbnail-p-2000.webp 2000w, images/built_by_me_ez_thumbnail-p-2600.webp 2600w, images/built_by_me_ez_thumbnail-p-3200.webp 3200w, images/built_by_me_ez_thumbnail.webp 3600w" alt="" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website</div>
-                          <h3 class="text-size-small">Built By Me EZ</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://blurredlinesentertainment.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/BLE_SWFT_thumbnail.webp" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail-p-1600.webp 1600w, images/BLE_SWFT_thumbnail-p-2000.webp 2000w, images/BLE_SWFT_thumbnail-p-2600.webp 2600w, images/BLE_SWFT_thumbnail-p-3200.webp 3200w, images/BLE_SWFT_thumbnail.webp 3600w" alt="" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website + Media</div>
-                          <h3 class="text-size-small">Blurred Lines Entertainment</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- SWFT custom: do not overwrite on Webflow import -->
-                    <div class="gallery_item">
-                      <a href="https://www.alphaministriesinternational.org/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/alpha-ministries-thumbnail.webp" loading="lazy" alt="Alpha Ministries International" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website + Email Automation</div>
-                          <h3 class="text-size-small">Alpha Ministries International</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://mannahydration.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/manna-hydration-thumbnail.webp" loading="lazy" alt="Manna Hydration" class="gallery_image"></a>
+                    <div class="gallery_item" data-category="ecommerce" data-name="Manna Hydration" data-order="2">
+                      <a href="case-study/manna-hydration.html" class="gallery_image-wrapper w-inline-block"><img src="images/manna-hydration-thumbnail.webp" loading="lazy" alt="Manna Hydration" class="gallery_image"></a>
                       <div class="gallery_content-wrapper">
                         <div class="margin-bottom">
                           <div class="gallery_category">Website + E-Commerce</div>
@@ -425,17 +371,8 @@ a,
                         </div>
                       </div>
                     </div>
-                    <div class="gallery_item">
-                      <a href="https://talhydration.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/tal-hydration-thumbnail.webp" loading="lazy" alt="TAL Hydration" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">Website + E-Commerce</div>
-                          <h3 class="text-size-small">TAL Hydration</h3>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gallery_item">
-                      <a href="https://shopthymeandtable.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/thyme-and-table-thumbnail.webp" loading="lazy" alt="Thyme &amp; Table" class="gallery_image"></a>
+                    <div class="gallery_item" data-category="ecommerce" data-name="Thyme &amp; Table" data-order="3">
+                      <a href="case-study/thyme-and-table.html" class="gallery_image-wrapper w-inline-block"><img src="images/thyme-and-table-thumbnail.webp" loading="lazy" alt="Thyme &amp; Table" class="gallery_image"></a>
                       <div class="gallery_content-wrapper">
                         <div class="margin-bottom">
                           <div class="gallery_category">Website + E-Commerce</div>
@@ -443,12 +380,102 @@ a,
                         </div>
                       </div>
                     </div>
-                    <div class="gallery_item">
-                      <a href="https://brooklynsteelco.com/" target="_blank" class="gallery_image-wrapper w-inline-block"><img src="images/brooklyn-steel-thumbnail.webp" loading="lazy" alt="Brooklyn Steel Co." class="gallery_image"></a>
+                    <div class="gallery_item" data-category="ecommerce" data-name="TAL Hydration" data-order="4">
+                      <a href="case-study/tal-hydration.html" class="gallery_image-wrapper w-inline-block"><img src="images/tal-hydration-thumbnail.webp" loading="lazy" alt="TAL Hydration" class="gallery_image"></a>
                       <div class="gallery_content-wrapper">
                         <div class="margin-bottom">
                           <div class="gallery_category">Website + E-Commerce</div>
-                          <h3 class="text-size-small">Brooklyn Steel Co.</h3>
+                          <h3 class="text-size-small">TAL Hydration</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="ecommerce" data-name="Scribble &amp; Scribe" data-order="5">
+                      <a href="case-study/scribble-and-scribe.html" class="gallery_image-wrapper w-inline-block"><img src="images/scribble_scribe_thumbnsail.png" loading="lazy" alt="Scribble &amp; Scribe" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website + E-Commerce</div>
+                          <h3 class="text-size-small">Scribble &amp; Scribe</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="service" data-name="Blurred Lines Entertainment" data-order="6">
+                      <a href="case-study/blurred-lines-entertainment.html" class="gallery_image-wrapper w-inline-block"><img src="images/BLE_SWFT_thumbnail.webp" loading="lazy" alt="Blurred Lines Entertainment" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website + Media</div>
+                          <h3 class="text-size-small">Blurred Lines Entertainment</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="service" data-name="Built By Me EZ" data-order="7">
+                      <a href="case-study/built-by-me-ez.html" class="gallery_image-wrapper w-inline-block"><img src="images/built_by_me_ez_thumbnail.webp" loading="lazy" alt="Built By Me EZ" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website</div>
+                          <h3 class="text-size-small">Built By Me EZ</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="service" data-name="Roller Reels" data-order="8">
+                      <a href="case-study/roller-reels.html" class="gallery_image-wrapper w-inline-block"><img src="images/Roller_Reels_thumbnail.webp" loading="lazy" alt="Roller Reels" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website + Media</div>
+                          <h3 class="text-size-small">Roller Reels</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="service" data-name="Hawthorne Global Ministries" data-order="9">
+                      <a href="case-study/hawthorne-global-ministries.html" class="gallery_image-wrapper w-inline-block"><img src="images/Hawthorne_Global_Ministries_thumbnail.webp" loading="lazy" alt="Hawthorne Global Ministries" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website</div>
+                          <h3 class="text-size-small">Hawthorne Global Ministries</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="service" data-name="Alpha Ministries International" data-order="10">
+                      <a href="case-study/alpha-ministries-international.html" class="gallery_image-wrapper w-inline-block"><img src="images/alpha-ministries-thumbnail.webp" loading="lazy" alt="Alpha Ministries International" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website + Email Automation</div>
+                          <h3 class="text-size-small">Alpha Ministries International</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="service" data-name="Core Home" data-order="11">
+                      <a href="case-study/core-home.html" class="gallery_image-wrapper w-inline-block"><img src="images/core_home_desktop_thumbnail.jpg" loading="lazy" alt="Core Home" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website</div>
+                          <h3 class="text-size-small">Core Home</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="service" data-name="Western HP" data-order="12">
+                      <a href="case-study/western-hp.html" class="gallery_image-wrapper w-inline-block"><img src="images/whp_desktop_screenshot.webp" loading="lazy" alt="Western HP" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website</div>
+                          <h3 class="text-size-small">Western HP</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="app" data-name="Snooze Lane" data-order="13">
+                      <a href="case-study/snooze-lane.html" class="gallery_image-wrapper w-inline-block"><img src="images/Snooze-Lane-Desktop-thumbnail.webp" loading="lazy" alt="Snooze Lane" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website + iOS App</div>
+                          <h3 class="text-size-small">Snooze Lane</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gallery_item" data-category="app" data-name="Hamper" data-order="14">
+                      <a href="case-study/hamper.html" class="gallery_image-wrapper w-inline-block"><img src="images/hamper_app_website_thumbnail.webp" loading="lazy" alt="Hamper" class="gallery_image"></a>
+                      <div class="gallery_content-wrapper">
+                        <div class="margin-bottom">
+                          <div class="gallery_category">Website + iOS App</div>
+                          <h3 class="text-size-small">Hamper</h3>
                         </div>
                       </div>
                     </div>
@@ -613,6 +640,8 @@ tippy('.nav_link.is-muted', {
   delay: 0,
 });
 </script>
+  <script src="js/work-filter.js"></script>
+  <!-- end SWFT custom -->
   <script src="js/swft-nav.js"></script>
 </body>
 </html>
