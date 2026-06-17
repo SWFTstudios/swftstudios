@@ -174,5 +174,38 @@
     "branding": true,
     "website": true,
     "film": false
+  },
+  {
+    "type": "article",
+    "name": "Scribble & Scribe",
+    "slug": "scribble-and-scribe",
+    "href": "case-study/scribble-and-scribe.html",
+    "image": "images/scribble_scribe_thumbnsail.png",
+    "details": "E-commerce web experience for a creative stationery and lifestyle brand built to showcase products and drive online sales.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Core Home",
+    "slug": "core-home",
+    "href": "case-study/core-home.html",
+    "image": "images/core_home_desktop_thumbnail.jpg",
+    "details": "Web design and development for a home and lifestyle brand focused on quality products and customer experience.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Western HP",
+    "slug": "western-hp",
+    "href": "case-study/western-hp.html",
+    "image": "images/whp_desktop_screenshot.webp",
+    "details": "Professional web presence for a service business focused on digital solutions and client engagement.",
+    "branding": true,
+    "website": true,
+    "film": false
   }
 ]

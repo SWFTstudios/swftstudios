@@ -1,0 +1,624 @@
+[
+  {
+    "order": 1,
+    "name": "Brooklyn Steel Co.",
+    "slug": "brooklyn-steel",
+    "category": "ecommerce",
+    "categoryLabel": "Website + E-Commerce",
+    "breadcrumb": "E-Commerce",
+    "tag": "E-Commerce",
+    "image": "images/brooklyn-steel-thumbnail.webp",
+    "liveUrl": "https://brooklynsteelco.com/",
+    "hubDetails": "A Brooklyn-inspired café aesthetic meets modern espresso engineering — brand story and Shopify experience for the Talos 20 launch.",
+    "summary": "Brooklyn Steel Co. needed a digital flagship that could sell a $499 espresso machine by educating buyers, not overwhelming them. SWFT built a Shopify experience that turns product specs into confidence.",
+    "bottomLine": "Brooklyn Steel Co. launched the Talos 20 with a storefront that educates first-time buyers, showcases the brand's Brooklyn identity, and drives accessory upsells — turning a considered purchase into a confident one.",
+    "whoTheyAre": "Brooklyn Steel Co. is a kitchen appliance brand inspired by Brooklyn's creative energy. Their flagship Talos 20 Espresso Machine brings café-quality brewing, built-in grinding, and milk frothing to home kitchens.",
+    "challenge": [
+      "Home espresso is a considered purchase — customers need to understand features before committing $499.",
+      "The brand's Brooklyn-inspired identity had to come through in every scroll, not just product photos.",
+      "Bundle and accessory merchandising needed to support higher average order values.",
+      "Brew Guides and educational content were needed to reduce post-purchase uncertainty."
+    ],
+    "built": [
+      "Shopify storefront with a feature-education product page for the Talos 20 (grind settings, pressure gauge, steam wand, dual spout).",
+      "Visual feature cards that explain capabilities in benefit language, not spec sheets.",
+      "Mix-and-match bundle builder for limited-edition coffee cup collections.",
+      "Machines, Mugs, and Accessories collection pages with Brooklyn-branded typography and tone.",
+      "Brew Guides content section for post-purchase confidence."
+    ],
+    "impact": [
+      "Product education reduces purchase hesitation for a premium appliance.",
+      "Brand storytelling reinforces Brooklyn Steel's unique café-at-home positioning.",
+      "Bundle merchandising supports higher average order values.",
+      "Brew Guides build loyalty and reduce return risk."
+    ],
+    "whyMatters": "If you sell a product that requires explanation before purchase, your website is your best salesperson. SWFT builds storefronts that educate, inspire, and convert — so visitors become confident buyers, not confused browsers.",
+    "scorecard": [
+      { "label": "Product education clarity", "before": 38, "after": 86 },
+      { "label": "Brand differentiation", "before": 44, "after": 88 },
+      { "label": "Average order value readiness", "before": 32, "after": 79 },
+      { "label": "Post-purchase confidence", "before": 35, "after": 82 }
+    ],
+    "outcomeType": "storefront",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 2,
+    "name": "Manna Hydration",
+    "slug": "manna-hydration",
+    "category": "ecommerce",
+    "categoryLabel": "Website + E-Commerce",
+    "breadcrumb": "E-Commerce",
+    "tag": "E-Commerce",
+    "image": "images/manna-hydration-thumbnail.webp",
+    "liveUrl": "https://mannahydration.com/",
+    "hubDetails": "E-commerce web experience and product storytelling for a lifestyle hydration brand built around color, style, and sustainability.",
+    "summary": "Manna Hydration needed a storefront as vibrant as its product line. SWFT built a Shopify experience that drives seasonal discovery, social shopping, and repeat visits.",
+    "bottomLine": "Manna Hydration now has a digital sales channel that matches the energy of its drinkware — seasonal campaigns, social proof, and collection-based shopping that keeps customers coming back for the next drop.",
+    "whoTheyAre": "Manna Hydration is a lifestyle drinkware brand built around style, affordability, and sustainability — from color-changing cups to workout-ready bottles and everyday tumblers.",
+    "challenge": [
+      "A wide, fast-evolving product catalog needed to feel organized, not cluttered.",
+      "Seasonal collections and new arrivals required dedicated merchandising homes.",
+      "Social traffic and influencer content needed clear paths to purchase.",
+      "The brand had to communicate sustainability and style without slowing checkout."
+    ],
+    "built": [
+      "Shopify storefront organized by use case (Everyday Favorites, Workout Ready, Travel Essentials) and product type.",
+      "Seasonal campaign sections for launches like Summer Stripes and Color Changing Cups.",
+      "Best Sellers and New Arrivals merchandising blocks.",
+      "Instagram integration and shop-the-look experiences.",
+      "Liquid Lingo blog for hydration, wellness, and style content plus newsletter signup."
+    ],
+    "impact": [
+      "Product discovery is faster and more visually engaging.",
+      "Seasonal campaigns have a dedicated home on the storefront.",
+      "The site supports social traffic and influencer-driven shopping journeys.",
+      "Manna has a scalable e-commerce foundation for future product launches."
+    ],
+    "whyMatters": "Lifestyle brands win when their storefront feels as alive as their Instagram feed. SWFT builds e-commerce experiences that turn product catalogs into discovery engines — driving repeat visits and higher conversion.",
+    "scorecard": [
+      { "label": "Collection discoverability", "before": 41, "after": 87 },
+      { "label": "Seasonal campaign readiness", "before": 35, "after": 84 },
+      { "label": "Social-to-shop conversion", "before": 38, "after": 81 },
+      { "label": "Mobile shopping experience", "before": 45, "after": 86 }
+    ],
+    "outcomeType": "storefront",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 3,
+    "name": "Thyme & Table",
+    "slug": "thyme-and-table",
+    "category": "ecommerce",
+    "categoryLabel": "Website + E-Commerce",
+    "breadcrumb": "E-Commerce",
+    "tag": "E-Commerce",
+    "image": "images/thyme-and-table-thumbnail.webp",
+    "liveUrl": "https://shopthymeandtable.com/",
+    "hubDetails": "Full e-commerce presence for a Walmart kitchen and home brand spanning cookware, appliances, dinnerware, and drinkware.",
+    "summary": "Thyme & Table needed a digital flagship for a wide kitchen catalog. SWFT built navigation and storytelling that makes a massive product range feel inspiring, not overwhelming.",
+    "bottomLine": "Thyme & Table now has a storefront that handles a wide catalog with ease — bold navigation, lifestyle content, and social proof that help shoppers find the right product and buy with confidence.",
+    "whoTheyAre": "Thyme & Table is a trend-forward kitchen and home brand offering cookware, bakeware, dinnerware, drinkware, kitchen appliances, and lifestyle content with bold colors and effortless function.",
+    "challenge": [
+      "The catalog spans Prep, Cook, Serve, Drinkware, Appliances, and Lifestyle — each with multiple sub-categories.",
+      "Customers shop by category and by lifestyle moment, requiring flexible navigation.",
+      "Higher-ticket items like espresso machines needed testimonials and recipe content for purchase confidence.",
+      "The site had to feel as polished as the products themselves."
+    ],
+    "built": [
+      "Multi-level mega-menu navigation organized around Prep, Cook, Serve, Drinkware, Appliances, and Lifestyle.",
+      "Dedicated collection pages for Cookware series, Kitchen Appliances, Dinnerware, and more.",
+      "Original Recipes content section connecting products to real kitchen moments.",
+      "Customer testimonials for high-ticket appliance purchases.",
+      "Support hub with FAQ, How To's, Product Registration, and Replacement Parts."
+    ],
+    "impact": [
+      "Navigation makes a wide catalog feel approachable and inspiring.",
+      "Lifestyle and recipe content support discovery beyond the product grid.",
+      "Testimonials build confidence for higher-ticket appliance purchases.",
+      "The site is a scalable foundation for seasonal campaigns and new launches."
+    ],
+    "whyMatters": "When your catalog is wide, clarity is your competitive advantage. SWFT builds e-commerce architectures that turn complexity into confidence — so every product finds its buyer.",
+    "scorecard": [
+      { "label": "Catalog navigation", "before": 40, "after": 89 },
+      { "label": "Lifestyle content integration", "before": 33, "after": 82 },
+      { "label": "High-ticket purchase confidence", "before": 36, "after": 80 },
+      { "label": "Support and retention pathways", "before": 42, "after": 85 }
+    ],
+    "outcomeType": "storefront",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 4,
+    "name": "TAL Hydration",
+    "slug": "tal-hydration",
+    "category": "ecommerce",
+    "categoryLabel": "Website + E-Commerce",
+    "breadcrumb": "E-Commerce",
+    "tag": "E-Commerce",
+    "image": "images/tal-hydration-thumbnail.webp",
+    "liveUrl": "https://talhydration.com/",
+    "hubDetails": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands — designed to convert at scale.",
+    "summary": "TAL Hydration needed a brand destination that complements retail presence. SWFT built a storefront that showcases the full range and makes the 2-in-1 differentiator impossible to miss.",
+    "bottomLine": "TAL Hydration now has a direct brand destination that complements its Walmart retail presence — organized product families, social proof, and retail-aware CTAs that convert at scale.",
+    "whoTheyAre": "TAL Hydration is one of the most recognized hydration brands at Walmart, offering water bottles, tumblers, coffee mugs, and kids' drinkware at accessible price points.",
+    "challenge": [
+      "The product catalog spans bottles, tumblers, coffee travel mugs, and kids' lines with many variants.",
+      "The signature 2-in-1 bottle feature needed prominent, clear placement.",
+      "Social proof was needed to reinforce value against premium competitors.",
+      "The site had to serve both Walmart shoppers and direct visitors."
+    ],
+    "built": [
+      "Shopify storefront with multi-level navigation by product family (Water Bottles, Tumblers, Coffee & Travel, Children & Tweens).",
+      "Hero storytelling for the 2-in-1 straw-and-chug feature.",
+      "Customer review sections and TAL Buzz testimonials.",
+      "Strategic Shop at Walmart links connecting digital to in-store purchase.",
+      "Newsletter signup and customer support pathways."
+    ],
+    "impact": [
+      "Product discovery is organized by use case and product family.",
+      "The 2-in-1 differentiator is clear from the first scroll.",
+      "Social proof reinforces value against premium competitors.",
+      "The site supports both direct shopping and retail discovery journeys."
+    ],
+    "whyMatters": "Retail-first brands need a digital home that builds affinity without competing against their partners. SWFT builds storefronts that strengthen brand recognition and drive confident purchase decisions.",
+    "scorecard": [
+      { "label": "Product family navigation", "before": 43, "after": 88 },
+      { "label": "Differentiator visibility", "before": 37, "after": 90 },
+      { "label": "Social proof impact", "before": 40, "after": 83 },
+      { "label": "Retail-to-digital bridge", "before": 35, "after": 81 }
+    ],
+    "outcomeType": "storefront",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 5,
+    "name": "Scribble & Scribe",
+    "slug": "scribble-and-scribe",
+    "category": "ecommerce",
+    "categoryLabel": "Website + E-Commerce",
+    "breadcrumb": "E-Commerce",
+    "tag": "E-Commerce",
+    "image": "images/scribble_scribe_thumbnsail.png",
+    "liveUrl": "https://scribbleandscribe.webflow.io/",
+    "hubDetails": "E-commerce web experience for a creative stationery and lifestyle brand built to showcase products and drive online sales.",
+    "summary": "Scribble & Scribe needed a storefront that matched the creativity of its products. SWFT built a web experience that turns browsing into buying for a design-forward audience.",
+    "bottomLine": "Scribble & Scribe launched with a web presence that showcases its creative product line with the same care it puts into every design — making it easy for customers to discover, fall in love, and purchase.",
+    "whoTheyAre": "Scribble & Scribe is a creative stationery and lifestyle brand offering thoughtfully designed products for people who appreciate quality materials and distinctive aesthetics.",
+    "challenge": [
+      "The brand needed a digital home that reflected its creative identity, not a generic template.",
+      "Product presentation had to inspire browsing and reduce friction to purchase.",
+      "The site needed to work as both a brand showcase and a functional sales channel.",
+      "Mobile shopping experience was critical for a design-conscious audience."
+    ],
+    "built": [
+      "Custom web design and development with brand-accurate typography, layout, and imagery.",
+      "Product-focused page structure optimized for visual discovery.",
+      "Responsive build tuned for mobile shopping and social traffic.",
+      "Clear calls to action that move visitors from inspiration to purchase."
+    ],
+    "impact": [
+      "The brand has a digital presence that matches the quality of its products.",
+      "Product discovery feels intentional and visually engaging.",
+      "The site supports both brand storytelling and direct sales.",
+      "Mobile experience keeps pace with how the audience actually shops."
+    ],
+    "whyMatters": "Creative brands lose sales when their website feels generic. SWFT builds storefronts that carry your brand identity through every pixel — so the online experience is as distinctive as what you sell.",
+    "scorecard": [
+      { "label": "Brand identity online", "before": 42, "after": 87 },
+      { "label": "Product presentation", "before": 38, "after": 85 },
+      { "label": "Purchase flow clarity", "before": 40, "after": 82 },
+      { "label": "Mobile experience", "before": 44, "after": 86 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 6,
+    "name": "Blurred Lines Entertainment",
+    "slug": "blurred-lines-entertainment",
+    "category": "service",
+    "categoryLabel": "Website + Media",
+    "breadcrumb": "Website",
+    "tag": "Website",
+    "image": "images/BLE_SWFT_thumbnail.webp",
+    "liveUrl": "https://blurredlinesentertainment.com/",
+    "hubDetails": "Entertainment brand storytelling and web experience.",
+    "summary": "Blurred Lines Entertainment needed a site that could pack venues and book gigs. SWFT built a digital presence that captures the brand vision and converts visitors into fans and clients.",
+    "bottomLine": "Blurred Lines Entertainment now has a website that captures the brand's live energy online — helping the owner pack venues, book more gigs, and present a professional face to potential clients.",
+    "whoTheyAre": "Blurred Lines Entertainment is a live entertainment brand that needed a digital presence as bold as its performances — one that could attract bookings and build a fan base.",
+    "challenge": [
+      "The brand needed a website that reflected its live performance energy, not a static brochure.",
+      "Video and media content had to load fast and look premium on mobile.",
+      "The site needed to support booking inquiries and venue outreach.",
+      "Google Ads integration was needed to drive targeted traffic to shows and events."
+    ],
+    "built": [
+      "Custom website design and development with media-first layout.",
+      "Videography integration showcasing live performance footage.",
+      "Clear booking and contact pathways for venue owners and event planners.",
+      "Google Ads campaign setup to drive targeted traffic.",
+      "Mobile-optimized media playback and fast-loading pages."
+    ],
+    "impact": [
+      "The brand captures its live energy in a professional digital format.",
+      "Video content helps potential clients visualize the experience.",
+      "Booking pathways make it easier to convert interest into gigs.",
+      "Paid traffic campaigns drive measurable audience growth."
+    ],
+    "whyMatters": "Entertainment brands live or die by first impressions. SWFT builds websites that turn your best moments into your strongest sales tool — so the energy on stage shows up online too.",
+    "scorecard": [
+      { "label": "Brand energy online", "before": 40, "after": 88 },
+      { "label": "Media presentation quality", "before": 35, "after": 85 },
+      { "label": "Booking inquiry flow", "before": 38, "after": 82 },
+      { "label": "Paid traffic readiness", "before": 30, "after": 78 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": true
+  },
+  {
+    "order": 7,
+    "name": "Built By Me EZ",
+    "slug": "built-by-me-ez",
+    "category": "service",
+    "categoryLabel": "Website",
+    "breadcrumb": "Website",
+    "tag": "Website",
+    "image": "images/built_by_me_ez_thumbnail.webp",
+    "liveUrl": "https://builtbymeez.com/",
+    "hubDetails": "Product story and site experience for a DIY builder audience.",
+    "summary": "Built By Me EZ needed a platform to showcase fitness content and sell courses. SWFT built a site that elevated a personal training business into a scalable digital brand.",
+    "bottomLine": "Built By Me EZ went from social-only to a sleek platform that showcases video content, sells courses online, and gives potential clients a reason to trust the brand before the first session.",
+    "whoTheyAre": "Built By Me EZ is a personal training brand that needed to move beyond Instagram and TikTok into a owned digital platform with course sales and client conversion.",
+    "challenge": [
+      "The trainer's best content lived on social platforms with no owned destination.",
+      "Course sales required a trustworthy, professional checkout experience.",
+      "Photography and social media content needed a curated home on the website.",
+      "The site had to convert social followers into paying clients and course buyers."
+    ],
+    "built": [
+      "Custom website design showcasing fitness photography and video content.",
+      "Course sales integration for online training programs.",
+      "Social media content curation into a professional portfolio layout.",
+      "Contact and booking pathways for personal training inquiries.",
+      "Mobile-first responsive build for social traffic conversion."
+    ],
+    "impact": [
+      "The brand has a professional platform beyond social media alone.",
+      "Course sales create a new revenue stream beyond in-person training.",
+      "Social content is curated into a conversion-focused portfolio.",
+      "Potential clients can evaluate the brand before reaching out."
+    ],
+    "whyMatters": "If your business runs on social media, you are renting your audience. SWFT builds owned platforms that turn followers into customers — with the professionalism to justify premium pricing.",
+    "scorecard": [
+      { "label": "Owned platform credibility", "before": 36, "after": 86 },
+      { "label": "Course sales readiness", "before": 28, "after": 80 },
+      { "label": "Social-to-site conversion", "before": 34, "after": 83 },
+      { "label": "Client trust signals", "before": 40, "after": 87 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 8,
+    "name": "Roller Reels",
+    "slug": "roller-reels",
+    "category": "service",
+    "categoryLabel": "Website + Media",
+    "breadcrumb": "Website",
+    "tag": "Website",
+    "image": "images/Roller_Reels_thumbnail.webp",
+    "liveUrl": "https://rollerreels.com/",
+    "hubDetails": "A focused look at positioning and web presence for a reels-forward brand.",
+    "summary": "Roller Reels needed a portfolio site that sells taste and range in seconds. SWFT rebuilt the experience so prospects move from browsing to briefing faster.",
+    "bottomLine": "Roller Reels now has a portfolio-led website that showcases work with clarity, presents the brand with authority, and helps prospects move from inspiration to inquiry with less friction.",
+    "whoTheyAre": "Roller Reels is a production company where the work has to sell itself fast — prospects scan for proof of taste, range, professionalism, and capability before they reach out.",
+    "challenge": [
+      "Excellent work was packaged weakly, costing inquiries.",
+      "The portfolio needed clearer organization and faster discoverability.",
+      "Media-heavy pages had to balance visual quality with load performance.",
+      "The site needed to function as portfolio, pitch deck, and client filter simultaneously."
+    ],
+    "built": [
+      "Portfolio-led website structure optimized for discoverability and confidence.",
+      "Clearer service positioning so work is not floating without context.",
+      "Media-first UX balancing visual impact with usability and mobile performance.",
+      "Lead support with calls to action treated as business tools, not afterthoughts."
+    ],
+    "impact": [
+      "Cleaner platform for sharing projects, reels, and capabilities.",
+      "The brand feels more intentional and premium, attracting better-fit clients.",
+      "The portfolio is easier to navigate and easier to remember after a visit.",
+      "The site supports business development instead of acting only as a showcase."
+    ],
+    "whyMatters": "Creative studios grow faster when presentation matches the quality of the work. SWFT builds portfolio sites that filter for better clients and accelerate the path from admiration to inquiry.",
+    "scorecard": [
+      { "label": "Portfolio discoverability", "before": 45, "after": 90 },
+      { "label": "Service clarity", "before": 39, "after": 84 },
+      { "label": "Inquiry flow", "before": 42, "after": 80 },
+      { "label": "Mobile media performance", "before": 34, "after": 76 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": true
+  },
+  {
+    "order": 9,
+    "name": "Hawthorne Global Ministries",
+    "slug": "hawthorne-global-ministries",
+    "category": "service",
+    "categoryLabel": "Website",
+    "breadcrumb": "Website",
+    "tag": "Website",
+    "image": "images/Hawthorne_Global_Ministries_thumbnail.webp",
+    "liveUrl": "https://www.hawthorneglobalministries.org/",
+    "hubDetails": "Brand and digital presence for a global ministries organization.",
+    "summary": "Hawthorne Global Ministries needed trust and clarity online. SWFT built a website that communicates mission, invites support, and gives visitors a credible path to engagement.",
+    "bottomLine": "Hawthorne Global Ministries now has a digital front door that makes the mission easier to understand, creates better conditions for donations and involvement, and presents a more professional presence to new audiences.",
+    "whoTheyAre": "Hawthorne Global Ministries is a mission-driven organization that needed a platform to build trust, communicate purpose, and help supporters understand where they fit into the work.",
+    "challenge": [
+      "Powerful stories were losing momentum because the digital experience was unclear.",
+      "Visitors needed clearer paths to learn about the mission, stay informed, and get involved.",
+      "Trust-sensitive actions like donations required a site that felt established, not overwhelming.",
+      "The ministry needed a stronger foundation for ongoing updates, events, and supporter communication."
+    ],
+    "built": [
+      "Mission-first messaging so purpose is graspable immediately.",
+      "Trust-building design with clear layout, content hierarchy, and thoughtful calls to action.",
+      "Supporter journey mapping from awareness to prayer, updates, giving, or direct connection.",
+      "Long-term usability platform for ongoing communication and community growth."
+    ],
+    "impact": [
+      "The mission is easier to understand for first-time visitors.",
+      "The site creates better conditions for donations, updates, and supporter involvement.",
+      "The ministry has a more trustworthy and organized communication hub.",
+      "The platform is better prepared for future outreach, storytelling, and growth."
+    ],
+    "whyMatters": "Mission-driven organizations lose support when their story is hard to find online. SWFT builds websites that turn purpose into action — clearer messaging, trusted design, and paths that invite engagement.",
+    "scorecard": [
+      { "label": "Mission clarity", "before": 46, "after": 88 },
+      { "label": "Supporter path", "before": 39, "after": 81 },
+      { "label": "Trust and credibility", "before": 50, "after": 87 },
+      { "label": "Donation readiness", "before": 34, "after": 79 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 10,
+    "name": "Alpha Ministries International",
+    "slug": "alpha-ministries-international",
+    "category": "service",
+    "categoryLabel": "Website + Email Automation",
+    "breadcrumb": "Website",
+    "tag": "Website",
+    "image": "images/alpha-ministries-thumbnail.webp",
+    "liveUrl": "https://www.alphaministriesinternational.org/",
+    "hubDetails": "How SWFT built a digital home for a 30-year cross-cultural ministry serving communities across Pakistan and New Jersey.",
+    "summary": "Alpha Ministries International needed one digital home for decades of cross-cultural work. SWFT built a site that organizes ministries, events, and giving into a clear supporter journey.",
+    "bottomLine": "Alpha Ministries International now has a digital front door for its cross-cultural mission — visitors can explore ministries, discover events, connect with leadership, and support the work with confidence.",
+    "whoTheyAre": "Alpha Ministries International is a Christ-centered ministry founded in 1995, serving communities across Pakistan and the United States through education, outreach, and relationship-based ministry.",
+    "challenge": [
+      "Multiple ministry areas needed to feel organized, not fragmented.",
+      "Visitors needed clearer paths to events, donations, and leadership contact.",
+      "The organization needed a credible platform for newsletter signups and ongoing outreach.",
+      "Trust-sensitive actions like giving required an established, easy-to-navigate site."
+    ],
+    "built": [
+      "Mission-first information architecture across South Asian Fellowship, Children's Ministry, Outreach, and ESL.",
+      "Ministry storytelling with dedicated pages for each area of impact.",
+      "Supporter and donor journey with clear calls to action for donations, events, and newsletter signup.",
+      "Email and communication readiness for ongoing outreach and event promotion."
+    ],
+    "impact": [
+      "The mission and ministry scope are easier to understand for first-time visitors.",
+      "Event and donation pathways are clearer and more accessible.",
+      "The organization has a more professional communication hub for ongoing outreach.",
+      "The platform supports future growth across Pakistan and the United States."
+    ],
+    "whyMatters": "Organizations with decades of impact deserve a website that reflects the breadth of their work. SWFT builds ministry platforms that organize complexity into clarity — so supporters find their place faster.",
+    "scorecard": [
+      { "label": "Ministry organization", "before": 41, "after": 87 },
+      { "label": "Event and donation paths", "before": 36, "after": 83 },
+      { "label": "Communication readiness", "before": 38, "after": 85 },
+      { "label": "First-visit comprehension", "before": 44, "after": 88 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 11,
+    "name": "Core Home",
+    "slug": "core-home",
+    "category": "service",
+    "categoryLabel": "Website",
+    "breadcrumb": "Website",
+    "tag": "Website",
+    "image": "images/core_home_desktop_thumbnail.jpg",
+    "liveUrl": "https://corehome.com",
+    "hubDetails": "Web design and development for a home and lifestyle brand focused on quality products and customer experience.",
+    "summary": "Core Home needed a web presence that matched its product quality. SWFT built a site that communicates brand value and drives customer engagement from the first visit.",
+    "bottomLine": "Core Home launched with a professional web presence that showcases its product line with clarity and credibility — giving customers a reason to explore, trust, and buy.",
+    "whoTheyAre": "Core Home is a home and lifestyle brand focused on quality products and customer experience, needing a digital presence that reflects its commitment to craftsmanship and design.",
+    "challenge": [
+      "The brand needed a website that communicated product quality and brand values, not just listed items.",
+      "Customer engagement required clear navigation and compelling product presentation.",
+      "The site had to support both brand discovery and direct customer action.",
+      "Mobile experience was essential for a broad consumer audience."
+    ],
+    "built": [
+      "Custom website design and development with brand-accurate visual identity.",
+      "Product-focused page structure optimized for discovery and engagement.",
+      "Responsive build tuned for mobile and desktop shopping journeys.",
+      "Clear calls to action guiding visitors from browsing to purchase or inquiry."
+    ],
+    "impact": [
+      "The brand has a credible digital home that matches product quality.",
+      "Product presentation drives engagement and reduces bounce rates.",
+      "The site supports both brand storytelling and customer conversion.",
+      "Mobile experience meets customers where they actually browse."
+    ],
+    "whyMatters": "Home and lifestyle brands compete on trust as much as product. SWFT builds websites that communicate quality before the first click — so visitors feel confident exploring your catalog.",
+    "scorecard": [
+      { "label": "Brand credibility online", "before": 40, "after": 86 },
+      { "label": "Product presentation", "before": 38, "after": 84 },
+      { "label": "Customer engagement paths", "before": 35, "after": 81 },
+      { "label": "Mobile experience", "before": 42, "after": 87 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 12,
+    "name": "Western HP",
+    "slug": "western-hp",
+    "category": "service",
+    "categoryLabel": "Website",
+    "breadcrumb": "Website",
+    "tag": "Website",
+    "image": "images/whp_desktop_screenshot.webp",
+    "liveUrl": "https://whp-digital.webflow.io/",
+    "hubDetails": "Professional web presence for a service business focused on digital solutions and client engagement.",
+    "summary": "Western HP needed a professional digital face for its service business. SWFT built a site that communicates expertise and makes it easy for prospects to take the next step.",
+    "bottomLine": "Western HP now has a professional web presence that communicates expertise, builds client confidence, and provides clear pathways for prospects to connect and engage.",
+    "whoTheyAre": "Western HP is a service business that needed a professional digital presence to communicate its expertise and convert visitors into clients.",
+    "challenge": [
+      "The business needed a website that communicated professionalism and expertise quickly.",
+      "Service offerings had to be presented clearly without overwhelming visitors.",
+      "Contact and inquiry pathways needed to be obvious and low-friction.",
+      "The site had to work as both a credibility tool and a lead generation engine."
+    ],
+    "built": [
+      "Custom website design reflecting the brand's professional identity.",
+      "Service-focused page structure with clear value propositions.",
+      "Contact and inquiry pathways optimized for conversion.",
+      "Responsive build ensuring a polished experience on every device."
+    ],
+    "impact": [
+      "The business has a credible digital presence that builds client confidence.",
+      "Service offerings are presented with clarity and purpose.",
+      "Inquiry pathways make it easy for prospects to take action.",
+      "The site functions as both a credibility anchor and a lead generation tool."
+    ],
+    "whyMatters": "Service businesses win clients on first impressions. SWFT builds websites that communicate expertise in seconds — so prospects trust you before they ever pick up the phone.",
+    "scorecard": [
+      { "label": "Professional credibility", "before": 38, "after": 85 },
+      { "label": "Service clarity", "before": 40, "after": 83 },
+      { "label": "Lead generation paths", "before": 35, "after": 80 },
+      { "label": "Mobile professionalism", "before": 42, "after": 86 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 13,
+    "name": "Snooze Lane",
+    "slug": "snooze-lane",
+    "category": "app",
+    "categoryLabel": "Website + iOS App",
+    "breadcrumb": "App",
+    "tag": "App",
+    "image": "images/Snooze-Lane-Desktop-thumbnail.webp",
+    "liveUrl": "https://snoozelaneapp.com/",
+    "hubDetails": "How SWFT translated a clever commuter app into a product story people could trust, understand, and share.",
+    "summary": "Snooze Lane needed a product story people could trust before downloading. SWFT built a landing experience that explains the app, builds confidence, and drives installs.",
+    "bottomLine": "Snooze Lane now has a product landing page that translates a clever commuter app into a story people trust, understand, and share — driving downloads with less explanation needed.",
+    "whoTheyAre": "Snooze Lane is a commuter app that helps riders optimize their sleep schedule around transit — a clever concept that needed clear storytelling to drive adoption.",
+    "challenge": [
+      "A novel app concept required explanation before users would download.",
+      "The landing page had to build trust quickly for a product users had never seen before.",
+      "App Store conversion depended on a clear, compelling product narrative.",
+      "The site needed to work as both marketing page and product education tool."
+    ],
+    "built": [
+      "Product landing page with clear value proposition and use-case storytelling.",
+      "iOS app integration with App Store download pathways.",
+      "Trust-building design with social proof and feature explanations.",
+      "Mobile-first responsive build optimized for social and search traffic."
+    ],
+    "impact": [
+      "The product story is clear enough to drive downloads without hand-holding.",
+      "Trust signals reduce hesitation for first-time users.",
+      "The landing page supports App Store conversion with a cohesive narrative.",
+      "Social sharing is easier when the product is easy to explain."
+    ],
+    "whyMatters": "App launches fail when users cannot understand the value in 10 seconds. SWFT builds landing pages that explain, convince, and convert — turning clever ideas into downloaded products.",
+    "scorecard": [
+      { "label": "Product story clarity", "before": 37, "after": 89 },
+      { "label": "Download conversion readiness", "before": 33, "after": 84 },
+      { "label": "Trust and credibility", "before": 40, "after": 86 },
+      { "label": "Social shareability", "before": 35, "after": 82 }
+    ],
+    "outcomeType": "website",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "order": 14,
+    "name": "Hamper",
+    "slug": "hamper",
+    "category": "app",
+    "categoryLabel": "Website + iOS App",
+    "breadcrumb": "App",
+    "tag": "App",
+    "image": "images/hamper_app_website_thumbnail.webp",
+    "liveUrl": "https://hamperapp.webflow.io/",
+    "hubDetails": "App and web case study for Hamper.",
+    "summary": "Hamper needed to feel like a reliable everyday service, not just another on-demand app. SWFT simplified the story and clarified the user flow to drive adoption.",
+    "bottomLine": "Hamper came out with a clearer digital system for acquisition and adoption — presenting itself as a practical, reliable service instead of an idea users still have to decode.",
+    "whoTheyAre": "Hamper is an on-demand laundry and delivery app that needed a digital experience making the service feel straightforward, trustworthy, and worth trying.",
+    "challenge": [
+      "If the landing experience felt confusing or unfinished, adoption dropped before the service could prove itself.",
+      "The brand needed to feel like a reliable everyday solution, not a concept.",
+      "Scheduling, onboarding, and action paths had to feel straightforward.",
+      "The site and app story had to work together as one cohesive product narrative."
+    ],
+    "built": [
+      "Simplified product story framing Hamper as a practical everyday service.",
+      "User flow focused on ease — scheduling, onboarding, and action paths with low mental effort.",
+      "Brand presentation tuned for trust and reliability over hype.",
+      "iOS app landing page integration with clear download and signup pathways."
+    ],
+    "impact": [
+      "Hamper presents itself more like a practical, reliable service.",
+      "User onboarding friction is reduced from first visit to first order.",
+      "The digital touchpoints support behavior change instead of creating extra friction.",
+      "The brand has a stronger base for growth and user acquisition."
+    ],
+    "whyMatters": "On-demand apps live or die on first-use clarity. SWFT builds product experiences that remove friction from the very first visit — so users understand the value before they download.",
+    "scorecard": [
+      { "label": "Service clarity", "before": 38, "after": 85 },
+      { "label": "Onboarding simplicity", "before": 32, "after": 82 },
+      { "label": "Trust presentation", "before": 40, "after": 86 },
+      { "label": "Adoption readiness", "before": 35, "after": 80 }
+    ],
+    "outcomeType": "website",
+    "branding": false,
+    "website": true,
+    "film": false
+  }
+]
