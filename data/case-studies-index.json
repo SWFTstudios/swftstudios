@@ -119,5 +119,60 @@
     "branding": true,
     "website": true,
     "film": false
+  },
+  {
+    "type": "article",
+    "name": "Alpha Ministries International",
+    "slug": "alpha-ministries-international",
+    "href": "case-study/alpha-ministries-international.html",
+    "image": "images/alpha-ministries-thumbnail.webp",
+    "details": "How SWFT built a digital home for a 30-year cross-cultural ministry serving communities across Pakistan and New Jersey.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Manna Hydration",
+    "slug": "manna-hydration",
+    "href": "case-study/manna-hydration.html",
+    "image": "images/manna-hydration-thumbnail.webp",
+    "details": "E-commerce web experience and product storytelling for a lifestyle hydration brand built around color, style, and sustainability.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "TAL Hydration",
+    "slug": "tal-hydration",
+    "href": "case-study/tal-hydration.html",
+    "image": "images/tal-hydration-thumbnail.webp",
+    "details": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands — designed to convert at scale.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Thyme & Table",
+    "slug": "thyme-and-table",
+    "href": "case-study/thyme-and-table.html",
+    "image": "images/thyme-and-table-thumbnail.webp",
+    "details": "Full e-commerce presence for a Walmart kitchen and home brand spanning cookware, appliances, dinnerware, and drinkware.",
+    "branding": true,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "article",
+    "name": "Brooklyn Steel Co.",
+    "slug": "brooklyn-steel",
+    "href": "case-study/brooklyn-steel.html",
+    "image": "images/brooklyn-steel-thumbnail.webp",
+    "details": "A Brooklyn-inspired café aesthetic meets modern espresso engineering — brand story and Shopify experience for the Talos 20 launch.",
+    "branding": true,
+    "website": true,
+    "film": false
   }
 ]
