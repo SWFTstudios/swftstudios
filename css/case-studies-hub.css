@@ -1,4 +1,4 @@
-/* Videos & Insights hub — Case Study Match layout, scoped to .swft-hub-match */
+/* Resources hub — Case Study Match layout, scoped to .swft-hub-match */
 .swft-hub-match {
   --light-grey: #e9e9e9;
   --hub-muted: rgba(255, 255, 255, 0.53);
@@ -464,4 +464,24 @@ body:is(.loading, .intro) .swft-hub-match .skeleton-bar {
   .swft-hub-match .modal_left {
     height: 30vh;
   }
+}
+
+/* Resources filter bar */
+.resources-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1vw 1.25rem;
+  position: relative;
+  z-index: 3;
+}
+
+.resources-filter-bar .rfb.is-active {
+  background: var(--green, #9fe870);
+  border-color: var(--green, #9fe870);
+  color: #000;
+}
+
+.swft-hub-match .case-study_item.is-hidden {
+  display: none !important;
 }

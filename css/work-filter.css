@@ -36,7 +36,8 @@
   outline: none;
 }
 
-.work-filter-btn.is-active {
+.work-filter-btn.is-active,
+.work-filter-btn.swft-btn.is-active {
   background: var(--green, #9fe870);
   border-color: var(--green, #9fe870);
   color: #000;
