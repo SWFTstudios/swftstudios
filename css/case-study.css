@@ -1,4 +1,207 @@
-/* SWFT Case Study — floating CTA + inline CTA block */
+/* SWFT Case Study — YOO-inspired layout, floating CTA, inline CTA block */
+
+/* Hero marquee */
+@keyframes cs-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.cs-detail {
+  padding-top: 0;
+}
+
+.cs-hero-marquee {
+  overflow: hidden;
+  width: 100%;
+  padding: 2rem 0 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cs-hero-marquee-track {
+  display: flex;
+  gap: 3rem;
+  width: max-content;
+  animation: cs-marquee-scroll 30s linear infinite;
+}
+
+.cs-hero-marquee-track span {
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0.15;
+}
+
+/* Cover image */
+.cs-cover {
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.cs-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Scroll cue */
+.cs-scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.cs-scroll-arrow {
+  display: block;
+  animation: cs-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes cs-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* Two-column layout */
+.cs-layout {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) minmax(0, 3fr);
+  gap: 3rem;
+  padding: 2rem 0 4rem;
+}
+
+.cs-sidebar {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+}
+
+.cs-sidebar dl {
+  margin: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.cs-sidebar dt {
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 0.25rem;
+}
+
+.cs-sidebar dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.cs-sidebar dd a {
+  color: var(--green, #9fe870);
+  text-decoration: none;
+}
+
+.cs-sidebar dd a:hover {
+  text-decoration: underline;
+}
+
+.cs-body .uui-text-rich-text {
+  max-width: 42rem;
+}
+
+.cs-word {
+  display: inline-block;
+}
+
+/* Prev / Next nav */
+.cs-prev-next {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 3rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-prev-next a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.cs-prev-next a:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cs-prev-next .cs-nav-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.cs-prev-next .cs-nav-title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.cs-prev-next .cs-next {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.cs-back-link {
+  margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 991px) {
+  .cs-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .cs-sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .cs-prev-next {
+    grid-template-columns: 1fr;
+  }
+
+  .cs-prev-next .cs-next {
+    text-align: left;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-hero-marquee-track {
+    animation: none;
+  }
+
+  .cs-scroll-arrow {
+    animation: none;
+  }
+}
+
 .cs-floating-cta {
   position: fixed;
   right: 1.5rem;
@@ -64,18 +267,12 @@
   justify-content: center;
 }
 
-.cs-cta-actions .button-2 {
+.cs-cta-actions .swft-btn {
   margin: 0;
 }
 
-.cs-cta-actions .button-2.is-outlined {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: inherit;
-}
-
-.cs-cta-actions .button-2.is-outlined:hover {
-  border-color: #fff;
+.cs-floating-cta.swft-btn {
+  border-radius: 999px;
 }
 
 @media screen and (max-width: 767px) {
