@@ -8,12 +8,13 @@
    ============================================================ */
 (function () {
   var LINKS = [
-    { label: "Home",     href: "/index.html",           key: "home" },
-    { label: "Pricing",  href: "/website-pricing.html", key: "pricing" },
-    { label: "Our Work", href: "/websites.html",        key: "our-work" },
-    { label: "Team",     href: "/team.html",            key: "team" },
-    { label: "Articles", href: "/case-studies.html",    key: "articles" },
-    { label: "Contact",  href: "/contact.html",         key: "contact" }
+    { label: "Home",         href: "/index.html",           key: "home" },
+    { label: "Services",     href: "/services.html",        key: "services" },
+    { label: "Our Work",     href: "/websites.html",        key: "our-work" },
+    { label: "Pricing",      href: "/website-pricing.html", key: "pricing" },
+    { label: "Case Studies", href: "/case-studies.html",    key: "case-studies" },
+    { label: "Team",         href: "/team.html",            key: "team" },
+    { label: "Contact",      href: "/contact.html",         key: "contact" }
   ];
   var CTA = { label: "Order Your Website →", href: "/swft-method.html" };
   var BRAND = 'SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span>';

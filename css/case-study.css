@@ -1,4 +1,4 @@
-/* SWFT Case Study — YOO-inspired layout, floating CTA, inline CTA block */
+/* SWFT Case Study — Case Study Match layout, floating CTA */
 
 /* Hero marquee */
 @keyframes cs-marquee-scroll {
@@ -58,7 +58,113 @@
   font-size: 0.6875rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  opacity: 0.5;
+  opacity: 0.75;
+  color: #fff;
+}
+
+/* Project hero head — title + service tags */
+.cs-hero-head {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-project-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  color: #fff;
+  margin: 0 0 1rem;
+}
+
+.cs-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cs-tag-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Readable body copy — override global gray rich text */
+.cs-body .uui-text-rich-text {
+  max-width: 42rem;
+  color: #f2f2f2;
+}
+
+.cs-body .uui-text-rich-text p,
+.cs-body .uui-text-rich-text li {
+  color: #f2f2f2;
+}
+
+.cs-body .uui-text-rich-text h2 {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 2.5rem 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+.cs-body .uui-text-rich-text h2:first-child {
+  margin-top: 0;
+}
+
+.cs-body .uui-text-rich-text em {
+  color: #d4d4d4;
+}
+
+.cs-body .uui-text-rich-text a {
+  color: var(--green, #9fe870);
+}
+
+/* Outcome scorecard blocks */
+.cs-scorecard-grid {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.cs-scorecard-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cs-scorecard-item:last-child {
+  border-bottom: none;
+}
+
+.cs-scorecard-item p {
+  margin: 0 0 0.65rem;
+  color: #fff !important;
+}
+
+.cs-scorecard-bars {
+  max-width: 26rem;
+}
+
+.cs-scorecard-bar {
+  height: 0.5rem;
+  margin-bottom: 0.35rem;
+  border-radius: 2px;
+}
+
+.cs-scorecard-bar--before {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.cs-scorecard-bar--after {
+  background: var(--green, #9fe870);
 }
 
 .cs-scroll-arrow {
@@ -95,14 +201,16 @@
   font-size: 0.6875rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  opacity: 0.5;
+  opacity: 0.75;
   margin-bottom: 0.25rem;
+  color: #fff;
 }
 
 .cs-sidebar dd {
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.4;
+  color: #f2f2f2;
 }
 
 .cs-sidebar dd a {
@@ -112,10 +220,6 @@
 
 .cs-sidebar dd a:hover {
   text-decoration: underline;
-}
-
-.cs-body .uui-text-rich-text {
-  max-width: 42rem;
 }
 
 .cs-word {
@@ -152,12 +256,14 @@
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: 0.5;
+  opacity: 0.75;
+  color: #fff;
 }
 
 .cs-prev-next .cs-nav-title {
   font-size: 0.9375rem;
   font-weight: 500;
+  color: #f2f2f2;
 }
 
 .cs-prev-next .cs-next {
@@ -252,12 +358,14 @@
   margin: 0 0 0.5rem;
   font-size: 1.25rem;
   font-weight: 500;
+  color: #fff;
 }
 
 .cs-cta-block p {
   margin: 0 0 1.25rem;
-  opacity: 0.8;
+  opacity: 0.95;
   font-size: 0.9375rem;
+  color: #f2f2f2;
 }
 
 .cs-cta-actions {
