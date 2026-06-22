@@ -160,8 +160,66 @@
 .ps-cta-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.7rem;
   justify-content: center;
+}
+
+/* Match homepage / Webflow button.is-course on shell pages */
+.ps-page .button-group.is-course {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+}
+
+.ps-page .button {
+  background-color: #fff;
+  color: #010101;
+  text-align: center;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  line-height: 0.9;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9375rem;
+}
+
+.ps-page .button.is-course {
+  border-radius: 4px;
+}
+
+.ps-page .button.is-course.outlined {
+  border: 0.5px solid #fff;
+  color: #fff;
+  background-color: transparent;
+}
+
+.ps-page .button.is-course.outlined:hover {
+  color: #010101;
+}
+
+.ps-page .button_bg {
+  background-color: var(--ps-accent, #7fffe5);
+  pointer-events: none;
+  width: 0%;
+  transition: width 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ps-page .button:hover .button_bg {
+  width: 100%;
+}
+
+.ps-page .button_text {
+  position: relative;
+  z-index: 1;
 }
 
 .ps-footer {

@@ -14,7 +14,6 @@
   <meta name="twitter:title" content="Contact | SWFT Studios">
   <meta name="twitter:description" content="Connect with SWFT Studios — web, content, and automation for brands that move fast.">
   <link rel="stylesheet" href="css/swft-nav.css">
-  <link rel="stylesheet" href="css/swft-buttons.css">
   <link rel="stylesheet" href="css/page-shell.css">
   <link rel="stylesheet" href="css/contact-page.css">
 </head>
@@ -79,7 +78,10 @@
               <label for="contact-message">Message</label>
               <textarea id="contact-message" name="message" required placeholder="Tell us about your goals, timeline, and what success looks like."></textarea>
             </div>
-            <button type="submit" class="swft-btn is-primary contact-submit" id="contact-submit">Send Message</button>
+            <button type="submit" class="button is-course contact-submit" id="contact-submit">
+              <div class="button_bg"></div>
+              <div class="button_text">Send Message</div>
+            </button>
             <p id="contact-status" class="contact-status" role="status" aria-live="polite" hidden></p>
           </form>
           <p class="contact-book-alt">Prefer to talk live? <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" rel="noopener noreferrer">Book a discovery call on Cal.com</a></p>
@@ -127,6 +129,7 @@
       const form = document.getElementById("contact-form");
       const statusEl = document.getElementById("contact-status");
       const submitBtn = document.getElementById("contact-submit");
+      const submitLabel = submitBtn ? submitBtn.querySelector(".button_text") : null;
       if (!form) return;
 
       function showStatus(msg, type) {
@@ -148,7 +151,7 @@
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = "Sending…";
+        if (submitLabel) submitLabel.textContent = "Sending…";
         statusEl.hidden = true;
 
         const payload = {
@@ -182,7 +185,7 @@
           })
           .finally(function () {
             submitBtn.disabled = false;
-            submitBtn.textContent = "Send Message";
+            if (submitLabel) submitLabel.textContent = "Send Message";
           });
       });
     })();
