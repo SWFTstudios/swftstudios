@@ -8,7 +8,8 @@
     "details": "How SWFT translated a clever commuter app into a product story people could trust, understand, and share.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Product story clarity: 89/100"
   },
   {
     "type": "case-study",
@@ -19,7 +20,8 @@
     "details": "A focused look at positioning and web presence for a reels-forward brand.",
     "branding": true,
     "website": true,
-    "film": true
+    "film": true,
+    "metric": "Portfolio discoverability: 90/100"
   },
   {
     "type": "case-study",
@@ -30,7 +32,8 @@
     "details": "Product story and site experience for a DIY builder audience.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Owned platform credibility: 86/100"
   },
   {
     "type": "case-study",
@@ -41,7 +44,8 @@
     "details": "App and web case study for Hamper.",
     "branding": false,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Service clarity: 85/100"
   },
   {
     "type": "case-study",
@@ -52,7 +56,8 @@
     "details": "Brand and digital presence for a global ministries organization.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Mission clarity: 88/100"
   },
   {
     "type": "case-study",
@@ -63,7 +68,8 @@
     "details": "Entertainment brand storytelling and web experience.",
     "branding": true,
     "website": true,
-    "film": true
+    "film": true,
+    "metric": "Brand energy online: 88/100"
   },
   {
     "type": "tips",
@@ -129,7 +135,8 @@
     "details": "How SWFT built a digital home for a 30-year cross-cultural ministry serving communities across Pakistan and New Jersey.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Ministry organization: 87/100"
   },
   {
     "type": "case-study",
@@ -140,7 +147,8 @@
     "details": "E-commerce web experience and product storytelling for a lifestyle hydration brand built around color, style, and sustainability.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Collection discoverability: 87/100"
   },
   {
     "type": "case-study",
@@ -151,7 +159,8 @@
     "details": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands — designed to convert at scale.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Product family navigation: 88/100"
   },
   {
     "type": "case-study",
@@ -162,7 +171,8 @@
     "details": "Full e-commerce presence for a Walmart kitchen and home brand spanning cookware, appliances, dinnerware, and drinkware.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Catalog navigation: 89/100"
   },
   {
     "type": "case-study",
@@ -173,7 +183,8 @@
     "details": "A Brooklyn-inspired café aesthetic meets modern espresso engineering — brand story and Shopify experience for the Talos 20 launch.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Product education clarity: 86/100"
   },
   {
     "type": "case-study",
@@ -184,7 +195,8 @@
     "details": "E-commerce web experience for a creative stationery and lifestyle brand built to showcase products and drive online sales.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Brand identity online: 87/100"
   },
   {
     "type": "case-study",
@@ -195,7 +207,8 @@
     "details": "Web design and development for a home and lifestyle brand focused on quality products and customer experience.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Brand credibility online: 86/100"
   },
   {
     "type": "case-study",
@@ -206,6 +219,7 @@
     "details": "Professional web presence for a service business focused on digital solutions and client engagement.",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "metric": "Professional credibility: 85/100"
   }
 ]
