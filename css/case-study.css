@@ -1,4 +1,5 @@
 /* SWFT Case Study — Case Study Match layout, floating CTA */
+@import url("swft-fonts.css");
 
 /* Hero marquee */
 @keyframes cs-marquee-scroll {

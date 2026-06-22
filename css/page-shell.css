@@ -8,6 +8,7 @@
   --ps-card: #0a0a0a;
   background: var(--ps-bg);
   color: var(--ps-text);
+  font-family: "Inter Display", Inter, sans-serif;
 }
 
 .ps-page main {
