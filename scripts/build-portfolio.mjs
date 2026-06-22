@@ -22,46 +22,74 @@ function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function serviceTags(p) {
+  var tags = [];
+  if (p.website) tags.push("Website");
+  if (p.branding) tags.push("Branding");
+  if (p.film) tags.push("Film");
+  return tags
+    .map(function (t) {
+      return '<span class="cs-tag-pill">' + escapeHtml(t) + "</span>";
+    })
+    .join("");
+}
+
+function buildScorecards(scorecard) {
+  return (
+    '<div class="cs-scorecard-grid">' +
+    scorecard
+      .map(function (s) {
+        return (
+          '<div class="cs-scorecard-item">' +
+          "<p><strong>" +
+          escapeHtml(s.label) +
+          "</strong>: " +
+          s.before +
+          " to " +
+          s.after +
+          " / 100</p>" +
+          '<div class="cs-scorecard-bars">' +
+          '<div class="cs-scorecard-bar cs-scorecard-bar--before" style="width: ' +
+          s.before +
+          '%;"></div>' +
+          '<div class="cs-scorecard-bar cs-scorecard-bar--after" style="width: ' +
+          s.after +
+          '%;"></div>' +
+          "</div></div>"
+        );
+      })
+      .join("") +
+    "</div>"
+  );
+}
+
 function buildRichText(p) {
   const outcomeWord = p.outcomeType === 'storefront' ? 'storefront' : 'website';
   const challengeList = p.challenge.map((c) => `<li>${escapeHtml(c)}</li>`).join('\n');
   const builtList = p.built.map((b) => `<li>${escapeHtml(b)}</li>`).join('\n');
   const impactList = p.impact.map((i) => `<li>${escapeHtml(i)}</li>`).join('\n');
-  const scorecards = p.scorecard
-    .map(
-      (s) => `
-                                    <div style="margin: 0 0 1.5rem 0;">
-                                      <p><strong>${escapeHtml(s.label)}</strong>: ${s.before} to ${s.after} / 100</p>
-                                      <div style="max-width: 26rem;">
-                                        <div style="height: 0.5rem; width: ${s.before}%; background: rgba(255,255,255,0.25); margin-bottom: 0.35rem;"></div>
-                                        <div style="height: 0.5rem; width: ${s.after}%; background: #9fe870;"></div>
-                                      </div>
-                                    </div>`
-    )
-    .join('');
 
   return `
-<h2>The Bottom Line</h2>
+<h2>Overview</h2>
 <p>${escapeHtml(p.bottomLine)}</p>
-<h2>Who They Are</h2>
 <p>${escapeHtml(p.whoTheyAre)}</p>
-<h2>The Challenge</h2>
+<h2>The Problem</h2>
 <ul>
 ${challengeList}
 </ul>
-<h2>What We Built</h2>
+<h2>The Solution</h2>
 <ul>
 ${builtList}
 </ul>
-<h2>The Impact</h2>
+<h2>The Outcome</h2>
 <p>The ${outcomeWord} at <a href="${p.liveUrl}" target="_blank" rel="noopener">${domain(p.liveUrl)}</a> now delivers measurable improvements for the business and its customers.</p>
 <ul>
 ${impactList}
 </ul>
-<h2>Growth Scorecard</h2>
+<h2>Results</h2>
 <p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p>
-${scorecards}
-<h2>Why This Matters For Your Business</h2>
+${buildScorecards(p.scorecard)}
+<h2>Closing</h2>
 <p>${escapeHtml(p.whyMatters)}</p>
 <div class="cs-cta-block">
   <h3>Ready for results like this?</h3>
@@ -107,8 +135,12 @@ function buildCaseStudySection(p, prev, next) {
           <div class="container-large">
             <div class="padding-section-large">
               <div class="cs-back-link">
-                <a href="../case-studies.html" class="swft-btn is-text">← Back to Resources</a>
+                <a href="../case-studies.html" class="swft-btn is-text">← Back to Case Studies</a>
               </div>
+              <header class="cs-hero-head">
+                <h1 class="cs-project-title">${escapeHtml(p.name)}</h1>
+                <div class="cs-tag-row">${serviceTags(p)}</div>
+              </header>
               <div class="cs-layout">
                 <aside class="cs-sidebar">
                   <dl>
@@ -371,12 +403,20 @@ if (!websitesHtml.includes('work-filter.js')) {
 writeFileSync(join(ROOT, 'websites.html'), websitesHtml);
 console.log('Updated websites.html gallery');
 
+function metricFromScorecard(scorecard) {
+  if (!Array.isArray(scorecard) || !scorecard.length) return undefined;
+  const top = scorecard[0];
+  if (top?.after == null || !top?.label) return undefined;
+  return `${top.label}: ${top.after}/100`;
+}
+
 // --- Update case-studies-index.json ---
 const indexPath = join(ROOT, 'data/case-studies-index.json');
 let hubIndex = JSON.parse(readFileSync(indexPath, 'utf8'));
 const existingSlugs = new Set(hubIndex.map((e) => e.slug));
 
 for (const p of projects) {
+  const metric = metricFromScorecard(p.scorecard);
   const entry = {
     type: 'case-study',
     name: p.name,
@@ -387,6 +427,7 @@ for (const p of projects) {
     branding: p.branding,
     website: p.website,
     film: p.film,
+    ...(metric ? { metric } : {}),
   };
   const idx = hubIndex.findIndex((e) => e.slug === p.slug);
   if (idx >= 0) {

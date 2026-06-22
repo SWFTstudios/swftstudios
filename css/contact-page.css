@@ -1,0 +1,259 @@
+/* Contact page — Stitch two-column layout */
+.contact-hero {
+  margin-bottom: 2.5rem;
+}
+
+.contact-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .contact-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-info h2 {
+  font-size: 1.25rem;
+  color: #fff;
+  margin: 0 0 1.25rem;
+  font-weight: 600;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.contact-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ps-accent, #7fffe5);
+  font-weight: 600;
+}
+
+.contact-value {
+  color: #f2f2f2;
+  font-size: 0.95rem;
+}
+
+.contact-value a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.contact-value a:hover {
+  color: var(--ps-accent, #7fffe5);
+}
+
+.contact-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-social a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.contact-social a:hover {
+  border-color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #7fffe5);
+}
+
+.contact-quote {
+  border-left: 3px solid var(--ps-accent, #7fffe5);
+  padding: 1rem 0 1rem 1.25rem;
+  color: #c4c7c7;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  font-style: italic;
+}
+
+.contact-form-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0a0a0a;
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+
+.contact-form-card h2 {
+  font-size: 1.15rem;
+  color: #fff;
+  margin: 0 0 1.25rem;
+  font-weight: 600;
+}
+
+.contact-field {
+  margin-bottom: 1rem;
+}
+
+.contact-field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c4c7c7;
+  margin-bottom: 0.4rem;
+}
+
+.contact-field input,
+.contact-field select,
+.contact-field textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: #010101;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.contact-field textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.contact-field input:focus,
+.contact-field select:focus,
+.contact-field textarea:focus {
+  outline: none;
+  border-color: rgba(127, 255, 229, 0.5);
+}
+
+.contact-submit {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.contact-status {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.contact-status.is-error {
+  color: #ff8a8a;
+}
+
+.contact-status.is-success {
+  color: var(--ps-accent, #7fffe5);
+}
+
+.contact-book-alt {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #a8a8a8;
+}
+
+.contact-book-alt a {
+  color: var(--ps-accent, #7fffe5);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-book-alt a:hover {
+  text-decoration: underline;
+}
+
+.contact-steps {
+  margin-bottom: 3rem;
+}
+
+.contact-steps h2 {
+  font-size: 1.35rem;
+  color: #fff;
+  margin: 0 0 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.contact-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 767px) {
+  .contact-steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-step {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.contact-step-num {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--ps-accent, #7fffe5);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.contact-step h3 {
+  font-size: 1rem;
+  color: #fff;
+  margin: 0 0 0.4rem;
+  font-weight: 600;
+}
+
+.contact-step p {
+  font-size: 0.85rem;
+  color: #a8a8a8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.contact-mood {
+  width: 100%;
+  height: 220px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a2a28 50%, #010101 100%);
+  position: relative;
+}
+
+.contact-mood img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  display: block;
+}
+
+.contact-mood-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(1, 1, 1, 0.7) 100%);
+  pointer-events: none;
+}
