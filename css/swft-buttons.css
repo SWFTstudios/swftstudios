@@ -1,0 +1,131 @@
+/* SWFT unified button system */
+.swft-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.swft-btn:focus-visible {
+  outline: 2px solid var(--green, #9fe870);
+  outline-offset: 3px;
+}
+
+.swft-btn.is-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  border-radius: 999px;
+}
+
+.swft-btn.is-lg {
+  padding: 1.125rem 2.5rem;
+  font-size: 1.125rem;
+}
+
+/* Primary fill */
+.swft-btn.is-primary {
+  background: var(--green, #9fe870);
+  color: #000;
+  border-color: var(--green, #9fe870);
+}
+
+.swft-btn.is-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(159, 232, 112, 0.35);
+  color: #000;
+}
+
+.swft-btn.is-primary .button_bg {
+  background-color: #000;
+  pointer-events: none;
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.swft-btn.is-primary:hover .button_bg {
+  width: 100%;
+}
+
+.swft-btn.is-primary .button_text {
+  position: relative;
+  z-index: 1;
+}
+
+.swft-btn.is-primary:hover .button_text {
+  color: #fff;
+}
+
+/* Secondary fill */
+.swft-btn.is-secondary {
+  background: var(--charcoal, #1a1a1a);
+  color: #fff;
+  border-color: var(--charcoal, #1a1a1a);
+}
+
+.swft-btn.is-secondary:hover {
+  background: #2a2a2a;
+  border-color: #2a2a2a;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* Outline */
+.swft-btn.is-outline {
+  background: transparent;
+  color: inherit;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.swft-btn.is-outline:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+}
+
+/* Text link */
+.swft-btn.is-text {
+  background: transparent;
+  border-color: transparent;
+  color: inherit;
+  padding: 0.25rem 0;
+  border-radius: 0;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.swft-btn.is-text:hover {
+  color: var(--green, #9fe870);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Button group */
+.swft-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media screen and (max-width: 767px) {
+  .swft-btn.is-lg {
+    width: 100%;
+    max-width: 20rem;
+  }
+}
