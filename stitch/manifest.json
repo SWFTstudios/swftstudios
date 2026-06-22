@@ -1,0 +1,87 @@
+{
+  "projectId": "16133987514164461574",
+  "projectTitle": "SWFT OS: Venture Studio Redesign",
+  "fetchedAt": "2026-06-14T14:37:24.522Z",
+  "screens": [
+    {
+      "slug": "home",
+      "title": "Home — SWFT Studios",
+      "screenId": "824759e3c7c1459182a80cf50444350c",
+      "codePath": "stitch/screens/home/code.html",
+      "imagePath": "stitch/screens/home/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "design-system",
+      "title": "Design System",
+      "screenId": "asset-stub-assets_ea3b39effb734085907edfba23ab48de",
+      "codePath": null,
+      "imagePath": "stitch/screens/design-system/screen.png",
+      "designMdPath": "stitch/screens/design-system/DESIGN.md"
+    },
+    {
+      "slug": "ventures",
+      "title": "Ventures — SWFT Studios",
+      "screenId": "64cee365a860431186a6cfa53d412eae",
+      "codePath": "stitch/screens/ventures/code.html",
+      "imagePath": "stitch/screens/ventures/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "services",
+      "title": "Services — SWFT Studios",
+      "screenId": "f9658966e6d348fa82a43a8b352a5228",
+      "codePath": "stitch/screens/services/code.html",
+      "imagePath": "stitch/screens/services/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "work",
+      "title": "Work — SWFT Studios",
+      "screenId": "4eff4d952457490cba2f5a740f909ae3",
+      "codePath": "stitch/screens/work/code.html",
+      "imagePath": "stitch/screens/work/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "method",
+      "title": "The SWFT Method — SWFT Studios",
+      "screenId": "4950d10f61e04c45a4de9a9642ab6def",
+      "codePath": "stitch/screens/method/code.html",
+      "imagePath": "stitch/screens/method/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "pricing",
+      "title": "Pricing — SWFT Studios",
+      "screenId": "fbc3b3de94c74d2c833d9b9564740781",
+      "codePath": "stitch/screens/pricing/code.html",
+      "imagePath": "stitch/screens/pricing/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "start-a-project",
+      "title": "Start a Project — SWFT Studios",
+      "screenId": "5d7f3287fe5c4e6698560fd876bf97aa",
+      "codePath": "stitch/screens/start-a-project/code.html",
+      "imagePath": "stitch/screens/start-a-project/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "intelligence-hub",
+      "title": "Intelligence Hub — SWFT Studios",
+      "screenId": "b95277f29e61466d9df65ddc893149b9",
+      "codePath": "stitch/screens/intelligence-hub/code.html",
+      "imagePath": "stitch/screens/intelligence-hub/screen.png",
+      "designMdPath": null
+    },
+    {
+      "slug": "asymmetric-upside",
+      "title": "Architecting for Asymmetric Upside",
+      "screenId": "a6108a62f706478795e38393972ae428",
+      "codePath": "stitch/screens/asymmetric-upside/code.html",
+      "imagePath": "stitch/screens/asymmetric-upside/screen.png",
+      "designMdPath": null
+    }
+  ]
+}
