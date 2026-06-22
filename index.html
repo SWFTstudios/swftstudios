@@ -16,7 +16,6 @@
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/components.css" rel="stylesheet" type="text/css">
   <link href="css/swftstudios000.css" rel="stylesheet" type="text/css">
-  <link href="css/swft-buttons.css" rel="stylesheet" type="text/css">
   <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.webp" rel="apple-touch-icon">
@@ -55,6 +54,7 @@ body{
 }
 </style>
   <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
+  <link href="css/pricing-page.css" rel="stylesheet" type="text/css">
   <style>
     /* Homepage redesign — services, proven results, booking */
     .hp-section {
@@ -102,6 +102,13 @@ body{
       color: #888;
     }
     .hp-service-card { position: relative; }
+    .hp-service-card-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
     .hp-service-card h3 {
       font-size: 1.5rem;
       font-weight: 600;
@@ -719,7 +726,7 @@ margin: 0rem !important;
                         <a href="case-study/manna-hydration.html" aria-label="Manna Hydration case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail-p-1080.webp 1080w, images/manna-hydration-thumbnail-p-1600.webp 1600w, images/manna-hydration-thumbnail-p-2000.webp 2000w, images/manna-hydration-thumbnail-p-2600.webp 2600w, images/manna-hydration-thumbnail-p-3200.webp 3200w, images/manna-hydration-thumbnail.webp 3600w" alt="Manna Hydration" loading="lazy" src="images/manna-hydration-thumbnail.webp" class="project_marquee-img"></a>
                         <a href="case-study/thyme-and-table.html" aria-label="Thyme &amp; Table case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w, images/thyme-and-table-thumbnail-p-1600.webp 1600w, images/thyme-and-table-thumbnail-p-2000.webp 2000w, images/thyme-and-table-thumbnail-p-2600.webp 2600w, images/thyme-and-table-thumbnail-p-3200.webp 3200w, images/thyme-and-table-thumbnail.webp 3600w" alt="Thyme &amp; Table" loading="lazy" src="images/thyme-and-table-thumbnail.webp" class="project_marquee-img"></a>
                         <a href="case-study/tal-hydration.html" aria-label="TAL Hydration case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w, images/tal-hydration-thumbnail-p-1600.webp 1600w, images/tal-hydration-thumbnail-p-2000.webp 2000w, images/tal-hydration-thumbnail-p-2600.webp 2600w, images/tal-hydration-thumbnail-p-3200.webp 3200w, images/tal-hydration-thumbnail.webp 3600w" alt="TAL Hydration" loading="lazy" src="images/tal-hydration-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/scribble-and-scribe.html" aria-label="Scribble &amp; Scribe case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 1440px) 100vw, 1440px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1440w" alt="Scribble &amp; Scribe" loading="lazy" src="images/scribble_scribe_thumbnsail.png" class="project_marquee-img"></a>
+                        <a href="case-study/scribble-and-scribe.html" aria-label="Scribble &amp; Scribe case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1600w, images/scribble_scribe_thumbnsail.png 2000w, images/scribble_scribe_thumbnsail.png 2600w, images/scribble_scribe_thumbnsail.png 3124w" alt="Scribble &amp; Scribe" loading="lazy" src="images/scribble_scribe_thumbnsail.png" class="project_marquee-img"></a>
                         <a href="case-study/blurred-lines-entertainment.html" aria-label="Blurred Lines Entertainment case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail-p-1600.webp 1600w, images/BLE_SWFT_thumbnail-p-2000.webp 2000w, images/BLE_SWFT_thumbnail-p-2600.webp 2600w, images/BLE_SWFT_thumbnail-p-3200.webp 3200w, images/BLE_SWFT_thumbnail.webp 3600w" alt="Blurred Lines Entertainment" loading="lazy" src="images/BLE_SWFT_thumbnail.webp" class="project_marquee-img"></a>
                         <a href="case-study/built-by-me-ez.html" aria-label="Built By Me EZ case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail-p-1600.webp 1600w, images/built_by_me_ez_thumbnail-p-2000.webp 2000w, images/built_by_me_ez_thumbnail-p-2600.webp 2600w, images/built_by_me_ez_thumbnail-p-3200.webp 3200w, images/built_by_me_ez_thumbnail.webp 3600w" alt="Built By Me EZ" loading="lazy" src="images/built_by_me_ez_thumbnail.webp" class="project_marquee-img"></a>
                         <a href="case-study/roller-reels.html" aria-label="Roller Reels case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w, images/Roller_Reels_thumbnail-p-1600.webp 1600w, images/Roller_Reels_thumbnail-p-2000.webp 2000w, images/Roller_Reels_thumbnail-p-2600.webp 2600w, images/Roller_Reels_thumbnail-p-3200.webp 3200w, images/Roller_Reels_thumbnail.webp 3600w" alt="Roller Reels" loading="lazy" src="images/Roller_Reels_thumbnail.webp" class="project_marquee-img"></a>
@@ -736,27 +743,27 @@ margin: 0rem !important;
                     <div class="marquee-track">
                       <a href="case-study/brooklyn-steel.html" aria-label="Brooklyn Steel Co. case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail-p-1600.webp 1600w, images/brooklyn-steel-thumbnail-p-2000.webp 2000w, images/brooklyn-steel-thumbnail-p-2600.webp 2600w, images/brooklyn-steel-thumbnail-p-3200.webp 3200w, images/brooklyn-steel-thumbnail.webp 3600w" alt="Brooklyn Steel Co." src="images/brooklyn-steel-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/brooklyn-steel-thumbnail.webp 500w, images/brooklyn-steel-thumbnail.webp 800w, images/brooklyn-steel-thumbnail.webp 1080w, images/brooklyn-steel-thumbnail.webp 1600w, images/brooklyn-steel-thumbnail.webp 2000w, images/brooklyn-steel-thumbnail.webp 2600w, images/brooklyn-steel-thumbnail.webp 3124w" alt="Brooklyn Steel Co." src="images/brooklyn-steel-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/manna-hydration.html" aria-label="Manna Hydration case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail-p-1080.webp 1080w, images/manna-hydration-thumbnail-p-1600.webp 1600w, images/manna-hydration-thumbnail-p-2000.webp 2000w, images/manna-hydration-thumbnail-p-2600.webp 2600w, images/manna-hydration-thumbnail-p-3200.webp 3200w, images/manna-hydration-thumbnail.webp 3600w" alt="Manna Hydration" src="images/manna-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/manna-hydration-thumbnail.webp 500w, images/manna-hydration-thumbnail.webp 800w, images/manna-hydration-thumbnail.webp 1080w, images/manna-hydration-thumbnail.webp 1600w, images/manna-hydration-thumbnail.webp 2000w, images/manna-hydration-thumbnail.webp 2600w, images/manna-hydration-thumbnail.webp 3124w" alt="Manna Hydration" src="images/manna-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/thyme-and-table.html" aria-label="Thyme &amp; Table case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w, images/thyme-and-table-thumbnail-p-1600.webp 1600w, images/thyme-and-table-thumbnail-p-2000.webp 2000w, images/thyme-and-table-thumbnail-p-2600.webp 2600w, images/thyme-and-table-thumbnail-p-3200.webp 3200w, images/thyme-and-table-thumbnail.webp 3600w" alt="Thyme &amp; Table" src="images/thyme-and-table-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/thyme-and-table-thumbnail.webp 500w, images/thyme-and-table-thumbnail.webp 800w, images/thyme-and-table-thumbnail.webp 1080w, images/thyme-and-table-thumbnail.webp 1600w, images/thyme-and-table-thumbnail.webp 2000w, images/thyme-and-table-thumbnail.webp 2600w, images/thyme-and-table-thumbnail.webp 3124w" alt="Thyme &amp; Table" src="images/thyme-and-table-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/tal-hydration.html" aria-label="TAL Hydration case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w, images/tal-hydration-thumbnail-p-1600.webp 1600w, images/tal-hydration-thumbnail-p-2000.webp 2000w, images/tal-hydration-thumbnail-p-2600.webp 2600w, images/tal-hydration-thumbnail-p-3200.webp 3200w, images/tal-hydration-thumbnail.webp 3600w" alt="TAL Hydration" src="images/tal-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/tal-hydration-thumbnail.webp 500w, images/tal-hydration-thumbnail.webp 800w, images/tal-hydration-thumbnail.webp 1080w, images/tal-hydration-thumbnail.webp 1600w, images/tal-hydration-thumbnail.webp 2000w, images/tal-hydration-thumbnail.webp 2600w, images/tal-hydration-thumbnail.webp 3124w" alt="TAL Hydration" src="images/tal-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/scribble-and-scribe.html" aria-label="Scribble &amp; Scribe case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 1440px) 100vw, 1440px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1440w" alt="Scribble &amp; Scribe" src="images/scribble_scribe_thumbnsail.png" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1600w, images/scribble_scribe_thumbnsail.png 2000w, images/scribble_scribe_thumbnsail.png 2600w, images/scribble_scribe_thumbnsail.png 3124w" alt="Scribble &amp; Scribe" src="images/scribble_scribe_thumbnsail.png" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/blurred-lines-entertainment.html" aria-label="Blurred Lines Entertainment case study" class="marquee-list w-inline-block">
@@ -781,7 +788,7 @@ margin: 0rem !important;
                       </a>
                       <a href="case-study/alpha-ministries-international.html" aria-label="Alpha Ministries International case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/alpha-ministries-thumbnail.webp 500w, images/alpha-ministries-thumbnail.webp 800w, images/alpha-ministries-thumbnail.webp 1080w, images/alpha-ministries-thumbnail.webp 1600w, images/alpha-ministries-thumbnail.webp 2000w, images/alpha-ministries-thumbnail.webp 2600w, images/alpha-ministries-thumbnail.webp 3124w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/core-home.html" aria-label="Core Home case study" class="marquee-list w-inline-block">
@@ -806,27 +813,27 @@ margin: 0rem !important;
                       </a>
                       <a href="case-study/brooklyn-steel.html" aria-label="Brooklyn Steel Co. case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail-p-1600.webp 1600w, images/brooklyn-steel-thumbnail-p-2000.webp 2000w, images/brooklyn-steel-thumbnail-p-2600.webp 2600w, images/brooklyn-steel-thumbnail-p-3200.webp 3200w, images/brooklyn-steel-thumbnail.webp 3600w" alt="Brooklyn Steel Co." src="images/brooklyn-steel-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/brooklyn-steel-thumbnail.webp 500w, images/brooklyn-steel-thumbnail.webp 800w, images/brooklyn-steel-thumbnail.webp 1080w, images/brooklyn-steel-thumbnail.webp 1600w, images/brooklyn-steel-thumbnail.webp 2000w, images/brooklyn-steel-thumbnail.webp 2600w, images/brooklyn-steel-thumbnail.webp 3124w" alt="Brooklyn Steel Co." src="images/brooklyn-steel-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/manna-hydration.html" aria-label="Manna Hydration case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail-p-1080.webp 1080w, images/manna-hydration-thumbnail-p-1600.webp 1600w, images/manna-hydration-thumbnail-p-2000.webp 2000w, images/manna-hydration-thumbnail-p-2600.webp 2600w, images/manna-hydration-thumbnail-p-3200.webp 3200w, images/manna-hydration-thumbnail.webp 3600w" alt="Manna Hydration" src="images/manna-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/manna-hydration-thumbnail.webp 500w, images/manna-hydration-thumbnail.webp 800w, images/manna-hydration-thumbnail.webp 1080w, images/manna-hydration-thumbnail.webp 1600w, images/manna-hydration-thumbnail.webp 2000w, images/manna-hydration-thumbnail.webp 2600w, images/manna-hydration-thumbnail.webp 3124w" alt="Manna Hydration" src="images/manna-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/thyme-and-table.html" aria-label="Thyme &amp; Table case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w, images/thyme-and-table-thumbnail-p-1600.webp 1600w, images/thyme-and-table-thumbnail-p-2000.webp 2000w, images/thyme-and-table-thumbnail-p-2600.webp 2600w, images/thyme-and-table-thumbnail-p-3200.webp 3200w, images/thyme-and-table-thumbnail.webp 3600w" alt="Thyme &amp; Table" src="images/thyme-and-table-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/thyme-and-table-thumbnail.webp 500w, images/thyme-and-table-thumbnail.webp 800w, images/thyme-and-table-thumbnail.webp 1080w, images/thyme-and-table-thumbnail.webp 1600w, images/thyme-and-table-thumbnail.webp 2000w, images/thyme-and-table-thumbnail.webp 2600w, images/thyme-and-table-thumbnail.webp 3124w" alt="Thyme &amp; Table" src="images/thyme-and-table-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/tal-hydration.html" aria-label="TAL Hydration case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w, images/tal-hydration-thumbnail-p-1600.webp 1600w, images/tal-hydration-thumbnail-p-2000.webp 2000w, images/tal-hydration-thumbnail-p-2600.webp 2600w, images/tal-hydration-thumbnail-p-3200.webp 3200w, images/tal-hydration-thumbnail.webp 3600w" alt="TAL Hydration" src="images/tal-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/tal-hydration-thumbnail.webp 500w, images/tal-hydration-thumbnail.webp 800w, images/tal-hydration-thumbnail.webp 1080w, images/tal-hydration-thumbnail.webp 1600w, images/tal-hydration-thumbnail.webp 2000w, images/tal-hydration-thumbnail.webp 2600w, images/tal-hydration-thumbnail.webp 3124w" alt="TAL Hydration" src="images/tal-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/scribble-and-scribe.html" aria-label="Scribble &amp; Scribe case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 1440px) 100vw, 1440px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1440w" alt="Scribble &amp; Scribe" src="images/scribble_scribe_thumbnsail.png" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1600w, images/scribble_scribe_thumbnsail.png 2000w, images/scribble_scribe_thumbnsail.png 2600w, images/scribble_scribe_thumbnsail.png 3124w" alt="Scribble &amp; Scribe" src="images/scribble_scribe_thumbnsail.png" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/blurred-lines-entertainment.html" aria-label="Blurred Lines Entertainment case study" class="marquee-list w-inline-block">
@@ -851,7 +858,7 @@ margin: 0rem !important;
                       </a>
                       <a href="case-study/alpha-ministries-international.html" aria-label="Alpha Ministries International case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
+                          <div class="marquee-image"><img sizes="(max-width: 3124px) 100vw, 3124px" srcset="images/alpha-ministries-thumbnail.webp 500w, images/alpha-ministries-thumbnail.webp 800w, images/alpha-ministries-thumbnail.webp 1080w, images/alpha-ministries-thumbnail.webp 1600w, images/alpha-ministries-thumbnail.webp 2000w, images/alpha-ministries-thumbnail.webp 2600w, images/alpha-ministries-thumbnail.webp 3124w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
                       <a href="case-study/core-home.html" aria-label="Core Home case study" class="marquee-list w-inline-block">
@@ -879,7 +886,7 @@ margin: 0rem !important;
                   <div class="explore-button-wrapper">
                     <div class="explore-button-copntainer">
                       <div data-w-id="d9a607c3-385c-74d6-d24e-d27064e405be" style="opacity:0" class="magnetic-element">
-                        <a href="websites.html" class="swft-btn is-primary w-inline-block">
+                        <a href="websites.html" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
                           <div class="button_text">View All</div>
                         </a>
@@ -888,11 +895,22 @@ margin: 0rem !important;
                   </div>
                 </div>
               </section>
+              <div id="About" class="animated-text-wrapper">
+                <div class="container-2">
+                  <div data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead36b7" class="animated-text-holder">
+                    <div class="animated-text-container">
+                      <div class="gradient-text"></div>
+                      <div class="animated-text">Built for founders, creators, and growing brands we turn the attention you're already getting into booked revenue with <span class="highlight-2">high-converting websites</span>, <span class="highlight-2">content that actually gets used</span>, and <span class="highlight-2">systems that follow up when you can't</span>.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <section class="hp-section" id="homepage-services" aria-labelledby="hp-services-heading">
                 <div class="hp-section-label">03 / Services</div>
                 <h2 class="hp-section-title" id="hp-services-heading">What we build for clients</h2>
                 <div class="hp-services-grid">
                   <article class="hp-service-card">
+                    <img src="images/swft-website-development.png" alt="Website development — Blurred Lines Entertainment homepage mockup on screen" class="hp-service-card-image" loading="lazy" width="800" height="450">
                     <span class="hp-service-card-num">01</span>
                     <div>
                       <div class="hp-section-label">Website Development</div>
@@ -906,12 +924,13 @@ margin: 0rem !important;
                         <li>Launch Support</li>
                       </ul>
                     </div>
-                    <a href="website-pricing.html#pricing" class="button is-course w-inline-block" data-stripe-service="website-development" data-stripe-link="">
+                    <a href="#homepage-pricing" class="button is-course w-inline-block" data-stripe-service="website-development" data-stripe-link="">
                       <div class="button_bg"></div>
                       <div class="button_text">Start a Website Project</div>
                     </a>
                   </article>
                   <article class="hp-service-card">
+                    <img src="images/swft-content-creation.png" alt="Content creation — product photography of stainless steel necklaces in a white lightbox studio" class="hp-service-card-image" loading="lazy" width="800" height="450">
                     <span class="hp-service-card-num">02</span>
                     <div>
                       <div class="hp-section-label">Content Creation</div>
@@ -925,631 +944,21 @@ margin: 0rem !important;
                         <li>Content Strategy</li>
                       </ul>
                     </div>
-                    <a href="website-pricing.html#pricing" class="button is-course outlined w-inline-block" data-stripe-service="content-creation" data-stripe-link="">
+                    <a href="#content-creation" class="button is-course outlined w-inline-block" data-stripe-service="content-creation" data-stripe-link="">
                       <div class="button_bg"></div>
                       <div class="button_text">Book a Content Day</div>
                     </a>
                   </article>
                 </div>
               </section>
-              <section class="hp-section" id="proven-results" aria-labelledby="hp-proven-heading">
-                <div class="hp-section-label">04 / Our Work</div>
-                <h2 class="hp-section-title" id="hp-proven-heading">Proven Results</h2>
-                <div class="hp-proven-grid">
-                  <a href="case-study/brooklyn-steel.html" class="hp-proven-card">
-                    <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co. website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce · Website</div>
-                      <h3>Brooklyn Steel Co.</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/snooze-lane.html" class="hp-proven-card">
-                    <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane website and app" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Website · App</div>
-                      <h3>Snooze Lane</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/tal-hydration.html" class="hp-proven-card">
-                    <img src="images/tal-hydration-thumbnail.webp" alt="TAL Hydration storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce</div>
-                      <h3>TAL Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/roller-reels.html" class="hp-proven-card">
-                    <img src="images/Roller_Reels_thumbnail.webp" alt="Roller Reels brand" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Brand · Film</div>
-                      <h3>Roller Reels</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/manna-hydration.html" class="hp-proven-card">
-                    <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce</div>
-                      <h3>Manna Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/thyme-and-table.html" class="hp-proven-card">
-                    <img src="images/thyme-and-table-thumbnail.webp" alt="Thyme and Table storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce</div>
-                      <h3>Thyme &amp; Table</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                </div>
-                <div class="hp-view-all">
-                  <a href="case-studies.html" class="button is-course w-inline-block">
-                    <div class="button_bg"></div>
-                    <div class="button_text">View All Work</div>
-                  </a>
-                </div>
-              </section>
             </div>
           </div>
         </div>
       </section>
-      <div class="section-2 benefits">
-        <div data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead368d" style="-webkit-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="dasboard-wrap">
-          <div data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead368e" style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(10deg) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(10deg) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(10deg) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(10deg) rotateY(0) rotateZ(0) skew(0, 0);transform-style:preserve-3d" class="dashboard-border">
-            <div class="container-regular">
-              <div class="w-layout-grid grid-three-column">
-                <div id="w-node-d8cc7671-41fe-51fd-76c2-250d9ead3691-278ca766" data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead3691" style="-webkit-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0, 0);-moz-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0, 0);-ms-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0, 0);transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0, 0);opacity:0;transform-style:preserve-3d" class="feature-card flex-vertical padding-all">
-                  <div class="icon-circle">
-                    <div class="icon-circle-inner">
-                      <div class="icon-regular w-embed"><svg xmlns="http://www.w3.org/2000/svg" height="32" width="32" viewbox="0 0 512 512"><!-- ! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.  -->
-                          <style>svg{fill:#ffffff}</style>
-                          <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path>
-                        </svg></div>
-                    </div>
-                  </div>
-                  <h2 class="feature-heading small">Save Time</h2>
-                  <p class="paragraph-regular text-color-gray-300">Discover the freedom of time. AI does more than automate; it liberates you from repetitive tasks, allowing you to focus on what truly matters in your business.</p>
-                </div>
-                <div id="w-node-d8cc7671-41fe-51fd-76c2-250d9ead3699-278ca766" data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead3699" style="-webkit-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="feature-card flex-vertical padding-all">
-                  <div class="icon-circle">
-                    <div class="icon-circle-inner">
-                      <div class="icon-regular w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewbox="0 0 384 512"><!-- ! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.  -->
-                          <style>svg{fill:#ffffff}</style>
-                          <path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"></path>
-                        </svg></div>
-                    </div>
-                  </div>
-                  <h2 class="feature-heading small">Ignite Innovation</h2>
-                  <p class="paragraph-regular text-color-gray-300">Light up your business strategy with AI. Harness the power of smart, creative solutions that keep you ahead of the curve, turning bright ideas into reality.</p>
-                </div>
-                <div id="w-node-d8cc7671-41fe-51fd-76c2-250d9ead36a1-278ca766" data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead36a1" style="-webkit-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="feature-card flex-vertical padding-all">
-                  <div class="icon-circle">
-                    <div class="icon-circle-inner">
-                      <div class="icon-regular w-embed"><svg xmlns="http://www.w3.org/2000/svg" height="32" width="32" viewbox="0 0 576 512"><!-- ! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.  -->
-                          <style>svg{fill:#ffffff}</style>
-                          <path d="M160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h50.7L9.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L256 109.3V160c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H160zM576 80a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM448 208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM400 384a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48 80a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm128 0a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM272 384a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48 80a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM144 512a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM576 336a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm-48-80a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"></path>
-                        </svg></div>
-                    </div>
-                  </div>
-                  <h2 class="feature-heading small">Personalized at Scale</h2>
-                  <p class="paragraph-regular text-color-gray-300">Every customer feels like your only customer. AI personalizes interactions at scale, ensuring no one feels neglected, enhancing loyalty and engagement.</p>
-                </div>
-                <div id="w-node-d8cc7671-41fe-51fd-76c2-250d9ead36a9-278ca766" data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead36a9" style="-webkit-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 44px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="feature-card flex-vertical padding-all">
-                  <div class="icon-circle">
-                    <div class="icon-circle-inner">
-                      <div class="icon-regular w-embed"><svg xmlns="http://www.w3.org/2000/svg" height="32" width="32" viewbox="0 0 640 512"><!-- ! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.  -->
-                          <style>svg{fill:#ffffff}</style>
-                          <path d="M323.4 85.2l-96.8 78.4c-16.1 13-19.2 36.4-7 53.1c12.9 17.8 38 21.3 55.3 7.8l99.3-77.2c7-5.4 17-4.2 22.5 2.8s4.2 17-2.8 22.5l-20.9 16.2L550.2 352H592c26.5 0 48-21.5 48-48V176c0-26.5-21.5-48-48-48H516h-4-.7l-3.9-2.5L434.8 79c-15.3-9.8-33.2-15-51.4-15c-21.8 0-43 7.5-60 21.2zm22.8 124.4l-51.7 40.2C263 274.4 217.3 268 193.7 235.6c-22.2-30.5-16.6-73.1 12.7-96.8l83.2-67.3c-11.6-4.9-24.1-7.4-36.8-7.4C234 64 215.7 69.6 200 80l-72 48H48c-26.5 0-48 21.5-48 48V304c0 26.5 21.5 48 48 48H156.2l91.4 83.4c19.6 17.9 49.9 16.5 67.8-3.1c5.5-6.1 9.2-13.2 11.1-20.6l17 15.6c19.5 17.9 49.9 16.6 67.8-2.9c4.5-4.9 7.8-10.6 9.9-16.5c19.4 13 45.8 10.3 62.1-7.5c17.9-19.5 16.6-49.9-2.9-67.8l-134.2-123z"></path>
-                        </svg></div>
-                    </div>
-                  </div>
-                  <h2 class="feature-heading small">Reliable Partner</h2>
-                  <p class="paragraph-regular text-color-gray-300">Your AI assistant and automated systems work tirelessly. Rely on AI for consistent growth and support, keeping your business thriving 24/7.</p>
-                </div>
-              </div>
-            </div>
-            <div class="dashboard"><img loading="lazy" src="images/Dashboard-SVG.svg" alt=""></div>
-            <div class="linear-border">
-              <div class="linear-border-code w-embed">
-                <style>
-.linear-border{
-padding:1px;
-background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 80%);
--webkit-mask: linear-gradient(#060609, #060609) content-box content-box, linear-gradient(#060609, #060609);
--webkit-mask-composite: xor;
-pointer-events:none;
-}
-</style>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="About" class="animated-text-wrapper">
-          <div class="container-2">
-            <div data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead36b7" class="animated-text-holder">
-              <div class="animated-text-container">
-                <div class="gradient-text"></div>
-                <div class="animated-text">We help service businesses turn attention into revenue with <span class="highlight-2">high-converting websites</span>, <span class="highlight-2">automation systems</span>, and <span class="highlight-2">customer journeys</span> designed to book more work.</div>
-              </div>
-            </div>
-            <div id="services" class="features-wrapper">
-              <div class="features-grid">
-                <div id="website-service" class="mobile-app-holder">
-                  <div class="feature-container">
-                    <div class="feature-image"><img sizes="(max-width: 2468px) 100vw, 2468px" srcset="images/Frame-6-p-500.png 500w, images/Frame-6-p-800.png 800w, images/Frame-6-p-1080.png 1080w, images/Frame-6-p-1600.png 1600w, images/Frame-6-p-2000.png 2000w, images/Frame-6.png 2468w" alt="" src="images/Frame-6.png" loading="lazy" class="image">
-                      <div class="iphone-gradient"></div>
-                    </div>
-                    <div class="feature-app-content">
-                      <div class="fade-in-on-scroll">
-                        <div class="tag">Services</div>
-                      </div>
-                      <div class="fade-in-on-scroll">
-                        <h3>Websites</h3>
-                      </div>
-                      <div class="fade-in-on-scroll">
-                        <div class="mobile-app-description">
-                          <p class="testimonial-text">Get a beautiful site that maxixmizes your visibility on search engines and get people to your door.</p>
-                          <div class="bottom-margin---16px-2">
-                            <ul role="list" class="video-category-list">
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">Bespoke Design</div>
-                              </li>
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">Backend Data Analysis</div>
-                              </li>
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">SEO &amp; AEO Ready</div>
-                              </li>
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">Rank on Google &amp; AI Search</div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="w-layout-hflex button-group">
-                        <a href="contact.html" target="_blank" class="swft-btn is-primary w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">Work WIth Us</div>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div id="ai-service" class="mobile-app-holder">
-                  <div class="feature-container">
-                    <div class="feature-image"><img sizes="(max-width: 1573px) 100vw, 1573px" srcset="images/IG-FB-Messenger-Lifestlye-p-500.webp 500w, images/IG-FB-Messenger-Lifestlye-p-800.webp 800w, images/IG-FB-Messenger-Lifestlye-p-1080.webp 1080w, images/IG-FB-Messenger-Lifestlye.webp 1573w" alt="" src="images/IG-FB-Messenger-Lifestlye.webp" loading="lazy" class="image">
-                      <div class="iphone-gradient"></div>
-                    </div>
-                    <div class="feature-app-content">
-                      <div class="fade-in-on-scroll">
-                        <div class="tag">PRODUCTS</div>
-                      </div>
-                      <div class="fade-in-on-scroll">
-                        <h3>Tools</h3>
-                      </div>
-                      <div class="fade-in-on-scroll">
-                        <div class="mobile-app-description">
-                          <p class="testimonial-text">Everything running in the background while you focus on the work. Powered by GoHighLevel &mdash; set up and managed for you.</p>
-                          <div class="bottom-margin---16px-2">
-                            <ul role="list" class="video-category-list">
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">Missed Call Text-Back &mdash; respond to leads in under 60 seconds</div>
-                              </li>
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">Automated Google Review Requests &mdash; build your reputation on autopilot</div>
-                              </li>
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">Online Booking &amp; Text-to-Pay &mdash; let customers book and pay from their phone</div>
-                              </li>
-                              <li class="video-category-list-item"><img loading="lazy" src="images/green-check_1green-check.png" alt="" class="image-2">
-                                <div class="text-block-5">AI Follow-Up &amp; CRM &mdash; never lose a lead again</div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <a href="tools.html" class="swft-btn is-primary w-inline-block">
-                        <div class="button_bg"></div>
-                        <div class="button_text">Explore Tools</div>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div id="w-node-d8cc7671-41fe-51fd-76c2-250d9ead3716-278ca766" class="mobile-app-holder hide">
-                  <div class="feature-container">
-                    <div class="feature-image">
-                      <div class="logo-loop">
-                        <div class="logo-block top">
-                          <div class="logo-row">
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M17.9375 6.125C20.5958 6.125 22.75 8.3125 22.75 11.375C22.75 17.5 16.1875 21 14 22.3125C11.8125 21 5.25 17.5 5.25 11.375C5.25 8.3125 7.4375 6.125 10.0625 6.125C11.69 6.125 13.125 7 14 7.875C14.875 7 16.31 6.125 17.9375 6.125Z" fill="url(#paint0_linear_722_11026)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11026" x1="14" y1="6.125" x2="14" y2="28.9449" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M14.8751 19.25V23.625H13.1251V19.25H11.3751V21.875H9.62506V19.0295C8.46456 18.7292 7.40062 18.1359 6.53517 17.3065C5.66973 16.477 5.03179 15.4393 4.68247 14.2926C4.33315 13.1459 4.28416 11.9287 4.54019 10.7576C4.79622 9.58653 5.3487 8.50084 6.14468 7.60454C6.94067 6.70823 7.95349 6.03136 9.0861 5.63876C10.2187 5.24617 11.4332 5.15101 12.6131 5.36241C13.7931 5.57381 14.8989 6.08467 15.8248 6.84606C16.7507 7.60745 17.4655 8.59385 17.9008 9.71074C18.5589 9.58484 19.2359 9.59771 19.8887 9.74855C20.5415 9.89939 21.1556 10.1849 21.6917 10.5867C22.2277 10.9885 22.674 11.4979 23.0019 12.0821C23.3298 12.6664 23.5321 13.3127 23.5959 13.9796C23.6596 14.6465 23.5834 15.3194 23.3721 15.9552C23.1608 16.591 22.8191 17.1757 22.3688 17.6718C21.9186 18.1679 21.3697 18.5645 20.7573 18.8363C20.1449 19.1081 19.4825 19.249 18.8126 19.25L18.3751 19.2509V21.8759H16.6251V19.2509H14.8751V19.25Z" fill="url(#paint0_linear_263_4898)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_263_4898" x1="13.9982" y1="5.2527" x2="13.9982" y2="31.1525" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M21 21C21 21.2321 20.9078 21.4546 20.7437 21.6187C20.5796 21.7828 20.3571 21.875 20.125 21.875H7.875C7.64294 21.875 7.42038 21.7828 7.25628 21.6187C7.09219 21.4546 7 21.2321 7 21V13.125H4.375L13.4111 4.91049C13.5722 4.76391 13.7822 4.68268 14 4.68268C14.2178 4.68268 14.4278 4.76391 14.5889 4.91049L23.625 13.125H21V21ZM13.125 14.875V20.125H14.875V14.875H13.125Z" fill="url(#paint0_linear_722_11030)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11030" x1="14" y1="4.68268" x2="14" y2="28.9191" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M21 6.125L22.75 9.625V21C22.75 21.2321 22.6578 21.4546 22.4937 21.6187C22.3296 21.7828 22.1071 21.875 21.875 21.875H6.125C5.89294 21.875 5.67038 21.7828 5.50628 21.6187C5.34219 21.4546 5.25 21.2321 5.25 21V9.6285L7 6.125H21ZM14 12.25L10.5 15.75H13.125V19.25H14.875V15.75H17.5L14 12.25ZM19.9185 7.875H8.0815L7.20737 9.625H20.7935L19.9185 7.875Z" fill="url(#paint0_linear_722_11032)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11032" x1="14" y1="6.125" x2="14" y2="28.3281" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M21.875 6.125V7.875C21.875 16.2986 17.1736 20.125 11.375 20.125H9.71075C9.89625 17.4895 10.717 15.8944 12.859 13.9991C13.9125 13.0672 13.8232 12.5291 13.3044 12.838C9.73087 14.9642 7.95637 17.8377 7.87762 22.4262L7.875 22.75H6.125C6.125 21.5574 6.2265 20.475 6.42775 19.4845C6.2265 18.3522 6.125 16.8157 6.125 14.875C6.125 10.0424 10.0424 6.125 14.875 6.125C16.625 6.125 18.375 7 21.875 6.125Z" fill="url(#paint0_linear_722_11034)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11034" x1="14" y1="6.125" x2="14" y2="38.6823" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="white" stop-opacity="0"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M17.5 21.875L13.3332 14.2363L16.625 8.75L23.625 21.875H17.5ZM10.5 12.25L15.75 21.875H5.25L10.5 12.25ZM8.3125 10.5C7.73234 10.5 7.17594 10.2695 6.7657 9.8593C6.35547 9.44906 6.125 8.89266 6.125 8.3125C6.125 7.73234 6.35547 7.17594 6.7657 6.7657C7.17594 6.35547 7.73234 6.125 8.3125 6.125C8.89266 6.125 9.44906 6.35547 9.8593 6.7657C10.2695 7.17594 10.5 7.73234 10.5 8.3125C10.5 8.89266 10.2695 9.44906 9.8593 9.8593C9.44906 10.2695 8.89266 10.5 8.3125 10.5Z" fill="url(#paint0_linear_722_11036)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11036" x1="14.4375" y1="6.125" x2="14.4375" y2="28.3281" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M21.875 4.375V14.875C21.8748 16.2519 21.5136 17.6047 20.8274 18.7985C20.1412 19.9922 19.154 20.9852 17.9642 21.6783C16.7745 22.3715 15.4238 22.7405 14.0469 22.7487C12.67 22.7569 11.315 22.404 10.1171 21.725C8.91917 21.0461 7.92021 20.065 7.21983 18.8795C6.51946 17.694 6.14216 16.3456 6.12557 14.9688C6.10898 13.5919 6.45368 12.2348 7.12528 11.0328C7.79689 9.83076 8.77192 8.82584 9.95312 8.11825L15.75 4.77137V7.19512L21.875 4.375ZM14 10.5C12.8397 10.5 11.7269 10.9609 10.9064 11.7814C10.0859 12.6019 9.625 13.7147 9.625 14.875C9.625 16.0353 10.0859 17.1481 10.9064 17.9686C11.7269 18.7891 12.8397 19.25 14 19.25C15.1603 19.25 16.2731 18.7891 17.0936 17.9686C17.9141 17.1481 18.375 16.0353 18.375 14.875C18.375 13.7147 17.9141 12.6019 17.0936 11.7814C16.2731 10.9609 15.1603 10.5 14 10.5V10.5Z" fill="url(#paint0_linear_722_11038)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11038" x1="14" y1="4.375" x2="14" y2="30.2771" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M7.81294 22.2994L12.9282 17.1841C13.3003 17.2839 13.6949 17.258 14.0509 17.1106C14.4068 16.9632 14.7041 16.7025 14.8968 16.3689C15.0894 16.0352 15.1666 15.6474 15.1163 15.2654C15.066 14.8835 14.8911 14.5288 14.6187 14.2564C14.3463 13.984 13.9916 13.809 13.6097 13.7588C13.2277 13.7085 12.8398 13.7857 12.5062 13.9783C12.1726 14.1709 11.9118 14.4683 11.7644 14.8242C11.617 15.1801 11.5912 15.5748 11.6909 15.9469L6.57569 21.0621L5.64819 20.1346C8.12182 17.2471 9.05019 14.0499 10.2874 8.68788L15.8559 8.06926L20.8058 13.0191L20.1872 18.5876C14.8252 19.8249 11.6279 20.7533 8.74132 23.2278L7.81294 22.3003V22.2994ZM18.0216 5.28501L23.5752 10.8378C23.6324 10.8949 23.6727 10.9668 23.6915 11.0454C23.7104 11.124 23.7071 11.2064 23.682 11.2832C23.6569 11.3601 23.6109 11.4285 23.5493 11.4808C23.4877 11.5332 23.4127 11.5674 23.3328 11.5798L22.0431 11.781L17.0941 6.83201L17.2796 5.53263C17.2911 5.45228 17.3248 5.37672 17.3768 5.31441C17.4288 5.2521 17.4971 5.20548 17.5741 5.17979C17.6511 5.15409 17.7338 5.15032 17.8128 5.16891C17.8918 5.18749 17.9641 5.22769 18.0216 5.28501Z" fill="url(#paint0_linear_722_11040)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11040" x1="14.6759" y1="5.15729" x2="14.6759" y2="30.6316" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.4483 19.25C10.1884 18.1361 9.01593 17.2253 8.53468 16.625C7.7106 15.5954 7.19414 14.3539 7.04479 13.0436C6.89544 11.7333 7.11928 10.4074 7.69053 9.21878C8.26178 8.03013 9.15719 7.02702 10.2736 6.32502C11.3901 5.62302 12.6821 5.25067 14.0009 5.25089C15.3197 5.2511 16.6116 5.62385 17.7278 6.32621C18.844 7.02857 19.7391 8.03197 20.31 9.22081C20.8808 10.4096 21.1042 11.7356 20.9545 13.0458C20.8047 14.3561 20.2878 15.5974 19.4634 16.6268C18.9822 17.2261 17.8114 18.137 17.5516 19.25H10.4474H10.4483ZM17.4999 21V21.875C17.4999 22.3391 17.3156 22.7843 16.9874 23.1124C16.6592 23.4406 16.2141 23.625 15.7499 23.625H12.2499C11.7858 23.625 11.3407 23.4406 11.0125 23.1124C10.6843 22.7843 10.4999 22.3391 10.4999 21.875V21H17.4999ZM14.8749 12.2544V8.75001L10.9374 14.0044H13.1249V17.5044L17.0624 12.2544H14.8749V12.2544Z" fill="url(#paint0_linear_722_11042)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11042" x1="13.9998" y1="5.25089" x2="13.9998" y2="31.1533" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="logo-block bottom">
-                          <div class="logo-row">
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M12.0942 5.45825C11.4207 6.92043 11.2114 8.55392 11.4946 10.1387C11.7779 11.7234 12.54 13.1833 13.6783 14.3217C14.8167 15.46 16.2766 16.2221 17.8613 16.5054C19.4461 16.7886 21.0796 16.5793 22.5417 15.9058C21.672 19.8223 18.1781 22.75 14 22.75C9.16738 22.75 5.25 18.8326 5.25 14C5.25 9.82187 8.17775 6.328 12.0942 5.45825V5.45825ZM19.3935 5.50462L20.125 5.6875V6.5625L19.3935 6.74538C19.0859 6.82232 18.8049 6.98141 18.5807 7.20565C18.3564 7.42989 18.1973 7.71085 18.1204 8.0185L17.9375 8.75H17.0625L16.8796 8.0185C16.8027 7.71085 16.6436 7.42989 16.4194 7.20565C16.1951 6.98141 15.9141 6.82232 15.6065 6.74538L14.875 6.5625V5.6875L15.6065 5.50462C15.914 5.42754 16.1948 5.26839 16.4188 5.04416C16.6429 4.81993 16.8019 4.53904 16.8787 4.2315L17.0625 3.5H17.9375L18.1204 4.2315C18.1973 4.53915 18.3564 4.82011 18.5807 5.04435C18.8049 5.26859 19.0859 5.42768 19.3935 5.50462V5.50462ZM23.7685 9.87962L24.5 10.0625V10.9375L23.7685 11.1204C23.4609 11.1973 23.1799 11.3564 22.9557 11.5806C22.7314 11.8049 22.5723 12.0859 22.4954 12.3935L22.3125 13.125H21.4375L21.2546 12.3935C21.1777 12.0859 21.0186 11.8049 20.7943 11.5806C20.5701 11.3564 20.2891 11.1973 19.9815 11.1204L19.25 10.9375V10.0625L19.9815 9.87962C20.2891 9.80268 20.5701 9.64359 20.7943 9.41935C21.0186 9.19511 21.1777 8.91415 21.2546 8.6065L21.4375 7.875H22.3125L22.4954 8.6065C22.5723 8.91415 22.7314 9.19511 22.9557 9.41935C23.1799 9.64359 23.4609 9.80268 23.7685 9.87962Z" fill="url(#paint0_linear_722_11060)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11060" x1="14.875" y1="3.5" x2="14.875" y2="30.6372" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M13.125 5.29376V14.875H22.7063C22.2679 19.2964 18.5369 22.75 14 22.75C9.16738 22.75 5.25 18.8326 5.25 14C5.25 9.46314 8.70363 5.73214 13.125 5.29376V5.29376ZM14.875 5.29376C16.8831 5.49606 18.7596 6.38613 20.1867 7.81327C21.6139 9.24041 22.504 11.1169 22.7063 13.125H14.875V5.29376Z" fill="url(#paint0_linear_722_11062)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11062" x1="13.9781" y1="5.29376" x2="13.9781" y2="29.9022" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M14 22.75C9.16738 22.75 5.25 18.8326 5.25 14C5.25 9.16738 9.16738 5.25 14 5.25C18.8326 5.25 22.75 9.16738 22.75 14C22.75 18.8326 18.8326 22.75 14 22.75ZM14 17.5C14.9283 17.5 15.8185 17.1313 16.4749 16.4749C17.1313 15.8185 17.5 14.9283 17.5 14C17.5 13.0717 17.1313 12.1815 16.4749 11.5251C15.8185 10.8687 14.9283 10.5 14 10.5C13.0717 10.5 12.1815 10.8687 11.5251 11.5251C10.8687 12.1815 10.5 13.0717 10.5 14C10.5 14.9283 10.8687 15.8185 11.5251 16.4749C12.1815 17.1313 13.0717 17.5 14 17.5V17.5Z" fill="url(#paint0_linear_722_11064)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11064" x1="14" y1="5.25" x2="14" y2="29.9201" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M20.9238 16.2129C20.7442 15.6568 20.5473 15.1064 20.3332 14.5626L19.5369 12.5974C19.5369 12.5746 19.5474 12.1879 19.5474 11.9884C19.5474 8.6275 17.9436 5.25 13.9999 5.25C10.0563 5.25 8.45245 8.6275 8.45245 11.9875C8.45245 12.1879 8.46207 12.5746 8.46295 12.5974L7.6667 14.5626C7.4497 15.1252 7.23357 15.7106 7.07607 16.2129C6.32357 18.6078 6.5677 19.5991 6.7532 19.621C7.15132 19.6682 8.30282 17.8185 8.30282 17.8185C8.30282 18.8895 8.8602 20.2878 10.0668 21.2975C9.6162 21.4349 9.0632 21.6466 8.70707 21.9056C8.3877 22.1392 8.42795 22.3781 8.4857 22.4744C8.73857 22.8952 12.8213 22.743 14.0008 22.6117C15.1794 22.743 19.2631 22.8953 19.5151 22.4735C19.5728 22.3773 19.6131 22.1392 19.2937 21.9056C18.9376 21.6466 18.3846 21.4349 17.9331 21.2966C19.1397 20.2878 19.6971 18.8895 19.6971 17.8176C19.6971 17.8176 20.8486 19.6683 21.2467 19.6201C21.4322 19.5983 21.6754 18.6078 20.9229 16.2129" fill="url(#paint0_linear_722_11066)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11066" x1="13.9997" y1="5.25" x2="13.9997" y2="29.9203" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M14 5.25C15.9725 5.25 17.8643 6.03359 19.2591 7.42839C20.6539 8.8232 21.4375 10.715 21.4375 12.6875C21.4375 18.375 16.625 23.1875 14 23.1875C11.375 23.1875 6.5625 18.375 6.5625 12.6875C6.5625 10.715 7.34609 8.8232 8.74089 7.42839C10.1357 6.03359 12.0275 5.25 14 5.25V5.25ZM18.8125 14C18.2603 14 17.7144 14.1161 17.21 14.3408C16.7056 14.5655 16.2542 14.8938 15.8849 15.3043C15.5157 15.7148 15.2369 16.1984 15.0667 16.7236C14.8964 17.2489 14.8386 17.8041 14.8969 18.3531C15.4809 18.4151 16.0713 18.3457 16.625 18.15C17.1787 17.9542 17.6816 17.6371 18.0969 17.2219C18.5121 16.8066 18.8292 16.3037 19.025 15.75C19.2207 15.1963 19.2901 14.6059 19.2281 14.0219C19.0901 14.0073 18.9513 14 18.8125 14V14ZM9.1875 14C9.0475 14 8.90838 14.007 8.77188 14.0219C8.70986 14.6059 8.77927 15.1963 8.97501 15.75C9.17075 16.3037 9.48787 16.8066 9.90313 17.2219C10.3184 17.6371 10.8213 17.9542 11.375 18.15C11.9287 18.3457 12.5191 18.4151 13.1031 18.3531C13.1614 17.8041 13.1036 17.2489 12.9333 16.7236C12.7631 16.1984 12.4843 15.7148 12.1151 15.3043C11.7458 14.8938 11.2944 14.5655 10.79 14.3408C10.2856 14.1161 9.73965 14 9.1875 14V14Z" fill="url(#paint0_linear_722_11068)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11068" x1="14" y1="5.25" x2="14" y2="30.5369" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M14 19.25C12.6076 19.25 11.2723 18.6969 10.2877 17.7123C9.30312 16.7277 8.75 15.3924 8.75 14C8.75 12.6076 9.30312 11.2723 10.2877 10.2877C11.2723 9.30312 12.6076 8.75 14 8.75C15.3924 8.75 16.7277 9.30312 17.7123 10.2877C18.6969 11.2723 19.25 12.6076 19.25 14C19.25 15.3924 18.6969 16.7277 17.7123 17.7123C16.7277 18.6969 15.3924 19.25 14 19.25ZM13.125 4.375H14.875V7H13.125V4.375ZM13.125 21H14.875V23.625H13.125V21ZM6.57563 7.81287L7.81287 6.57563L9.66875 8.4315L8.4315 9.66875L6.57563 7.81375V7.81287ZM18.3313 19.5685L19.5685 18.3313L21.4244 20.1871L20.1871 21.4244L18.3313 19.5685ZM20.1871 6.57475L21.4244 7.81287L19.5685 9.66875L18.3313 8.4315L20.1871 6.57563V6.57475ZM8.4315 18.3313L9.66875 19.5685L7.81287 21.4244L6.57563 20.1871L8.4315 18.3313V18.3313ZM23.625 13.125V14.875H21V13.125H23.625ZM7 13.125V14.875H4.375V13.125H7Z" fill="url(#paint0_linear_722_11070)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11070" x1="14" y1="4.375" x2="14" y2="31.5122" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M14 5.25C15.4992 5.24994 16.9672 5.6778 18.2316 6.4833C19.496 7.28881 20.5041 8.43848 21.1377 9.79721C21.7712 11.1559 22.0037 12.6673 21.8079 14.1536C21.6121 15.6399 20.9961 17.0395 20.0323 18.1877C21.1304 18.914 21.8111 19.8415 21.8706 20.8556L21.875 21L14 22.75L6.12501 21L6.12938 20.8556C6.18801 19.8406 6.86963 18.9131 7.96688 18.1869C6.7747 16.7699 6.12225 14.9768 6.12501 13.125C6.12501 11.0364 6.95469 9.03338 8.43154 7.55653C9.90839 6.07969 11.9114 5.25 14 5.25V5.25ZM14 14.875C12.7925 14.875 11.8125 15.463 11.8125 16.1875C11.8125 16.912 12.7925 17.5 14 17.5C15.2075 17.5 16.1875 16.912 16.1875 16.1875C16.1875 15.463 15.2075 14.875 14 14.875ZM11.375 10.5C10.4081 10.5 9.62501 11.088 9.62501 11.8125C9.62501 12.537 10.4081 13.125 11.375 13.125C12.3419 13.125 13.125 12.537 13.125 11.8125C13.125 11.088 12.3419 10.5 11.375 10.5ZM16.625 10.5C15.6581 10.5 14.875 11.088 14.875 11.8125C14.875 12.537 15.6581 13.125 16.625 13.125C17.5919 13.125 18.375 12.537 18.375 11.8125C18.375 11.088 17.5919 10.5 16.625 10.5Z" fill="url(#paint0_linear_722_11072)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11072" x1="14.0002" y1="5.25" x2="14.0002" y2="29.9201" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M15.2372 12.7627L15.6572 13.188L16.0641 13.6124L16.4657 14.0429C19.4915 17.3364 21.2537 20.3586 20.4969 21.1155C20.1469 21.4655 19.3104 21.2765 18.1869 20.6719C16.803 21.5395 15.1838 21.9557 13.553 21.8629C11.9223 21.7702 10.3607 21.1729 9.08425 20.1539L11.6917 17.5464C12.0581 17.6444 12.4464 17.6207 12.7982 17.4789C13.15 17.3371 13.4461 17.0848 13.6421 16.7601C13.8381 16.4354 13.9233 16.0558 13.8849 15.6785C13.8465 15.3012 13.6865 14.9466 13.4291 14.668C13.1717 14.3895 12.8308 14.2021 12.4577 14.1341C12.0845 14.0661 11.6994 14.1212 11.3603 14.291C11.0212 14.4609 10.7464 14.7363 10.5774 15.0758C10.4083 15.4153 10.3541 15.8005 10.423 16.1735L10.4536 16.3091L7.847 18.9166C6.82767 17.6399 6.23029 16.078 6.13748 14.447C6.04468 12.8159 6.46105 11.1963 7.329 9.81224C6.7235 8.68961 6.5345 7.85399 6.8845 7.50311C7.73937 6.64911 11.4782 9.00374 15.2372 12.7619V12.7627ZM20.8057 7.19424C20.9798 7.36822 21.1152 7.57697 21.2032 7.80685C21.2911 8.03672 21.3295 8.28256 21.316 8.52831C21.3025 8.77406 21.2372 9.01418 21.1246 9.23301C21.0119 9.45183 20.8544 9.64443 20.6622 9.79824C21.3528 10.8949 21.7624 12.1448 21.8551 13.4374C21.9477 14.73 21.7204 16.0256 21.1934 17.2095C20.153 15.4997 18.5071 13.5572 16.4745 11.5255L16.0046 11.06C14.1426 9.24086 12.3681 7.76649 10.7914 6.80749C11.9754 6.28025 13.2711 6.0529 14.5639 6.14554C15.8567 6.23818 17.1067 6.64795 18.2035 7.33861C18.3572 7.14669 18.5497 6.98932 18.7683 6.87677C18.987 6.76421 19.2269 6.699 19.4724 6.68538C19.7179 6.67175 19.9636 6.71003 20.1933 6.79771C20.423 6.88539 20.6317 7.0205 20.8057 7.19424V7.19424Z" fill="url(#paint0_linear_722_11074)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11074" x1="14" y1="6.12537" x2="14" y2="28.3289" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                            <div class="logo">
-                              <div class="feature-icon w-embed"><svg width="28" height="28" viewbox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M9.40625 5.6875C9.8946 5.6875 10.3782 5.78369 10.8294 5.97057C11.2805 6.15746 11.6905 6.43138 12.0358 6.7767C12.3811 7.12201 12.655 7.53197 12.8419 7.98315C13.0288 8.43433 13.125 8.9179 13.125 9.40625V13.125H9.40625C8.41998 13.125 7.4741 12.7332 6.7767 12.0358C6.0793 11.3384 5.6875 10.3925 5.6875 9.40625C5.6875 8.41998 6.0793 7.4741 6.7767 6.7767C7.4741 6.0793 8.41998 5.6875 9.40625 5.6875V5.6875ZM9.40625 14.875H13.125V18.5938C13.125 19.3292 12.9069 20.0482 12.4983 20.6598C12.0897 21.2713 11.5089 21.748 10.8294 22.0294C10.1498 22.3109 9.40213 22.3845 8.68076 22.241C7.95939 22.0976 7.29677 21.7434 6.7767 21.2233C6.25662 20.7032 5.90245 20.0406 5.75896 19.3192C5.61547 18.5979 5.68911 17.8502 5.97057 17.1706C6.25204 16.4911 6.72868 15.9103 7.34022 15.5017C7.95177 15.0931 8.67075 14.875 9.40625 14.875V14.875ZM18.5938 5.6875C19.58 5.6875 20.5259 6.0793 21.2233 6.7767C21.9207 7.4741 22.3125 8.41998 22.3125 9.40625C22.3125 10.3925 21.9207 11.3384 21.2233 12.0358C20.5259 12.7332 19.58 13.125 18.5938 13.125H14.875V9.40625C14.875 8.41998 15.2668 7.4741 15.9642 6.7767C16.6616 6.0793 17.6075 5.6875 18.5938 5.6875V5.6875ZM14.875 14.875H18.5938C19.3293 14.875 20.0482 15.0931 20.6598 15.5017C21.2713 15.9103 21.748 16.4911 22.0294 17.1706C22.3109 17.8502 22.3845 18.5979 22.241 19.3192C22.0976 20.0406 21.7434 20.7032 21.2233 21.2233C20.7032 21.7434 20.0406 22.0976 19.3192 22.241C18.5979 22.3845 17.8502 22.3109 17.1706 22.0294C16.4911 21.748 15.9103 21.2713 15.5017 20.6598C15.0931 20.0482 14.875 19.3292 14.875 18.5938V14.875Z" fill="url(#paint0_linear_722_11076)"></path>
-                                  <defs>
-                                    <lineargradient id="paint0_linear_722_11076" x1="14" y1="5.6875" x2="14" y2="29.1241" gradientunits="userSpaceOnUse">
-                                      <stop stop-color="white"></stop>
-                                      <stop offset="1" stop-color="#363A3F"></stop>
-                                    </lineargradient>
-                                  </defs>
-                                </svg></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="gradient-overlay"></div>
-                      </div>
-                    </div>
-                    <div class="feature-app-content">
-                      <div class="fade-in-on-scroll">
-                        <div class="tag">AI Marketing Automation</div>
-                      </div>
-                      <div class="fade-in-on-scroll">
-                        <h3>Stop Chasing Leads Manually</h3>
-                      </div>
-                      <div class="fade-in-on-scroll">
-                        <div class="mobile-app-description">
-                          <p>78% of customers hire the first business that responds. Our automated systems text back missed calls, follow up with cold leads, and request Google reviews after every job &mdash; all without you lifting a finger.<br></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id="use-cases" class="mobile-app-holder">
-                <div class="mobile-app-container slider">
-                  <div class="feature-app-content">
-                    <div class="fade-in-on-scroll">
-                      <div class="tag">Resources &amp; Insights</div>
-                    </div>
-                    <div class="fade-in-on-scroll">
-                      <h3 class="heading">Browse videos, articles, and <br>real-world use cases</h3>
-                    </div>
-                    <div class="fade-in-on-scroll">
-                      <div class="mobile-app-description">
-                        <p>Watch quick breakdowns, read practical guides, and explore real client outcomes you can model in your own business.</p>
-                        <div class="margin-top-2 _20px">
-                          <a href="case-studies.html" target="_blank" class="swft-btn is-primary w-inline-block">
-                            <div class="button_bg"></div>
-                            <div class="button_text">View Case Studies</div>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead3761" style="opacity:0" class="mobile-app-phone-holder">
-                    <div class="iphone-gradient">
-                      <div data-delay="4000" data-animation="slide" class="slider w-slider" data-autoplay="true" data-easing="ease-in-out-quart" data-hide-arrows="true" data-disable-swipe="true" data-autoplay-limit="0" data-nav-spacing="3" data-duration="700" data-infinite="true">
-                        <div class="w-slider-mask">
-                          <div class="blog-slide _1 w-slide">
-                            <div class="blog-description-container"></div>
-                          </div>
-                          <div class="blog-slide _2 w-slide">
-                            <div class="blog-description-container"></div>
-                          </div>
-                          <div class="blog-slide _3 w-slide">
-                            <div class="blog-description-container"></div>
-                          </div>
-                          <div class="blog-slide _4 w-slide">
-                            <div class="blog-description-container"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="gradient _90-from-left"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <section id="Projects">
-        <div class="slider-section-wrapper glow-1">
-          <div class="slider-section-container">
-            <div class="section-tag-container">
-              <div>About us</div>
-              <div class="section-tag-line"></div>
-            </div>
-            <div data-w-id="7974c498-4d6e-c808-291d-0b8b5a7d255c" style="opacity:0" class="projects-slider-wrapper">
-              <div data-delay="4000" data-animation="outin" class="project-slider w-slider" data-autoplay="true" data-easing="ease-in-out" data-hide-arrows="false" data-disable-swipe="true" data-autoplay-limit="0" data-nav-spacing="3" data-duration="500" data-infinite="true">
-                <div class="project-sldier-mask w-slider-mask">
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">Why SWFT?</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Strategic</div>
-                          <div class="project-tag">Workflows</div>
-                          <div class="project-tag">Facilitating</div>
-                          <div class="project-tag">Transformation</div>
-                        </div>
-                        <p class="testimonial-text">SWFT was built from real operator experience. We deploy the same systems we rely on ourselves so small businesses can access enterprise-level execution without enterprise-level overhead. <span class="highlight">Strategy first. Automation where it counts. Results you can measure.</span></p>
-                        <a href="websites.html" target="_blank" class="swft-btn is-primary w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">View Our Work</div>
-                        </a>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                      </div>
-                      <div class="project-image-container">
-                        <a href="#" class="lightbox-wrapper w-inline-block w-lightbox"><img sizes="(max-width: 3156px) 100vw, 3156px" srcset="images/swft-thumbnail-p-500.webp 500w, images/swft-thumbnail-p-800.webp 800w, images/swft-thumbnail-p-1080.webp 1080w, images/swft-thumbnail-p-1600.webp 1600w, images/swft-thumbnail-p-2000.webp 2000w, images/swft-thumbnail-p-2600.webp 2600w, images/swft-thumbnail.webp 3156w" alt="" src="images/swft-thumbnail.webp" loading="lazy" class="about-video-thumbnail no-border">
-                          <script type="application/json" class="w-json">{
-  "items": [],
-  "group": ""
-}</script>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">What We Do</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Branding</div>
-                          <div class="project-tag">Web Development</div>
-                          <div class="project-tag">Mobile Development</div>
-                          <div class="project-tag">And More...</div>
-                        </div>
-                        <p class="testimonial-text">We turn ideas into revenue-ready digital systems: brand identity, conversion-focused websites, and backend automations that remove busywork. <span class="highlight">Every deliverable is built to attract leads, convert attention, and support long-term growth.</span></p>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                        <a href="contact.html" target="_blank" class="swft-btn is-primary w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">Read Case Studies</div>
-                        </a>
-                      </div>
-                      <div class="project-image-container"><img sizes="(max-width: 2237px) 100vw, 2237px" srcset="images/Frame-13-p-500.jpg 500w, images/Frame-13-p-800.jpg 800w, images/Frame-13-p-1080.jpg 1080w, images/Frame-13-p-1600.jpg 1600w, images/Frame-13-p-2000.jpg 2000w, images/Frame-13.jpg 2237w" alt="" src="images/Frame-13.jpg" loading="lazy" class="about-video-thumbnail no-border"></div>
-                    </div>
-                  </div>
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">Who We Work With</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Digital Nomads</div>
-                          <div class="project-tag">Solo-Entrepreneurs</div>
-                          <div class="project-tag">Small-Medium Businesses</div>
-                        </div>
-                        <p class="testimonial-text">We partner with founders, service pros, and lean teams who are done piecing tools together. If you need a clear system that helps you get found, followed up with, and booked, we build it around how you actually work.</p>
-                        <a href="contact.html" target="_blank" class="swft-btn is-primary w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">Work With Us</div>
-                        </a>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                      </div>
-                      <div class="project-image-container"><img sizes="(max-width: 3000px) 100vw, 3000px" srcset="images/SWFT-Customer-Logos-p-500.webp 500w, images/SWFT-Customer-Logos-p-800.webp 800w, images/SWFT-Customer-Logos-p-1080.webp 1080w, images/SWFT-Customer-Logos-p-1600.webp 1600w, images/SWFT-Customer-Logos-p-2000.webp 2000w, images/SWFT-Customer-Logos-p-2600.webp 2600w, images/SWFT-Customer-Logos.webp 3000w" alt="" src="images/SWFT-Customer-Logos.webp" loading="lazy" class="about-video-thumbnail no-border"></div>
-                    </div>
-                  </div>
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">How We Can Help You</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Get Started</div>
-                          <div class="project-tag">Strategize</div>
-                          <div class="project-tag">Create</div>
-                        </div>
-                        <p class="testimonial-text">You have momentum but not enough bandwidth. We help you clarify your offer, map the customer journey, and launch the website + automation stack that keeps leads moving from first click to paid client.</p>
-                        <a href="contact.html" target="_blank" class="swft-btn is-primary w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">Work With Us</div>
-                        </a>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                      </div>
-                      <div class="project-image-container"><img sizes="(max-width: 4080px) 100vw, 4080px" srcset="images/AdobeStock_1431669061-p-500.jpeg 500w, images/AdobeStock_1431669061-p-800.jpeg 800w, images/AdobeStock_1431669061-p-1080.jpeg 1080w, images/AdobeStock_1431669061-p-1600.jpeg 1600w, images/AdobeStock_1431669061-p-2000.jpeg 2000w, images/AdobeStock_1431669061-p-2600.jpeg 2600w, images/AdobeStock_1431669061-p-3200.jpeg 3200w, images/AdobeStock_1431669061.jpeg 4080w" alt="" src="images/AdobeStock_1431669061.jpeg" loading="lazy" class="about-video-thumbnail no-border"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="left-arrow-slider about w-slider-arrow-left">
-                  <div class="arrow-holder"><img loading="lazy" src="images/Left-Arrow.svg" alt="" class="arrow"></div>
-                </div>
-                <div class="right-arrow-slider about w-slider-arrow-right">
-                  <div class="arrow-holder"><img loading="lazy" src="images/Right-Arrow.svg" alt="" class="arrow"></div>
-                </div>
-                <div class="slide-nav w-slider-nav w-round"></div>
-              </div>
-            </div>
-          </div>
+      <section class="hp-section padding-global" id="homepage-pricing" aria-labelledby="hp-pricing-heading">
+        <div class="container-large">
+          <div class="hp-section-label" id="hp-pricing-heading">04 / Investment</div>
+          <div id="hp-pricing-mount"></div>
         </div>
       </section>
       <div class="section-2">
@@ -1610,116 +1019,206 @@ pointer-events:none;
           </div>
         </div>
       </div>
-      <div id="Testimonials" class="section-2 grey-section">
-        <div class="testimonails-wrapper">
-          <div class="container-2">
-            <div class="testimonail-slider-holder">
-              <div class="testimonail-slider-container">
-                <div data-delay="4000" data-animation="slide" class="testimonial-slider-2 w-slider" data-autoplay="true" data-easing="ease" data-hide-arrows="false" data-disable-swipe="false" data-autoplay-limit="0" data-nav-spacing="3" data-duration="700" data-infinite="false">
-                  <div class="testimonial-mask w-slider-mask">
-                    <div class="testimonial-slide w-slide">
-                      <div data-w-id="e8393153-27b4-aec7-030f-76d4e707c212" class="testimonail-card-holder">
-                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c213-278ca766" class="testimonial-content-holder">
-                          <div class="testimonial-text">They captured the vision I have for my brand perfectly and created a website that helped me pack venues and book more gigs.</div>
-                          <div class="testimonail-user">
-                            <div class="testimonial-user-wrapper">
-                              <div class="user-image-holder"><img loading="lazy" src="images/Animoji-2.png" alt="" class="user-image"></div>
-                              <div class="user-content-holder">
-                                <div class="user-name">
-                                  <div>Yanko Hernando</div>
-                                </div>
-                                <div class="user-job-position">
-                                  <div>Owner - <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Blurred lines entertainment</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="testimonial-slide w-slide">
-                      <div class="testimonail-card-holder">
-                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c227-278ca766" class="testimonial-content-holder">
-                          <div class="testimonial-text">“...I&#x27;ve always wanted my own website. Especially something professionally done... and then I got lucky. I found you...&quot;<span class="white-text"></span></div>
-                          <div class="testimonail-user">
-                            <div class="testimonial-user-wrapper">
-                              <div class="user-image-holder"><img sizes="(max-width: 1720px) 100vw, 1720px" srcset="images/Animoji-5-p-500.png 500w, images/Animoji-5-p-800.png 800w, images/Animoji-5-p-1080.png 1080w, images/Animoji-5-p-1600.png 1600w, images/Animoji-5.png 1720w" alt="" src="images/Animoji-5.png" loading="lazy" class="user-image"></div>
-                              <div class="user-content-holder">
-                                <div class="user-name">
-                                  <div>Omar Ndiye</div>
-                                </div>
-                                <div class="user-job-position">
-                                  <div>Owner- <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Built By Me Ez</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="testimonial-slide w-slide">
-                      <div class="testimonail-card-holder">
-                        <div id="w-node-e8393153-27b4-aec7-030f-76d4e707c24d-278ca766" class="testimonial-content-holder">
-                          <div class="testimonial-text">I am extremely impressed with the redesign of my website&#x27;s home page! The updated layout and security features have made my clients feel much more confident in trusting my business</div>
-                          <div class="testimonail-user">
-                            <div class="testimonial-user-wrapper">
-                              <div class="user-image-holder"><img loading="lazy" src="images/Animoji-3.png" alt="" class="user-image"></div>
-                              <div class="user-content-holder">
-                                <div class="user-name">
-                                  <div>Richard M</div>
-                                </div>
-                                <div class="user-job-position">
-                                  <div>Owner - AHA Consulting Services</div>
-                                </div>
-                              </div>
-                            </div><img loading="lazy" src="images/Qoute.svg" alt="" class="qoute">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="left-arrow-slider w-slider-arrow-left">
-                    <div class="arrow-holder"><img loading="lazy" src="images/Left-Arrow.svg" alt="" class="arrow"></div>
-                  </div>
-                  <div class="right-arrow-slider w-slider-arrow-right">
-                    <div class="arrow-holder"><img loading="lazy" src="images/Right-Arrow.svg" alt="" class="arrow"></div>
-                  </div>
-                  <div class="hide-2 w-slider-nav w-round"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <section id="Service" class="section_services">
-        <div class="section-wrapper glow-1">
-          <div class="section-container service">
+      <section id="Projects">
+        <div class="slider-section-wrapper glow-1">
+          <div class="slider-section-container">
             <div class="section-tag-container">
-              <div>Our Services</div>
+              <div>About us</div>
               <div class="section-tag-line"></div>
             </div>
-            <div data-w-id="5a595109-d7c2-618b-4808-9e9890638d0c" style="opacity:0" class="service-cards-wrapper">
-              <div class="service-card">
-                <div class="service-card-title">Brand Identity &amp; Storyboarding </div>
-                <p class="service-card-paragraph">We craft your story, visuals, and positioning so your brand stands out and scales with clarity.</p>
-                <p class="service-card-list">• Visual Branding &amp; Logo Design<br>• Brand strategy &amp; Guidelines<br>• Digital and Print collateral<br>• Content Creation</p>
-              </div>
-              <div class="service-card">
-                <div class="service-card-title">Wire Framing &amp; Mockups</div>
-                <p class="service-card-paragraph">We map your user’s journey and prototype every click—so your site guides visitors to take action.</p>
-                <p class="service-card-list">• UX Flow Mapping<br>• Conversion-Focused Layouts<br>• Mockup design<br>• User Testing &amp; Feedback<br></p>
-              </div>
-              <div class="service-card">
-                <div class="service-card-title">Web &amp; App Development</div>
-                <p class="service-card-paragraph">We build fast, reliable Webflow sites, Shopify stores, and iOS apps—baked with booking, payments, and AI-powered workflows.</p>
-                <p class="service-card-list">• Webflow CMS &amp; Interactions<br>• Shopify Site Builds<br>• iOS App Development<br>• 3rd Party App Integrations<br></p>
+            <div data-w-id="7974c498-4d6e-c808-291d-0b8b5a7d255c" style="opacity:0" class="projects-slider-wrapper">
+              <div data-delay="4000" data-animation="outin" class="project-slider w-slider" data-autoplay="true" data-easing="ease-in-out" data-hide-arrows="false" data-disable-swipe="true" data-autoplay-limit="0" data-nav-spacing="3" data-duration="500" data-infinite="true">
+                <div class="project-sldier-mask w-slider-mask">
+                  <div class="w-slide">
+                    <div class="project-container">
+                      <div class="project-info-container">
+                        <h2 class="project-title">Why SWFT?</h2>
+                        <div class="project-tag-container">
+                          <div class="project-tag">Strategic</div>
+                          <div class="project-tag">Workflows</div>
+                          <div class="project-tag">Facilitating</div>
+                          <div class="project-tag">Transformation</div>
+                        </div>
+                        <p class="testimonial-text">SWFT was built from real operator experience. We deploy the same systems we rely on ourselves so small businesses can access enterprise-level execution without enterprise-level overhead. <span class="highlight">Strategy first. Automation where it counts. Results you can measure.</span></p>
+                        <a href="websites.html" target="_blank" class="button is-course w-inline-block">
+                          <div class="button_bg"></div>
+                          <div class="button_text">View Our Work</div>
+                        </a>
+                        <a href="#" class="project-link w-inline-block">
+                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
+                        </a>
+                      </div>
+                      <div class="project-image-container">
+                        <a href="#" class="lightbox-wrapper w-inline-block w-lightbox"><img sizes="(max-width: 3156px) 100vw, 3156px" srcset="images/swft-thumbnail-p-500.webp 500w, images/swft-thumbnail-p-800.webp 800w, images/swft-thumbnail-p-1080.webp 1080w, images/swft-thumbnail-p-1600.webp 1600w, images/swft-thumbnail-p-2000.webp 2000w, images/swft-thumbnail-p-2600.webp 2600w, images/swft-thumbnail.webp 3156w" alt="" src="images/swft-thumbnail.webp" loading="lazy" class="about-video-thumbnail no-border">
+                          <script type="application/json" class="w-json">{
+  "items": [],
+  "group": ""
+}</script>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="w-slide">
+                    <div class="project-container">
+                      <div class="project-info-container">
+                        <h2 class="project-title">What We Do</h2>
+                        <div class="project-tag-container">
+                          <div class="project-tag">Branding</div>
+                          <div class="project-tag">Web Development</div>
+                          <div class="project-tag">Mobile Development</div>
+                          <div class="project-tag">And More...</div>
+                        </div>
+                        <p class="testimonial-text">We turn ideas into revenue-ready digital systems: brand identity, conversion-focused websites, and backend automations that remove busywork. <span class="highlight">Every deliverable is built to attract leads, convert attention, and support long-term growth.</span></p>
+                        <a href="#" class="project-link w-inline-block">
+                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
+                        </a>
+                        <a href="contact.html" target="_blank" class="button is-course w-inline-block">
+                          <div class="button_bg"></div>
+                          <div class="button_text">Read Case Studies</div>
+                        </a>
+                      </div>
+                      <div class="project-image-container"><img sizes="(max-width: 2237px) 100vw, 2237px" srcset="images/Frame-13-p-500.jpg 500w, images/Frame-13-p-800.jpg 800w, images/Frame-13-p-1080.jpg 1080w, images/Frame-13-p-1600.jpg 1600w, images/Frame-13-p-2000.jpg 2000w, images/Frame-13.jpg 2237w" alt="" src="images/Frame-13.jpg" loading="lazy" class="about-video-thumbnail no-border"></div>
+                    </div>
+                  </div>
+                  <div class="w-slide">
+                    <div class="project-container">
+                      <div class="project-info-container">
+                        <h2 class="project-title">Who We Work With</h2>
+                        <div class="project-tag-container">
+                          <div class="project-tag">Digital Nomads</div>
+                          <div class="project-tag">Solo-Entrepreneurs</div>
+                          <div class="project-tag">Small-Medium Businesses</div>
+                        </div>
+                        <p class="testimonial-text">We partner with founders, service pros, and lean teams who are done piecing tools together. If you need a clear system that helps you get found, followed up with, and booked, we build it around how you actually work.</p>
+                        <a href="contact.html" target="_blank" class="button is-course w-inline-block">
+                          <div class="button_bg"></div>
+                          <div class="button_text">Work With Us</div>
+                        </a>
+                        <a href="#" class="project-link w-inline-block">
+                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
+                        </a>
+                      </div>
+                      <div class="project-image-container"><img sizes="(max-width: 3000px) 100vw, 3000px" srcset="images/SWFT-Customer-Logos-p-500.webp 500w, images/SWFT-Customer-Logos-p-800.webp 800w, images/SWFT-Customer-Logos-p-1080.webp 1080w, images/SWFT-Customer-Logos-p-1600.webp 1600w, images/SWFT-Customer-Logos-p-2000.webp 2000w, images/SWFT-Customer-Logos-p-2600.webp 2600w, images/SWFT-Customer-Logos.webp 3000w" alt="" src="images/SWFT-Customer-Logos.webp" loading="lazy" class="about-video-thumbnail no-border"></div>
+                    </div>
+                  </div>
+                  <div class="w-slide">
+                    <div class="project-container">
+                      <div class="project-info-container">
+                        <h2 class="project-title">How We Can Help You</h2>
+                        <div class="project-tag-container">
+                          <div class="project-tag">Get Started</div>
+                          <div class="project-tag">Strategize</div>
+                          <div class="project-tag">Create</div>
+                        </div>
+                        <p class="testimonial-text">You have momentum but not enough bandwidth. We help you clarify your offer, map the customer journey, and launch the website + automation stack that keeps leads moving from first click to paid client.</p>
+                        <a href="contact.html" target="_blank" class="button is-course w-inline-block">
+                          <div class="button_bg"></div>
+                          <div class="button_text">Work With Us</div>
+                        </a>
+                        <a href="#" class="project-link w-inline-block">
+                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
+                        </a>
+                      </div>
+                      <div class="project-image-container"><img sizes="(max-width: 4080px) 100vw, 4080px" srcset="images/AdobeStock_1431669061-p-500.jpeg 500w, images/AdobeStock_1431669061-p-800.jpeg 800w, images/AdobeStock_1431669061-p-1080.jpeg 1080w, images/AdobeStock_1431669061-p-1600.jpeg 1600w, images/AdobeStock_1431669061-p-2000.jpeg 2000w, images/AdobeStock_1431669061-p-2600.jpeg 2600w, images/AdobeStock_1431669061-p-3200.jpeg 3200w, images/AdobeStock_1431669061.jpeg 4080w" alt="" src="images/AdobeStock_1431669061.jpeg" loading="lazy" class="about-video-thumbnail no-border"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="left-arrow-slider about w-slider-arrow-left">
+                  <div class="arrow-holder"><img loading="lazy" src="images/Left-Arrow.svg" alt="" class="arrow"></div>
+                </div>
+                <div class="right-arrow-slider about w-slider-arrow-right">
+                  <div class="arrow-holder"><img loading="lazy" src="images/Right-Arrow.svg" alt="" class="arrow"></div>
+                </div>
+                <div class="slide-nav w-slider-nav w-round"></div>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <section class="hp-section" id="proven-results" aria-labelledby="hp-proven-heading">
+                <div class="hp-section-label">05 / Our Work</div>
+                <h2 class="hp-section-title" id="hp-proven-heading">Proven Results</h2>
+                <div class="hp-proven-grid">
+                  <a href="case-study/brooklyn-steel.html" class="hp-proven-card">
+                    <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co. website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">E-commerce · Website</div>
+                      <h3>Brooklyn Steel Co.</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/snooze-lane.html" class="hp-proven-card">
+                    <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane website and app" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">Website · App</div>
+                      <h3>Snooze Lane</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/tal-hydration.html" class="hp-proven-card">
+                    <img src="images/tal-hydration-thumbnail.webp" alt="TAL Hydration storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">E-commerce</div>
+                      <h3>TAL Hydration</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/roller-reels.html" class="hp-proven-card">
+                    <img src="images/Roller_Reels_thumbnail.webp" alt="Roller Reels brand" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">Brand · Film</div>
+                      <h3>Roller Reels</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/manna-hydration.html" class="hp-proven-card">
+                    <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">E-commerce</div>
+                      <h3>Manna Hydration</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/thyme-and-table.html" class="hp-proven-card">
+                    <img src="images/thyme-and-table-thumbnail.webp" alt="Thyme and Table storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">E-commerce</div>
+                      <h3>Thyme &amp; Table</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/blurred-lines-entertainment.html" class="hp-proven-card">
+                    <img src="images/BLE_SWFT_thumbnail.webp" alt="Blurred Lines Entertainment brand and film" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">Brand · Film</div>
+                      <h3>Blurred Lines Entertainment</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/built-by-me-ez.html" class="hp-proven-card">
+                    <img src="images/built_by_me_ez_thumbnail.webp" alt="Built By Me EZ website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">Website</div>
+                      <h3>Built By Me EZ</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                  <a href="case-study/hawthorne-global-ministries.html" class="hp-proven-card">
+                    <img src="images/Hawthorne_Global_Ministries_thumbnail.webp" alt="Hawthorne Global Ministries website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w">
+                    <div class="hp-proven-card-body">
+                      <div class="hp-proven-tag">Website</div>
+                      <h3>Hawthorne Global Ministries</h3>
+                      <span class="hp-proven-link">View Case Study →</span>
+                    </div>
+                  </a>
+                </div>
+                <div class="hp-view-all">
+                  <a href="case-studies.html" class="button is-course w-inline-block">
+                    <div class="button_bg"></div>
+                    <div class="button_text">View All Work</div>
+                  </a>
+                </div>
+              </section>
       <section id="How-we-work">
         <div class="section-wrapper glow-2">
           <div class="section-container process">
@@ -1754,49 +1253,9 @@ pointer-events:none;
           </div>
         </div>
       </section>
-      <section id="Get-in-touch">
-        <div class="section-wrapper glow-1">
-          <div class="section-container contact">
-            <div class="section-tag-container">
-              <div>Start a project</div>
-              <div class="section-tag-line"></div>
-            </div>
-            <div class="contact-content-container">
-              <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2f4" style="opacity:0" class="section-title-container">
-                <h2 class="section-title-2">Have a project in mind?</h2>
-                <div class="testimonial-text">Fill out the form and we’ll get back to you within 24 hours... or email us at <a href="mailto:elombe@swftstudios.com?subject=Inquiry%20from%20SWFT%20Studios" class="highlight">hello@swftstudios.com</a>
-                </div>
-              </div>
-              <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2fb" style="opacity:0" class="contact-form-container">
-                <div class="form-block w-form">
-                  <form id="wf-form-Contact-Form" name="wf-form-Contact-Form" data-name="Contact Form" action="https://formsubmit.co/elombe@swftstudios.com" method="post" class="form" data-wf-page-id="688e7554265d8089278ca766" data-wf-element-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2fd">
-                    <div class="field-container"><label for="name" class="testimonial-text">What&#x27;s your name?</label><input class="text-field w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"></div>
-                    <div class="field-container"><label for="name-2" class="testimonial-text">What&#x27;s your email?</label><input class="text-field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="text" id="name-2"></div>
-                    <div class="field-container"><label for="name-4" class="testimonial-text">Describe your project</label><textarea id="Project-description" name="Project-description" maxlength="5000" data-name="field" placeholder="" required="" class="textarea w-input"></textarea></div>
-                    <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb30e" class="magnetic-element">
-                      <a href="#" class="swft-btn is-primary w-inline-block">
-                        <div class="button_bg"></div>
-                        <div class="button_text">Submit</div>
-                      </a>
-                    </div>
-                  </form>
-                  <div class="success-message w-form-done">
-                    <div class="div-block">
-                      <div>Thank you! Your submission has been received!</div>
-                    </div>
-                  </div>
-                  <div class="error-message w-form-fail">
-                    <div>Oops! Something went wrong while submitting the form.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
       <section id="book-discovery" class="hp-booking padding-global" aria-labelledby="hp-booking-heading">
         <div class="container-large">
-          <div class="hp-section-label">05 / Book a Call</div>
+          <div class="hp-section-label">06 / Book a Call</div>
           <div class="hp-booking-copy">
             <h2 id="hp-booking-heading">Let&#x27;s Talk. 30 Minutes, No Pressure.</h2>
             <p>Book a free discovery call. We&#x27;ll cover your goals, timeline, and whether SWFT is the right fit.</p>
@@ -2170,7 +1629,7 @@ pointer-events:none;
                     </div>
                   </div>
                   <div class="nav-menu-button-holder">
-                    <a href="#Early-Access" class="swft-btn is-outline is-sm">Sign In</a>
+                    <a href="#Early-Access" class="button-5 navbar-button w-button">Sign In</a>
                   </div>
                 </div>
               </nav>
@@ -2213,8 +1672,8 @@ pointer-events:none;
             <p class="paragraph-2">SWFT builds revenue systems for service pros and ecommerce brands — site, capture, follow-up, and reviews. One builder. You own it.</p>
           </div>
           <div class="hero-section-button-holder">
-            <a href="website-pricing.html#pricing" class="swft-btn is-primary">See Pricing</a>
-            <a href="https://cal.com/rollerreels/swft-meeting" target="_blank" rel="noopener noreferrer" class="swft-btn is-secondary">Book A Call</a>
+            <a href="website-pricing.html#pricing" class="button-5 video w-button">See Pricing</a>
+            <a href="https://cal.com/rollerreels/swft-meeting" target="_blank" rel="noopener noreferrer" class="button-5 secondary w-button">Book A Call</a>
           </div>
         </div>
       </div>
@@ -2404,7 +1863,7 @@ pointer-events:none;
                   <p>Our AI systems and bots are designed for seamless integration across various platforms to enhance your business&#x27;s digital presence</p>
                 </div>
                 <div class="fade-in-on-scroll _100width">
-                  <a href="https://calendly.com/elombe/30min" target="_blank" class="swft-btn is-outline">Get Started Today</a>
+                  <a href="https://calendly.com/elombe/30min" target="_blank" class="button-5 white w-button">Get Started Today</a>
                 </div>
               </div>
             </div>
@@ -2512,7 +1971,7 @@ pointer-events:none;
                         </div>
                       </div>
                       <div class="pricing-button-holder">
-                        <a href="website-pricing.html#pricing" class="swft-btn is-outline">See full pricing</a>
+                        <a href="website-pricing.html#pricing" class="button-5 white w-button">See full pricing</a>
                       </div>
                     </div>
                   </div>
@@ -2575,7 +2034,7 @@ pointer-events:none;
                         </div>
                       </div>
                       <div class="pricing-button-holder">
-                        <a href="website-pricing.html#pricing" class="swft-btn is-primary is-lg">See full pricing</a>
+                        <a href="website-pricing.html#pricing" class="button-5 full w-button">See full pricing</a>
                       </div>
                     </div>
                   </div>
@@ -2611,7 +2070,7 @@ pointer-events:none;
                 </div>
                 <div class="form-block-2 w-form">
                   <form id="Early-Access-Emails" name="wf-form-Early-Access-Emails" data-name="Early Access Emails" action="https://formsubmit.co/elombe@swftstudios.com" method="post" class="form-holder" data-wf-page-id="688e7554265d8089278ca766" data-wf-element-id="d8cc7671-41fe-51fd-76c2-250d9ead3931">
-                    <div style="opacity:0;-webkit-transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="form-2"><input class="text-field-2 w-input" maxlength="256" name="email" data-name="Email" placeholder="Enter email here" type="email" id="Early-Access-Emails" required=""><input type="submit" data-wait="..." class="submit-swft-btn is-primary" value=""></div>
+                    <div style="opacity:0;-webkit-transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 30px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)" class="form-2"><input class="text-field-2 w-input" maxlength="256" name="email" data-name="Email" placeholder="Enter email here" type="email" id="Early-Access-Emails" required=""><input type="submit" data-wait="..." class="submit-button-2 w-button" value=""></div>
                   </form>
                   <div class="thank-you-message w-form-done">
                     <div><span class="white-text">Thank you! </span><br>Your submission has been received!</div>
@@ -2836,6 +2295,8 @@ Cal.ns["swft-meeting"]("inline", {
   calLink: "swftstudios/swft-meeting"
 });
 </script>
+  <script src="js/pricing-render.js"></script>
+  <script src="js/homepage-pricing.js"></script>
   <script src="js/swft-nav.js"></script>
 </body>
 </html>
