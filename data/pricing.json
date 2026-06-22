@@ -1,255 +1,243 @@
 {
   "hero": {
-    "headline": "Stop losing leads after the click.",
-    "sub": "Revenue systems for service pros and ecommerce brands — built, launched, and optionally managed by one builder."
+    "headline": "Investment in Transformation",
+    "sub": "Transparent pricing for high-impact results. Choose the path that fits your scale."
   },
   "billingToggle": {
     "default": "monthly",
-    "monthly": "Monthly Subscription",
-    "oneTime": "One-Time Build"
+    "monthly": "Monthly",
+    "oneTime": "One-Time"
   },
   "revisionPolicy": {
     "freeWindowDays": 30,
     "freeRevisions": 2,
     "cardNote": "30 days post-launch · 2 free revisions included",
-    "afterWindowNote": "Contact for current revision rates."
+    "scopeNote": "Final quote after intake."
   },
-  "siteTypes": {
-    "servicePros": {
-      "id": "service-pros",
-      "name": "Service Pros",
-      "platform": "Webflow",
-      "tag": "REVENUE SYSTEM",
-      "outcome": "Turn site visitors into booked jobs — with follow-up that doesn't depend on you answering every call.",
-      "oneTime": {
-        "buildLabel": "$1,500",
-        "buildPrice": 1500,
-        "scopeNote": "Final quote after intake.",
-        "buildIncludes": [
-          "Brand-matched site that builds trust fast",
-          "Lead capture forms wired to your CRM",
-          "Booking + inquiry flows",
-          "Mobile-first + SEO foundations",
-          "Launched in your Webflow account"
+  "calUrl": "https://cal.com/swftstudios/swft-meeting",
+  "websiteDevelopment": {
+    "id": "website-development",
+    "label": "Website Development",
+    "tiers": [
+      {
+        "id": "service-pro",
+        "name": "Service Pro",
+        "platform": "Webflow",
+        "monthly": 200,
+        "oneTime": 1500,
+        "featured": false,
+        "ghl": false,
+        "description": "Perfect for local service providers needing a professional ongoing presence.",
+        "cta": "Get Started",
+        "oneTimeIncludes": [
+          "Strategy + wireframing session",
+          "Up to 5 pages in your Webflow account",
+          "Mobile-first, conversion-focused design",
+          "Basic SEO setup (titles, meta, sitemap)",
+          "Lead capture forms wired to email",
+          "Launch support + handoff training",
+          "30 days post-launch · 2 free revisions"
+        ],
+        "monthlyIncludes": [
+          "2 queued site updates per month (~2–3 day turnaround)",
+          "Form uptime + submission monitoring",
+          "Quarterly SEO health check",
+          "CMS support in your Webflow account",
+          "Direct line to your builder"
+        ],
+        "notIncluded": [
+          "GoHighLevel automations (available on Growth tier)",
+          "Custom logo or brand identity design"
         ]
       },
-      "monthly": {
-        "tiers": [
-          {
-            "id": "essential",
-            "name": "Essential",
-            "price": 399,
-            "priceLabel": "$399/mo",
-            "featured": true,
-            "ghlFeatures": [
-              "Lead capture + missed-call text-back",
-              "Basic CRM pipeline",
-              "Monthly performance snapshot"
-            ],
-            "includes": [
-              "Website included",
-              "Queued site updates (2–3 day turnaround)",
-              "Hosting + form monitoring",
-              "GoHighLevel Essential features",
-              "Direct line to your builder"
-            ]
-          },
-          {
-            "id": "growth",
-            "name": "Growth",
-            "price": 799,
-            "priceLabel": "$799/mo",
-            "featured": false,
-            "ghlFeatures": [
-              "Everything in Essential",
-              "Review automation",
-              "Booking reminders + follow-up sequences",
-              "Monthly reporting + source attribution"
-            ],
-            "includes": [
-              "Website included",
-              "Priority update queue",
-              "Hosting + uptime monitoring",
-              "GoHighLevel Growth features",
-              "Direct line to your builder"
-            ]
-          }
+      {
+        "id": "growth",
+        "name": "Growth",
+        "platform": "Webflow",
+        "monthly": 400,
+        "oneTime": 3500,
+        "featured": true,
+        "badge": "Most Popular",
+        "ghl": true,
+        "ghlLabel": "Includes GoHighLevel",
+        "description": "Advanced features and integrations for scaling businesses and restaurants.",
+        "cta": "Get Started",
+        "oneTimeIncludes": [
+          "Everything in Service Pro build",
+          "Conversion-focused page layouts",
+          "Booking + inquiry flow setup",
+          "CRM-ready form wiring",
+          "Automation-ready Webflow build",
+          "30 days post-launch · 2 free revisions"
+        ],
+        "monthlyIncludes": [
+          "Everything in Service Pro monthly",
+          "Dedicated GoHighLevel sub-account managed by SWFT",
+          "Missed-call text-back",
+          "Lead capture + CRM pipeline",
+          "Automated Google review requests",
+          "Online booking flow",
+          "Monthly performance snapshot"
+        ],
+        "notIncluded": [
+          "SMS/phone usage beyond fair-use caps (billed at cost or quoted)",
+          "Custom logo or full brand identity"
         ]
       },
-      "valueStack": [
-        { "item": "Custom conversion-focused Webflow site", "anchor": 4000 },
-        { "item": "Missed-call + instant text-back setup", "anchor": 800 },
-        { "item": "CRM pipelines + auto follow-up", "anchor": 1500 },
-        { "item": "Review automation + GBP setup", "anchor": 600 },
-        { "item": "90 days freelancer ops", "anchor": 1500 }
-      ],
-      "retailFirst90": 8400
-    },
-    "ecommerceBrands": {
-      "id": "ecommerce-brands",
-      "name": "Ecommerce Brands",
-      "platform": "Shopify",
-      "tag": "REVENUE SYSTEM",
-      "outcome": "Turn traffic into orders — with a store that doesn't leak sales at checkout.",
-      "oneTime": {
-        "buildLabel": "$2,500",
-        "buildPrice": 2500,
-        "scopeNote": "Final quote after intake.",
-        "buildIncludes": [
-          "Brand-matched Shopify storefront",
+      {
+        "id": "ecommerce",
+        "name": "E-Commerce",
+        "platform": "Shopify",
+        "monthly": 500,
+        "oneTime": 5000,
+        "featured": false,
+        "ghl": true,
+        "ghlLabel": "Includes GoHighLevel",
+        "description": "Full managed online store support and continuous optimization.",
+        "cta": "Get Started",
+        "oneTimeIncludes": [
+          "Custom Shopify storefront in your account",
           "Catalog + collection architecture",
           "Checkout + cart flow optimization",
           "Cart recovery foundations",
-          "Launched in your Shopify account"
+          "Mobile-first product presentation",
+          "30 days post-launch · 2 free revisions"
+        ],
+        "monthlyIncludes": [
+          "Queued product + page updates",
+          "Checkout + app monitoring",
+          "Merchandising + conversion tweaks",
+          "GoHighLevel SMS follow-up + review automation",
+          "Monthly store health report",
+          "Direct line to your builder"
+        ],
+        "notIncluded": [
+          "Paid ad spend or media buying",
+          "Product photography (see Content plans)"
         ]
-      },
-      "monthly": {
-        "tiers": [
-          {
-            "id": "essential",
-            "name": "Essential",
-            "price": 599,
-            "priceLabel": "$599/mo",
-            "featured": true,
-            "features": [
-              "Product + page updates (queued)",
-              "Checkout + app monitoring",
-              "Monthly store health report"
-            ],
-            "includes": [
-              "Store included",
-              "Queued updates (2–3 day turnaround)",
-              "App + stack maintenance",
-              "Shopify Essential ops",
-              "Direct line to your builder"
-            ]
-          },
-          {
-            "id": "growth",
-            "name": "Growth",
-            "price": 999,
-            "priceLabel": "$999/mo",
-            "featured": false,
-            "features": [
-              "Everything in Essential",
-              "Cart recovery flows",
-              "Merchandising + conversion updates",
-              "Monthly sales + attribution report"
-            ],
-            "includes": [
-              "Store included",
-              "Priority update queue",
-              "Checkout + conversion monitoring",
-              "Shopify Growth ops",
-              "Direct line to your builder"
-            ]
-          }
-        ]
-      },
-      "valueStack": [
-        { "item": "Custom Shopify build", "anchor": 5000 },
-        { "item": "Catalog + checkout setup", "anchor": 2000 },
-        { "item": "Conversion + cart recovery pass", "anchor": 1800 },
-        { "item": "90 days store ops", "anchor": 2250 }
-      ],
-      "retailFirst90": 11050
-    }
-  },
-  "leakage": [
-    {
-      "pain": "Missed call on a job site",
-      "fix": "Text-back fires within seconds"
-    },
-    {
-      "pain": "Form submitted, never followed up",
-      "fix": "CRM sequence starts automatically"
-    },
-    {
-      "pain": "No reviews → losing to competitors",
-      "fix": "Review requests sent after every job"
-    },
-    {
-      "pain": "Traffic but no bookings",
-      "fix": "Every page built around one action"
-    }
-  ],
-  "diyManaged": {
-    "hormoziLine": "If one saved job or one recovered order pays for the month, the plan pays for itself.",
-    "diy": [
-      "Full Webflow or Shopify access after launch",
-      "You change copy, images, and products",
-      "No monthly fee required from SWFT",
-      "Best if you're hands-on"
-    ],
-    "managed": [
-      "Monthly plan — site, edits, monitoring, and GHL stack",
-      "One request at a time; ~2–3 day turnaround",
-      "Pause or cancel anytime (31-day cycle)",
-      "Best if your time is worth more than the fee"
+      }
     ]
   },
-  "benefits": [
-    {
-      "title": "Captures demand",
-      "text": "Site, forms, and follow-up work as one system."
-    },
-    {
-      "title": "You own it",
-      "text": "Webflow or Shopify in your account. No hostage situations."
-    },
-    {
-      "title": "One builder",
-      "text": "Build, wire, and operate — no agency handoffs."
-    },
-    {
-      "title": "DIY or done-for-you",
-      "text": "Use the CMS yourself or hand it off monthly."
-    }
-  ],
+  "contentCreation": {
+    "id": "content-creation",
+    "label": "Content Creation",
+    "monthlyOnlyNote": "Content plans are monthly retainers. Book a discovery call to scope a one-off content day.",
+    "tiers": [
+      {
+        "id": "content-starter",
+        "name": "Content Starter",
+        "monthly": 600,
+        "featured": false,
+        "ghl": false,
+        "description": "Monthly essential photos and updates to keep your social feeds fresh.",
+        "cta": "Get Started",
+        "monthlyIncludes": [
+          "1 half-day shoot per month (or equivalent photo batch)",
+          "10–15 edited photos sized for web + social",
+          "4–6 Canva-based social/ad templates customized to your brand",
+          "Caption starter bank",
+          "Assets delivered ready to post"
+        ],
+        "notIncluded": [
+          "Custom logo or full brand identity",
+          "Freelance design work — quoted separately"
+        ]
+      },
+      {
+        "id": "content-growth",
+        "name": "Content Growth",
+        "monthly": 1200,
+        "featured": false,
+        "ghl": false,
+        "description": "Comprehensive photo and short-form video system for active brands.",
+        "cta": "Get Started",
+        "monthlyIncludes": [
+          "1 full shoot day per month",
+          "6–8 short-form reels + 20+ deliverables",
+          "Canva ad creative sets + light motion graphics",
+          "Monthly content calendar",
+          "Pro graphics support when needed"
+        ],
+        "notIncluded": [
+          "Full logo/brand identity projects",
+          "Paid ad management"
+        ]
+      },
+      {
+        "id": "content-pro",
+        "name": "Content Pro",
+        "monthly": 2000,
+        "featured": false,
+        "ghl": false,
+        "description": "Full-scale production. Premium cinematic video and extensive photo coverage.",
+        "cta": "Get Started",
+        "monthlyIncludes": [
+          "2 shoot days per month",
+          "Quarterly cinematic hero video piece",
+          "Full campaign asset packages",
+          "Priority turnaround",
+          "Freelancer budget for logos, decks, and campaign graphics"
+        ],
+        "notIncluded": [
+          "Unlimited revisions outside agreed scope",
+          "TV/broadcast media buys"
+        ]
+      }
+    ]
+  },
+  "bundle": {
+    "id": "website-content-bundle",
+    "badge": "The Ultimate Ecosystem",
+    "name": "Website + Content Starter Package",
+    "description": "The complete entry package for businesses serious about showing up online. A Service Pro website build paired with ongoing Content Starter production so your site and social stay aligned.",
+    "setup": 1200,
+    "monthly": 600,
+    "featured": true,
+    "cta": "Secure Your Bundle",
+    "includes": [
+      "One-time website build (Service Pro scope — up to 5 pages)",
+      "Content Starter retainer ($600/mo value)",
+      "Optional: upgrade to Growth (+$200/mo) for GoHighLevel automations"
+    ]
+  },
+  "bookCta": {
+    "headline": "Let's Put Your Business on Autopilot.",
+    "quote": "Ready to stand out and get noticed? — Elombe",
+    "sub": "Stop managing tasks and start scaling impact. Book your strategic session today.",
+    "button": "Book a Discovery Call"
+  },
   "faq": [
     {
-      "q": "Is this just a website?",
-      "a": "No. The build includes capture, routing, and follow-up plumbing. The site is the front door — the system is what happens after someone clicks."
+      "q": "Which plans include GoHighLevel?",
+      "a": "GoHighLevel automations are included on Growth ($400/mo) and E-Commerce ($500/mo) website plans only. Service Pro ($200/mo) is website management without GHL. You can upgrade from the bundle or Service Pro anytime."
     },
     {
-      "q": "What's the difference between Service Pros and Ecommerce?",
-      "a": "Service Pros are Webflow revenue systems for local and service businesses — leads, bookings, and trust. Ecommerce Brands are Shopify stores built to move product. Same builder, different stack."
+      "q": "What does monthly website management include?",
+      "a": "Service Pro covers site updates, monitoring, and CMS support. Growth and E-Commerce add a managed GoHighLevel sub-account with missed-call text-back, CRM pipeline, review automation, and booking flows."
+    },
+    {
+      "q": "What's included in content plans?",
+      "a": "All content plans are monthly retainers with shoots, edited photos/video, and Canva-based social assets. Custom logos and full brand identity are not included on Starter — they're available on Content Pro or as a separate quote."
+    },
+    {
+      "q": "What's in the bundle?",
+      "a": "The Website + Content Starter Package is $1,200 setup (Service Pro website build) + $600/mo (Content Starter retainer). Add Growth automations for +$200/mo on top of your website plan."
     },
     {
       "q": "Do I need the monthly plan?",
-      "a": "No. One-time builds hand off with full CMS access. Monthly is for owners who want the site plus ongoing edits, monitoring, and GoHighLevel features without doing it themselves."
+      "a": "No. One-time website builds hand off with full CMS access in your Webflow or Shopify account. Monthly is for owners who want ongoing updates, monitoring, and support without doing it themselves."
     },
     {
-      "q": "What's included in the build vs monthly?",
-      "a": "One-time = revenue system installed and handed off. Monthly = site included plus ongoing updates, monitoring, and tiered GHL marketing features."
-    },
-    {
-      "q": "What's the difference between Essential and Growth?",
-      "a": "Essential covers the core: site, lead capture, basic CRM, and queued updates. Growth adds review automation, follow-up sequences, booking reminders, priority queue, and deeper reporting."
-    },
-    {
-      "q": "What happens after the 30-day post-launch window?",
-      "a": "One-time builds include 2 free revisions within 30 days of launch. After that, contact for current revision rates."
-    },
-    {
-      "q": "Can I edit the site myself?",
-      "a": "Yes. Every build ships in your Webflow or Shopify account with full CMS access."
-    },
-    {
-      "q": "How fast do you deliver?",
-      "a": "Service sites typically launch in 6–8 weeks. Ecommerce builds run 6–10 weeks. Monthly update requests ship in ~2–3 business days."
+      "q": "What happens after launch?",
+      "a": "One-time builds include 2 free revisions within 30 days of launch. After that, contact us for current revision rates or move to a monthly plan."
     },
     {
       "q": "Can I pause monthly service?",
-      "a": "Yes. Billing runs on a 31-day cycle. Pause anytime — unused days stay on your account for when you return."
+      "a": "Yes. Monthly plans can be paused or cancelled. We'll confirm terms on your discovery call before you commit."
+    },
+    {
+      "q": "How do I get started?",
+      "a": "Book a free discovery call. We'll match you to the right tier based on your goals, timeline, and whether you need website, content, or both."
     }
-  ],
-  "sections": {
-    "pricing": "Pick your system",
-    "path": "Run it yourself or I run it for you",
-    "leakage": "Where businesses lose money",
-    "value": "Typical cost if you bought piece by piece",
-    "benefits": "Why owners choose SWFT",
-    "footerCta": "Ready to stop leaking leads?"
-  }
+  ]
 }

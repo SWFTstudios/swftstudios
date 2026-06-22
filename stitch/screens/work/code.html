@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Work | SWFT STUDIOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;600;700&amp;family=Inter:wght@400&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#c9c6c5",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-background": "#e5e2e1",
+                        "inverse-surface": "#e5e2e1",
+                        "inverse-on-surface": "#303030",
+                        "inverse-primary": "#5f5e5e",
+                        "on-tertiary-fixed": "#161c22",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "on-secondary-fixed": "#001a42",
+                        "error": "#ffb4ab",
+                        "surface": "#131313",
+                        "outline-variant": "#444748",
+                        "surface-container-highest": "#353535",
+                        "on-secondary": "#002e6a",
+                        "error-container": "#93000a",
+                        "surface-dim": "#131313",
+                        "surface-container-low": "#1b1b1c",
+                        "text-muted": "#888888",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#353535",
+                        "surface-container": "#202020",
+                        "on-primary": "#313030",
+                        "outline": "#8e9192",
+                        "on-tertiary-container": "#747a81",
+                        "tertiary-fixed-dim": "#c1c7cf",
+                        "secondary": "#adc6ff",
+                        "surface-tint": "#c9c6c5",
+                        "border-low-light": "rgba(255, 255, 255, 0.08)",
+                        "on-primary-fixed": "#1c1b1b",
+                        "on-primary-fixed-variant": "#474646",
+                        "background": "#131313",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-tertiary-fixed-variant": "#41474e",
+                        "primary-fixed": "#e5e2e1",
+                        "tertiary-fixed": "#dde3eb",
+                        "tertiary-container": "#050b10",
+                        "surface-subtle": "#1F1F1F",
+                        "surface-bright": "#393939",
+                        "on-surface-variant": "#c4c7c7",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary": "#c1c7cf",
+                        "on-tertiary": "#2b3137",
+                        "primary-container": "#0a0a0a",
+                        "surface-deep": "#0A0A0A",
+                        "secondary-container": "#0566d9",
+                        "on-error": "#690005",
+                        "on-secondary-container": "#e6ecff",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-primary-container": "#7b7979",
+                        "secondary-fixed": "#d8e2ff",
+                        "accent-silver": "#CBD5E1",
+                        "on-surface": "#e5e2e1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "section-padding": "120px",
+                        "stack-md": "24px",
+                        "stack-sm": "12px",
+                        "grid-gutter": "24px",
+                        "stack-lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-xl": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-xl-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "quote-editorial": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "label-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-xl-mobile": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "quote-editorial": ["24px", { "lineHeight": "1.4", "fontWeight": "300" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-mono": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0A;
+            color: #e5e2e1;
+        }
+        .grid-blueprint {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1440px;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            padding: 0 32px;
+        }
+        .grid-line {
+            width: 1px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.04);
+            margin: 0 auto;
+        }
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface antialiased selection:bg-primary selection:text-surface-deep min-h-screen flex flex-col">
+<!-- Blueprint Grid Background -->
+<div class="grid-blueprint hidden md:grid">
+<div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div>
+<div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div>
+<div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div>
+</div>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-6 max-w-container-max mx-auto bg-background/80 backdrop-blur-xl border-b border-border-low-light">
+<div class="text-body-lg font-headline-md font-bold tracking-tighter text-on-surface">
+            SWFT STUDIOS
+        </div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-mono font-label-mono uppercase tracking-widest hover:bg-surface-bright/10 transition-all duration-300 px-2 py-1" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-mono font-label-mono uppercase tracking-widest hover:bg-surface-bright/10 transition-all duration-300 px-2 py-1" href="#">Ventures</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-mono font-label-mono uppercase tracking-widest hover:bg-surface-bright/10 transition-all duration-300 px-2 py-1" href="#">Services</a>
+<a class="text-primary font-bold border-b border-primary pb-1 text-label-mono font-label-mono uppercase tracking-widest hover:bg-surface-bright/10 transition-all duration-300 px-2 py-1 scale-95 transition-transform" href="#">Work</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-mono font-label-mono uppercase tracking-widest hover:bg-surface-bright/10 transition-all duration-300 px-2 py-1" href="#">Method</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-mono font-label-mono uppercase tracking-widest hover:bg-surface-bright/10 transition-all duration-300 px-2 py-1" href="#">Pricing</a>
+</nav>
+<button class="text-label-mono font-label-mono font-bold uppercase tracking-widest bg-on-surface text-surface-deep px-6 py-3 hover:bg-primary transition-colors">
+            START A PROJECT
+        </button>
+</header>
+<main class="content-layer flex-grow pt-32 pb-section-padding max-w-container-max mx-auto w-full px-8">
+<!-- Hero Section -->
+<section class="py-section-padding border-b border-surface-subtle">
+<div class="max-w-4xl">
+<span class="block text-label-mono font-label-mono text-text-muted mb-6">01 // WORK</span>
+<h1 class="text-display-xl-mobile md:text-display-xl font-display-xl text-on-surface mb-8">Proof over promises.</h1>
+<p class="text-body-lg md:text-quote-editorial font-quote-editorial text-text-muted max-w-2xl">
+                    See how we've built digital systems that drive real business results for ambitious founders and brands.
+                </p>
+</div>
+</section>
+<!-- Featured Projects Grid -->
+<section class="py-section-padding">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-surface-subtle border border-surface-subtle">
+<!-- Project 1 -->
+<article class="bg-surface-deep group cursor-pointer relative overflow-hidden flex flex-col h-full border border-surface-subtle hover:border-primary transition-colors duration-300 p-8">
+<span class="absolute top-8 right-8 text-label-mono font-label-mono text-text-muted group-hover:text-primary transition-colors">01</span>
+<div class="mb-12 h-64 w-full bg-surface-container overflow-hidden">
+<div class="w-full h-full bg-surface-variant opacity-50 transition-transform duration-700 group-hover:scale-105" data-alt="A highly detailed overhead view of a modern desk setup in a dark studio environment. A sleek laptop displays intricate wireframes and UI designs. The lighting is moody and dramatic, with a stark contrast between deep charcoal shadows and crisp, cool white light illuminating the screen. A minimalist aesthetic emphasizing technical precision and corporate polish." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuARqoY1JD8prjfYrs8A5rfsz62KNI7jIyWTSceMYs-DIHVAJf5K8CrS3KEJs9MdlFegfUVxbuqnozYeexX0KiKc2TChlmk43bydueBDR1pLKRlMI1g0P-ozJxA6xNGhQxl_DtF2OvYW7E_Nbx7JHTAg_fk8uGYgAO4as7HvuJ8Wq3KPXA7A_PxtNwjy40qsNipLpann1RyxFov38br9ooE7cC30RppOFrRln1ukQQFB67i3mGyQy8FibD5W7yZaLuaw3A3c851Oo4Sj'); background-size: cover; background-position: center;">
+</div>
+</div>
+<div class="mt-auto">
+<div class="flex justify-between items-start mb-4">
+<h2 class="text-headline-md font-headline-md text-on-surface">Core Home</h2>
+<span class="text-label-mono font-label-mono text-text-muted px-3 py-1 border border-surface-subtle rounded-full">Webflow + Shopify</span>
+</div>
+<p class="text-label-mono font-label-mono text-primary mb-6 uppercase">E-Commerce Architecture</p>
+<div class="space-y-4 pt-6 border-t border-surface-subtle">
+<div>
+<h3 class="text-label-mono font-label-mono text-text-muted uppercase mb-1">Problem</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-sm">Fragmented legacy system restricting conversion flow.</p>
+</div>
+<div>
+<h3 class="text-label-mono font-label-mono text-text-muted uppercase mb-1">System Built</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-sm">Headless commerce setup with unified inventory management.</p>
+</div>
+<div>
+<h3 class="text-label-mono font-label-mono text-text-muted uppercase mb-1">Outcome</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-sm text-primary">240% increase in checkout speed.</p>
+</div>
+</div>
+</div>
+</article>
+<!-- Project 2 -->
+<article class="bg-surface-deep group cursor-pointer relative overflow-hidden flex flex-col h-full border border-surface-subtle hover:border-primary transition-colors duration-300 p-8">
+<span class="absolute top-8 right-8 text-label-mono font-label-mono text-text-muted group-hover:text-primary transition-colors">02</span>
+<div class="mb-12 h-64 w-full bg-surface-container overflow-hidden">
+<div class="w-full h-full bg-surface-variant opacity-50 transition-transform duration-700 group-hover:scale-105" data-alt="A close-up shot of a smartphone displaying a sleek, modern mobile application interface focused on hydration tracking. The device rests on a matte black surface. Ambient, cool-toned lighting highlights the sharp edges of the phone and creates a premium, high-tech atmosphere indicative of a polished venture product." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6LOG7PMOjq5SX6cMiTZK_HbWtFmMazBNTYpXYzMDJbblkkgNyFdGtS3co1iJ0ZD3OF5ZSMnea7KIXvKCQvaLk_dI0h08jO3hO7-Fgr_CkxLCfKEjcKDNSya0wC7UgSopsAp94lOmCKNeDh44Hk8Y0PlTnEuCBItyKGymeUCEsaiJFFxEv3-McyRsPDJ880ndddz91DUNmQuiZCS6u4gDghxBrRAtpi1cCPzQUuZru9u91h4UBkxGi-qutf5pMYazQ1zmfNvR_LpHI'); background-size: cover; background-position: center;">
+</div>
+</div>
+<div class="mt-auto">
+<div class="flex justify-between items-start mb-4">
+<h2 class="text-headline-md font-headline-md text-on-surface">Manna Hydration</h2>
+<span class="text-label-mono font-label-mono text-text-muted px-3 py-1 border border-surface-subtle rounded-full">React Native</span>
+</div>
+<p class="text-label-mono font-label-mono text-primary mb-6 uppercase">Product Design</p>
+<div class="space-y-4 pt-6 border-t border-surface-subtle">
+<div>
+<h3 class="text-label-mono font-label-mono text-text-muted uppercase mb-1">Problem</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-sm">Low daily active user retention post-download.</p>
+</div>
+<div>
+<h3 class="text-label-mono font-label-mono text-text-muted uppercase mb-1">System Built</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-sm">Gamified onboarding and smart push notification engine.</p>
+</div>
+<div>
+<h3 class="text-label-mono font-label-mono text-text-muted uppercase mb-1">Outcome</h3>
+<p class="text-body-md font-body-md text-on-surface-variant text-sm text-primary">45% improvement in 30-day retention.</p>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-section-padding border-t border-surface-subtle">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+<blockquote class="pl-8 border-l-2 border-primary">
+<p class="text-quote-editorial font-quote-editorial text-on-surface mb-6">"SWFT didn't just build a website; they architected a growth engine. Their technical precision is unmatched in the agency space."</p>
+<footer class="text-label-mono font-label-mono">
+<strong class="text-on-surface block uppercase">Sarah Jenkins</strong>
+<span class="text-text-muted">Founder, Core Home</span>
+</footer>
+</blockquote>
+<blockquote class="pl-8 border-l-2 border-surface-bright">
+<p class="text-quote-editorial font-quote-editorial text-on-surface mb-6">"The speed and clarity with which they executed our vision was startling. They are a rare breed of strategic builders."</p>
+<footer class="text-label-mono font-label-mono">
+<strong class="text-on-surface block uppercase">Marcus Thorne</strong>
+<span class="text-text-muted">CEO, Roller Reels</span>
+</footer>
+</blockquote>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-section-padding border-t border-surface-subtle text-center">
+<h2 class="text-headline-lg font-headline-lg text-on-surface mb-8">Ready to build your system?</h2>
+<button class="inline-block text-label-mono font-label-mono font-bold uppercase tracking-widest bg-on-surface text-surface-deep px-8 py-4 hover:bg-primary transition-colors">
+                Let's Build
+            </button>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-stack-lg px-8 grid grid-cols-1 md:grid-cols-4 gap-grid-gutter max-w-container-max mx-auto bg-surface-container-lowest border-t border-border-low-light">
+<div class="md:col-span-1">
+<div class="text-headline-md font-headline-md text-on-surface mb-4">
+                SWFT STUDIOS
+            </div>
+<p class="text-body-md font-body-md text-text-muted">
+                © 2024 SWFT STUDIOS. BUILT FOR SCALE.
+            </p>
+</div>
+<div class="md:col-span-3 flex flex-wrap gap-8 justify-end">
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">Home</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">Ventures</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">Services</a>
+<a class="text-primary text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">Work</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">Method</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">Pricing</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">NYC / JERSEY CITY</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">LINKEDIN</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">TWITTER</a>
+<a class="text-text-muted hover:text-on-surface text-label-mono font-label-mono uppercase hover:opacity-80 transition-opacity Transition-all duration-200" href="#">INSTAGRAM</a>
+</div>
+</footer>
+</body></html>
