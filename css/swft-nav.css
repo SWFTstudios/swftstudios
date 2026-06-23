@@ -4,10 +4,18 @@
    SWFT Studios — shared clean navigation
    Used site-wide. Self-contained, prefixed with .sn-
    ============================================================ */
-:root { --sm-green: #7fffe5; }
+:root {
+  --sm-green: #7fffe5;
+  --sn-height: 62px;
+}
 
 .sn-nav {
-  position: sticky; top: 0; z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
   background: rgba(1,1,1,0.82);
@@ -23,8 +31,11 @@
 .sn-link:hover { color: #fff; }
 .sn-link.is-active { color: #fff; position: relative; }
 .sn-link.is-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--sm-green); border-radius: 2px; }
-/* Reserve nav height so injected component doesn't shift layout */
-#swft-nav { display: block; min-height: 62px; }
+/* Reserve nav height — fixed bar is removed from document flow */
+#swft-nav { display: block; min-height: var(--sn-height); }
+
+/* Legacy Webflow footer nav replaced by shared component */
+body:has(#swft-nav) footer.navbar { display: none !important; }
 .sn-cta { background: var(--sm-green); color: #010101; font-weight: 700; font-size: 0.9rem; padding: 0.6rem 1.1rem; border-radius: 999px; text-decoration: none; white-space: nowrap; transition: transform 0.18s; }
 .sn-cta:hover { transform: translateY(-1px); }
 .sn-burger { display: none; flex-direction: column; gap: 5px; width: 30px; height: 30px; justify-content: center; align-items: center; background: none; border: none; cursor: pointer; padding: 0; }
@@ -45,7 +56,6 @@
   .sn-panel a { color: #fff; text-decoration: none; font-size: 1.15rem; font-weight: 600; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .sn-panel a.is-active { color: var(--sm-green); }
   .sn-panel a.sn-panel-cta { margin-top: 1.5rem; border: none; background: var(--sm-green); color: #010101; text-align: center; border-radius: 999px; padding: 1rem; }
-  #swft-nav { min-height: 0; }
   .sn-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1050; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
   .sn-scrim.open { opacity: 1; pointer-events: auto; }
   .sn-close { position: absolute; top: 1.4rem; right: 1.5rem; background: none; border: none; color: #fff; font-size: 1.8rem; cursor: pointer; line-height: 1; }
