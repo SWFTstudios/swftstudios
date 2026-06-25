@@ -3,17 +3,7 @@
  * Writes the multi-step discovery form to Airtable ("Discovery Calls").
  * Env: AIRTABLE_TOKEN (secret, required); optional AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT.
  */
-import { PostHog } from 'posthog-node'
-
-function createPostHog(env) {
-  if (!env.POSTHOG_API_KEY) return null
-  return new PostHog(env.POSTHOG_API_KEY, {
-    host: env.POSTHOG_HOST ?? 'https://us.i.posthog.com',
-    flushAt: 1,
-    flushInterval: 0,
-    enableExceptionAutocapture: true,
-  })
-}
+import { captureEvent } from "../_lib/posthog.js";
 
 const DEFAULTS = {
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
@@ -78,23 +68,23 @@ export async function onRequestPost(context) {
 
   const stored = await writeToAirtable(env, table, fields);
 
-  const ph = createPostHog(env)
-  if (ph) {
-    const contactEmail = str(body.email, 320)
-    const distinctId = contactEmail || 'anonymous'
-    context.waitUntil(ph.captureImmediate({
+  const contactEmail = str(body.email, 320);
+  const distinctId = contactEmail || "anonymous";
+  context.waitUntil(
+    captureEvent(env, {
       distinctId,
-      event: 'discovery call requested',
+      event: "discovery call requested",
       properties: {
         $set: { email: contactEmail, name: str(body.name, 200) },
         business_type: str(body.businessType, 200),
         primary_goal: str(body.primaryGoal, 200),
         timeline: str(body.timeline, 200),
         budget: str(body.budget, 200),
+        source: str(body.source, 200),
         stored_in_airtable: stored,
       },
-    }))
-  }
+    })
+  );
 
   return json({ ok: true, stored });
 }
