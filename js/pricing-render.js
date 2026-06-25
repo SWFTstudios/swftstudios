@@ -194,7 +194,10 @@
   function renderToggle(data, billing) {
     var bt = data.billingToggle;
     return (
-      '<div class="hp-billing-toggle" role="group" aria-label="Billing type">' +
+      '<div class="hp-billing-toggle" role="group" aria-label="Billing type" data-active="' +
+      escapeHtml(billing) +
+      '">' +
+      '<span class="hp-billing-toggle__pill" aria-hidden="true"></span>' +
       '<button type="button" class="hp-billing-toggle__btn' +
       (billing === "monthly" ? " is-active" : "") +
       '" data-billing="monthly" aria-pressed="' +
@@ -242,26 +245,12 @@
     });
   }
 
-  function buildPricingHtml(data, options) {
+  function buildPricingBodyHtml(data, options) {
     var billing = options.billing;
     var layout = options.layout || "full";
-    var showHero = options.showHero !== false;
     var showFaqLink = options.showFaqLink === true;
     var calUrl = data.calUrl || CAL_URL;
     var html = "";
-
-    if (showHero) {
-      html +=
-        '<header class="hp-pricing-hero">' +
-        "<h2>" +
-        escapeHtml(data.hero.headline) +
-        "</h2>" +
-        "<p>" +
-        escapeHtml(data.hero.sub) +
-        "</p></header>";
-    }
-
-    html += renderToggle(data, billing);
 
     if (billing === "oneTime" && data.revisionPolicy) {
       html +=
@@ -324,6 +313,36 @@
     return html;
   }
 
+  function buildPricingHtml(data, options) {
+    var showHero = options.showHero !== false;
+    var html = "";
+
+    if (showHero) {
+      html +=
+        '<header class="hp-pricing-hero">' +
+        "<h2>" +
+        escapeHtml(data.hero.headline) +
+        "</h2>" +
+        "<p>" +
+        escapeHtml(data.hero.sub) +
+        "</p></header>";
+    }
+
+    html += renderToggle(data, options.billing);
+    html += '<div class="hp-pricing-body">' + buildPricingBodyHtml(data, options) + "</div>";
+
+    return html;
+  }
+
+  function updateToggleState(toggle, billing) {
+    toggle.setAttribute("data-active", billing);
+    toggle.querySelectorAll(".hp-billing-toggle__btn").forEach(function (btn) {
+      var active = btn.getAttribute("data-billing") === billing;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  }
+
   function wireToggle(rootEl, data, options, onBillingChange) {
     var toggle = rootEl.querySelector(".hp-billing-toggle");
     if (!toggle) return;
@@ -346,14 +365,22 @@
     options.layout = options.layout || "full";
 
     function repaint() {
-      rootEl.innerHTML = buildPricingHtml(data, options);
-      wireToggle(rootEl, data, options, function (mode) {
-        options.billing = mode;
-        repaint();
-      });
+      var toggle = rootEl.querySelector(".hp-billing-toggle");
+      var bodyWrap = rootEl.querySelector(".hp-pricing-body");
+      if (toggle && bodyWrap) {
+        updateToggleState(toggle, options.billing);
+        bodyWrap.innerHTML = buildPricingBodyHtml(data, options);
+      } else {
+        rootEl.innerHTML = buildPricingHtml(data, options);
+      }
     }
 
     repaint();
+    wireToggle(rootEl, data, options, function (mode) {
+      options.billing = mode;
+      repaint();
+    });
+
     return {
       setBilling: function (mode) {
         options.billing = mode;

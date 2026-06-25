@@ -87,40 +87,76 @@
 }
 
 .hp-billing-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 0.25rem;
-  border: 1px solid var(--pp-border);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  padding: 0.25rem;
+  padding: 0.3rem;
   margin: 0 auto 2rem;
   width: fit-content;
   max-width: 100%;
-  background: #0a0a0a;
+  background: rgba(255, 255, 255, 0.04);
+  isolation: isolate;
+}
+
+.hp-billing-toggle__pill {
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0.3rem;
+  right: calc(50% + 0.15rem);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), right 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hp-billing-toggle[data-active="oneTime"] .hp-billing-toggle__pill {
+  left: calc(50% + 0.15rem);
+  right: 0.3rem;
 }
 
 .hp-billing-toggle__btn {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 7.5rem;
   border: 0;
   background: transparent;
-  color: var(--pp-muted);
+  color: #fff;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.65rem 1.25rem;
+  padding: 0.7rem 1.35rem;
   border-radius: 999px;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .hp-billing-toggle__btn.is-active {
-  background: var(--pp-accent);
-  color: #1c1b1b;
-  font-weight: 600;
+  background: transparent;
+  color: #010101;
+  font-weight: 700;
+}
+
+.hp-billing-toggle__btn:not(.is-active):hover {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .hp-billing-toggle__btn:focus-visible {
-  outline: 2px solid var(--pp-accent);
+  outline: 2px solid #fff;
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hp-billing-toggle__pill {
+    transition: none;
+  }
 }
 
 .hp-pricing-note {
