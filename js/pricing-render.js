@@ -82,6 +82,16 @@
     var calUrl = (global.SwftPricingConfig && global.SwftPricingConfig.calUrl) || CAL_URL;
     var includes = renderIncludesList(tierIncludesForBilling(tier, billing), layout);
     var notIncluded = layout === "full" ? renderNotIncluded(tier.notIncluded) : "";
+    var desc = tier.cardDescription || tier.description;
+    var whoLine =
+      tier.whoItsFor && tier.whoItsFor.intro && layout === "full"
+        ? '<p class="hp-pricing-who">' + escapeHtml(tier.whoItsFor.intro.slice(0, 120)) + (tier.whoItsFor.intro.length > 120 ? "…" : "") + "</p>"
+        : "";
+    var detailLink = tier.detailPath
+      ? '<p class="hp-pricing-detail-link"><a href="' +
+        escapeHtml(tier.detailPath) +
+        '">See what\'s included →</a></p>'
+      : "";
 
     return (
       '<article class="' +
@@ -99,10 +109,12 @@
       escapeHtml(price) +
       "</p>" +
       '<p class="hp-pricing-desc">' +
-      escapeHtml(tier.description) +
+      escapeHtml(desc) +
       "</p>" +
+      whoLine +
       includes +
       notIncluded +
+      detailLink +
       '<a href="' +
       escapeHtml(calUrl) +
       '" target="_blank" rel="noopener noreferrer" class="' +
@@ -158,10 +170,15 @@
       escapeHtml(bundle.name) +
       "</h3>" +
       '<p class="hp-pricing-desc">' +
-      escapeHtml(bundle.description) +
+      escapeHtml(bundle.cardDescription || bundle.description) +
       "</p>" +
       priceHtml +
       renderIncludesList(bundle.includes || [], layout) +
+      (bundle.detailPath
+        ? '<p class="hp-pricing-detail-link"><a href="' +
+          escapeHtml(bundle.detailPath) +
+          '">See what\'s included →</a></p>'
+        : "") +
       '<a href="' +
       escapeHtml(calUrl) +
       '" target="_blank" rel="noopener noreferrer" class="button is-course w-inline-block" data-stripe-tier="' +

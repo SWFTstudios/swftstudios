@@ -293,6 +293,28 @@
   margin-bottom: 0.25rem;
 }
 
+.hp-pricing-who {
+  font-size: 0.82rem;
+  color: #999;
+  line-height: 1.45;
+  margin: 0 0 0.75rem;
+}
+
+.hp-pricing-detail-link {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+}
+
+.hp-pricing-detail-link a {
+  color: #7fffe5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.hp-pricing-detail-link a:hover {
+  text-decoration: underline;
+}
+
 .hp-pricing-card .button {
   margin-top: auto;
   align-self: flex-start;

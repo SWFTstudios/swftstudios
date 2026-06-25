@@ -1,0 +1,92 @@
+{
+  "id": "swft-method",
+  "name": "SWFT Method",
+  "platform": "Webflow",
+  "pageType": "multi-plan",
+  "detailPath": "/pricing/swft-method/",
+  "cardDescription": "Turn Instagram followers into customers with a custom website built in 7 days — pay once or stay on a monthly plan with updates included.",
+  "description": "The SWFT Method is a guided build plan for creators and service brands coming from social — custom site in 7 days, optional feature add-ons, Stripe checkout.",
+  "calUrl": "https://cal.com/swftstudios/swft-meeting",
+  "orderUrl": "/swft-method.html",
+  "whoItsFor": {
+    "intro": "The SWFT Method is for creators, coaches, and small brands who've outgrown link-in-bio tools and want a real website fast — without learning Webflow yourself.",
+    "idealFor": [
+      "Instagram-first businesses ready to capture leads on a owned site",
+      "Service providers who need booking, checkout, or store add-ons",
+      "Owners who want a 7-day build with a clear quote before paying",
+      "Brands choosing between pay-once ownership or monthly updates"
+    ],
+    "notIdealFor": [
+      "Large e-commerce catalogs (see E-Commerce tier on website pricing)",
+      "Enterprises needing 20+ pages and complex integrations",
+      "Teams that only need monthly content with no website build"
+    ]
+  },
+  "process": {
+    "title": "How the SWFT Method works",
+    "steps": [
+      { "name": "Build plan form", "description": "Answer guided questions about your business, features, and timeline on swft-method.html." },
+      { "name": "Quote + plan choice", "description": "See your custom feature list and choose One-Time Build or Monthly Plan." },
+      { "name": "7-day build", "description": "SWFT designs and builds your site with one revision round included." },
+      { "name": "Launch + bio-link setup", "description": "Site goes live with Instagram bio and key links wired up." },
+      { "name": "Ongoing (optional)", "description": "Monthly Plan includes updates and check-ins; One-Time can add $99/mo maintenance." }
+    ]
+  },
+  "caseStudies": [
+    { "slug": "built-by-me-ez", "headline": "Creator website in days", "whyMatch": "Fitness creator moved from social-only to an owned platform with courses and booking paths." },
+    { "slug": "western-hp", "headline": "Service brand clarity", "whyMatch": "Professional Webflow presence for a B2B digital services company." }
+  ],
+  "compareUpgrade": { "label": "Growth (managed + GHL)", "path": "/pricing/growth/" },
+  "plans": [
+    {
+      "id": "one-time",
+      "anchor": "one-time",
+      "name": "One-Time Build",
+      "priceLabel": "$800 starting (up to $2,500 with add-ons)",
+      "basePrice": 800,
+      "priceCap": 2500,
+      "sub": "Pay once, own your site outright.",
+      "includes": [
+        "Custom website built in 7 days",
+        "Everything selected in your build plan",
+        "1 round of revisions",
+        "Launch and bio-link setup"
+      ],
+      "addon": {
+        "name": "Monthly maintenance",
+        "price": 99,
+        "description": "Updates, small changes, and upkeep so your site stays current."
+      }
+    },
+    {
+      "id": "monthly",
+      "anchor": "monthly",
+      "name": "Monthly Plan",
+      "priceLabel": "$299/mo",
+      "monthly": 299,
+      "badge": "Most popular",
+      "sub": "Lower upfront. We build, maintain, and grow it with you.",
+      "includes": [
+        "Custom website built in 7 days",
+        "Everything selected in your build plan",
+        "Updates included — ongoing tweaks and changes",
+        "2× 30-min check-in calls every month",
+        "Priority support · cancel anytime"
+      ]
+    }
+  ],
+  "featureAddons": [
+    { "name": "Online store", "price": 700 },
+    { "name": "Booking system", "price": 300 },
+    { "name": "Checkout / payments", "price": 400 },
+    { "name": "Member area", "price": 500 },
+    { "name": "Blog / CMS expansion", "price": 200 },
+    { "name": "Multi-language", "price": 350 }
+  ],
+  "notIncluded": [
+    "GoHighLevel CRM automations (see Growth tier)",
+    "Ongoing content shoots (see Content plans)",
+    "Paid ad management"
+  ],
+  "cta": "Start my build plan"
+}

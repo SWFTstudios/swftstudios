@@ -9,6 +9,18 @@
  *   optional overrides: AIRTABLE_BASE_ID, AIRTABLE_TABLE,
  *     STRIPE_PRICE_MONTHLY
  */
+import { PostHog } from 'posthog-node'
+
+function createPostHog(env) {
+  if (!env.POSTHOG_API_KEY) return null
+  return new PostHog(env.POSTHOG_API_KEY, {
+    host: env.POSTHOG_HOST ?? 'https://us.i.posthog.com',
+    flushAt: 1,
+    flushInterval: 0,
+    enableExceptionAutocapture: true,
+  })
+}
+
 const DEFAULTS = {
   STRIPE_PRICE_MONTHLY: "price_1Td9xhAF4d9gCyuNnjPgqkho",
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
@@ -123,6 +135,33 @@ export async function onRequestPost(context) {
     businessName,
     origin,
   });
+
+  const ph = createPostHog(env)
+  if (ph) {
+    const distinctId = email || 'anonymous'
+    const captures = [
+      ph.captureImmediate({
+        distinctId,
+        event: 'build request submitted',
+        properties: {
+          $set: { email, name: str(body.name, 200) },
+          plan,
+          has_maintenance: maintenance,
+          one_time_amount: oneTimeAmount,
+          business_name: businessName,
+          stored_in_airtable: stored,
+        },
+      }),
+    ]
+    if (checkoutUrl) {
+      captures.push(ph.captureImmediate({
+        distinctId,
+        event: 'stripe checkout initiated',
+        properties: { plan, has_maintenance: maintenance, one_time_amount: oneTimeAmount },
+      }))
+    }
+    context.waitUntil(Promise.all(captures))
+  }
 
   return json({ ok: true, stored, checkoutUrl });
 }
