@@ -1,3 +1,5 @@
+import { PostHog } from 'posthog-node'
+
 /**
  * SWFT static site worker: serves assets + POST /api/case-study-match
  * (replaces third-party template Worker; deterministic match with optional Workers AI)
@@ -15,6 +17,8 @@ export interface Env {
   AIRTABLE_TABLE?: string;
   AIRTABLE_TABLE_CONTACT?: string;
   FORMSUBMIT_EMAIL?: string;
+  POSTHOG_API_KEY?: string;
+  POSTHOG_HOST?: string;
 }
 
 /* Defaults for the resources provisioned for SWFT Studios. Override via env vars. */
@@ -25,6 +29,16 @@ const DEFAULTS = {
   AIRTABLE_TABLE: "tbl30H9M2CC7p6MqY", // Website Build Requests
   AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L", // Discovery Calls
 };
+
+function createPostHog(env: Env): PostHog | null {
+  if (!env.POSTHOG_API_KEY) return null
+  return new PostHog(env.POSTHOG_API_KEY, {
+    host: env.POSTHOG_HOST ?? 'https://us.i.posthog.com',
+    flushAt: 1,
+    flushInterval: 0,
+    enableExceptionAutocapture: true,
+  })
+}
 
 type CaseStudyInput = {
   title: string;
@@ -176,6 +190,16 @@ type BuildRequestBody = Record<string, unknown>;
 
 const str = (v: unknown, max = 2000): string => String(v ?? "").trim().slice(0, max);
 
+function buildContactDetails(body: BuildRequestBody): string {
+  const parts: string[] = [];
+  if (body.source) parts.push(`Source: ${str(body.source, 200)}`);
+  if (body.phone) parts.push(`Phone: ${str(body.phone, 50)}`);
+  if (body.instagram) parts.push(`Instagram/Website: ${str(body.instagram, 500)}`);
+  const extra = str(body.details, 4000);
+  if (extra) parts.push(extra);
+  return parts.join(" | ").slice(0, 4000);
+}
+
 /** Create a Stripe Checkout Session via the REST API. Returns the hosted URL or null. */
 async function createStripeCheckout(
   env: Env,
@@ -309,6 +333,8 @@ export default {
         request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
         "unknown";
       if (!checkRateLimit(clientIp)) {
+        const phRl = createPostHog(env)
+        if (phRl) ctx.waitUntil(phRl.captureImmediate({ distinctId: clientIp, event: 'rate limit hit', properties: { route: '/api/build-request' } }))
         return new Response(JSON.stringify({ ok: false, error: "Too many requests. Try again in a minute." }), {
           status: 429,
           headers: { "Content-Type": "application/json", "Retry-After": "60", ...corsHeaders(origin) },
@@ -325,7 +351,9 @@ export default {
           });
         }
         body = JSON.parse(raw) as BuildRequestBody;
-      } catch {
+      } catch (err) {
+        const phErr = createPostHog(env)
+        if (phErr) ctx.waitUntil(phErr.captureExceptionImmediate(err, clientIp))
         return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
@@ -401,6 +429,35 @@ export default {
         origin: reqOrigin,
       });
 
+      const posthogBuild = createPostHog(env)
+      if (posthogBuild) {
+        const distinctId = email || clientIp
+        const captures: Promise<void>[] = [
+          posthogBuild.captureImmediate({
+            distinctId,
+            event: 'build request submitted',
+            properties: {
+              $set: { email, name: str(body.name, 200) },
+              plan,
+              has_maintenance: maintenance,
+              one_time_amount: oneTimeAmount,
+              business_name: businessName,
+              main_goal: str(body.mainGoal, 200),
+              timeline: str(body.timeline, 200),
+              stored_in_airtable: stored,
+            },
+          }),
+        ]
+        if (checkoutUrl) {
+          captures.push(posthogBuild.captureImmediate({
+            distinctId,
+            event: 'stripe checkout initiated',
+            properties: { plan, has_maintenance: maintenance, one_time_amount: oneTimeAmount },
+          }))
+        }
+        ctx.waitUntil(Promise.all(captures))
+      }
+
       return new Response(JSON.stringify({ ok: true, stored, checkoutUrl }), {
         headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
       });
@@ -413,6 +470,8 @@ export default {
         request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
         "unknown";
       if (!checkRateLimit(clientIp)) {
+        const phRl = createPostHog(env)
+        if (phRl) ctx.waitUntil(phRl.captureImmediate({ distinctId: clientIp, event: 'rate limit hit', properties: { route: '/api/contact' } }))
         return new Response(JSON.stringify({ ok: false, error: "Too many requests. Try again in a minute." }), {
           status: 429,
           headers: { "Content-Type": "application/json", "Retry-After": "60", ...corsHeaders(origin) },
@@ -429,7 +488,9 @@ export default {
           });
         }
         body = JSON.parse(raw) as BuildRequestBody;
-      } catch {
+      } catch (err) {
+        const phErr = createPostHog(env)
+        if (phErr) ctx.waitUntil(phErr.captureExceptionImmediate(err, clientIp))
         return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
@@ -444,11 +505,30 @@ export default {
         "Primary Goal": str(body.primaryGoal, 4000),
         Timeline: str(body.timeline, 200),
         Budget: str(body.budget, 200),
-        Details: str(body.details, 4000),
+        Details: buildContactDetails(body),
         Status: "New",
         "Submitted At": new Date().toISOString(),
       };
       const stored = await writeToAirtable(env, contactTable, fields);
+
+      const posthogContact = createPostHog(env)
+      if (posthogContact) {
+        const contactEmail = str(body.email, 320)
+        const distinctId = contactEmail || clientIp
+        ctx.waitUntil(posthogContact.captureImmediate({
+          distinctId,
+          event: 'discovery call requested',
+          properties: {
+            $set: { email: contactEmail, name: str(body.name, 200) },
+            business_type: str(body.businessType, 200),
+            primary_goal: str(body.primaryGoal, 200),
+            timeline: str(body.timeline, 200),
+            budget: str(body.budget, 200),
+            stored_in_airtable: stored,
+          },
+        }))
+      }
+
       return new Response(JSON.stringify({ ok: true, stored }), {
         headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
       });
@@ -461,6 +541,8 @@ export default {
         request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
         "unknown";
       if (!checkRateLimit(clientIp)) {
+        const phRl = createPostHog(env)
+        if (phRl) ctx.waitUntil(phRl.captureImmediate({ distinctId: clientIp, event: 'rate limit hit', properties: { route: '/api/case-study-match' } }))
         return new Response(JSON.stringify({ error: "Too many requests. Try again in a minute." }), {
           status: 429,
           headers: {
@@ -504,6 +586,7 @@ export default {
       }
 
       let ai = await tryAiMatch(env, prompt, caseStudies);
+      const matchedWithAi = !!ai;
       if (!ai) {
         const pick = pickDeterministic(prompt, caseStudies);
         if (!pick) {
@@ -521,6 +604,19 @@ export default {
           matchedCaseStudy: pick.title.toLowerCase(),
           matchedLink: pick.link,
         };
+      }
+
+      const posthogMatch = createPostHog(env)
+      if (posthogMatch) {
+        ctx.waitUntil(posthogMatch.captureImmediate({
+          distinctId: clientIp,
+          event: 'case study matched',
+          properties: {
+            matched_case_study: ai.matchedCaseStudy,
+            match_method: matchedWithAi ? 'ai' : 'deterministic',
+            prompt_length: prompt.length,
+          },
+        }))
       }
 
       return new Response(

@@ -82,6 +82,16 @@
     var calUrl = (global.SwftPricingConfig && global.SwftPricingConfig.calUrl) || CAL_URL;
     var includes = renderIncludesList(tierIncludesForBilling(tier, billing), layout);
     var notIncluded = layout === "full" ? renderNotIncluded(tier.notIncluded) : "";
+    var desc = tier.cardDescription || tier.description;
+    var whoLine =
+      tier.whoItsFor && tier.whoItsFor.intro && layout === "full"
+        ? '<p class="hp-pricing-who">' + escapeHtml(tier.whoItsFor.intro.slice(0, 120)) + (tier.whoItsFor.intro.length > 120 ? "…" : "") + "</p>"
+        : "";
+    var detailLink = tier.detailPath
+      ? '<p class="hp-pricing-detail-link"><a href="' +
+        escapeHtml(tier.detailPath) +
+        '">See what\'s included →</a></p>'
+      : "";
 
     return (
       '<article class="' +
@@ -99,10 +109,12 @@
       escapeHtml(price) +
       "</p>" +
       '<p class="hp-pricing-desc">' +
-      escapeHtml(tier.description) +
+      escapeHtml(desc) +
       "</p>" +
+      whoLine +
       includes +
       notIncluded +
+      detailLink +
       '<a href="' +
       escapeHtml(calUrl) +
       '" target="_blank" rel="noopener noreferrer" class="' +
@@ -158,10 +170,16 @@
       escapeHtml(bundle.name) +
       "</h3>" +
       '<p class="hp-pricing-desc">' +
-      escapeHtml(bundle.description) +
+      escapeHtml(bundle.cardDescription || bundle.description) +
       "</p>" +
       priceHtml +
       renderIncludesList(bundle.includes || [], layout) +
+      (layout === "full" ? renderNotIncluded(bundle.notIncluded) : "") +
+      (bundle.detailPath
+        ? '<p class="hp-pricing-detail-link"><a href="' +
+          escapeHtml(bundle.detailPath) +
+          '">See what\'s included →</a></p>'
+        : "") +
       '<a href="' +
       escapeHtml(calUrl) +
       '" target="_blank" rel="noopener noreferrer" class="button is-course w-inline-block" data-stripe-tier="' +
@@ -177,7 +195,10 @@
   function renderToggle(data, billing) {
     var bt = data.billingToggle;
     return (
-      '<div class="hp-billing-toggle" role="group" aria-label="Billing type">' +
+      '<div class="hp-billing-toggle" role="group" aria-label="Billing type" data-active="' +
+      escapeHtml(billing) +
+      '">' +
+      '<span class="hp-billing-toggle__pill" aria-hidden="true"></span>' +
       '<button type="button" class="hp-billing-toggle__btn' +
       (billing === "monthly" ? " is-active" : "") +
       '" data-billing="monthly" aria-pressed="' +
@@ -225,26 +246,12 @@
     });
   }
 
-  function buildPricingHtml(data, options) {
+  function buildPricingBodyHtml(data, options) {
     var billing = options.billing;
     var layout = options.layout || "full";
-    var showHero = options.showHero !== false;
     var showFaqLink = options.showFaqLink === true;
     var calUrl = data.calUrl || CAL_URL;
     var html = "";
-
-    if (showHero) {
-      html +=
-        '<header class="hp-pricing-hero">' +
-        "<h2>" +
-        escapeHtml(data.hero.headline) +
-        "</h2>" +
-        "<p>" +
-        escapeHtml(data.hero.sub) +
-        "</p></header>";
-    }
-
-    html += renderToggle(data, billing);
 
     if (billing === "oneTime" && data.revisionPolicy) {
       html +=
@@ -307,6 +314,36 @@
     return html;
   }
 
+  function buildPricingHtml(data, options) {
+    var showHero = options.showHero !== false;
+    var html = "";
+
+    if (showHero) {
+      html +=
+        '<header class="hp-pricing-hero">' +
+        "<h2>" +
+        escapeHtml(data.hero.headline) +
+        "</h2>" +
+        "<p>" +
+        escapeHtml(data.hero.sub) +
+        "</p></header>";
+    }
+
+    html += renderToggle(data, options.billing);
+    html += '<div class="hp-pricing-body">' + buildPricingBodyHtml(data, options) + "</div>";
+
+    return html;
+  }
+
+  function updateToggleState(toggle, billing) {
+    toggle.setAttribute("data-active", billing);
+    toggle.querySelectorAll(".hp-billing-toggle__btn").forEach(function (btn) {
+      var active = btn.getAttribute("data-billing") === billing;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  }
+
   function wireToggle(rootEl, data, options, onBillingChange) {
     var toggle = rootEl.querySelector(".hp-billing-toggle");
     if (!toggle) return;
@@ -329,14 +366,22 @@
     options.layout = options.layout || "full";
 
     function repaint() {
-      rootEl.innerHTML = buildPricingHtml(data, options);
-      wireToggle(rootEl, data, options, function (mode) {
-        options.billing = mode;
-        repaint();
-      });
+      var toggle = rootEl.querySelector(".hp-billing-toggle");
+      var bodyWrap = rootEl.querySelector(".hp-pricing-body");
+      if (toggle && bodyWrap) {
+        updateToggleState(toggle, options.billing);
+        bodyWrap.innerHTML = buildPricingBodyHtml(data, options);
+      } else {
+        rootEl.innerHTML = buildPricingHtml(data, options);
+      }
     }
 
     repaint();
+    wireToggle(rootEl, data, options, function (mode) {
+      options.billing = mode;
+      repaint();
+    });
+
     return {
       setBilling: function (mode) {
         options.billing = mode;

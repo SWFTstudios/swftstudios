@@ -1,0 +1,69 @@
+{
+  "id": "website-in-a-weekend",
+  "name": "Website in a Weekend",
+  "platform": "Webflow",
+  "pageType": "single",
+  "detailPath": "/pricing/website-in-a-weekend/",
+  "landingPath": "/website-in-a-weekend-personal-trainers/",
+  "monthly": null,
+  "oneTime": 800,
+  "oneTimeLabel": "$800 starting",
+  "featured": false,
+  "description": "Premium one-page website for fitness professionals — built in one weekend with lead capture, booking CTA, and mobile-first design.",
+  "cardDescription": "For Jersey City and NYC personal trainers who need a client-booking website live in one weekend — not another link in bio.",
+  "whoItsFor": {
+    "intro": "Website in a Weekend is built for fitness professionals who post great content but lose leads to DMs, slow replies, and link-in-bio limits.",
+    "idealFor": [
+      "Personal trainers, gym owners, and bootcamp instructors",
+      "Wellness coaches building 1:1 or group training offers",
+      "Creators with Instagram traffic who need a booking path",
+      "Jersey City, Hoboken, and NYC trainers ready to look professional online"
+    ],
+    "notIdealFor": [
+      "Full Shopify stores with large product catalogs",
+      "Businesses needing 10+ pages and complex automations on day one",
+      "Teams that don't need lead capture or discovery call booking"
+    ]
+  },
+  "process": {
+    "title": "What's involved in a Weekend build",
+    "steps": [
+      { "name": "Discovery call", "description": "30 minutes to clarify your offer, services, pricing, and ideal clients." },
+      { "name": "Content pull", "description": "We use your Instagram, photos, videos, and existing brand assets — no blank slate." },
+      { "name": "Build weekend", "description": "SWFT designs and builds your one-page site with conversion-focused copy and structure." },
+      { "name": "Launch + leads", "description": "Site goes live with lead form, booking CTA, and signed-in analytics basics." },
+      { "name": "Optional upgrades", "description": "Add content filming, reel editing, Meta creative, or CRM setup as needed." }
+    ]
+  },
+  "caseStudies": [
+    { "slug": "built-by-me-ez", "headline": "Trainer brand → owned platform", "whyMatch": "BuiltByMeez shows how a fitness creator's personality and content become a professional digital home." }
+  ],
+  "compareUpgrade": { "label": "SWFT Method (full build plan)", "path": "/pricing/swft-method/" },
+  "oneTimeIncludes": [
+    "Custom one-page website",
+    "Mobile-first responsive design",
+    "Lead capture form wired to notifications",
+    "Booking / discovery call CTA",
+    "Services and packages section",
+    "About, testimonials, and social links",
+    "Basic SEO setup",
+    "Launch support",
+    "1 revision round"
+  ],
+  "monthlyIncludes": [],
+  "optionalAddons": [
+    "Content filming session",
+    "Reel editing package",
+    "Meta ad creative",
+    "Monthly website updates",
+    "CRM / Airtable setup",
+    "Email or SMS lead notifications"
+  ],
+  "notIncluded": [
+    "Multi-page site expansion beyond one page (quoted separately)",
+    "GoHighLevel automations (see Growth tier)",
+    "Ongoing monthly content retainer (see Content Starter)"
+  ],
+  "calUrl": "https://cal.com/swftstudios/swft-meeting",
+  "cta": "Book a Free Discovery Call"
+}

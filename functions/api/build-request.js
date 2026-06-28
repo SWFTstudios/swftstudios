@@ -9,6 +9,8 @@
  *   optional overrides: AIRTABLE_BASE_ID, AIRTABLE_TABLE,
  *     STRIPE_PRICE_MONTHLY
  */
+import { captureEvent } from "../_lib/posthog.js";
+
 const DEFAULTS = {
   STRIPE_PRICE_MONTHLY: "price_1Td9xhAF4d9gCyuNnjPgqkho",
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
@@ -123,6 +125,32 @@ export async function onRequestPost(context) {
     businessName,
     origin,
   });
+
+  const distinctId = email || "anonymous";
+  const captures = [
+    captureEvent(env, {
+      distinctId,
+      event: "build request submitted",
+      properties: {
+        $set: { email, name: str(body.name, 200) },
+        plan,
+        has_maintenance: maintenance,
+        one_time_amount: oneTimeAmount,
+        business_name: businessName,
+        stored_in_airtable: stored,
+      },
+    }),
+  ];
+  if (checkoutUrl) {
+    captures.push(
+      captureEvent(env, {
+        distinctId,
+        event: "stripe checkout initiated",
+        properties: { plan, has_maintenance: maintenance, one_time_amount: oneTimeAmount },
+      })
+    );
+  }
+  context.waitUntil(Promise.all(captures));
 
   return json({ ok: true, stored, checkoutUrl });
 }

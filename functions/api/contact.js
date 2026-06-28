@@ -3,12 +3,24 @@
  * Writes the multi-step discovery form to Airtable ("Discovery Calls").
  * Env: AIRTABLE_TOKEN (secret, required); optional AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT.
  */
+import { captureEvent } from "../_lib/posthog.js";
+
 const DEFAULTS = {
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
   AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L",
 };
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
+
+function buildDetails(body) {
+  const parts = [];
+  if (body.source) parts.push(`Source: ${str(body.source, 200)}`);
+  if (body.phone) parts.push(`Phone: ${str(body.phone, 50)}`);
+  if (body.instagram) parts.push(`Instagram/Website: ${str(body.instagram, 500)}`);
+  const extra = str(body.details, 4000);
+  if (extra) parts.push(extra);
+  return parts.join(" | ").slice(0, 4000);
+}
 
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
@@ -49,12 +61,31 @@ export async function onRequestPost(context) {
     "Primary Goal": str(body.primaryGoal, 4000),
     Timeline: str(body.timeline, 200),
     Budget: str(body.budget, 200),
-    Details: str(body.details, 4000),
+    Details: buildDetails(body),
     Status: "New",
     "Submitted At": new Date().toISOString(),
   };
 
   const stored = await writeToAirtable(env, table, fields);
+
+  const contactEmail = str(body.email, 320);
+  const distinctId = contactEmail || "anonymous";
+  context.waitUntil(
+    captureEvent(env, {
+      distinctId,
+      event: "discovery call requested",
+      properties: {
+        $set: { email: contactEmail, name: str(body.name, 200) },
+        business_type: str(body.businessType, 200),
+        primary_goal: str(body.primaryGoal, 200),
+        timeline: str(body.timeline, 200),
+        budget: str(body.budget, 200),
+        source: str(body.source, 200),
+        stored_in_airtable: stored,
+      },
+    })
+  );
+
   return json({ ok: true, stored });
 }
 

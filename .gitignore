@@ -17,3 +17,4 @@ node_modules/
 
 # Local Webflow export staging (not committed)
 webflow-export/
+.dev.vars

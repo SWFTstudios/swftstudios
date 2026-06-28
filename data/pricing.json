@@ -28,6 +28,38 @@
         "featured": false,
         "ghl": false,
         "description": "Perfect for local service providers needing a professional ongoing presence.",
+        "cardDescription": "For local service businesses that need a credible Webflow site and light monthly updates — without CRM automation.",
+        "detailPath": "/pricing/service-pro/",
+        "compareUpgrade": { "label": "Growth", "path": "/pricing/growth/" },
+        "whoItsFor": {
+          "intro": "Service Pro is built for owners who need a professional web presence and occasional updates — not a full marketing automation stack.",
+          "idealFor": [
+            "Local service providers (consultants, coaches, trades, studios)",
+            "Nonprofits and ministries with clear donation or contact goals",
+            "App or product launches that need a focused landing page",
+            "Businesses that already handle follow-up manually or via email"
+          ],
+          "notIdealFor": [
+            "You need missed-call text-back, CRM pipelines, or review automation",
+            "You want a Shopify store with product catalog management",
+            "You need weekly content shoots included in the same retainer"
+          ]
+        },
+        "process": {
+          "title": "How a Service Pro build works",
+          "steps": [
+            { "name": "Discovery call", "description": "We clarify your offer, audience, and pages needed — usually up to 5 on Webflow." },
+            { "name": "Strategy + wireframe", "description": "Structure and conversion paths are mapped before design starts." },
+            { "name": "Design + build", "description": "Mobile-first Webflow build with forms, SEO basics, and your brand applied." },
+            { "name": "Launch + handoff", "description": "Site goes live in your Webflow account with CMS training and 2 free revisions within 30 days." },
+            { "name": "Optional monthly care", "description": "Queued updates, form monitoring, and quarterly SEO checks — or pause anytime." }
+          ]
+        },
+        "caseStudies": [
+          { "slug": "western-hp", "headline": "B2B service credibility", "whyMatch": "Clean Webflow site for a digital services brand — professional presence without e-commerce complexity." },
+          { "slug": "hawthorne-global-ministries", "headline": "Nonprofit mission clarity", "whyMatch": "Service Pro scope: clear story, contact paths, and trust-building for a global ministry." },
+          { "slug": "hamper", "headline": "App landing clarity", "whyMatch": "Focused landing page that explains an on-demand service app without a full automation stack." }
+        ],
         "cta": "Get Started",
         "oneTimeIncludes": [
           "Strategy + wireframing session",
@@ -61,6 +93,38 @@
         "ghl": true,
         "ghlLabel": "Includes GoHighLevel",
         "description": "Advanced features and integrations for scaling businesses and restaurants.",
+        "cardDescription": "For restaurants and scaling service brands that want leads captured, booked, and followed up automatically via GoHighLevel.",
+        "detailPath": "/pricing/growth/",
+        "compareUpgrade": { "label": "E-Commerce", "path": "/pricing/ecommerce/" },
+        "whoItsFor": {
+          "intro": "Growth pairs a conversion-focused Webflow site with a managed GoHighLevel sub-account — so leads don't sit in an inbox while you're busy running the business.",
+          "idealFor": [
+            "Restaurants and hospitality with booking and review goals",
+            "Service businesses tired of DM and email ping-pong",
+            "Brands running ads that need a real landing page + follow-up",
+            "Teams that want CRM, missed-call text-back, and review requests handled"
+          ],
+          "notIdealFor": [
+            "You only need a simple brochure site with no automations",
+            "You need Shopify product catalog and checkout management",
+            "You want cinematic video production every month (see Content Pro)"
+          ]
+        },
+        "process": {
+          "title": "How a Growth engagement works",
+          "steps": [
+            { "name": "Discovery + automation map", "description": "We define your offer, lead paths, and which GHL workflows matter most." },
+            { "name": "Webflow build", "description": "Conversion layouts, booking flows, and CRM-ready forms in your Webflow account." },
+            { "name": "GoHighLevel setup", "description": "SWFT configures your sub-account: pipelines, text-back, reviews, and booking." },
+            { "name": "Launch + test", "description": "End-to-end test from form submit to follow-up — with 2 free revisions within 30 days." },
+            { "name": "Monthly optimization", "description": "Performance snapshot, workflow tweaks, and site updates on your monthly plan." }
+          ]
+        },
+        "caseStudies": [
+          { "slug": "alpha-ministries-international", "headline": "Automation-ready ministry outreach", "whyMatch": "Website plus email and outreach automation for a growing nonprofit." },
+          { "slug": "built-by-me-ez", "headline": "Creator → owned platform", "whyMatch": "Lead capture, booking pathways, and brand home for a fitness creator audience." },
+          { "slug": "blurred-lines-entertainment", "headline": "Entertainment lead gen", "whyMatch": "High-energy brand site with inquiry flows for a live entertainment business." }
+        ],
         "cta": "Get Started",
         "oneTimeIncludes": [
           "Everything in Service Pro build",
@@ -94,6 +158,38 @@
         "ghl": true,
         "ghlLabel": "Includes GoHighLevel",
         "description": "Full managed online store support and continuous optimization.",
+        "cardDescription": "For product brands on Shopify who need a managed storefront plus post-purchase SMS and review automation.",
+        "detailPath": "/pricing/ecommerce/",
+        "compareUpgrade": null,
+        "whoItsFor": {
+          "intro": "E-Commerce is for brands selling products online who want Shopify built right — and ongoing merchandising, monitoring, and customer follow-up without hiring in-house.",
+          "idealFor": [
+            "CPG, kitchen, lifestyle, and drinkware brands on Shopify",
+            "Retailers migrating from marketplace-only to owned DTC",
+            "Stores that need catalog architecture and checkout optimization",
+            "Brands that want SMS follow-up and review automation post-purchase"
+          ],
+          "notIdealFor": [
+            "You don't sell products online (see Service Pro or Growth)",
+            "You need only a link-in-bio or single landing page",
+            "You want paid ad management included (quoted separately)"
+          ]
+        },
+        "process": {
+          "title": "How an E-Commerce build works",
+          "steps": [
+            { "name": "Discovery + catalog plan", "description": "Product hierarchy, collections, and conversion goals defined upfront." },
+            { "name": "Shopify storefront build", "description": "Custom theme work, mobile product presentation, and checkout flow in your account." },
+            { "name": "GoHighLevel tie-in", "description": "SMS follow-up, review requests, and customer communication workflows." },
+            { "name": "Launch + QA", "description": "Full purchase path tested; 2 free revisions within 30 days of launch." },
+            { "name": "Monthly store care", "description": "Product updates, merchandising tweaks, app monitoring, and health reports." }
+          ]
+        },
+        "caseStudies": [
+          { "slug": "brooklyn-steel", "headline": "Kitchen brand storefront", "whyMatch": "Shopify e-commerce for a premium kitchen appliances brand." },
+          { "slug": "manna-hydration", "headline": "Lifestyle drinkware DTC", "whyMatch": "Owned storefront with social shopping integration for a hydration brand." },
+          { "slug": "thyme-and-table", "headline": "Retail-scale catalog", "whyMatch": "Large product catalog architecture for a kitchen and home retail brand." }
+        ],
         "cta": "Get Started",
         "oneTimeIncludes": [
           "Custom Shopify storefront in your account",
@@ -130,13 +226,44 @@
         "featured": false,
         "ghl": false,
         "description": "Monthly essential photos and updates to keep your social feeds fresh.",
+        "cardDescription": "For businesses that need fresh photos and post-ready social assets every month without a full production crew.",
+        "detailPath": "/pricing/content-starter/",
+        "compareUpgrade": { "label": "Content Growth", "path": "/pricing/content-growth/" },
+        "whoItsFor": {
+          "intro": "Content Starter keeps your feeds active with a half-day shoot and edited deliverables — ideal when you have a site but social goes stale between campaigns.",
+          "idealFor": [
+            "Local businesses posting 3–5× per week",
+            "Brands that need photos + Canva templates, not full video crews",
+            "Teams aligning website hero images with social content",
+            "Owners who want assets delivered ready to post"
+          ],
+          "notIdealFor": [
+            "You need multiple reels per week and cinematic video",
+            "You want a full rebrand or custom logo (see Content Pro or separate quote)",
+            "You need paid ad management included"
+          ]
+        },
+        "process": {
+          "title": "How Content Starter works each month",
+          "steps": [
+            { "name": "Content brief", "description": "We align on themes, locations, and what your site and social need this month." },
+            { "name": "Half-day shoot", "description": "On-site or studio session focused on web + social-ready shots." },
+            { "name": "Edit + templates", "description": "10–15 edited photos plus 4–6 Canva social/ad templates in your brand." },
+            { "name": "Delivery", "description": "Assets sized for web and social with caption starters — ready to publish." },
+            { "name": "Repeat monthly", "description": "Same rhythm each month; pause or upgrade to Growth when you need video." }
+          ]
+        },
+        "caseStudies": [
+          { "slug": "built-by-me-ez", "headline": "Social-aligned fitness brand", "whyMatch": "Website and curated social content for a trainer building an owned audience." },
+          { "slug": "manna-hydration", "headline": "Seasonal product content", "whyMatch": "Lifestyle imagery supporting a drinkware brand's storefront and social channels." }
+        ],
         "cta": "Get Started",
         "monthlyIncludes": [
           "1 half-day shoot per month (or equivalent photo batch)",
           "10–15 edited photos sized for web + social",
           "4–6 Canva-based social/ad templates customized to your brand",
           "Caption starter bank",
-          "Assets delivered ready to post"
+          "Professional retouching and fast edit turnaround"
         ],
         "notIncluded": [
           "Custom logo or full brand identity",
@@ -150,6 +277,37 @@
         "featured": false,
         "ghl": false,
         "description": "Comprehensive photo and short-form video system for active brands.",
+        "cardDescription": "For active brands that need a full shoot day, reels, and a monthly content calendar — not just photos.",
+        "detailPath": "/pricing/content-growth/",
+        "compareUpgrade": { "label": "Content Pro", "path": "/pricing/content-pro/" },
+        "whoItsFor": {
+          "intro": "Content Growth is a full production day each month — photo, short-form video, and calendar planning for brands posting consistently across channels.",
+          "idealFor": [
+            "Restaurants, studios, and entertainment brands posting reels weekly",
+            "Businesses running Meta or Google ads that need fresh creative",
+            "Teams that want a content calendar, not ad-hoc shoots",
+            "Brands upgrading from photo-only to photo + video systems"
+          ],
+          "notIdealFor": [
+            "You only need a few photos per month (Content Starter fits better)",
+            "You need quarterly cinematic hero films (see Content Pro)",
+            "You want website builds included (see Bundle or website tiers)"
+          ]
+        },
+        "process": {
+          "title": "How Content Growth works each month",
+          "steps": [
+            { "name": "Calendar planning", "description": "Themes, campaigns, and shoot list aligned to your marketing calendar." },
+            { "name": "Full shoot day", "description": "Photo + short-form video captured in one coordinated session." },
+            { "name": "Edit + motion", "description": "6–8 reels, 20+ deliverables, ad creative sets, light motion graphics." },
+            { "name": "Review + delivery", "description": "Organized asset drop with sizes for web, social, and ads." },
+            { "name": "Iterate monthly", "description": "Performance-informed adjustments to themes and formats." }
+          ]
+        },
+        "caseStudies": [
+          { "slug": "blurred-lines-entertainment", "headline": "Entertainment content system", "whyMatch": "Photo and video supporting a live entertainment brand's web and campaigns." },
+          { "slug": "roller-reels", "headline": "Reels-forward studio", "whyMatch": "Portfolio and production brand built around short-form video output." }
+        ],
         "cta": "Get Started",
         "monthlyIncludes": [
           "1 full shoot day per month",
@@ -170,6 +328,37 @@
         "featured": false,
         "ghl": false,
         "description": "Full-scale production. Premium cinematic video and extensive photo coverage.",
+        "cardDescription": "For brands that need cinematic hero video, two shoot days, and campaign-level asset packages every month.",
+        "detailPath": "/pricing/content-pro/",
+        "compareUpgrade": null,
+        "whoItsFor": {
+          "intro": "Content Pro is SWFT's highest-touch retainer — two shoot days, quarterly cinematic pieces, and budget for overflow creative when campaigns demand it.",
+          "idealFor": [
+            "Brands launching major campaigns or seasonal collections",
+            "Video-first businesses (studios, entertainment, premium DTC)",
+            "Teams that need priority turnaround and campaign packages",
+            "Companies that want freelancer budget for decks, logos, and graphics included"
+          ],
+          "notIdealFor": [
+            "You only need social templates and a half-day shoot",
+            "You're pre-revenue and testing messaging (Starter or Growth may fit)",
+            "You need TV/broadcast media buys (not included)"
+          ]
+        },
+        "process": {
+          "title": "How Content Pro works each month",
+          "steps": [
+            { "name": "Campaign scoping", "description": "Hero narratives, shot lists, and deliverable map for the month and quarter." },
+            { "name": "Two shoot days", "description": "Photo and video coverage across locations or studio setups." },
+            { "name": "Cinematic edit", "description": "Quarterly hero film plus full campaign asset packages." },
+            { "name": "Priority delivery", "description": "Fast turnaround with organized folders for web, ads, and social." },
+            { "name": "Creative overflow", "description": "Freelancer budget applied to logos, decks, and campaign graphics as scoped." }
+          ]
+        },
+        "caseStudies": [
+          { "slug": "roller-reels", "headline": "Premium video production", "whyMatch": "Full-scale video and portfolio presence for a production studio." },
+          { "slug": "blurred-lines-entertainment", "headline": "Campaign-level creative", "whyMatch": "High-energy brand content supporting web, ads, and live events." }
+        ],
         "cta": "Get Started",
         "monthlyIncludes": [
           "2 shoot days per month",
@@ -190,14 +379,50 @@
     "badge": "The Ultimate Ecosystem",
     "name": "Website + Content Starter Package",
     "description": "The complete entry package for businesses serious about showing up online. A Service Pro website build paired with ongoing Content Starter production so your site and social stay aligned.",
+    "cardDescription": "For owners ready to launch a professional site and keep social content in sync from day one — website build plus monthly content retainer.",
+    "detailPath": "/pricing/website-content-bundle/",
+    "compareUpgrade": { "label": "Growth (+$200/mo)", "path": "/pricing/growth/" },
     "setup": 1200,
     "monthly": 600,
     "featured": true,
+    "whoItsFor": {
+      "intro": "The bundle is the fastest path to looking legit online and staying visible — one setup fee covers your Service Pro website; Content Starter keeps feeds fresh every month.",
+      "idealFor": [
+        "New businesses launching site + social together",
+        "Local brands tired of mismatched website and Instagram aesthetics",
+        "Owners who want one team handling web and monthly content",
+        "Fitness, food, and service brands in Jersey City / NYC area"
+      ],
+      "notIdealFor": [
+        "You only need a website with no ongoing content",
+        "You need Shopify e-commerce (see E-Commerce tier)",
+        "You need daily video production (see Content Growth or Pro)"
+      ]
+    },
+    "process": {
+      "title": "How the bundle engagement works",
+      "steps": [
+        { "name": "Discovery call", "description": "We scope website pages and first-month content themes together." },
+        { "name": "Website build", "description": "Service Pro Webflow build — up to 5 pages, forms, SEO, launch." },
+        { "name": "First content shoot", "description": "Half-day session producing photos and templates aligned with the new site." },
+        { "name": "Launch aligned", "description": "Site goes live with matching social assets ready to post." },
+        { "name": "Monthly rhythm", "description": "Content Starter continues each month; upgrade to Growth for GHL anytime." }
+      ]
+    },
+    "caseStudies": [
+      { "slug": "built-by-me-ez", "headline": "Site + social for a trainer brand", "whyMatch": "Owned platform plus content ecosystem for a fitness creator." },
+      { "slug": "social-media-content-2026", "headline": "Why aligned content matters", "whyMatch": "Guide on keeping website and social content working together in 2026." }
+    ],
     "cta": "Secure Your Bundle",
     "includes": [
       "One-time website build (Service Pro scope — up to 5 pages)",
       "Content Starter retainer ($600/mo value)",
       "Optional: upgrade to Growth (+$200/mo) for GoHighLevel automations"
+    ],
+    "notIncluded": [
+      "GoHighLevel automations (add Growth upgrade)",
+      "Shopify e-commerce builds",
+      "Custom full brand identity design"
     ]
   },
   "bookCta": {
