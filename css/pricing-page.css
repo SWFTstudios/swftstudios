@@ -298,11 +298,12 @@
 }
 
 .hp-pricing-includes li::before {
-  content: "·";
+  content: "✓";
   position: absolute;
   left: 0;
   color: var(--pp-accent);
   font-weight: 700;
+  font-size: 0.75rem;
 }
 
 .hp-pricing-includes-more {

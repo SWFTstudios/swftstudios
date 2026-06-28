@@ -174,6 +174,7 @@
       "</p>" +
       priceHtml +
       renderIncludesList(bundle.includes || [], layout) +
+      (layout === "full" ? renderNotIncluded(bundle.notIncluded) : "") +
       (bundle.detailPath
         ? '<p class="hp-pricing-detail-link"><a href="' +
           escapeHtml(bundle.detailPath) +
