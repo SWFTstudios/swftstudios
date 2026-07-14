@@ -1,0 +1,10 @@
+.git
+.wrangler
+.cursor
+node_modules
+src
+scripts
+functions
+package.json
+package-lock.json
+tsconfig.json

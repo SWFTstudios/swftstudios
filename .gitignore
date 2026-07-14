@@ -4,6 +4,9 @@ swftstudios-website-template-folder/
 # Node.js dependencies
 node_modules/
 
+# Wrangler local dev cache/state
+.wrangler/
+
 # Build artifacts - generated from notes repo
 .notes-temp/
 
