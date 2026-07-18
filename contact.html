@@ -2,20 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Contact | SWFT Studios</title>
-  <meta name="description" content="Initiate your transformation. Contact SWFT Studios for web development, content creation, and automation — NYC, Jersey City, and global virtual.">
+  <title>Contact | Start a Project with SWFT Studios</title>
+  <meta name="description" content="Ready to hire SWFT Studios? Submit your project details for website design, content, or lead systems. Serving Jersey City, NYC, and North Jersey.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="canonical" href="https://www.swftstudios.com/contact.html">
-  <meta property="og:title" content="Contact | SWFT Studios">
-  <meta property="og:description" content="Connect with SWFT Studios — web, content, and automation for brands that move fast.">
+  <meta property="og:title" content="Contact | Start a Project with SWFT Studios">
+  <meta property="og:description" content="Tell SWFT about your project — website, content, or lead systems for growing businesses.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.swftstudios.com/contact.html">
+  <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Contact | SWFT Studios">
-  <meta name="twitter:description" content="Connect with SWFT Studios — web, content, and automation for brands that move fast.">
+  <meta name="twitter:description" content="Submit your project to SWFT Studios.">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/page-shell.css">
   <link rel="stylesheet" href="css/contact-page.css">
+  <link rel="stylesheet" href="css/growth-audit.css">
+  <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page">
   <div id="swft-nav" data-active="contact"></div>
@@ -23,9 +26,10 @@
   <main>
     <div class="ps-shell">
       <header class="contact-hero ps-hero">
-        <p class="ps-eyebrow">Connect with Authority</p>
-        <h1 class="ps-title">Initiate Your <span class="ps-accent">Transformation</span></h1>
-        <p class="ps-lead">Tell us about your project — or book a call directly. We respond within one business day.</p>
+        <p class="ps-eyebrow">Project inquiry</p>
+        <h1 class="ps-title">Tell us about your <span class="ps-accent">project</span></h1>
+        <p class="ps-lead">Already know you want to work with SWFT? Share the details below. Prefer a lighter first step?
+          <a href="/growth-audit">Request a Free Growth Audit</a>.</p>
       </header>
 
       <div class="contact-columns">
@@ -38,80 +42,93 @@
             </li>
             <li>
               <span class="contact-label">Location</span>
-              <span class="contact-value">NYC · Jersey City · Global Virtual</span>
+              <span class="contact-value">Jersey City · New York City · North Jersey · Virtual</span>
             </li>
           </ul>
           <div class="contact-social">
             <a href="https://www.instagram.com/swftstudios/" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="https://www.linkedin.com/company/swftstudios/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" rel="noopener noreferrer">Book on Cal.com</a>
+            <a href="/growth-audit">Free Growth Audit</a>
           </div>
           <blockquote class="contact-quote">
-            "We don't just build websites — we architect systems that turn attention into revenue."
+            "We help businesses turn attention into customers through websites, content, and lead systems."
           </blockquote>
+          <p class="contact-book-alt">Not ready to start? <a href="/growth-audit">Request a Free Growth Audit</a>.</p>
         </div>
 
-        <div class="contact-form-card">
-          <h2>Start a Project</h2>
+        <div class="contact-form-card ga-form-card">
+          <h2>Project details</h2>
           <form id="contact-form" novalidate>
-            <div class="contact-field">
-              <label for="contact-name">Name</label>
+            <div class="ga-hp" aria-hidden="true">
+              <label for="company_website">Company website</label>
+              <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="ga-field">
+              <label for="contact-name">Name <span class="req">*</span></label>
               <input type="text" id="contact-name" name="name" required autocomplete="name">
             </div>
-            <div class="contact-field">
-              <label for="contact-email">Email</label>
+            <div class="ga-field">
+              <label for="contact-email">Email <span class="req">*</span></label>
               <input type="email" id="contact-email" name="email" required autocomplete="email">
             </div>
-            <div class="contact-field">
-              <label for="contact-project-type">Project Type</label>
-              <select id="contact-project-type" name="project_type" required>
-                <option value="">Select a project type</option>
-                <option value="Website Development">Website Development</option>
-                <option value="E-Commerce / Shopify">E-Commerce / Shopify</option>
-                <option value="Content Creation">Content Creation</option>
-                <option value="Automation / GHL">Automation / GHL</option>
-                <option value="Brand Identity">Brand Identity</option>
+            <div class="ga-field">
+              <label for="contact-phone">Phone <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
+              <input type="tel" id="contact-phone" name="phone" autocomplete="tel">
+            </div>
+            <div class="ga-field">
+              <label for="contact-business">Business name <span class="req">*</span></label>
+              <input type="text" id="contact-business" name="business_name" required autocomplete="organization">
+            </div>
+            <div class="ga-field">
+              <label for="contact-website">Website or social link <span class="req">*</span></label>
+              <input type="text" id="contact-website" name="website" required placeholder="https:// or @handle">
+            </div>
+            <div class="ga-field">
+              <label for="contact-service">Service needed <span class="req">*</span></label>
+              <select id="contact-service" name="service_needed" required>
+                <option value="">Select a service</option>
+                <option value="Website Design and Development">Website Design and Development</option>
+                <option value="Photo and Video Content">Photo and Video Content</option>
+                <option value="Lead Systems and Automation">Lead Systems and Automation</option>
+                <option value="Website + Content">Website + Content</option>
                 <option value="Other">Other</option>
               </select>
             </div>
-            <div class="contact-field">
-              <label for="contact-message">Message</label>
-              <textarea id="contact-message" name="message" required placeholder="Tell us about your goals, timeline, and what success looks like."></textarea>
+            <div class="ga-field">
+              <label for="contact-challenge">Current challenge <span class="req">*</span></label>
+              <textarea id="contact-challenge" name="challenge" required placeholder="What is getting in the way today?"></textarea>
+            </div>
+            <div class="ga-field">
+              <label for="contact-outcome">Desired outcome <span class="req">*</span></label>
+              <textarea id="contact-outcome" name="desired_outcome" required placeholder="What does success look like?"></textarea>
+            </div>
+            <div class="ga-field">
+              <label for="contact-timeline">Timeline</label>
+              <input type="text" id="contact-timeline" name="timeline" placeholder="e.g. 30 days, this quarter">
+            </div>
+            <div class="ga-field">
+              <label for="contact-budget">Budget range</label>
+              <select id="contact-budget" name="budget">
+                <option value="">Select a range</option>
+                <option value="Under $1,000">Under $1,000</option>
+                <option value="$1,000–$2,500">$1,000–$2,500</option>
+                <option value="$2,500–$5,000">$2,500–$5,000</option>
+                <option value="$5,000+">$5,000+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+            </div>
+            <div class="ga-field">
+              <label for="contact-details">Project details</label>
+              <textarea id="contact-details" name="details" placeholder="Scope, must-haves, examples, constraints"></textarea>
             </div>
             <button type="submit" class="button is-course contact-submit" id="contact-submit">
               <div class="button_bg"></div>
-              <div class="button_text">Send Message</div>
+              <div class="button_text">Submit Your Project</div>
             </button>
-            <p id="contact-status" class="contact-status" role="status" aria-live="polite" hidden></p>
+            <p id="contact-status" class="contact-status ga-status" role="status" aria-live="polite" hidden></p>
           </form>
-          <p class="contact-book-alt">Prefer to talk live? <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" rel="noopener noreferrer">Book a discovery call on Cal.com</a></p>
+          <p class="contact-book-alt">Not ready to start? <a href="/growth-audit">Request a Free Growth Audit</a>.</p>
         </div>
-      </div>
-
-      <section class="contact-steps" aria-labelledby="steps-heading">
-        <h2 id="steps-heading">What Happens Next</h2>
-        <div class="contact-steps-grid">
-          <article class="contact-step">
-            <div class="contact-step-num">01</div>
-            <h3>Discovery</h3>
-            <p>We review your message and schedule a short call to understand goals, constraints, and timeline.</p>
-          </article>
-          <article class="contact-step">
-            <div class="contact-step-num">02</div>
-            <h3>Strategy</h3>
-            <p>We propose a scoped plan — website, content, automation, or a bundled approach — with clear deliverables.</p>
-          </article>
-          <article class="contact-step">
-            <div class="contact-step-num">03</div>
-            <h3>Execution</h3>
-            <p>We build, ship, and iterate. You get a partner who moves fast without sacrificing quality.</p>
-          </article>
-        </div>
-      </section>
-
-      <div class="contact-mood" aria-hidden="true">
-        <img src="images/swft-thumbnail.webp" alt="" loading="lazy" width="1120" height="220">
-        <div class="contact-mood-overlay"></div>
       </div>
 
       <footer class="ps-footer">
@@ -123,6 +140,7 @@
     </div>
   </main>
 
+  <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
   <script>
     (function () {
@@ -135,31 +153,53 @@
       function showStatus(msg, type) {
         statusEl.textContent = msg;
         statusEl.hidden = false;
-        statusEl.className = "contact-status is-" + type;
+        statusEl.className = "contact-status ga-status is-" + type;
+      }
+
+      function val(name) {
+        const el = form.elements.namedItem(name);
+        return el ? String(el.value || "").trim() : "";
       }
 
       form.addEventListener("submit", function (e) {
         e.preventDefault();
-        const name = form.name.value.trim();
-        const email = form.email.value.trim();
-        const projectType = form.project_type.value.trim();
-        const message = form.message.value.trim();
+        if (val("company_website")) {
+          showStatus("Message sent — we'll be in touch within one business day.", "success");
+          return;
+        }
 
-        if (!name || !email || !projectType || !message) {
+        const name = val("name");
+        const email = val("email");
+        const businessName = val("business_name");
+        const website = val("website");
+        const serviceNeeded = val("service_needed");
+        const challenge = val("challenge");
+        const desiredOutcome = val("desired_outcome");
+
+        if (!name || !email || !businessName || !website || !serviceNeeded || !challenge || !desiredOutcome) {
           showStatus("Please fill in all required fields.", "error");
           return;
         }
 
         submitBtn.disabled = true;
-        if (submitLabel) submitLabel.textContent = "Sending…";
+        if (submitLabel) submitLabel.textContent = "Submitting…";
         statusEl.hidden = true;
 
         const payload = {
           name: name,
           email: email,
-          businessType: projectType,
-          primaryGoal: message,
-          details: "",
+          phone: val("phone"),
+          businessName: businessName,
+          website: website,
+          businessType: serviceNeeded,
+          serviceNeeded: serviceNeeded,
+          challenge: challenge,
+          desiredOutcome: desiredOutcome,
+          primaryGoal: desiredOutcome,
+          timeline: val("timeline"),
+          budget: val("budget"),
+          details: val("details"),
+          honeypot: val("company_website"),
         };
 
         fetch("/api/contact", {
@@ -175,17 +215,25 @@
           .then(function (result) {
             if (result.ok && result.data.ok) {
               form.reset();
-              showStatus("Message sent — we'll be in touch within one business day.", "success");
+              showStatus("Project submitted — we'll be in touch within one business day.", "success");
+              if (window.SWFTAnalytics) {
+                window.SWFTAnalytics.track("contact_form_submit", {
+                  page_path: location.pathname,
+                  form_name: "contact",
+                  service_interest: serviceNeeded,
+                  budget_range: payload.budget || "",
+                });
+              }
             } else {
-              showStatus("Something went wrong. Email us at hello@swftstudios.com or book on Cal.com.", "error");
+              showStatus("Something went wrong. Email us at hello@swftstudios.com.", "error");
             }
           })
           .catch(function () {
-            showStatus("Unable to send right now. Email hello@swftstudios.com or book on Cal.com.", "error");
+            showStatus("Unable to send right now. Email hello@swftstudios.com.", "error");
           })
           .finally(function () {
             submitBtn.disabled = false;
-            if (submitLabel) submitLabel.textContent = "Send Message";
+            if (submitLabel) submitLabel.textContent = "Submit Your Project";
           });
       });
     })();

@@ -1,7 +1,7 @@
 (function (global) {
   "use strict";
 
-  var CAL_URL = "https://cal.com/swftstudios/swft-meeting";
+  var CAL_URL = "/growth-audit";
 
   function formatMoney(n) {
     return "$" + n.toLocaleString("en-US");
@@ -10,9 +10,9 @@
   function priceLabel(tier, billing) {
     if (billing === "oneTime") {
       if (tier.oneTime == null) return null;
-      return formatMoney(tier.oneTime);
+      return "Starting at " + formatMoney(tier.oneTime);
     }
-    return formatMoney(tier.monthly) + "/mo";
+    return "Starting at " + formatMoney(tier.monthly) + "/mo";
   }
 
   function escapeHtml(str) {
@@ -105,14 +105,14 @@
       notIncluded +
       '<a href="' +
       escapeHtml(calUrl) +
-      '" target="_blank" rel="noopener noreferrer" class="' +
+      '" class="' +
       btnClass +
       '" data-stripe-tier="' +
       escapeHtml(groupId + ":" + tier.id) +
       '">' +
       '<div class="button_bg"></div>' +
       '<div class="button_text">' +
-      escapeHtml(tier.cta || "Get Started") +
+      escapeHtml(tier.cta || "Get Your Free Growth Audit") +
       "</div></a></article>"
     );
   }
@@ -164,7 +164,7 @@
       renderIncludesList(bundle.includes || [], layout) +
       '<a href="' +
       escapeHtml(calUrl) +
-      '" target="_blank" rel="noopener noreferrer" class="button is-course w-inline-block" data-stripe-tier="' +
+      '" class="button is-course w-inline-block" data-stripe-tier="' +
       escapeHtml(bundle.id) +
       '">' +
       '<div class="button_bg"></div>' +
@@ -291,7 +291,7 @@
         escapeHtml(data.contentCreation.monthlyOnlyNote) +
         ' <a href="' +
         escapeHtml(calUrl) +
-        '" target="_blank" rel="noopener noreferrer" class="highlight">Book a discovery call</a>.</p></section>';
+        '" class="highlight">Get Your Free Growth Audit</a>.</p></section>';
     }
 
     html += renderBundle(data.bundle, billing, calUrl, layout);

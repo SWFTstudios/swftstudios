@@ -1,0 +1,274 @@
+/* Growth Audit landing + thank-you — extends page-shell */
+.ga-page .ps-hero {
+  margin-bottom: 2rem;
+}
+
+.ga-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 2.5rem;
+  align-items: start;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 900px) {
+  .ga-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ga-deliverables {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ga-deliverables li {
+  position: relative;
+  padding-left: 1.25rem;
+  color: #c4c7c7;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.ga-deliverables li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--ps-accent, #7fffe5);
+}
+
+.ga-expectation {
+  border-left: 2px solid var(--ps-accent, #7fffe5);
+  padding: 0.75rem 0 0.75rem 1rem;
+  color: #e5e2e1;
+  font-size: 0.95rem;
+  margin: 0 0 1.5rem;
+}
+
+.ga-form-card {
+  background: var(--ps-card, #0a0a0a);
+  border: 1px solid var(--ps-border, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.ga-form-card h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+.ga-field {
+  margin-bottom: 1rem;
+}
+
+.ga-field label {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ps-muted, #a8a8a8);
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.ga-field .req {
+  color: var(--ps-accent, #7fffe5);
+}
+
+.ga-field input,
+.ga-field select,
+.ga-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  padding: 0.7rem 0.85rem;
+  min-height: 44px;
+}
+
+.ga-field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.ga-field input:focus,
+.ga-field select:focus,
+.ga-field textarea:focus {
+  outline: 2px solid var(--ps-accent, #7fffe5);
+  outline-offset: 2px;
+  border-color: transparent;
+}
+
+.ga-field.is-error input,
+.ga-field.is-error select,
+.ga-field.is-error textarea {
+  border-color: #ff6b6b;
+}
+
+.ga-error {
+  color: #ff8a8a;
+  font-size: 0.82rem;
+  margin: 0.3rem 0 0;
+}
+
+.ga-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.ga-consent {
+  font-size: 0.85rem;
+  color: var(--ps-muted, #a8a8a8);
+  margin: 0.75rem 0 1.25rem;
+  line-height: 1.45;
+}
+
+.ga-consent a {
+  color: var(--ps-accent, #7fffe5);
+}
+
+.ga-status {
+  margin-top: 0.85rem;
+  font-size: 0.9rem;
+}
+
+.ga-status.is-error {
+  color: #ff8a8a;
+}
+
+.ga-status.is-success {
+  color: var(--ps-accent, #7fffe5);
+}
+
+.ga-optional-legend {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ps-muted, #a8a8a8);
+  margin: 1.5rem 0 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ps-border, rgba(255, 255, 255, 0.1));
+}
+
+.ga-steps {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.ga-step {
+  border: 1px solid var(--ps-border, rgba(255, 255, 255, 0.1));
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+}
+
+.ga-step-num {
+  color: var(--ps-accent, #7fffe5);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.ga-step h3 {
+  margin: 0 0 0.35rem;
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.ga-step p {
+  margin: 0;
+  color: #c4c7c7;
+  font-size: 0.92rem;
+}
+
+.ga-cal {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--ps-border, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  text-align: center;
+}
+
+.ga-cal h2 {
+  margin: 0 0 0.5rem;
+  color: #fff;
+  font-size: 1.35rem;
+}
+
+.ga-cal p {
+  color: #c4c7c7;
+  margin: 0 0 1.25rem;
+}
+
+.ga-cases {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 700px) {
+  .ga-cases {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ga-case-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--ps-border, rgba(255, 255, 255, 0.1));
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.ga-case-card:hover,
+.ga-case-card:focus-visible {
+  border-color: var(--ps-accent, #7fffe5);
+}
+
+.ga-case-card img {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.ga-case-card .ga-case-body {
+  padding: 0.85rem 1rem 1rem;
+}
+
+.ga-case-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.ga-case-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a8a8a8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ga-case-card {
+    transition: none;
+  }
+}

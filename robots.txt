@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /stitch/
+Disallow: /style-guide.html
+Disallow: /401.html
+Disallow: /growth-audit/thank-you
+Disallow: /component-
+
+Sitemap: https://www.swftstudios.com/sitemap.xml

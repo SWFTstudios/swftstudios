@@ -1,7 +1,7 @@
 {
   "hero": {
-    "headline": "Investment in Transformation",
-    "sub": "Transparent pricing for high-impact results. Choose the path that fits your scale."
+    "headline": "Clear pricing for websites and content",
+    "sub": "Starting prices for one-time projects and ongoing plans. Final quotes depend on scope \u2014 every package explains who it is for, what you get, and the next step."
   },
   "billingToggle": {
     "default": "monthly",
@@ -11,10 +11,10 @@
   "revisionPolicy": {
     "freeWindowDays": 30,
     "freeRevisions": 2,
-    "cardNote": "30 days post-launch · 2 free revisions included",
+    "cardNote": "30 days post-launch \u00b7 2 free revisions included",
     "scopeNote": "Final quote after intake."
   },
-  "calUrl": "https://cal.com/swftstudios/swft-meeting",
+  "calUrl": "/growth-audit",
   "websiteDevelopment": {
     "id": "website-development",
     "label": "Website Development",
@@ -28,7 +28,7 @@
         "featured": false,
         "ghl": false,
         "description": "Perfect for local service providers needing a professional ongoing presence.",
-        "cta": "Get Started",
+        "cta": "Get Your Free Growth Audit",
         "oneTimeIncludes": [
           "Strategy + wireframing session",
           "Up to 5 pages in your Webflow account",
@@ -36,10 +36,10 @@
           "Basic SEO setup (titles, meta, sitemap)",
           "Lead capture forms wired to email",
           "Launch support + handoff training",
-          "30 days post-launch · 2 free revisions"
+          "30 days post-launch \u00b7 2 free revisions"
         ],
         "monthlyIncludes": [
-          "2 queued site updates per month (~2–3 day turnaround)",
+          "2 queued site updates per month (~2\u20133 day turnaround)",
           "Form uptime + submission monitoring",
           "Quarterly SEO health check",
           "CMS support in your Webflow account",
@@ -48,7 +48,9 @@
         "notIncluded": [
           "GoHighLevel automations (available on Growth tier)",
           "Custom logo or brand identity design"
-        ]
+        ],
+        "timeline": "Typically 2\u20136 weeks depending on scope",
+        "whoFor": "Perfect for local service providers needing a professional ongoing presence."
       },
       {
         "id": "growth",
@@ -61,14 +63,14 @@
         "ghl": true,
         "ghlLabel": "Includes GoHighLevel",
         "description": "Advanced features and integrations for scaling businesses and restaurants.",
-        "cta": "Get Started",
+        "cta": "Get Your Free Growth Audit",
         "oneTimeIncludes": [
           "Everything in Service Pro build",
           "Conversion-focused page layouts",
           "Booking + inquiry flow setup",
           "CRM-ready form wiring",
           "Automation-ready Webflow build",
-          "30 days post-launch · 2 free revisions"
+          "30 days post-launch \u00b7 2 free revisions"
         ],
         "monthlyIncludes": [
           "Everything in Service Pro monthly",
@@ -82,7 +84,9 @@
         "notIncluded": [
           "SMS/phone usage beyond fair-use caps (billed at cost or quoted)",
           "Custom logo or full brand identity"
-        ]
+        ],
+        "timeline": "Typically 2\u20136 weeks depending on scope",
+        "whoFor": "Advanced features and integrations for scaling businesses and restaurants."
       },
       {
         "id": "ecommerce",
@@ -94,14 +98,14 @@
         "ghl": true,
         "ghlLabel": "Includes GoHighLevel",
         "description": "Full managed online store support and continuous optimization.",
-        "cta": "Get Started",
+        "cta": "Get Your Free Growth Audit",
         "oneTimeIncludes": [
           "Custom Shopify storefront in your account",
           "Catalog + collection architecture",
           "Checkout + cart flow optimization",
           "Cart recovery foundations",
           "Mobile-first product presentation",
-          "30 days post-launch · 2 free revisions"
+          "30 days post-launch \u00b7 2 free revisions"
         ],
         "monthlyIncludes": [
           "Queued product + page updates",
@@ -114,7 +118,9 @@
         "notIncluded": [
           "Paid ad spend or media buying",
           "Product photography (see Content plans)"
-        ]
+        ],
+        "timeline": "Typically 2\u20136 weeks depending on scope",
+        "whoFor": "Full managed online store support and continuous optimization."
       }
     ]
   },
@@ -130,18 +136,19 @@
         "featured": false,
         "ghl": false,
         "description": "Monthly essential photos and updates to keep your social feeds fresh.",
-        "cta": "Get Started",
+        "cta": "Get Your Free Growth Audit",
         "monthlyIncludes": [
           "1 half-day shoot per month (or equivalent photo batch)",
-          "10–15 edited photos sized for web + social",
-          "4–6 Canva-based social/ad templates customized to your brand",
+          "10\u201315 edited photos sized for web + social",
+          "4\u20136 Canva-based social/ad templates customized to your brand",
           "Caption starter bank",
           "Assets delivered ready to post"
         ],
         "notIncluded": [
           "Custom logo or full brand identity",
-          "Freelance design work — quoted separately"
-        ]
+          "Freelance design work \u2014 quoted separately"
+        ],
+        "timeline": "Ongoing monthly; first shoot scheduled after kickoff"
       },
       {
         "id": "content-growth",
@@ -150,10 +157,10 @@
         "featured": false,
         "ghl": false,
         "description": "Comprehensive photo and short-form video system for active brands.",
-        "cta": "Get Started",
+        "cta": "Get Your Free Growth Audit",
         "monthlyIncludes": [
           "1 full shoot day per month",
-          "6–8 short-form reels + 20+ deliverables",
+          "6\u20138 short-form reels + 20+ deliverables",
           "Canva ad creative sets + light motion graphics",
           "Monthly content calendar",
           "Pro graphics support when needed"
@@ -161,7 +168,8 @@
         "notIncluded": [
           "Full logo/brand identity projects",
           "Paid ad management"
-        ]
+        ],
+        "timeline": "Ongoing monthly; first shoot scheduled after kickoff"
       },
       {
         "id": "content-pro",
@@ -170,7 +178,7 @@
         "featured": false,
         "ghl": false,
         "description": "Full-scale production. Premium cinematic video and extensive photo coverage.",
-        "cta": "Get Started",
+        "cta": "Get Your Free Growth Audit",
         "monthlyIncludes": [
           "2 shoot days per month",
           "Quarterly cinematic hero video piece",
@@ -181,7 +189,8 @@
         "notIncluded": [
           "Unlimited revisions outside agreed scope",
           "TV/broadcast media buys"
-        ]
+        ],
+        "timeline": "Ongoing monthly; first shoot scheduled after kickoff"
       }
     ]
   },
@@ -193,18 +202,18 @@
     "setup": 1200,
     "monthly": 600,
     "featured": true,
-    "cta": "Secure Your Bundle",
+    "cta": "Get Your Free Growth Audit",
     "includes": [
-      "One-time website build (Service Pro scope — up to 5 pages)",
+      "One-time website build (Service Pro scope \u2014 up to 5 pages)",
       "Content Starter retainer ($600/mo value)",
       "Optional: upgrade to Growth (+$200/mo) for GoHighLevel automations"
     ]
   },
   "bookCta": {
-    "headline": "Let's Put Your Business on Autopilot.",
-    "quote": "Ready to stand out and get noticed? — Elombe",
-    "sub": "Stop managing tasks and start scaling impact. Book your strategic session today.",
-    "button": "Book a Discovery Call"
+    "headline": "Not sure which package fits?",
+    "quote": "Start with a free Growth Audit \u2014 then we match you to the right scope.",
+    "sub": "Get a personalized review of your website, social presence, and customer journey.",
+    "button": "Get Your Free Growth Audit"
   },
   "faq": [
     {
@@ -217,7 +226,7 @@
     },
     {
       "q": "What's included in content plans?",
-      "a": "All content plans are monthly retainers with shoots, edited photos/video, and Canva-based social assets. Custom logos and full brand identity are not included on Starter — they're available on Content Pro or as a separate quote."
+      "a": "All content plans are monthly retainers with shoots, edited photos/video, and Canva-based social assets. Custom logos and full brand identity are not included on Starter \u2014 they're available on Content Pro or as a separate quote."
     },
     {
       "q": "What's in the bundle?",
@@ -233,11 +242,11 @@
     },
     {
       "q": "Can I pause monthly service?",
-      "a": "Yes. Monthly plans can be paused or cancelled. We'll confirm terms on your discovery call before you commit."
+      "a": "Yes. Monthly plans can be paused or cancelled. We'll confirm terms on your Growth Audit before you commit."
     },
     {
       "q": "How do I get started?",
-      "a": "Book a free discovery call. We'll match you to the right tier based on your goals, timeline, and whether you need website, content, or both."
+      "a": "Request a free Growth Audit. We'll review your online presence and recommend the right website, content, or lead-system package \u2014 with starting prices based on scope."
     }
   ]
 }

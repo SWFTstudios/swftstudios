@@ -14,6 +14,8 @@ export interface Env {
   AIRTABLE_BASE_ID?: string;
   AIRTABLE_TABLE?: string;
   AIRTABLE_TABLE_CONTACT?: string;
+  /** Airtable table id for Growth Audit leads — set via Worker vars */
+  AIRTABLE_TABLE_GROWTH_AUDIT?: string;
   FORMSUBMIT_EMAIL?: string;
 }
 
@@ -24,6 +26,8 @@ const DEFAULTS = {
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
   AIRTABLE_TABLE: "tbl30H9M2CC7p6MqY", // Website Build Requests
   AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L", // Discovery Calls
+  /* Growth Audits table id must be set after creating the table in Airtable */
+  AIRTABLE_TABLE_GROWTH_AUDIT: "",
 };
 
 type CaseStudyInput = {
@@ -293,11 +297,28 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
 
+    /* Clean marketing URLs (no .html) */
+    if (request.method === "GET" || request.method === "HEAD") {
+      const cleanRoutes: Record<string, string> = {
+        "/growth-audit": "/growth-audit.html",
+        "/growth-audit/": "/growth-audit.html",
+        "/growth-audit/thank-you": "/growth-audit/thank-you.html",
+        "/growth-audit/thank-you/": "/growth-audit/thank-you.html",
+      };
+      const assetPath = cleanRoutes[url.pathname];
+      if (assetPath) {
+        const rewritten = new URL(request.url);
+        rewritten.pathname = assetPath;
+        return env.ASSETS.fetch(new Request(rewritten.toString(), request));
+      }
+    }
+
     if (
       request.method === "OPTIONS" &&
       (url.pathname === "/api/case-study-match" ||
         url.pathname === "/api/build-request" ||
-        url.pathname === "/api/contact")
+        url.pathname === "/api/contact" ||
+        url.pathname === "/api/growth-audit")
     ) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
@@ -406,6 +427,119 @@ export default {
       });
     }
 
+    if (request.method === "POST" && url.pathname === "/api/growth-audit") {
+      pruneRateBuckets();
+      const clientIp =
+        request.headers.get("CF-Connecting-IP") ||
+        request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
+        "unknown";
+      if (!checkRateLimit(clientIp)) {
+        return new Response(JSON.stringify({ ok: false, error: "Too many requests. Try again in a minute." }), {
+          status: 429,
+          headers: { "Content-Type": "application/json", "Retry-After": "60", ...corsHeaders(origin) },
+        });
+      }
+
+      let body: BuildRequestBody;
+      try {
+        const raw = await request.text();
+        if (raw.length > 100_000) {
+          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
+            status: 413,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          });
+        }
+        body = JSON.parse(raw) as BuildRequestBody;
+      } catch {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      /* Honeypot — bots fill this; humans never see it */
+      if (str(body.honeypot, 200) || str(body.company_website, 200)) {
+        return new Response(JSON.stringify({ ok: true, stored: false }), {
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const firstName = str(body.firstName, 120);
+      const email = str(body.email, 320);
+      const businessName = str(body.businessName, 200);
+      const website = str(body.website, 500);
+      const businessCategory = str(body.businessCategory, 200);
+      const challenge = str(body.challenge, 400);
+      const desiredOutcome = str(body.desiredOutcome, 4000);
+
+      if (!firstName || !email || !businessName || !website || !businessCategory || !challenge || !desiredOutcome) {
+        return new Response(JSON.stringify({ ok: false, error: "Missing required fields." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid email." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const auditTable = env.AIRTABLE_TABLE_GROWTH_AUDIT || DEFAULTS.AIRTABLE_TABLE_GROWTH_AUDIT;
+      const fields: Record<string, unknown> = {
+        "First Name": firstName,
+        Email: email,
+        Phone: str(body.phone, 40),
+        "Business Name": businessName,
+        "Website or Social": website,
+        "Business Category": businessCategory,
+        "Biggest Challenge": challenge,
+        "Desired Outcome": desiredOutcome,
+        Instagram: str(body.instagram, 300),
+        "Monthly Budget": str(body.budget, 80),
+        Timeline: str(body.timeline, 200),
+        "Additional Context": str(body.details, 4000),
+        "UTM Source": str(body.utmSource, 120),
+        "UTM Medium": str(body.utmMedium, 120),
+        "UTM Campaign": str(body.utmCampaign, 120),
+        "Source Page": str(body.sourcePage, 300),
+        Status: "New",
+        "Submitted At": new Date().toISOString(),
+      };
+
+      let stored = false;
+      if (auditTable) {
+        stored = await writeToAirtable(env, auditTable, fields);
+      } else {
+        /* Fallback: store in Discovery Calls so leads are never silently dropped */
+        const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
+        stored = await writeToAirtable(env, contactTable, {
+          Name: firstName,
+          Email: email,
+          "Business Type": businessCategory,
+          "Primary Goal": `Growth Audit — ${challenge}`,
+          Timeline: str(body.timeline, 200),
+          Budget: str(body.budget, 80),
+          Details: [
+            `Business: ${businessName}`,
+            `Website: ${website}`,
+            `Outcome: ${desiredOutcome}`,
+            `Phone: ${str(body.phone, 40)}`,
+            `Instagram: ${str(body.instagram, 300)}`,
+            `Context: ${str(body.details, 2000)}`,
+            `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
+            `Source: ${str(body.sourcePage, 200)}`,
+          ].join("\n"),
+          Status: "New",
+          "Submitted At": new Date().toISOString(),
+        });
+      }
+
+      return new Response(JSON.stringify({ ok: true, stored }), {
+        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      });
+    }
+
     if (request.method === "POST" && url.pathname === "/api/contact") {
       pruneRateBuckets();
       const clientIp =
@@ -436,15 +570,39 @@ export default {
         });
       }
 
+      if (str(body.honeypot, 200) || str(body.company_website, 200)) {
+        return new Response(JSON.stringify({ ok: true, stored: false }), {
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
       const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
+      const name = str(body.name, 200);
+      const email = str(body.email, 320);
+      if (!name || !email) {
+        return new Response(JSON.stringify({ ok: false, error: "Name and email are required." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const detailsParts = [
+        str(body.details, 4000),
+        str(body.website, 500) ? `Website/Social: ${str(body.website, 500)}` : "",
+        str(body.phone, 40) ? `Phone: ${str(body.phone, 40)}` : "",
+        str(body.businessName, 200) ? `Business: ${str(body.businessName, 200)}` : "",
+        str(body.challenge, 400) ? `Challenge: ${str(body.challenge, 400)}` : "",
+        str(body.desiredOutcome, 2000) ? `Desired outcome: ${str(body.desiredOutcome, 2000)}` : "",
+      ].filter(Boolean);
+
       const fields: Record<string, unknown> = {
-        Name: str(body.name, 200),
-        Email: str(body.email, 320),
-        "Business Type": str(body.businessType, 200),
-        "Primary Goal": str(body.primaryGoal, 4000),
+        Name: name,
+        Email: email,
+        "Business Type": str(body.businessType || body.serviceNeeded, 200),
+        "Primary Goal": str(body.primaryGoal || body.desiredOutcome || body.challenge, 4000),
         Timeline: str(body.timeline, 200),
         Budget: str(body.budget, 200),
-        Details: str(body.details, 4000),
+        Details: detailsParts.join("\n"),
         Status: "New",
         "Submitted At": new Date().toISOString(),
       };
