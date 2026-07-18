@@ -16,7 +16,7 @@
     { label: "Team",         href: "/team.html",            key: "team" },
     { label: "Contact",      href: "/contact.html",         key: "contact" }
   ];
-  var CTA = { label: "Order Your Website →", href: "/swft-method.html" };
+  var CTA = { label: "Get Your Free Growth Audit", href: "/growth-audit" };
   var BRAND = 'SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span>';
 
   function navHTML(active) {
