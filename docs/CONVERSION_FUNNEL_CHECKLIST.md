@@ -17,23 +17,23 @@ Primary funnel: Homepage / Services → `/growth-audit` → form → `/growth-au
 
 ### Release 1 — Cleanup and conversion
 - [x] Branch created
-- [ ] Hidden legacy homepage block removed
-- [ ] Nav CTA → Growth Audit
-- [ ] Homepage hero + section order updated
-- [ ] Growth Audit landing + thank-you + API live
-- [ ] Local funnel path verified
+- [x] Hidden legacy homepage block removed
+- [x] Nav CTA → Growth Audit
+- [x] Homepage hero + section order updated
+- [x] Growth Audit landing + thank-you + API live
+- [x] Local funnel path verified
 
 ### Release 2 — Trust and qualification
-- [ ] Pricing CTAs/copy aligned
-- [ ] Contact form expanded
-- [ ] Case study end CTAs → Growth Audit
-- [ ] Airtable confirmation automations documented
+- [x] Pricing CTAs/copy aligned
+- [x] Contact form expanded
+- [x] Case study end CTAs → Growth Audit
+- [x] Airtable confirmation automations documented
 
 ### Release 3 — Measurement and optimization
-- [ ] robots.txt + sitemap.xml
-- [ ] Analytics events wired
-- [ ] SEO meta / JSON-LD on key pages
-- [ ] A11y / responsive / performance QA
+- [x] robots.txt + sitemap.xml
+- [x] Analytics events wired
+- [x] SEO meta / JSON-LD on key pages
+- [x] A11y / responsive / performance QA
 
 ## Legacy inventory (pre-cleanup)
 
