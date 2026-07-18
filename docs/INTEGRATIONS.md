@@ -6,8 +6,42 @@ your Airtable base so you can see every lead in a grid and start the build.
 
 | Form | Worker endpoint | Airtable table |
 |---|---|---|
-| `swft-method.html` (Order Your Website) | `POST /api/build-request` | "Website Build Requests" |
-| `contact.html` (Discovery) | `POST /api/contact` | "Discovery Calls" |
+| `growth-audit.html` (Free Growth Audit) | `POST /api/growth-audit` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) |
+| `contact.html` (Project inquiry) | `POST /api/contact` | "Discovery Calls" |
+| `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` | "Website Build Requests" |
+
+### Growth Audit table setup (manual)
+
+Create a table named **Growth Audits** in the SWFT Website Leads base with fields:
+
+| Field | Type |
+|---|---|
+| First Name | Single line text |
+| Email | Email |
+| Phone | Phone / single line |
+| Business Name | Single line text |
+| Website or Social | URL / single line |
+| Business Category | Single line text |
+| Biggest Challenge | Single select / long text |
+| Desired Outcome | Long text |
+| Instagram | Single line text |
+| Monthly Budget | Single select / single line |
+| Timeline | Single line text |
+| Additional Context | Long text |
+| UTM Source / Medium / Campaign | Single line text |
+| Source Page | Single line text |
+| Status | Single select (default New) |
+| Submitted At | Date/time |
+
+Then set the Worker var:
+
+```bash
+npx wrangler secret put AIRTABLE_TOKEN   # if not already set
+# Non-secret table id:
+# wrangler.toml / dashboard var AIRTABLE_TABLE_GROWTH_AUDIT=tblXXXXXXXX
+```
+
+Recommended Airtable automation: *When record created → Send email* confirming the audit request (see Release 2).
 
 `/api/build-request` also **starts a Stripe Checkout session** for the chosen plan
 and returns its URL, which the page redirects the visitor to (only if a Stripe key
