@@ -58,22 +58,23 @@ body{
   <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
   <link href="css/pricing-page.css" rel="stylesheet" type="text/css">
   <style>
-    /* Homepage redesign — services, proven results, booking */
+    /* Homepage redesign — services, proven results, booking (uses --swft-* tokens) */
     .hp-section {
       padding: 4rem 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
     }
     .hp-section-label {
-      font-size: 0.75rem;
+      font-size: var(--swft-text-tiny, 0.75rem);
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #888;
+      color: var(--swft-muted, #a8a8a8);
       margin-bottom: 1rem;
     }
     .hp-section-title {
-      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-size: var(--swft-h2, clamp(1.75rem, 4vw, 2.75rem));
       font-weight: 600;
-      line-height: 1.2;
+      line-height: var(--swft-lh-heading, 1.1);
+      color: var(--swft-text-strong, #fff);
       margin-bottom: 2.5rem;
     }
     .hp-services-grid {
@@ -85,8 +86,8 @@ body{
       .hp-services-grid { grid-template-columns: 1fr 1fr; }
     }
     .hp-service-card {
-      border: 1px solid #333;
-      background: #0a0a0a;
+      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
+      background: var(--swft-card, #0a0a0a);
       padding: 2rem;
       display: flex;
       flex-direction: column;
@@ -94,14 +95,14 @@ body{
       min-height: 22rem;
       transition: border-color 0.3s ease;
     }
-    .hp-service-card:hover { border-color: #c9c6c5; }
+    .hp-service-card:hover { border-color: var(--swft-accent, #7fffe5); }
     .hp-service-card-num {
       position: absolute;
       top: 2rem;
       right: 2rem;
-      font-size: 0.75rem;
+      font-size: var(--swft-text-tiny, 0.75rem);
       letter-spacing: 0.1em;
-      color: #888;
+      color: var(--swft-muted, #a8a8a8);
     }
     .hp-service-card { position: relative; }
     .hp-service-card-image {
@@ -112,24 +113,38 @@ body{
       display: block;
     }
     .hp-service-card h3 {
-      font-size: 1.5rem;
+      font-size: var(--swft-h4, 1.5rem);
       font-weight: 600;
       margin: 0 0 1rem;
+      color: var(--swft-text-strong, #fff);
     }
     .hp-service-card p {
-      color: #c4c7c7;
-      line-height: 1.6;
+      color: var(--swft-lead, #c4c7c7);
+      line-height: var(--swft-lh-lead, 1.55);
+      font-size: var(--swft-text-body, 1rem);
       margin: 0 0 1.25rem;
     }
     .hp-service-deliverables {
       list-style: none;
       padding: 0;
       margin: 0 0 1.5rem;
-      color: #888;
-      font-size: 0.875rem;
-      line-height: 1.8;
+      color: var(--swft-text, #f0eeec);
+      font-size: var(--swft-text-body, 1.0625rem);
+      font-weight: 400;
+      line-height: 1.75;
     }
-    .hp-service-deliverables li::before { content: "· "; color: #c9c6c5; }
+    .hp-service-deliverables li {
+      margin-bottom: 0.55rem;
+    }
+    .hp-service-deliverables li::before { content: "· "; color: var(--swft-accent, #7fffe5); }
+    #homepage-problems .hp-service-deliverables {
+      font-size: var(--swft-text-lead, 1.125rem);
+      line-height: 1.7;
+      color: var(--swft-text, #f0eeec);
+    }
+    #homepage-problems .hp-service-deliverables li {
+      margin-bottom: 0.75rem;
+    }
     .hp-proven-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -139,7 +154,7 @@ body{
     @media (min-width: 640px) { .hp-proven-grid { grid-template-columns: 1fr 1fr; } }
     @media (min-width: 992px) { .hp-proven-grid { grid-template-columns: 1fr 1fr 1fr; } }
     .hp-proven-card {
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
       background: #131313;
       overflow: hidden;
       transition: border-color 0.3s ease, transform 0.3s ease;
@@ -148,7 +163,7 @@ body{
       display: block;
     }
     .hp-proven-card:hover {
-      border-color: #c9c6c5;
+      border-color: var(--swft-accent, #7fffe5);
       transform: translateY(-2px);
     }
     .hp-proven-card img {
@@ -161,7 +176,7 @@ body{
       width: 100%;
       aspect-ratio: 16 / 10;
       overflow: hidden;
-      background: #0a0a0a;
+      background: var(--swft-card, #0a0a0a);
       line-height: 0;
     }
     .hp-proven-thumb img {
@@ -173,22 +188,23 @@ body{
     }
     .hp-proven-card-body { padding: 1.25rem; }
     .hp-proven-tag {
-      font-size: 0.7rem;
+      font-size: var(--swft-text-tiny, 0.75rem);
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #888;
+      color: var(--swft-muted, #a8a8a8);
       margin-bottom: 0.5rem;
     }
     .hp-proven-card h3 {
-      font-size: 1.125rem;
+      font-size: var(--swft-text-lead, 1.125rem);
       font-weight: 600;
       margin: 0 0 0.75rem;
+      color: var(--swft-text-strong, #fff);
     }
     .hp-proven-link {
-      font-size: 0.8rem;
+      font-size: var(--swft-text-small, 0.875rem);
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: #c9c6c5;
+      color: var(--swft-accent, #7fffe5);
     }
     .hp-view-all {
       margin-top: 2.5rem;
@@ -196,22 +212,27 @@ body{
     }
     .hp-booking {
       padding: 5rem 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
     }
     .hp-booking-copy {
       max-width: 36rem;
       margin-bottom: 2rem;
     }
     .hp-booking-copy h2 {
-      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-size: var(--swft-h2, clamp(1.75rem, 4vw, 2.75rem));
       font-weight: 600;
       margin: 0 0 1rem;
+      color: var(--swft-text-strong, #fff);
     }
-    .hp-booking-copy p { color: #c4c7c7; line-height: 1.6; }
+    .hp-booking-copy p {
+      color: var(--swft-lead, #c4c7c7);
+      line-height: var(--swft-lh-lead, 1.55);
+      font-size: var(--swft-text-body, 1rem);
+    }
     .hp-cal-embed {
       width: 100%;
       min-height: 630px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
       background: #0e0e0e;
     }
     .hp-cal-fallback {
@@ -221,7 +242,7 @@ body{
       min-height: 12rem;
       padding: 2rem;
       text-align: center;
-      color: #888;
+      color: var(--swft-muted, #a8a8a8);
     }
   </style>
   <script type="application/ld+json">
@@ -969,7 +990,7 @@ margin: 0rem !important;
                 </div>
               </div>
               <section class="hp-section" id="homepage-problems" aria-labelledby="hp-problems-heading">
-                <div class="hp-section-label">02 / The Problem</div>
+                <div class="hp-section-label">The Problem</div>
                 <h2 class="hp-section-title" id="hp-problems-heading">Your business may be better than it looks online.</h2>
                 <ul class="hp-service-deliverables" role="list" style="max-width:42rem;margin:0;">
                   <li>Visitors do not immediately understand what you offer</li>
@@ -980,7 +1001,7 @@ margin: 0rem !important;
                 </ul>
               </section>
               <section class="hp-section" id="homepage-services" aria-labelledby="hp-services-heading">
-                <div class="hp-section-label">03 / Services</div>
+                <div class="hp-section-label">Services</div>
                 <h2 class="hp-section-title" id="hp-services-heading">How SWFT turns attention into customers</h2>
                 <div class="hp-services-grid">
                   <article class="hp-service-card">
@@ -1224,7 +1245,7 @@ margin: 0rem !important;
         </div>
       </section>
       <section class="hp-section" id="proven-results" aria-labelledby="hp-proven-heading">
-                <div class="hp-section-label">05 / Our Work</div>
+                <div class="hp-section-label">Our Work</div>
                 <h2 class="hp-section-title" id="hp-proven-heading">Proven Results</h2>
                 <div class="hp-proven-grid">
                   <a href="case-study/brooklyn-steel.html" class="hp-proven-card">
@@ -1353,13 +1374,13 @@ margin: 0rem !important;
       </section>
       <section class="hp-section padding-global" id="homepage-pricing" aria-labelledby="hp-pricing-heading">
         <div class="container-large">
-          <div class="hp-section-label" id="hp-pricing-heading">04 / Investment</div>
+          <div class="hp-section-label" id="hp-pricing-heading">Investment</div>
           <div id="hp-pricing-mount"></div>
         </div>
       </section>
       <section id="growth-audit-cta" class="hp-booking padding-global" aria-labelledby="hp-audit-heading">
         <div class="container-large">
-          <div class="hp-section-label">08 / Free Growth Audit</div>
+          <div class="hp-section-label">Free Growth Audit</div>
           <div class="hp-booking-copy">
             <h2 id="hp-audit-heading">Find out what is costing your business customers online.</h2>
             <p>Submit your website or social profile and receive a personalized review of the three changes most likely to improve trust, inquiries, and sales.</p>
@@ -1378,7 +1399,7 @@ margin: 0rem !important;
       </section>
       <section id="homepage-faq" class="hp-section padding-global" aria-labelledby="hp-faq-heading">
         <div class="container-large">
-          <div class="hp-section-label">09 / FAQ</div>
+          <div class="hp-section-label">FAQ</div>
           <h2 class="hp-section-title" id="hp-faq-heading">Common questions</h2>
           <div class="hp-faq" style="max-width:42rem;display:grid;gap:1.25rem;">
             <details>

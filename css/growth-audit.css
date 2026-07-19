@@ -28,8 +28,8 @@
 .ga-deliverables li {
   position: relative;
   padding-left: 1.25rem;
-  color: #c4c7c7;
-  font-size: 0.95rem;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-body, 1rem);
   line-height: 1.45;
 }
 
@@ -47,8 +47,8 @@
 .ga-expectation {
   border-left: 2px solid var(--ps-accent, #7fffe5);
   padding: 0.75rem 0 0.75rem 1rem;
-  color: #e5e2e1;
-  font-size: 0.95rem;
+  color: var(--swft-text, #e5e2e1);
+  font-size: var(--swft-text-body, 1rem);
   margin: 0 0 1.5rem;
 }
 
@@ -61,8 +61,8 @@
 
 .ga-form-card h2 {
   margin: 0 0 1.25rem;
-  font-size: 1.25rem;
-  color: #fff;
+  font-size: var(--swft-h5, 1.25rem);
+  color: var(--swft-text-strong, #fff);
 }
 
 .ga-field {
@@ -91,9 +91,9 @@
   background: #050505;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  color: #fff;
+  color: var(--swft-text-strong, #fff);
   font: inherit;
-  font-size: 1rem;
+  font-size: var(--swft-text-body, 1rem);
   padding: 0.7rem 0.85rem;
   min-height: 44px;
 }
@@ -187,14 +187,14 @@
 
 .ga-step h3 {
   margin: 0 0 0.35rem;
-  color: #fff;
-  font-size: 1.05rem;
+  color: var(--swft-text-strong, #fff);
+  font-size: var(--swft-text-lead, 1.05rem);
 }
 
 .ga-step p {
   margin: 0;
-  color: #c4c7c7;
-  font-size: 0.92rem;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-small, 0.875rem);
 }
 
 .ga-cal {
@@ -207,13 +207,14 @@
 
 .ga-cal h2 {
   margin: 0 0 0.5rem;
-  color: #fff;
-  font-size: 1.35rem;
+  color: var(--swft-text-strong, #fff);
+  font-size: var(--swft-h4, 1.35rem);
 }
 
 .ga-cal p {
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   margin: 0 0 1.25rem;
+  font-size: var(--swft-text-body, 1rem);
 }
 
 .ga-cases {
@@ -257,14 +258,14 @@
 
 .ga-case-card h3 {
   margin: 0 0 0.35rem;
-  font-size: 1rem;
-  color: #fff;
+  font-size: var(--swft-h6, 1rem);
+  color: var(--swft-text-strong, #fff);
 }
 
 .ga-case-card p {
   margin: 0;
-  font-size: 0.85rem;
-  color: #a8a8a8;
+  font-size: var(--swft-text-small, 0.875rem);
+  color: var(--swft-muted, #a8a8a8);
 }
 
 @media (prefers-reduced-motion: reduce) {

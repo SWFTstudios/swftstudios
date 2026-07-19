@@ -1,13 +1,28 @@
 /* SWFT Pricing — Stitch-style tiers (shared with homepage via pricing-render.js) */
 .pricing-page {
-  --pp-bg: #010101;
-  --pp-text: #e5e2e1;
-  --pp-muted: #888;
-  --pp-accent: #c9c6c5;
-  --pp-border: #333;
-  --pp-card: #0a0a0a;
+  --pp-bg: var(--swft-bg, #010101);
+  --pp-text: var(--swft-text, #e5e2e1);
+  --pp-muted: var(--swft-muted, #a8a8a8);
+  --pp-accent: var(--swft-accent, #7fffe5);
+  --pp-border: var(--swft-border, rgba(255, 255, 255, 0.1));
+  --pp-card: var(--swft-card, #0a0a0a);
   background: var(--pp-bg);
   color: var(--pp-text);
+  font-size: var(--swft-text-body, 1rem);
+  line-height: var(--swft-lh-body, 1.5);
+}
+
+/* Homepage pricing block inherits tokens even without .pricing-page */
+#homepage-pricing,
+.hp-pricing-hero,
+.hp-pricing-grid,
+.hp-pricing-bundle {
+  --pp-bg: var(--swft-bg, #010101);
+  --pp-text: var(--swft-text, #e5e2e1);
+  --pp-muted: var(--swft-muted, #a8a8a8);
+  --pp-accent: var(--swft-accent, #7fffe5);
+  --pp-border: var(--swft-border, rgba(255, 255, 255, 0.1));
+  --pp-card: var(--swft-card, #0a0a0a);
 }
 
 .pricing-page main {
@@ -28,26 +43,26 @@
   color: var(--pp-accent);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.75rem;
+  font-size: var(--swft-text-tiny, 0.75rem);
   margin-bottom: 0.75rem;
 }
 
 .pricing-hero-title {
-  font-size: clamp(1.85rem, 4vw, 2.75rem);
-  line-height: 1.1;
+  font-size: var(--swft-h1, clamp(2.25rem, 5vw, 3.5rem));
+  line-height: var(--swft-lh-heading, 1.1);
   letter-spacing: -0.02em;
   max-width: 20ch;
   margin: 0 auto 0.75rem;
-  color: #fff;
+  color: var(--swft-text-strong, #fff);
   font-weight: 600;
 }
 
 .pricing-hero-lead {
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   margin: 0 auto;
   max-width: 42ch;
-  font-size: 1.05rem;
-  line-height: 1.55;
+  font-size: var(--swft-text-lead, 1.05rem);
+  line-height: var(--swft-lh-lead, 1.55);
 }
 
 #pricing {
@@ -59,8 +74,8 @@
 }
 
 .section-heading {
-  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
-  color: #fff;
+  font-size: var(--swft-h4, clamp(1.25rem, 2.5vw, 1.6rem));
+  color: var(--swft-text-strong, #fff);
   margin: 0 0 1.5rem;
   text-align: center;
   font-weight: 600;
@@ -73,17 +88,19 @@
 }
 
 .hp-pricing-hero h2 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: var(--swft-h2, clamp(1.75rem, 4vw, 2.75rem));
   font-weight: 600;
-  line-height: 1.15;
+  line-height: var(--swft-lh-heading, 1.1);
   margin: 0 0 0.75rem;
+  color: var(--swft-text-strong, #fff);
 }
 
 .hp-pricing-hero p {
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   max-width: 40ch;
   margin: 0 auto;
-  line-height: 1.55;
+  line-height: var(--swft-lh-lead, 1.55);
+  font-size: var(--swft-text-lead, 1.05rem);
 }
 
 .hp-billing-toggle {
@@ -96,14 +113,14 @@
   margin: 0 auto 2rem;
   width: fit-content;
   max-width: 100%;
-  background: #0a0a0a;
+  background: var(--pp-card);
 }
 
 .hp-billing-toggle__btn {
   border: 0;
   background: transparent;
   color: var(--pp-muted);
-  font-size: 0.75rem;
+  font-size: var(--swft-text-tiny, 0.75rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.65rem 1.25rem;
@@ -114,7 +131,7 @@
 
 .hp-billing-toggle__btn.is-active {
   background: var(--pp-accent);
-  color: #1c1b1b;
+  color: var(--swft-bg, #010101);
   font-weight: 600;
 }
 
@@ -126,7 +143,7 @@
 .hp-pricing-note {
   text-align: center;
   color: var(--pp-muted);
-  font-size: 0.875rem;
+  font-size: var(--swft-text-small, 0.875rem);
   margin: -1rem 0 2rem;
 }
 
@@ -136,7 +153,7 @@
 }
 
 .hp-pricing-group-title {
-  font-size: 0.75rem;
+  font-size: var(--swft-text-tiny, 0.75rem);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--pp-muted);
@@ -182,7 +199,7 @@
 
 .hp-pricing-card--featured {
   border-color: var(--pp-accent);
-  box-shadow: 0 0 24px rgba(201, 198, 197, 0.12);
+  box-shadow: 0 0 24px rgba(127, 255, 229, 0.12);
   padding-top: 2rem;
 }
 
@@ -192,7 +209,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: var(--pp-accent);
-  color: #1c1b1b;
+  color: var(--swft-bg, #010101);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -203,27 +220,28 @@
 }
 
 .hp-pricing-card h3 {
-  font-size: 1.25rem;
+  font-size: var(--swft-h5, 1.25rem);
   font-weight: 600;
   margin: 0.5rem 0 0;
+  color: var(--swft-text-strong, #fff);
 }
 
 .hp-pricing-price {
-  font-size: 1.5rem;
+  font-size: var(--swft-h4, 1.5rem);
   font-weight: 600;
   color: var(--pp-accent);
   margin: 0;
 }
 
 .hp-pricing-desc {
-  color: #c4c7c7;
-  font-size: 0.9rem;
-  line-height: 1.55;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-small, 0.9rem);
+  line-height: var(--swft-lh-lead, 1.55);
   margin: 0;
 }
 
 .hp-pricing-platform {
-  font-size: 0.7rem;
+  font-size: var(--swft-text-tiny, 0.75rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--pp-muted);
@@ -233,7 +251,7 @@
 .hp-pricing-ghl-badge {
   display: inline-block;
   align-self: flex-start;
-  background: rgba(201, 198, 197, 0.12);
+  background: rgba(127, 255, 229, 0.12);
   border: 1px solid var(--pp-accent);
   color: var(--pp-accent);
   font-size: 0.65rem;
@@ -256,8 +274,8 @@
   position: relative;
   padding-left: 1.1rem;
   margin-bottom: 0.45rem;
-  color: #c4c7c7;
-  font-size: 0.82rem;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-small, 0.875rem);
   line-height: 1.45;
 }
 
@@ -285,7 +303,7 @@
 }
 
 .hp-pricing-not-included span {
-  color: #888;
+  color: var(--pp-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-size: 0.65rem;
@@ -300,16 +318,17 @@
 
 .hp-pricing-bundle {
   border: 1px solid var(--pp-accent);
-  background: linear-gradient(180deg, rgba(201, 198, 197, 0.06) 0%, var(--pp-card) 40%);
+  background: linear-gradient(180deg, rgba(127, 255, 229, 0.06) 0%, var(--pp-card) 40%);
   padding: 2rem;
   margin-top: 1rem;
   text-align: center;
-  box-shadow: 0 0 32px rgba(201, 198, 197, 0.1);
+  box-shadow: 0 0 32px rgba(127, 255, 229, 0.1);
 }
 
 .hp-pricing-bundle h3 {
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-size: var(--swft-h3, clamp(1.25rem, 3vw, 1.75rem));
   margin: 1rem 0 0.75rem;
+  color: var(--swft-text-strong, #fff);
 }
 
 .hp-pricing-bundle .hp-pricing-desc {
@@ -326,9 +345,10 @@
 }
 
 .hp-pricing-bundle-price {
-  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-size: var(--swft-h3, clamp(1.35rem, 3vw, 1.75rem));
   font-weight: 600;
   margin: 0 0 1.25rem;
+  color: var(--swft-text-strong, #fff);
 }
 
 .hp-pricing-bundle-price-accent {
@@ -378,15 +398,16 @@
 }
 
 .hp-pricing-faq-item h3 {
-  font-size: 1rem;
+  font-size: var(--swft-h6, 1rem);
   font-weight: 600;
   margin: 0 0 0.5rem;
+  color: var(--swft-text-strong, #fff);
 }
 
 .hp-pricing-faq-item p {
-  color: #c4c7c7;
-  font-size: 0.9rem;
-  line-height: 1.55;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-small, 0.9rem);
+  line-height: var(--swft-lh-lead, 1.55);
   margin: 0;
 }
 
@@ -408,9 +429,10 @@
 }
 
 .pricing-book-cta__copy h2 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: var(--swft-h2, clamp(1.5rem, 3vw, 2rem));
   font-weight: 600;
   margin: 0 0 0.75rem;
+  color: var(--swft-text-strong, #fff);
 }
 
 .pricing-book-cta__quote {
@@ -420,10 +442,11 @@
 }
 
 .pricing-book-cta__sub {
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   margin: 0;
-  line-height: 1.55;
+  line-height: var(--swft-lh-lead, 1.55);
   max-width: 40ch;
+  font-size: var(--swft-text-body, 1rem);
 }
 
 .pricing-book-cta__actions {
