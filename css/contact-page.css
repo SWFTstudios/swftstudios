@@ -87,7 +87,7 @@
 .contact-quote {
   border-left: 3px solid var(--ps-accent, #7fffe5);
   padding: 1rem 0 1rem 1.25rem;
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   font-size: 0.95rem;
   line-height: 1.55;
   font-style: italic;
@@ -115,7 +115,7 @@
   display: block;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   margin-bottom: 0.4rem;
 }
 
@@ -167,7 +167,7 @@
   margin-top: 1rem;
   text-align: center;
   font-size: 0.85rem;
-  color: #a8a8a8;
+  color: var(--swft-muted, #a8a8a8);
 }
 
 .contact-book-alt a {
@@ -228,7 +228,7 @@
 
 .contact-step p {
   font-size: 0.85rem;
-  color: #a8a8a8;
+  color: var(--swft-muted, #a8a8a8);
   line-height: 1.5;
   margin: 0;
 }

@@ -84,7 +84,7 @@
 
 .cs-card-details {
   font-size: 0.85rem;
-  color: #a8a8a8;
+  color: var(--swft-muted, #a8a8a8);
   line-height: 1.5;
   margin: 0;
   display: -webkit-box;
@@ -118,7 +118,7 @@
 .cs-empty,
 .cs-error {
   text-align: center;
-  color: #a8a8a8;
+  color: var(--swft-muted, #a8a8a8);
   padding: 3rem 1rem;
   grid-column: 1 / -1;
 }

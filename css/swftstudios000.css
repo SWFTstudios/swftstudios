@@ -1,8 +1,8 @@
-@import url("swft-fonts.css");
+@import url("swft-tokens.css");
 
 :root {
   --black: #010101;
-  --white: white;
+  --white: #ffffff;
   --green: #7fffe5;
   --charcoal: #0c0c0c;
   --glass_edge: #ffffff80;
@@ -137,60 +137,66 @@
 }
 
 body {
-  background-color: var(--black);
-  color: var(--white);
-  font-family: Inter Display, sans-serif;
-  font-size: 1rem;
-  line-height: 1.3;
+  background-color: var(--swft-bg, var(--black));
+  color: var(--swft-text, var(--white));
+  font-family: var(--swft-font, Inter Display, sans-serif);
+  font-size: var(--swft-text-body, 1rem);
+  line-height: var(--swft-lh-body, 1.5);
 }
 
 h1 {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 4rem;
+  font-size: var(--swft-h1);
   font-weight: 700;
-  line-height: 1;
+  line-height: var(--swft-lh-tight, 1.05);
+  color: var(--swft-text-strong, #fff);
 }
 
 h2 {
   width: auto;
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 3rem;
+  font-size: var(--swft-h2);
   font-weight: 500;
-  line-height: 1.2;
+  line-height: var(--swft-lh-heading, 1.1);
+  color: var(--swft-text-strong, #fff);
 }
 
 h3 {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 2rem;
+  font-size: var(--swft-h3);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--swft-lh-heading, 1.1);
+  color: var(--swft-text-strong, #fff);
 }
 
 h4 {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 1.5rem;
+  font-size: var(--swft-h4);
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.3;
+  color: var(--swft-text-strong, #fff);
 }
 
 h5 {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 1.25rem;
+  font-size: var(--swft-h5);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.4;
+  color: var(--swft-text-strong, #fff);
 }
 
 h6 {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: var(--swft-h6);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.4;
+  color: var(--swft-text-strong, #fff);
 }
 
 p {
@@ -656,9 +662,9 @@ figcaption {
 }
 
 .heading-style-h3 {
-  font-size: 2rem;
+  font-size: var(--swft-h3);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--swft-lh-heading, 1.1);
 }
 
 .text-rich-text h1, .text-rich-text h2, .text-rich-text h3, .text-rich-text h4 {
@@ -696,9 +702,9 @@ figcaption {
 }
 
 .heading-style-h1 {
-  font-size: 4rem;
+  font-size: var(--swft-h1);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: var(--swft-lh-heading, 1.1);
 }
 
 .padding-global {
@@ -729,7 +735,6 @@ figcaption {
 }
 
 .text-weight-medium {
-  font-size: 2.9rem;
   font-weight: 500;
 }
 
@@ -751,7 +756,7 @@ figcaption {
 }
 
 .text-size-tiny {
-  font-size: .75rem;
+  font-size: var(--swft-text-tiny);
 }
 
 .max-width-xxlarge {
@@ -806,7 +811,7 @@ figcaption {
 }
 
 .text-size-regular {
-  font-size: 1rem;
+  font-size: var(--swft-text-body);
 }
 
 .text-weight-xbold {
@@ -861,7 +866,7 @@ figcaption {
 
 .text-size-small {
   letter-spacing: -.005em;
-  font-size: .9rem;
+  font-size: var(--swft-text-small);
 }
 
 .text-size-small.text-color-green {
@@ -873,7 +878,7 @@ figcaption {
 }
 
 .heading-style-h4 {
-  font-size: 1.5rem;
+  font-size: var(--swft-h4);
   font-weight: 700;
   line-height: 1.4;
 }
@@ -928,7 +933,7 @@ figcaption {
 }
 
 .heading-style-h6 {
-  font-size: 1rem;
+  font-size: var(--swft-h6);
   font-weight: 700;
   line-height: 1.5;
 }
@@ -959,7 +964,7 @@ figcaption {
 }
 
 .text-size-large {
-  font-size: 1.5rem;
+  font-size: var(--swft-h4);
 }
 
 .fs-styleguide_header {
@@ -967,9 +972,9 @@ figcaption {
 }
 
 .heading-style-h2 {
-  font-size: 3rem;
+  font-size: var(--swft-h2);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--swft-lh-heading, 1.1);
 }
 
 .fs-styleguide_label {
@@ -1000,9 +1005,9 @@ figcaption {
 }
 
 .heading-style-h5 {
-  font-size: 1.25rem;
+  font-size: var(--swft-h5);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .container-large {
@@ -1145,7 +1150,7 @@ figcaption {
 }
 
 .text-size-medium {
-  font-size: 1.25rem;
+  font-size: var(--swft-h5);
 }
 
 .fs-styleguide_section {
@@ -8176,27 +8181,27 @@ figcaption {
 
 @media screen and (max-width: 767px) {
   h1 {
-    font-size: 2.5rem;
+    font-size: var(--swft-h1);
   }
 
   h2 {
-    font-size: 2rem;
+    font-size: var(--swft-h2);
   }
 
   h3 {
-    font-size: 1.5rem;
+    font-size: var(--swft-h3);
   }
 
   h4 {
-    font-size: 1.25rem;
+    font-size: var(--swft-h4);
   }
 
   h5 {
-    font-size: 1rem;
+    font-size: var(--swft-h5);
   }
 
   h6 {
-    font-size: .875rem;
+    font-size: var(--swft-h6);
   }
 
   .padding-xlarge {
@@ -8332,11 +8337,11 @@ figcaption {
   }
 
   .heading-style-h3 {
-    font-size: 1.5rem;
+    font-size: var(--swft-h3);
   }
 
   .heading-style-h1 {
-    font-size: 2.5rem;
+    font-size: var(--swft-h1);
   }
 
   .padding-global {
@@ -8363,7 +8368,7 @@ figcaption {
   }
 
   .heading-style-h4 {
-    font-size: 1rem;
+    font-size: var(--swft-h4);
   }
 
   .text-style-nowrap {
@@ -8371,7 +8376,7 @@ figcaption {
   }
 
   .heading-style-h6 {
-    font-size: .75rem;
+    font-size: var(--swft-h6);
   }
 
   .padding-section-large {
@@ -8380,15 +8385,19 @@ figcaption {
   }
 
   .text-size-large {
-    font-size: 1.25rem;
+    font-size: var(--swft-h4);
   }
 
   .heading-style-h2 {
-    font-size: 2rem;
+    font-size: var(--swft-h2);
   }
 
-  .fs-styleguide_version, .heading-style-h5 {
+  .fs-styleguide_version {
     font-size: .875rem;
+  }
+
+  .heading-style-h5 {
+    font-size: var(--swft-h5);
   }
 
   .button.is-course {

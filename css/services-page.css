@@ -1,13 +1,15 @@
 /* SWFT Services page */
 .services-page {
-  --svc-bg: #010101;
-  --svc-text: #e5e2e1;
-  --svc-muted: #a8a8a8;
-  --svc-accent: #c9c6c5;
-  --svc-border: rgba(255, 255, 255, 0.1);
-  --svc-card: #0a0a0a;
+  --svc-bg: var(--swft-bg, #010101);
+  --svc-text: var(--swft-text, #e5e2e1);
+  --svc-muted: var(--swft-muted, #a8a8a8);
+  --svc-accent: var(--swft-accent, #7fffe5);
+  --svc-border: var(--swft-border, rgba(255, 255, 255, 0.1));
+  --svc-card: var(--swft-card, #0a0a0a);
   background: var(--svc-bg);
   color: var(--svc-text);
+  font-size: var(--swft-text-body, 1rem);
+  line-height: var(--swft-lh-body, 1.5);
 }
 
 .services-page main {
@@ -28,26 +30,26 @@
   color: var(--svc-accent);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.75rem;
+  font-size: var(--swft-text-tiny, 0.75rem);
   margin-bottom: 0.75rem;
 }
 
 .services-hero-title {
-  font-size: clamp(1.85rem, 4vw, 2.75rem);
-  line-height: 1.1;
+  font-size: var(--swft-h1, clamp(2.25rem, 5vw, 3.5rem));
+  line-height: var(--swft-lh-heading, 1.1);
   letter-spacing: -0.02em;
   max-width: 22ch;
   margin: 0 auto 0.75rem;
-  color: #fff;
+  color: var(--swft-text-strong, #fff);
   font-weight: 600;
 }
 
 .services-hero-lead {
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   margin: 0 auto;
   max-width: 48ch;
-  font-size: 1.05rem;
-  line-height: 1.55;
+  font-size: var(--swft-text-lead, 1.05rem);
+  line-height: var(--swft-lh-lead, 1.55);
 }
 
 .services-grid {
@@ -77,23 +79,23 @@
 }
 
 .services-card-num {
-  font-size: 0.7rem;
+  font-size: var(--swft-text-tiny, 0.75rem);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--svc-muted);
 }
 
 .services-card h2 {
-  font-size: 1.35rem;
+  font-size: var(--swft-h4, 1.35rem);
   font-weight: 600;
   margin: 0;
-  color: #fff;
+  color: var(--swft-text-strong, #fff);
 }
 
 .services-card-desc {
-  color: #c4c7c7;
-  font-size: 0.9rem;
-  line-height: 1.55;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-small, 0.9rem);
+  line-height: var(--swft-lh-lead, 1.55);
   margin: 0;
 }
 
@@ -108,8 +110,8 @@
   position: relative;
   padding-left: 1.1rem;
   margin-bottom: 0.45rem;
-  color: #c4c7c7;
-  font-size: 0.82rem;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-small, 0.875rem);
   line-height: 1.45;
 }
 
@@ -131,21 +133,22 @@
   margin-top: 2.5rem;
   padding: 2rem;
   border: 1px solid var(--svc-border);
-  background: linear-gradient(180deg, rgba(201, 198, 197, 0.06) 0%, var(--svc-card) 40%);
+  background: linear-gradient(180deg, rgba(127, 255, 229, 0.06) 0%, var(--svc-card) 40%);
   text-align: center;
 }
 
 .services-tools-note h2 {
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-size: var(--swft-h3, clamp(1.25rem, 3vw, 1.75rem));
   margin: 0 0 0.75rem;
-  color: #fff;
+  color: var(--swft-text-strong, #fff);
 }
 
 .services-tools-note p {
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   max-width: 52ch;
   margin: 0 auto 1.25rem;
-  line-height: 1.55;
+  line-height: var(--swft-lh-lead, 1.55);
+  font-size: var(--swft-text-body, 1rem);
 }
 
 .services-cta-row {
@@ -164,14 +167,15 @@
 }
 
 .services-book h2 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: var(--swft-h2, clamp(1.5rem, 3vw, 2rem));
   margin: 0 0 0.75rem;
-  color: #fff;
+  color: var(--swft-text-strong, #fff);
 }
 
 .services-book p {
-  color: #c4c7c7;
+  color: var(--swft-lead, #c4c7c7);
   margin: 0 auto 1.25rem;
   max-width: 40ch;
-  line-height: 1.55;
+  line-height: var(--swft-lh-lead, 1.55);
+  font-size: var(--swft-text-body, 1rem);
 }
