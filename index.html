@@ -128,11 +128,23 @@ body{
       list-style: none;
       padding: 0;
       margin: 0 0 1.5rem;
-      color: var(--swft-muted, #a8a8a8);
-      font-size: var(--swft-text-small, 0.875rem);
-      line-height: 1.8;
+      color: var(--swft-text, #f0eeec);
+      font-size: var(--swft-text-body, 1.0625rem);
+      font-weight: 400;
+      line-height: 1.75;
+    }
+    .hp-service-deliverables li {
+      margin-bottom: 0.55rem;
     }
     .hp-service-deliverables li::before { content: "· "; color: var(--swft-accent, #7fffe5); }
+    #homepage-problems .hp-service-deliverables {
+      font-size: var(--swft-text-lead, 1.125rem);
+      line-height: 1.7;
+      color: var(--swft-text, #f0eeec);
+    }
+    #homepage-problems .hp-service-deliverables li {
+      margin-bottom: 0.75rem;
+    }
     .hp-proven-grid {
       display: grid;
       grid-template-columns: 1fr;

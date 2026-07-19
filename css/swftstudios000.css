@@ -202,6 +202,9 @@ h6 {
 p {
   letter-spacing: -.019em;
   margin-bottom: 0;
+  font-size: var(--swft-text-body);
+  line-height: var(--swft-lh-body);
+  color: var(--swft-text);
 }
 
 a {

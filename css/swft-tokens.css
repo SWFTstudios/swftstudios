@@ -11,10 +11,10 @@
 
   /* Semantic surfaces & text */
   --swft-bg: #010101;
-  --swft-text: #e5e2e1;
+  --swft-text: #f0eeec; /* soft off-white — readable, not pure white */
   --swft-text-strong: #ffffff;
-  --swft-muted: #a8a8a8;
-  --swft-lead: #c4c7c7;
+  --swft-muted: #b5b5b5;
+  --swft-lead: #e3e0de;
   --swft-accent: var(--green);
   --swft-border: rgba(255, 255, 255, 0.1);
   --swft-card: #0a0a0a;
@@ -22,11 +22,11 @@
   /* Font */
   --swft-font: "Inter Display", Inter, sans-serif;
 
-  /* Fluid type scale (16px root baseline) */
-  --swft-text-body: 1rem;
-  --swft-text-lead: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --swft-text-small: 0.875rem;
-  --swft-text-tiny: 0.75rem;
+  /* Fluid type scale (16px root baseline; body ~17–19px) */
+  --swft-text-body: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --swft-text-lead: clamp(1.125rem, 1.05rem + 0.4vw, 1.25rem);
+  --swft-text-small: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --swft-text-tiny: 0.8125rem;
   --swft-h1: clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem);
   --swft-h2: clamp(1.75rem, 1.35rem + 1.8vw, 2.75rem);
   --swft-h3: clamp(1.35rem, 1.15rem + 0.9vw, 2rem);
@@ -35,10 +35,22 @@
   --swft-h6: 1rem;
 
   /* Line heights */
-  --swft-lh-body: 1.5;
-  --swft-lh-lead: 1.55;
+  --swft-lh-body: 1.6;
+  --swft-lh-lead: 1.65;
   --swft-lh-heading: 1.1;
   --swft-lh-tight: 1.05;
+}
+
+/* Default lists inherit readable body type */
+ul,
+ol {
+  font-size: var(--swft-text-body);
+  line-height: var(--swft-lh-body);
+  color: var(--swft-text);
+}
+
+li {
+  color: inherit;
 }
 
 html {
