@@ -240,29 +240,31 @@ async function createStripeCheckout(
 /* Where lead notifications are emailed. Override with the FORMSUBMIT_EMAIL var. */
 const NOTIFY_EMAIL_DEFAULT = "hello@swftstudios.com";
 
+type NotifyEmailData = {
+  subject: string;
+  name: string;
+  email: string;
+  fields: Record<string, unknown>;
+  /** When set, FormSubmit sends this message to the visitor's email address. */
+  autoresponse?: string;
+};
+
 /**
- * Send the team a notification email and the visitor a confirmation
- * (autoresponse) via FormSubmit's AJAX endpoint. Best-effort.
+ * Send the team a notification email (and optional visitor autoresponse)
+ * via FormSubmit's AJAX endpoint. Best-effort — never blocks the API response.
  * Note: FormSubmit requires a one-time activation of each recipient address.
  */
-async function sendFormSubmitEmail(
-  env: Env,
-  data: { email: string; name: string; fields: Record<string, unknown> }
-): Promise<boolean> {
+async function notifyTeamByEmail(env: Env, data: NotifyEmailData): Promise<boolean> {
   const to = env.FORMSUBMIT_EMAIL || NOTIFY_EMAIL_DEFAULT;
-  const autoresponse =
-    "Thanks for your website request — we've got it! Our team will review your " +
-    "build plan and reach out within 48 hours with your next steps to get your site " +
-    "live in 7 days or less. If it's urgent, email us anytime at hello@swftstudios.com. — SWFT Studios";
   const payload: Record<string, unknown> = {
-    _subject: "New SWFT Build Plan — Instagram → Online Business",
+    _subject: data.subject,
     _template: "table",
     _captcha: "false",
-    _autoresponse: autoresponse,
     name: data.name,
-    email: data.email, // FormSubmit sends the autoresponse to this address
+    email: data.email,
     ...data.fields,
   };
+  if (data.autoresponse) payload._autoresponse = data.autoresponse;
   try {
     const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
       method: "POST",
@@ -392,9 +394,14 @@ export default {
       //    (48-hour autoresponse). Runs in the background so it never blocks
       //    the response / Stripe redirect.
       ctx.waitUntil(
-        sendFormSubmitEmail(env, {
+        notifyTeamByEmail(env, {
+          subject: "New SWFT Build Plan — Instagram → Online Business",
           email,
           name: str(body.name, 200),
+          autoresponse:
+            "Thanks for your website request — we've got it! Our team will review your " +
+            "build plan and reach out within 48 hours with your next steps to get your site " +
+            "live in 7 days or less. If it's urgent, email us anytime at hello@swftstudios.com. — SWFT Studios",
           fields: {
             Instagram: str(body.instagram, 120),
             Phone: str(body.phone, 60),
@@ -535,6 +542,30 @@ export default {
         });
       }
 
+      ctx.waitUntil(
+        notifyTeamByEmail(env, {
+          subject: "New SWFT Growth Audit Request",
+          name: firstName,
+          email,
+          fields: {
+            "Business Name": businessName,
+            "Website or Social": website,
+            "Business Category": businessCategory,
+            "Biggest Challenge": challenge,
+            "Desired Outcome": desiredOutcome,
+            Phone: str(body.phone, 40),
+            Instagram: str(body.instagram, 300),
+            "Monthly Budget": str(body.budget, 80),
+            Timeline: str(body.timeline, 200),
+            "Additional Context": str(body.details, 4000),
+            "UTM Source": str(body.utmSource, 120),
+            "UTM Medium": str(body.utmMedium, 120),
+            "UTM Campaign": str(body.utmCampaign, 120),
+            "Source Page": str(body.sourcePage, 300),
+          },
+        })
+      );
+
       return new Response(JSON.stringify({ ok: true, stored }), {
         headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
       });
@@ -607,6 +638,21 @@ export default {
         "Submitted At": new Date().toISOString(),
       };
       const stored = await writeToAirtable(env, contactTable, fields);
+      ctx.waitUntil(
+        notifyTeamByEmail(env, {
+          subject: "New SWFT Contact Inquiry",
+          name,
+          email,
+          fields: {
+            "Business Type": str(body.businessType || body.serviceNeeded, 200),
+            "Primary Goal": str(body.primaryGoal || body.desiredOutcome || body.challenge, 4000),
+            Timeline: str(body.timeline, 200),
+            Budget: str(body.budget, 200),
+            Details: detailsParts.join("\n"),
+            "Source Page": str(body.sourcePage, 300) || "contact",
+          },
+        })
+      );
       return new Response(JSON.stringify({ ok: true, stored }), {
         headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
       });

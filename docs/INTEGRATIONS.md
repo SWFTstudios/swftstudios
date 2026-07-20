@@ -1,14 +1,38 @@
-# SWFT — Booking Flow Integrations (Airtable + Stripe)
+# SWFT — Booking Flow Integrations (Airtable + Email)
 
 **Submissions go straight to Airtable** — no more FormSubmit (their service was
-returning 521 errors). Both forms post to the Worker, which writes the record to
+returning 521 errors). All lead forms post to the Worker, which writes the record to
 your Airtable base so you can see every lead in a grid and start the build.
+
+The Worker also sends a **best-effort team notification email** to
+`hello@swftstudios.com` (via FormSubmit AJAX) for every form submission. If FormSubmit
+is unreliable, use an **Airtable automation** as backup: *When record created → Send
+email to hello@swftstudios.com*.
 
 | Form | Worker endpoint | Airtable table |
 |---|---|---|
 | `growth-audit.html` (Free Growth Audit) | `POST /api/growth-audit` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) |
 | `contact.html` (Project inquiry) | `POST /api/contact` | "Discovery Calls" |
+| `resources.html` (Start a project) | `POST /api/contact` | "Discovery Calls" |
 | `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` | "Website Build Requests" |
+
+### Team email notifications
+
+All four endpoints call `notifyTeamByEmail()` in the background (`ctx.waitUntil`):
+
+| Endpoint | Email subject |
+|---|---|
+| `/api/growth-audit` | New SWFT Growth Audit Request |
+| `/api/contact` | New SWFT Contact Inquiry |
+| `/api/build-request` | New SWFT Build Plan — Instagram → Online Business (+ visitor autoresponse) |
+
+Recipient defaults to `hello@swftstudios.com`. Override with Worker var `FORMSUBMIT_EMAIL`.
+
+**FormSubmit activation:** The first time you use a recipient address, FormSubmit sends
+an activation link — click it once so notifications are delivered.
+
+**More reliable fallback:** In Airtable, add an automation on each table:
+*When record created → Send email* to `hello@swftstudios.com` with key fields.
 
 ### Growth Audit table setup (manual)
 
@@ -52,11 +76,13 @@ page now shows an inline "try again / email us" message instead of bouncing the
 visitor to a third-party error page.
 
 ### Confirmation emails (optional)
-The Worker still makes a best-effort background call to FormSubmit to email a
-confirmation — but since that service is flaky, the **recommended** way to send a
-reliable "we got your request, we'll reply within 48 hours" email is an **Airtable
-automation**: in the base, add *Automation → When record created → Send email* to
-the record's Email field. That sends from Airtable's infrastructure, no extra keys.
+The Worker makes a best-effort background call to FormSubmit to email the **team**
+on every submission. Build-request also sends the visitor an autoresponse.
+
+For a reliable "we got your request, we'll reply within 48 hours" **visitor** email,
+use an **Airtable automation**: in the base, add *Automation → When record created →
+Send email* to the record's Email field. That sends from Airtable's infrastructure,
+no extra keys.
 
 ---
 

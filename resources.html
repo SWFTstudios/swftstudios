@@ -531,21 +531,21 @@ a,
             <div class="contact-content-container">
               <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2f4" style="opacity:0" class="section-title-container">
                 <h2 class="section-title-2">Let us know if you want to talk about your next project!</h2>
-                <div>Fill the form and start a project or, if you prefer to email us instead... <a href="#" class="highlight">hello@swftstudios.com</a>
+                <div>Fill the form and start a project or, if you prefer to email us instead... <a href="mailto:hello@swftstudios.com" class="highlight">hello@swftstudios.com</a>
                 </div>
               </div>
               <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2fb" style="opacity:0" class="contact-form-container">
                 <div class="form-block w-form">
-                  <form id="wf-form-Contact-Form" name="wf-form-Contact-Form" data-name="Contact Form" method="get" class="form" data-wf-page-id="688fd414579ab2c38f5c3ac0" data-wf-element-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2fd">
-                    <div class="field-container"><label for="name" class="field-label">What&#x27;s your name?</label><input class="text-field w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name"></div>
-                    <div class="field-container"><label for="name-2" class="field-label">What&#x27;s your email?</label><input class="text-field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="text" id="name-2"></div>
+                  <form id="wf-form-Contact-Form" name="wf-form-Contact-Form" data-name="Contact Form" method="post" class="form" data-wf-page-id="688fd414579ab2c38f5c3ac0" data-wf-element-id="13bb3164-e0a0-3a1c-540a-76b39dcbb2fd">
+                    <div class="field-container"><label for="name" class="field-label">What&#x27;s your name?</label><input class="text-field w-input" maxlength="256" name="name" data-name="Name" placeholder="" type="text" id="name" required=""></div>
+                    <div class="field-container"><label for="name-2" class="field-label">What&#x27;s your email?</label><input class="text-field w-input" maxlength="256" name="name-2" data-name="Name 2" placeholder="" type="email" id="name-2" required=""></div>
                     <div class="field-container"><label for="name-3" class="field-label">What&#x27;s your budget? (Ex. $2K - $5K)</label><input class="text-field w-input" maxlength="256" name="name-3" data-name="Name 3" placeholder="" type="text" id="name-3"></div>
                     <div class="field-container"><label for="name-4" class="field-label">Describe your project</label><textarea id="Project-description" name="Project-description" maxlength="5000" data-name="field" placeholder="" required="" class="textarea w-input"></textarea></div>
                     <div data-w-id="13bb3164-e0a0-3a1c-540a-76b39dcbb30e" class="magnetic-element">
-                      <a href="contact.html" target="_blank" class="swft-btn is-primary w-inline-block">
+                      <button type="submit" class="swft-btn is-primary w-inline-block">
                         <div class="button_bg"></div>
                         <div class="button_text">Request A Website</div>
-                      </a>
+                      </button>
                     </div>
                   </form>
                   <div class="success-message w-form-done">
@@ -662,5 +662,6 @@ tippy('.nav_link.is-muted', {
 });
 </script>
   <script src="js/swft-nav.js"></script>
+  <script src="js/resources-contact-form.js" defer></script>
 </body>
 </html>
