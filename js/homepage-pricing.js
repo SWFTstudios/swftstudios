@@ -12,8 +12,10 @@
 
       SwftPricing.mountPricing(mount, data, {
         layout: "compact",
-        showHero: true,
-        showFaqLink: true
+        showHero: false,
+        showFaqLink: true,
+        showTrustLine: false,
+        projectOnly: true
       });
 
       function scrollToHashTarget() {
@@ -21,10 +23,12 @@
         var params = new URLSearchParams(window.location.search);
         var service = params.get("service");
         var targetId = null;
-        if (hash === "content-creation" || service === "content") {
-          targetId = "content-creation";
-        } else if (hash === "homepage-pricing" || hash === "website-development" || service === "website") {
-          targetId = "website-development";
+        if (hash === "homepage-pricing" || hash === "pricing" || hash === "project-tiers") {
+          targetId = "homepage-pricing";
+        } else if (hash === "ongoing" || hash === "homepage-ongoing" || service === "content") {
+          targetId = "homepage-ongoing";
+        } else if (hash === "offers" || hash === "homepage-services" || service === "website") {
+          targetId = "homepage-services";
         } else if (hash) {
           targetId = hash;
         }
@@ -39,6 +43,10 @@
       window.addEventListener("hashchange", scrollToHashTarget);
     } catch (err) {
       console.error(err);
+      if (mount) {
+        mount.innerHTML =
+          '<p class="hp-pricing-desc">Pricing is temporarily unavailable. <a href="/growth-audit" class="highlight">Request a Growth Audit</a> for a scoped quote.</p>';
+      }
     }
   }
 

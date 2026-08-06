@@ -22,7 +22,6 @@
     'thyme-and-table',
     'brooklyn-steel',
     'scribble-and-scribe',
-    'core-home',
     'western-hp',
   ]);
 

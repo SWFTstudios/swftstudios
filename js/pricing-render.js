@@ -3,18 +3,6 @@
 
   var CAL_URL = "/growth-audit";
 
-  function formatMoney(n) {
-    return "$" + n.toLocaleString("en-US");
-  }
-
-  function priceLabel(tier, billing) {
-    if (billing === "oneTime") {
-      if (tier.oneTime == null) return null;
-      return "Starting at " + formatMoney(tier.oneTime);
-    }
-    return "Starting at " + formatMoney(tier.monthly) + "/mo";
-  }
-
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, "&amp;")
@@ -49,60 +37,43 @@
     return list;
   }
 
-  function renderNotIncluded(items) {
-    if (!items || !items.length) return "";
-    return (
-      '<p class="hp-pricing-not-included"><span>Not included:</span> ' +
-      escapeHtml(items.join(" · ")) +
-      "</p>"
-    );
-  }
-
-  function tierIncludesForBilling(tier, billing) {
-    if (billing === "oneTime") {
-      return tier.oneTimeIncludes || tier.monthlyIncludes || [];
-    }
-    return tier.monthlyIncludes || tier.oneTimeIncludes || [];
-  }
-
-  function renderTierCard(tier, billing, groupId, layout) {
-    var price = priceLabel(tier, billing);
-    if (price === null) return "";
-
+  function renderTierCard(tier, groupId, layout) {
     var featured = tier.featured
       ? '<span class="hp-pricing-badge">' + escapeHtml(tier.badge || "Featured") + "</span>"
       : "";
-    var ghlBadge = tier.ghl
-      ? '<span class="hp-pricing-ghl-badge">' + escapeHtml(tier.ghlLabel || "Includes GoHighLevel") + "</span>"
-      : "";
-    var platform = tier.platform
-      ? '<p class="hp-pricing-platform">' + escapeHtml(tier.platform) + "</p>"
-      : "";
-    var btnClass = tier.featured ? "button is-course w-inline-block" : "button is-course outlined w-inline-block";
+    var btnClass = tier.featured
+      ? "button is-course w-inline-block"
+      : "button is-course outlined w-inline-block";
     var calUrl = (global.SwftPricingConfig && global.SwftPricingConfig.calUrl) || CAL_URL;
-    var includes = renderIncludesList(tierIncludesForBilling(tier, billing), layout);
-    var notIncluded = layout === "full" ? renderNotIncluded(tier.notIncluded) : "";
+    var priceNote = tier.priceNote
+      ? '<span class="hp-pricing-price-note">' + escapeHtml(tier.priceNote) + "</span>"
+      : "";
+    var scopeDriver = tier.scopeDriver
+      ? '<p class="hp-pricing-scope">' + escapeHtml(tier.scopeDriver) + "</p>"
+      : "";
 
     return (
       '<article class="' +
       tierCardClass(tier, layout) +
       '" data-tier-id="' +
       escapeHtml(tier.id) +
+      '" id="' +
+      escapeHtml(tier.id) +
       '">' +
       featured +
-      ghlBadge +
       "<h3>" +
       escapeHtml(tier.name) +
       "</h3>" +
-      platform +
       '<p class="hp-pricing-price">' +
-      escapeHtml(price) +
+      escapeHtml(tier.priceLabel || "") +
+      " " +
+      priceNote +
       "</p>" +
       '<p class="hp-pricing-desc">' +
-      escapeHtml(tier.description) +
+      escapeHtml(tier.description || "") +
       "</p>" +
-      includes +
-      notIncluded +
+      scopeDriver +
+      renderIncludesList(tier.includes || [], layout) +
       '<a href="' +
       escapeHtml(calUrl) +
       '" class="' +
@@ -112,91 +83,55 @@
       '">' +
       '<div class="button_bg"></div>' +
       '<div class="button_text">' +
-      escapeHtml(tier.cta || "Get Your Free Growth Audit") +
+      escapeHtml(tier.cta || "Get started") +
       "</div></a></article>"
     );
   }
 
-  function renderTierGrid(tiers, billing, groupId, layout) {
+  function renderTierGrid(tiers, groupId, layout) {
     return (
       '<div class="hp-pricing-grid' +
       (layout === "compact" ? " hp-pricing-grid--compact" : "") +
       '">' +
       tiers
         .map(function (tier) {
-          return renderTierCard(tier, billing, groupId, layout);
+          return renderTierCard(tier, groupId, layout);
         })
         .join("") +
       "</div>"
     );
   }
 
-  function renderBundle(bundle, billing, calUrl, layout) {
-    var priceHtml;
-    if (billing === "oneTime") {
-      priceHtml =
-        '<p class="hp-pricing-bundle-price">' +
-        escapeHtml(formatMoney(bundle.setup)) +
-        ' <span class="hp-pricing-bundle-price-note">setup</span></p>';
-    } else {
-      priceHtml =
-        '<p class="hp-pricing-bundle-price">' +
-        escapeHtml(formatMoney(bundle.setup)) +
-        ' setup + <span class="hp-pricing-bundle-price-accent">' +
-        escapeHtml(formatMoney(bundle.monthly)) +
-        " /mo</span></p>";
+  function renderGroup(group, layout, options) {
+    if (!group || !group.tiers || !group.tiers.length) return "";
+    var intro = group.intro
+      ? '<p class="hp-pricing-group-intro">' + escapeHtml(group.intro) + "</p>"
+      : "";
+    var linkNote = "";
+    if (options && options.ongoingLink && group.id === "project-tiers") {
+      linkNote =
+        '<p class="hp-pricing-desc hp-pricing-ongoing-link">Looking for monthly content or ads support? <a href="#ongoing" class="highlight">See ongoing retainers</a>.</p>';
     }
-
     return (
-      '<article class="hp-pricing-bundle hp-pricing-card--featured" id="' +
-      escapeHtml(bundle.id) +
-      '">' +
-      '<span class="hp-pricing-badge">' +
-      escapeHtml(bundle.badge) +
-      "</span>" +
-      "<h3>" +
-      escapeHtml(bundle.name) +
+      '<section class="hp-pricing-group" id="' +
+      escapeHtml(group.id) +
+      '" aria-labelledby="hp-pricing-' +
+      escapeHtml(group.id) +
+      '-heading">' +
+      '<h3 id="hp-pricing-' +
+      escapeHtml(group.id) +
+      '-heading" class="hp-pricing-group-title">' +
+      escapeHtml(group.label) +
       "</h3>" +
-      '<p class="hp-pricing-desc">' +
-      escapeHtml(bundle.description) +
-      "</p>" +
-      priceHtml +
-      renderIncludesList(bundle.includes || [], layout) +
-      '<a href="' +
-      escapeHtml(calUrl) +
-      '" class="button is-course w-inline-block" data-stripe-tier="' +
-      escapeHtml(bundle.id) +
-      '">' +
-      '<div class="button_bg"></div>' +
-      '<div class="button_text">' +
-      escapeHtml(bundle.cta) +
-      "</div></a></article>"
-    );
-  }
-
-  function renderToggle(data, billing) {
-    var bt = data.billingToggle;
-    return (
-      '<div class="hp-billing-toggle" role="group" aria-label="Billing type">' +
-      '<button type="button" class="hp-billing-toggle__btn' +
-      (billing === "monthly" ? " is-active" : "") +
-      '" data-billing="monthly" aria-pressed="' +
-      (billing === "monthly" ? "true" : "false") +
-      '">' +
-      escapeHtml(bt.monthly) +
-      "</button>" +
-      '<button type="button" class="hp-billing-toggle__btn' +
-      (billing === "oneTime" ? " is-active" : "") +
-      '" data-billing="oneTime" aria-pressed="' +
-      (billing === "oneTime" ? "true" : "false") +
-      '">' +
-      escapeHtml(bt.oneTime) +
-      "</button></div>"
+      intro +
+      renderTierGrid(group.tiers, group.id, layout) +
+      linkNote +
+      "</section>"
     );
   }
 
   function renderFaqList(faq) {
-    return faq
+    return (faq || [])
       .map(function (item) {
         return (
           '<article class="hp-pricing-faq-item">' +
@@ -215,7 +150,7 @@
     return JSON.stringify({
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faq.map(function (item) {
+      mainEntity: (faq || []).map(function (item) {
         return {
           "@type": "Question",
           name: item.q,
@@ -226,14 +161,14 @@
   }
 
   function buildPricingHtml(data, options) {
-    var billing = options.billing;
     var layout = options.layout || "full";
     var showHero = options.showHero !== false;
     var showFaqLink = options.showFaqLink === true;
-    var calUrl = data.calUrl || CAL_URL;
+    var showOngoing = options.showOngoing !== false;
+    var projectOnly = options.projectOnly === true;
     var html = "";
 
-    if (showHero) {
+    if (showHero && data.hero) {
       html +=
         '<header class="hp-pricing-hero">' +
         "<h2>" +
@@ -244,57 +179,23 @@
         "</p></header>";
     }
 
-    html += renderToggle(data, billing);
-
-    if (billing === "oneTime" && data.revisionPolicy) {
+    if (data.hero && data.hero.trustLine && options.showTrustLine) {
       html +=
-        '<p class="hp-pricing-note" aria-live="polite">' +
-        escapeHtml(data.revisionPolicy.cardNote) +
-        ". " +
-        escapeHtml(data.revisionPolicy.scopeNote) +
+        '<p class="hp-pricing-trust">' +
+        escapeHtml(data.hero.trustLine) +
         "</p>";
     }
 
-    html +=
-      '<section class="hp-pricing-group" id="website-development" aria-labelledby="hp-pricing-website-heading">' +
-      '<h3 id="hp-pricing-website-heading" class="hp-pricing-group-title">' +
-      escapeHtml(data.websiteDevelopment.label) +
-      "</h3>" +
-      renderTierGrid(
-        data.websiteDevelopment.tiers,
-        billing,
-        data.websiteDevelopment.id,
-        layout
-      ) +
-      "</section>";
+    html += renderGroup(data.projectTiers, layout, {
+      ongoingLink: showOngoing && !projectOnly && layout === "compact"
+    });
 
-    if (billing === "monthly") {
+    if (showOngoing && !projectOnly && data.ongoingTiers) {
+      html += renderGroup(data.ongoingTiers, layout, null);
+    } else if (projectOnly && data.ongoingTiers) {
       html +=
-        '<section class="hp-pricing-group" id="content-creation" aria-labelledby="hp-pricing-content-heading">' +
-        '<h3 id="hp-pricing-content-heading" class="hp-pricing-group-title">' +
-        escapeHtml(data.contentCreation.label) +
-        "</h3>" +
-        renderTierGrid(
-          data.contentCreation.tiers,
-          billing,
-          data.contentCreation.id,
-          layout
-        ) +
-        "</section>";
-    } else if (data.contentCreation.monthlyOnlyNote) {
-      html +=
-        '<section class="hp-pricing-group hp-pricing-group--note" id="content-creation">' +
-        '<h3 class="hp-pricing-group-title">' +
-        escapeHtml(data.contentCreation.label) +
-        "</h3>" +
-        '<p class="hp-pricing-desc">' +
-        escapeHtml(data.contentCreation.monthlyOnlyNote) +
-        ' <a href="' +
-        escapeHtml(calUrl) +
-        '" class="highlight">Get Your Free Growth Audit</a>.</p></section>';
+        '<p class="hp-pricing-desc hp-pricing-ongoing-link">Retainers start at $450/mo. <a href="#homepage-ongoing" class="highlight">See ongoing options</a> or <a href="website-pricing.html#ongoing" class="highlight">full pricing</a>.</p>';
     }
-
-    html += renderBundle(data.bundle, billing, calUrl, layout);
 
     if (showFaqLink) {
       html +=
@@ -307,40 +208,16 @@
     return html;
   }
 
-  function wireToggle(rootEl, data, options, onBillingChange) {
-    var toggle = rootEl.querySelector(".hp-billing-toggle");
-    if (!toggle) return;
-
-    toggle.addEventListener("click", function (e) {
-      var btn = e.target.closest(".hp-billing-toggle__btn");
-      if (!btn) return;
-      var mode = btn.getAttribute("data-billing");
-      if (!mode || mode === options.billing) return;
-      options.billing = mode;
-      onBillingChange(mode);
-    });
-  }
-
   function mountPricing(rootEl, data, options) {
     if (!rootEl || !data) return null;
 
     options = options || {};
-    options.billing = options.billing || data.billingToggle.default || "monthly";
     options.layout = options.layout || "full";
 
-    function repaint() {
-      rootEl.innerHTML = buildPricingHtml(data, options);
-      wireToggle(rootEl, data, options, function (mode) {
-        options.billing = mode;
-        repaint();
-      });
-    }
-
-    repaint();
+    rootEl.innerHTML = buildPricingHtml(data, options);
     return {
-      setBilling: function (mode) {
-        options.billing = mode;
-        repaint();
+      refresh: function () {
+        rootEl.innerHTML = buildPricingHtml(data, options);
       }
     };
   }
@@ -349,7 +226,6 @@
     mountPricing: mountPricing,
     buildPricingHtml: buildPricingHtml,
     renderFaqList: renderFaqList,
-    renderFaqSchema: renderFaqSchema,
-    formatMoney: formatMoney
+    renderFaqSchema: renderFaqSchema
   };
 })(window);

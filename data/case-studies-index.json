@@ -19,7 +19,7 @@
     "image": "images/Roller_Reels_thumbnail.webp",
     "details": "A focused look at positioning and web presence for a reels-forward brand.",
     "branding": true,
-    "website": true,
+    "website": false,
     "film": true,
     "metric": "Portfolio discoverability: 90/100"
   },
@@ -67,7 +67,7 @@
     "image": "images/BLE_SWFT_thumbnail.webp",
     "details": "Entertainment brand storytelling and web experience.",
     "branding": true,
-    "website": true,
+    "website": false,
     "film": true,
     "metric": "Brand energy online: 88/100"
   },
@@ -156,7 +156,7 @@
     "slug": "tal-hydration",
     "href": "case-study/tal-hydration.html",
     "image": "images/tal-hydration-thumbnail.webp",
-    "details": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands — designed to convert at scale.",
+    "details": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands \u2014 designed to convert at scale.",
     "branding": true,
     "website": true,
     "film": false,
@@ -180,7 +180,7 @@
     "slug": "brooklyn-steel",
     "href": "case-study/brooklyn-steel.html",
     "image": "images/brooklyn-steel-thumbnail.webp",
-    "details": "A Brooklyn-inspired café aesthetic meets modern espresso engineering — brand story and Shopify experience for the Talos 20 launch.",
+    "details": "A Brooklyn-inspired caf\u00e9 aesthetic meets modern espresso engineering \u2014 brand story and Shopify experience for the Talos 20 launch.",
     "branding": true,
     "website": true,
     "film": false,
@@ -197,18 +197,6 @@
     "website": true,
     "film": false,
     "metric": "Brand identity online: 87/100"
-  },
-  {
-    "type": "case-study",
-    "name": "Core Home",
-    "slug": "core-home",
-    "href": "case-study/core-home.html",
-    "image": "images/core_home_desktop_thumbnail.jpg",
-    "details": "Web design and development for a home and lifestyle brand focused on quality products and customer experience.",
-    "branding": true,
-    "website": true,
-    "film": false,
-    "metric": "Brand credibility online: 86/100"
   },
   {
     "type": "case-study",

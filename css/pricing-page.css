@@ -169,8 +169,59 @@
 
 @media (min-width: 768px) {
   .hp-pricing-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
+}
+
+@media (min-width: 1100px) {
+  .hp-pricing-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  #ongoing .hp-pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+.hp-pricing-grid--compact {
+  /* inherits responsive columns */
+}
+
+.hp-pricing-group-intro,
+.hp-pricing-trust,
+.hp-pricing-scope,
+.hp-pricing-ongoing-link {
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-small, 0.9rem);
+  line-height: var(--swft-lh-lead, 1.55);
+  margin: 0 0 1.25rem;
+  text-align: center;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hp-pricing-scope {
+  text-align: left;
+  font-size: var(--swft-text-small, 0.85rem);
+  color: var(--pp-muted);
+  margin: 0;
+}
+
+.hp-pricing-price-note {
+  display: block;
+  font-size: var(--swft-text-tiny, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--pp-muted);
+  margin-top: 0.25rem;
+}
+
+.hp-pricing-trust {
+  margin-bottom: 2rem;
+  color: var(--swft-text, #e5e2e1);
 }
 
 .hp-pricing-card {

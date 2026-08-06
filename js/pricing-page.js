@@ -18,7 +18,9 @@
       SwftPricing.mountPricing(mount, data, {
         layout: "full",
         showHero: false,
-        showFaqLink: false
+        showFaqLink: false,
+        showOngoing: true,
+        showTrustLine: true
       });
 
       var faqList = document.getElementById("faq-list");
@@ -34,15 +36,25 @@
       var bookHeadline = document.getElementById("book-cta-headline");
       var bookQuote = document.getElementById("book-cta-quote");
       var bookSub = document.getElementById("book-cta-sub");
+      var bookBtn = document.querySelector(".pricing-book-cta__actions .button_text");
       if (data.bookCta) {
         if (bookHeadline) bookHeadline.textContent = data.bookCta.headline;
         if (bookQuote) bookQuote.textContent = data.bookCta.quote;
         if (bookSub) bookSub.textContent = data.bookCta.sub;
+        if (bookBtn && data.bookCta.button) bookBtn.textContent = data.bookCta.button;
       }
 
       var hash = window.location.hash.replace("#", "");
-      if (hash === "content-creation" || hash === "website-development") {
-        var target = document.getElementById(hash);
+      var scrollIds = {
+        "content-creation": "ongoing",
+        "website-development": "project-tiers",
+        pricing: "pricing",
+        ongoing: "ongoing",
+        "project-tiers": "project-tiers"
+      };
+      var targetId = scrollIds[hash] || hash;
+      if (targetId) {
+        var target = document.getElementById(targetId);
         if (target) {
           requestAnimationFrame(function () {
             target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -53,7 +65,7 @@
       console.error(err);
       if (mount) {
         mount.innerHTML =
-          '<p class="hp-pricing-desc">Pricing is temporarily unavailable. <a href="https://cal.com/swftstudios/swft-meeting" class="highlight">Book a call</a> for a quote.</p>';
+          '<p class="hp-pricing-desc">Pricing is temporarily unavailable. <a href="/growth-audit" class="highlight">Request a Growth Audit</a> for a scoped quote.</p>';
       }
     }
   }
