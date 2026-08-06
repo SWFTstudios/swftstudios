@@ -5,10 +5,10 @@
   <title>Web Design + Content for Growing Businesses | SWFT Studios</title>
   <meta content="SWFT Studios helps service businesses and growing brands in NYC, Jersey City, and North Jersey turn attention into booked customers with websites, photo/video content, and lead systems." name="description">
   <meta content="Web Design + Content for Growing Businesses | SWFT Studios" property="og:title">
-  <meta content="Websites and content that turn attention into booked customers. Free Growth Audit for local businesses." property="og:description">
+  <meta content="Websites and content that turn attention into booked customers. Transparent project pricing from $400 GBP refreshes to full website + content builds." property="og:description">
   <meta content="https://cdn.prod.website-files.com/688e7554265d8089278ca76e/688fe8fd55a360a548808bcb_Screenshot%202025-08-03%20at%206.54.36%E2%80%AFPM.png" property="og:image">
   <meta content="Web Design + Content for Growing Businesses | SWFT Studios" property="twitter:title">
-  <meta content="Websites and content that turn attention into booked customers. Free Growth Audit for local businesses." property="twitter:description">
+  <meta content="Websites and content that turn attention into booked customers. Transparent project pricing from $400 GBP refreshes to full website + content builds." property="twitter:description">
   <meta content="https://cdn.prod.website-files.com/688e7554265d8089278ca76e/688fe8fd55a360a548808bcb_Screenshot%202025-08-03%20at%206.54.36%E2%80%AFPM.png" property="twitter:image">
   <link rel="canonical" href="https://www.swftstudios.com/">
   <meta property="og:type" content="website">
@@ -84,6 +84,30 @@ body{
     }
     @media (min-width: 768px) {
       .hp-services-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1100px) {
+      .hp-services-grid { grid-template-columns: repeat(4, 1fr); }
+      .hp-services-grid--ongoing { grid-template-columns: 1fr 1fr; max-width: 720px; }
+    }
+    .hp-services-intro {
+      color: var(--swft-lead, #c4c7c7);
+      max-width: 42rem;
+      margin: -1.5rem 0 2rem;
+      line-height: var(--swft-lh-lead, 1.55);
+    }
+    .hp-service-price {
+      font-size: var(--swft-h4, 1.35rem);
+      font-weight: 600;
+      color: var(--swft-accent, #7fffe5);
+      margin: 0 0 0.35rem;
+    }
+    .hp-service-price-note {
+      display: block;
+      font-size: var(--swft-text-tiny, 0.75rem);
+      font-weight: 500;
+      color: var(--swft-muted, #a8a8a8);
+      letter-spacing: 0.04em;
+      margin-top: 0.2rem;
     }
     .hp-service-card {
       border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
@@ -255,7 +279,7 @@ body{
         "name": "What is the Free Growth Audit?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A personalized strategic review of your website, offer, and customer journey — not an automated score. You receive three prioritized recommendations by email."
+          "text": "A personalized strategic review of your website, offer, and customer journey, not an automated score. You receive three prioritized recommendations by email."
         }
       },
       {
@@ -272,6 +296,46 @@ body{
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "No. Start with the Growth Audit. An optional discovery call is available after you submit if you want to discuss the business beforehand."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does SWFT deliver?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Website design and development, photo and video content, and lead-capture / follow-up systems, so you are not juggling multiple agencies."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does a website cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Price depends on whether you supply photos and copy or we capture content on-site. Website Only runs $800–$1,500. Website plus a half-day shoot is $2,000–$2,800. Website plus a full-day or multi-location shoot starts at $3,000–$4,500+."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the GBP Content Refresh?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A $400–$600 one-time offer with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile, and set up review generation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you require long-term contracts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Project work is scoped per engagement. Retainers are month-to-month."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How fast can you turn around a site?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simpler builds can turn around in as little as 24–48 hours when content and decisions are ready. Larger sites and shoot-inclusive work take longer."
         }
       }
     ]
@@ -800,12 +864,12 @@ margin: 0rem !important;
                         <h1 class="text-weight-medium">Websites and content that turn attention into booked customers.</h1>
                       </div>
                     </div>
-                    <p class="testimonial-text">SWFT Studios helps service businesses and growing brands build credibility, capture leads, and follow up with potential customers—without juggling multiple agencies.</p>
+                    <p class="testimonial-text">We build the website and capture the photo and video content in person, so local businesses get one clear system instead of juggling separate agencies.</p>
                     <div class="margin-top margin-medium">
                       <div class="button-group is-course">
-                        <a href="/growth-audit" class="button is-course w-inline-block">
+                        <a href="#homepage-pricing" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
-                          <div class="button_text">Get Your Free Growth Audit</div>
+                          <div class="button_text">See Pricing</div>
                         </a>
                         <a href="websites.html" class="button is-course outlined w-inline-block">
                           <div class="button_bg"></div>
@@ -813,7 +877,7 @@ margin: 0rem !important;
                         </a>
                       </div>
                     </div>
-                    <p class="text-size-small text-color-green margin-top margin-small">Receive a personalized review of your website, social presence, and customer journey.</p>
+                    <p class="text-size-small text-color-green margin-top margin-small">Named offers with clear scope. Price scales with content capture, not a flat minimum.</p>
                   </div>
                   <div id="w-node-_9273b8d8-2395-dafb-0ae5-13a6781fdc25-278ca766" class="course_spacer-block"></div>
                 </div>
@@ -833,7 +897,6 @@ margin: 0rem !important;
                         <a href="case-study/roller-reels.html" aria-label="Roller Reels case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w, images/Roller_Reels_thumbnail-p-1600.webp 1600w, images/Roller_Reels_thumbnail-p-2000.webp 2000w, images/Roller_Reels_thumbnail-p-2600.webp 2600w, images/Roller_Reels_thumbnail-p-3200.webp 3200w, images/Roller_Reels_thumbnail.webp 3600w" alt="Roller Reels" loading="lazy" src="images/Roller_Reels_thumbnail.webp" class="project_marquee-img"></a>
                         <a href="case-study/hawthorne-global-ministries.html" aria-label="Hawthorne Global Ministries case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w" alt="Hawthorne Global Ministries" loading="lazy" src="images/Hawthorne_Global_Ministries_thumbnail.webp" class="project_marquee-img"></a>
                         <a href="case-study/alpha-ministries-international.html" aria-label="Alpha Ministries International case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" loading="lazy" src="images/alpha-ministries-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/core-home.html" aria-label="Core Home case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3024px) 100vw, 3024px" srcset="images/core_home_desktop_thumbnail.jpg 500w, images/core_home_desktop_thumbnail.jpg 800w, images/core_home_desktop_thumbnail.jpg 1080w, images/core_home_desktop_thumbnail.jpg 1600w, images/core_home_desktop_thumbnail.jpg 2000w, images/core_home_desktop_thumbnail.jpg 2600w, images/core_home_desktop_thumbnail.jpg 3024w" alt="Core Home" loading="lazy" src="images/core_home_desktop_thumbnail.jpg" class="project_marquee-img"></a>
                         <a href="case-study/western-hp.html" aria-label="Western HP case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="Western HP" loading="lazy" src="images/whp_desktop_screenshot.webp" class="project_marquee-img"></a>
                         <a href="case-study/snooze-lane.html" aria-label="Snooze Lane case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail-p-1080.webp 1080w, images/Snooze-Lane-Desktop-thumbnail-p-1600.webp 1600w, images/Snooze-Lane-Desktop-thumbnail-p-2000.webp 2000w, images/Snooze-Lane-Desktop-thumbnail-p-2600.webp 2600w, images/Snooze-Lane-Desktop-thumbnail-p-3200.webp 3200w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w" alt="Snooze Lane" loading="lazy" src="images/Snooze-Lane-Desktop-thumbnail.webp" class="project_marquee-img"></a>
                         <a href="case-study/hamper.html" aria-label="Hamper case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/hamper_app_website_thumbnail-p-500.webp 500w, images/hamper_app_website_thumbnail-p-800.webp 800w, images/hamper_app_website_thumbnail-p-1080.webp 1080w, images/hamper_app_website_thumbnail-p-1600.webp 1600w, images/hamper_app_website_thumbnail-p-2000.webp 2000w, images/hamper_app_website_thumbnail-p-2600.webp 2600w, images/hamper_app_website_thumbnail-p-3200.webp 3200w, images/hamper_app_website_thumbnail.webp 3600w" alt="Hamper" loading="lazy" src="images/hamper_app_website_thumbnail.webp" class="project_marquee-img"></a>
@@ -892,11 +955,6 @@ margin: 0rem !important;
                           <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
-                      <a href="case-study/core-home.html" aria-label="Core Home case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3024px) 100vw, 3024px" srcset="images/core_home_desktop_thumbnail.jpg 500w, images/core_home_desktop_thumbnail.jpg 800w, images/core_home_desktop_thumbnail.jpg 1080w, images/core_home_desktop_thumbnail.jpg 1600w, images/core_home_desktop_thumbnail.jpg 2000w, images/core_home_desktop_thumbnail.jpg 2600w, images/core_home_desktop_thumbnail.jpg 3024w" alt="Core Home" src="images/core_home_desktop_thumbnail.jpg" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
                       <a href="case-study/western-hp.html" aria-label="Western HP case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
                           <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="Western HP" src="images/whp_desktop_screenshot.webp" loading="lazy" class="photo"></div>
@@ -962,11 +1020,6 @@ margin: 0rem !important;
                           <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
                         </div>
                       </a>
-                      <a href="case-study/core-home.html" aria-label="Core Home case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3024px) 100vw, 3024px" srcset="images/core_home_desktop_thumbnail.jpg 500w, images/core_home_desktop_thumbnail.jpg 800w, images/core_home_desktop_thumbnail.jpg 1080w, images/core_home_desktop_thumbnail.jpg 1600w, images/core_home_desktop_thumbnail.jpg 2000w, images/core_home_desktop_thumbnail.jpg 2600w, images/core_home_desktop_thumbnail.jpg 3024w" alt="Core Home" src="images/core_home_desktop_thumbnail.jpg" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
                       <a href="case-study/western-hp.html" aria-label="Western HP case study" class="marquee-list w-inline-block">
                         <div class="marquee-item">
                           <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="Western HP" src="images/whp_desktop_screenshot.webp" loading="lazy" class="photo"></div>
@@ -1018,67 +1071,129 @@ margin: 0rem !important;
                 </ul>
               </section>
               <section class="hp-section" id="homepage-services" aria-labelledby="hp-services-heading">
-                <div class="hp-section-label">Services</div>
-                <h2 class="hp-section-title" id="hp-services-heading">How SWFT turns attention into customers</h2>
+                <div class="hp-section-label">Offers</div>
+                <h2 class="hp-section-title" id="hp-services-heading">Pick the scope that matches what you need</h2>
+                <p class="hp-services-intro">Price is driven by whether we capture content on-site, site complexity, and shoot duration. Start with the smallest offer that solves the problem.</p>
                 <div class="hp-services-grid">
-                  <article class="hp-service-card">
-                    <img src="images/swft-website-development.png" alt="Website design and development mockup on a laptop screen" class="hp-service-card-image" loading="lazy" width="800" height="450">
-                    <span class="hp-service-card-num">01</span>
+                  <article class="hp-service-card" id="offer-gbp-refresh">
+                    <span class="hp-service-card-num">00</span>
                     <div>
-                      <div class="hp-section-label">Website Design and Development</div>
-                      <h3>Websites built to generate inquiries.</h3>
-                      <p>Conversion-focused websites built to explain your value, establish trust, and generate qualified inquiries.</p>
+                      <div class="hp-section-label">GBP Content Refresh</div>
+                      <p class="hp-service-price">$400–$600<span class="hp-service-price-note">one-time · no new website</span></p>
+                      <h3>Look better on Google, fast.</h3>
+                      <p>On-site photo, short-form video, and Google Business Profile optimization for local businesses that need fresh proof without a rebuild.</p>
                       <ul class="hp-service-deliverables" role="list">
-                        <li>Clear messaging and page structure</li>
-                        <li>Mobile-first design</li>
-                        <li>Lead capture and booking paths</li>
-                        <li>SEO foundations</li>
-                        <li>Launch support</li>
+                        <li>On-site photo shoot</li>
+                        <li>Short-form video content</li>
+                        <li>GBP categories, services, photos, and posts setup</li>
+                        <li>Review-generation setup</li>
                       </ul>
                     </div>
                     <a href="/growth-audit" class="button is-course w-inline-block">
                       <div class="button_bg"></div>
-                      <div class="button_text">See What Is Costing You Customers</div>
+                      <div class="button_text">Start with GBP Refresh</div>
                     </a>
                   </article>
-                  <article class="hp-service-card">
-                    <img src="images/swft-content-creation.png" alt="Professional product photography in a studio lightbox" class="hp-service-card-image" loading="lazy" width="800" height="450">
+                  <article class="hp-service-card" id="offer-website-only">
+                    <span class="hp-service-card-num">01</span>
+                    <div>
+                      <div class="hp-section-label">Website Only</div>
+                      <p class="hp-service-price">$800–$1,500<span class="hp-service-price-note">one-time · you supply content</span></p>
+                      <h3>A site that books customers.</h3>
+                      <p>Built and customized on Webflow or Shopify when you already have usable photos and copy. Right fit for simple brochure and local lead-gen sites.</p>
+                      <ul class="hp-service-deliverables" role="list">
+                        <li>$800–$1,000: 1–5 page brochure site</li>
+                        <li>$1,200–$1,500: more pages, Shopify, booking or lead forms</li>
+                        <li>Mobile-first layout and clear messaging</li>
+                        <li>SEO foundations and launch support</li>
+                      </ul>
+                    </div>
+                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
+                      <div class="button_bg"></div>
+                      <div class="button_text">Start Website Only</div>
+                    </a>
+                  </article>
+                  <article class="hp-service-card" id="offer-website-content">
                     <span class="hp-service-card-num">02</span>
                     <div>
-                      <div class="hp-section-label">Photo and Video Content</div>
-                      <h3>Content that matches your real-world quality.</h3>
-                      <p>Professional content designed for your website, advertisements, social channels, and sales process.</p>
+                      <div class="hp-section-label">Website + Content Capture</div>
+                      <p class="hp-service-price">$2,000–$2,800<span class="hp-service-price-note">one-time · half-day shoot</span></p>
+                      <h3>Site and real content, together.</h3>
+                      <p>Website build plus a 2–4 hour on-location photo and video shoot, edited for the site and Google Business Profile.</p>
                       <ul class="hp-service-deliverables" role="list">
-                        <li>Brand photography</li>
-                        <li>Short-form video</li>
-                        <li>Product and location shoots</li>
-                        <li>Social-ready deliverables</li>
-                        <li>Content for ads and sales</li>
+                        <li>Website build and customization</li>
+                        <li>Half-day on-location shoot</li>
+                        <li>Edited assets for site and GBP</li>
+                        <li>Lead paths wired for inquiries</li>
                       </ul>
                     </div>
                     <a href="/growth-audit" class="button is-course outlined w-inline-block">
                       <div class="button_bg"></div>
-                      <div class="button_text">See What Is Costing You Customers</div>
+                      <div class="button_text">Start Website + Content</div>
                     </a>
                   </article>
-                  <article class="hp-service-card">
-                    <img src="images/swft-website-development.png" alt="Lead capture and follow-up systems concept" class="hp-service-card-image" loading="lazy" width="800" height="450">
+                  <article class="hp-service-card" id="offer-extended-content">
                     <span class="hp-service-card-num">03</span>
                     <div>
-                      <div class="hp-section-label">Lead Systems and Automation</div>
-                      <h3>Follow-up that does not rely on memory.</h3>
-                      <p>Forms, booking flows, email follow-up, analytics, and integrations that help turn attention into conversations.</p>
+                      <div class="hp-section-label">Website + Extended Content</div>
+                      <p class="hp-service-price">$3,000–$4,500+<span class="hp-service-price-note">one-time · full-day shoot</span></p>
+                      <h3>Larger scope, fuller coverage.</h3>
+                      <p>More pages and stakeholder complexity, plus a full-day content shoot across multiple locations or product lines.</p>
                       <ul class="hp-service-deliverables" role="list">
-                        <li>Inquiry and booking forms</li>
-                        <li>Email follow-up sequences</li>
-                        <li>CRM-ready wiring</li>
-                        <li>Analytics and tracking</li>
-                        <li>Integrations that stick</li>
+                        <li>Expanded site architecture</li>
+                        <li>Full-day multi-location or product shoot</li>
+                        <li>Edited photo and video package</li>
+                        <li>Site and GBP content integration</li>
                       </ul>
                     </div>
                     <a href="/growth-audit" class="button is-course outlined w-inline-block">
                       <div class="button_bg"></div>
-                      <div class="button_text">Get an Audit for Your Business</div>
+                      <div class="button_text">Start Extended Project</div>
+                    </a>
+                  </article>
+                </div>
+              </section>
+              <section class="hp-section" id="homepage-ongoing" aria-labelledby="hp-ongoing-heading">
+                <div class="hp-section-label">Ongoing</div>
+                <h2 class="hp-section-title" id="hp-ongoing-heading">Stay current after launch</h2>
+                <p class="hp-services-intro">Month-to-month retainers for businesses that already have a site, or want content and Meta ads managed together.</p>
+                <div class="hp-services-grid hp-services-grid--ongoing">
+                  <article class="hp-service-card" id="offer-content-retainer">
+                    <span class="hp-service-card-num">04</span>
+                    <div>
+                      <div class="hp-section-label">Content + Growth Retainer</div>
+                      <p class="hp-service-price">$450–$800<span class="hp-service-price-note">per month</span></p>
+                      <h3>Keep the visuals fresh.</h3>
+                      <p>Monthly photo and video content, GBP posting, and review management when the site is already live.</p>
+                      <ul class="hp-service-deliverables" role="list">
+                        <li>Monthly photo and/or short-form video</li>
+                        <li>Google Business Profile posting</li>
+                        <li>Review management support</li>
+                        <li>Month-to-month, no long contract</li>
+                      </ul>
+                    </div>
+                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
+                      <div class="button_bg"></div>
+                      <div class="button_text">Start Content Retainer</div>
+                    </a>
+                  </article>
+                  <article class="hp-service-card" id="offer-growth-partner">
+                    <span class="hp-service-card-num">05</span>
+                    <div>
+                      <div class="hp-section-label">Full Growth Partner</div>
+                      <p class="hp-service-price">From $1,200<span class="hp-service-price-note">per month · custom scoped</span></p>
+                      <h3>Content plus ads, managed.</h3>
+                      <p>Content production combined with Meta ads management. Scoped to your market and budget. No published ceiling.</p>
+                      <ul class="hp-service-deliverables" role="list">
+                        <li>Ongoing content production</li>
+                        <li>Meta ads management</li>
+                        <li>GBP and review support as needed</li>
+                        <li>Custom scope and reporting</li>
+                      </ul>
+                    </div>
+                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
+                      <div class="button_bg"></div>
+                      <div class="button_text">Talk About Growth Partner</div>
                     </a>
                   </article>
                 </div>
@@ -1268,7 +1383,7 @@ margin: 0rem !important;
                   <a href="case-study/brooklyn-steel.html" class="hp-proven-card">
                     <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co. website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce · Website</div>
+                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
                       <h3>Brooklyn Steel Co.</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
@@ -1284,7 +1399,7 @@ margin: 0rem !important;
                   <a href="case-study/tal-hydration.html" class="hp-proven-card">
                     <img src="images/tal-hydration-thumbnail.webp" alt="TAL Hydration storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce</div>
+                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
                       <h3>TAL Hydration</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
@@ -1292,7 +1407,7 @@ margin: 0rem !important;
                   <a href="case-study/roller-reels.html" class="hp-proven-card">
                     <img src="images/Roller_Reels_thumbnail.webp" alt="Roller Reels brand" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Brand · Film</div>
+                      <div class="hp-proven-tag">Content &amp; Production</div>
                       <h3>Roller Reels</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
@@ -1300,7 +1415,7 @@ margin: 0rem !important;
                   <a href="case-study/manna-hydration.html" class="hp-proven-card">
                     <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce</div>
+                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
                       <h3>Manna Hydration</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
@@ -1308,7 +1423,7 @@ margin: 0rem !important;
                   <a href="case-study/thyme-and-table.html" class="hp-proven-card">
                     <img src="images/thyme-and-table-thumbnail.webp" alt="Thyme and Table storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-commerce</div>
+                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
                       <h3>Thyme &amp; Table</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
@@ -1316,7 +1431,7 @@ margin: 0rem !important;
                   <a href="case-study/blurred-lines-entertainment.html" class="hp-proven-card">
                     <img src="images/BLE_SWFT_thumbnail.webp" alt="Blurred Lines Entertainment brand and film" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Brand · Film</div>
+                      <div class="hp-proven-tag">Content &amp; Production</div>
                       <h3>Blurred Lines Entertainment</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
@@ -1324,7 +1439,7 @@ margin: 0rem !important;
                   <a href="case-study/built-by-me-ez.html" class="hp-proven-card">
                     <img src="images/built_by_me_ez_thumbnail.webp" alt="Built By Me EZ website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Website</div>
+                      <div class="hp-proven-tag">Custom Website Build</div>
                       <h3>Built By Me EZ</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
@@ -1332,18 +1447,8 @@ margin: 0rem !important;
                   <a href="case-study/hawthorne-global-ministries.html" class="hp-proven-card">
                     <img src="images/Hawthorne_Global_Ministries_thumbnail.webp" alt="Hawthorne Global Ministries website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w">
                     <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Website</div>
+                      <div class="hp-proven-tag">Custom Website Build</div>
                       <h3>Hawthorne Global Ministries</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/core-home.html" class="hp-proven-card">
-                    <div class="hp-proven-thumb">
-                      <img src="images/core_home_desktop_thumbnail.jpg" alt="Core Home website at corehome.com" loading="lazy">
-                    </div>
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Website</div>
-                      <h3>Core Home</h3>
                       <span class="hp-proven-link">View Case Study →</span>
                     </div>
                   </a>
@@ -1391,7 +1496,9 @@ margin: 0rem !important;
       </section>
       <section class="hp-section padding-global" id="homepage-pricing" aria-labelledby="hp-pricing-heading">
         <div class="container-large">
-          <div class="hp-section-label" id="hp-pricing-heading">Investment</div>
+          <div class="hp-section-label">Investment</div>
+          <h2 class="hp-section-title" id="hp-pricing-heading">Pricing that matches the work</h2>
+          <p class="hp-services-intro">Transparent pricing, scoped to what you actually need. No long contracts. Work directly with the person who builds it.</p>
           <div id="hp-pricing-mount"></div>
         </div>
       </section>
@@ -1421,7 +1528,7 @@ margin: 0rem !important;
           <div class="hp-faq" style="max-width:42rem;display:grid;gap:1.25rem;">
             <details>
               <summary>What is the Free Growth Audit?</summary>
-              <p>A personalized strategic review of your website, offer, and customer journey — not an automated score. You receive three prioritized recommendations by email.</p>
+              <p>A personalized strategic review of your website, offer, and customer journey, not an automated score. You receive three prioritized recommendations by email.</p>
             </details>
             <details>
               <summary>Who is SWFT for?</summary>
@@ -1433,7 +1540,23 @@ margin: 0rem !important;
             </details>
             <details>
               <summary>What does SWFT deliver?</summary>
-              <p>Website design and development, photo and video content, and lead-capture / follow-up systems — so you are not juggling multiple agencies.</p>
+              <p>Website design and development, photo and video content, and lead-capture / follow-up systems, so you are not juggling multiple agencies.</p>
+            </details>
+            <details>
+              <summary>How much does a website cost?</summary>
+              <p>Price depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800–$1,500. Website plus a half-day shoot is $2,000–$2,800. Website plus a full-day or multi-location shoot starts at $3,000–$4,500+. See the offers above for what each range includes.</p>
+            </details>
+            <details>
+              <summary>What's the GBP Content Refresh?</summary>
+              <p>A $400–$600 one-time offer with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile (categories, services, photos, posts), and set up review generation. Fastest way to look better locally without a rebuild.</p>
+            </details>
+            <details>
+              <summary>Do you require long-term contracts?</summary>
+              <p>No. Project work is scoped and billed per engagement. Retainers are month-to-month.</p>
+            </details>
+            <details>
+              <summary>How fast can you turn around a site?</summary>
+              <p>Simpler builds can turn around in as little as 24–48 hours when content and decisions are ready. Larger sites, multi-stakeholder projects, and shoot-inclusive work take longer. We set a realistic timeline after intake.</p>
             </details>
           </div>
         </div>

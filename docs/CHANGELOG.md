@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-06 — Offer ladder & pricing overhaul (v2)
+
+### Changed
+- Replaced the old Service Pro / Growth / E-Commerce / Content Starter pricing model with a content-capture-scoped offer ladder (Tiers 0–5) in [`data/pricing.json`](../data/pricing.json).
+- Homepage hero primary CTA is now **See Pricing** (`#homepage-pricing`). Services section is the one-time offer ladder; Ongoing section covers retainers; Investment mounts the same JSON.
+- [`website-pricing.html`](../website-pricing.html), [`services.html`](../services.html), [`js/pricing-render.js`](../js/pricing-render.js), and related CSS updated to the new schema (no monthly/one-time billing toggle).
+- Portfolio labels on [`websites.html`](../websites.html), homepage Proven Results, and case-study pages now distinguish **E-Commerce (Shopify)**, **Custom Website Build**, and **Content & Production**.
+- Roller Reels and Blurred Lines Entertainment moved out of the website gallery into a **Content & Production** section on `websites.html`.
+- Core Home (`corehome.com`) removed from public galleries, marquees, Proven Results, and the case-studies hub index pending operator confirmation that the live flagship site was SWFT-built.
+
+### Added
+- Homepage FAQ items: website cost, GBP Content Refresh, contracts, turnaround speed (plus matching FAQ schema).
+- Pricing FAQ in `data/pricing.json` aligned to the new ladder.
+
+### Security / trust
+- Public copy now pairs every price with concrete scope (content capture vs client-supplied assets) to reduce under/over-selling from cold ad traffic.
+
 ## 2026-08-06 — Vimeo hero + intro loader
 
 ### Changed

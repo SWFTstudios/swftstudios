@@ -1,252 +1,155 @@
 {
   "hero": {
-    "headline": "Clear pricing for websites and content",
-    "sub": "Starting prices for one-time projects and ongoing plans. Final quotes depend on scope \u2014 every package explains who it is for, what you get, and the next step."
-  },
-  "billingToggle": {
-    "default": "monthly",
-    "monthly": "Monthly",
-    "oneTime": "One-Time"
-  },
-  "revisionPolicy": {
-    "freeWindowDays": 30,
-    "freeRevisions": 2,
-    "cardNote": "30 days post-launch \u00b7 2 free revisions included",
-    "scopeNote": "Final quote after intake."
+    "headline": "Transparent pricing, scoped to what you need",
+    "sub": "Price scales with whether we capture content on-site, how complex the site is, and how long the shoot runs. No flat minimum that overcharges simple jobs or undersells bigger ones.",
+    "trustLine": "Transparent pricing, scoped to what you actually need. No long contracts. Work directly with the person who builds it."
   },
   "calUrl": "/growth-audit",
-  "websiteDevelopment": {
-    "id": "website-development",
-    "label": "Website Development",
+  "projectTiers": {
+    "id": "project-tiers",
+    "label": "One-time projects",
+    "intro": "Start with the smallest offer that solves the problem. Content capture is the main lever that moves price up.",
     "tiers": [
       {
-        "id": "service-pro",
-        "name": "Service Pro",
-        "platform": "Webflow",
-        "monthly": 200,
-        "oneTime": 1500,
+        "id": "gbp-refresh",
+        "name": "GBP Content Refresh",
+        "priceLabel": "$400–$600",
+        "priceNote": "one-time",
         "featured": false,
-        "ghl": false,
-        "description": "Perfect for local service providers needing a professional ongoing presence.",
-        "cta": "Get Your Free Growth Audit",
-        "oneTimeIncludes": [
-          "Strategy + wireframing session",
-          "Up to 5 pages in your Webflow account",
-          "Mobile-first, conversion-focused design",
-          "Basic SEO setup (titles, meta, sitemap)",
-          "Lead capture forms wired to email",
-          "Launch support + handoff training",
-          "30 days post-launch \u00b7 2 free revisions"
+        "description": "No new website. On-site photo, short-form video, and a cleaned-up Google Business Profile so locals see quality now.",
+        "scopeDriver": "Entry offer when you need fresh visuals and GBP setup without rebuilding the site.",
+        "includes": [
+          "On-site photo shoot",
+          "Short-form video content",
+          "Google Business Profile optimization (categories, services, photos, posts)",
+          "Review-generation setup"
         ],
-        "monthlyIncludes": [
-          "2 queued site updates per month (~2\u20133 day turnaround)",
-          "Form uptime + submission monitoring",
-          "Quarterly SEO health check",
-          "CMS support in your Webflow account",
-          "Direct line to your builder"
-        ],
-        "notIncluded": [
-          "GoHighLevel automations (available on Growth tier)",
-          "Custom logo or brand identity design"
-        ],
-        "timeline": "Typically 2\u20136 weeks depending on scope",
-        "whoFor": "Perfect for local service providers needing a professional ongoing presence."
+        "cta": "Start with GBP Refresh"
       },
       {
-        "id": "growth",
-        "name": "Growth",
-        "platform": "Webflow",
-        "monthly": 400,
-        "oneTime": 3500,
+        "id": "website-only",
+        "name": "Website Only",
+        "priceLabel": "$800–$1,500",
+        "priceNote": "one-time · you supply content",
+        "featured": false,
+        "description": "A conversion-focused site built and customized on Webflow or Shopify when you already have usable photos and copy.",
+        "scopeDriver": "$800–$1,000 for a simple 1–5 page brochure site. $1,200–$1,500 for more pages, Shopify setup, booking or lead forms, or extra revision rounds.",
+        "includes": [
+          "Site built and customized on Webflow or Shopify",
+          "Mobile-first layout and clear messaging",
+          "Lead capture or booking path",
+          "Basic SEO foundations and launch support"
+        ],
+        "cta": "Start Website Only"
+      },
+      {
+        "id": "website-content-half",
+        "name": "Website + Content Capture",
+        "priceLabel": "$2,000–$2,800",
+        "priceNote": "one-time · half-day shoot",
         "featured": true,
-        "badge": "Most Popular",
-        "ghl": true,
-        "ghlLabel": "Includes GoHighLevel",
-        "description": "Advanced features and integrations for scaling businesses and restaurants.",
-        "cta": "Get Your Free Growth Audit",
-        "oneTimeIncludes": [
-          "Everything in Service Pro build",
-          "Conversion-focused page layouts",
-          "Booking + inquiry flow setup",
-          "CRM-ready form wiring",
-          "Automation-ready Webflow build",
-          "30 days post-launch \u00b7 2 free revisions"
+        "badge": "Most common",
+        "description": "Website build plus a 2–4 hour on-location photo and video shoot, edited and placed on the site and Google Business Profile.",
+        "scopeDriver": "Right fit when the business looks better in person than online and needs both a site and real content in one project.",
+        "includes": [
+          "Website build and customization",
+          "Half-day on-location photo and video shoot",
+          "Edited assets for the site and GBP",
+          "Lead paths wired for inquiries"
         ],
-        "monthlyIncludes": [
-          "Everything in Service Pro monthly",
-          "Dedicated GoHighLevel sub-account managed by SWFT",
-          "Missed-call text-back",
-          "Lead capture + CRM pipeline",
-          "Automated Google review requests",
-          "Online booking flow",
-          "Monthly performance snapshot"
-        ],
-        "notIncluded": [
-          "SMS/phone usage beyond fair-use caps (billed at cost or quoted)",
-          "Custom logo or full brand identity"
-        ],
-        "timeline": "Typically 2\u20136 weeks depending on scope",
-        "whoFor": "Advanced features and integrations for scaling businesses and restaurants."
+        "cta": "Start Website + Content"
       },
       {
-        "id": "ecommerce",
-        "name": "E-Commerce",
-        "platform": "Shopify",
-        "monthly": 500,
-        "oneTime": 5000,
+        "id": "website-content-full",
+        "name": "Website + Extended Content",
+        "priceLabel": "$3,000–$4,500+",
+        "priceNote": "one-time · full-day shoot",
         "featured": false,
-        "ghl": true,
-        "ghlLabel": "Includes GoHighLevel",
-        "description": "Full managed online store support and continuous optimization.",
-        "cta": "Get Your Free Growth Audit",
-        "oneTimeIncludes": [
-          "Custom Shopify storefront in your account",
-          "Catalog + collection architecture",
-          "Checkout + cart flow optimization",
-          "Cart recovery foundations",
-          "Mobile-first product presentation",
-          "30 days post-launch \u00b7 2 free revisions"
+        "description": "Larger site with more pages or stakeholder complexity, plus a full-day content shoot across multiple locations or product lines.",
+        "scopeDriver": "For multi-location businesses, ministries, or catalogs that need deeper coverage. Larger church and multi-stakeholder projects land near the top of this range.",
+        "includes": [
+          "Expanded site architecture and pages",
+          "Full-day content shoot (multiple locations or products)",
+          "Edited photo and video package",
+          "Site and GBP content integration"
         ],
-        "monthlyIncludes": [
-          "Queued product + page updates",
-          "Checkout + app monitoring",
-          "Merchandising + conversion tweaks",
-          "GoHighLevel SMS follow-up + review automation",
-          "Monthly store health report",
-          "Direct line to your builder"
-        ],
-        "notIncluded": [
-          "Paid ad spend or media buying",
-          "Product photography (see Content plans)"
-        ],
-        "timeline": "Typically 2\u20136 weeks depending on scope",
-        "whoFor": "Full managed online store support and continuous optimization."
+        "cta": "Start Extended Project"
       }
     ]
   },
-  "contentCreation": {
-    "id": "content-creation",
-    "label": "Content Creation",
-    "monthlyOnlyNote": "Content plans are monthly retainers. Book a discovery call to scope a one-off content day.",
+  "ongoingTiers": {
+    "id": "ongoing",
+    "label": "Ongoing",
+    "intro": "Month-to-month retainers for businesses that already have a site and need to stay visually current, or want content plus ads managed together.",
     "tiers": [
       {
-        "id": "content-starter",
-        "name": "Content Starter",
-        "monthly": 600,
+        "id": "content-growth-retainer",
+        "name": "Content + Growth Retainer",
+        "priceLabel": "$450–$800",
+        "priceNote": "per month",
         "featured": false,
-        "ghl": false,
-        "description": "Monthly essential photos and updates to keep your social feeds fresh.",
-        "cta": "Get Your Free Growth Audit",
-        "monthlyIncludes": [
-          "1 half-day shoot per month (or equivalent photo batch)",
-          "10\u201315 edited photos sized for web + social",
-          "4\u20136 Canva-based social/ad templates customized to your brand",
-          "Caption starter bank",
-          "Assets delivered ready to post"
+        "description": "Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site.",
+        "scopeDriver": "Scope depends on shoot frequency and how many channels we keep current each month.",
+        "includes": [
+          "Monthly photo and/or short-form video",
+          "Google Business Profile posting",
+          "Review management support",
+          "Month-to-month, no long contract"
         ],
-        "notIncluded": [
-          "Custom logo or full brand identity",
-          "Freelance design work \u2014 quoted separately"
-        ],
-        "timeline": "Ongoing monthly; first shoot scheduled after kickoff"
+        "cta": "Start Content Retainer"
       },
       {
-        "id": "content-growth",
-        "name": "Content Growth",
-        "monthly": 1200,
+        "id": "full-growth-partner",
+        "name": "Full Growth Partner",
+        "priceLabel": "From $1,200",
+        "priceNote": "per month · custom scoped",
         "featured": false,
-        "ghl": false,
-        "description": "Comprehensive photo and short-form video system for active brands.",
-        "cta": "Get Your Free Growth Audit",
-        "monthlyIncludes": [
-          "1 full shoot day per month",
-          "6\u20138 short-form reels + 20+ deliverables",
-          "Canva ad creative sets + light motion graphics",
-          "Monthly content calendar",
-          "Pro graphics support when needed"
+        "description": "Content plus Meta ads management combined. Scoped to your offer, market, and ad budget. No published ceiling.",
+        "scopeDriver": "Bespoke. We define deliverables, ad management load, and reporting after a short intake.",
+        "includes": [
+          "Ongoing content production",
+          "Meta ads management",
+          "GBP and review support as needed",
+          "Custom scope and reporting"
         ],
-        "notIncluded": [
-          "Full logo/brand identity projects",
-          "Paid ad management"
-        ],
-        "timeline": "Ongoing monthly; first shoot scheduled after kickoff"
-      },
-      {
-        "id": "content-pro",
-        "name": "Content Pro",
-        "monthly": 2000,
-        "featured": false,
-        "ghl": false,
-        "description": "Full-scale production. Premium cinematic video and extensive photo coverage.",
-        "cta": "Get Your Free Growth Audit",
-        "monthlyIncludes": [
-          "2 shoot days per month",
-          "Quarterly cinematic hero video piece",
-          "Full campaign asset packages",
-          "Priority turnaround",
-          "Freelancer budget for logos, decks, and campaign graphics"
-        ],
-        "notIncluded": [
-          "Unlimited revisions outside agreed scope",
-          "TV/broadcast media buys"
-        ],
-        "timeline": "Ongoing monthly; first shoot scheduled after kickoff"
+        "cta": "Talk About Growth Partner"
       }
-    ]
-  },
-  "bundle": {
-    "id": "website-content-bundle",
-    "badge": "The Ultimate Ecosystem",
-    "name": "Website + Content Starter Package",
-    "description": "The complete entry package for businesses serious about showing up online. A Service Pro website build paired with ongoing Content Starter production so your site and social stay aligned.",
-    "setup": 1200,
-    "monthly": 600,
-    "featured": true,
-    "cta": "Get Your Free Growth Audit",
-    "includes": [
-      "One-time website build (Service Pro scope \u2014 up to 5 pages)",
-      "Content Starter retainer ($600/mo value)",
-      "Optional: upgrade to Growth (+$200/mo) for GoHighLevel automations"
     ]
   },
   "bookCta": {
-    "headline": "Not sure which package fits?",
-    "quote": "Start with a free Growth Audit \u2014 then we match you to the right scope.",
-    "sub": "Get a personalized review of your website, social presence, and customer journey.",
+    "headline": "Not sure which tier fits?",
+    "quote": "Start with a free Growth Audit. We will map your site, content, and GBP to the right offer.",
+    "sub": "Or jump to the pricing tiers above and pick the scope that matches how much content you need us to capture.",
     "button": "Get Your Free Growth Audit"
   },
   "faq": [
     {
-      "q": "Which plans include GoHighLevel?",
-      "a": "GoHighLevel automations are included on Growth ($400/mo) and E-Commerce ($500/mo) website plans only. Service Pro ($200/mo) is website management without GHL. You can upgrade from the bundle or Service Pro anytime."
+      "q": "How much does a website cost?",
+      "a": "It depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800–$1,500. Website plus a half-day shoot is $2,000–$2,800. Website plus a full-day or multi-location shoot starts at $3,000–$4,500+."
     },
     {
-      "q": "What does monthly website management include?",
-      "a": "Service Pro covers site updates, monitoring, and CMS support. Growth and E-Commerce add a managed GoHighLevel sub-account with missed-call text-back, CRM pipeline, review automation, and booking flows."
+      "q": "What's the GBP Content Refresh?",
+      "a": "A $400–$600 one-time offer with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile (categories, services, photos, posts), and set up review generation. Fastest entry point if you need to look better locally without a rebuild."
     },
     {
-      "q": "What's included in content plans?",
-      "a": "All content plans are monthly retainers with shoots, edited photos/video, and Canva-based social assets. Custom logos and full brand identity are not included on Starter \u2014 they're available on Content Pro or as a separate quote."
+      "q": "Do you require long-term contracts?",
+      "a": "No. Project work is scoped and billed per engagement. Retainers are month-to-month."
     },
     {
-      "q": "What's in the bundle?",
-      "a": "The Website + Content Starter Package is $1,200 setup (Service Pro website build) + $600/mo (Content Starter retainer). Add Growth automations for +$200/mo on top of your website plan."
+      "q": "How fast can you turn around a site?",
+      "a": "Simpler builds can turn around in as little as 24–48 hours when content and decisions are ready. Larger sites, multi-stakeholder projects, and shoot-inclusive work take longer. We set a realistic timeline after intake."
     },
     {
-      "q": "Do I need the monthly plan?",
-      "a": "No. One-time website builds hand off with full CMS access in your Webflow or Shopify account. Monthly is for owners who want ongoing updates, monitoring, and support without doing it themselves."
+      "q": "What changes the price within a tier?",
+      "a": "Whether we capture content on-site, site complexity (pages, Shopify vs brochure, forms), shoot duration, and number of locations or product lines. Every quote ties price to those levers."
     },
     {
-      "q": "What happens after launch?",
-      "a": "One-time builds include 2 free revisions within 30 days of launch. After that, contact us for current revision rates or move to a monthly plan."
-    },
-    {
-      "q": "Can I pause monthly service?",
-      "a": "Yes. Monthly plans can be paused or cancelled. We'll confirm terms on your Growth Audit before you commit."
+      "q": "Do you build custom code from scratch?",
+      "a": "Sites are built and customized on Webflow or Shopify, not ground-up custom code frameworks. You get a production site in your account with the structure, design, and integrations scoped for your business."
     },
     {
       "q": "How do I get started?",
-      "a": "Request a free Growth Audit. We'll review your online presence and recommend the right website, content, or lead-system package \u2014 with starting prices based on scope."
+      "a": "Pick a tier that matches your scope, or request a free Growth Audit. We review your online presence and recommend the right project or retainer."
     }
   ]
 }

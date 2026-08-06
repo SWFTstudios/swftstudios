@@ -11,7 +11,7 @@ Primary funnel: Homepage / Services → `/growth-audit` → form → `/growth-au
 | Forms | Worker → Airtable (`AIRTABLE_TOKEN`) |
 | Booking | `https://cal.com/swftstudios/swft-meeting` |
 | Analytics | Added via `js/swft-analytics.js` (optional GA4 ID) |
-| Pricing source | `data/pricing.json` (Method page demoted) |
+| Pricing source | `data/pricing.json` offer ladder v2 (GBP → Website Only → Website+Content → Retainers; Method page demoted) |
 
 ## Release gates
 
