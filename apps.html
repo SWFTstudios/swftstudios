@@ -33,8 +33,22 @@ body{
   }
 </style>
   <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
+  <link href="css/hero-vimeo-loader.css" rel="stylesheet" type="text/css">
+  <style>
+    /* Critical: paint loader before hero iframe */
+    #swft-hero-loader{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.75rem;background:#1e211e;color:#fff;font-family:"Inter Display",Inter,system-ui,sans-serif}
+    body.hero-loading{overflow:hidden}
+  </style>
 </head>
 <body>
+  <div id="swft-hero-loader" class="swft-hero-loader" role="status" aria-live="polite" aria-label="Loading">
+    <div class="swft-hero-loader__brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></div>
+    <div class="swft-hero-loader__progress">
+      <div class="swft-hero-loader__track"><span id="swft-hero-loader-bar" class="swft-hero-loader__bar"></span></div>
+      <div id="swft-hero-loader-pct" class="swft-hero-loader__pct">0%</div>
+    </div>
+  </div>
+
   <div class="page-wrapper">
     <div class="hide w-embed">
       <style>
@@ -291,8 +305,11 @@ a,
           </div>
           <div class="background_edge-gradient"></div>
           <div class="background_image-wrappe">
-            <div class="hero-background-video _3d" data-w-id="753b03b3-20ea-a763-23e0-13dc3447be6e" data-animation-type="spline" data-spline-url="https://prod.spline.design/lBVeuGXupxOHLCtS/scene.splinecode"><canvas></canvas></div>
-            <div data-poster-url="videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg" data-video-urls="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4,videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" class="hero-background-video hide w-background-video w-background-video-atom"><video id="4e980cc5-6bd9-d7d0-53d5-69b601f13828-video" autoplay="" loop="" style="background-image:url(&quot;videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
+            <div class="hero-background-video _3d hero-vimeo" aria-hidden="true">
+              <iframe id="hero-vimeo" src="https://player.vimeo.com/video/1216244886?background=1&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;autopause=0&amp;badge=0&amp;player_id=0&amp;app_id=58479" title="NYC View" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              <img class="hero-vimeo-still" src="images/hero-nyc-view-still.jpg" alt="" hidden>
+            </div>
+<div data-poster-url="videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg" data-video-urls="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4,videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" class="hero-background-video hide w-background-video w-background-video-atom"><video id="4e980cc5-6bd9-d7d0-53d5-69b601f13828-video" autoplay="" loop="" style="background-image:url(&quot;videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
                 <source src="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4" data-wf-ignore="true">
                 <source src="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.webm" data-wf-ignore="true">
               </video><noscript>
@@ -492,7 +509,7 @@ $(document).mousemove(function (event) {
         mouseXpercentage +
         "% " +
         mouseYpercentage +
-        "%, hsla(0, 0.00%, 0.00%, 0.00), var(--black) 46%)"
+        "%, hsla(0, 0.00%, 0.00%, 0.00), rgba(0, 0, 0, 0.45) 70%)"
     );
     $(".background_image").css(
       "transform",
@@ -514,5 +531,7 @@ tippy('.nav_link.is-muted', {
 });
 </script>
   <script src="js/swft-nav.js"></script>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <script src="js/hero-vimeo-loader.js"></script>
 </body>
 </html>

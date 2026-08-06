@@ -1,0 +1,224 @@
+/* ============================================================
+   SWFT Studios — Vimeo hero + intro loader
+   ============================================================ */
+
+:root {
+  --hvl-green: #7fffe5;
+  --hvl-bg: #1e211e;
+}
+
+/* Cover-style Vimeo hero (replaces Spline _3d canvas) */
+.hero-vimeo {
+  overflow: hidden;
+  background-color: #0a0a0a;
+}
+
+.hero-vimeo iframe,
+.hero-vimeo .hero-vimeo-still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+  object-fit: cover;
+}
+
+.hero-vimeo iframe {
+  /* Scale slightly so letterboxing is cropped in cover contexts */
+  transform: scale(1.15);
+  transform-origin: center center;
+}
+
+/* Mobile: crop landscape Vimeo to fill tall hero (no letterbox bars) */
+@media screen and (max-width: 991px) {
+  .hero-vimeo iframe {
+    top: 50%;
+    left: auto;
+    right: -20%;
+    bottom: auto;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-50%) scale(3);
+    transform-origin: right center;
+  }
+
+  .hero-vimeo .hero-vimeo-still {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% center;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .hero-vimeo iframe {
+    /* Taller phones need a bit more crop to clear top/bottom bars */
+    transform: translateY(-50%) scale(3.35);
+    transform-origin: right center;
+  }
+}
+
+.hero-vimeo.is-still iframe {
+  display: none !important;
+}
+
+.hero-vimeo.is-still .hero-vimeo-still {
+  display: block !important;
+}
+
+.hero-vimeo .hero-vimeo-still[hidden] {
+  display: none !important;
+}
+
+/* Intro overlay */
+.swft-hero-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  background: var(--hvl-bg);
+  color: #fff;
+  font-family: "Inter Display", Inter, system-ui, sans-serif;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.swft-hero-loader.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.swft-hero-loader__brand {
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.swft-hero-loader__brand .sk {
+  font-weight: 400;
+}
+
+.swft-hero-loader__brand .hl {
+  color: var(--hvl-green);
+}
+
+.swft-hero-loader__progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  width: min(220px, 55vw);
+}
+
+.swft-hero-loader__track {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.swft-hero-loader__bar {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: var(--hvl-green);
+  border-radius: 999px;
+  transition: width 0.2s linear;
+}
+
+.swft-hero-loader__pct {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.72);
+  font-variant-numeric: tabular-nums;
+}
+
+body.hero-loading {
+  overflow: hidden;
+}
+
+body.hero-ready .swft-hero-loader {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swft-hero-loader {
+    transition: none;
+  }
+
+  .swft-hero-loader__bar {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (min-width: 992px) {
+  .hero-vimeo iframe {
+    transform: none;
+  }
+}
+
+/* Soften mouse spotlight / vignette so hero video stays visible */
+.background_gradient-wrapper {
+  opacity: 0.28;
+}
+
+.background_edge-gradient {
+  opacity: 0.35;
+}
+
+.background_gradient {
+  background-image: radial-gradient(
+    circle farthest-corner at 50% 50%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.55) 78%
+  );
+}
+
+/* Full-height diagonal scrim: top-left → bottom-right for hero copy contrast */
+.background_image-container {
+  isolation: isolate;
+}
+
+.background_image-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    148deg,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.62) 22%,
+    rgba(0, 0, 0, 0.32) 48%,
+    rgba(0, 0, 0, 0.1) 72%,
+    transparent 88%
+  );
+}
+
+@media screen and (max-width: 767px) {
+  .background_image-container::after {
+    background: linear-gradient(
+      160deg,
+      rgba(0, 0, 0, 0.84) 0%,
+      rgba(0, 0, 0, 0.55) 35%,
+      rgba(0, 0, 0, 0.22) 65%,
+      transparent 90%
+    );
+  }
+}
