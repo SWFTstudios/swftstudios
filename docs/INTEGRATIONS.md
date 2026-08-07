@@ -1,14 +1,16 @@
 # SWFT — Booking Flow Integrations (Airtable + Stripe)
 
 **Submissions go straight to Airtable** — no more FormSubmit (their service was
-returning 521 errors). Both forms post to the Worker, which writes the record to
-your Airtable base so you can see every lead in a grid and start the build.
+returning 521 errors). Production is **Cloudflare Pages** (`swftstudios-website`);
+forms post to **Pages Functions** under `functions/api/`, which write to your
+Airtable base and send email via **Resend** when `RESEND_API_KEY` is set.
+(`src/worker.ts` mirrors the same Airtable handlers for local `wrangler` use.)
 
-| Form | Worker endpoint | Airtable table |
-|---|---|---|
-| `growth-audit.html` (Free Growth Audit) | `POST /api/growth-audit` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) |
-| `contact.html` (Project inquiry) | `POST /api/contact` | "Discovery Calls" |
-| `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` | "Website Build Requests" |
+| Form | Pages Function | Airtable table | Email |
+|---|---|---|---|
+| `growth-audit.html` (Free Growth Audit) | `POST /api/growth-audit` → `functions/api/growth-audit.js` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) or Discovery Calls fallback | Team notify → `hello@swftstudios.com` + visitor confirmation |
+| `contact.html` (Project inquiry) | `POST /api/contact` → `functions/api/contact.js` | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation |
+| `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` → `functions/api/build-request.js` | "Website Build Requests" | (Airtable only for now) |
 
 ### Growth Audit table setup (manual)
 
@@ -33,15 +35,16 @@ Create a table named **Growth Audits** in the SWFT Website Leads base with field
 | Status | Single select (default New) |
 | Submitted At | Date/time |
 
-Then set the Worker var:
+Then set env on the **Pages** project (or leave unset to use the Discovery Calls fallback):
 
 ```bash
-npx wrangler secret put AIRTABLE_TOKEN   # if not already set
-# Non-secret table id:
-# wrangler.toml / dashboard var AIRTABLE_TABLE_GROWTH_AUDIT=tblXXXXXXXX
+# Dashboard: Pages → swftstudios-website → Settings → Variables and Secrets
+# AIRTABLE_TOKEN (secret) — already required for /api/contact
+# AIRTABLE_TABLE_GROWTH_AUDIT (plain text) = tblXXXXXXXX  after you create the table
 ```
 
-Recommended Airtable automation: *When record created → Send email* confirming the audit request (see Release 2).
+Recommended Airtable automation: optional — Resend now handles confirmation email
+from the Pages Function (see Resend setup below).
 
 `/api/build-request` also **starts a Stripe Checkout session** for the chosen plan
 and returns its URL, which the page redirects the visitor to (only if a Stripe key
@@ -51,12 +54,25 @@ Both forms are multi-step and require JavaScript to operate; on a submit error t
 page now shows an inline "try again / email us" message instead of bouncing the
 visitor to a third-party error page.
 
-### Confirmation emails (optional)
-The Worker still makes a best-effort background call to FormSubmit to email a
-confirmation — but since that service is flaky, the **recommended** way to send a
-reliable "we got your request, we'll reply within 48 hours" email is an **Airtable
-automation**: in the base, add *Automation → When record created → Send email* to
-the record's Email field. That sends from Airtable's infrastructure, no extra keys.
+### Confirmation emails (Resend)
+
+Growth Audit and contact submissions send:
+
+1. **Team notification** to `hello@swftstudios.com` (override with `NOTIFY_EMAIL`), with `Reply-To` set to the visitor so you can reply in-thread.
+2. **Visitor confirmation** from `SWFT Studios <hello@swftstudios.com>` (override with `RESEND_FROM`).
+
+Shared helper: `functions/_lib/resend.js`. Email is best-effort — Airtable write still succeeds if Resend fails.
+
+**Required secret (you already added this):** `RESEND_API_KEY` on Pages → `swftstudios-website`.
+
+Optional vars:
+
+| Var | Default |
+|---|---|
+| `RESEND_FROM` | `SWFT Studios <hello@swftstudios.com>` |
+| `NOTIFY_EMAIL` | `hello@swftstudios.com` |
+
+Domain `swftstudios.com` must stay **Verified** for sending in the Resend dashboard.
 
 ---
 
@@ -84,36 +100,31 @@ can see the layout — delete it anytime.
 
 ## Setup — the ONE thing to do
 
-To see submissions land in Airtable, set a single secret on the Worker:
-
-```bash
-# Airtable Personal Access Token with data.records:write on the base
-npx wrangler secret put AIRTABLE_TOKEN
-```
+To see submissions land in Airtable, set a single secret on the **Pages** project
+(`swftstudios-website` — already used by `/api/contact`):
 
 1. Create the token at **https://airtable.com/create/tokens** while signed in as
    `elombe@swftstudios.com`.
 2. Scope: **`data.records:write`** (add `data.records:read` too if you like).
 3. Access: the **"SWFT Website Leads"** base.
-4. Copy the token (starts with `pat...`) and paste it when `wrangler secret put`
-   prompts. You can also set it in the Cloudflare dashboard:
-   *Workers → swftstudios → Settings → Variables and Secrets → Add (Secret)*.
+4. In the Cloudflare dashboard:
+   *Pages → swftstudios-website → Settings → Variables and Secrets → Add (Secret)*
+   name `AIRTABLE_TOKEN`.
 
-That's it — every booking + contact submission then appears in your Airtable.
+That's it — Growth Audit, contact, and booking submissions then appear in Airtable.
+(`/api/contact` already returns `stored: true` in production, so this secret is set.)
 
 ### Stripe (optional — only needed to take payment)
-```bash
-npx wrangler secret put STRIPE_SECRET_KEY   # sk_live_... or sk_test_...
-```
+Set `STRIPE_SECRET_KEY` on the same Pages project (secret).
 Without it, the booking flow still saves to Airtable and shows the on-page
 confirmation — it just won't open a checkout page.
 
-> Until `AIRTABLE_TOKEN` is set, the Worker accepts the submission and shows the
-> visitor a success message, but the record isn't saved. Set the token first.
+> Until `AIRTABLE_TOKEN` is set, the Functions accept the submission and show the
+> visitor a success message, but the record isn't saved.
 
 ### Optional overrides (vars, not secrets)
-`STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_MAINTENANCE`, `AIRTABLE_BASE_ID`,
-`AIRTABLE_TABLE`, `AIRTABLE_TABLE_CONTACT`, `FORMSUBMIT_EMAIL`.
+`STRIPE_PRICE_MONTHLY`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE`,
+`AIRTABLE_TABLE_CONTACT`, `AIRTABLE_TABLE_GROWTH_AUDIT`.
 
 ---
 
@@ -127,7 +138,16 @@ confirmation — it just won't open a checkout page.
 
 ## Local dev / deploy
 
+Production deploys from Git → Cloudflare Pages (`swftstudios-website` on `main`).
+Merging/pushing this function to `main` publishes `/api/growth-audit`.
+
 ```bash
-npx wrangler dev      # local
-npx wrangler deploy   # publish
+npx wrangler pages deploy . --project-name=swftstudios-website   # manual Pages publish
+# or: push/merge to main (Git-connected Pages)
 ```
+
+### Failure cases (Growth Audit)
+
+1. **Missing Pages Function** — `POST /api/growth-audit` returns 405 empty body; the form shows "Unable to send right now."
+2. **Missing `AIRTABLE_TOKEN`** — API returns `{ ok: true, stored: false }`; visitor still reaches thank-you, lead is not saved.
+3. **Invalid / oversized JSON** — API returns 400/413 with `{ ok: false, error }`; form shows that error inline.

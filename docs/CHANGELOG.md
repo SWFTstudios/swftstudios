@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-08-07 — Resend lead emails + Growth Audit Pages Function
+
+### Added
+- [`functions/_lib/resend.js`](../functions/_lib/resend.js) — shared Resend send helper
+- Growth Audit + contact Forms send team notify to `hello@swftstudios.com` and visitor confirmation via Resend (`RESEND_API_KEY`)
+- [`functions/api/growth-audit.js`](../functions/api/growth-audit.js) — Pages Function for `POST /api/growth-audit` (was missing; caused form 405)
+
+### Fixed
+- Growth Audit form on production returned “Unable to send right now” because `POST /api/growth-audit` had no Cloudflare Pages Function
+
+### Docs
+- Updated [`docs/INTEGRATIONS.md`](INTEGRATIONS.md) for Pages Functions + Resend
+
+---
+
 ## 2026-08-06 — Offer ladder & pricing overhaul (v2)
 
 ### Changed
@@ -16,6 +31,8 @@
 
 ### Security / trust
 - Public copy now pairs every price with concrete scope (content capture vs client-supplied assets) to reduce under/over-selling from cold ad traffic.
+
+---
 
 ## 2026-08-06 — Vimeo hero + intro loader
 
