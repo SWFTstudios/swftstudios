@@ -268,6 +268,139 @@ body{
       text-align: center;
       color: var(--swft-muted, #a8a8a8);
     }
+    /* Who's this for — horizontal swipe cards */
+    .hp-audience-intro {
+      color: var(--swft-lead, #c4c7c7);
+      max-width: 48rem;
+      margin: -1.5rem 0 1.75rem;
+      line-height: var(--swft-lh-lead, 1.55);
+      font-size: var(--swft-text-body, 1rem);
+    }
+    .hp-audience-track {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 0.25rem 0 1.25rem;
+      margin: 0 -0.25rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--swft-accent, #7fffe5) transparent;
+    }
+    .hp-audience-track:focus-visible {
+      outline: 2px solid var(--swft-accent, #7fffe5);
+      outline-offset: 4px;
+    }
+    .hp-audience-card {
+      position: relative;
+      flex: 0 0 min(78vw, 18.5rem);
+      scroll-snap-align: start;
+      min-height: 24rem;
+      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
+      overflow: hidden;
+      cursor: pointer;
+      background: #0a0a0a;
+      color: #fff;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+    @media (min-width: 768px) {
+      .hp-audience-card { flex-basis: 17.5rem; }
+    }
+    .hp-audience-card:hover,
+    .hp-audience-card:focus-within {
+      border-color: var(--swft-accent, #7fffe5);
+    }
+    .hp-audience-card.is-expanded {
+      border-color: var(--swft-accent, #7fffe5);
+    }
+    .hp-audience-card__media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hp-audience-card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.02);
+      transition: transform 0.45s ease;
+    }
+    .hp-audience-card.is-expanded .hp-audience-card__media img {
+      transform: scale(1.06);
+    }
+    .hp-audience-card__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(1, 1, 1, 0.15) 0%,
+        rgba(1, 1, 1, 0.45) 42%,
+        rgba(1, 1, 1, 0.92) 100%
+      );
+    }
+    .hp-audience-card__body {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 24rem;
+      padding: 1.35rem 1.25rem 1.25rem;
+      gap: 0.75rem;
+    }
+    .hp-audience-card h3 {
+      margin: 0;
+      font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: #fff;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+    }
+    .hp-audience-card__blurb {
+      margin: 0;
+      color: rgba(245, 245, 245, 0.92);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transition: max-height 0.35s ease, opacity 0.25s ease;
+    }
+    .hp-audience-card.is-expanded .hp-audience-card__blurb {
+      max-height: 14rem;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .hp-audience-card__toggle {
+      align-self: flex-start;
+      margin-top: 0.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(1, 1, 1, 0.35);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.55rem 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .hp-audience-card__toggle:hover,
+    .hp-audience-card__toggle:focus-visible {
+      border-color: var(--swft-accent, #7fffe5);
+      color: var(--swft-accent, #7fffe5);
+      outline: none;
+    }
+    .hp-audience-hint {
+      margin: 0.25rem 0 0;
+      color: var(--swft-muted, #a8a8a8);
+      font-size: var(--swft-text-tiny, 0.75rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -287,7 +420,7 @@ body{
         "name": "Who is SWFT for?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Local service businesses, professionals, and growing brands in Jersey City, New York City, and North Jersey who want websites and content that generate inquiries."
+          "text": "Service businesses, e-commerce brands, restaurants and hospitality, B2B and professional services, creators and personal brands, and health, wellness, and beauty companies—especially in Jersey City, New York City, and North Jersey—who want websites and content that generate inquiries."
         }
       },
       {
@@ -1070,133 +1203,85 @@ margin: 0rem !important;
                   <li>Your brand feels inconsistent across your website and social media</li>
                 </ul>
               </section>
-              <section class="hp-section" id="homepage-services" aria-labelledby="hp-services-heading">
-                <div class="hp-section-label">Offers</div>
-                <h2 class="hp-section-title" id="hp-services-heading">Pick the scope that matches what you need</h2>
-                <p class="hp-services-intro">Price is driven by whether we capture content on-site, site complexity, and shoot duration. Start with the smallest offer that solves the problem.</p>
-                <div class="hp-services-grid">
-                  <article class="hp-service-card" id="offer-gbp-refresh">
-                    <span class="hp-service-card-num">00</span>
-                    <div>
-                      <div class="hp-section-label">GBP Content Refresh</div>
-                      <p class="hp-service-price">$400–$600<span class="hp-service-price-note">one-time · no new website</span></p>
-                      <h3>Look better on Google, fast.</h3>
-                      <p>On-site photo, short-form video, and Google Business Profile optimization for local businesses that need fresh proof without a rebuild.</p>
-                      <ul class="hp-service-deliverables" role="list">
-                        <li>On-site photo shoot</li>
-                        <li>Short-form video content</li>
-                        <li>GBP categories, services, photos, and posts setup</li>
-                        <li>Review-generation setup</li>
-                      </ul>
+              <section class="hp-section" id="homepage-audience" aria-labelledby="hp-audience-heading">
+                <div class="hp-section-label">Who&rsquo;s this for</div>
+                <h2 class="hp-section-title" id="hp-audience-heading">Built for businesses that need leads, not just a pretty site</h2>
+                <p class="hp-audience-intro">SWFT Studios helps service businesses, e-commerce brands, restaurants, B2B teams, creators, and health &amp; wellness companies in Jersey City, New York City, and North Jersey. We pair websites with on-brand photo/video content and lead paths so attention turns into booked customers. Swipe the cards to find your industry, then tap Learn more for how we help.</p>
+                <div class="hp-audience-track" role="list" tabindex="0" aria-label="Industries SWFT helps. Swipe horizontally.">
+                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="service-businesses">
+                    <div class="hp-audience-card__media" aria-hidden="true">
+                      <img src="images/brooklyn-steel-thumbnail.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
                     </div>
-                    <a href="/growth-audit" class="button is-course w-inline-block">
-                      <div class="button_bg"></div>
-                      <div class="button_text">Start with GBP Refresh</div>
-                    </a>
+                    <div class="hp-audience-card__body">
+                      <h3>Service businesses</h3>
+                      <div class="hp-audience-card__blurb" aria-hidden="true">
+                        <p>Local service pros often look better in person than online. We clarify what you offer, rebuild trust on the site and Google Business Profile, and wire booking or inquiry paths so searches and referrals convert.</p>
+                      </div>
+                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
+                    </div>
                   </article>
-                  <article class="hp-service-card" id="offer-website-only">
-                    <span class="hp-service-card-num">01</span>
-                    <div>
-                      <div class="hp-section-label">Website Only</div>
-                      <p class="hp-service-price">$800–$1,500<span class="hp-service-price-note">one-time · you supply content</span></p>
-                      <h3>A site that books customers.</h3>
-                      <p>Built and customized on Webflow or Shopify when you already have usable photos and copy. Right fit for simple brochure and local lead-gen sites.</p>
-                      <ul class="hp-service-deliverables" role="list">
-                        <li>$800–$1,000: 1–5 page brochure site</li>
-                        <li>$1,200–$1,500: more pages, Shopify, booking or lead forms</li>
-                        <li>Mobile-first layout and clear messaging</li>
-                        <li>SEO foundations and launch support</li>
-                      </ul>
+                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="ecommerce">
+                    <div class="hp-audience-card__media" aria-hidden="true">
+                      <img src="images/manna-hydration-thumbnail.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
                     </div>
-                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
-                      <div class="button_bg"></div>
-                      <div class="button_text">Start Website Only</div>
-                    </a>
+                    <div class="hp-audience-card__body">
+                      <h3>E-commerce</h3>
+                      <div class="hp-audience-card__blurb" aria-hidden="true">
+                        <p>Product brands need a storefront that matches the quality of what ships. We build and customize Shopify experiences, capture product and lifestyle content, and tighten the path from social click to checkout.</p>
+                      </div>
+                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
+                    </div>
                   </article>
-                  <article class="hp-service-card" id="offer-website-content">
-                    <span class="hp-service-card-num">02</span>
-                    <div>
-                      <div class="hp-section-label">Website + Content Capture</div>
-                      <p class="hp-service-price">$2,000–$2,800<span class="hp-service-price-note">one-time · half-day shoot</span></p>
-                      <h3>Site and real content, together.</h3>
-                      <p>Website build plus a 2–4 hour on-location photo and video shoot, edited for the site and Google Business Profile.</p>
-                      <ul class="hp-service-deliverables" role="list">
-                        <li>Website build and customization</li>
-                        <li>Half-day on-location shoot</li>
-                        <li>Edited assets for site and GBP</li>
-                        <li>Lead paths wired for inquiries</li>
-                      </ul>
+                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="restaurants">
+                    <div class="hp-audience-card__media" aria-hidden="true">
+                      <img src="images/thyme-and-table-thumbnail.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
                     </div>
-                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
-                      <div class="button_bg"></div>
-                      <div class="button_text">Start Website + Content</div>
-                    </a>
+                    <div class="hp-audience-card__body">
+                      <h3>Restaurants &amp; hospitality</h3>
+                      <div class="hp-audience-card__blurb" aria-hidden="true">
+                        <p>Guests decide in seconds from photos, menus, and reviews. We shoot food and atmosphere content, refresh Google Business Profile, and build a site that drives reservations, orders, and repeat visits.</p>
+                      </div>
+                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
+                    </div>
                   </article>
-                  <article class="hp-service-card" id="offer-extended-content">
-                    <span class="hp-service-card-num">03</span>
-                    <div>
-                      <div class="hp-section-label">Website + Extended Content</div>
-                      <p class="hp-service-price">$3,000–$4,500+<span class="hp-service-price-note">one-time · full-day shoot</span></p>
-                      <h3>Larger scope, fuller coverage.</h3>
-                      <p>More pages and stakeholder complexity, plus a full-day content shoot across multiple locations or product lines.</p>
-                      <ul class="hp-service-deliverables" role="list">
-                        <li>Expanded site architecture</li>
-                        <li>Full-day multi-location or product shoot</li>
-                        <li>Edited photo and video package</li>
-                        <li>Site and GBP content integration</li>
-                      </ul>
+                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="b2b">
+                    <div class="hp-audience-card__media" aria-hidden="true">
+                      <img src="images/hamper_app_website_thumbnail.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
                     </div>
-                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
-                      <div class="button_bg"></div>
-                      <div class="button_text">Start Extended Project</div>
-                    </a>
+                    <div class="hp-audience-card__body">
+                      <h3>B2B &amp; professional services</h3>
+                      <div class="hp-audience-card__blurb" aria-hidden="true">
+                        <p>B2B buyers need clear offers, proof, and an easy next step. We structure messaging for decision-makers, present case-ready visuals, and connect forms or booking so inbound interest becomes qualified conversations.</p>
+                      </div>
+                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
+                    </div>
+                  </article>
+                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="creators">
+                    <div class="hp-audience-card__media" aria-hidden="true">
+                      <img src="images/BLE_SWFT_thumbnail.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
+                    </div>
+                    <div class="hp-audience-card__body">
+                      <h3>Creators &amp; personal brands</h3>
+                      <div class="hp-audience-card__blurb" aria-hidden="true">
+                        <p>Audience on social is not the same as a business online. We turn your content and offer into a site that sells products, bookings, or memberships, with a look that feels like your feed—not a generic template.</p>
+                      </div>
+                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
+                    </div>
+                  </article>
+                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="health-wellness">
+                    <div class="hp-audience-card__media" aria-hidden="true">
+                      <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
+                    </div>
+                    <div class="hp-audience-card__body">
+                      <h3>Health, wellness &amp; beauty</h3>
+                      <div class="hp-audience-card__blurb" aria-hidden="true">
+                        <p>Studios and practitioners win on trust and atmosphere. We capture real space and treatment visuals, clarify services and pricing, and set up booking-friendly sites plus local SEO so new clients find you.</p>
+                      </div>
+                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
+                    </div>
                   </article>
                 </div>
-              </section>
-              <section class="hp-section" id="homepage-ongoing" aria-labelledby="hp-ongoing-heading">
-                <div class="hp-section-label">Ongoing</div>
-                <h2 class="hp-section-title" id="hp-ongoing-heading">Stay current after launch</h2>
-                <p class="hp-services-intro">Month-to-month retainers for businesses that already have a site, or want content and Meta ads managed together.</p>
-                <div class="hp-services-grid hp-services-grid--ongoing">
-                  <article class="hp-service-card" id="offer-content-retainer">
-                    <span class="hp-service-card-num">04</span>
-                    <div>
-                      <div class="hp-section-label">Content + Growth Retainer</div>
-                      <p class="hp-service-price">$450–$800<span class="hp-service-price-note">per month</span></p>
-                      <h3>Keep the visuals fresh.</h3>
-                      <p>Monthly photo and video content, GBP posting, and review management when the site is already live.</p>
-                      <ul class="hp-service-deliverables" role="list">
-                        <li>Monthly photo and/or short-form video</li>
-                        <li>Google Business Profile posting</li>
-                        <li>Review management support</li>
-                        <li>Month-to-month, no long contract</li>
-                      </ul>
-                    </div>
-                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
-                      <div class="button_bg"></div>
-                      <div class="button_text">Start Content Retainer</div>
-                    </a>
-                  </article>
-                  <article class="hp-service-card" id="offer-growth-partner">
-                    <span class="hp-service-card-num">05</span>
-                    <div>
-                      <div class="hp-section-label">Full Growth Partner</div>
-                      <p class="hp-service-price">From $1,200<span class="hp-service-price-note">per month · custom scoped</span></p>
-                      <h3>Content plus ads, managed.</h3>
-                      <p>Content production combined with Meta ads management. Scoped to your market and budget. No published ceiling.</p>
-                      <ul class="hp-service-deliverables" role="list">
-                        <li>Ongoing content production</li>
-                        <li>Meta ads management</li>
-                        <li>GBP and review support as needed</li>
-                        <li>Custom scope and reporting</li>
-                      </ul>
-                    </div>
-                    <a href="/growth-audit" class="button is-course outlined w-inline-block">
-                      <div class="button_bg"></div>
-                      <div class="button_text">Talk About Growth Partner</div>
-                    </a>
-                  </article>
-                </div>
+                <p class="hp-audience-hint">Swipe · tap Learn more for details</p>
               </section>
             </div>
           </div>
@@ -1498,7 +1583,7 @@ margin: 0rem !important;
         <div class="container-large">
           <div class="hp-section-label">Investment</div>
           <h2 class="hp-section-title" id="hp-pricing-heading">Pricing that matches the work</h2>
-          <p class="hp-services-intro">Transparent pricing, scoped to what you actually need. No long contracts. Work directly with the person who builds it.</p>
+          <p class="hp-services-intro">Transparent pricing, scoped to what you actually need. Toggle between one-time projects and ongoing retainers. No long contracts. Work directly with the person who builds it.</p>
           <div id="hp-pricing-mount"></div>
         </div>
       </section>
@@ -1532,7 +1617,7 @@ margin: 0rem !important;
             </details>
             <details>
               <summary>Who is SWFT for?</summary>
-              <p>Local service businesses, professionals, and growing brands in Jersey City, New York City, and North Jersey who want websites and content that generate inquiries.</p>
+              <p>Service businesses, e-commerce brands, restaurants and hospitality, B2B and professional services, creators and personal brands, and health, wellness, and beauty companies—especially in Jersey City, New York City, and North Jersey—who want websites and content that generate inquiries.</p>
             </details>
             <details>
               <summary>Do I need to book a call first?</summary>
@@ -1544,7 +1629,7 @@ margin: 0rem !important;
             </details>
             <details>
               <summary>How much does a website cost?</summary>
-              <p>Price depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800–$1,500. Website plus a half-day shoot is $2,000–$2,800. Website plus a full-day or multi-location shoot starts at $3,000–$4,500+. See the offers above for what each range includes.</p>
+              <p>Price depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800–$1,500. Website plus a half-day shoot is $2,000–$2,800. Website plus a full-day or multi-location shoot starts at $3,000–$4,500+. See the Investment section for one-time projects and ongoing retainers.</p>
             </details>
             <details>
               <summary>What's the GBP Content Refresh?</summary>
@@ -1661,6 +1746,7 @@ tippy('.nav_link.is-muted', {
 </script>
   <script src="js/pricing-render.js"></script>
   <script src="js/homepage-pricing.js"></script>
+  <script src="js/homepage-audience.js"></script>
   <script src="js/swft-analytics.js"></script>
   <script src="js/swft-nav.js"></script>
   <script src="https://player.vimeo.com/api/player.js"></script>

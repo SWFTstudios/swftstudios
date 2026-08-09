@@ -15,12 +15,13 @@
       if (heroTitle) heroTitle.textContent = data.hero.headline;
       if (heroLead) heroLead.textContent = data.hero.sub;
 
-      SwftPricing.mountPricing(mount, data, {
+      var pricingApi = SwftPricing.mountPricing(mount, data, {
         layout: "full",
         showHero: false,
         showFaqLink: false,
         showOngoing: true,
-        showTrustLine: true
+        showTrustLine: true,
+        tabs: true
       });
 
       var faqList = document.getElementById("faq-list");
@@ -45,6 +46,18 @@
       }
 
       var hash = window.location.hash.replace("#", "");
+      if (
+        hash === "ongoing" ||
+        hash === "content-creation"
+      ) {
+        if (pricingApi) pricingApi.activateTab("ongoing");
+      } else if (
+        hash === "project-tiers" ||
+        hash === "website-development"
+      ) {
+        if (pricingApi) pricingApi.activateTab("onetime");
+      }
+
       var scrollIds = {
         "content-creation": "ongoing",
         "website-development": "project-tiers",
