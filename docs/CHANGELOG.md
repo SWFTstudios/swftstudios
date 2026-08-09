@@ -6,6 +6,7 @@
 - Replaced homepage **Offers** and **Ongoing** pricing cards with a **Who’s this for** horizontal swipe section (`#homepage-audience`) covering service businesses, e-commerce, restaurants, B2B, creators, and health/wellness.
 - Industry cards keep LLM-readable blurbs in the HTML; **Learn more** expands the blurb in-card; a second tap collapses back to headline + background image.
 - Homepage **Investment** (and `website-pricing.html`) now mounts one-time + ongoing tiers in a legible tab toggle via [`js/pricing-render.js`](../js/pricing-render.js).
+- Rewrote customer-facing third-person “SWFT Studios / SWFT helps / SWFT builds” copy to first-person “we” on the homepage, case studies, portfolio data, contact, growth audit, and team pages (brand name kept in titles/schema).
 
 ### Added
 - [`js/homepage-audience.js`](../js/homepage-audience.js) — expand/collapse behavior for audience cards.
