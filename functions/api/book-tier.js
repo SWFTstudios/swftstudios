@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function — POST /api/book-tier
+ * Cloudflare Pages Function. POST /api/book-tier
  * Books a pricing-ladder tier:
  *   1) Writes the lead to Airtable ("Discovery Calls").
  *   2) Creates a Stripe Checkout session (payment or subscription).
@@ -68,7 +68,7 @@ async function createStripeCheckout(env, { tier, email, businessName, name, orig
   params.set("line_items[0][price_data][product_data][name]", tier.productName);
   params.set(
     "line_items[0][price_data][product_data][description]",
-    `${tier.name} — ${tier.priceLabel} (starting checkout)`.slice(0, 500)
+    `${tier.name}. ${tier.priceLabel} (starting checkout)`.slice(0, 500)
   );
 
   if (tier.mode === "subscription") {
@@ -202,7 +202,7 @@ export async function onRequestPost(context) {
     visitorEmail: email,
     visitorName: name,
     idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
-    teamSubject: `Stripe book: ${tier.name} — ${businessName}`,
+    teamSubject: `Stripe book: ${tier.name}. ${businessName}`,
     teamHtml: `
       <p><strong>New tier booking (heading to Stripe)</strong></p>
       <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
@@ -218,12 +218,12 @@ export async function onRequestPost(context) {
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
-    confirmSubject: `Next step: complete checkout for ${tier.name} — SWFT Studios`,
+    confirmSubject: `Next step: complete checkout for ${tier.name}. SWFT Studios`,
     confirmHtml: `
       <p>Hi ${escapeHtml(name)},</p>
       <p>Thanks for choosing <strong>${escapeHtml(tier.name)}</strong>. Complete Stripe Checkout to lock in your start (${escapeHtml(tier.priceDisplay)}).</p>
       <p>If the checkout tab closed, reopen your booking page or email <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>.</p>
-      <p>— SWFT Studios</p>
+      <p>SWFT Studios</p>
     `,
   });
 

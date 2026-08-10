@@ -1,0 +1,239 @@
+/* Local SEO locations + HTML sitemap */
+@import url("swft-tokens.css");
+
+.locations-page .loc-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  font-size: var(--swft-text-tiny, 0.75rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ps-muted);
+  margin-bottom: 1.5rem;
+}
+
+.locations-page .loc-breadcrumb a {
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+}
+
+.locations-page .loc-breadcrumb a:hover {
+  color: var(--ps-accent);
+}
+
+.locations-page .loc-hero {
+  margin-bottom: 2rem;
+}
+
+.locations-page .loc-region-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 2.5rem;
+}
+
+.locations-page .loc-region-jump a {
+  border: 1px solid var(--ps-border);
+  color: var(--swft-text-strong);
+  text-decoration: none;
+  padding: 0.55rem 0.9rem;
+  border-radius: 4px;
+  font-size: var(--swft-text-small);
+}
+
+.locations-page .loc-region-jump a:hover {
+  border-color: rgba(127, 255, 229, 0.5);
+  color: var(--ps-accent);
+}
+
+.locations-page .loc-region {
+  margin-bottom: 3rem;
+}
+
+.locations-page .loc-region h2,
+.locations-page .loc-angle h2,
+.locations-page .loc-neighborhoods h2,
+.locations-page .loc-services h2,
+.locations-page .loc-related h2,
+.locations-page .sitemap-grid h2,
+.locations-page .sitemap-grid h3 {
+  color: var(--swft-text-strong);
+  font-size: var(--swft-h3);
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+
+.locations-page .sitemap-grid h3 {
+  font-size: 1.05rem;
+  margin-top: 1.5rem;
+}
+
+.locations-page .loc-region-summary,
+.locations-page .loc-angle p,
+.locations-page .sitemap-intro {
+  color: var(--swft-lead);
+  line-height: var(--swft-lh-lead);
+  margin: 0 0 1.25rem;
+  max-width: 62ch;
+}
+
+.locations-page .loc-card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  .locations-page .loc-card-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.locations-page .loc-card-list li {
+  border: 1px solid var(--ps-border);
+  background: linear-gradient(180deg, rgba(127, 255, 229, 0.04) 0%, var(--ps-card) 55%);
+  border-radius: 10px;
+  padding: 1.1rem 1.15rem 1.2rem;
+}
+
+.locations-page .loc-card-list a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.locations-page .loc-card-list strong {
+  display: block;
+  color: var(--swft-text-strong);
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.locations-page .loc-card-list a span {
+  display: block;
+  color: var(--ps-accent);
+  font-size: var(--swft-text-tiny, 0.75rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.65rem;
+}
+
+.locations-page .loc-card-list p {
+  margin: 0.75rem 0 0;
+  color: var(--swft-lead);
+  font-size: var(--swft-text-small);
+  line-height: 1.55;
+}
+
+.locations-page .loc-card-list a:hover strong {
+  color: var(--ps-accent);
+}
+
+.locations-page .loc-hood-list,
+.locations-page .loc-chip-list {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.locations-page .loc-hood-list li,
+.locations-page .loc-chip-list a {
+  border: 1px solid var(--ps-border);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: var(--swft-text-small);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.locations-page .loc-chip-list a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.locations-page .loc-chip-list a:hover {
+  border-color: rgba(127, 255, 229, 0.55);
+  color: var(--ps-accent);
+}
+
+.locations-page .loc-service-list {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+@media (min-width: 800px) {
+  .locations-page .loc-service-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.locations-page .loc-service-list li {
+  border-top: 1px solid var(--ps-border);
+  padding-top: 0.85rem;
+}
+
+.locations-page .loc-service-list a {
+  color: var(--swft-text-strong);
+  text-decoration: none;
+}
+
+.locations-page .loc-service-list a:hover {
+  color: var(--ps-accent);
+}
+
+.locations-page .loc-service-list p {
+  margin: 0.35rem 0 0;
+  color: var(--swft-lead);
+  font-size: var(--swft-text-small);
+  line-height: 1.5;
+}
+
+.locations-page .sitemap-grid {
+  display: grid;
+  gap: 2.25rem;
+}
+
+@media (min-width: 900px) {
+  .locations-page .sitemap-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.locations-page .sitemap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.locations-page .sitemap-list li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+  align-items: baseline;
+}
+
+.locations-page .sitemap-list a {
+  color: var(--swft-text-strong);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.locations-page .sitemap-list a:hover {
+  color: var(--ps-accent);
+}
+
+.locations-page .sitemap-note {
+  color: var(--ps-muted);
+  font-size: var(--swft-text-small);
+}

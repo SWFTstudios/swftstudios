@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="canonical" href="https://www.swftstudios.com/contact.html">
   <meta property="og:title" content="Contact | Start a Project with Us">
-  <meta property="og:description" content="Tell SWFT about your project — website, content, or lead systems for growing businesses.">
+  <meta property="og:description" content="Tell SWFT about your project, website, content, or lead systems for growing businesses.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.swftstudios.com/contact.html">
   <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
@@ -42,7 +42,7 @@
             </li>
             <li>
               <span class="contact-label">Location</span>
-              <span class="contact-value">Jersey City · New York City · North Jersey · Virtual</span>
+              <span class="contact-value"><a href="/locations/">Jersey City · New York City · North Jersey</a> · Virtual</span>
             </li>
           </ul>
           <div class="contact-social">
@@ -111,8 +111,8 @@
               <select id="contact-budget" name="budget">
                 <option value="">Select a range</option>
                 <option value="Under $1,000">Under $1,000</option>
-                <option value="$1,000–$2,500">$1,000–$2,500</option>
-                <option value="$2,500–$5,000">$2,500–$5,000</option>
+                <option value="$1,000 to $2,500">$1,000 to $2,500</option>
+                <option value="$2,500 to $5,000">$2,500 to $5,000</option>
                 <option value="$5,000+">$5,000+</option>
                 <option value="Not sure yet">Not sure yet</option>
               </select>
@@ -147,7 +147,7 @@
       const form = document.getElementById("contact-form");
       const statusEl = document.getElementById("contact-status");
       const submitBtn = document.getElementById("contact-submit");
-      const submitLabel = submitBtn ? submitBtn.querySelector(".button_text") : null;
+      const submitLabel = submitBtn ? submitBtn.querySelector(".button_text"): null;
       if (!form) return;
 
       function showStatus(msg, type) {
@@ -158,13 +158,13 @@
 
       function val(name) {
         const el = form.elements.namedItem(name);
-        return el ? String(el.value || "").trim() : "";
+        return el ? String(el.value || "").trim(): "";
       }
 
       form.addEventListener("submit", function (e) {
         e.preventDefault();
         if (val("company_website")) {
-          showStatus("Message sent — we'll be in touch within one business day.", "success");
+          showStatus("Message sent, we'll be in touch within one business day.", "success");
           return;
         }
 
@@ -215,7 +215,7 @@
           .then(function (result) {
             if (result.ok && result.data.ok) {
               form.reset();
-              showStatus("Project submitted — we'll be in touch within one business day.", "success");
+              showStatus("Project submitted, we'll be in touch within one business day.", "success");
               if (window.SWFTAnalytics) {
                 window.SWFTAnalytics.track("contact_form_submit", {
                   page_path: location.pathname,

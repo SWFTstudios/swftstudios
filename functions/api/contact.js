@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function — POST /api/contact
+ * Cloudflare Pages Function. POST /api/contact
  * Writes the project inquiry form to Airtable ("Discovery Calls").
  * Sends Resend team notify + visitor confirmation when RESEND_API_KEY is set.
  *
@@ -122,12 +122,12 @@ export async function onRequestPost(context) {
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
-    confirmSubject: "We got your project inquiry — SWFT Studios",
+    confirmSubject: "We got your project inquiry. SWFT Studios",
     confirmHtml: `
       <p>Hi ${escapeHtml(name)},</p>
       <p>Thanks for reaching out. We received your project inquiry and will follow up within one business day.</p>
       <p>Questions sooner? Reply to this message or email hello@swftstudios.com.</p>
-      <p>— SWFT Studios</p>
+      <p>SWFT Studios</p>
     `,
   });
 

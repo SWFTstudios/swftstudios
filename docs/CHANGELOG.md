@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-08-10: Copy dash cleanup, local SEO pages, structured site map
+
+### Changed
+- Removed em dashes and en dashes from public website copy across HTML pages, pricing/portfolio data, booking pages, and user-facing email/API strings. Price ranges now read as `$400 to $600`. Clause breaks use commas or periods instead of AI-style dashes.
+
+### Added
+- Local SEO hub at [`/locations/`](../locations/index.html) covering Jersey City & Hudson County, North Jersey, and New York City.
+- 25 area landing pages under `/locations/<slug>.html` (unique local copy + schema.org `ProfessionalService` markup), generated from [`data/locations.json`](../data/locations.json) via `npm run build:locations`.
+- Human and LLM readable structured site map at [`/sitemap.html`](../sitemap.html).
+- [`css/locations-page.css`](../css/locations-page.css) and generator [`scripts/build-location-pages.mjs`](../scripts/build-location-pages.mjs).
+- Nav link to Locations; contact and Growth Audit link into the locations hub.
+
+### SEO
+- Expanded homepage and Growth Audit `areaServed` schema to include each served city.
+- Updated [`sitemap.xml`](../sitemap.xml) with `/sitemap.html`, `/locations/`, and every area page.
+
+---
+
 ## 2026-08-10 — Stripe booking pages per pricing tier
 
 ### Added

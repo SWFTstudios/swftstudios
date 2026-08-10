@@ -1,5 +1,5 @@
 /* ============================================================
-   SWFT Studios — shared navigation COMPONENT (single source).
+   SWFT Studios shared navigation COMPONENT (single source).
    Every page renders this nav by including:
        <div id="swft-nav" data-active="home"></div>
    plus <link href="css/swft-nav.css"> and <script src="js/swft-nav.js">.
@@ -12,6 +12,7 @@
     { label: "Services",     href: "/services.html",        key: "services" },
     { label: "Our Work",     href: "/websites.html",        key: "our-work" },
     { label: "Pricing",      href: "/website-pricing.html", key: "pricing" },
+    { label: "Locations",    href: "/locations/",           key: "locations" },
     { label: "Case Studies", href: "/case-studies.html",    key: "case-studies" },
     { label: "Team",         href: "/team.html",            key: "team" },
     { label: "Contact",      href: "/contact.html",         key: "contact" }
@@ -21,10 +22,10 @@
 
   function navHTML(active) {
     var desktop = LINKS.map(function (l) {
-      return '<a href="' + l.href + '" class="sn-link' + (l.key === active ? " is-active" : "") + '">' + l.label + "</a>";
+      return '<a href="' + l.href + '" class="sn-link' + (l.key === active ? " is-active": "") + '">' + l.label + "</a>";
     }).join("");
     var mobile = LINKS.map(function (l) {
-      return '<a href="' + l.href + '"' + (l.key === active ? ' class="is-active"' : "") + ">" + l.label + "</a>";
+      return '<a href="' + l.href + '"' + (l.key === active ? ' class="is-active"': "") + ">" + l.label + "</a>";
     }).join("");
     return (
       '<nav class="sn-nav">' +

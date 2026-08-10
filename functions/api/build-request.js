@@ -1,11 +1,11 @@
 /**
- * Cloudflare Pages Function — POST /api/build-request
+ * Cloudflare Pages Function. POST /api/build-request
  * Handles the "Order Your Website" booking flow:
  *   1) Writes the lead to Airtable ("Website Build Requests").
  *   2) Optionally opens a Stripe Checkout session for the chosen plan.
  * Env (set in Pages → Settings → Variables and Secrets):
  *   AIRTABLE_TOKEN (secret, required to save)
- *   STRIPE_SECRET_KEY (secret, optional — enables checkout)
+ *   STRIPE_SECRET_KEY (secret, optional, enables checkout)
  *   optional overrides: AIRTABLE_BASE_ID, AIRTABLE_TABLE,
  *     STRIPE_PRICE_MONTHLY
  */

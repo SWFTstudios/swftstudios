@@ -13,7 +13,7 @@
   var backBtn = document.getElementById("ga-back");
   var nextBtn = document.getElementById("ga-next");
   var doneBtn = document.getElementById("ga-done");
-  var nextLabel = nextBtn ? nextBtn.querySelector(".button_text") : null;
+  var nextLabel = nextBtn ? nextBtn.querySelector(".button_text"): null;
   var stepLabel = document.getElementById("ga-step-label");
   var stepTitle = document.getElementById("ga-step-title");
   var progressFill = document.getElementById("ga-progress-fill");
@@ -35,7 +35,7 @@
     "website-content-full": "Website + Extended Content",
     "content-growth-retainer": "Content + Growth Retainer",
     "full-growth-partner": "Full Growth Partner",
-    "not-sure": "Not sure — help me choose",
+    "not-sure": "Not sure, help me choose",
   };
 
   function track(name, params) {
@@ -49,7 +49,7 @@
   function getUtms() {
     try {
       var raw = sessionStorage.getItem("swft_utm");
-      return raw ? JSON.parse(raw) : {};
+      return raw ? JSON.parse(raw): {};
     } catch (e) {
       return {};
     }
@@ -98,7 +98,7 @@
 
   function val(name) {
     var el = form.elements.namedItem(name);
-    return el ? String(el.value || "").trim() : "";
+    return el ? String(el.value || "").trim(): "";
   }
 
   function serviceLabel(id) {
@@ -200,7 +200,7 @@
     if (nextBtn) {
       nextBtn.hidden = step === 5;
       if (nextLabel) {
-        nextLabel.textContent = step === 4 ? "Save & schedule call" : "Continue";
+        nextLabel.textContent = step === 4 ? "Save & schedule call": "Continue";
       }
     }
     if (doneBtn) doneBtn.hidden = step !== 5;
@@ -221,7 +221,7 @@
     var presence = website || social;
     var details = val("details");
     var photoLinks = val("photo_links");
-    var combinedDetails = [details, photoLinks ? "Photo links: " + photoLinks : ""]
+    var combinedDetails = [details, photoLinks ? "Photo links: " + photoLinks: ""]
       .filter(Boolean)
       .join("\n\n");
 

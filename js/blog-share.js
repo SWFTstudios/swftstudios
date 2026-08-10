@@ -1,5 +1,5 @@
 /**
- * SWFT blog share buttons — copy link, X/Twitter, Facebook, LinkedIn.
+ * SWFT blog share buttons, copy link, X/Twitter, Facebook, LinkedIn.
  * Enhances .uui-blogpost01_share icon rows (order: copy, twitter, facebook, linkedin).
  */
 (function () {
@@ -35,7 +35,7 @@
   }
 
   function setCopiedState(btn, on) {
-    btn.setAttribute("aria-label", on ? "Link copied" : "Copy link");
+    btn.setAttribute("aria-label", on ? "Link copied": "Copy link");
     btn.classList.toggle("is-copied", on);
     if (on) {
       btn.setAttribute("data-copied", "true");

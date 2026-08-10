@@ -1,6 +1,6 @@
 /**
  * Server-side Stripe booking catalog for offer-ladder tiers.
- * Amounts are authoritative — never trust client-supplied prices.
+ * Amounts are authoritative, never trust client-supplied prices.
  * Keep in sync with data/pricing.json → tier.stripe fields.
  */
 export const STRIPE_TIERS = {
@@ -9,8 +9,8 @@ export const STRIPE_TIERS = {
     name: "GBP Content Refresh",
     mode: "payment",
     amountCents: 40000,
-    productName: "SWFT — GBP Content Refresh (project start)",
-    priceLabel: "$400–$600",
+    productName: "SWFT. GBP Content Refresh (project start)",
+    priceLabel: "$400 to $600",
     priceDisplay: "$400",
   },
   "website-only": {
@@ -18,8 +18,8 @@ export const STRIPE_TIERS = {
     name: "Website Only",
     mode: "payment",
     amountCents: 80000,
-    productName: "SWFT — Website Only (project start)",
-    priceLabel: "$800–$1,500",
+    productName: "SWFT. Website Only (project start)",
+    priceLabel: "$800 to $1,500",
     priceDisplay: "$800",
   },
   "website-content-half": {
@@ -27,8 +27,8 @@ export const STRIPE_TIERS = {
     name: "Website + Content Capture",
     mode: "payment",
     amountCents: 200000,
-    productName: "SWFT — Website + Content Capture (project start)",
-    priceLabel: "$2,000–$2,800",
+    productName: "SWFT. Website + Content Capture (project start)",
+    priceLabel: "$2,000 to $2,800",
     priceDisplay: "$2,000",
   },
   "website-content-full": {
@@ -36,8 +36,8 @@ export const STRIPE_TIERS = {
     name: "Website + Extended Content",
     mode: "payment",
     amountCents: 300000,
-    productName: "SWFT — Website + Extended Content (project start)",
-    priceLabel: "$3,000–$4,500+",
+    productName: "SWFT. Website + Extended Content (project start)",
+    priceLabel: "$3,000 to $4,500+",
     priceDisplay: "$3,000",
   },
   "content-growth-retainer": {
@@ -46,8 +46,8 @@ export const STRIPE_TIERS = {
     mode: "subscription",
     amountCents: 45000,
     interval: "month",
-    productName: "SWFT — Content + Growth Retainer",
-    priceLabel: "$450–$800/mo",
+    productName: "SWFT. Content + Growth Retainer",
+    priceLabel: "$450 to $800/mo",
     priceDisplay: "$450/mo",
   },
   "full-growth-partner": {
@@ -56,7 +56,7 @@ export const STRIPE_TIERS = {
     mode: "subscription",
     amountCents: 120000,
     interval: "month",
-    productName: "SWFT — Full Growth Partner",
+    productName: "SWFT. Full Growth Partner",
     priceLabel: "From $1,200/mo",
     priceDisplay: "$1,200/mo",
   },
