@@ -8,9 +8,21 @@ Airtable base and send email via **Resend** when `RESEND_API_KEY` is set.
 
 | Form | Pages Function | Airtable table | Email |
 |---|---|---|---|
-| `growth-audit.html` (Free Growth Audit) | `POST /api/growth-audit` → `functions/api/growth-audit.js` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) or Discovery Calls fallback | Team notify → `hello@swftstudios.com` + visitor confirmation |
+| `growth-audit.html` (Free Growth Audit — multi-step) | `POST /api/growth-audit` → `functions/api/growth-audit.js` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) or Discovery Calls fallback | Team notify → `hello@swftstudios.com` + visitor confirmation |
 | `contact.html` (Project inquiry) | `POST /api/contact` → `functions/api/contact.js` | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation |
 | `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` → `functions/api/build-request.js` | "Website Build Requests" | (Airtable only for now) |
+
+### Growth Audit multi-step flow
+
+`growth-audit.html` is a 5-step onboarding form (progress bar):
+
+1. Contact info (name, email, phone, business)
+2. Website and/or social (at least one required)
+3. Desired service (dropdown of pricing packages; pre-selected from `?plan=<tier-id>`)
+4. Additional details + photo share links + consent
+5. Cal.com booking (`https://cal.com/swftstudios/swft-meeting`) after the lead is saved
+
+Pricing tier CTAs in [`js/pricing-render.js`](../js/pricing-render.js) link to `/growth-audit?plan=<id>` (e.g. `website-only`, `gbp-refresh`). Generic “Get Your Free Growth Audit” CTAs omit `plan` so the dropdown starts empty.
 
 ### Growth Audit table setup (manual)
 
@@ -27,13 +39,13 @@ Create a table named **Growth Audits** in the SWFT Website Leads base with field
 | Biggest Challenge | Single select / long text |
 | Desired Outcome | Long text |
 | Instagram | Single line text |
-| Monthly Budget | Single select / single line |
-| Timeline | Single line text |
-| Additional Context | Long text |
+| Additional Context | Long text (includes last name, desired service, photo links, notes) |
 | UTM Source / Medium / Campaign | Single line text |
 | Source Page | Single line text |
 | Status | Single select (default New) |
 | Submitted At | Date/time |
+
+Optional later (if you add columns in Airtable): Last Name, Desired Service, Photo Links. Until then those values are folded into **Additional Context** / **Biggest Challenge** so writes never fail on unknown fields.
 
 Then set env on the **Pages** project (or leave unset to use the Discovery Calls fallback):
 
@@ -50,9 +62,9 @@ from the Pages Function (see Resend setup below).
 and returns its URL, which the page redirects the visitor to (only if a Stripe key
 is set).
 
-Both forms are multi-step and require JavaScript to operate; on a submit error the
-page now shows an inline "try again / email us" message instead of bouncing the
-visitor to a third-party error page.
+Growth Audit is multi-step and requires JavaScript. Contact is a single-page form.
+On a submit error the page shows an inline "try again / email us" message instead of
+bouncing the visitor to a third-party error page.
 
 ### Confirmation emails (Resend)
 

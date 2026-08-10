@@ -43,7 +43,7 @@
       <header class="ps-hero ps-hero--left">
         <p class="ps-eyebrow">Free Growth Audit</p>
         <h1 class="ps-title">Find out what is costing your business customers online.</h1>
-        <p class="ps-lead">Submit your website or social profile and receive a personalized video showing the three changes most likely to improve trust, inquiries, and sales.</p>
+        <p class="ps-lead">Tell us about your business, pick the offer that fits, and book a short call. You’ll get a personalized review with the three changes most likely to improve trust, inquiries, and sales.</p>
       </header>
 
       <div class="ga-grid">
@@ -61,102 +61,142 @@
         </div>
 
         <div class="ga-form-card">
-          <h2>Request your audit</h2>
+          <div class="ga-progress" aria-hidden="false">
+            <div class="ga-progress-meta">
+              <span id="ga-step-label">Step 1 of 5</span>
+              <span id="ga-step-title">Contact info</span>
+            </div>
+            <div class="ga-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-labelledby="ga-step-label">
+              <div class="ga-progress-fill" id="ga-progress-fill" style="width:20%"></div>
+            </div>
+          </div>
+
           <form id="growth-audit-form" novalidate>
             <div class="ga-hp" aria-hidden="true">
               <label for="company_website">Company website</label>
               <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
             </div>
 
-            <div class="ga-field">
-              <label for="first_name">First name <span class="req">*</span></label>
-              <input type="text" id="first_name" name="first_name" required autocomplete="given-name">
-            </div>
-            <div class="ga-field">
-              <label for="email">Email <span class="req">*</span></label>
-              <input type="email" id="email" name="email" required autocomplete="email">
-            </div>
-            <div class="ga-field">
-              <label for="business_name">Business name <span class="req">*</span></label>
-              <input type="text" id="business_name" name="business_name" required autocomplete="organization">
-            </div>
-            <div class="ga-field">
-              <label for="website">Website URL or primary social profile <span class="req">*</span></label>
-              <input type="url" id="website" name="website" required placeholder="https://" inputmode="url">
-            </div>
-            <div class="ga-field">
-              <label for="business_category">Primary business category <span class="req">*</span></label>
-              <select id="business_category" name="business_category" required>
-                <option value="">Select a category</option>
-                <option value="Local service business">Local service business</option>
-                <option value="Professional / practice">Professional / practice</option>
-                <option value="Restaurant / hospitality">Restaurant / hospitality</option>
-                <option value="E-commerce / retail">E-commerce / retail</option>
-                <option value="Creator / personal brand">Creator / personal brand</option>
-                <option value="Nonprofit / ministry">Nonprofit / ministry</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="ga-field">
-              <label for="challenge">Biggest current challenge <span class="req">*</span></label>
-              <select id="challenge" name="challenge" required>
-                <option value="">Select a challenge</option>
-                <option value="My website is not generating inquiries">My website is not generating inquiries</option>
-                <option value="My business needs a new website">My business needs a new website</option>
-                <option value="My content does not reflect the quality of my services">My content does not reflect the quality of my services</option>
-                <option value="I need better photos or videos">I need better photos or videos</option>
-                <option value="I need a clearer brand and offer">I need a clearer brand and offer</option>
-                <option value="I need a better lead follow-up system">I need a better lead follow-up system</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="ga-field">
-              <label for="desired_outcome">Desired business outcome <span class="req">*</span></label>
-              <textarea id="desired_outcome" name="desired_outcome" required placeholder="What does success look like in the next 90 days?"></textarea>
-            </div>
+            <!-- Step 1: Contact info -->
+            <fieldset class="ga-step-panel is-active" data-step="1" aria-labelledby="ga-step1-heading">
+              <legend id="ga-step1-heading" class="ga-step-heading">Your contact info</legend>
+              <div class="ga-field">
+                <label for="first_name">First name <span class="req">*</span></label>
+                <input type="text" id="first_name" name="first_name" required autocomplete="given-name" placeholder="Jane">
+              </div>
+              <div class="ga-field">
+                <label for="last_name">Last name <span class="req">*</span></label>
+                <input type="text" id="last_name" name="last_name" required autocomplete="family-name" placeholder="Smith">
+              </div>
+              <div class="ga-field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input type="email" id="email" name="email" required autocomplete="email" placeholder="name@example.com">
+              </div>
+              <div class="ga-field">
+                <label for="phone">Phone number</label>
+                <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(201) 555-0123">
+              </div>
+              <div class="ga-field">
+                <label for="business_name">Business / company <span class="req">*</span></label>
+                <input type="text" id="business_name" name="business_name" required autocomplete="organization" placeholder="Acme Corporation">
+              </div>
+            </fieldset>
 
-            <p class="ga-optional-legend">Optional details</p>
-            <div class="ga-field">
-              <label for="phone">Phone number</label>
-              <input type="tel" id="phone" name="phone" autocomplete="tel">
-            </div>
-            <div class="ga-field">
-              <label for="instagram">Instagram or other social links</label>
-              <input type="text" id="instagram" name="instagram" placeholder="@yourbrand or URL">
-            </div>
-            <div class="ga-field">
-              <label for="budget">Current monthly marketing budget</label>
-              <select id="budget" name="budget">
-                <option value="">Select a range</option>
-                <option value="Under $1,000">Under $1,000</option>
-                <option value="$1,000–$2,500">$1,000–$2,500</option>
-                <option value="$2,500–$5,000">$2,500–$5,000</option>
-                <option value="$5,000+">$5,000+</option>
-                <option value="Not sure yet">Not sure yet</option>
-              </select>
-            </div>
-            <div class="ga-field">
-              <label for="timeline">Desired project timeline</label>
-              <input type="text" id="timeline" name="timeline" placeholder="e.g. ASAP, 30 days, this quarter">
-            </div>
-            <div class="ga-field">
-              <label for="details">Additional context</label>
-              <textarea id="details" name="details" placeholder="Anything else that would help us prepare your audit"></textarea>
-            </div>
+            <!-- Step 2: Website / social -->
+            <fieldset class="ga-step-panel" data-step="2" hidden aria-labelledby="ga-step2-heading">
+              <legend id="ga-step2-heading" class="ga-step-heading">Website &amp; social</legend>
+              <p class="ga-step-help">Share at least one — website or a primary social profile.</p>
+              <div class="ga-field">
+                <label for="website">Website URL</label>
+                <input type="url" id="website" name="website" placeholder="https://" inputmode="url" autocomplete="url">
+              </div>
+              <div class="ga-field">
+                <label for="instagram">Instagram or other social</label>
+                <input type="text" id="instagram" name="instagram" placeholder="@yourbrand or profile URL">
+              </div>
+            </fieldset>
 
-            <p class="ga-consent">
-              <label>
-                <input type="checkbox" name="consent" value="yes" required>
-                I agree to be contacted about my Growth Audit. See our
-                <a href="resources.html">resources</a> and email
-                <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a> for privacy questions.
-              </label>
-            </p>
+            <!-- Step 3: Desired service -->
+            <fieldset class="ga-step-panel" data-step="3" hidden aria-labelledby="ga-step3-heading">
+              <legend id="ga-step3-heading" class="ga-step-heading">Desired service</legend>
+              <p class="ga-step-help">If you came from pricing, your selection is already chosen — change it anytime.</p>
+              <div class="ga-field">
+                <label for="desired_service">Which offer are you interested in? <span class="req">*</span></label>
+                <select id="desired_service" name="desired_service" required>
+                  <option value="">Select a service</option>
+                  <option value="gbp-refresh">GBP Content Refresh</option>
+                  <option value="website-only">Website Only</option>
+                  <option value="website-content-half">Website + Content Capture</option>
+                  <option value="website-content-full">Website + Extended Content</option>
+                  <option value="content-growth-retainer">Content + Growth Retainer</option>
+                  <option value="full-growth-partner">Full Growth Partner</option>
+                  <option value="not-sure">Not sure — help me choose</option>
+                </select>
+              </div>
+            </fieldset>
 
-            <button type="submit" class="button is-course contact-submit" id="ga-submit">
-              <div class="button_bg"></div>
-              <div class="button_text">Get Your Free Growth Audit</div>
-            </button>
+            <!-- Step 4: Details + photos -->
+            <fieldset class="ga-step-panel" data-step="4" hidden aria-labelledby="ga-step4-heading">
+              <legend id="ga-step4-heading" class="ga-step-heading">Additional details &amp; photos</legend>
+              <div class="ga-field">
+                <label for="details">Anything we should know before the call?</label>
+                <textarea id="details" name="details" placeholder="Goals, timeline, locations, competitors, or what’s not working today"></textarea>
+              </div>
+              <div class="ga-field">
+                <label for="photo_links">Photo / file links</label>
+                <input type="text" id="photo_links" name="photo_links" placeholder="Google Drive, Dropbox, or iCloud share links">
+                <p class="ga-field-hint">No upload required — paste share links if you have existing photos or brand assets.</p>
+              </div>
+              <p class="ga-consent">
+                <label>
+                  <input type="checkbox" name="consent" value="yes" required>
+                  I agree to be contacted about my Growth Audit. See our
+                  <a href="resources.html">resources</a> and email
+                  <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a> for privacy questions.
+                </label>
+              </p>
+            </fieldset>
+
+            <!-- Step 5: Schedule call -->
+            <fieldset class="ga-step-panel" data-step="5" hidden aria-labelledby="ga-step5-heading">
+              <legend id="ga-step5-heading" class="ga-step-heading">Best date &amp; time to call</legend>
+              <p class="ga-step-help">Your details are saved. Pick a time that works — or skip and we’ll follow up by email.</p>
+              <div class="ga-cal-embed">
+                <a
+                  id="ga-cal-link"
+                  href="https://cal.com/swftstudios/swft-meeting"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button is-course w-inline-block"
+                  data-swft-event="calendar_click"
+                >
+                  <div class="button_bg"></div>
+                  <div class="button_text">Open calendar to book a call</div>
+                </a>
+                <iframe
+                  id="ga-cal-iframe"
+                  class="ga-cal-iframe"
+                  title="Book a discovery call with SWFT Studios"
+                  src="https://cal.com/swftstudios/swft-meeting?embed=true"
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </fieldset>
+
+            <div class="ga-nav">
+              <button type="button" class="button is-course outlined w-inline-block ga-btn-back" id="ga-back" hidden>
+                <div class="button_bg"></div>
+                <div class="button_text">Back</div>
+              </button>
+              <button type="button" class="button is-course w-inline-block ga-btn-next" id="ga-next">
+                <div class="button_bg"></div>
+                <div class="button_text">Continue</div>
+              </button>
+              <a href="/growth-audit/thank-you" class="button is-course outlined w-inline-block ga-btn-done" id="ga-done" hidden>
+                <div class="button_bg"></div>
+                <div class="button_text">Done — go to confirmation</div>
+              </a>
+            </div>
             <p id="ga-status" class="ga-status" role="status" aria-live="polite" hidden></p>
           </form>
         </div>
