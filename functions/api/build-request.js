@@ -1,11 +1,11 @@
 /**
- * Cloudflare Pages Function — POST /api/build-request
+ * Cloudflare Pages Function. POST /api/build-request
  * Handles the "Order Your Website" booking flow:
  *   1) Writes the lead to Airtable ("Website Build Requests").
  *   2) Optionally opens a Stripe Checkout session for the chosen plan.
  * Env (set in Pages → Settings → Variables and Secrets):
  *   AIRTABLE_TOKEN (secret, required to save)
- *   STRIPE_SECRET_KEY (secret, optional — enables checkout)
+ *   STRIPE_SECRET_KEY (secret, optional: enables checkout)
  *   optional overrides: AIRTABLE_BASE_ID, AIRTABLE_TABLE,
  *     STRIPE_PRICE_MONTHLY
  */
@@ -47,7 +47,7 @@ async function createStripeCheckout(env, data) {
   if (data.email) params.set("customer_email", data.email);
   params.set("metadata[plan]", data.plan);
   params.set("metadata[business]", data.businessName.slice(0, 200));
-  params.set("metadata[maintenance]", data.maintenance ? "yes" : "no");
+  params.set("metadata[maintenance]", data.maintenance ? "yes": "no");
   if (data.plan === "Monthly Plan") {
     params.set("mode", "subscription");
     params.set("line_items[0][price]", env.STRIPE_PRICE_MONTHLY || DEFAULTS.STRIPE_PRICE_MONTHLY);
@@ -86,7 +86,7 @@ export async function onRequestPost(context) {
   const url = new URL(request.url);
   const origin = `${url.protocol}//${url.host}`;
   const email = str(body.email, 320);
-  const plan = str(body.plan, 40) === "Monthly Plan" ? "Monthly Plan" : "One-Time Build";
+  const plan = str(body.plan, 40) === "Monthly Plan" ? "Monthly Plan": "One-Time Build";
   const maintenance = body.maintenance === true || str(body.maintenance) === "Yes";
   const oneTimeAmount = Math.max(0, Math.min(100000, Number(body.oneTimeAmount) || 0));
   const businessName = str(body.businessName, 200);
@@ -104,7 +104,7 @@ export async function onRequestPost(context) {
     Features: str(body.features, 4000),
     "Plan Choice": plan,
     "One-Time Price": oneTimeAmount,
-    "Maintenance Add-On": maintenance ? "Yes" : "No",
+    "Maintenance Add-On": maintenance ? "Yes": "No",
     "Monthly Price": "$299/mo",
     "Content Ready": str(body.contentReady, 200),
     "Has Domain": str(body.hasDomain, 200),

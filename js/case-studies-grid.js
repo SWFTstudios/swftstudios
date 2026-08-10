@@ -1,5 +1,5 @@
 /**
- * Case Studies hub — fetch index JSON, render grid, search + category filters.
+ * Case Studies hub, fetch index JSON, render grid, search + category filters.
  */
 (function () {
   const gridEl = document.getElementById("cs-grid");
@@ -68,11 +68,11 @@
       .join("");
     const metricHtml = item.metric
       ? `<p class="cs-card-metric">${escapeHtml(item.metric)}</p>`
-      : "";
+     : "";
     const thumbSrc = cardThumb(item);
     const thumb = thumbSrc
       ? `<img src="${escapeHtml(thumbSrc)}" alt="" loading="lazy" width="400" height="240">`
-      : `<div class="cs-card-thumb-placeholder" aria-hidden="true"></div>`;
+     : `<div class="cs-card-thumb-placeholder" aria-hidden="true"></div>`;
 
     return `
       <a href="${escapeHtml(item.href)}" class="cs-card">
@@ -120,7 +120,7 @@
       return res.json();
     })
     .then((data) => {
-      items = Array.isArray(data) ? data : data.items || [];
+      items = Array.isArray(data) ? data: data.items || [];
       render();
     })
     .catch(() => {

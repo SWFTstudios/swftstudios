@@ -5552,6 +5552,15 @@ figcaption {
   text-shadow: 0 0 18px #2cd19a2e;
 }
 
+a.highlight-2 {
+  text-decoration: none;
+}
+
+a.highlight-2:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .hero-section-mac-holder {
   z-index: 10;
   flex-direction: column;

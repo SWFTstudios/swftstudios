@@ -1,5 +1,5 @@
 /**
- * Videos & Insights hub — Case Study Match-style scroll, prompt, modal.
+ * Videos & Insights hub. Case Study Match-style scroll, prompt, modal.
  * POST /api/case-study-match (SWFT Worker); client scorer fallback on failure.
  *
  * API endpoint: reads data-worker-url attribute from [data-swft-hub] element,
@@ -45,7 +45,7 @@
         bestScore = s;
       }
     }
-    return bestScore > 0 ? best : list[0];
+    return bestScore > 0 ? best: list[0];
   }
 
   function getCaseStudyData(items) {
@@ -84,7 +84,7 @@
     parent.insertBefore(oddWrap, items[0]);
     parent.insertBefore(evenWrap, items[0]);
     items.forEach(function (item, i) {
-      (i % 2 === 0 ? oddWrap : evenWrap).appendChild(item);
+      (i % 2 === 0 ? oddWrap: evenWrap).appendChild(item);
     });
 
     var promptInput = hub.querySelector(".prompt_input");
@@ -132,11 +132,11 @@
       setTimeout(function () {
         cardEl = hub.querySelector(".case-study_item.is-active .case-study_card");
         if (cardEl && modalTarget) flipInto(modalTarget);
-      }, reducedMotion ? 0 : 400);
+      }, reducedMotion ? 0: 400);
       var tl = gs.timeline();
       tl.fromTo(
         ".swft-hub-match .modal_content_wrap",
-        { delay: reducedMotion ? 0 : 0.2, "--progress": 1 },
+        { delay: reducedMotion ? 0: 0.2, "--progress": 1 },
         { "--progress": 0, ease: "power1.inOut", duration: 0.55 }
       );
       tl.fromTo(
@@ -149,7 +149,7 @@
         ".swft-hub-match .modal_backdrop",
         { opacity: 0 },
         { opacity: 1, duration: 0.2 },
-        reducedMotion ? 0 : "-=0.2"
+        reducedMotion ? 0: "-=0.2"
       );
       if (promptResult && promptResult.children.length) {
         tl.from(promptResult.children, { opacity: 0, stagger: 0.02, duration: 0.2 }, "-=0.1");
@@ -219,7 +219,7 @@
         gs.to(".swft-hub-match .prompt_wrap", {
           yPercent: 100,
           scale: 0.6,
-          duration: reducedMotion ? 0 : 0.3,
+          duration: reducedMotion ? 0: 0.3,
           ease: "power3.out",
         });
       }
@@ -238,10 +238,10 @@
         applyMatch({
           explanation:
             "<p>Showing the closest match using on-device scoring (API unavailable).</p><p><strong>" +
-            (pick && pick.title ? pick.title : "") +
+            (pick && pick.title ? pick.title: "") +
             "</strong></p>",
-          matchedCaseStudy: pick && pick.title ? pick.title.toLowerCase() : "",
-          matchedLink: pick && pick.link ? pick.link : "",
+          matchedCaseStudy: pick && pick.title ? pick.title.toLowerCase(): "",
+          matchedLink: pick && pick.link ? pick.link: "",
         });
         setLive("Used offline match.");
       }
@@ -283,14 +283,14 @@
       tl3.fromTo(
         ".swft-hub-match .loader_image",
         { scale: 0, rotation: 180 },
-        { scale: 1, rotation: 0, duration: reducedMotion ? 0 : 0.65, ease: "power2.out" },
+        { scale: 1, rotation: 0, duration: reducedMotion ? 0: 0.65, ease: "power2.out" },
         0
       );
-      tl3.fromTo(".swft-hub-match .cms-wrapper", { opacity: 0 }, { opacity: 1, delay: reducedMotion ? 0 : 0.25 });
+      tl3.fromTo(".swft-hub-match .cms-wrapper", { opacity: 0 }, { opacity: 1, delay: reducedMotion ? 0: 0.25 });
       tl3.fromTo(
         ".swft-hub-match .case-study_group",
-        { "--progress": reducedMotion ? 0 : 0.2 },
-        { "--progress": 0, ease: "power3.inOut", duration: reducedMotion ? 0 : 1.1 },
+        { "--progress": reducedMotion ? 0: 0.2 },
+        { "--progress": 0, ease: "power3.inOut", duration: reducedMotion ? 0: 1.1 },
         "<"
       );
     } else {

@@ -1,0 +1,303 @@
+{
+  "hub": {
+    "title": "Areas We Serve | Jersey City, North Jersey & NYC | SWFT Studios",
+    "description": "SWFT Studios builds websites, photo and video content, and lead systems for local businesses across Jersey City, North Jersey, and New York City.",
+    "h1": "Local websites and content for Jersey City, North Jersey, and NYC",
+    "lead": "We work on site with service businesses and growing brands across Hudson County, North Jersey, and the five boroughs. Pick your area to see how we help nearby businesses turn attention into booked customers."
+  },
+  "regions": [
+    {
+      "id": "jersey-city-hudson",
+      "name": "Jersey City & Hudson County",
+      "summary": "Our home base. On-site shoots, Google Business Profile work, and conversion-focused websites for Hudson County businesses.",
+      "locations": [
+        {
+          "slug": "jersey-city",
+          "name": "Jersey City",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Website design and content for Jersey City businesses",
+          "lead": "From Journal Square to the waterfront, Jersey City businesses compete on trust and speed. We build sites and capture on-site photo and video so your online presence matches how good you are in person.",
+          "localAngle": "Jersey City searchers often compare Google results and Maps photos before they call. We tighten your website offer, refresh your Google Business Profile, and wire clear inquiry paths so nearby customers can book without friction.",
+          "neighborhoods": ["Downtown", "Journal Square", "The Heights", "Newport", "Bergen-Lafayette", "Greenville", "West Side"]
+        },
+        {
+          "slug": "hoboken",
+          "name": "Hoboken",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Websites and content for Hoboken local businesses",
+          "lead": "Hoboken businesses live on foot traffic, reviews, and Instagram. We help you own a professional website and fresh photo and video that convert visitors who already know the mile square.",
+          "localAngle": "Hoboken customers move fast and judge quality from photos first. We capture real storefront and service imagery, then place it on your site and Google profile so you look as sharp online as you do on Washington Street.",
+          "neighborhoods": ["Washington Street", "Uptown", "Downtown", "Waterfront"]
+        },
+        {
+          "slug": "weehawken",
+          "name": "Weehawken",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Local SEO websites for Weehawken businesses",
+          "lead": "Weehawken sits between NYC views and Hudson County customers. We build clear websites and content systems so nearby residents and Manhattan clients can find and trust you.",
+          "localAngle": "Many Weehawken businesses serve both New Jersey locals and New York clients. We clarify who you help, capture on-location content, and set up lead paths that work for both audiences.",
+          "neighborhoods": ["Boulevard East", "Port Imperial", "Downtown Weehawken"]
+        },
+        {
+          "slug": "union-city",
+          "name": "Union City",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Website and Google Business help for Union City",
+          "lead": "Union City businesses win on neighborhood reputation. We modernize your website and Google Business Profile so searchers nearby choose you with confidence.",
+          "localAngle": "Dense local competition means your photos, reviews, and offer clarity matter. We refresh the assets people see first, then connect them to a simple inquiry or booking flow.",
+          "neighborhoods": ["Bergenline Avenue", "Transfer Station", "Hudson Corridor"]
+        },
+        {
+          "slug": "bayonne",
+          "name": "Bayonne",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Websites and content capture for Bayonne businesses",
+          "lead": "Bayonne service providers and retailers need a digital front door that feels local and professional. We build it, shoot the content, and connect the leads.",
+          "localAngle": "Bayonne customers often search by city name plus service. We align your site messaging and Google categories to those searches, then back it with real on-site photography.",
+          "neighborhoods": ["Broadway", "Peninsula", "Constable Hook"]
+        },
+        {
+          "slug": "west-new-york",
+          "name": "West New York",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Digital presence for West New York local brands",
+          "lead": "West New York businesses serve a bilingual, high-density market. We create websites and content that communicate clearly and convert inquiries.",
+          "localAngle": "We help West New York operators look established online with strong visuals, simple service pages, and Google Business Profile improvements that support local discovery.",
+          "neighborhoods": ["Bergenline Avenue", "Boulevard East", "Port Imperial corridor"]
+        },
+        {
+          "slug": "secaucus",
+          "name": "Secaucus",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Websites and lead systems for Secaucus businesses",
+          "lead": "Secaucus sits at a logistics and retail crossroads. We build conversion-focused websites and content for companies that need to look credible to local and regional buyers.",
+          "localAngle": "Whether you serve outlet shoppers, nearby residents, or B2B clients, we clarify your offer and put professional photo and video behind it.",
+          "neighborhoods": ["Plaza area", "North End", "Meadowlands edge"]
+        },
+        {
+          "slug": "north-bergen",
+          "name": "North Bergen",
+          "state": "NJ",
+          "region": "Hudson County",
+          "headline": "Local website design for North Bergen businesses",
+          "lead": "North Bergen businesses need a clean site and better local proof. We deliver both, with on-site content when you need fresher photos and video.",
+          "localAngle": "We help North Bergen providers stand out in Maps and search with updated imagery, clearer service pages, and inquiry paths that do not dump people into a dead-end contact form.",
+          "neighborhoods": ["Boulevard East", "Tonnelle corridor", "Woodcliff"]
+        }
+      ]
+    },
+    {
+      "id": "north-jersey",
+      "name": "North Jersey",
+      "summary": "Bergen, Essex, Passaic, and Morris County businesses that need a sharper website, better content, and a clearer path to booked work.",
+      "locations": [
+        {
+          "slug": "hackensack",
+          "name": "Hackensack",
+          "state": "NJ",
+          "region": "Bergen County",
+          "headline": "Website and content services in Hackensack",
+          "lead": "Hackensack is a Bergen County hub for professional services and local retail. We build websites and capture content that help you earn the next inquiry.",
+          "localAngle": "County-seat visibility means prospects compare you against nearby competitors. We tighten messaging, improve local proof, and make it easy to contact you.",
+          "neighborhoods": ["Downtown Hackensack", "Prospect Avenue", "Hospital district"]
+        },
+        {
+          "slug": "fort-lee",
+          "name": "Fort Lee",
+          "state": "NJ",
+          "region": "Bergen County",
+          "headline": "Websites for Fort Lee businesses near the GWB",
+          "lead": "Fort Lee businesses serve New Jersey locals and New York visitors every day. We create a digital presence that works for both.",
+          "localAngle": "Bridge traffic brings opportunity and competition. We help Fort Lee brands look premium online with strong photography, clear offers, and lead capture that works on mobile.",
+          "neighborhoods": ["Main Street", "Bridge Plaza", "Palisade Avenue"]
+        },
+        {
+          "slug": "englewood",
+          "name": "Englewood",
+          "state": "NJ",
+          "region": "Bergen County",
+          "headline": "Local SEO and websites for Englewood, NJ",
+          "lead": "Englewood businesses thrive when they look established and easy to book. We build the site and content system behind that first impression.",
+          "localAngle": "We focus on trust signals Englewood customers notice: real photos, clear services, reviews workflow, and a homepage that explains what you do in seconds.",
+          "neighborhoods": ["Downtown Englewood", "East Hill", "Englewood Cliffs nearby"]
+        },
+        {
+          "slug": "teaneck",
+          "name": "Teaneck",
+          "state": "NJ",
+          "region": "Bergen County",
+          "headline": "Website design for Teaneck local businesses",
+          "lead": "Teaneck service businesses and shops need a site that feels personal and professional. We build that, then support it with content when you need it.",
+          "localAngle": "Community reputation travels fast in Teaneck. We make sure your website and Google profile reinforce the quality people already hear about.",
+          "neighborhoods": ["Cedar Lane", "Queen Anne Road", "Teaneck Road"]
+        },
+        {
+          "slug": "paramus",
+          "name": "Paramus",
+          "state": "NJ",
+          "region": "Bergen County",
+          "headline": "Conversion websites for Paramus businesses",
+          "lead": "Paramus is retail and service dense. Standing out online takes clarity, strong creative, and a path to inquire. That is what we build.",
+          "localAngle": "Shoppers and clients in Paramus compare options quickly. We create focused pages, capture on-brand content, and connect leads so interest does not stall.",
+          "neighborhoods": ["Route 17 corridor", "Route 4 corridor", "Garden State Plaza area"]
+        },
+        {
+          "slug": "ridgewood",
+          "name": "Ridgewood",
+          "state": "NJ",
+          "region": "Bergen County",
+          "headline": "Premium web presence for Ridgewood businesses",
+          "lead": "Ridgewood customers expect polish. We design websites and content that feel elevated without slowing down your ability to get booked.",
+          "localAngle": "We help Ridgewood brands match the downtown quality bar online with refined visuals, clear service storytelling, and inquiry flows that feel simple.",
+          "neighborhoods": ["East Ridgewood Avenue", "Downtown Ridgewood", "Godwin Avenue"]
+        },
+        {
+          "slug": "montclair",
+          "name": "Montclair",
+          "state": "NJ",
+          "region": "Essex County",
+          "headline": "Websites and content for Montclair brands",
+          "lead": "Montclair businesses compete on taste and trust. We build digital experiences that show your craft and make the next step obvious.",
+          "localAngle": "From Bloomfield Avenue storefronts to professional practices, we pair strong photography with conversion-minded site structure so Montclair customers take action.",
+          "neighborhoods": ["Bloomfield Avenue", "Upper Montclair", "South End", "Watchung Plaza"]
+        },
+        {
+          "slug": "newark",
+          "name": "Newark",
+          "state": "NJ",
+          "region": "Essex County",
+          "headline": "Website design and lead systems for Newark businesses",
+          "lead": "Newark companies need a credible site that works for local customers and regional partners. We build it and back it with content and follow-up paths.",
+          "localAngle": "We help Newark operators present a clear offer, professional proof, and mobile-friendly inquiry flows for a market that moves quickly.",
+          "neighborhoods": ["Downtown", "Ironbound", "University Heights", "Forest Hill"]
+        },
+        {
+          "slug": "paterson",
+          "name": "Paterson",
+          "state": "NJ",
+          "region": "Passaic County",
+          "headline": "Local websites for Paterson businesses",
+          "lead": "Paterson businesses grow when customers can find them, trust them, and contact them easily. We handle the website and content side of that equation.",
+          "localAngle": "We improve local visibility with clearer service pages, stronger Google Business assets, and on-site photo and video that show real operations.",
+          "neighborhoods": ["Downtown Paterson", "Great Falls area", "Lakeview"]
+        },
+        {
+          "slug": "clifton",
+          "name": "Clifton",
+          "state": "NJ",
+          "region": "Passaic County",
+          "headline": "Website and GBP services for Clifton, NJ",
+          "lead": "Clifton service providers and retailers need a modern site and better local proof. We deliver website builds, content capture, and Google profile upgrades.",
+          "localAngle": "We align your online presence to how Clifton customers search, then make booking or inquiry the easiest next step.",
+          "neighborhoods": ["Main Avenue", "Allwood", "Botany Village"]
+        },
+        {
+          "slug": "morristown",
+          "name": "Morristown",
+          "state": "NJ",
+          "region": "Morris County",
+          "headline": "Websites for Morristown professionals and brands",
+          "lead": "Morristown businesses serve professionals who expect a sharp first impression. We build websites and content systems that earn that trust.",
+          "localAngle": "We help Morristown practices and local brands look established with clean design, strong photography, and lead paths that feel premium.",
+          "neighborhoods": ["The Green", "South Street", "Speedwell Avenue"]
+        },
+        {
+          "slug": "wayne",
+          "name": "Wayne",
+          "state": "NJ",
+          "region": "Passaic County",
+          "headline": "Local web design for Wayne, NJ businesses",
+          "lead": "Wayne businesses need a digital presence that works for families, professionals, and nearby towns. We build sites and content that convert that traffic.",
+          "localAngle": "From Route 23 corridor retailers to local service pros, we clarify offers and upgrade the visuals customers use to decide.",
+          "neighborhoods": ["Route 23", "Wayne Hills", "Packanack"]
+        }
+      ]
+    },
+    {
+      "id": "nyc",
+      "name": "New York City",
+      "summary": "Website, content, and lead system work for NYC businesses that need a partner who can also shoot on location across the boroughs.",
+      "locations": [
+        {
+          "slug": "manhattan",
+          "name": "Manhattan",
+          "state": "NY",
+          "region": "New York City",
+          "headline": "Website design and content for Manhattan businesses",
+          "lead": "Manhattan brands are judged in seconds. We build fast, clear websites and capture on-location content that holds up to the city’s standards.",
+          "localAngle": "We help Manhattan operators cut through noise with focused messaging, premium visuals, and inquiry paths that work for mobile-first customers.",
+          "neighborhoods": ["Midtown", "Downtown", "Upper East Side", "Upper West Side", "Chelsea", "SoHo", "Harlem"]
+        },
+        {
+          "slug": "brooklyn",
+          "name": "Brooklyn",
+          "state": "NY",
+          "region": "New York City",
+          "headline": "Websites and content production for Brooklyn brands",
+          "lead": "Brooklyn businesses win with personality and proof. We build storefronts and content systems that show your craft and turn attention into customers.",
+          "localAngle": "Whether you are in Williamsburg, Downtown Brooklyn, or farther out, we capture real neighborhood energy and put it behind a site that converts.",
+          "neighborhoods": ["Williamsburg", "Downtown Brooklyn", "Park Slope", "DUMBO", "Bushwick", "Bay Ridge"]
+        },
+        {
+          "slug": "queens",
+          "name": "Queens",
+          "state": "NY",
+          "region": "New York City",
+          "headline": "Local websites for Queens businesses",
+          "lead": "Queens is full of strong local businesses that under-present online. We fix that with clearer sites, better content, and practical lead systems.",
+          "localAngle": "We help Queens businesses speak to neighborhood searchers with accurate services, strong photos, and Google Business Profile improvements.",
+          "neighborhoods": ["Long Island City", "Astoria", "Flushing", "Jackson Heights", "Forest Hills"]
+        },
+        {
+          "slug": "bronx",
+          "name": "Bronx",
+          "state": "NY",
+          "region": "New York City",
+          "headline": "Website and local content for Bronx businesses",
+          "lead": "Bronx businesses grow when customers can trust what they see online. We build that trust with websites, photography, and clear contact paths.",
+          "localAngle": "We focus on practical upgrades: stronger visuals, clearer offers, and Google profile work that helps nearby customers choose you.",
+          "neighborhoods": ["Fordham", "Mott Haven", "Riverdale", "Hunts Point"]
+        },
+        {
+          "slug": "staten-island",
+          "name": "Staten Island",
+          "state": "NY",
+          "region": "New York City",
+          "headline": "Websites for Staten Island local businesses",
+          "lead": "Staten Island businesses need a local digital presence that feels close to home and easy to book. We build websites and content with that in mind.",
+          "localAngle": "We help Staten Island providers show up strongly in local search and look professional the moment a neighbor checks your site or Google profile.",
+          "neighborhoods": ["St. George", "Todt Hill", "Great Kills", "New Dorp"]
+        }
+      ]
+    }
+  ],
+  "servicesOffered": [
+    {
+      "name": "GBP Content Refresh",
+      "href": "/website-pricing.html#gbp-refresh",
+      "blurb": "On-site photo, short-form video, and Google Business Profile cleanup without a full website rebuild."
+    },
+    {
+      "name": "Website Only",
+      "href": "/website-pricing.html#website-only",
+      "blurb": "Conversion-focused Webflow or Shopify builds when you already have usable photos and copy."
+    },
+    {
+      "name": "Website + Content",
+      "href": "/website-pricing.html#website-content-half",
+      "blurb": "Website build plus half-day or full-day on-location photo and video capture."
+    },
+    {
+      "name": "Content + Growth Retainer",
+      "href": "/website-pricing.html#ongoing",
+      "blurb": "Month-to-month content, posting, and review support after your site is live."
+    }
+  ]
+}

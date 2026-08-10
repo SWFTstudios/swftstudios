@@ -13,7 +13,7 @@
       {
         "id": "gbp-refresh",
         "name": "GBP Content Refresh",
-        "priceLabel": "$400–$600",
+        "priceLabel": "$400 to $600",
         "priceNote": "one-time",
         "featured": false,
         "description": "No new website. On-site photo, short-form video, and a cleaned-up Google Business Profile so locals see quality now.",
@@ -29,20 +29,20 @@
         "stripe": {
           "mode": "payment",
           "amountCents": 40000,
-          "productName": "SWFT — GBP Content Refresh (project start)",
+          "productName": "SWFT. GBP Content Refresh (project start)",
           "ctaLabel": "Pay $400 to start",
           "priceDisplay": "$400",
-          "billingNote": "Starting price within the $400–$600 range. Final scope is confirmed after a short intake."
+          "billingNote": "Starting price within the $400 to $600 range. Final scope is confirmed after a short intake."
         }
       },
       {
         "id": "website-only",
         "name": "Website Only",
-        "priceLabel": "$800–$1,500",
+        "priceLabel": "$800 to $1,500",
         "priceNote": "one-time · you supply content",
         "featured": false,
         "description": "A conversion-focused site built and customized on Webflow or Shopify when you already have usable photos and copy.",
-        "scopeDriver": "$800–$1,000 for a simple 1–5 page brochure site. $1,200–$1,500 for more pages, Shopify setup, booking or lead forms, or extra revision rounds.",
+        "scopeDriver": "$800 to $1,000 for a simple 1 to 5 page brochure site. $1,200 to $1,500 for more pages, Shopify setup, booking or lead forms, or extra revision rounds.",
         "includes": [
           "Site built and customized on Webflow or Shopify",
           "Mobile-first layout and clear messaging",
@@ -54,20 +54,20 @@
         "stripe": {
           "mode": "payment",
           "amountCents": 80000,
-          "productName": "SWFT — Website Only (project start)",
+          "productName": "SWFT. Website Only (project start)",
           "ctaLabel": "Pay $800 to start",
           "priceDisplay": "$800",
-          "billingNote": "Starting price within the $800–$1,500 range. You supply photos and copy. Final scope confirmed after intake."
+          "billingNote": "Starting price within the $800 to $1,500 range. You supply photos and copy. Final scope confirmed after intake."
         }
       },
       {
         "id": "website-content-half",
         "name": "Website + Content Capture",
-        "priceLabel": "$2,000–$2,800",
+        "priceLabel": "$2,000 to $2,800",
         "priceNote": "one-time · half-day shoot",
         "featured": true,
         "badge": "Most common",
-        "description": "Website build plus a 2–4 hour on-location photo and video shoot, edited and placed on the site and Google Business Profile.",
+        "description": "Website build plus a 2 to 4 hour on-location photo and video shoot, edited and placed on the site and Google Business Profile.",
         "scopeDriver": "Right fit when the business looks better in person than online and needs both a site and real content in one project.",
         "includes": [
           "Website build and customization",
@@ -80,16 +80,16 @@
         "stripe": {
           "mode": "payment",
           "amountCents": 200000,
-          "productName": "SWFT — Website + Content Capture (project start)",
+          "productName": "SWFT. Website + Content Capture (project start)",
           "ctaLabel": "Pay $2,000 to start",
           "priceDisplay": "$2,000",
-          "billingNote": "Starting price within the $2,000–$2,800 range for a half-day shoot + site. Final scope confirmed after intake."
+          "billingNote": "Starting price within the $2,000 to $2,800 range for a half-day shoot + site. Final scope confirmed after intake."
         }
       },
       {
         "id": "website-content-full",
         "name": "Website + Extended Content",
-        "priceLabel": "$3,000–$4,500+",
+        "priceLabel": "$3,000 to $4,500+",
         "priceNote": "one-time · full-day shoot",
         "featured": false,
         "description": "Larger site with more pages or stakeholder complexity, plus a full-day content shoot across multiple locations or product lines.",
@@ -105,10 +105,10 @@
         "stripe": {
           "mode": "payment",
           "amountCents": 300000,
-          "productName": "SWFT — Website + Extended Content (project start)",
+          "productName": "SWFT. Website + Extended Content (project start)",
           "ctaLabel": "Pay $3,000 to start",
           "priceDisplay": "$3,000",
-          "billingNote": "Starting price within the $3,000–$4,500+ range. Multi-location or complex builds may quote higher after intake."
+          "billingNote": "Starting price within the $3,000 to $4,500+ range. Multi-location or complex builds may quote higher after intake."
         }
       }
     ]
@@ -121,7 +121,7 @@
       {
         "id": "content-growth-retainer",
         "name": "Content + Growth Retainer",
-        "priceLabel": "$450–$800",
+        "priceLabel": "$450 to $800",
         "priceNote": "per month",
         "featured": false,
         "description": "Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site.",
@@ -138,10 +138,10 @@
           "mode": "subscription",
           "amountCents": 45000,
           "interval": "month",
-          "productName": "SWFT — Content + Growth Retainer",
+          "productName": "SWFT. Content + Growth Retainer",
           "ctaLabel": "Start at $450/mo",
           "priceDisplay": "$450/mo",
-          "billingNote": "Starting monthly rate within the $450–$800 band. Month-to-month. Scope (shoot frequency and channels) confirmed after intake."
+          "billingNote": "Starting monthly rate within the $450 to $800 band. Month-to-month. Scope (shoot frequency and channels) confirmed after intake."
         }
       },
       {
@@ -164,7 +164,7 @@
           "mode": "subscription",
           "amountCents": 120000,
           "interval": "month",
-          "productName": "SWFT — Full Growth Partner",
+          "productName": "SWFT. Full Growth Partner",
           "ctaLabel": "Start at $1,200/mo",
           "priceDisplay": "$1,200/mo",
           "billingNote": "Starting monthly rate. Ad spend is billed separately to your ad account. Final deliverables and reporting cadence confirmed after intake."
@@ -181,11 +181,11 @@
   "faq": [
     {
       "q": "How much does a website cost?",
-      "a": "It depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800–$1,500. Website plus a half-day shoot is $2,000–$2,800. Website plus a full-day or multi-location shoot starts at $3,000–$4,500+."
+      "a": "It depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800 to $1,500. Website plus a half-day shoot is $2,000 to $2,800. Website plus a full-day or multi-location shoot starts at $3,000 to $4,500+."
     },
     {
       "q": "What's the GBP Content Refresh?",
-      "a": "A $400–$600 one-time offer with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile (categories, services, photos, posts), and set up review generation. Fastest entry point if you need to look better locally without a rebuild."
+      "a": "A $400 to $600 one-time offer with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile (categories, services, photos, posts), and set up review generation. Fastest entry point if you need to look better locally without a rebuild."
     },
     {
       "q": "Do you require long-term contracts?",
@@ -193,7 +193,7 @@
     },
     {
       "q": "How fast can you turn around a site?",
-      "a": "Simpler builds can turn around in as little as 24–48 hours when content and decisions are ready. Larger sites, multi-stakeholder projects, and shoot-inclusive work take longer. We set a realistic timeline after intake."
+      "a": "Simpler builds can turn around in as little as 24 to 48 hours when content and decisions are ready. Larger sites, multi-stakeholder projects, and shoot-inclusive work take longer. We set a realistic timeline after intake."
     },
     {
       "q": "What changes the price within a tier?",

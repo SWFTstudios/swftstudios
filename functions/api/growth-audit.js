@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function — POST /api/growth-audit
+ * Cloudflare Pages Function. POST /api/growth-audit
  * Writes Free Growth Audit leads to Airtable ("Growth Audits"),
  * falling back to "Discovery Calls" when AIRTABLE_TABLE_GROWTH_AUDIT is unset.
  * Sends Resend team notify + visitor confirmation when RESEND_API_KEY is set.
@@ -10,7 +10,7 @@
  *   optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_GROWTH_AUDIT, AIRTABLE_TABLE_CONTACT,
  *             RESEND_FROM, NOTIFY_EMAIL
  */
-import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
+import { escapeHtml, sendLeadEmails } from "./_lib/resend.js";
 
 const DEFAULTS = {
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
@@ -35,7 +35,7 @@ const SERVICE_LABELS = {
   "website-content-full": "Website + Extended Content",
   "content-growth-retainer": "Content + Growth Retainer",
   "full-growth-partner": "Full Growth Partner",
-  "not-sure": "Not sure — help me choose",
+  "not-sure": "Not sure, help me choose",
 };
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
@@ -43,7 +43,7 @@ const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 function json(obj, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { "Content-Type": "application/json", ...extraHeaders },
+    headers: { "Content-Type": "application/json", ..extraHeaders },
   });
 }
 
@@ -81,7 +81,7 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: "Invalid JSON" }, 400);
   }
 
-  /* Honeypot — bots fill this; humans never see it */
+  /* Honeypot, bots fill this; humans never see it */
   if (str(body.honeypot, 200) || str(body.company_website, 200)) {
     return json({ ok: true, stored: false });
   }
@@ -94,7 +94,7 @@ export async function onRequestPost(context) {
   const instagram = str(body.instagram, 300);
   const presence = websiteUrl || instagram || str(body.website, 500);
   const desiredServiceRaw = str(body.desiredService, 80);
-  const desiredService = ALLOWED_SERVICES.has(desiredServiceRaw) ? desiredServiceRaw : "";
+  const desiredService = ALLOWED_SERVICES.has(desiredServiceRaw) ? desiredServiceRaw: "";
   const desiredServiceLabel =
     str(body.desiredServiceLabel, 200) || SERVICE_LABELS[desiredService] || desiredService;
   const details = str(body.details, 4000);
@@ -116,7 +116,7 @@ export async function onRequestPost(context) {
   }
 
   const fullName = [firstName, lastName].filter(Boolean).join(" ");
-  const additionalContext = [details, photoLinks ? `Photo links: ${photoLinks}` : ""]
+  const additionalContext = [details, photoLinks ? `Photo links: ${photoLinks}`: ""]
     .filter(Boolean)
     .join("\n\n");
 
@@ -135,8 +135,8 @@ export async function onRequestPost(context) {
       "Desired Outcome": desiredOutcome,
       Instagram: instagram,
       "Additional Context": [
-        lastName ? `Last name: ${lastName}` : "",
-        desiredServiceLabel ? `Desired service: ${desiredServiceLabel}` : "",
+        lastName ? `Last name: ${lastName}`: "",
+        desiredServiceLabel ? `Desired service: ${desiredServiceLabel}`: "",
         additionalContext,
       ]
         .filter(Boolean)
@@ -155,10 +155,10 @@ export async function onRequestPost(context) {
       Name: fullName || firstName,
       Email: email,
       "Business Type": desiredServiceLabel || businessCategory,
-      "Primary Goal": `Growth Audit — ${desiredServiceLabel || challenge}`,
+      "Primary Goal": `Growth Audit, ${desiredServiceLabel || challenge}`,
       Details: [
         `Business: ${businessName}`,
-        lastName ? `Last name: ${lastName}` : "",
+        lastName ? `Last name: ${lastName}`: "",
         `Website: ${websiteUrl}`,
         `Social: ${instagram}`,
         `Desired service: ${desiredServiceLabel}`,
@@ -181,7 +181,7 @@ export async function onRequestPost(context) {
     visitorEmail: email,
     visitorName: firstName,
     idempotencyBase,
-    teamSubject: `Growth Audit: ${businessName}${desiredServiceLabel ? ` (${desiredServiceLabel})` : ""}`,
+    teamSubject: `Growth Audit: ${businessName}${desiredServiceLabel ? ` (${desiredServiceLabel})`: ""}`,
     teamHtml: `
       <p><strong>New Growth Audit request</strong></p>
       <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
@@ -196,18 +196,18 @@ export async function onRequestPost(context) {
         ${row("Photo links", photoLinks)}
         ${row("UTM", [str(body.utmSource, 80), str(body.utmMedium, 80), str(body.utmCampaign, 80)].filter(Boolean).join(" / "))}
         ${row("Source page", str(body.sourcePage, 200))}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Stored in Airtable", stored ? "Yes": "No")}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
-    confirmSubject: "We got your Growth Audit request — SWFT Studios",
+    confirmSubject: "We got your Growth Audit request. SWFT Studios",
     confirmHtml: `
       <p>Hi ${escapeHtml(firstName)},</p>
       <p>Thanks for requesting a Free Growth Audit for <strong>${escapeHtml(businessName)}</strong>.</p>
       <p>We'll review your site and send personalized recommendations to this email within a few business days.</p>
       <p>If you haven't booked a call yet, you can pick a time here: <a href="https://cal.com/swftstudios/swft-meeting">cal.com/swftstudios/swft-meeting</a>.</p>
       <p>Questions in the meantime? Just reply to this message or email hello@swftstudios.com.</p>
-      <p>— SWFT Studios</p>
+      <p>. SWFT Studios</p>
     `,
   });
 

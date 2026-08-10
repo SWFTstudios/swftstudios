@@ -1,12 +1,12 @@
 /**
- * Cloudflare Pages Function — POST /api/contact
+ * Cloudflare Pages Function. POST /api/contact
  * Writes the project inquiry form to Airtable ("Discovery Calls").
  * Sends Resend team notify + visitor confirmation when RESEND_API_KEY is set.
  *
  * Env: AIRTABLE_TOKEN, RESEND_API_KEY;
  * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT, RESEND_FROM, NOTIFY_EMAIL
  */
-import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
+import { escapeHtml, sendLeadEmails } from "./_lib/resend.js";
 
 const DEFAULTS = {
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
@@ -76,11 +76,11 @@ export async function onRequestPost(context) {
 
   const detailsParts = [
     details,
-    website ? `Website/Social: ${website}` : "",
-    phone ? `Phone: ${phone}` : "",
-    businessName ? `Business: ${businessName}` : "",
-    challenge ? `Challenge: ${challenge}` : "",
-    desiredOutcome ? `Desired outcome: ${desiredOutcome}` : "",
+    website ? `Website/Social: ${website}`: "",
+    phone ? `Phone: ${phone}`: "",
+    businessName ? `Business: ${businessName}`: "",
+    challenge ? `Challenge: ${challenge}`: "",
+    desiredOutcome ? `Desired outcome: ${desiredOutcome}`: "",
   ].filter(Boolean);
 
   const table = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
@@ -118,16 +118,16 @@ export async function onRequestPost(context) {
         ${row("Timeline", timeline)}
         ${row("Budget", budget)}
         ${row("Details", details)}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Stored in Airtable", stored ? "Yes": "No")}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
-    confirmSubject: "We got your project inquiry — SWFT Studios",
+    confirmSubject: "We got your project inquiry. SWFT Studios",
     confirmHtml: `
       <p>Hi ${escapeHtml(name)},</p>
       <p>Thanks for reaching out. We received your project inquiry and will follow up within one business day.</p>
       <p>Questions sooner? Reply to this message or email hello@swftstudios.com.</p>
-      <p>— SWFT Studios</p>
+      <p>. SWFT Studios</p>
     `,
   });
 

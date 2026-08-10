@@ -1,5 +1,5 @@
 /* ============================================================
-   SWFT Studios — Vimeo hero intro loader
+   SWFT Studios - Vimeo hero intro loader
    Gates page reveal until muted autoplay hero is ready,
    or falls back to a local still on slow/offline/reduced-motion.
    ============================================================ */
@@ -103,7 +103,7 @@
 
     function attachPlayer() {
       if (typeof window.Vimeo === "undefined" || !window.Vimeo.Player) {
-        // player.js missing — wait for timeout / iframe load
+        // player.js missing - wait for timeout / iframe load
         iframe.addEventListener("load", function () {
           // Give the player a beat after iframe load
           window.setTimeout(onReady, 400);
@@ -124,7 +124,7 @@
         player.ready().then(function () {
           return player.play();
         }).then(settle).catch(function () {
-          // Autoplay blocked or error — still treat as ready if loaded
+          // Autoplay blocked or error - still treat as ready if loaded
           settle();
         });
       } catch (err) {
