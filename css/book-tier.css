@@ -1,0 +1,149 @@
+/* Tier Stripe booking pages — extends page-shell + growth-audit form styles */
+.book-page .ps-hero {
+  margin-bottom: 1.75rem;
+}
+
+.book-price-chip {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.85rem;
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(127, 255, 229, 0.28);
+  border-radius: 10px;
+  background: rgba(127, 255, 229, 0.05);
+}
+
+.book-price-chip strong {
+  color: var(--swft-text-strong, #fff);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  letter-spacing: -0.02em;
+}
+
+.book-price-chip span {
+  color: var(--swft-muted, #a8a8a8);
+  font-size: 0.92rem;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 2.25rem;
+  align-items: start;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 900px) {
+  .book-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.book-includes {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.book-includes li {
+  position: relative;
+  padding-left: 1.25rem;
+  color: var(--swft-lead, #c4c7c7);
+  line-height: 1.45;
+}
+
+.book-includes li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--ps-accent, #7fffe5);
+}
+
+.book-note {
+  border-left: 2px solid var(--ps-accent, #7fffe5);
+  padding: 0.65rem 0 0.65rem 1rem;
+  margin: 0 0 1.25rem;
+  color: var(--swft-text, #e5e2e1);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.book-alt {
+  margin: 1.25rem 0 0;
+  font-size: 0.92rem;
+  color: var(--swft-muted, #a8a8a8);
+}
+
+.book-alt a {
+  color: var(--ps-accent, #7fffe5);
+}
+
+.book-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 3rem;
+}
+
+.book-hub-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid var(--ps-border, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  background: var(--ps-card, #0a0a0a);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.book-hub-card:hover,
+.book-hub-card:focus-visible {
+  border-color: rgba(127, 255, 229, 0.45);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.book-hub-card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--swft-text-strong, #fff);
+}
+
+.book-hub-card .book-hub-price {
+  color: var(--ps-accent, #7fffe5);
+  font-weight: 600;
+}
+
+.book-hub-card p {
+  margin: 0;
+  color: var(--swft-muted, #a8a8a8);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.book-status-banner {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.92rem;
+}
+
+.book-status-banner.is-cancel {
+  background: rgba(255, 180, 180, 0.08);
+  border: 1px solid rgba(255, 180, 180, 0.35);
+  color: #ffc9c9;
+}
+
+.book-submit[disabled] {
+  opacity: 0.65;
+  pointer-events: none;
+}
