@@ -24,7 +24,16 @@
           "Google Business Profile optimization (categories, services, photos, posts)",
           "Review-generation setup"
         ],
-        "cta": "Start with GBP Refresh"
+        "cta": "Start with GBP Refresh",
+        "bookUrl": "/book/gbp-refresh.html",
+        "stripe": {
+          "mode": "payment",
+          "amountCents": 40000,
+          "productName": "SWFT — GBP Content Refresh (project start)",
+          "ctaLabel": "Pay $400 to start",
+          "priceDisplay": "$400",
+          "billingNote": "Starting price within the $400–$600 range. Final scope is confirmed after a short intake."
+        }
       },
       {
         "id": "website-only",
@@ -40,7 +49,16 @@
           "Lead capture or booking path",
           "Basic SEO foundations and launch support"
         ],
-        "cta": "Start Website Only"
+        "cta": "Start Website Only",
+        "bookUrl": "/book/website-only.html",
+        "stripe": {
+          "mode": "payment",
+          "amountCents": 80000,
+          "productName": "SWFT — Website Only (project start)",
+          "ctaLabel": "Pay $800 to start",
+          "priceDisplay": "$800",
+          "billingNote": "Starting price within the $800–$1,500 range. You supply photos and copy. Final scope confirmed after intake."
+        }
       },
       {
         "id": "website-content-half",
@@ -57,7 +75,16 @@
           "Edited assets for the site and GBP",
           "Lead paths wired for inquiries"
         ],
-        "cta": "Start Website + Content"
+        "cta": "Start Website + Content",
+        "bookUrl": "/book/website-content-half.html",
+        "stripe": {
+          "mode": "payment",
+          "amountCents": 200000,
+          "productName": "SWFT — Website + Content Capture (project start)",
+          "ctaLabel": "Pay $2,000 to start",
+          "priceDisplay": "$2,000",
+          "billingNote": "Starting price within the $2,000–$2,800 range for a half-day shoot + site. Final scope confirmed after intake."
+        }
       },
       {
         "id": "website-content-full",
@@ -73,7 +100,16 @@
           "Edited photo and video package",
           "Site and GBP content integration"
         ],
-        "cta": "Start Extended Project"
+        "cta": "Start Extended Project",
+        "bookUrl": "/book/website-content-full.html",
+        "stripe": {
+          "mode": "payment",
+          "amountCents": 300000,
+          "productName": "SWFT — Website + Extended Content (project start)",
+          "ctaLabel": "Pay $3,000 to start",
+          "priceDisplay": "$3,000",
+          "billingNote": "Starting price within the $3,000–$4,500+ range. Multi-location or complex builds may quote higher after intake."
+        }
       }
     ]
   },
@@ -96,7 +132,17 @@
           "Review management support",
           "Month-to-month, no long contract"
         ],
-        "cta": "Start Content Retainer"
+        "cta": "Start Content Retainer",
+        "bookUrl": "/book/content-growth-retainer.html",
+        "stripe": {
+          "mode": "subscription",
+          "amountCents": 45000,
+          "interval": "month",
+          "productName": "SWFT — Content + Growth Retainer",
+          "ctaLabel": "Start at $450/mo",
+          "priceDisplay": "$450/mo",
+          "billingNote": "Starting monthly rate within the $450–$800 band. Month-to-month. Scope (shoot frequency and channels) confirmed after intake."
+        }
       },
       {
         "id": "full-growth-partner",
@@ -112,7 +158,17 @@
           "GBP and review support as needed",
           "Custom scope and reporting"
         ],
-        "cta": "Talk About Growth Partner"
+        "cta": "Talk About Growth Partner",
+        "bookUrl": "/book/full-growth-partner.html",
+        "stripe": {
+          "mode": "subscription",
+          "amountCents": 120000,
+          "interval": "month",
+          "productName": "SWFT — Full Growth Partner",
+          "ctaLabel": "Start at $1,200/mo",
+          "priceDisplay": "$1,200/mo",
+          "billingNote": "Starting monthly rate. Ad spend is billed separately to your ad account. Final deliverables and reporting cadence confirmed after intake."
+        }
       }
     ]
   },

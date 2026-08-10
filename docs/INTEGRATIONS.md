@@ -8,9 +8,37 @@ Airtable base and send email via **Resend** when `RESEND_API_KEY` is set.
 
 | Form | Pages Function | Airtable table | Email |
 |---|---|---|---|
+| `book/<tier>.html` (Stripe tier booking) | `POST /api/book-tier` → `functions/api/book-tier.js` | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation, then Stripe Checkout |
 | `growth-audit.html` (Free Growth Audit — multi-step) | `POST /api/growth-audit` → `functions/api/growth-audit.js` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) or Discovery Calls fallback | Team notify → `hello@swftstudios.com` + visitor confirmation |
 | `contact.html` (Project inquiry) | `POST /api/contact` → `functions/api/contact.js` | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation |
 | `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` → `functions/api/build-request.js` | "Website Build Requests" | (Airtable only for now) |
+
+### Stripe tier booking pages
+
+Each offer in [`data/pricing.json`](../data/pricing.json) has a dedicated booking page under `/book/`:
+
+| Page | Checkout |
+|---|---|
+| `/book/gbp-refresh.html` | $400 one-time (start of $400–$600) |
+| `/book/website-only.html` | $800 one-time (start of $800–$1,500) |
+| `/book/website-content-half.html` | $2,000 one-time (start of $2,000–$2,800) |
+| `/book/website-content-full.html` | $3,000 one-time (start of $3,000–$4,500+) |
+| `/book/content-growth-retainer.html` | $450/mo subscription |
+| `/book/full-growth-partner.html` | $1,200/mo subscription |
+
+Flow: form → Airtable + Resend → Stripe Checkout → `/book/thank-you.html`.
+
+**Amounts are server-authoritative** in [`functions/_lib/stripe-tiers.js`](../functions/_lib/stripe-tiers.js) (mirrored in `pricing.json` → `tier.stripe`). Clients cannot set the price.
+
+Regenerate pages after editing pricing stripe fields:
+
+```bash
+npm run build:book
+```
+
+Pricing card CTAs use `tier.bookUrl` (see [`js/pricing-render.js`](../js/pricing-render.js)). The Growth Audit path remains for “not sure” traffic.
+
+Required secret (same Pages project): `STRIPE_SECRET_KEY`. Without it, `/api/book-tier` returns 503 and the form shows an inline error.
 
 ### Growth Audit multi-step flow
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-08-10 — Stripe booking pages per pricing tier
+
+### Added
+- Dedicated Stripe Checkout booking pages for every offer-ladder tier under `/book/` (GBP Refresh, Website Only, Website + Content half/full, Content Retainer, Full Growth Partner).
+- `POST /api/book-tier` Pages Function: Airtable (Discovery Calls) + Resend notify + Stripe Checkout (`price_data`; payment or subscription).
+- Shared catalog [`functions/_lib/stripe-tiers.js`](../functions/_lib/stripe-tiers.js) (server-authoritative amounts).
+- Generator: `npm run build:book` → [`scripts/build-book-pages.mjs`](../scripts/build-book-pages.mjs).
+- Thank-you page at `/book/thank-you.html`.
+
+### Changed
+- [`data/pricing.json`](../data/pricing.json) tiers now include `bookUrl` + `stripe` start amounts.
+- Pricing card CTAs link to `/book/<tier>.html` instead of Growth Audit preselect.
+
+### Docs
+- Updated [`docs/INTEGRATIONS.md`](INTEGRATIONS.md) for the tier booking flow.
+
+---
+
 ## 2026-08-10 — Pricing → Growth Audit preselect + multi-step onboarding
 
 ### Changed

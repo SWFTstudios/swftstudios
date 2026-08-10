@@ -45,8 +45,8 @@
       ? "button is-course w-inline-block"
       : "button is-course outlined w-inline-block";
     var calUrl = (global.SwftPricingConfig && global.SwftPricingConfig.calUrl) || CAL_URL;
-    var planHref = calUrl;
-    if (tier.id) {
+    var planHref = tier.bookUrl || calUrl;
+    if (!tier.bookUrl && tier.id) {
       planHref +=
         (calUrl.indexOf("?") === -1 ? "?" : "&") + "plan=" + encodeURIComponent(tier.id);
     }
