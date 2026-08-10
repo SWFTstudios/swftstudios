@@ -8,8 +8,8 @@
  * Env: AIRTABLE_TOKEN, STRIPE_SECRET_KEY, RESEND_API_KEY
  * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT, RESEND_FROM, NOTIFY_EMAIL
  */
-import { escapeHtml, sendLeadEmails } from "./_lib/resend.js";
-import { getStripeTier } from "./_lib/stripe-tiers.js";
+import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
+import { getStripeTier } from "../_lib/stripe-tiers.js";
 
 const DEFAULTS = {
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
@@ -68,7 +68,7 @@ async function createStripeCheckout(env, { tier, email, businessName, name, orig
   params.set("line_items[0][price_data][product_data][name]", tier.productName);
   params.set(
     "line_items[0][price_data][product_data][description]",
-    `${tier.name}, ${tier.priceLabel} (starting checkout)`.slice(0, 500)
+    `${tier.name}. ${tier.priceLabel} (starting checkout)`.slice(0, 500)
   );
 
   if (tier.mode === "subscription") {
@@ -139,7 +139,7 @@ export async function onRequestPost(context) {
   const amountLabel =
     tier.mode === "subscription"
       ? `${tier.priceDisplay} (subscription)`
-     : `${tier.priceDisplay} (one-time start)`;
+      : `${tier.priceDisplay} (one-time start)`;
 
   const table = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
   const fields = {
@@ -149,12 +149,12 @@ export async function onRequestPost(context) {
     "Primary Goal": `Book ${tier.name} via Stripe (${amountLabel})`,
     Details: [
       `Business: ${businessName}`,
-      phone ? `Phone: ${phone}`: "",
-      website ? `Website/Social: ${website}`: "",
+      phone ? `Phone: ${phone}` : "",
+      website ? `Website/Social: ${website}` : "",
       `Tier ID: ${tier.id}`,
       `Checkout: ${amountLabel}`,
       `Published range: ${tier.priceLabel}`,
-      notes ? `Notes: ${notes}`: "",
+      notes ? `Notes: ${notes}` : "",
       `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
       `Source: ${str(body.sourcePage, 300)}`,
     ]
@@ -202,7 +202,7 @@ export async function onRequestPost(context) {
     visitorEmail: email,
     visitorName: name,
     idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
-    teamSubject: `Stripe book: ${tier.name}, ${businessName}`,
+    teamSubject: `Stripe book: ${tier.name}. ${businessName}`,
     teamHtml: `
       <p><strong>New tier booking (heading to Stripe)</strong></p>
       <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
@@ -214,7 +214,7 @@ export async function onRequestPost(context) {
         ${row("Business", businessName)}
         ${row("Website / Social", website)}
         ${row("Notes", notes)}
-        ${row("Stored in Airtable", stored ? "Yes": "No")}
+        ${row("Stored in Airtable", stored ? "Yes" : "No")}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
@@ -223,7 +223,7 @@ export async function onRequestPost(context) {
       <p>Hi ${escapeHtml(name)},</p>
       <p>Thanks for choosing <strong>${escapeHtml(tier.name)}</strong>. Complete Stripe Checkout to lock in your start (${escapeHtml(tier.priceDisplay)}).</p>
       <p>If the checkout tab closed, reopen your booking page or email <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>.</p>
-      <p>. SWFT Studios</p>
+      <p>SWFT Studios</p>
     `,
   });
 
