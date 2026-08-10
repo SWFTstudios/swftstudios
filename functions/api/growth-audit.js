@@ -18,6 +18,26 @@ const DEFAULTS = {
   AIRTABLE_TABLE_GROWTH_AUDIT: "",
 };
 
+const ALLOWED_SERVICES = new Set([
+  "gbp-refresh",
+  "website-only",
+  "website-content-half",
+  "website-content-full",
+  "content-growth-retainer",
+  "full-growth-partner",
+  "not-sure",
+]);
+
+const SERVICE_LABELS = {
+  "gbp-refresh": "GBP Content Refresh",
+  "website-only": "Website Only",
+  "website-content-half": "Website + Content Capture",
+  "website-content-full": "Website + Extended Content",
+  "content-growth-retainer": "Content + Growth Retainer",
+  "full-growth-partner": "Full Growth Partner",
+  "not-sure": "Not sure — help me choose",
+};
+
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
 function json(obj, status = 200, extraHeaders = {}) {
@@ -67,24 +87,38 @@ export async function onRequestPost(context) {
   }
 
   const firstName = str(body.firstName, 120);
+  const lastName = str(body.lastName, 120);
   const email = str(body.email, 320);
   const businessName = str(body.businessName, 200);
-  const website = str(body.website, 500);
-  const businessCategory = str(body.businessCategory, 200);
-  const challenge = str(body.challenge, 400);
-  const desiredOutcome = str(body.desiredOutcome, 4000);
-  const phone = str(body.phone, 40);
+  const websiteUrl = str(body.websiteUrl || body.website, 500);
   const instagram = str(body.instagram, 300);
-  const budget = str(body.budget, 80);
-  const timeline = str(body.timeline, 200);
+  const presence = websiteUrl || instagram || str(body.website, 500);
+  const desiredServiceRaw = str(body.desiredService, 80);
+  const desiredService = ALLOWED_SERVICES.has(desiredServiceRaw) ? desiredServiceRaw : "";
+  const desiredServiceLabel =
+    str(body.desiredServiceLabel, 200) || SERVICE_LABELS[desiredService] || desiredService;
   const details = str(body.details, 4000);
+  const photoLinks = str(body.photoLinks, 1000);
+  const phone = str(body.phone, 40);
 
-  if (!firstName || !email || !businessName || !website || !businessCategory || !challenge || !desiredOutcome) {
+  /* Legacy aliases still accepted for older clients */
+  const businessCategory =
+    str(body.businessCategory, 200) || desiredServiceLabel || "Growth Audit";
+  const challenge = str(body.challenge, 400) || desiredServiceLabel || "Growth Audit inquiry";
+  const desiredOutcome =
+    str(body.desiredOutcome, 4000) || details || `Discuss ${desiredServiceLabel || "next steps"}`;
+
+  if (!firstName || !email || !businessName || !presence || !desiredService) {
     return json({ ok: false, error: "Missing required fields." }, 400);
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ ok: false, error: "Invalid email." }, 400);
   }
+
+  const fullName = [firstName, lastName].filter(Boolean).join(" ");
+  const additionalContext = [details, photoLinks ? `Photo links: ${photoLinks}` : ""]
+    .filter(Boolean)
+    .join("\n\n");
 
   const auditTable = env.AIRTABLE_TABLE_GROWTH_AUDIT || DEFAULTS.AIRTABLE_TABLE_GROWTH_AUDIT;
   let stored = false;
@@ -95,14 +129,18 @@ export async function onRequestPost(context) {
       Email: email,
       Phone: phone,
       "Business Name": businessName,
-      "Website or Social": website,
+      "Website or Social": presence,
       "Business Category": businessCategory,
       "Biggest Challenge": challenge,
       "Desired Outcome": desiredOutcome,
       Instagram: instagram,
-      "Monthly Budget": budget,
-      Timeline: timeline,
-      "Additional Context": details,
+      "Additional Context": [
+        lastName ? `Last name: ${lastName}` : "",
+        desiredServiceLabel ? `Desired service: ${desiredServiceLabel}` : "",
+        additionalContext,
+      ]
+        .filter(Boolean)
+        .join("\n"),
       "UTM Source": str(body.utmSource, 120),
       "UTM Medium": str(body.utmMedium, 120),
       "UTM Campaign": str(body.utmCampaign, 120),
@@ -114,22 +152,24 @@ export async function onRequestPost(context) {
     /* Fallback: Discovery Calls so leads are never silently dropped */
     const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
     stored = await writeToAirtable(env, contactTable, {
-      Name: firstName,
+      Name: fullName || firstName,
       Email: email,
-      "Business Type": businessCategory,
-      "Primary Goal": `Growth Audit — ${challenge}`,
-      Timeline: timeline,
-      Budget: budget,
+      "Business Type": desiredServiceLabel || businessCategory,
+      "Primary Goal": `Growth Audit — ${desiredServiceLabel || challenge}`,
       Details: [
         `Business: ${businessName}`,
-        `Website: ${website}`,
-        `Outcome: ${desiredOutcome}`,
+        lastName ? `Last name: ${lastName}` : "",
+        `Website: ${websiteUrl}`,
+        `Social: ${instagram}`,
+        `Desired service: ${desiredServiceLabel}`,
         `Phone: ${phone}`,
-        `Instagram: ${instagram}`,
-        `Context: ${str(body.details, 2000)}`,
+        `Photo links: ${photoLinks}`,
+        `Context: ${str(details, 2000)}`,
         `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
         `Source: ${str(body.sourcePage, 200)}`,
-      ].join("\n"),
+      ]
+        .filter(Boolean)
+        .join("\n"),
       Status: "New",
       "Submitted At": new Date().toISOString(),
     });
@@ -141,22 +181,19 @@ export async function onRequestPost(context) {
     visitorEmail: email,
     visitorName: firstName,
     idempotencyBase,
-    teamSubject: `Growth Audit: ${businessName}`,
+    teamSubject: `Growth Audit: ${businessName}${desiredServiceLabel ? ` (${desiredServiceLabel})` : ""}`,
     teamHtml: `
       <p><strong>New Growth Audit request</strong></p>
       <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
-        ${row("Name", firstName)}
+        ${row("Name", fullName || firstName)}
         ${row("Email", email)}
         ${row("Phone", phone)}
         ${row("Business", businessName)}
-        ${row("Website / Social", website)}
-        ${row("Category", businessCategory)}
-        ${row("Challenge", challenge)}
-        ${row("Desired outcome", desiredOutcome)}
-        ${row("Instagram", instagram)}
-        ${row("Budget", budget)}
-        ${row("Timeline", timeline)}
+        ${row("Website", websiteUrl)}
+        ${row("Social", instagram)}
+        ${row("Desired service", desiredServiceLabel)}
         ${row("Details", details)}
+        ${row("Photo links", photoLinks)}
         ${row("UTM", [str(body.utmSource, 80), str(body.utmMedium, 80), str(body.utmCampaign, 80)].filter(Boolean).join(" / "))}
         ${row("Source page", str(body.sourcePage, 200))}
         ${row("Stored in Airtable", stored ? "Yes" : "No")}
@@ -168,6 +205,7 @@ export async function onRequestPost(context) {
       <p>Hi ${escapeHtml(firstName)},</p>
       <p>Thanks for requesting a Free Growth Audit for <strong>${escapeHtml(businessName)}</strong>.</p>
       <p>We'll review your site and send personalized recommendations to this email within a few business days.</p>
+      <p>If you haven't booked a call yet, you can pick a time here: <a href="https://cal.com/swftstudios/swft-meeting">cal.com/swftstudios/swft-meeting</a>.</p>
       <p>Questions in the meantime? Just reply to this message or email hello@swftstudios.com.</p>
       <p>— SWFT Studios</p>
     `,

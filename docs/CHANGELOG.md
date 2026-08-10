@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-08-10 — Pricing → Growth Audit preselect + multi-step onboarding
+
+### Changed
+- Growth Audit (`growth-audit.html`) is now a Launch Kit–style **5-step** form with a progress bar: contact → website/social → desired service → details/photos → Cal.com booking.
+- Removed overlapping qualification questions (category / challenge / budget / timeline) so service intent is asked once.
+- Pricing tier CTAs append `?plan=<tier-id>` so the desired-service dropdown arrives pre-selected (still editable).
+
+### Added
+- Desired service dropdown aligned to [`data/pricing.json`](../data/pricing.json) package IDs.
+- Photo share-link field (Drive/Dropbox/iCloud) — no file-upload backend.
+- API + worker accept `desiredService`, `lastName`, `photoLinks`, and website-or-social presence.
+
+### Docs
+- Updated [`docs/INTEGRATIONS.md`](INTEGRATIONS.md) for the multi-step flow and Airtable fields.
+
+---
+
 ## 2026-08-09 — Homepage audience carousel + Investment tabs
 
 ### Changed

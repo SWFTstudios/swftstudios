@@ -465,14 +465,23 @@ export default {
       }
 
       const firstName = str(body.firstName, 120);
+      const lastName = str(body.lastName, 120);
       const email = str(body.email, 320);
       const businessName = str(body.businessName, 200);
-      const website = str(body.website, 500);
-      const businessCategory = str(body.businessCategory, 200);
-      const challenge = str(body.challenge, 400);
-      const desiredOutcome = str(body.desiredOutcome, 4000);
+      const websiteUrl = str(body.websiteUrl || body.website, 500);
+      const instagram = str(body.instagram, 300);
+      const presence = websiteUrl || instagram || str(body.website, 500);
+      const desiredService = str(body.desiredService, 80);
+      const desiredServiceLabel = str(body.desiredServiceLabel, 200) || desiredService;
+      const details = str(body.details, 4000);
+      const photoLinks = str(body.photoLinks, 1000);
+      const businessCategory =
+        str(body.businessCategory, 200) || desiredServiceLabel || "Growth Audit";
+      const challenge = str(body.challenge, 400) || desiredServiceLabel || "Growth Audit inquiry";
+      const desiredOutcome =
+        str(body.desiredOutcome, 4000) || details || `Discuss ${desiredServiceLabel || "next steps"}`;
 
-      if (!firstName || !email || !businessName || !website || !businessCategory || !challenge || !desiredOutcome) {
+      if (!firstName || !email || !businessName || !presence || !desiredService) {
         return new Response(JSON.stringify({ ok: false, error: "Missing required fields." }), {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
@@ -485,20 +494,29 @@ export default {
         });
       }
 
+      const fullName = [firstName, lastName].filter(Boolean).join(" ");
+      const additionalContext = [details, photoLinks ? `Photo links: ${photoLinks}` : ""]
+        .filter(Boolean)
+        .join("\n\n");
+
       const auditTable = env.AIRTABLE_TABLE_GROWTH_AUDIT || DEFAULTS.AIRTABLE_TABLE_GROWTH_AUDIT;
       const fields: Record<string, unknown> = {
         "First Name": firstName,
         Email: email,
         Phone: str(body.phone, 40),
         "Business Name": businessName,
-        "Website or Social": website,
+        "Website or Social": presence,
         "Business Category": businessCategory,
         "Biggest Challenge": challenge,
         "Desired Outcome": desiredOutcome,
-        Instagram: str(body.instagram, 300),
-        "Monthly Budget": str(body.budget, 80),
-        Timeline: str(body.timeline, 200),
-        "Additional Context": str(body.details, 4000),
+        Instagram: instagram,
+        "Additional Context": [
+          lastName ? `Last name: ${lastName}` : "",
+          desiredServiceLabel ? `Desired service: ${desiredServiceLabel}` : "",
+          additionalContext,
+        ]
+          .filter(Boolean)
+          .join("\n"),
         "UTM Source": str(body.utmSource, 120),
         "UTM Medium": str(body.utmMedium, 120),
         "UTM Campaign": str(body.utmCampaign, 120),
@@ -514,22 +532,24 @@ export default {
         /* Fallback: store in Discovery Calls so leads are never silently dropped */
         const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
         stored = await writeToAirtable(env, contactTable, {
-          Name: firstName,
+          Name: fullName || firstName,
           Email: email,
-          "Business Type": businessCategory,
-          "Primary Goal": `Growth Audit — ${challenge}`,
-          Timeline: str(body.timeline, 200),
-          Budget: str(body.budget, 80),
+          "Business Type": desiredServiceLabel || businessCategory,
+          "Primary Goal": `Growth Audit — ${desiredServiceLabel || challenge}`,
           Details: [
             `Business: ${businessName}`,
-            `Website: ${website}`,
-            `Outcome: ${desiredOutcome}`,
+            lastName ? `Last name: ${lastName}` : "",
+            `Website: ${websiteUrl}`,
+            `Social: ${instagram}`,
+            `Desired service: ${desiredServiceLabel}`,
             `Phone: ${str(body.phone, 40)}`,
-            `Instagram: ${str(body.instagram, 300)}`,
-            `Context: ${str(body.details, 2000)}`,
+            `Photo links: ${photoLinks}`,
+            `Context: ${str(details, 2000)}`,
             `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
             `Source: ${str(body.sourcePage, 200)}`,
-          ].join("\n"),
+          ]
+            .filter(Boolean)
+            .join("\n"),
           Status: "New",
           "Submitted At": new Date().toISOString(),
         });

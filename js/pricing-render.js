@@ -45,6 +45,11 @@
       ? "button is-course w-inline-block"
       : "button is-course outlined w-inline-block";
     var calUrl = (global.SwftPricingConfig && global.SwftPricingConfig.calUrl) || CAL_URL;
+    var planHref = calUrl;
+    if (tier.id) {
+      planHref +=
+        (calUrl.indexOf("?") === -1 ? "?" : "&") + "plan=" + encodeURIComponent(tier.id);
+    }
     var priceNote = tier.priceNote
       ? '<span class="hp-pricing-price-note">' + escapeHtml(tier.priceNote) + "</span>"
       : "";
@@ -75,11 +80,13 @@
       scopeDriver +
       renderIncludesList(tier.includes || [], layout) +
       '<a href="' +
-      escapeHtml(calUrl) +
+      escapeHtml(planHref) +
       '" class="' +
       btnClass +
       '" data-stripe-tier="' +
       escapeHtml(groupId + ":" + tier.id) +
+      '" data-plan="' +
+      escapeHtml(tier.id) +
       '">' +
       '<div class="button_bg"></div>' +
       '<div class="button_text">' +

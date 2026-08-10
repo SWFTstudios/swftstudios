@@ -1,7 +1,7 @@
 # SWFT Conversion Funnel — Implementation Checklist
 
 Branch: `cursor/swft-conversion-funnel-4378`  
-Primary funnel: Homepage / Services → `/growth-audit` → form → `/growth-audit/thank-you` → optional Cal.com
+Primary funnel: Homepage / Pricing (`?plan=`) → `/growth-audit` multi-step → Cal.com (step 5) → `/growth-audit/thank-you`
 
 ## Architecture (audit)
 
