@@ -278,7 +278,7 @@ body{
     }
     .hp-audience-track {
       display: flex;
-      gap: 1rem;
+      gap: 16px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
@@ -293,7 +293,9 @@ body{
     }
     .hp-audience-card {
       position: relative;
-      flex: 0 0 min(78vw, 18.5rem);
+      flex: 0 0 50vw;
+      min-width: 48vw;
+      max-width: 52vw;
       scroll-snap-align: start;
       min-height: 24rem;
       border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
@@ -303,8 +305,12 @@ body{
       color: #fff;
       transition: border-color 0.25s ease, transform 0.25s ease;
     }
-    @media (min-width: 768px) {
-      .hp-audience-card { flex-basis: 17.5rem; }
+    @media (min-width: 1024px) {
+      .hp-audience-card {
+        flex-basis: 29vw;
+        min-width: 28vw;
+        max-width: 30vw;
+      }
     }
     .hp-audience-card:hover,
     .hp-audience-card:focus-within {
