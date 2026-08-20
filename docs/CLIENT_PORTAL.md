@@ -101,10 +101,11 @@ Production is Cloudflare Pages project **`swftstudios-website`**.
 - Pages deploy config: [`wrangler.pages.jsonc`](../wrangler.pages.jsonc) (D1 + portal vars; no Worker `ASSETS` binding)
 
 ```bash
-npx wrangler pages deploy . --project-name=swftstudios-website --config wrangler.pages.jsonc
+npx wrangler pages deploy . --project-name=swftstudios-website
+# or: npm run deploy:pages
 ```
 
-D1 `swft-portal` is bound as **`DB`** on production and preview. Redeploy after binding changes so Functions pick it up.
+[`wrangler.pages.jsonc`](../wrangler.pages.jsonc) documents the intended Pages D1 + vars shape. Wrangler Pages does not accept `--config` yet, so production bindings are applied via the Cloudflare Pages API / dashboard; keep this file as the source of truth for what must be bound.
 
 ## Failure behavior
 
