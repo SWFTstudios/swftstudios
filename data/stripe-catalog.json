@@ -1,0 +1,63 @@
+{
+  "account": "acct_1FKOZ3AF4d9gCyuN",
+  "livemode": true,
+  "updatedAt": "2026-08-20",
+  "tiers": {
+    "gbp-refresh": {
+      "productId": "prod_V6pp175lesl4bW",
+      "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
+      "paymentLinkId": "plink_1U6cAuAF4d9gCyuNC5Nrha49",
+      "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A",
+      "mode": "payment",
+      "amountCents": 40000,
+      "envPriceKey": "STRIPE_PRICE_GBP_REFRESH"
+    },
+    "website-only": {
+      "productId": "prod_V6ppC4BSom0d3y",
+      "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
+      "paymentLinkId": "plink_1U6cAWAF4d9gCyuNKHEBOht1",
+      "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v",
+      "mode": "payment",
+      "amountCents": 80000,
+      "envPriceKey": "STRIPE_PRICE_WEBSITE_ONLY"
+    },
+    "website-content-half": {
+      "productId": "prod_V6ppDg4l64XXZv",
+      "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
+      "paymentLinkId": "plink_1U6cAYAF4d9gCyuNxPyC1xLD",
+      "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w",
+      "mode": "payment",
+      "amountCents": 200000,
+      "envPriceKey": "STRIPE_PRICE_WEBSITE_CONTENT_HALF"
+    },
+    "website-content-full": {
+      "productId": "prod_V6pp0Xyq2W6KUk",
+      "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
+      "paymentLinkId": "plink_1U6cAdAF4d9gCyuNI0LDP7pm",
+      "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x",
+      "mode": "payment",
+      "amountCents": 300000,
+      "envPriceKey": "STRIPE_PRICE_WEBSITE_CONTENT_FULL"
+    },
+    "content-growth-retainer": {
+      "productId": "prod_V6pp3VerM5Q8w6",
+      "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
+      "paymentLinkId": "plink_1U6cAnAF4d9gCyuNp3rojIzS",
+      "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y",
+      "mode": "subscription",
+      "amountCents": 45000,
+      "interval": "month",
+      "envPriceKey": "STRIPE_PRICE_CONTENT_GROWTH_RETAINER"
+    },
+    "full-growth-partner": {
+      "productId": "prod_V6ppplJcLxdJHj",
+      "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
+      "paymentLinkId": "plink_1U6cAnAF4d9gCyuN8efzlzjW",
+      "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z",
+      "mode": "subscription",
+      "amountCents": 120000,
+      "interval": "month",
+      "envPriceKey": "STRIPE_PRICE_FULL_GROWTH_PARTNER"
+    }
+  }
+}

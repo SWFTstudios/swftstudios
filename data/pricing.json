@@ -32,7 +32,9 @@
           "productName": "SWFT. GBP Content Refresh (project start)",
           "ctaLabel": "Pay $400 to start",
           "priceDisplay": "$400",
-          "billingNote": "Starting price within the $400 to $600 range. Final scope is confirmed after a short intake."
+          "billingNote": "Starting price within the $400 to $600 range. Final scope is confirmed after a short intake.",
+          "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
+          "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
         }
       },
       {
@@ -57,7 +59,9 @@
           "productName": "SWFT. Website Only (project start)",
           "ctaLabel": "Pay $800 to start",
           "priceDisplay": "$800",
-          "billingNote": "Starting price within the $800 to $1,500 range. You supply photos and copy. Final scope confirmed after intake."
+          "billingNote": "Starting price within the $800 to $1,500 range. You supply photos and copy. Final scope confirmed after intake.",
+          "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
+          "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
         }
       },
       {
@@ -83,7 +87,9 @@
           "productName": "SWFT. Website + Content Capture (project start)",
           "ctaLabel": "Pay $2,000 to start",
           "priceDisplay": "$2,000",
-          "billingNote": "Starting price within the $2,000 to $2,800 range for a half-day shoot + site. Final scope confirmed after intake."
+          "billingNote": "Starting price within the $2,000 to $2,800 range for a half-day shoot + site. Final scope confirmed after intake.",
+          "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
+          "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
         }
       },
       {
@@ -108,7 +114,9 @@
           "productName": "SWFT. Website + Extended Content (project start)",
           "ctaLabel": "Pay $3,000 to start",
           "priceDisplay": "$3,000",
-          "billingNote": "Starting price within the $3,000 to $4,500+ range. Multi-location or complex builds may quote higher after intake."
+          "billingNote": "Starting price within the $3,000 to $4,500+ range. Multi-location or complex builds may quote higher after intake.",
+          "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
+          "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
         }
       }
     ]
@@ -141,7 +149,9 @@
           "productName": "SWFT. Content + Growth Retainer",
           "ctaLabel": "Start at $450/mo",
           "priceDisplay": "$450/mo",
-          "billingNote": "Starting monthly rate within the $450 to $800 band. Month-to-month. Scope (shoot frequency and channels) confirmed after intake."
+          "billingNote": "Starting monthly rate within the $450 to $800 band. Month-to-month. Scope (shoot frequency and channels) confirmed after intake.",
+          "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
+          "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
         }
       },
       {
@@ -167,7 +177,9 @@
           "productName": "SWFT. Full Growth Partner",
           "ctaLabel": "Start at $1,200/mo",
           "priceDisplay": "$1,200/mo",
-          "billingNote": "Starting monthly rate. Ad spend is billed separately to your ad account. Final deliverables and reporting cadence confirmed after intake."
+          "billingNote": "Starting monthly rate. Ad spend is billed separately to your ad account. Final deliverables and reporting cadence confirmed after intake.",
+          "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
+          "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
         }
       }
     ]

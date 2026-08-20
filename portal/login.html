@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Client Portal Sign In | SWFT Studios</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Sign in to your SWFT client portal.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.swftstudios.com/portal/login.html">
+  <link rel="stylesheet" href="/css/swft-nav.css">
+  <link rel="stylesheet" href="/css/page-shell.css">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="ps-page portal-page">
+  <div id="swft-nav" data-active=""></div>
+  <main>
+    <div class="portal-shell">
+      <header class="ps-hero ps-hero--left">
+        <p class="ps-eyebrow">Client portal</p>
+        <h1 class="ps-title">Sign in</h1>
+        <p class="ps-lead">Access project status and site performance for your SWFT engagement.</p>
+      </header>
+
+      <div class="portal-card">
+        <form id="login-form" class="portal-form" novalidate>
+          <label>
+            Email
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            Password
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+          </label>
+          <div class="portal-actions">
+            <button type="submit" class="button is-course w-inline-block">
+              <div class="button_bg"></div>
+              <div class="button_text">Sign in</div>
+            </button>
+            <a class="portal-link" href="/portal/onboard.html">Need an account? Create one</a>
+          </div>
+        </form>
+        <div id="form-msg" class="portal-msg" hidden></div>
+      </div>
+    </div>
+  </main>
+  <script src="/js/swft-nav.js"></script>
+  <script src="/js/portal.js"></script>
+  <script>
+    (function () {
+      SWFTPortal.qs("#login-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var msg = SWFTPortal.qs("#form-msg");
+        SWFTPortal.showMsg(msg, "Signing in…", "info");
+        var result = await SWFTPortal.api("/api/portal/login", {
+          method: "POST",
+          body: JSON.stringify({
+            email: SWFTPortal.qs("#email").value.trim(),
+            password: SWFTPortal.qs("#password").value,
+          }),
+        });
+        if (!result.res.ok || !result.data.ok) {
+          SWFTPortal.showMsg(msg, (result.data && result.data.error) || "Sign in failed.", "error");
+          return;
+        }
+        window.location.href = result.data.redirect || "/portal/dashboard.html";
+      });
+    })();
+  </script>
+</body>
+</html>

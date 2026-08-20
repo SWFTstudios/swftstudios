@@ -10,6 +10,14 @@
     "binding": "AI",
     "remote": true
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "swft-portal",
+      "database_id": "dfd16777-238c-4679-a8e2-68a5bf9b707b",
+      "migrations_dir": "migrations"
+    }
+  ],
   "assets": {
     "directory": ".",
     "binding": "ASSETS",

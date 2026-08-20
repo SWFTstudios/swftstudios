@@ -30,6 +30,9 @@ npm run build:locations
 | `/contact.html` | Project inquiry |
 | `/locations/` | Local SEO hub |
 | `/book/` | Stripe booking hub |
+| `/portal/onboard.html` | Client portal signup |
+| `/portal/login.html` | Client portal sign-in |
+| `/portal/dashboard.html` | Client project + performance dashboard |
 
 ## Local SEO coverage
 

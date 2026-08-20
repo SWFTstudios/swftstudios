@@ -1,22 +1,16 @@
 /**
  * Cloudflare Pages Function. POST /api/growth-audit
- * Writes Free Growth Audit leads to Airtable ("Growth Audits"),
- * falling back to "Discovery Calls" when AIRTABLE_TABLE_GROWTH_AUDIT is unset.
+ * Writes Free Growth Audit leads to Airtable CRM (Growth Audits + Pipeline).
  * Sends Resend team notify + visitor confirmation when RESEND_API_KEY is set.
  *
  * Env (Pages → Settings → Variables and Secrets):
  *   AIRTABLE_TOKEN (secret)
  *   RESEND_API_KEY (secret)
- *   optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_GROWTH_AUDIT, AIRTABLE_TABLE_CONTACT,
- *             RESEND_FROM, NOTIFY_EMAIL
+ *   optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_GROWTH_AUDIT, AIRTABLE_TABLE_PEOPLE,
+ *             AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-
-const DEFAULTS = {
-  AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
-  AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L",
-  AIRTABLE_TABLE_GROWTH_AUDIT: "",
-};
+import { storeCrmLead } from "../_lib/airtable-crm.js";
 
 const ALLOWED_SERVICES = new Set([
   "gbp-refresh",
@@ -45,21 +39,6 @@ function json(obj, status = 200, extraHeaders = {}) {
     status,
     headers: { "Content-Type": "application/json", ...extraHeaders },
   });
-}
-
-async function writeToAirtable(env, table, fields) {
-  if (!env.AIRTABLE_TOKEN || !table) return false;
-  const base = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
-  try {
-    const res = await fetch(`https://api.airtable.com/v0/${base}/${encodeURIComponent(table)}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${env.AIRTABLE_TOKEN}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ records: [{ fields }], typecast: true }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
 }
 
 function row(label, value) {
@@ -100,6 +79,10 @@ export async function onRequestPost(context) {
   const details = str(body.details, 4000);
   const photoLinks = str(body.photoLinks, 1000);
   const phone = str(body.phone, 40);
+  const sourcePage = str(body.sourcePage, 300);
+  const utmSource = str(body.utmSource, 120);
+  const utmMedium = str(body.utmMedium, 120);
+  const utmCampaign = str(body.utmCampaign, 120);
 
   /* Legacy aliases still accepted for older clients */
   const businessCategory =
@@ -120,12 +103,24 @@ export async function onRequestPost(context) {
     .filter(Boolean)
     .join("\n\n");
 
-  const auditTable = env.AIRTABLE_TABLE_GROWTH_AUDIT || DEFAULTS.AIRTABLE_TABLE_GROWTH_AUDIT;
-  let stored = false;
-
-  if (auditTable) {
-    stored = await writeToAirtable(env, auditTable, {
+  const stored = await storeCrmLead(env, {
+    formGroup: "Growth Audit",
+    formType: desiredServiceLabel || "growth-audit",
+    person: { name: fullName || firstName, email, phone, firstName, lastName },
+    company: {
+      name: businessName,
+      website: websiteUrl || undefined,
+      phone,
+      industry: businessCategory,
+    },
+    sourcePage,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    notes: additionalContext,
+    formFields: {
       "First Name": firstName,
+      "Last Name": lastName,
       Email: email,
       Phone: phone,
       "Business Name": businessName,
@@ -133,47 +128,16 @@ export async function onRequestPost(context) {
       "Business Category": businessCategory,
       "Biggest Challenge": challenge,
       "Desired Outcome": desiredOutcome,
+      "Desired Service": desiredServiceLabel,
       Instagram: instagram,
-      "Additional Context": [
-        lastName ? `Last name: ${lastName}` : "",
-        desiredServiceLabel ? `Desired service: ${desiredServiceLabel}` : "",
-        additionalContext,
-      ]
-        .filter(Boolean)
-        .join("\n"),
-      "UTM Source": str(body.utmSource, 120),
-      "UTM Medium": str(body.utmMedium, 120),
-      "UTM Campaign": str(body.utmCampaign, 120),
-      "Source Page": str(body.sourcePage, 300),
+      "Additional Context": additionalContext,
+      "UTM Source": utmSource,
+      "UTM Medium": utmMedium,
+      "UTM Campaign": utmCampaign,
+      "Source Page": sourcePage,
       Status: "New",
-      "Submitted At": new Date().toISOString(),
-    });
-  } else {
-    /* Fallback: Discovery Calls so leads are never silently dropped */
-    const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
-    stored = await writeToAirtable(env, contactTable, {
-      Name: fullName || firstName,
-      Email: email,
-      "Business Type": desiredServiceLabel || businessCategory,
-      "Primary Goal": `Growth Audit. ${desiredServiceLabel || challenge}`,
-      Details: [
-        `Business: ${businessName}`,
-        lastName ? `Last name: ${lastName}` : "",
-        `Website: ${websiteUrl}`,
-        `Social: ${instagram}`,
-        `Desired service: ${desiredServiceLabel}`,
-        `Phone: ${phone}`,
-        `Photo links: ${photoLinks}`,
-        `Context: ${str(details, 2000)}`,
-        `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
-        `Source: ${str(body.sourcePage, 200)}`,
-      ]
-        .filter(Boolean)
-        .join("\n"),
-      Status: "New",
-      "Submitted At": new Date().toISOString(),
-    });
-  }
+    },
+  });
 
   const idempotencyBase = `growth-audit/${email.toLowerCase()}/${Date.now()}`;
   const emailed = await sendLeadEmails(env, {
@@ -194,8 +158,8 @@ export async function onRequestPost(context) {
         ${row("Desired service", desiredServiceLabel)}
         ${row("Details", details)}
         ${row("Photo links", photoLinks)}
-        ${row("UTM", [str(body.utmSource, 80), str(body.utmMedium, 80), str(body.utmCampaign, 80)].filter(Boolean).join(" / "))}
-        ${row("Source page", str(body.sourcePage, 200))}
+        ${row("UTM", [utmSource, utmMedium, utmCampaign].filter(Boolean).join(" / "))}
+        ${row("Source page", sourcePage)}
         ${row("Stored in Airtable", stored ? "Yes" : "No")}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Client Dashboard | SWFT Studios</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Your SWFT project status and site performance.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
+  <link rel="stylesheet" href="/css/swft-nav.css">
+  <link rel="stylesheet" href="/css/page-shell.css">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="ps-page portal-page">
+  <div id="swft-nav" data-active=""></div>
+  <main>
+    <div class="portal-shell portal-shell--wide">
+      <div class="portal-topbar">
+        <header class="ps-hero ps-hero--left" style="margin-bottom:0;">
+          <p class="ps-eyebrow">Client portal</p>
+          <h1 class="ps-title">Dashboard</h1>
+          <p class="ps-lead" id="welcome">Loading your account…</p>
+        </header>
+        <button type="button" class="portal-btn-ghost" id="logout-btn">Sign out</button>
+      </div>
+
+      <div class="portal-grid">
+        <section class="portal-card" id="project-card">
+          <p class="portal-stat-label">Project</p>
+          <h2 id="tier-name" style="margin:0.35rem 0 0.5rem;font-size:1.35rem;">—</h2>
+          <p><span id="status-badge" class="portal-badge portal-badge--muted">—</span></p>
+          <p class="portal-muted" id="project-meta"></p>
+        </section>
+        <section class="portal-card" id="billing-card">
+          <p class="portal-stat-label">Billing</p>
+          <p class="portal-stat" id="billing-status">—</p>
+          <p class="portal-muted" id="billing-note">Stripe status for your engagement.</p>
+        </section>
+      </div>
+
+      <section class="portal-card" id="metrics-card" style="margin-top:1.25rem;">
+        <p class="portal-stat-label">Site performance (last 30 days)</p>
+        <div id="metrics-body">
+          <p class="portal-muted">Loading metrics…</p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="/js/swft-nav.js"></script>
+  <script src="/js/portal.js"></script>
+  <script>
+    (function () {
+      function statusBadge(status) {
+        var el = SWFTPortal.qs("#status-badge");
+        var billing = SWFTPortal.qs("#billing-status");
+        var label = status || "none";
+        el.textContent = label;
+        el.className = "portal-badge";
+        if (label === "paid" || label === "active") {
+          el.classList.add("portal-badge");
+          billing.textContent = label === "active" ? "Active subscription" : "Paid";
+        } else if (label === "past_due") {
+          el.classList.add("portal-badge--warn");
+          billing.textContent = "Past due";
+        } else if (label === "canceled") {
+          el.classList.add("portal-badge--muted");
+          billing.textContent = "Canceled";
+        } else {
+          el.classList.add("portal-badge--muted");
+          billing.textContent = "No billing yet";
+        }
+      }
+
+      function renderMetrics(m) {
+        var body = SWFTPortal.qs("#metrics-body");
+        if (!m || !m.ok) {
+          var reason = (m && m.message) || "Analytics unavailable.";
+          body.innerHTML = '<p class="portal-msg portal-msg--info" style="margin:0.75rem 0 0;">' + reason + "</p>";
+          return;
+        }
+        if (m.empty) {
+          body.innerHTML =
+            '<p class="portal-msg portal-msg--info" style="margin:0.75rem 0 0;">' +
+            (m.message || "Not tracking yet.") +
+            "</p>" +
+            (m.host ? '<p class="portal-muted">Host: ' + m.host + "</p>" : "");
+          return;
+        }
+        var rows = (m.topPages || [])
+          .map(function (r) {
+            return "<tr><td>" + r.path + "</td><td>" + r.pageviews + "</td></tr>";
+          })
+          .join("");
+        body.innerHTML =
+          '<div class="portal-grid" style="margin-top:1rem;">' +
+          '<div><p class="portal-stat-label">Visitors</p><p class="portal-stat">' +
+          m.visitors +
+          "</p></div>" +
+          '<div><p class="portal-stat-label">Pageviews</p><p class="portal-stat">' +
+          m.pageviews +
+          "</p></div>" +
+          "</div>" +
+          (m.host ? '<p class="portal-muted">Host: ' + m.host + "</p>" : "") +
+          (rows
+            ? '<table class="portal-table"><thead><tr><th>Top pages</th><th>Views</th></tr></thead><tbody>' +
+              rows +
+              "</tbody></table>"
+            : "");
+      }
+
+      async function init() {
+        var data = await SWFTPortal.requireAuth();
+        if (!data) return;
+        SWFTPortal.qs("#welcome").textContent = "Signed in as " + data.user.email;
+        if (!data.project) {
+          SWFTPortal.qs("#tier-name").textContent = "No project yet";
+          SWFTPortal.qs("#project-meta").textContent =
+            "Complete a booking or Payment Link, then refresh this page.";
+          statusBadge("none");
+          renderMetrics({
+            ok: false,
+            message: "No project yet. Complete a booking to see progress here.",
+          });
+          return;
+        }
+        SWFTPortal.qs("#tier-name").textContent = data.project.tierName;
+        SWFTPortal.qs("#project-meta").textContent = data.project.hasAnalyticsHost
+          ? "Tracking host assigned."
+          : "Analytics pending — we install tracking when your site is live.";
+        statusBadge(data.project.status);
+
+        var metrics = await SWFTPortal.api("/api/portal/metrics");
+        if (metrics.data && metrics.data.metrics) {
+          renderMetrics(metrics.data.metrics);
+        } else {
+          renderMetrics({ ok: false, message: "Could not load metrics." });
+        }
+      }
+
+      SWFTPortal.qs("#logout-btn").addEventListener("click", async function () {
+        await SWFTPortal.api("/api/portal/logout", { method: "POST", body: "{}" });
+        window.location.href = "/portal/login.html";
+      });
+
+      init();
+    })();
+  </script>
+</body>
+</html>

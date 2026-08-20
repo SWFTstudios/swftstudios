@@ -1,20 +1,17 @@
 /**
  * Cloudflare Pages Function. POST /api/book-tier
  * Books a pricing-ladder tier:
- *   1) Writes the lead to Airtable ("Discovery Calls").
+ *   1) Writes the lead to Airtable CRM (Paid Bookings + Pipeline).
  *   2) Creates a Stripe Checkout session (payment or subscription).
  *   3) Sends Resend team notify + visitor confirmation when configured.
  *
  * Env: AIRTABLE_TOKEN, STRIPE_SECRET_KEY, RESEND_API_KEY
- * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT, RESEND_FROM, NOTIFY_EMAIL
+ * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_BOOKINGS, AIRTABLE_TABLE_PEOPLE,
+ *   AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { getStripeTier } from "../_lib/stripe-tiers.js";
-
-const DEFAULTS = {
-  AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
-  AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L",
-};
+import { getStripeTier, resolveStripePriceId } from "../_lib/stripe-tiers.js";
+import { storeCrmLead } from "../_lib/airtable-crm.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -30,23 +27,14 @@ function row(label, value) {
   return `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;color:#666;">${escapeHtml(label)}</td><td style="padding:6px 0;">${escapeHtml(value)}</td></tr>`;
 }
 
-async function writeToAirtable(env, table, fields) {
-  if (!env.AIRTABLE_TOKEN) return false;
-  const base = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
-  try {
-    const res = await fetch(`https://api.airtable.com/v0/${base}/${encodeURIComponent(table)}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${env.AIRTABLE_TOKEN}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ records: [{ fields }], typecast: true }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
 async function createStripeCheckout(env, { tier, email, businessName, name, origin, cancelPath }) {
   if (!env.STRIPE_SECRET_KEY) return null;
+
+  const priceId = resolveStripePriceId(env, tier.id);
+  if (!priceId) {
+    console.error("Missing Stripe Price ID for tier", tier.id);
+    return null;
+  }
 
   const successUrl = `${origin}/book/thank-you.html?tier=${encodeURIComponent(tier.id)}&status=success`;
   const cancelUrl = `${origin}${cancelPath || `/book/${tier.id}.html`}?status=cancel`;
@@ -63,17 +51,7 @@ async function createStripeCheckout(env, { tier, email, businessName, name, orig
   params.set("client_reference_id", `${tier.id}:${email}`.slice(0, 200));
 
   params.set("line_items[0][quantity]", "1");
-  params.set("line_items[0][price_data][currency]", "usd");
-  params.set("line_items[0][price_data][unit_amount]", String(tier.amountCents));
-  params.set("line_items[0][price_data][product_data][name]", tier.productName);
-  params.set(
-    "line_items[0][price_data][product_data][description]",
-    `${tier.name}. ${tier.priceLabel} (starting checkout)`.slice(0, 500)
-  );
-
-  if (tier.mode === "subscription") {
-    params.set("line_items[0][price_data][recurring][interval]", tier.interval || "month");
-  }
+  params.set("line_items[0][price]", priceId);
 
   try {
     const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -126,6 +104,10 @@ export async function onRequestPost(context) {
   const phone = str(body.phone, 40);
   const website = str(body.website, 500);
   const notes = str(body.notes, 4000);
+  const sourcePage = str(body.sourcePage, 300);
+  const utmSource = str(body.utmSource, 120);
+  const utmMedium = str(body.utmMedium, 120);
+  const utmCampaign = str(body.utmCampaign, 120);
 
   if (!name || !email || !businessName) {
     return json({ ok: false, error: "Name, email, and business name are required." }, 400);
@@ -141,30 +123,33 @@ export async function onRequestPost(context) {
       ? `${tier.priceDisplay} (subscription)`
       : `${tier.priceDisplay} (one-time start)`;
 
-  const table = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
-  const fields = {
-    Name: name,
-    Email: email,
-    "Business Type": tier.name,
-    "Primary Goal": `Book ${tier.name} via Stripe (${amountLabel})`,
-    Details: [
-      `Business: ${businessName}`,
-      phone ? `Phone: ${phone}` : "",
-      website ? `Website/Social: ${website}` : "",
-      `Tier ID: ${tier.id}`,
-      `Checkout: ${amountLabel}`,
-      `Published range: ${tier.priceLabel}`,
-      notes ? `Notes: ${notes}` : "",
-      `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
-      `Source: ${str(body.sourcePage, 300)}`,
-    ]
-      .filter(Boolean)
-      .join("\n"),
-    Status: "New",
-    "Submitted At": new Date().toISOString(),
-  };
-
-  const stored = await writeToAirtable(env, table, fields);
+  const stored = await storeCrmLead(env, {
+    formGroup: "Paid Booking",
+    formType: tier.name,
+    person: { name, email, phone },
+    company: { name: businessName, website, phone },
+    sourcePage,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    notes,
+    formFields: {
+      Name: name,
+      Email: email,
+      Business: businessName,
+      Phone: phone,
+      Website: website,
+      "Tier ID": tier.id,
+      "Tier Name": tier.name,
+      "Checkout amount label": amountLabel,
+      Notes: notes,
+      "UTM Source": utmSource,
+      "UTM Medium": utmMedium,
+      "UTM Campaign": utmCampaign,
+      "Source Page": sourcePage,
+      Status: "New",
+    },
+  });
 
   const checkoutUrl = await createStripeCheckout(env, {
     tier,

@@ -1,8 +1,28 @@
 /**
  * Server-side Stripe booking catalog for offer-ladder tiers.
- * Amounts are authoritative, never trust client-supplied prices.
- * Keep in sync with data/pricing.json → tier.stripe fields.
+ * Amounts and Price IDs are authoritative — never trust client-supplied prices.
+ * Keep in sync with data/pricing.json → tier.stripe and data/stripe-catalog.json.
  */
+
+/** Default Price IDs from live Stripe catalog (data/stripe-catalog.json). Override via env. */
+export const DEFAULT_STRIPE_PRICE_IDS = {
+  "gbp-refresh": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
+  "website-only": "price_1U6cA5AF4d9gCyuNj65BmDU2",
+  "website-content-half": "price_1U6cA8AF4d9gCyuNt2PH1qew",
+  "website-content-full": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
+  "content-growth-retainer": "price_1U6cA8AF4d9gCyuN0Ko807my",
+  "full-growth-partner": "price_1U6cAAAF4d9gCyuN6yvZR5im",
+};
+
+export const STRIPE_PRICE_ENV_KEYS = {
+  "gbp-refresh": "STRIPE_PRICE_GBP_REFRESH",
+  "website-only": "STRIPE_PRICE_WEBSITE_ONLY",
+  "website-content-half": "STRIPE_PRICE_WEBSITE_CONTENT_HALF",
+  "website-content-full": "STRIPE_PRICE_WEBSITE_CONTENT_FULL",
+  "content-growth-retainer": "STRIPE_PRICE_CONTENT_GROWTH_RETAINER",
+  "full-growth-partner": "STRIPE_PRICE_FULL_GROWTH_PARTNER",
+};
+
 export const STRIPE_TIERS = {
   "gbp-refresh": {
     id: "gbp-refresh",
@@ -65,4 +85,21 @@ export const STRIPE_TIERS = {
 export function getStripeTier(id) {
   if (!id) return null;
   return STRIPE_TIERS[String(id).trim()] || null;
+}
+
+/** Resolve reusable Stripe Price ID for a tier (env override → catalog default). */
+export function resolveStripePriceId(env, tierId) {
+  const envKey = STRIPE_PRICE_ENV_KEYS[tierId];
+  if (envKey && env?.[envKey]) return String(env[envKey]).trim();
+  return DEFAULT_STRIPE_PRICE_IDS[tierId] || null;
+}
+
+/** Map a Stripe Price ID back to our tier id (for webhooks). */
+export function tierIdFromPriceId(env, priceId) {
+  if (!priceId) return null;
+  for (const [tierId, envKey] of Object.entries(STRIPE_PRICE_ENV_KEYS)) {
+    const resolved = (env?.[envKey] && String(env[envKey]).trim()) || DEFAULT_STRIPE_PRICE_IDS[tierId];
+    if (resolved === priceId) return tierId;
+  }
+  return null;
 }

@@ -1,5 +1,58 @@
 # Changelog
 
+## 2026-08-20: Client portal, Stripe catalog, PostHog dashboards
+
+### Added
+- Live Stripe Products, Prices, and Payment Links for all six offer-ladder tiers ([`data/stripe-catalog.json`](../data/stripe-catalog.json)).
+- Cloudflare D1 database `swft-portal` with users, sessions, projects, invite_tokens ([`migrations/0001_portal.sql`](../migrations/0001_portal.sql)).
+- Portal pages: [`/portal/onboard.html`](../portal/onboard.html), [`/portal/login.html`](../portal/login.html), [`/portal/dashboard.html`](../portal/dashboard.html).
+- APIs: `/api/portal/*`, `/api/stripe-webhook`, `/api/admin/projects` (Pages Functions + Worker mirror).
+- PostHog host-scoped metrics on the dashboard (staff assigns `site_host`).
+- Product docs: [`docs/CLIENT_PORTAL.md`](CLIENT_PORTAL.md).
+
+### Changed
+- `/api/book-tier` Checkout uses reusable Stripe Price IDs instead of ad-hoc `price_data`.
+- Thank-you page links to portal onboarding.
+- Portal paths protected from Webflow overwrite ([`instructions.md`](../instructions.md), [`docs/WEBFLOW_WORKFLOW.md`](WEBFLOW_WORKFLOW.md)).
+
+### Env
+- Secrets: `STRIPE_WEBHOOK_SECRET`, `PORTAL_ADMIN_SECRET`, `POSTHOG_PERSONAL_API_KEY` (plus existing `STRIPE_SECRET_KEY`, `RESEND_API_KEY`).
+- Binding: D1 `DB` → `swft-portal`.
+- Stripe webhook URL: `https://www.swftstudios.com/api/stripe-webhook`.
+
+### Failure cases
+- Missing Price ID / Stripe key: book-tier 503/502; no phantom checkout.
+- Invalid webhook signature or D1 down: 400/500; Stripe retries.
+- PostHog missing or no events: dashboard loads with explicit pending/empty copy.
+
+---
+
+## 2026-08-20: Airtable hub-and-spoke CRM
+
+### Added
+- Hub tables in **SWFT Website Leads**: Companies, People, Pipeline (Kanban by Stage), plus form tables Growth Audits, Contact Inquiries, Paid Bookings, Website Build Requests.
+- [`functions/_lib/airtable-crm.js`](../functions/_lib/airtable-crm.js) — person/company upsert + form + Pipeline writes.
+- [`scripts/airtable-crm-setup.mjs`](../scripts/airtable-crm-setup.mjs) — print IDs + migrate archive Discovery Calls.
+- [`docs/AIRTABLE_CRM.md`](AIRTABLE_CRM.md) — schema, env vars, day-to-day Kanban usage, token scopes.
+- Contact and Instant Website forms now send `sourcePage` + UTM fields.
+
+### Changed
+- Form handlers route by form type (no longer dump contact + Stripe into Discovery Calls).
+- Discovery Calls renamed to **Archive — Discovery Calls**; 24 rows migrated into the CRM.
+- Growth Audit no longer falls back to Discovery Calls (Growth Audits table id is baked in).
+- Worker mirror in [`src/worker.ts`](../src/worker.ts) uses the same CRM defaults.
+
+### Env
+- Secret: `AIRTABLE_TOKEN` needs **data.records:read** and **data.records:write** on Pages.
+- Optional overrides: `AIRTABLE_TABLE_PEOPLE`, `AIRTABLE_TABLE_COMPANIES`, `AIRTABLE_TABLE_PIPELINE`, `AIRTABLE_TABLE_GROWTH_AUDIT`, `AIRTABLE_TABLE_CONTACT`, `AIRTABLE_TABLE_BOOKINGS`, `AIRTABLE_TABLE`.
+
+### Failure cases
+- Missing token: forms still succeed; `stored: false`.
+- Read scope missing: upserts fail; form-only write attempted when possible.
+- Re-migrate: Pipeline Notes include archive record ids for skip detection.
+
+---
+
 ## 2026-08-20: Resend on live Worker forms
 
 ### Added

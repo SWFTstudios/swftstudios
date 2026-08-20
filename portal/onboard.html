@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Create Portal Account | SWFT Studios</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Create your SWFT client portal account with email and password.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.swftstudios.com/portal/onboard.html">
+  <link rel="stylesheet" href="/css/swft-nav.css">
+  <link rel="stylesheet" href="/css/page-shell.css">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="ps-page portal-page">
+  <div id="swft-nav" data-active=""></div>
+  <main>
+    <div class="portal-shell">
+      <header class="ps-hero ps-hero--left">
+        <p class="ps-eyebrow">Client portal</p>
+        <h1 class="ps-title">Create your account</h1>
+        <p class="ps-lead">Use the email from your booking. Choose a password (at least 10 characters). We store a secure hash only — never your password in plain text.</p>
+      </header>
+
+      <div class="portal-card">
+        <p id="paid-note" class="portal-msg portal-msg--ok" hidden>Payment received. Set your password to open the dashboard.</p>
+        <form id="onboard-form" class="portal-form" novalidate>
+          <input type="hidden" id="invite-token" name="inviteToken" value="">
+          <label>
+            Email
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            Password
+            <input id="password" name="password" type="password" autocomplete="new-password" minlength="10" required>
+          </label>
+          <label>
+            Confirm password
+            <input id="password2" name="password2" type="password" autocomplete="new-password" minlength="10" required>
+          </label>
+          <div class="portal-actions">
+            <button type="submit" class="button is-course w-inline-block">
+              <div class="button_bg"></div>
+              <div class="button_text">Create account</div>
+            </button>
+            <a class="portal-link" href="/portal/login.html">Already have an account? Sign in</a>
+          </div>
+        </form>
+        <div id="form-msg" class="portal-msg" hidden></div>
+      </div>
+    </div>
+  </main>
+  <script src="/js/swft-nav.js"></script>
+  <script src="/js/portal.js"></script>
+  <script>
+    (function () {
+      var p = SWFTPortal.params();
+      var emailEl = SWFTPortal.qs("#email");
+      var tokenEl = SWFTPortal.qs("#invite-token");
+      var paidNote = SWFTPortal.qs("#paid-note");
+      if (p.get("email")) emailEl.value = p.get("email");
+      if (p.get("token")) tokenEl.value = p.get("token");
+      if (p.get("paid") === "1") paidNote.hidden = false;
+
+      SWFTPortal.qs("#onboard-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var msg = SWFTPortal.qs("#form-msg");
+        var password = SWFTPortal.qs("#password").value;
+        var password2 = SWFTPortal.qs("#password2").value;
+        if (password !== password2) {
+          SWFTPortal.showMsg(msg, "Passwords do not match.", "error");
+          return;
+        }
+        if (password.length < 10) {
+          SWFTPortal.showMsg(msg, "Password must be at least 10 characters.", "error");
+          return;
+        }
+        SWFTPortal.showMsg(msg, "Creating account…", "info");
+        var result = await SWFTPortal.api("/api/portal/onboard", {
+          method: "POST",
+          body: JSON.stringify({
+            email: emailEl.value.trim(),
+            password: password,
+            inviteToken: tokenEl.value || undefined,
+          }),
+        });
+        if (!result.res.ok || !result.data.ok) {
+          SWFTPortal.showMsg(msg, (result.data && result.data.error) || "Could not create account.", "error");
+          return;
+        }
+        window.location.href = result.data.redirect || "/portal/dashboard.html";
+      });
+    })();
+  </script>
+</body>
+</html>

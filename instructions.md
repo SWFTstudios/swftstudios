@@ -26,6 +26,9 @@ These contain custom logic or config and must not be replaced by a Webflow expor
 - `case-study/` – all case study slug pages and tag links
 - `case-study.html` – template or redirect if used
 - `detail_project.html`, `detail_video.html` – project/video detail logic
+- `portal/` – client portal (onboard, login, dashboard)
+- `css/portal.css`, `js/portal.js`
+- `functions/`, `migrations/`, `src/` – Worker/Pages Functions and D1
 - `wrangler.jsonc` – Cloudflare config
 - `.gitignore`, `.deploy-trigger` – repo/deploy behavior
 - `js/swftstudios000.js` – custom JS; if Webflow adds JS, use a separate file

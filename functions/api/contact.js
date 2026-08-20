@@ -1,17 +1,14 @@
 /**
  * Cloudflare Pages Function. POST /api/contact
- * Writes the project inquiry form to Airtable ("Discovery Calls").
+ * Writes project inquiries to Airtable CRM (Contact Inquiries + Pipeline).
  * Sends Resend team notify + visitor confirmation when RESEND_API_KEY is set.
  *
  * Env: AIRTABLE_TOKEN, RESEND_API_KEY;
- * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT, RESEND_FROM, NOTIFY_EMAIL
+ * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT, AIRTABLE_TABLE_PEOPLE,
+ *   AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-
-const DEFAULTS = {
-  AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
-  AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L",
-};
+import { storeCrmLead } from "../_lib/airtable-crm.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -20,21 +17,6 @@ function json(obj, status = 200) {
     status,
     headers: { "Content-Type": "application/json" },
   });
-}
-
-async function writeToAirtable(env, table, fields) {
-  if (!env.AIRTABLE_TOKEN) return false;
-  const base = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
-  try {
-    const res = await fetch(`https://api.airtable.com/v0/${base}/${encodeURIComponent(table)}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${env.AIRTABLE_TOKEN}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ records: [{ fields }], typecast: true }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
 }
 
 function row(label, value) {
@@ -73,30 +55,42 @@ export async function onRequestPost(context) {
   const timeline = str(body.timeline, 200);
   const budget = str(body.budget, 200);
   const details = str(body.details, 4000);
+  const sourcePage = str(body.sourcePage, 300);
+  const utmSource = str(body.utmSource, 120);
+  const utmMedium = str(body.utmMedium, 120);
+  const utmCampaign = str(body.utmCampaign, 120);
 
-  const detailsParts = [
-    details,
-    website ? `Website/Social: ${website}` : "",
-    phone ? `Phone: ${phone}` : "",
-    businessName ? `Business: ${businessName}` : "",
-    challenge ? `Challenge: ${challenge}` : "",
-    desiredOutcome ? `Desired outcome: ${desiredOutcome}` : "",
-  ].filter(Boolean);
-
-  const table = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
-  const fields = {
-    Name: name,
-    Email: email,
-    "Business Type": businessType,
-    "Primary Goal": desiredOutcome || str(body.primaryGoal, 4000),
-    Timeline: timeline,
-    Budget: budget,
-    Details: detailsParts.join("\n"),
-    Status: "New",
-    "Submitted At": new Date().toISOString(),
-  };
-
-  const stored = await writeToAirtable(env, table, fields);
+  const stored = await storeCrmLead(env, {
+    formGroup: "Project Inquiry",
+    formType: "contact",
+    person: { name, email, phone },
+    company: businessName
+      ? { name: businessName, website, phone, industry: businessType }
+      : undefined,
+    sourcePage,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    notes: details,
+    formFields: {
+      Name: name,
+      Email: email,
+      Phone: phone,
+      Business: businessName,
+      Website: website,
+      "Service needed": businessType,
+      Challenge: challenge,
+      Outcome: desiredOutcome,
+      Timeline: timeline,
+      Budget: budget,
+      Details: details,
+      "UTM Source": utmSource,
+      "UTM Medium": utmMedium,
+      "UTM Campaign": utmCampaign,
+      "Source Page": sourcePage,
+      Status: "New",
+    },
+  });
 
   const emailed = await sendLeadEmails(env, {
     kind: "contact",
@@ -118,6 +112,7 @@ export async function onRequestPost(context) {
         ${row("Timeline", timeline)}
         ${row("Budget", budget)}
         ${row("Details", details)}
+        ${row("Source page", sourcePage)}
         ${row("Stored in Airtable", stored ? "Yes" : "No")}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>

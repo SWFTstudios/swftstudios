@@ -19,6 +19,9 @@ Do **not** rebase, squash, or force-push `main` unless explicitly agreed and coo
 - `case-study/` – all case study slug pages and tag links.
 - `case-study.html` – if used as a template/redirect.
 - `detail_project.html`, `detail_video.html` – project/video detail logic.
+- `portal/` – client portal pages (onboard, login, dashboard).
+- `css/portal.css`, `js/portal.js` – portal UI.
+- `functions/`, `migrations/`, `src/` – APIs, D1, Worker.
 - `wrangler.jsonc` – Cloudflare config.
 - `.gitignore`, `.deploy-trigger` – repo/deploy behavior.
 - `js/swftstudios000.js` – custom JS. If Webflow adds JS, prefer a separate file rather than replacing this one.

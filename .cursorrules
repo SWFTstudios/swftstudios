@@ -159,6 +159,7 @@ Follow this repo’s branch and file contract so Webflow imports and custom code
 
 ### Protected files (never overwrite from Webflow)
 - `case-studies.html`, `case-study/`, `case-study.html`, `detail_project.html`, `detail_video.html`
+- `portal/`, `css/portal.css`, `js/portal.js`, `functions/`, `migrations/`, `src/`
 - `wrangler.jsonc`, `.gitignore`, `.deploy-trigger`
 - `js/swftstudios000.js` (if adding Webflow JS, use a separate file)
 

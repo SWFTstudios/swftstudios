@@ -198,6 +198,10 @@
           budget: val("budget"),
           details: val("details"),
           honeypot: val("company_website"),
+          sourcePage: location.pathname + location.search,
+          utmSource: (new URLSearchParams(location.search)).get("utm_source") || "",
+          utmMedium: (new URLSearchParams(location.search)).get("utm_medium") || "",
+          utmCampaign: (new URLSearchParams(location.search)).get("utm_campaign") || "",
         };
 
         fetch("/api/contact", {

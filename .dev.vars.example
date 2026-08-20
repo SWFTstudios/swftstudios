@@ -2,9 +2,32 @@
 # Production: already set on Pages project swftstudios-website as RESEND_API_KEY
 # Rotate with: npx wrangler pages secret put RESEND_API_KEY --project-name=swftstudios-website
 # Optional: also set AIRTABLE_TOKEN and STRIPE_SECRET_KEY the same way.
+#
+# Airtable CRM (SWFT Website Leads) — token needs data.records:read + data.records:write.
+# Schema scopes only for one-time setup / MCP table creation. See docs/AIRTABLE_CRM.md
 
 RESEND_API_KEY=re_xxxxxxxx
 # RESEND_FROM=SWFT Studios <hello@swftstudios.com>
 # NOTIFY_EMAIL=hello@swftstudios.com
 # AIRTABLE_TOKEN=
+# AIRTABLE_BASE_ID=appjwRgcgS0BD4lT7
+# AIRTABLE_TABLE_COMPANIES=tblsWplUc9TypNts6
+# AIRTABLE_TABLE_PEOPLE=tbl8Dh908emJXZ6vj
+# AIRTABLE_TABLE_PIPELINE=tblRnwAPc9Yz6LnHz
+# AIRTABLE_TABLE_GROWTH_AUDIT=tbl4yRS7k6ZIYQ4zh
+# AIRTABLE_TABLE_CONTACT=tbl1juYArQAJxoQcf
+# AIRTABLE_TABLE_BOOKINGS=tbloX0ged1EJUOpuA
+# AIRTABLE_TABLE=tbl2oMRm4qjOftvLQ
 # STRIPE_SECRET_KEY=
+# STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx
+# PORTAL_ADMIN_SECRET=generate-a-long-random-string
+# POSTHOG_PERSONAL_API_KEY=phx_xxxxxxxx
+# POSTHOG_PROJECT_ID=486061
+# PORTAL_ORIGIN=http://127.0.0.1:8787
+# Optional Price ID overrides (defaults in data/stripe-catalog.json):
+# STRIPE_PRICE_GBP_REFRESH=price_1U6c9zAF4d9gCyuNIaEa8MhT
+# STRIPE_PRICE_WEBSITE_ONLY=price_1U6cA5AF4d9gCyuNj65BmDU2
+# STRIPE_PRICE_WEBSITE_CONTENT_HALF=price_1U6cA8AF4d9gCyuNt2PH1qew
+# STRIPE_PRICE_WEBSITE_CONTENT_FULL=price_1U6cAAAF4d9gCyuNeB6qUFx5
+# STRIPE_PRICE_CONTENT_GROWTH_RETAINER=price_1U6cA8AF4d9gCyuN0Ko807my
+# STRIPE_PRICE_FULL_GROWTH_PARTNER=price_1U6cAAAF4d9gCyuN6yvZR5im

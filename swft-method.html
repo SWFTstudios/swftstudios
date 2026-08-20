@@ -550,6 +550,7 @@
       document.getElementById('hf-plan').value = plan || 'Not selected';
       document.getElementById('hf-maint').value = maint ? 'Yes (+$99/mo)': 'No';
 
+      var sp = new URLSearchParams(location.search);
       var payload = {
         name: val('Name'), email: val('Email'), instagram: val('Instagram Handle'), phone: val('Phone'),
         businessName: val('Business Name'), whatYouSell: val('What You Sell or Offer'),
@@ -557,7 +558,11 @@
         features: document.getElementById('hf-features').value || selectedFeatures().map(function (f) { return f.value; }).join(', '),
         plan: plan, maintenance: maint, oneTimeAmount: oneTimeTotal(),
         contentReady: val('Content Ready'), hasDomain: val('Has Domain'),
-        timeline: val('Launch Timeline'), anythingElse: val('Anything Else')
+        timeline: val('Launch Timeline'), anythingElse: val('Anything Else'),
+        sourcePage: location.pathname + location.search,
+        utmSource: sp.get('utm_source') || '',
+        utmMedium: sp.get('utm_medium') || '',
+        utmCampaign: sp.get('utm_campaign') || ''
       };
 
       var btn = document.getElementById('sm-submit');

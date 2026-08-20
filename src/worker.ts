@@ -1,9 +1,11 @@
 /**
  * SWFT static site worker: serves assets + form APIs
- * (contact, growth-audit, book-tier, build-request, case-study-match).
+ * (contact, growth-audit, book-tier, build-request, case-study-match, portal, stripe-webhook).
  * Lead emails go through Resend when RESEND_API_KEY is set.
  */
-export interface Env {
+import { handlePortalRoutes, resolveStripePriceId, type PortalEnv } from "./portal-handlers";
+
+export interface Env extends PortalEnv {
   ASSETS: Fetcher;
   AI?: { run(model: string, opts: { messages: { role: string; content: string }[] }): Promise<unknown> };
   /* Secrets — set with `wrangler secret put` (or in the Cloudflare dashboard) */
@@ -19,6 +21,10 @@ export interface Env {
   AIRTABLE_TABLE_CONTACT?: string;
   /** Airtable table id for Growth Audit leads — set via Worker vars */
   AIRTABLE_TABLE_GROWTH_AUDIT?: string;
+  AIRTABLE_TABLE_BOOKINGS?: string;
+  AIRTABLE_TABLE_PEOPLE?: string;
+  AIRTABLE_TABLE_COMPANIES?: string;
+  AIRTABLE_TABLE_PIPELINE?: string;
   FORMSUBMIT_EMAIL?: string;
   /** Override From header, e.g. `SWFT Studios <hello@swftstudios.com>` */
   RESEND_FROM?: string;
@@ -31,10 +37,13 @@ const DEFAULTS = {
   STRIPE_PRICE_MONTHLY: "price_1Td9xhAF4d9gCyuNnjPgqkho", // $299/mo SWFT Monthly Website Plan
   STRIPE_PRICE_MAINTENANCE: "price_1Td9xiAF4d9gCyuN6rUc25R0", // $99/mo SWFT Website Maintenance
   AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
-  AIRTABLE_TABLE: "tbl30H9M2CC7p6MqY", // Website Build Requests
-  AIRTABLE_TABLE_CONTACT: "tblGCvDi4RdGkK96L", // Discovery Calls
-  /* Growth Audits table id must be set after creating the table in Airtable */
-  AIRTABLE_TABLE_GROWTH_AUDIT: "",
+  AIRTABLE_TABLE: "tbl2oMRm4qjOftvLQ", // Website Build Requests
+  AIRTABLE_TABLE_CONTACT: "tbl1juYArQAJxoQcf", // Contact Inquiries
+  AIRTABLE_TABLE_GROWTH_AUDIT: "tbl4yRS7k6ZIYQ4zh",
+  AIRTABLE_TABLE_BOOKINGS: "tbloX0ged1EJUOpuA",
+  AIRTABLE_TABLE_PEOPLE: "tbl8Dh908emJXZ6vj",
+  AIRTABLE_TABLE_COMPANIES: "tblsWplUc9TypNts6",
+  AIRTABLE_TABLE_PIPELINE: "tblRnwAPc9Yz6LnHz",
 };
 
 type CaseStudyInput = {
@@ -484,6 +493,12 @@ async function createTierCheckout(
 ): Promise<string | null> {
   if (!env.STRIPE_SECRET_KEY) return null;
 
+  const priceId = resolveStripePriceId(env, data.tier.id);
+  if (!priceId) {
+    console.error("Missing Stripe Price ID for tier", data.tier.id);
+    return null;
+  }
+
   const successUrl = `${data.origin}/book/thank-you.html?tier=${encodeURIComponent(data.tier.id)}&status=success`;
   const cancelUrl = `${data.origin}${data.cancelPath || `/book/${data.tier.id}.html`}?status=cancel`;
 
@@ -498,16 +513,7 @@ async function createTierCheckout(
   params.set("metadata[name]", data.name.slice(0, 200));
   params.set("client_reference_id", `${data.tier.id}:${data.email}`.slice(0, 200));
   params.set("line_items[0][quantity]", "1");
-  params.set("line_items[0][price_data][currency]", "usd");
-  params.set("line_items[0][price_data][unit_amount]", String(data.tier.amountCents));
-  params.set("line_items[0][price_data][product_data][name]", data.tier.productName);
-  params.set(
-    "line_items[0][price_data][product_data][description]",
-    `${data.tier.name}. ${data.tier.priceLabel} (starting checkout)`.slice(0, 500)
-  );
-  if (data.tier.mode === "subscription") {
-    params.set("line_items[0][price_data][recurring][interval]", data.tier.interval || "month");
-  }
+  params.set("line_items[0][price]", priceId);
 
   try {
     const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -531,10 +537,24 @@ async function createTierCheckout(
   }
 }
 
-/** Write a record to an Airtable table. Returns true on success. */
-async function writeToAirtable(env: Env, table: string, fields: Record<string, unknown>): Promise<boolean> {
+type FormGroup = "Growth Audit" | "Project Inquiry" | "Paid Booking" | "Website Build";
+
+function airtableTable(env: Env, key: keyof typeof DEFAULTS): string {
+  const fromEnv = (env as unknown as Record<string, string | undefined>)[key];
+  return fromEnv || DEFAULTS[key];
+}
+
+function escapeAirtableFormula(value: string): string {
+  return value.replace(/'/g, "\\'");
+}
+
+async function createAirtableRecord(
+  env: Env,
+  table: string,
+  fields: Record<string, unknown>
+): Promise<{ ok: boolean; id: string | null }> {
   const token = env.AIRTABLE_TOKEN;
-  if (!token) return false;
+  if (!token || !table) return { ok: false, id: null };
   const baseId = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
   try {
     const res = await fetch(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`, {
@@ -542,10 +562,161 @@ async function writeToAirtable(env: Env, table: string, fields: Record<string, u
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify({ records: [{ fields }], typecast: true }),
     });
-    return res.ok;
-  } catch {
-    return false;
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error("Airtable create failed", table, res.status, errBody.slice(0, 400));
+      return { ok: false, id: null };
+    }
+    const data = (await res.json()) as { records?: { id?: string }[] };
+    const id = data?.records?.[0]?.id || null;
+    return { ok: !!id, id };
+  } catch (err) {
+    console.error("Airtable create fetch failed", err);
+    return { ok: false, id: null };
   }
+}
+
+async function findAirtableId(env: Env, table: string, formula: string): Promise<string | null> {
+  const token = env.AIRTABLE_TOKEN;
+  if (!token || !table) return null;
+  const baseId = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
+  try {
+    const url = new URL(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`);
+    url.searchParams.set("filterByFormula", formula);
+    url.searchParams.set("maxRecords", "1");
+    const res = await fetch(url.toString(), { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { records?: { id?: string }[] };
+    return data?.records?.[0]?.id || null;
+  } catch {
+    return null;
+  }
+}
+
+async function findOrCreateCompany(
+  env: Env,
+  company: { name?: string; website?: string; phone?: string; industry?: string }
+): Promise<string | null> {
+  const name = String(company.name || "").trim();
+  if (!name) return null;
+  const table = airtableTable(env, "AIRTABLE_TABLE_COMPANIES");
+  const existing = await findAirtableId(env, table, `{Business Name} = '${escapeAirtableFormula(name)}'`);
+  if (existing) return existing;
+  const fields: Record<string, unknown> = {
+    "Business Name": name.slice(0, 200),
+    "Company Status": "Prospect",
+  };
+  if (company.website) fields.Website = String(company.website).trim().slice(0, 500);
+  if (company.phone) fields.Phone = String(company.phone).trim().slice(0, 40);
+  if (company.industry) fields["Industry / category"] = String(company.industry).trim().slice(0, 200);
+  return (await createAirtableRecord(env, table, fields)).id;
+}
+
+async function findOrCreatePerson(
+  env: Env,
+  person: {
+    name: string;
+    email: string;
+    phone?: string;
+    firstName?: string;
+    lastName?: string;
+    companyId?: string | null;
+  }
+): Promise<string | null> {
+  const email = String(person.email || "").trim().toLowerCase();
+  if (!email) return null;
+  const table = airtableTable(env, "AIRTABLE_TABLE_PEOPLE");
+  const existing = await findAirtableId(env, table, `LOWER({Email}) = '${escapeAirtableFormula(email)}'`);
+  if (existing) return existing;
+  const fields: Record<string, unknown> = {
+    Name: String(person.name || email).trim().slice(0, 200),
+    Email: email.slice(0, 320),
+  };
+  if (person.phone) fields.Phone = String(person.phone).trim().slice(0, 40);
+  if (person.firstName) fields["First Name"] = String(person.firstName).trim().slice(0, 120);
+  if (person.lastName) fields["Last Name"] = String(person.lastName).trim().slice(0, 120);
+  if (person.companyId) fields.Company = [person.companyId];
+  return (await createAirtableRecord(env, table, fields)).id;
+}
+
+async function storeCrmLead(
+  env: Env,
+  lead: {
+    formGroup: FormGroup;
+    formType?: string;
+    formFields: Record<string, unknown>;
+    person: { name: string; email: string; phone?: string; firstName?: string; lastName?: string };
+    company?: { name?: string; website?: string; phone?: string; industry?: string };
+    sourcePage?: string;
+    utmSource?: string;
+    utmMedium?: string;
+    utmCampaign?: string;
+    notes?: string;
+    submittedAt?: string;
+  }
+): Promise<boolean> {
+  if (!env.AIRTABLE_TOKEN) return false;
+
+  const formTableKey: Record<FormGroup, keyof typeof DEFAULTS> = {
+    "Growth Audit": "AIRTABLE_TABLE_GROWTH_AUDIT",
+    "Project Inquiry": "AIRTABLE_TABLE_CONTACT",
+    "Paid Booking": "AIRTABLE_TABLE_BOOKINGS",
+    "Website Build": "AIRTABLE_TABLE",
+  };
+  const pipelineLink: Record<FormGroup, string> = {
+    "Growth Audit": "Growth Audit",
+    "Project Inquiry": "Contact Inquiry",
+    "Paid Booking": "Paid Booking",
+    "Website Build": "Website Build",
+  };
+
+  const formTable = airtableTable(env, formTableKey[lead.formGroup]);
+  const submittedAt = lead.submittedAt || new Date().toISOString();
+
+  let companyId: string | null = null;
+  let personId: string | null = null;
+  try {
+    if (lead.company?.name) companyId = await findOrCreateCompany(env, lead.company);
+    personId = await findOrCreatePerson(env, { ...lead.person, companyId });
+  } catch (err) {
+    console.error("CRM upsert failed; continuing with form-only write", err);
+  }
+
+  const formFields = { ...lead.formFields };
+  if (personId) formFields.Person = [personId];
+  if (!formFields.Status) formFields.Status = "New";
+  if (!formFields["Submitted At"]) formFields["Submitted At"] = submittedAt;
+
+  const formResult = await createAirtableRecord(env, formTable, formFields);
+  if (!formResult.ok || !formResult.id) return false;
+
+  const pipelineTable = airtableTable(env, "AIRTABLE_TABLE_PIPELINE");
+  const leadLabel =
+    [lead.person.name, lead.company?.name].filter(Boolean).join(" · ") || lead.person.email;
+  const pipelineFields: Record<string, unknown> = {
+    Lead: leadLabel.slice(0, 200),
+    Stage: "New",
+    "Form Group": lead.formGroup,
+    "Form Type": (lead.formType || lead.formGroup).slice(0, 200),
+    "Source Page": String(lead.sourcePage || "").slice(0, 300),
+    "UTM Source": String(lead.utmSource || "").slice(0, 120),
+    "UTM Medium": String(lead.utmMedium || "").slice(0, 120),
+    "UTM Campaign": String(lead.utmCampaign || "").slice(0, 120),
+    Notes: String(lead.notes || "").slice(0, 4000),
+    "Submitted At": submittedAt,
+  };
+  if (personId) pipelineFields.Person = [personId];
+  if (companyId) pipelineFields.Company = [companyId];
+  pipelineFields[pipelineLink[lead.formGroup]] = [formResult.id];
+
+  const pipelineResult = await createAirtableRecord(env, pipelineTable, pipelineFields);
+  if (!pipelineResult.ok) console.error("Pipeline write failed; form row was stored", formResult.id);
+  return true;
+}
+
+/** @deprecated Prefer storeCrmLead — kept for any residual call sites */
+async function writeToAirtable(env: Env, table: string, fields: Record<string, unknown>): Promise<boolean> {
+  return (await createAirtableRecord(env, table, fields)).ok;
 }
 
 export default {
@@ -585,10 +756,16 @@ export default {
         url.pathname === "/api/build-request" ||
         url.pathname === "/api/contact" ||
         url.pathname === "/api/growth-audit" ||
-        url.pathname === "/api/book-tier")
+        url.pathname === "/api/book-tier" ||
+        url.pathname.startsWith("/api/portal/") ||
+        url.pathname === "/api/stripe-webhook" ||
+        url.pathname === "/api/admin/projects")
     ) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
+
+    const portalResponse = await handlePortalRoutes(request, env, url);
+    if (portalResponse) return portalResponse;
 
     if (request.method === "POST" && url.pathname === "/api/build-request") {
       pruneRateBuckets();
@@ -629,31 +806,43 @@ export default {
       // Build a same-origin redirect base from the request URL (so success/cancel land back here).
       const reqOrigin = `${url.protocol}//${url.host}`;
 
-      // 1) Store the lead (best-effort).
-      const airtableFields: Record<string, unknown> = {
-        Name: str(body.name, 200),
-        Email: email,
-        Instagram: str(body.instagram, 120),
-        Phone: str(body.phone, 60),
-        "Business Name": businessName,
-        "What They Sell": str(body.whatYouSell, 4000),
-        "Ideal Customer": str(body.idealCustomer, 4000),
-        "Main Goal": str(body.mainGoal, 200),
-        "Look and Feel": str(body.lookAndFeel, 4000),
-        Features: str(body.features, 4000),
-        "Plan Choice": plan,
-        "One-Time Price": oneTimeAmount,
-        "Maintenance Add-On": maintenance ? "Yes" : "No",
-        "Monthly Price": "$299/mo",
-        "Content Ready": str(body.contentReady, 200),
-        "Has Domain": str(body.hasDomain, 200),
-        Timeline: str(body.timeline, 200),
-        "Anything Else": str(body.anythingElse, 4000),
-        Status: "New",
-        "Submitted At": new Date().toISOString(),
-      };
-      const buildTable = env.AIRTABLE_TABLE || DEFAULTS.AIRTABLE_TABLE;
-      const stored = await writeToAirtable(env, buildTable, airtableFields);
+      // 1) Store the lead in CRM (best-effort).
+      const stored = await storeCrmLead(env, {
+        formGroup: "Website Build",
+        formType: plan,
+        person: { name: str(body.name, 200), email, phone: str(body.phone, 60) },
+        company: businessName ? { name: businessName, phone: str(body.phone, 60) } : undefined,
+        sourcePage: str(body.sourcePage, 300),
+        utmSource: str(body.utmSource, 120),
+        utmMedium: str(body.utmMedium, 120),
+        utmCampaign: str(body.utmCampaign, 120),
+        notes: str(body.anythingElse, 4000),
+        formFields: {
+          Name: str(body.name, 200),
+          Email: email,
+          Instagram: str(body.instagram, 120),
+          Phone: str(body.phone, 60),
+          "Business Name": businessName,
+          "What They Sell": str(body.whatYouSell, 4000),
+          "Ideal Customer": str(body.idealCustomer, 4000),
+          "Main Goal": str(body.mainGoal, 200),
+          "Look and Feel": str(body.lookAndFeel, 4000),
+          Features: str(body.features, 4000),
+          "Plan Choice": plan,
+          "One-Time Price": oneTimeAmount,
+          "Maintenance Add-On": maintenance ? "Yes" : "No",
+          "Monthly Price": "$299/mo",
+          "Content Ready": str(body.contentReady, 200),
+          "Has Domain": str(body.hasDomain, 200),
+          Timeline: str(body.timeline, 200),
+          "Anything Else": str(body.anythingElse, 4000),
+          "UTM Source": str(body.utmSource, 120),
+          "UTM Medium": str(body.utmMedium, 120),
+          "UTM Campaign": str(body.utmCampaign, 120),
+          "Source Page": str(body.sourcePage, 300),
+          Status: "New",
+        },
+      });
 
       // 2) Email the team a notification + send the visitor a confirmation
       //    (48-hour autoresponse). Runs in the background so it never blocks
@@ -765,64 +954,44 @@ export default {
       const additionalContext = [details, photoLinks ? `Photo links: ${photoLinks}` : ""]
         .filter(Boolean)
         .join("\n\n");
-
-      const auditTable = env.AIRTABLE_TABLE_GROWTH_AUDIT || DEFAULTS.AIRTABLE_TABLE_GROWTH_AUDIT;
-      const fields: Record<string, unknown> = {
-        "First Name": firstName,
-        Email: email,
-        Phone: str(body.phone, 40),
-        "Business Name": businessName,
-        "Website or Social": presence,
-        "Business Category": businessCategory,
-        "Biggest Challenge": challenge,
-        "Desired Outcome": desiredOutcome,
-        Instagram: instagram,
-        "Additional Context": [
-          lastName ? `Last name: ${lastName}` : "",
-          desiredServiceLabel ? `Desired service: ${desiredServiceLabel}` : "",
-          additionalContext,
-        ]
-          .filter(Boolean)
-          .join("\n"),
-        "UTM Source": str(body.utmSource, 120),
-        "UTM Medium": str(body.utmMedium, 120),
-        "UTM Campaign": str(body.utmCampaign, 120),
-        "Source Page": str(body.sourcePage, 300),
-        Status: "New",
-        "Submitted At": new Date().toISOString(),
-      };
-
-      let stored = false;
-      if (auditTable) {
-        stored = await writeToAirtable(env, auditTable, fields);
-      } else {
-        /* Fallback: store in Discovery Calls so leads are never silently dropped */
-        const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
-        stored = await writeToAirtable(env, contactTable, {
-          Name: fullName || firstName,
-          Email: email,
-          "Business Type": desiredServiceLabel || businessCategory,
-          "Primary Goal": `Growth Audit — ${desiredServiceLabel || challenge}`,
-          Details: [
-            `Business: ${businessName}`,
-            lastName ? `Last name: ${lastName}` : "",
-            `Website: ${websiteUrl}`,
-            `Social: ${instagram}`,
-            `Desired service: ${desiredServiceLabel}`,
-            `Phone: ${str(body.phone, 40)}`,
-            `Photo links: ${photoLinks}`,
-            `Context: ${str(details, 2000)}`,
-            `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
-            `Source: ${str(body.sourcePage, 200)}`,
-          ]
-            .filter(Boolean)
-            .join("\n"),
-          Status: "New",
-          "Submitted At": new Date().toISOString(),
-        });
-      }
-
       const phone = str(body.phone, 40);
+
+      const stored = await storeCrmLead(env, {
+        formGroup: "Growth Audit",
+        formType: desiredServiceLabel || "growth-audit",
+        person: { name: fullName || firstName, email, phone, firstName, lastName },
+        company: {
+          name: businessName,
+          website: websiteUrl || undefined,
+          phone,
+          industry: businessCategory,
+        },
+        sourcePage: str(body.sourcePage, 300),
+        utmSource: str(body.utmSource, 120),
+        utmMedium: str(body.utmMedium, 120),
+        utmCampaign: str(body.utmCampaign, 120),
+        notes: additionalContext,
+        formFields: {
+          "First Name": firstName,
+          "Last Name": lastName,
+          Email: email,
+          Phone: phone,
+          "Business Name": businessName,
+          "Website or Social": presence,
+          "Business Category": businessCategory,
+          "Biggest Challenge": challenge,
+          "Desired Outcome": desiredOutcome,
+          "Desired Service": desiredServiceLabel,
+          Instagram: instagram,
+          "Additional Context": additionalContext,
+          "UTM Source": str(body.utmSource, 120),
+          "UTM Medium": str(body.utmMedium, 120),
+          "UTM Campaign": str(body.utmCampaign, 120),
+          "Source Page": str(body.sourcePage, 300),
+          Status: "New",
+        },
+      });
+
       const emailed = await sendLeadEmails(env, {
         kind: "growth-audit",
         visitorEmail: email,
@@ -899,7 +1068,6 @@ export default {
         });
       }
 
-      const contactTable = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
       const name = str(body.name, 200);
       const email = str(body.email, 320);
       if (!name || !email) {
@@ -924,28 +1092,42 @@ export default {
       const timeline = str(body.timeline, 200);
       const budget = str(body.budget, 200);
       const details = str(body.details, 4000);
+      const sourcePage = str(body.sourcePage, 300);
+      const utmSource = str(body.utmSource, 120);
+      const utmMedium = str(body.utmMedium, 120);
+      const utmCampaign = str(body.utmCampaign, 120);
 
-      const detailsParts = [
-        details,
-        website ? `Website/Social: ${website}` : "",
-        phone ? `Phone: ${phone}` : "",
-        businessName ? `Business: ${businessName}` : "",
-        challenge ? `Challenge: ${challenge}` : "",
-        desiredOutcome ? `Desired outcome: ${desiredOutcome}` : "",
-      ].filter(Boolean);
-
-      const fields: Record<string, unknown> = {
-        Name: name,
-        Email: email,
-        "Business Type": businessType,
-        "Primary Goal": desiredOutcome || str(body.primaryGoal, 4000),
-        Timeline: timeline,
-        Budget: budget,
-        Details: detailsParts.join("\n"),
-        Status: "New",
-        "Submitted At": new Date().toISOString(),
-      };
-      const stored = await writeToAirtable(env, contactTable, fields);
+      const stored = await storeCrmLead(env, {
+        formGroup: "Project Inquiry",
+        formType: "contact",
+        person: { name, email, phone },
+        company: businessName
+          ? { name: businessName, website, phone, industry: businessType }
+          : undefined,
+        sourcePage,
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        notes: details,
+        formFields: {
+          Name: name,
+          Email: email,
+          Phone: phone,
+          Business: businessName,
+          Website: website,
+          "Service needed": businessType,
+          Challenge: challenge,
+          Outcome: desiredOutcome,
+          Timeline: timeline,
+          Budget: budget,
+          Details: details,
+          "UTM Source": utmSource,
+          "UTM Medium": utmMedium,
+          "UTM Campaign": utmCampaign,
+          "Source Page": sourcePage,
+          Status: "New",
+        },
+      });
 
       const emailed = await sendLeadEmails(env, {
         kind: "contact",
@@ -1058,30 +1240,33 @@ export default {
           ? `${tier.priceDisplay} (subscription)`
           : `${tier.priceDisplay} (one-time start)`;
 
-      const table = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
-      const fields: Record<string, unknown> = {
-        Name: name,
-        Email: email,
-        "Business Type": tier.name,
-        "Primary Goal": `Book ${tier.name} via Stripe (${amountLabel})`,
-        Details: [
-          `Business: ${businessName}`,
-          phone ? `Phone: ${phone}` : "",
-          website ? `Website/Social: ${website}` : "",
-          `Tier ID: ${tier.id}`,
-          `Checkout: ${amountLabel}`,
-          `Published range: ${tier.priceLabel}`,
-          notes ? `Notes: ${notes}` : "",
-          `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
-          `Source: ${str(body.sourcePage, 300)}`,
-        ]
-          .filter(Boolean)
-          .join("\n"),
-        Status: "New",
-        "Submitted At": new Date().toISOString(),
-      };
-
-      const stored = await writeToAirtable(env, table, fields);
+      const stored = await storeCrmLead(env, {
+        formGroup: "Paid Booking",
+        formType: tier.name,
+        person: { name, email, phone },
+        company: { name: businessName, website, phone },
+        sourcePage: str(body.sourcePage, 300),
+        utmSource: str(body.utmSource, 120),
+        utmMedium: str(body.utmMedium, 120),
+        utmCampaign: str(body.utmCampaign, 120),
+        notes,
+        formFields: {
+          Name: name,
+          Email: email,
+          Business: businessName,
+          Phone: phone,
+          Website: website,
+          "Tier ID": tier.id,
+          "Tier Name": tier.name,
+          "Checkout amount label": amountLabel,
+          Notes: notes,
+          "UTM Source": str(body.utmSource, 120),
+          "UTM Medium": str(body.utmMedium, 120),
+          "UTM Campaign": str(body.utmCampaign, 120),
+          "Source Page": str(body.sourcePage, 300),
+          Status: "New",
+        },
+      });
 
       const cancelPath =
         tier.id === "gbp-refresh" ? "/book/gbp-content-refresh.html" : `/book/${tier.id}.html`;
