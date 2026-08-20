@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-20: Book via Payment Links (no Stripe secret key)
+
+### Changed
+- `/api/book-tier` prefers durable Stripe **Payment Links** (email prefilled) so booking works without `STRIPE_SECRET_KEY`.
+- Removed the 503 “checkout unavailable” path when the secret key is missing.
+- Checkout Sessions remain an optional fallback only if a Payment Link URL is missing.
+
+---
+
 ## 2026-08-20: Portal secrets + Pages D1 binding
 
 ### Added

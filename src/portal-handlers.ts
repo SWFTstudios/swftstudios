@@ -44,6 +44,15 @@ const DEFAULT_PRICE_IDS: Record<string, string> = {
   "full-growth-partner": "price_1U6cAAAF4d9gCyuN6yvZR5im",
 };
 
+const DEFAULT_PAYMENT_LINK_URLS: Record<string, string> = {
+  "gbp-refresh": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A",
+  "website-only": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v",
+  "website-content-half": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w",
+  "website-content-full": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x",
+  "content-growth-retainer": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y",
+  "full-growth-partner": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z",
+};
+
 const PRICE_ENV_KEYS: Record<string, keyof PortalEnv> = {
   "gbp-refresh": "STRIPE_PRICE_GBP_REFRESH",
   "website-only": "STRIPE_PRICE_WEBSITE_ONLY",
@@ -142,6 +151,19 @@ export function resolveStripePriceId(env: PortalEnv, tierId: string): string | n
   const key = PRICE_ENV_KEYS[tierId];
   if (key && env[key]) return String(env[key]).trim();
   return DEFAULT_PRICE_IDS[tierId] || null;
+}
+
+/** Payment Link URL for a tier (no STRIPE_SECRET_KEY required). Prefills email when provided. */
+export function resolvePaymentLinkUrl(env: PortalEnv, tierId: string, email?: string): string | null {
+  const base = DEFAULT_PAYMENT_LINK_URLS[tierId] || null;
+  if (!base) return null;
+  try {
+    const url = new URL(base);
+    if (email) url.searchParams.set("prefilled_email", email.trim().toLowerCase());
+    return url.toString();
+  } catch {
+    return base;
+  }
 }
 
 async function getSessionUser(db: PortalD1, request: Request) {

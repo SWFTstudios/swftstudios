@@ -3,7 +3,7 @@
  * (contact, growth-audit, book-tier, build-request, case-study-match, portal, stripe-webhook).
  * Lead emails go through Resend when RESEND_API_KEY is set.
  */
-import { handlePortalRoutes, resolveStripePriceId, type PortalEnv } from "./portal-handlers";
+import { handlePortalRoutes, resolvePaymentLinkUrl, resolveStripePriceId, type PortalEnv } from "./portal-handlers";
 
 export interface Env extends PortalEnv {
   ASSETS: Fetcher;
@@ -479,7 +479,7 @@ function getStripeTier(id: unknown): StripeTierDef | null {
   return STRIPE_TIERS[String(id).trim()] || null;
 }
 
-/** Create Stripe Checkout for a pricing-ladder tier. Returns hosted URL or null. */
+/** Prefer Payment Link (no secret key). Optional Checkout Session if STRIPE_SECRET_KEY is set. */
 async function createTierCheckout(
   env: Env,
   data: {
@@ -491,6 +491,9 @@ async function createTierCheckout(
     cancelPath?: string;
   }
 ): Promise<string | null> {
+  const paymentLink = resolvePaymentLinkUrl(env, data.tier.id, data.email);
+  if (paymentLink) return paymentLink;
+
   if (!env.STRIPE_SECRET_KEY) return null;
 
   const priceId = resolveStripePriceId(env, data.tier.id);
@@ -1278,21 +1281,6 @@ export default {
         origin: reqOrigin,
         cancelPath,
       });
-
-      if (!checkoutUrl && !env.STRIPE_SECRET_KEY) {
-        return new Response(
-          JSON.stringify({
-            ok: false,
-            stored,
-            error:
-              "Checkout is temporarily unavailable. Email hello@swftstudios.com or request a Growth Audit.",
-          }),
-          {
-            status: 503,
-            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-          }
-        );
-      }
 
       if (!checkoutUrl) {
         return new Response(
