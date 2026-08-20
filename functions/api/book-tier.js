@@ -92,7 +92,9 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: "Invalid JSON" }, 400);
   }
 
-  if (str(body.honeypot, 200) || str(body.company_website, 200)) {
+  // Honeypot only — do not treat visible "website" as spam. Autofill used to fill
+  // legacy company_website and silently block Payment Links for real leads.
+  if (str(body.honeypot, 200) || str(body.swft_hp_confirm, 200)) {
     return json({ ok: true, stored: false, checkoutUrl: null });
   }
 

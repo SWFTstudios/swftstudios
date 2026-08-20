@@ -1200,13 +1200,12 @@ export default {
         });
       }
 
-      if (str(body.honeypot, 200) || str(body.company_website, 200)) {
+      // Honeypot only — do not treat visible website as spam (autofill used to fill company_website).
+      if (str(body.honeypot, 200) || str((body as { swft_hp_confirm?: string }).swft_hp_confirm, 200)) {
         return new Response(JSON.stringify({ ok: true, stored: false, checkoutUrl: null }), {
           headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
         });
       }
-
-      const tier = getStripeTier(body.tierId);
       if (!tier) {
         return new Response(JSON.stringify({ ok: false, error: "Unknown pricing tier." }), {
           status: 400,

@@ -136,7 +136,8 @@
       notes: (form.querySelector("#book-notes") || {}).value
         ? form.querySelector("#book-notes").value.trim()
         : "",
-      honeypot: (form.querySelector("#company_website") || {}).value || "",
+      // Obscure honeypot id — browsers autofill #company_website and block real checkouts.
+      honeypot: (form.querySelector("#swft_hp_confirm") || {}).value || "",
       utmSource: utm.utm_source || "",
       utmMedium: utm.utm_medium || "",
       utmCampaign: utm.utm_campaign || "",
