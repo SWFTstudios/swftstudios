@@ -13,7 +13,7 @@
 }
 
 .services-page main {
-  padding: 6rem 1.25rem 4rem;
+  padding: 6rem var(--swft-gutter, 1.5rem) 4rem;
 }
 
 .services-shell {

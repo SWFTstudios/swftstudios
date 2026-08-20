@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-20: Shell nav gutter and box model
+
+### Fixed
+- Shared nav used `width: 100%` plus 40px padding without `border-box`, so the Growth Audit CTA clipped by a constant 40px on shell pages.
+- Nav inset was 40px while page-shell body used 20px. Both now use `--swft-gutter` (24px).
+
+### Notes
+- Punch-list items 05 and 06. Branch: `fix/shell-nav-layout`.
+
+---
+
 ## 2026-08-20: Growth Audit skip CTA
 
 ### Fixed

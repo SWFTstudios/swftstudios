@@ -16,7 +16,7 @@
 }
 
 .ps-page main {
-  padding: 5.5rem 1.25rem 3rem;
+  padding: 5.5rem var(--swft-gutter, 1.5rem) 3rem;
 }
 
 .ps-shell {
