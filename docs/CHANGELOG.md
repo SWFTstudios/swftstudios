@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-20: Shared site footer
+
+### Added
+- `js/swft-nav.js` now injects one footer (email, Instagram, Our Work, Locations, site map, Growth Audit) on every page that already loads the shared nav, including Home, Services, and Pricing.
+
+### Changed
+- Existing `footer.ps-footer` and `footer.footer_component` blocks are hidden when the shared footer is present so crawlers and visitors see one set of links.
+
+### Notes
+- Punch-list item 07. Branch: `feat/shared-footer`.
+
+---
+
 ## 2026-08-20: Shell nav gutter and box model
 
 ### Fixed

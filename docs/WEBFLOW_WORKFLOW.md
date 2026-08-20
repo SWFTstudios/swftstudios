@@ -86,6 +86,7 @@ Every Webflow export should follow this branch-based workflow:
 
 - For **non-Webflow features/fixes**, use purpose-named branches off `main` (for example, `feat/case-study-copy-update`, `fix/tab-routing`).
 - For **Webflow imports**, always follow the import workflow above and never paste a full export directly on `main`.
+- After replacing `index.html`, keep `js/swft-nav.js` and `css/swft-nav.css` (they inject the site nav and footer) and `css/hero-vimeo-loader.css` (hero overflow). Re-link them if the export drops the tags.
 - Treat `archive/*` branches as read-only history references.
 
 ### 6. Changelog
