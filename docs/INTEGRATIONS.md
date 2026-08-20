@@ -31,10 +31,12 @@ Each offer in [`data/pricing.json`](../data/pricing.json) has a dedicated bookin
 | `/book/content-growth-retainer.html` | $450/mo subscription |
 | `/book/full-growth-partner.html` | $1,200/mo subscription |
 
-Flow: form → Airtable + Resend → Stripe Checkout → `/book/thank-you.html`.
+Flow: form → Airtable + Resend → **Stripe Payment Link** (prefilled email) → after pay, `/portal/onboard.html`.
 
-**Amounts are server-authoritative** in [`functions/_lib/stripe-tiers.js`](../functions/_lib/stripe-tiers.js)
-(also inlined in [`src/worker.ts`](../src/worker.ts); keep both in sync with `pricing.json` → `tier.stripe`).
+Payment Links are preferred so booking works **without** `STRIPE_SECRET_KEY`. Checkout Sessions remain an optional fallback only if a Payment Link is missing and a secret key is set.
+
+**Amounts / Price IDs / Payment Links** are server-authoritative in [`functions/_lib/stripe-tiers.js`](../functions/_lib/stripe-tiers.js)
+(also mirrored in [`src/worker.ts`](../src/worker.ts) / [`src/portal-handlers.ts`](../src/portal-handlers.ts); keep in sync with `pricing.json` / `stripe-catalog.json`).
 Clients cannot set the price.
 
 Regenerate pages after editing pricing stripe fields:
@@ -45,9 +47,7 @@ npm run build:book
 
 Pricing card CTAs use `tier.bookUrl` (see [`js/pricing-render.js`](../js/pricing-render.js)). The Growth Audit path remains for “not sure” traffic.
 
-Required secret (Pages `swftstudios-website`): `STRIPE_SECRET_KEY`. Without it, `/api/book-tier` returns 503 and the form shows an inline error.
-
-Checkout uses **durable Stripe Price IDs** from [`data/stripe-catalog.json`](../data/stripe-catalog.json) (not ad-hoc `price_data`). Payment Links for each tier are listed there and in `tier.stripe.paymentLinkUrl` in [`data/pricing.json`](../data/pricing.json).
+`STRIPE_SECRET_KEY` is optional while Payment Links are in use. Without a Payment Link URL for a tier, `/api/book-tier` returns 502.
 
 ### Client portal + Stripe webhooks
 

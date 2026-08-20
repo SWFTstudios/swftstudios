@@ -60,15 +60,31 @@ Dashboard metrics call the PostHog Query API server-side with `POSTHOG_PERSONAL_
 
 | Name | Where | Notes |
 | --- | --- | --- |
-| `STRIPE_SECRET_KEY` | Pages/Worker secret | Existing; Checkout |
+| `STRIPE_SECRET_KEY` | Pages/Worker secret | **Required for Checkout** — set in dashboard if missing |
 | `STRIPE_WEBHOOK_SECRET` | Secret | Stripe Dashboard → Webhooks → signing secret |
-| `SESSION_SECRET` | Secret | Reserved for future signed cookies; sessions currently use random D1 ids |
+| `SESSION_SECRET` | Secret | Session hardening / future signed cookies |
 | `PORTAL_ADMIN_SECRET` | Secret | Bearer token for `/api/admin/projects` |
-| `POSTHOG_PERSONAL_API_KEY` | Secret | Personal API key with query access |
-| `POSTHOG_PROJECT_ID` | Optional var | Default `486061` |
-| `PORTAL_ORIGIN` | Optional var | Default `https://www.swftstudios.com` (invite links) |
-| `STRIPE_PRICE_*` | Optional vars | Override Price IDs from catalog defaults |
+| `POSTHOG_PERSONAL_API_KEY` | Secret | Personal API key (`phx_…`) with query access — not the public `phc_` project token |
+| `POSTHOG_PROJECT_ID` | Plain var | Default `486061` |
+| `PORTAL_ORIGIN` | Plain var | Default `https://www.swftstudios.com` (invite links) |
+| `STRIPE_PRICE_*` | Plain vars | Override Price IDs from catalog defaults |
 | `DB` | D1 binding | Database `swft-portal` |
+
+### Wired on production Pages (`swftstudios-website`) as of 2026-08-20
+
+Already set via API / wrangler:
+
+- D1 binding **`DB`** → `swft-portal` (`dfd16777-238c-4679-a8e2-68a5bf9b707b`) on production + preview
+- Secrets: `STRIPE_WEBHOOK_SECRET`, `PORTAL_ADMIN_SECRET`, `SESSION_SECRET`
+- Plain vars: `PORTAL_ORIGIN`, `POSTHOG_PROJECT_ID`, all six `STRIPE_PRICE_*`
+- Stripe webhook endpoint: `we_1U6cSSAF4d9gCyuNlEcMD2v1` → `https://www.swftstudios.com/api/stripe-webhook`
+
+**Still required (set in Cloudflare Pages → Settings → Variables and Secrets):**
+
+1. `STRIPE_SECRET_KEY` — live secret key from Stripe Dashboard (Checkout will 503 without it)
+2. `POSTHOG_PERSONAL_API_KEY` — create at [PostHog user API keys](https://us.posthog.com/settings/user-api-keys) with Query access
+
+Local copies of generated admin/session values (if created by the setup script) live in gitignored `.portal-secrets.local`.
 
 ### Stripe webhook setup
 
@@ -79,7 +95,17 @@ Dashboard metrics call the PostHog Query API server-side with `POSTHOG_PERSONAL_
 
 ### Pages project binding
 
-Production leads run on Pages Functions (`swftstudios-website`). Bind D1 database `swft-portal` as **`DB`** on that Pages project (Dashboard → Settings → Functions → D1 bindings), matching [`wrangler.jsonc`](../wrangler.jsonc).
+Production is Cloudflare Pages project **`swftstudios-website`**.
+
+- Worker local/dev config: [`wrangler.jsonc`](../wrangler.jsonc) (includes D1 `DB` for `wrangler dev`)
+- Pages deploy config: [`wrangler.pages.jsonc`](../wrangler.pages.jsonc) (D1 + portal vars; no Worker `ASSETS` binding)
+
+```bash
+npx wrangler pages deploy . --project-name=swftstudios-website
+# or: npm run deploy:pages
+```
+
+[`wrangler.pages.jsonc`](../wrangler.pages.jsonc) documents the intended Pages D1 + vars shape. Wrangler Pages does not accept `--config` yet, so production bindings are applied via the Cloudflare Pages API / dashboard; keep this file as the source of truth for what must be bound.
 
 ## Failure behavior
 

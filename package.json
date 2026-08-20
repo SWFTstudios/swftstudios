@@ -4,7 +4,8 @@
   "scripts": {
     "build:book": "node scripts/build-book-pages.mjs",
     "build:locations": "node scripts/build-location-pages.mjs",
-    "airtable:crm": "node scripts/airtable-crm-setup.mjs"
+    "airtable:crm": "node scripts/airtable-crm-setup.mjs",
+    "deploy:pages": "wrangler pages deploy . --project-name=swftstudios-website"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",

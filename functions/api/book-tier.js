@@ -2,15 +2,15 @@
  * Cloudflare Pages Function. POST /api/book-tier
  * Books a pricing-ladder tier:
  *   1) Writes the lead to Airtable CRM (Paid Bookings + Pipeline).
- *   2) Creates a Stripe Checkout session (payment or subscription).
+ *   2) Returns the durable Stripe Payment Link for that tier (no secret key required).
  *   3) Sends Resend team notify + visitor confirmation when configured.
  *
- * Env: AIRTABLE_TOKEN, STRIPE_SECRET_KEY, RESEND_API_KEY
- * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_BOOKINGS, AIRTABLE_TABLE_PEOPLE,
- *   AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
+ * Env: AIRTABLE_TOKEN, RESEND_API_KEY
+ * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_*, RESEND_FROM, NOTIFY_EMAIL,
+ *   STRIPE_PAYMENT_LINK_* overrides, STRIPE_SECRET_KEY (optional Checkout fallback)
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { getStripeTier, resolveStripePriceId } from "../_lib/stripe-tiers.js";
+import { getStripeTier, resolvePaymentLinkUrl, resolveStripePriceId } from "../_lib/stripe-tiers.js";
 import { storeCrmLead } from "../_lib/airtable-crm.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
@@ -27,7 +27,11 @@ function row(label, value) {
   return `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;color:#666;">${escapeHtml(label)}</td><td style="padding:6px 0;">${escapeHtml(value)}</td></tr>`;
 }
 
-async function createStripeCheckout(env, { tier, email, businessName, name, origin, cancelPath }) {
+/** Prefer Payment Links (no secret key). Optional Checkout Session if STRIPE_SECRET_KEY is set. */
+async function resolveCheckoutUrl(env, { tier, email, businessName, name, origin, cancelPath }) {
+  const paymentLink = resolvePaymentLinkUrl(env, tier.id, email);
+  if (paymentLink) return paymentLink;
+
   if (!env.STRIPE_SECRET_KEY) return null;
 
   const priceId = resolveStripePriceId(env, tier.id);
@@ -49,7 +53,6 @@ async function createStripeCheckout(env, { tier, email, businessName, name, orig
   params.set("metadata[business]", businessName.slice(0, 200));
   params.set("metadata[name]", name.slice(0, 200));
   params.set("client_reference_id", `${tier.id}:${email}`.slice(0, 200));
-
   params.set("line_items[0][quantity]", "1");
   params.set("line_items[0][price]", priceId);
 
@@ -151,25 +154,16 @@ export async function onRequestPost(context) {
     },
   });
 
-  const checkoutUrl = await createStripeCheckout(env, {
+  const cancelPath =
+    tier.id === "gbp-refresh" ? "/book/gbp-content-refresh.html" : `/book/${tier.id}.html`;
+  const checkoutUrl = await resolveCheckoutUrl(env, {
     tier,
     email,
     businessName,
     name,
     origin,
-    cancelPath: `/book/${tier.id}.html`,
+    cancelPath,
   });
-
-  if (!checkoutUrl && !env.STRIPE_SECRET_KEY) {
-    return json(
-      {
-        ok: false,
-        stored,
-        error: "Checkout is temporarily unavailable. Email hello@swftstudios.com or request a Growth Audit.",
-      },
-      503
-    );
-  }
 
   if (!checkoutUrl) {
     return json(

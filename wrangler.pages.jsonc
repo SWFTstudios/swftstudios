@@ -1,15 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
-  "name": "swftstudios",
-  "main": "src/worker.ts",
+  "name": "swftstudios-website",
+  "pages_build_output_dir": ".",
   "compatibility_date": "2026-03-09",
-  "observability": {
-    "enabled": true
-  },
-  "ai": {
-    "binding": "AI",
-    "remote": true
-  },
   "d1_databases": [
     {
       "binding": "DB",
@@ -28,24 +21,5 @@
     "STRIPE_PRICE_WEBSITE_CONTENT_FULL": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
     "STRIPE_PRICE_CONTENT_GROWTH_RETAINER": "price_1U6cA8AF4d9gCyuN0Ko807my",
     "STRIPE_PRICE_FULL_GROWTH_PARTNER": "price_1U6cAAAF4d9gCyuN6yvZR5im"
-  },
-  "assets": {
-    "directory": ".",
-    "binding": "ASSETS",
-    "exclude": [
-      ".git",
-      "**/.git/**",
-      ".wrangler",
-      "**/.wrangler/**",
-      ".cursor",
-      "**/.cursor/**",
-      "node_modules",
-      "**/node_modules/**",
-      "src",
-      "**/src/**",
-      "package.json",
-      "package-lock.json",
-      "tsconfig.json"
-    ]
   }
 }
