@@ -7,21 +7,29 @@
 :root {
   --sm-green: #7fffe5;
   --sn-height: 62px;
+  --swft-gutter: 1.5rem;
 }
 
 .sn-nav {
+  box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
+  max-width: 100%;
   z-index: 1000;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  padding: 0.9rem var(--swft-gutter);
   background: rgba(1,1,1,0.82);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   font-family: "Inter Display", Inter, sans-serif;
+}
+.sn-nav *,
+.sn-nav *::before,
+.sn-nav *::after {
+  box-sizing: border-box;
 }
 .sn-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.04em; color: #fff; text-decoration: none; white-space: nowrap; }
 .sn-brand .sk { font-weight: 400; }
@@ -59,4 +67,41 @@ body:has(#swft-nav) footer.navbar { display: none !important; }
   .sn-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1050; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
   .sn-scrim.open { opacity: 1; pointer-events: auto; }
   .sn-close { position: absolute; top: 1.4rem; right: 1.5rem; background: none; border: none; color: #fff; font-size: 1.8rem; cursor: pointer; line-height: 1; }
+}
+
+/* Shared site footer — injected by js/swft-nav.js */
+body:has(.sf-footer) footer.ps-footer,
+body:has(.sf-footer) footer.footer_component {
+  display: none !important;
+}
+
+.sf-footer {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 3rem;
+  padding: 2rem var(--swft-gutter);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: #010101;
+  font-family: "Inter Display", Inter, sans-serif;
+}
+
+.sf-footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sf-footer a {
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.sf-footer a:hover {
+  color: var(--sm-green);
 }

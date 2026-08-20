@@ -11,6 +11,14 @@
 .hero-vimeo {
   overflow: hidden;
   background-color: #0a0a0a;
+  isolation: isolate;
+  contain: paint;
+}
+
+/* The scaled iframe is 1601px+; clip at the wrapper so the page does not scroll sideways */
+.background_image-wrappe:has(.hero-vimeo) {
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .hero-vimeo iframe,

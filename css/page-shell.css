@@ -16,7 +16,7 @@
 }
 
 .ps-page main {
-  padding: 5.5rem 1.25rem 3rem;
+  padding: 5.5rem var(--swft-gutter, 1.5rem) 3rem;
 }
 
 .ps-shell {
@@ -192,6 +192,11 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 0.9375rem;
+}
+
+/* .ps-page .button { display } is more specific than [hidden] and was showing Back / skip CTAs */
+.ps-page [hidden] {
+  display: none !important;
 }
 
 .ps-page .button.is-course {

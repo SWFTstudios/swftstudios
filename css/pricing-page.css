@@ -26,7 +26,7 @@
 }
 
 .pricing-page main {
-  padding: 6.5rem 5vw 4rem;
+  padding: 6.5rem var(--swft-gutter, 1.5rem) 4rem;
 }
 
 .pricing-shell {

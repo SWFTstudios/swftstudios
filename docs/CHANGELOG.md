@@ -1,5 +1,62 @@
 # Changelog
 
+## 2026-08-20: Homepage hero overflow
+
+### Fixed
+- At a 400px viewport the homepage was ~6px wider than the screen. The scaled Vimeo hero iframe is now clipped on `.hero-vimeo` (`contain: paint`) and `.background_image-wrappe`.
+
+### Notes
+- Punch-list item 09. Lives in `css/hero-vimeo-loader.css` so a Webflow import of `index.html` does not drop the rule if that stylesheet stays linked. Branch: `fix/homepage-overflow`.
+
+---
+
+## 2026-08-20: Shared site footer
+
+### Added
+- `js/swft-nav.js` now injects one footer (email, Instagram, Our Work, Locations, site map, Growth Audit) on every page that already loads the shared nav, including Home, Services, and Pricing.
+
+### Changed
+- Existing `footer.ps-footer` and `footer.footer_component` blocks are hidden when the shared footer is present so crawlers and visitors see one set of links.
+
+### Notes
+- Punch-list item 07. Branch: `feat/shared-footer`.
+
+---
+
+## 2026-08-20: Shell nav gutter and box model
+
+### Fixed
+- Shared nav used `width: 100%` plus 40px padding without `border-box`, so the Growth Audit CTA clipped by a constant 40px on shell pages.
+- Nav inset was 40px while page-shell body used 20px. Both now use `--swft-gutter` (24px).
+
+### Notes
+- Punch-list items 05 and 06. Branch: `fix/shell-nav-layout`.
+
+---
+
+## 2026-08-20: Growth Audit skip CTA
+
+### Fixed
+- Removed the “Done: go to confirmation” link that jumped to `/growth-audit/thank-you` without submitting a lead.
+- `.ps-page .button { display: inline-block }` overrode `[hidden]`, so Back stayed visible on step 1. `.ps-page [hidden]` now wins. Back is also `disabled` on steps 1 and 5.
+
+### Notes
+- Punch-list item 02. Branch: `fix/growth-audit-skip`.
+
+---
+
+## 2026-08-20: Nested page assets load from site root
+
+### Fixed
+- Booking pages under `/book/`, case studies under `/case-study/`, and `/growth-audit/thank-you` requested CSS/JS/images with `./` or `../`, so browsers resolved `/book/css/…` and `/case-study/css/…` (404). Assets now use root-absolute `/css/`, `/js/`, `/images/`.
+- Case study pages used a leftover Webflow nav (`footer.navbar`) with 404 links and `mailto:elombe@` while the visible text said `hello@`. That block is removed; `#swft-nav` is the nav. Footer CTA text matches `hello@swftstudios.com`.
+- [`scripts/build-book-pages.mjs`](../scripts/build-book-pages.mjs) now emits root-absolute asset paths so `npm run build:book` cannot restore the bug.
+
+### Notes
+- Punch-list items 01, 03, 04, and 08. Branch: `fix/nested-page-assets` off `feat/site-punch-list`.
+
+---
+
 ## 2026-08-10: Copy dash cleanup, local SEO pages, structured site map
 
 ### Changed

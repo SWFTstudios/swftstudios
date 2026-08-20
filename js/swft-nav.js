@@ -1,10 +1,11 @@
 /* ============================================================
-   SWFT Studios shared navigation COMPONENT (single source).
-   Every page renders this nav by including:
+   SWFT Studios shared chrome (nav + footer).
+   Every page includes:
        <div id="swft-nav" data-active="home"></div>
-   plus <link href="css/swft-nav.css"> and <script src="js/swft-nav.js">.
+       <link href="/css/swft-nav.css"> and <script src="/js/swft-nav.js">
    Change a link here once and it updates on every page.
    Links are root-absolute so the same component works from any folder.
+   Footer is injected once at the end of <body> (or into #swft-footer).
    ============================================================ */
 (function () {
   var LINKS = [
@@ -44,6 +45,21 @@
     );
   }
 
+  function footerHTML() {
+    return (
+      '<footer class="sf-footer" role="contentinfo">' +
+        '<div class="sf-footer-inner">' +
+          '<a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>' +
+          '<a href="https://www.instagram.com/swftstudios/" target="_blank" rel="noopener noreferrer">Instagram</a>' +
+          '<a href="/websites.html">Our Work</a>' +
+          '<a href="/locations/">Locations</a>' +
+          '<a href="/sitemap.html">Site map</a>' +
+          '<a href="/growth-audit">Get Your Free Growth Audit</a>' +
+        "</div>" +
+      "</footer>"
+    );
+  }
+
   function wire() {
     var burger = document.getElementById("sn-burger");
     var panel = document.getElementById("sn-panel");
@@ -58,11 +74,27 @@
     panel.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", shut); });
   }
 
-  function init() {
+  function initNav() {
     var mount = document.getElementById("swft-nav");
     if (!mount) return;
     mount.innerHTML = navHTML(mount.getAttribute("data-active") || "");
     wire();
+  }
+
+  function initFooter() {
+    if (document.querySelector(".sf-footer")) return;
+    var html = footerHTML();
+    var mount = document.getElementById("swft-footer");
+    if (mount) {
+      mount.innerHTML = html;
+      return;
+    }
+    document.body.insertAdjacentHTML("beforeend", html);
+  }
+
+  function init() {
+    initNav();
+    initFooter();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
