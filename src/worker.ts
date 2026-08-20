@@ -299,6 +299,16 @@ export default {
 
     /* Clean marketing URLs (no .html) */
     if (request.method === "GET" || request.method === "HEAD") {
+      if (
+        url.pathname === "/book/gbp-refresh.html" ||
+        url.pathname === "/book/gbp-refresh" ||
+        url.pathname === "/book/gbp-refresh/"
+      ) {
+        const dest = new URL("/book/gbp-content-refresh.html", url.origin);
+        dest.search = url.search;
+        return Response.redirect(dest.toString(), 301);
+      }
+
       const cleanRoutes: Record<string, string> = {
         "/growth-audit": "/growth-audit.html",
         "/growth-audit/": "/growth-audit.html",

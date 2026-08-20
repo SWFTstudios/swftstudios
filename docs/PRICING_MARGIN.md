@@ -20,7 +20,7 @@ Price scales primarily with **whether SWFT captures content on-site**, then with
 ## Margin heuristics
 
 1. **Website Only** must stay lean: client-supplied assets, limited revision rounds, platform builds (Webflow/Shopify), not ground-up custom frameworks.
-2. **GBP Refresh** is the FB ad entry offer. Protect margin by keeping scope to one location and a defined deliverable pack. Ad traffic should land on `/book/gbp-refresh.html` (Stripe start at $400), not a free form, when the intent is paid booking.
+2. **GBP Content Refresh** is the FB ad entry offer. Protect margin by keeping scope to one location and a defined deliverable pack. Ad traffic should land on `/book/gbp-content-refresh.html` (Stripe start at $400), not a free form, when the intent is paid booking.
 3. **Half-day vs full-day** is the main jump from Tier 2 to Tier 3. Do not discount full-day multi-location work into the half-day band.
 4. **Retainers** are month-to-month. Price toward the top of the band when GBP posting + review management + monthly shoots are all included.
 5. **Growth Partner** always requires a written scope (content cadence + ad management hours). Ad spend is client-paid and separate.

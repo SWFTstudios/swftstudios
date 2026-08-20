@@ -19,7 +19,7 @@ Each offer in [`data/pricing.json`](../data/pricing.json) has a dedicated bookin
 
 | Page | Checkout |
 |---|---|
-| `/book/gbp-refresh.html` | $400 one-time (start of $400–$600) |
+| `/book/gbp-content-refresh.html` | $400 one-time (start of $400–$600) |
 | `/book/website-only.html` | $800 one-time (start of $800–$1,500) |
 | `/book/website-content-half.html` | $2,000 one-time (start of $2,000–$2,800) |
 | `/book/website-content-full.html` | $3,000 one-time (start of $3,000–$4,500+) |
