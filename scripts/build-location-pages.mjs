@@ -122,7 +122,7 @@ function relatedLinks(current, locations) {
 
 function renderLocationPage(loc, data, locations) {
   const title = `${loc.name} Website Design & Content | SWFT Studios`;
-  const description = `SWFT Studios builds websites, photo and video content, and lead systems for businesses in ${loc.name}, ${loc.state}. Serving ${loc.region} with on-site capture and conversion-focused builds.`;
+  const description = `Websites, photo and video, and lead systems for ${loc.name}, ${loc.state} businesses. On-site capture and conversion-focused builds serving ${loc.region}.`;
   const canonical = `${SITE}/locations/${loc.slug}.html`;
   const neighborhoods = (loc.neighborhoods || [])
     .map((n) => `<li>${escapeHtml(n)}</li>`)

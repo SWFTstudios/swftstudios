@@ -2,7 +2,7 @@
   "hero": {
     "headline": "Transparent pricing, scoped to what you need",
     "sub": "Price scales with whether we capture content on-site, how complex the site is, and how long the shoot runs. No flat minimum that overcharges simple jobs or undersells bigger ones.",
-    "trustLine": "Transparent pricing, scoped to what you actually need. No long contracts. Work directly with the person who builds it."
+    "trustLine": "No long contracts. Work directly with the person who builds it. Price follows content capture and site complexity."
   },
   "calUrl": "/growth-audit",
   "projectTiers": {
@@ -24,7 +24,7 @@
           "Google Business Profile optimization (categories, services, photos, posts)",
           "Review-generation setup"
         ],
-        "cta": "Start with GBP Refresh",
+        "cta": "Start with GBP Content Refresh",
         "bookUrl": "/book/gbp-refresh.html",
         "stripe": {
           "mode": "payment",
@@ -42,7 +42,7 @@
         "priceNote": "one-time · you supply content",
         "featured": false,
         "description": "A conversion-focused site built and customized on Webflow or Shopify when you already have usable photos and copy.",
-        "scopeDriver": "$800 to $1,000 for a simple 1 to 5 page brochure site. $1,200 to $1,500 for more pages, Shopify setup, booking or lead forms, or extra revision rounds.",
+        "scopeDriver": "$800 to $1,000 for a simple 1- to 5-page brochure site. $1,200 to $1,500 for more pages, Shopify setup, booking or lead forms, or extra revision rounds.",
         "includes": [
           "Site built and customized on Webflow or Shopify",
           "Mobile-first layout and clear messaging",
@@ -67,7 +67,7 @@
         "priceNote": "one-time · half-day shoot",
         "featured": true,
         "badge": "Most common",
-        "description": "Website build plus a 2 to 4 hour on-location photo and video shoot, edited and placed on the site and Google Business Profile.",
+        "description": "Website build plus a 2- to 4-hour on-location photo and video shoot, edited and placed on the site and Google Business Profile.",
         "scopeDriver": "Right fit when the business looks better in person than online and needs both a site and real content in one project.",
         "includes": [
           "Website build and customization",
@@ -184,7 +184,7 @@
       "a": "It depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800 to $1,500. Website plus a half-day shoot is $2,000 to $2,800. Website plus a full-day or multi-location shoot starts at $3,000 to $4,500+."
     },
     {
-      "q": "What's the GBP Content Refresh?",
+      "q": "What is the GBP Content Refresh?",
       "a": "A $400 to $600 one-time offer with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile (categories, services, photos, posts), and set up review generation. Fastest entry point if you need to look better locally without a rebuild."
     },
     {
