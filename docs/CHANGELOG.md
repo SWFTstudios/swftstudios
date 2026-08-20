@@ -1,5 +1,36 @@
 # Changelog
 
+## 2026-08-20: Punch-list phases 3 and 4 (SEO and copy)
+
+### SEO (items 10 to 13)
+- Added unique meta descriptions (about 140 to 160 characters) to 14 client case studies, plus `media.html`, `videos.html`, and `swft-tv.html`.
+- Rewrote titles on Websites, Apps, Media, SWFT TV, Resources, Video Resources, and Contact to the house pattern `Topic | SWFT Studios` (about 50 characters). Replaced leftover Dann Petty template titles, descriptions, and OG images on Websites, Apps, and Resources.
+- Shortened generated location-page descriptions in [`scripts/build-location-pages.mjs`](../scripts/build-location-pages.mjs) (rebuild with `npm run build:locations`). Longest is now 146 characters (Staten Island).
+- Homepage testimonials heading is now a single `h2` (“What clients had to say”). The hero `h1` is the only H1.
+- Filled empty `alt` on work thumbnails, posters, and logos on Home, Videos, Apps, Media, Resources, SWFT TV, and Websites. Hidden hero stills and decorative arrows stay `alt=""`.
+
+### Copy (items 14 to 26)
+- Yanko testimonial: consistent curly quotes, “one-stop shop,” one period, question mark.
+- Homepage problem heading no longer repeats the intro line. Pricing trust line no longer repeats the H1.
+- Services card label is `02-03 / Website + Content` (one card, combined offer).
+- Homepage section titles use sentence case. Audience copy is device-neutral (“Browse” / “Select a card”).
+- “And more” instead of “And More..”. “long-term” hyphenated. Team CTA is “View our work.”
+- GBP button and book hub copy say **GBP Content Refresh**. Booking copy uses `1- to 5-page` and `2- to 4-hour` (`npm run build:book`).
+- Contact: “Get in touch,” one “Not ready to start?” line, budget options aligned to live tiers (`$400 to $600`, `$800 to $1,500`, `$2,000 to $2,800`, `$3,000+`, “Not sure yet”).
+- Case-study possessives (`brand’s`, `kids’`) use `&rsquo;` so they do not mix with script quotes.
+
+### Notes
+- Punch-list items 10 to 26. Branch: `feat/site-punch-list-p3p4`.
+- A Webflow import of `index.html`, `websites.html`, `apps.html`, `media.html`, `resources.html`, `videos.html`, or `swft-tv.html` will overwrite titles, metas, alts, and homepage copy. Re-apply after import.
+- Rebuild generated pages after editing sources: `npm run build:book` and `npm run build:locations`.
+
+### Failure cases
+- If `build:locations` is skipped after a generator edit, city pages keep the longer descriptions Google would truncate.
+- Contact budget is a free-text field on the worker (`Budget: str(body.budget, 200)`). New option labels only affect the dropdown; old submissions are unchanged.
+- Decorative `alt=""` on arrows is intentional. Work images without a mapped filename still need a manual alt if new galleries are added.
+
+---
+
 ## 2026-08-20: Homepage hero overflow
 
 ### Fixed

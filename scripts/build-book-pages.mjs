@@ -198,7 +198,7 @@ ${cards}
   return pageShell({
     title: "Book a SWFT Offer | SWFT Studios",
     description:
-      "Book GBP Refresh, Website Only, Website + Content, or a growth retainer with secure Stripe Checkout.",
+      "Book GBP Content Refresh, Website Only, Website + Content, or a growth retainer with secure Stripe Checkout.",
     canonical: "https://www.swftstudios.com/book/",
     bodyClass: "ps-page book-page",
     body,
