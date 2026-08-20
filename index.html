@@ -279,11 +279,14 @@ body{
     .hp-audience-track {
       display: flex;
       gap: 16px;
+      width: 100%;
+      max-width: 100%;
       overflow-x: auto;
+      overflow-y: hidden;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       padding: 0.25rem 0 1.25rem;
-      margin: 0 -0.25rem;
+      margin: 0;
       scrollbar-width: thin;
       scrollbar-color: var(--swft-accent, #7fffe5) transparent;
     }
@@ -293,9 +296,11 @@ body{
     }
     .hp-audience-card {
       position: relative;
-      flex: 0 0 50vw;
-      min-width: 48vw;
-      max-width: 52vw;
+      box-sizing: border-box;
+      flex: 0 0 calc((100% - 16px) / 1.5);
+      width: calc((100% - 16px) / 1.5);
+      min-width: calc((100% - 16px) / 1.5);
+      max-width: none;
       scroll-snap-align: start;
       min-height: 24rem;
       border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
@@ -307,9 +312,9 @@ body{
     }
     @media (min-width: 1024px) {
       .hp-audience-card {
-        flex-basis: 29vw;
-        min-width: 28vw;
-        max-width: 30vw;
+        flex-basis: calc((100% - 32px) / 3);
+        width: calc((100% - 32px) / 3);
+        min-width: calc((100% - 32px) / 3);
       }
     }
     .hp-audience-card:hover,
@@ -1006,13 +1011,13 @@ margin: 0rem !important;
                     <p class="testimonial-text">We build the website and capture the photo and video content in person, so local businesses get one clear system instead of juggling separate agencies.</p>
                     <div class="margin-top margin-medium">
                       <div class="button-group is-course">
-                        <a href="#homepage-pricing" class="button is-course w-inline-block">
+                        <a href="/growth-audit" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
-                          <div class="button_text">See Pricing</div>
+                          <div class="button_text">Free Growth Audit</div>
                         </a>
                         <a href="websites.html" class="button is-course outlined w-inline-block">
                           <div class="button_bg"></div>
-                          <div class="button_text">View our work</div>
+                          <div class="button_text">See Our Work</div>
                         </a>
                       </div>
                     </div>
