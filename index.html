@@ -278,6 +278,7 @@ body{
     }
     .hp-audience-track {
       display: flex;
+      align-items: flex-start;
       gap: 16px;
       width: 100%;
       max-width: 100%;
@@ -297,12 +298,14 @@ body{
     .hp-audience-card {
       position: relative;
       box-sizing: border-box;
-      flex: 0 0 calc((100% - 16px) / 1.5);
+      flex: 0 0 auto;
+      align-self: flex-start;
       width: calc((100% - 16px) / 1.5);
       min-width: calc((100% - 16px) / 1.5);
       max-width: none;
-      aspect-ratio: 3 / 4;
-      height: auto;
+      height: 420px;
+      min-height: 420px;
+      max-height: 420px;
       scroll-snap-align: start;
       border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
       overflow: hidden;
@@ -313,9 +316,11 @@ body{
     }
     @media (min-width: 1024px) {
       .hp-audience-card {
-        flex-basis: calc((100% - 32px) / 3);
         width: calc((100% - 32px) / 3);
         min-width: calc((100% - 32px) / 3);
+        height: 560px;
+        min-height: 560px;
+        max-height: 560px;
       }
     }
     .hp-audience-card:hover,
@@ -331,6 +336,8 @@ body{
       z-index: 0;
     }
     .hp-audience-card__media img {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
