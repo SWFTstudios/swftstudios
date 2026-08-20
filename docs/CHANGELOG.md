@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-08-20: Nested page assets load from site root
+
+### Fixed
+- Booking pages under `/book/`, case studies under `/case-study/`, and `/growth-audit/thank-you` requested CSS/JS/images with `./` or `../`, so browsers resolved `/book/css/…` and `/case-study/css/…` (404). Assets now use root-absolute `/css/`, `/js/`, `/images/`.
+- Case study pages used a leftover Webflow nav (`footer.navbar`) with 404 links and `mailto:elombe@` while the visible text said `hello@`. That block is removed; `#swft-nav` is the nav. Footer CTA text matches `hello@swftstudios.com`.
+- [`scripts/build-book-pages.mjs`](../scripts/build-book-pages.mjs) now emits root-absolute asset paths so `npm run build:book` cannot restore the bug.
+
+### Notes
+- Punch-list items 01, 03, 04, and 08. Branch: `fix/nested-page-assets` off `feat/site-punch-list`.
+
+---
+
+## 2026-08-10: Copy dash cleanup, local SEO pages, structured site map
+
 ## 2026-08-10: Copy dash cleanup, local SEO pages, structured site map
 
 ### Changed
