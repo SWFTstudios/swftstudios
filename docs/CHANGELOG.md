@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-20: PostHog on marketing site
+
+### Added
+- PostHog JS SDK (project `486061`) loads via [`js/swft-analytics.js`](../js/swft-analytics.js) — `$pageview`, pageleave, and custom SWFT events (`pricing_view`, `book_tier_submit`, etc.).
+- Analytics script added on apps, media, websites, resources, team, case-studies, and portal pages that were missing it.
+
+---
+
 ## 2026-08-20: Book via Payment Links (no Stripe secret key)
 
 ### Changed

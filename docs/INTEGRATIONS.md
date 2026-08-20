@@ -18,6 +18,19 @@ optional Worker deploys — keep it in sync with Pages Functions.
 
 Full CRM schema, Kanban usage, and table IDs: [`docs/AIRTABLE_CRM.md`](AIRTABLE_CRM.md). Shared write helper: [`functions/_lib/airtable-crm.js`](../functions/_lib/airtable-crm.js).
 
+### PostHog (marketing site)
+
+Browser analytics load from [`js/swft-analytics.js`](../js/swft-analytics.js) on pages that include that script:
+
+- Project: `486061` (SWFT Studios / Default project)
+- Public token: `phc_AwfkAWFJ3Xs2vcFLcjhN9CfeSfZ6nYStWvpXMTi3uMkb` (safe in browser)
+- Host: `https://us.i.posthog.com`
+- Captures `$pageview` / pageleave automatically; custom events via `SWFTAnalytics.track` (also forwarded to PostHog)
+- Disable with `window.SWFT_POSTHOG_DISABLED = true` before the script loads
+- Live dashboard: [Web analytics](https://us.posthog.com/project/486061/web)
+
+Client-site install snippet (for portal host metrics) remains in [`docs/CLIENT_PORTAL.md`](CLIENT_PORTAL.md).
+
 ### Stripe tier booking pages
 
 Each offer in [`data/pricing.json`](../data/pricing.json) has a dedicated booking page under `/book/`:
