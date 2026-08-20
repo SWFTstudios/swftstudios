@@ -307,7 +307,7 @@ function renderHtmlSitemap(data, locations) {
 
   const book = [
     { href: "/book/", label: "Book a tier", note: "Stripe checkout hub" },
-    { href: "/book/gbp-refresh.html", label: "Book GBP Content Refresh" },
+    { href: "/book/gbp-content-refresh.html", label: "Book GBP Content Refresh" },
     { href: "/book/website-only.html", label: "Book Website Only" },
     { href: "/book/website-content-half.html", label: "Book Website + Content" },
     { href: "/book/website-content-full.html", label: "Book Website + Extended Content" },

@@ -25,7 +25,7 @@
           "Review-generation setup"
         ],
         "cta": "Start with GBP Content Refresh",
-        "bookUrl": "/book/gbp-refresh.html",
+        "bookUrl": "/book/gbp-content-refresh.html",
         "stripe": {
           "mode": "payment",
           "amountCents": 40000,

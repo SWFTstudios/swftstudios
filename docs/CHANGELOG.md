@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-08-20: Punch-list leftovers (19, 22, 24)
+
+### Changed
+- Straight apostrophes in public HTML copy are now `&rsquo;` (script, style, and form `value` attributes left alone so JS and stored payloads stay valid).
+- GBP booking URL is `/book/gbp-content-refresh.html`. Stripe plan id stays `gbp-refresh`. Old `/book/gbp-refresh.html` 301s via the Worker, `_redirects` (`301!`), and a stub page.
+- Contact hero no longer repeats the Growth Audit prompt. One “Not ready to start?” line remains under the form.
+
+### Notes
+- Punch-list items 19, 22, and 24. Branch: `fix/punch-list-leftovers`.
+- Rebuild book pages with `npm run build:book` so the generator keeps writing the new filename and the redirect stub.
+
+### Failure cases
+- Bookmarks to `/book/gbp-refresh.html` should 301. If a static host ignores `_redirects` and the Worker, the HTML stub still meta-refreshes.
+- `npm run build:book` overwrites `book/*.html`. The generator writes `gbp-refresh.html` as a redirect, not a checkout page.
+- Radio `value="It's all on my Instagram"` on `swft-method.html` is unchanged so Airtable still receives the original string.
+
+---
+
 ## 2026-08-20: Punch-list phases 3 and 4 (SEO and copy)
 
 ### SEO (items 10 to 13)

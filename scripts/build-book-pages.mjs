@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build Stripe booking pages from data/pricing.json
- * Output: book/<tier-id>.html + book/index.html
+ * Output: book/<basename from bookUrl or id>.html + book/index.html
  *
  * Run: node scripts/build-book-pages.mjs
  */
@@ -22,6 +22,12 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function bookBasename(tier) {
+  const raw = tier.bookUrl || `/book/${tier.id}.html`;
+  const name = String(raw).replace(/^\/book\//, "").replace(/^\//, "");
+  return name.endsWith(".html") ? name : `${name}.html`;
 }
 
 function collectTiers(data) {
@@ -81,7 +87,7 @@ function renderTierPage(tier) {
   const stripe = tier.stripe;
   const title = `Book ${tier.name} | SWFT Studios`;
   const description = `${tier.description} Start at ${stripe.priceDisplay}. Secure checkout via Stripe.`;
-  const canonical = `https://www.swftstudios.com/book/${tier.id}.html`;
+  const canonical = `https://www.swftstudios.com/book/${bookBasename(tier)}`;
   const modeLabel = stripe.mode === "subscription" ? "Monthly retainer" : "One-time project";
   const cta = stripe.ctaLabel || `Pay ${stripe.priceDisplay} to start`;
 
@@ -98,7 +104,7 @@ function renderTierPage(tier) {
 
       <div class="book-grid">
         <div>
-          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">What's included</h2>
+          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">What&rsquo;s included</h2>
           ${renderIncludes(tier.includes)}
           ${
             tier.scopeDriver
@@ -111,7 +117,7 @@ function renderTierPage(tier) {
 
         <div class="ga-form-card">
           <h2>Your details</h2>
-          <p class="ga-step-help" style="margin-top:-0.5rem;">We'll save your info, then send you to Stripe Checkout.</p>
+          <p class="ga-step-help" style="margin-top:-0.5rem;">We&rsquo;ll save your info, then send you to Stripe Checkout.</p>
           <div id="book-status" class="ga-status" hidden></div>
           <form id="book-tier-form" data-tier-id="${escapeHtml(tier.id)}" novalidate>
             <div class="ga-hp" aria-hidden="true">
@@ -173,7 +179,7 @@ function renderIndex(tiers) {
     .map((tier) => {
       const stripe = tier.stripe;
       return (
-        `<a class="book-hub-card" href="${escapeHtml(tier.id)}.html">` +
+        `<a class="book-hub-card" href="${escapeHtml(bookBasename(tier))}">` +
         `<h2>${escapeHtml(tier.name)}</h2>` +
         `<div class="book-hub-price">${escapeHtml(stripe.priceDisplay)} to start</div>` +
         `<p>${escapeHtml(tier.priceLabel)}${tier.priceNote ? ` · ${escapeHtml(tier.priceNote)}` : ""}</p>` +
@@ -209,8 +215,8 @@ function renderThankYou() {
   const body = `
       <header class="ps-hero ps-hero--left">
         <p class="ps-eyebrow">Payment received</p>
-        <h1 class="ps-title">You're booked. We'll take it from here.</h1>
-        <p class="ps-lead">Thanks for starting with SWFT. Check your email for a confirmation. We'll reach out within one business day to confirm scope and schedule.</p>
+        <h1 class="ps-title">You&rsquo;re booked. We&rsquo;ll take it from here.</h1>
+        <p class="ps-lead">Thanks for starting with SWFT. Check your email for a confirmation. We&rsquo;ll reach out within one business day to confirm scope and schedule.</p>
       </header>
       <div class="ga-steps">
         <article class="ga-step">
@@ -263,7 +269,27 @@ mkdirSync(OUT_DIR, { recursive: true });
 writeFileSync(join(OUT_DIR, "index.html"), renderIndex(tiers));
 writeFileSync(join(OUT_DIR, "thank-you.html"), renderThankYou());
 for (const tier of tiers) {
-  writeFileSync(join(OUT_DIR, `${tier.id}.html`), renderTierPage(tier));
-  console.log(`Wrote book/${tier.id}.html`);
+  const file = bookBasename(tier);
+  writeFileSync(join(OUT_DIR, file), renderTierPage(tier));
+  console.log(`Wrote book/${file}`);
 }
+
+writeFileSync(
+  join(OUT_DIR, "gbp-refresh.html"),
+  `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GBP Content Refresh | SWFT Studios</title>
+  <link rel="canonical" href="https://www.swftstudios.com/book/gbp-content-refresh.html">
+  <meta http-equiv="refresh" content="0;url=/book/gbp-content-refresh.html">
+  <script>location.replace("/book/gbp-content-refresh.html" + location.search);</script>
+</head>
+<body>
+  <p>This offer is at <a href="/book/gbp-content-refresh.html">GBP Content Refresh</a>.</p>
+</body>
+</html>
+`
+);
+console.log("Wrote book/gbp-refresh.html (redirect to gbp-content-refresh.html)");
 console.log(`Wrote book/index.html and book/thank-you.html (${tiers.length} tiers)`);
