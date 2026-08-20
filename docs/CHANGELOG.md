@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-08-20: Homepage hero overflow
+
+### Fixed
+- At a 400px viewport the homepage was ~6px wider than the screen. The scaled Vimeo hero iframe is now clipped on `.hero-vimeo` (`contain: paint`) and `.background_image-wrappe`.
+
+### Notes
+- Punch-list item 09. Lives in `css/hero-vimeo-loader.css` so a Webflow import of `index.html` does not drop the rule if that stylesheet stays linked. Branch: `fix/homepage-overflow`.
+
+---
+
 ## 2026-08-20: Shared site footer
 
 ### Added
