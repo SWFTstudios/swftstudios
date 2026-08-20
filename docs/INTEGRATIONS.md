@@ -1,17 +1,20 @@
-# SWFT — Booking Flow Integrations (Airtable + Stripe)
+# SWFT — Booking Flow Integrations (Airtable + Stripe + Resend)
 
-**Submissions go straight to Airtable** — no more FormSubmit (their service was
-returning 521 errors). Production is **Cloudflare Pages** (`swftstudios-website`);
-forms post to **Pages Functions** under `functions/api/`, which write to your
-Airtable base and send email via **Resend** when `RESEND_API_KEY` is set.
-(`src/worker.ts` mirrors the same Airtable handlers for local `wrangler` use.)
+**Submissions go straight to Airtable** — no more FormSubmit for live lead forms.
+Production is **Cloudflare Pages** project **`swftstudios-website`**. Forms post to
+same-origin `/api/*` **Pages Functions** under [`functions/api/`](../functions/api/),
+which write to Airtable and send email via **Resend** when `RESEND_API_KEY` is set
+(that secret is already configured on `swftstudios-website`).
+
+[`src/worker.ts`](../src/worker.ts) mirrors the same handlers for local `wrangler` /
+optional Worker deploys — keep it in sync with Pages Functions.
 
 | Form | Pages Function | Airtable table | Email |
 |---|---|---|---|
-| `book/<tier>.html` (Stripe tier booking) | `POST /api/book-tier` → `functions/api/book-tier.js` | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation, then Stripe Checkout |
-| `growth-audit.html` (Free Growth Audit — multi-step) | `POST /api/growth-audit` → `functions/api/growth-audit.js` | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) or Discovery Calls fallback | Team notify → `hello@swftstudios.com` + visitor confirmation |
-| `contact.html` (Project inquiry) | `POST /api/contact` → `functions/api/contact.js` | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation |
-| `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` → `functions/api/build-request.js` | "Website Build Requests" | (Airtable only for now) |
+| `book/<tier>.html` (Stripe tier booking) | `POST /api/book-tier` → [`functions/api/book-tier.js`](../functions/api/book-tier.js) | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation, then Stripe Checkout |
+| `growth-audit.html` (Free Growth Audit — multi-step) | `POST /api/growth-audit` → [`functions/api/growth-audit.js`](../functions/api/growth-audit.js) | "Growth Audits" (`AIRTABLE_TABLE_GROWTH_AUDIT`) or Discovery Calls fallback | Team notify → `hello@swftstudios.com` + visitor confirmation |
+| `contact.html` (Project inquiry) | `POST /api/contact` → [`functions/api/contact.js`](../functions/api/contact.js) | "Discovery Calls" | Team notify → `hello@swftstudios.com` + visitor confirmation |
+| `swft-method.html` (Instant Website intake — demoted) | `POST /api/build-request` → [`functions/api/build-request.js`](../functions/api/build-request.js) | "Website Build Requests" | Legacy FormSubmit notify (not Resend yet) |
 
 ### Stripe tier booking pages
 
@@ -28,7 +31,9 @@ Each offer in [`data/pricing.json`](../data/pricing.json) has a dedicated bookin
 
 Flow: form → Airtable + Resend → Stripe Checkout → `/book/thank-you.html`.
 
-**Amounts are server-authoritative** in [`functions/_lib/stripe-tiers.js`](../functions/_lib/stripe-tiers.js) (mirrored in `pricing.json` → `tier.stripe`). Clients cannot set the price.
+**Amounts are server-authoritative** in [`functions/_lib/stripe-tiers.js`](../functions/_lib/stripe-tiers.js)
+(also inlined in [`src/worker.ts`](../src/worker.ts); keep both in sync with `pricing.json` → `tier.stripe`).
+Clients cannot set the price.
 
 Regenerate pages after editing pricing stripe fields:
 
@@ -38,7 +43,7 @@ npm run build:book
 
 Pricing card CTAs use `tier.bookUrl` (see [`js/pricing-render.js`](../js/pricing-render.js)). The Growth Audit path remains for “not sure” traffic.
 
-Required secret (same Pages project): `STRIPE_SECRET_KEY`. Without it, `/api/book-tier` returns 503 and the form shows an inline error.
+Required secret (Pages `swftstudios-website`): `STRIPE_SECRET_KEY`. Without it, `/api/book-tier` returns 503 and the form shows an inline error.
 
 ### Growth Audit multi-step flow
 
@@ -75,15 +80,15 @@ Create a table named **Growth Audits** in the SWFT Website Leads base with field
 
 Optional later (if you add columns in Airtable): Last Name, Desired Service, Photo Links. Until then those values are folded into **Additional Context** / **Biggest Challenge** so writes never fail on unknown fields.
 
-Then set env on the **Pages** project (or leave unset to use the Discovery Calls fallback):
+Then set env on the **Pages** project `swftstudios-website` (or leave unset to use the Discovery Calls fallback):
 
 ```bash
 # Dashboard: Pages → swftstudios-website → Settings → Variables and Secrets
-# AIRTABLE_TOKEN (secret) — already required for /api/contact
+# AIRTABLE_TOKEN (secret) — required for /api/contact and other lead routes
 # AIRTABLE_TABLE_GROWTH_AUDIT (plain text) = tblXXXXXXXX  after you create the table
 ```
 
-Recommended Airtable automation: optional — Resend now handles confirmation email
+Recommended Airtable automation: optional — Resend handles confirmation email
 from the Pages Function (see Resend setup below).
 
 `/api/build-request` also **starts a Stripe Checkout session** for the chosen plan
@@ -96,23 +101,43 @@ bouncing the visitor to a third-party error page.
 
 ### Confirmation emails (Resend)
 
-Growth Audit and contact submissions send:
+Contact, Growth Audit, and book-tier submissions send:
 
 1. **Team notification** to `hello@swftstudios.com` (override with `NOTIFY_EMAIL`), with `Reply-To` set to the visitor so you can reply in-thread.
 2. **Visitor confirmation** from `SWFT Studios <hello@swftstudios.com>` (override with `RESEND_FROM`).
 
-Shared helper: `functions/_lib/resend.js`. Email is best-effort — Airtable write still succeeds if Resend fails.
+Implementation:
 
-**Required secret (you already added this):** `RESEND_API_KEY` on Pages → `swftstudios-website`.
+- Worker: Resend helpers inside [`src/worker.ts`](../src/worker.ts)
+- Pages Functions (mirror): [`functions/_lib/resend.js`](../functions/_lib/resend.js)
 
-Optional vars:
+Email is best-effort — Airtable write still succeeds if Resend fails. Responses include `emailed: true|false`.
+
+**Required secret (already set on production):** `RESEND_API_KEY` on Cloudflare Pages project **`swftstudios-website`**
+(Dashboard → Workers & Pages → `swftstudios-website` → Settings → Variables and Secrets).
+
+The code reads `env.RESEND_API_KEY` in both Pages Functions and [`src/worker.ts`](../src/worker.ts) — that exact name.
+
+```bash
+# Production Pages (only if rotating / re-adding the key)
+npx wrangler pages secret put RESEND_API_KEY --project-name=swftstudios-website
+
+# Local (copy .dev.vars.example → .dev.vars; never commit .dev.vars)
+# RESEND_API_KEY=re_xxxxxxxx
+```
+
+Do **not** use `npx wrangler secret put RESEND_API_KEY` against Worker name `swftstudios` from `wrangler.jsonc` unless you intentionally deploy that Worker — production form traffic is the Pages project.
+
+Domain `swftstudios.com` is **Verified** for sending in Resend (US East). Keep it verified.
+
+Optional vars (plain text, not secrets):
 
 | Var | Default |
 |---|---|
 | `RESEND_FROM` | `SWFT Studios <hello@swftstudios.com>` |
 | `NOTIFY_EMAIL` | `hello@swftstudios.com` |
 
-Domain `swftstudios.com` must stay **Verified** for sending in the Resend dashboard.
+Do **not** call Resend from the browser — the API has no CORS and would expose the key.
 
 ---
 
@@ -138,33 +163,46 @@ can see the layout — delete it anytime.
 
 ---
 
-## Setup — the ONE thing to do
+## Setup — secrets on Pages (`swftstudios-website`)
 
-To see submissions land in Airtable, set a single secret on the **Pages** project
-(`swftstudios-website` — already used by `/api/contact`):
+Production is the **Cloudflare Pages** project **`swftstudios-website`**. Form handlers live in
+[`functions/api/`](../functions/api/) and already look for `env.RESEND_API_KEY`.
 
-1. Create the token at **https://airtable.com/create/tokens** while signed in as
+To see submissions land in Airtable **and** emails fire via Resend, confirm these secrets on that project:
+
+1. Create the Airtable token at **https://airtable.com/create/tokens** while signed in as
    `elombe@swftstudios.com`.
 2. Scope: **`data.records:write`** (add `data.records:read` too if you like).
 3. Access: the **"SWFT Website Leads"** base.
-4. In the Cloudflare dashboard:
-   *Pages → swftstudios-website → Settings → Variables and Secrets → Add (Secret)*
-   name `AIRTABLE_TOKEN`.
+4. Secrets (Dashboard → Pages → `swftstudios-website` → Settings → Variables and Secrets):
 
-That's it — Growth Audit, contact, and booking submissions then appear in Airtable.
-(`/api/contact` already returns `stored: true` in production, so this secret is set.)
+| Secret | Status |
+|---|---|
+| `AIRTABLE_TOKEN` | Required for lead storage |
+| `RESEND_API_KEY` | **Already set** — name must stay exactly `RESEND_API_KEY` |
+| `STRIPE_SECRET_KEY` | Optional; required for `/api/book-tier` checkout |
+
+```bash
+# Rotate Resend key on Pages only:
+npx wrangler pages secret put RESEND_API_KEY --project-name=swftstudios-website
+```
+
+Local: copy [`.dev.vars.example`](../.dev.vars.example) to `.dev.vars` (gitignored).
+
+That's it — Growth Audit, contact, and booking submissions then appear in Airtable,
+and Resend sends team + visitor mail when `RESEND_API_KEY` is present.
 
 ### Stripe (optional — only needed to take payment)
 Set `STRIPE_SECRET_KEY` on the same Pages project (secret).
-Without it, the booking flow still saves to Airtable and shows the on-page
-confirmation — it just won't open a checkout page.
+Without it, `/api/book-tier` returns 503; contact and growth-audit still work.
 
 > Until `AIRTABLE_TOKEN` is set, the Functions accept the submission and show the
-> visitor a success message, but the record isn't saved.
+> visitor a success message, but the record isn't saved. Until `RESEND_API_KEY` is
+> set, `emailed` is `false` and no mail is sent.
 
 ### Optional overrides (vars, not secrets)
 `STRIPE_PRICE_MONTHLY`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE`,
-`AIRTABLE_TABLE_CONTACT`, `AIRTABLE_TABLE_GROWTH_AUDIT`.
+`AIRTABLE_TABLE_CONTACT`, `AIRTABLE_TABLE_GROWTH_AUDIT`, `RESEND_FROM`, `NOTIFY_EMAIL`.
 
 ---
 
@@ -178,16 +216,17 @@ confirmation — it just won't open a checkout page.
 
 ## Local dev / deploy
 
-Production deploys from Git → Cloudflare Pages (`swftstudios-website` on `main`).
-Merging/pushing this function to `main` publishes `/api/growth-audit`.
-
 ```bash
-npx wrangler pages deploy . --project-name=swftstudios-website   # manual Pages publish
-# or: push/merge to main (Git-connected Pages)
+npx wrangler pages dev .            # local Pages + functions/api
+# or: npx wrangler dev              # Worker mirror in src/worker.ts (needs .dev.vars)
+npx wrangler pages deploy . --project-name=swftstudios-website
 ```
 
-### Failure cases (Growth Audit)
+### Failure cases (forms + Resend)
 
-1. **Missing Pages Function** — `POST /api/growth-audit` returns 405 empty body; the form shows "Unable to send right now."
-2. **Missing `AIRTABLE_TOKEN`** — API returns `{ ok: true, stored: false }`; visitor still reaches thank-you, lead is not saved.
-3. **Invalid / oversized JSON** — API returns 400/413 with `{ ok: false, error }`; form shows that error inline.
+1. **Missing `RESEND_API_KEY`** — API still returns `{ ok: true }`; Airtable may store; `emailed` is false; no mail.
+2. **Resend 403 (domain / from mismatch)** — Function/Worker logs the error body; lead still stored; visitor sees success.
+3. **Missing Pages Function** — `POST /api/growth-audit` returns 405; the form shows "Unable to send right now."
+4. **Missing `AIRTABLE_TOKEN`** — API returns `{ ok: true, stored: false }`; visitor still reaches thank-you, lead is not saved.
+5. **Invalid / oversized JSON** — API returns 400/413 with `{ ok: false, error }`; form shows that error inline.
+6. **Missing `STRIPE_SECRET_KEY` on book-tier** — `503` with inline checkout error; lead may still be in Airtable.

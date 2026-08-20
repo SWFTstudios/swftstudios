@@ -19,3 +19,8 @@ node_modules/
 webflow-export/
 
 .wrangler/
+
+# Local secrets for `wrangler dev` (never commit)
+.dev.vars
+.dev.vars.*
+!.dev.vars.example

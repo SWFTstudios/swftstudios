@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-08-20: Resend on live Worker forms
+
+### Added
+- Resend team notify + visitor confirmation on Worker routes `POST /api/contact`, `/api/growth-audit`, and `/api/book-tier` in [`src/worker.ts`](../src/worker.ts).
+- Full `POST /api/book-tier` on the Worker (Airtable → Resend → Stripe Checkout), matching [`functions/api/book-tier.js`](../functions/api/book-tier.js).
+- [`.dev.vars.example`](../.dev.vars.example) and `.dev.vars` gitignore entries for local secrets.
+
+### Changed
+- [`docs/INTEGRATIONS.md`](INTEGRATIONS.md) documents Pages `swftstudios-website` as production; secret name is exactly `RESEND_API_KEY` (already set there).
+
+### Env
+- Secret: `RESEND_API_KEY` on Pages `swftstudios-website` (required for email; already provisioned).
+- Optional vars: `RESEND_FROM`, `NOTIFY_EMAIL`.
+- Domain `swftstudios.com` already verified in Resend.
+
+### Failure cases
+- Missing `RESEND_API_KEY`: form still succeeds; `emailed: false`.
+- Resend 403/network errors: logged; Airtable write still attempted; visitor sees success.
+- Missing `STRIPE_SECRET_KEY` on book-tier: `503`; lead may still be stored.
+
+---
+
 ## 2026-08-20: Punch-list leftovers (19, 22, 24)
 
 ### Changed

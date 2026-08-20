@@ -1,6 +1,7 @@
 /**
- * SWFT static site worker: serves assets + POST /api/case-study-match
- * (replaces third-party template Worker; deterministic match with optional Workers AI)
+ * SWFT static site worker: serves assets + form APIs
+ * (contact, growth-audit, book-tier, build-request, case-study-match).
+ * Lead emails go through Resend when RESEND_API_KEY is set.
  */
 export interface Env {
   ASSETS: Fetcher;
@@ -8,6 +9,8 @@ export interface Env {
   /* Secrets — set with `wrangler secret put` (or in the Cloudflare dashboard) */
   STRIPE_SECRET_KEY?: string;
   AIRTABLE_TOKEN?: string;
+  /** Resend API key for lead notify + visitor confirmation emails */
+  RESEND_API_KEY?: string;
   /* Non-secret config — safe defaults baked in; override via vars if needed */
   STRIPE_PRICE_MONTHLY?: string;
   STRIPE_PRICE_MAINTENANCE?: string;
@@ -17,6 +20,10 @@ export interface Env {
   /** Airtable table id for Growth Audit leads — set via Worker vars */
   AIRTABLE_TABLE_GROWTH_AUDIT?: string;
   FORMSUBMIT_EMAIL?: string;
+  /** Override From header, e.g. `SWFT Studios <hello@swftstudios.com>` */
+  RESEND_FROM?: string;
+  /** Team notify inbox (default hello@swftstudios.com) */
+  NOTIFY_EMAIL?: string;
 }
 
 /* Defaults for the resources provisioned for SWFT Studios. Override via env vars. */
@@ -237,13 +244,122 @@ async function createStripeCheckout(
   }
 }
 
-/* Where lead notifications are emailed. Override with the FORMSUBMIT_EMAIL var. */
+/* Where lead notifications are emailed. Override with NOTIFY_EMAIL (or legacy FORMSUBMIT_EMAIL). */
 const NOTIFY_EMAIL_DEFAULT = "hello@swftstudios.com";
+const RESEND_FROM_DEFAULT = "SWFT Studios <hello@swftstudios.com>";
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function notifyAddress(env: Env): string {
+  return env.NOTIFY_EMAIL || env.FORMSUBMIT_EMAIL || NOTIFY_EMAIL_DEFAULT;
+}
+
+function emailRow(label: string, value: string): string {
+  if (!value) return "";
+  return `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;color:#666;">${escapeHtml(label)}</td><td style="padding:6px 0;">${escapeHtml(value)}</td></tr>`;
+}
 
 /**
- * Send the team a notification email and the visitor a confirmation
- * (autoresponse) via FormSubmit's AJAX endpoint. Best-effort.
- * Note: FormSubmit requires a one-time activation of each recipient address.
+ * Send one email via Resend HTTP API.
+ * Returns true on success. Never throws. Skips when RESEND_API_KEY is unset.
+ */
+async function sendResendEmail(
+  env: Env,
+  opts: {
+    to: string | string[];
+    subject: string;
+    html: string;
+    text?: string;
+    replyTo?: string;
+    idempotencyKey?: string;
+  }
+): Promise<boolean> {
+  const apiKey = env.RESEND_API_KEY;
+  if (!apiKey || !opts.to) return false;
+
+  const from = env.RESEND_FROM || RESEND_FROM_DEFAULT;
+  const payload: Record<string, unknown> = {
+    from,
+    to: Array.isArray(opts.to) ? opts.to : [opts.to],
+    subject: opts.subject,
+    html: opts.html,
+  };
+  if (opts.text) payload.text = opts.text;
+  if (opts.replyTo) payload.reply_to = opts.replyTo;
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+  };
+  if (opts.idempotencyKey) headers["Idempotency-Key"] = String(opts.idempotencyKey).slice(0, 256);
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error("Resend error", res.status, errBody.slice(0, 500));
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Resend fetch failed", err);
+    return false;
+  }
+}
+
+/** Team alert + visitor confirmation. Best-effort; does not throw. */
+async function sendLeadEmails(
+  env: Env,
+  opts: {
+    kind: string;
+    visitorEmail: string;
+    visitorName?: string;
+    teamSubject: string;
+    teamHtml: string;
+    confirmSubject: string;
+    confirmHtml: string;
+    idempotencyBase?: string;
+  }
+): Promise<{ team: boolean; visitor: boolean }> {
+  const notify = notifyAddress(env);
+  const base = opts.idempotencyBase || `${opts.kind}/${Date.now()}`;
+  const results = { team: false, visitor: false };
+
+  results.team = await sendResendEmail(env, {
+    to: notify,
+    subject: opts.teamSubject,
+    html: opts.teamHtml,
+    replyTo: opts.visitorEmail || undefined,
+    idempotencyKey: `${base}/team`,
+  });
+
+  if (opts.visitorEmail) {
+    results.visitor = await sendResendEmail(env, {
+      to: opts.visitorEmail,
+      subject: opts.confirmSubject,
+      html: opts.confirmHtml,
+      replyTo: notify,
+      idempotencyKey: `${base}/visitor`,
+    });
+  }
+
+  return results;
+}
+
+/**
+ * Legacy FormSubmit notify for /api/build-request (swft-method).
+ * Prefer Resend for contact / growth-audit / book-tier.
  */
 async function sendFormSubmitEmail(
   env: Env,
@@ -260,7 +376,7 @@ async function sendFormSubmitEmail(
     _captcha: "false",
     _autoresponse: autoresponse,
     name: data.name,
-    email: data.email, // FormSubmit sends the autoresponse to this address
+    email: data.email,
     ...data.fields,
   };
   try {
@@ -272,6 +388,146 @@ async function sendFormSubmitEmail(
     return res.ok;
   } catch {
     return false;
+  }
+}
+
+/**
+ * Server-authoritative Stripe booking catalog (keep in sync with
+ * functions/_lib/stripe-tiers.js and data/pricing.json → tier.stripe).
+ */
+type StripeTierDef = {
+  id: string;
+  name: string;
+  mode: "payment" | "subscription";
+  amountCents: number;
+  productName: string;
+  priceLabel: string;
+  priceDisplay: string;
+  interval?: string;
+};
+
+const STRIPE_TIERS: Record<string, StripeTierDef> = {
+  "gbp-refresh": {
+    id: "gbp-refresh",
+    name: "GBP Content Refresh",
+    mode: "payment",
+    amountCents: 40000,
+    productName: "SWFT. GBP Content Refresh (project start)",
+    priceLabel: "$400 to $600",
+    priceDisplay: "$400",
+  },
+  "website-only": {
+    id: "website-only",
+    name: "Website Only",
+    mode: "payment",
+    amountCents: 80000,
+    productName: "SWFT. Website Only (project start)",
+    priceLabel: "$800 to $1,500",
+    priceDisplay: "$800",
+  },
+  "website-content-half": {
+    id: "website-content-half",
+    name: "Website + Content Capture",
+    mode: "payment",
+    amountCents: 200000,
+    productName: "SWFT. Website + Content Capture (project start)",
+    priceLabel: "$2,000 to $2,800",
+    priceDisplay: "$2,000",
+  },
+  "website-content-full": {
+    id: "website-content-full",
+    name: "Website + Extended Content",
+    mode: "payment",
+    amountCents: 300000,
+    productName: "SWFT. Website + Extended Content (project start)",
+    priceLabel: "$3,000 to $4,500+",
+    priceDisplay: "$3,000",
+  },
+  "content-growth-retainer": {
+    id: "content-growth-retainer",
+    name: "Content + Growth Retainer",
+    mode: "subscription",
+    amountCents: 45000,
+    interval: "month",
+    productName: "SWFT. Content + Growth Retainer",
+    priceLabel: "$450 to $800/mo",
+    priceDisplay: "$450/mo",
+  },
+  "full-growth-partner": {
+    id: "full-growth-partner",
+    name: "Full Growth Partner",
+    mode: "subscription",
+    amountCents: 120000,
+    interval: "month",
+    productName: "SWFT. Full Growth Partner",
+    priceLabel: "From $1,200/mo",
+    priceDisplay: "$1,200/mo",
+  },
+};
+
+function getStripeTier(id: unknown): StripeTierDef | null {
+  if (!id) return null;
+  return STRIPE_TIERS[String(id).trim()] || null;
+}
+
+/** Create Stripe Checkout for a pricing-ladder tier. Returns hosted URL or null. */
+async function createTierCheckout(
+  env: Env,
+  data: {
+    tier: StripeTierDef;
+    email: string;
+    businessName: string;
+    name: string;
+    origin: string;
+    cancelPath?: string;
+  }
+): Promise<string | null> {
+  if (!env.STRIPE_SECRET_KEY) return null;
+
+  const successUrl = `${data.origin}/book/thank-you.html?tier=${encodeURIComponent(data.tier.id)}&status=success`;
+  const cancelUrl = `${data.origin}${data.cancelPath || `/book/${data.tier.id}.html`}?status=cancel`;
+
+  const params = new URLSearchParams();
+  params.set("success_url", successUrl);
+  params.set("cancel_url", cancelUrl);
+  if (data.email) params.set("customer_email", data.email);
+  params.set("mode", data.tier.mode);
+  params.set("metadata[tierId]", data.tier.id);
+  params.set("metadata[tierName]", data.tier.name.slice(0, 200));
+  params.set("metadata[business]", data.businessName.slice(0, 200));
+  params.set("metadata[name]", data.name.slice(0, 200));
+  params.set("client_reference_id", `${data.tier.id}:${data.email}`.slice(0, 200));
+  params.set("line_items[0][quantity]", "1");
+  params.set("line_items[0][price_data][currency]", "usd");
+  params.set("line_items[0][price_data][unit_amount]", String(data.tier.amountCents));
+  params.set("line_items[0][price_data][product_data][name]", data.tier.productName);
+  params.set(
+    "line_items[0][price_data][product_data][description]",
+    `${data.tier.name}. ${data.tier.priceLabel} (starting checkout)`.slice(0, 500)
+  );
+  if (data.tier.mode === "subscription") {
+    params.set("line_items[0][price_data][recurring][interval]", data.tier.interval || "month");
+  }
+
+  try {
+    const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params.toString(),
+    });
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error("Stripe checkout error", res.status, errBody.slice(0, 500));
+      return null;
+    }
+    const session = (await res.json()) as { url?: string };
+    return session.url || null;
+  } catch (err) {
+    console.error("Stripe checkout fetch failed", err);
+    return null;
   }
 }
 
@@ -328,7 +584,8 @@ export default {
       (url.pathname === "/api/case-study-match" ||
         url.pathname === "/api/build-request" ||
         url.pathname === "/api/contact" ||
-        url.pathname === "/api/growth-audit")
+        url.pathname === "/api/growth-audit" ||
+        url.pathname === "/api/book-tier")
     ) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
@@ -565,7 +822,43 @@ export default {
         });
       }
 
-      return new Response(JSON.stringify({ ok: true, stored }), {
+      const phone = str(body.phone, 40);
+      const emailed = await sendLeadEmails(env, {
+        kind: "growth-audit",
+        visitorEmail: email,
+        visitorName: firstName,
+        idempotencyBase: `growth-audit/${email.toLowerCase()}/${Date.now()}`,
+        teamSubject: `Growth Audit: ${businessName}${desiredServiceLabel ? ` (${desiredServiceLabel})` : ""}`,
+        teamHtml: `
+      <p><strong>New Growth Audit request</strong></p>
+      <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
+        ${emailRow("Name", fullName || firstName)}
+        ${emailRow("Email", email)}
+        ${emailRow("Phone", phone)}
+        ${emailRow("Business", businessName)}
+        ${emailRow("Website", websiteUrl)}
+        ${emailRow("Social", instagram)}
+        ${emailRow("Desired service", desiredServiceLabel)}
+        ${emailRow("Details", details)}
+        ${emailRow("Photo links", photoLinks)}
+        ${emailRow("UTM", [str(body.utmSource, 80), str(body.utmMedium, 80), str(body.utmCampaign, 80)].filter(Boolean).join(" / "))}
+        ${emailRow("Source page", str(body.sourcePage, 200))}
+        ${emailRow("Stored in Airtable", stored ? "Yes" : "No")}
+      </table>
+      <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
+    `,
+        confirmSubject: "We got your Growth Audit request. SWFT Studios",
+        confirmHtml: `
+      <p>Hi ${escapeHtml(firstName)},</p>
+      <p>Thanks for requesting a Free Growth Audit for <strong>${escapeHtml(businessName)}</strong>.</p>
+      <p>We'll review your site and send personalized recommendations to this email within a few business days.</p>
+      <p>If you haven't booked a call yet, you can pick a time here: <a href="https://cal.com/swftstudios/swft-meeting">cal.com/swftstudios/swft-meeting</a>.</p>
+      <p>Questions in the meantime? Just reply to this message or email hello@swftstudios.com.</p>
+      <p>SWFT Studios</p>
+    `,
+      });
+
+      return new Response(JSON.stringify({ ok: true, stored, emailed: !!(emailed.team || emailed.visitor) }), {
         headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
       });
     }
@@ -615,31 +908,263 @@ export default {
           headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
         });
       }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid email." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const phone = str(body.phone, 40);
+      const businessName = str(body.businessName, 200);
+      const website = str(body.website, 500);
+      const businessType = str(body.businessType || body.serviceNeeded, 200);
+      const challenge = str(body.challenge, 400);
+      const desiredOutcome = str(body.desiredOutcome || body.primaryGoal, 4000);
+      const timeline = str(body.timeline, 200);
+      const budget = str(body.budget, 200);
+      const details = str(body.details, 4000);
 
       const detailsParts = [
-        str(body.details, 4000),
-        str(body.website, 500) ? `Website/Social: ${str(body.website, 500)}` : "",
-        str(body.phone, 40) ? `Phone: ${str(body.phone, 40)}` : "",
-        str(body.businessName, 200) ? `Business: ${str(body.businessName, 200)}` : "",
-        str(body.challenge, 400) ? `Challenge: ${str(body.challenge, 400)}` : "",
-        str(body.desiredOutcome, 2000) ? `Desired outcome: ${str(body.desiredOutcome, 2000)}` : "",
+        details,
+        website ? `Website/Social: ${website}` : "",
+        phone ? `Phone: ${phone}` : "",
+        businessName ? `Business: ${businessName}` : "",
+        challenge ? `Challenge: ${challenge}` : "",
+        desiredOutcome ? `Desired outcome: ${desiredOutcome}` : "",
       ].filter(Boolean);
 
       const fields: Record<string, unknown> = {
         Name: name,
         Email: email,
-        "Business Type": str(body.businessType || body.serviceNeeded, 200),
-        "Primary Goal": str(body.primaryGoal || body.desiredOutcome || body.challenge, 4000),
-        Timeline: str(body.timeline, 200),
-        Budget: str(body.budget, 200),
+        "Business Type": businessType,
+        "Primary Goal": desiredOutcome || str(body.primaryGoal, 4000),
+        Timeline: timeline,
+        Budget: budget,
         Details: detailsParts.join("\n"),
         Status: "New",
         "Submitted At": new Date().toISOString(),
       };
       const stored = await writeToAirtable(env, contactTable, fields);
-      return new Response(JSON.stringify({ ok: true, stored }), {
+
+      const emailed = await sendLeadEmails(env, {
+        kind: "contact",
+        visitorEmail: email,
+        visitorName: name,
+        idempotencyBase: `contact/${email.toLowerCase()}/${Date.now()}`,
+        teamSubject: `Project inquiry: ${businessName || name}`,
+        teamHtml: `
+      <p><strong>New project inquiry</strong></p>
+      <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
+        ${emailRow("Name", name)}
+        ${emailRow("Email", email)}
+        ${emailRow("Phone", phone)}
+        ${emailRow("Business", businessName)}
+        ${emailRow("Website / Social", website)}
+        ${emailRow("Service needed", businessType)}
+        ${emailRow("Challenge", challenge)}
+        ${emailRow("Desired outcome", desiredOutcome)}
+        ${emailRow("Timeline", timeline)}
+        ${emailRow("Budget", budget)}
+        ${emailRow("Details", details)}
+        ${emailRow("Stored in Airtable", stored ? "Yes" : "No")}
+      </table>
+      <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
+    `,
+        confirmSubject: "We got your project inquiry. SWFT Studios",
+        confirmHtml: `
+      <p>Hi ${escapeHtml(name)},</p>
+      <p>Thanks for reaching out. We received your project inquiry and will follow up within one business day.</p>
+      <p>Questions sooner? Reply to this message or email hello@swftstudios.com.</p>
+      <p>SWFT Studios</p>
+    `,
+      });
+
+      return new Response(JSON.stringify({ ok: true, stored, emailed: !!(emailed.team || emailed.visitor) }), {
         headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
       });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/book-tier") {
+      pruneRateBuckets();
+      const clientIp =
+        request.headers.get("CF-Connecting-IP") ||
+        request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
+        "unknown";
+      if (!checkRateLimit(clientIp)) {
+        return new Response(JSON.stringify({ ok: false, error: "Too many requests. Try again in a minute." }), {
+          status: 429,
+          headers: { "Content-Type": "application/json", "Retry-After": "60", ...corsHeaders(origin) },
+        });
+      }
+
+      let body: BuildRequestBody;
+      try {
+        const raw = await request.text();
+        if (raw.length > 50_000) {
+          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
+            status: 413,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          });
+        }
+        body = JSON.parse(raw) as BuildRequestBody;
+      } catch {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      if (str(body.honeypot, 200) || str(body.company_website, 200)) {
+        return new Response(JSON.stringify({ ok: true, stored: false, checkoutUrl: null }), {
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const tier = getStripeTier(body.tierId);
+      if (!tier) {
+        return new Response(JSON.stringify({ ok: false, error: "Unknown pricing tier." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const name = str(body.name, 200);
+      const email = str(body.email, 320);
+      const businessName = str(body.businessName, 200);
+      const phone = str(body.phone, 40);
+      const website = str(body.website, 500);
+      const notes = str(body.notes, 4000);
+
+      if (!name || !email || !businessName) {
+        return new Response(
+          JSON.stringify({ ok: false, error: "Name, email, and business name are required." }),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          }
+        );
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid email." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        });
+      }
+
+      const reqOrigin = `${url.protocol}//${url.host}`;
+      const amountLabel =
+        tier.mode === "subscription"
+          ? `${tier.priceDisplay} (subscription)`
+          : `${tier.priceDisplay} (one-time start)`;
+
+      const table = env.AIRTABLE_TABLE_CONTACT || DEFAULTS.AIRTABLE_TABLE_CONTACT;
+      const fields: Record<string, unknown> = {
+        Name: name,
+        Email: email,
+        "Business Type": tier.name,
+        "Primary Goal": `Book ${tier.name} via Stripe (${amountLabel})`,
+        Details: [
+          `Business: ${businessName}`,
+          phone ? `Phone: ${phone}` : "",
+          website ? `Website/Social: ${website}` : "",
+          `Tier ID: ${tier.id}`,
+          `Checkout: ${amountLabel}`,
+          `Published range: ${tier.priceLabel}`,
+          notes ? `Notes: ${notes}` : "",
+          `UTM: ${str(body.utmSource, 80)}/${str(body.utmMedium, 80)}/${str(body.utmCampaign, 80)}`,
+          `Source: ${str(body.sourcePage, 300)}`,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+        Status: "New",
+        "Submitted At": new Date().toISOString(),
+      };
+
+      const stored = await writeToAirtable(env, table, fields);
+
+      const cancelPath =
+        tier.id === "gbp-refresh" ? "/book/gbp-content-refresh.html" : `/book/${tier.id}.html`;
+      const checkoutUrl = await createTierCheckout(env, {
+        tier,
+        email,
+        businessName,
+        name,
+        origin: reqOrigin,
+        cancelPath,
+      });
+
+      if (!checkoutUrl && !env.STRIPE_SECRET_KEY) {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            stored,
+            error:
+              "Checkout is temporarily unavailable. Email hello@swftstudios.com or request a Growth Audit.",
+          }),
+          {
+            status: 503,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          }
+        );
+      }
+
+      if (!checkoutUrl) {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            stored,
+            error: "Unable to start checkout right now. Please try again or email hello@swftstudios.com.",
+          }),
+          {
+            status: 502,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          }
+        );
+      }
+
+      const emailed = await sendLeadEmails(env, {
+        kind: "book-tier",
+        visitorEmail: email,
+        visitorName: name,
+        idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
+        teamSubject: `Stripe book: ${tier.name}. ${businessName}`,
+        teamHtml: `
+      <p><strong>New tier booking (heading to Stripe)</strong></p>
+      <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
+        ${emailRow("Tier", tier.name)}
+        ${emailRow("Checkout", amountLabel)}
+        ${emailRow("Name", name)}
+        ${emailRow("Email", email)}
+        ${emailRow("Phone", phone)}
+        ${emailRow("Business", businessName)}
+        ${emailRow("Website / Social", website)}
+        ${emailRow("Notes", notes)}
+        ${emailRow("Stored in Airtable", stored ? "Yes" : "No")}
+      </table>
+      <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
+    `,
+        confirmSubject: `Next step: complete checkout for ${tier.name}. SWFT Studios`,
+        confirmHtml: `
+      <p>Hi ${escapeHtml(name)},</p>
+      <p>Thanks for choosing <strong>${escapeHtml(tier.name)}</strong>. Complete Stripe Checkout to lock in your start (${escapeHtml(tier.priceDisplay)}).</p>
+      <p>If the checkout tab closed, reopen your booking page or email <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>.</p>
+      <p>SWFT Studios</p>
+    `,
+      });
+
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          stored,
+          checkoutUrl,
+          emailed: !!(emailed.team || emailed.visitor),
+          tierId: tier.id,
+        }),
+        {
+          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+        }
+      );
     }
 
     if (request.method === "POST" && url.pathname === "/api/case-study-match") {
