@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-20: Growth Audit skip CTA
+
+### Fixed
+- Removed the “Done: go to confirmation” link that jumped to `/growth-audit/thank-you` without submitting a lead.
+- `.ps-page .button { display: inline-block }` overrode `[hidden]`, so Back stayed visible on step 1. `.ps-page [hidden]` now wins. Back is also `disabled` on steps 1 and 5.
+
+### Notes
+- Punch-list item 02. Branch: `fix/growth-audit-skip`.
+
+---
+
 ## 2026-08-20: Nested page assets load from site root
 
 ### Fixed
@@ -11,8 +22,6 @@
 - Punch-list items 01, 03, 04, and 08. Branch: `fix/nested-page-assets` off `feat/site-punch-list`.
 
 ---
-
-## 2026-08-10: Copy dash cleanup, local SEO pages, structured site map
 
 ## 2026-08-10: Copy dash cleanup, local SEO pages, structured site map
 

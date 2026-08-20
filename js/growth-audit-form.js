@@ -12,7 +12,6 @@
   var statusEl = document.getElementById("ga-status");
   var backBtn = document.getElementById("ga-back");
   var nextBtn = document.getElementById("ga-next");
-  var doneBtn = document.getElementById("ga-done");
   var nextLabel = nextBtn ? nextBtn.querySelector(".button_text"): null;
   var stepLabel = document.getElementById("ga-step-label");
   var stepTitle = document.getElementById("ga-step-title");
@@ -196,14 +195,17 @@
     if (progressFill) progressFill.style.width = Math.round((step / TOTAL_STEPS) * 100) + "%";
     if (progressBar) progressBar.setAttribute("aria-valuenow", String(step));
 
-    if (backBtn) backBtn.hidden = step === 1 || step === 5;
+    if (backBtn) {
+      var hideBack = step === 1 || step === 5;
+      backBtn.hidden = hideBack;
+      backBtn.disabled = hideBack;
+    }
     if (nextBtn) {
       nextBtn.hidden = step === 5;
       if (nextLabel) {
         nextLabel.textContent = step === 4 ? "Save & schedule call": "Continue";
       }
     }
-    if (doneBtn) doneBtn.hidden = step !== 5;
 
     track("growth_audit_step", {
       page_path: location.pathname,

@@ -194,6 +194,11 @@
   font-size: 0.9375rem;
 }
 
+/* .ps-page .button { display } is more specific than [hidden] and was showing Back / skip CTAs */
+.ps-page [hidden] {
+  display: none !important;
+}
+
 .ps-page .button.is-course {
   border-radius: 4px;
 }
