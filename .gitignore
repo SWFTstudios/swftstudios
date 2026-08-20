@@ -24,3 +24,6 @@ webflow-export/
 .dev.vars
 .dev.vars.*
 !.dev.vars.example
+
+# Local portal secret dump (never commit)
+.portal-secrets.local

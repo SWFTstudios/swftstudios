@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-08-20: Portal secrets + Pages D1 binding
+
+### Added
+- [`wrangler.pages.jsonc`](../wrangler.pages.jsonc) for Pages deploys (D1 `DB` + Stripe price vars) without conflicting Worker `ASSETS`.
+- `npm run deploy:pages` script.
+- Stripe live webhook endpoint for portal provisioning (`checkout.session.completed`, subscription updated/deleted).
+
+### Changed
+- Pages production/preview: D1 `DB` bound to `swft-portal`; portal secrets `STRIPE_WEBHOOK_SECRET`, `PORTAL_ADMIN_SECRET`, `SESSION_SECRET` set.
+- [`docs/CLIENT_PORTAL.md`](CLIENT_PORTAL.md) documents what is wired vs still required (`STRIPE_SECRET_KEY`, `POSTHOG_PERSONAL_API_KEY`).
+
+---
+
 ## 2026-08-20: Client portal, Stripe catalog, PostHog dashboards
 
 ### Added
