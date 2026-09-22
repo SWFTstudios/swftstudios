@@ -53,6 +53,15 @@
     var priceNote = tier.priceNote
       ? '<span class="hp-pricing-price-note">' + escapeHtml(tier.priceNote) + "</span>"
       : "";
+    var bestFor = tier.bestFor
+      ? '<p class="hp-pricing-best-for">' + escapeHtml(tier.bestFor) + "</p>"
+      : "";
+    var suggested = tier.recommendedPrice
+      ? '<div class="hp-pricing-suggested"><span>' + escapeHtml(tier.recommendedLabel || "Suggested scope") + '</span><strong>' + escapeHtml(tier.recommendedPrice) + '</strong>' + (tier.recommendedDetails ? '<p>' + escapeHtml(tier.recommendedDetails) + '</p>' : '') + '</div>'
+      : "";
+    var checkoutNote = tier.checkoutNote
+      ? '<p class="hp-pricing-checkout-note">' + escapeHtml(tier.checkoutNote) + '</p>'
+      : "";
     var scopeDriver = tier.scopeDriver
       ? '<p class="hp-pricing-scope">' + escapeHtml(tier.scopeDriver) + "</p>"
       : "";
@@ -66,6 +75,7 @@
       escapeHtml(tier.id) +
       '">' +
       featured +
+      bestFor +
       "<h3>" +
       escapeHtml(tier.name) +
       "</h3>" +
@@ -74,11 +84,13 @@
       " " +
       priceNote +
       "</p>" +
+      suggested +
       '<p class="hp-pricing-desc">' +
       escapeHtml(tier.description || "") +
       "</p>" +
       scopeDriver +
       renderIncludesList(tier.includes || [], layout) +
+      checkoutNote +
       '<a href="' +
       escapeHtml(planHref) +
       '" class="' +
