@@ -554,3 +554,121 @@
 #homepage-pricing {
   scroll-margin-top: 5rem;
 }
+
+
+/* 2026 pricing offer ladder: make the suggested investment legible without hiding
+   the actual published range or the amount charged by existing Stripe links. */
+.pricing-page .pricing-hero { margin-bottom: 2.25rem; }
+.pricing-page .pricing-hero-title { max-width: 18ch; font-weight: 650; letter-spacing: -0.045em; }
+.pricing-page .pricing-hero-lead { max-width: 55ch; }
+.pricing-hero-meta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  flex-wrap: wrap;
+  margin: 1.2rem 0 0;
+  color: var(--pp-muted, #a8a8a8);
+  font-size: .78rem;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+.pricing-hero-meta span + span::before { content: "·"; margin-right: .55rem; color: var(--pp-accent, #7fffe5); }
+.pricing-pathway {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 3rem;
+  border: 1px solid var(--pp-border, rgba(255,255,255,.1));
+  background: linear-gradient(112deg, rgba(127,255,229,.045), transparent 55%), #0a0a0a;
+}
+.pricing-pathway__step { padding: 1.35rem 1.5rem; }
+.pricing-pathway__step + .pricing-pathway__step { border-left: 1px solid var(--pp-border, rgba(255,255,255,.1)); }
+.pricing-pathway__number {
+  display: block;
+  margin-bottom: .65rem;
+  font-size: .74rem;
+  letter-spacing: .1em;
+  color: var(--pp-accent, #7fffe5);
+}
+.pricing-pathway__step h2 { color: #fff; font-size: 1.08rem; line-height: 1.3; margin: 0 0 .4rem; font-weight: 600; }
+.pricing-pathway__step p { color: var(--pp-muted, #a8a8a8); font-size: .87rem; line-height: 1.5; margin: 0; }
+.hp-pricing-best-for {
+  font-size: .7rem;
+  color: var(--pp-accent, #7fffe5);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 650;
+  margin: 0;
+}
+.hp-pricing-card { gap: .85rem; border-radius: 12px; padding: 1.6rem; }
+.hp-pricing-card--featured { padding-top: 2.05rem; }
+.hp-pricing-card h3 { margin: 0; line-height: 1.2; }
+.hp-pricing-price { font-size: 1rem; color: var(--pp-muted, #a8a8a8); font-weight: 500; }
+.hp-pricing-price-note { display: inline; font-size: .75rem; margin-left: .4rem; }
+.hp-pricing-suggested {
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(127,255,229,.22);
+  background: rgba(127,255,229,.06);
+  border-radius: 8px;
+}
+.hp-pricing-suggested span {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .66rem;
+  color: var(--swft-lead, #c4c7c7);
+}
+.hp-pricing-suggested strong {
+  display: block;
+  margin: .15rem 0 .35rem;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  color: #fff;
+  font-weight: 650;
+}
+.hp-pricing-suggested p { color: var(--swft-lead, #c4c7c7); line-height: 1.5; font-size: .82rem; margin: 0; }
+.hp-pricing-checkout-note {
+  margin: 0;
+  border-top: 1px solid var(--pp-border, rgba(255,255,255,.1));
+  padding-top: .75rem;
+  color: var(--pp-muted, #a8a8a8);
+  font-size: .75rem;
+  line-height: 1.5;
+}
+.hp-pricing-card .button {
+  margin-top: auto;
+  align-self: stretch;
+  justify-content: center;
+  text-align: center;
+}
+.hp-pricing-card .button_text { text-align: center; }
+.hp-pricing-group-intro { max-width: 58ch; }
+.hp-billing-toggle { margin-bottom: 1.25rem; }
+.hp-billing-toggle__btn { min-height: 44px; }
+.hp-pricing-tab-panel { padding-top: .3rem; }
+.pricing-page .pricing-faq { margin-top: 1rem; }
+.pricing-page .pricing-book-cta { border-radius: 12px; }
+@media (min-width: 1100px) {
+  .hp-pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #ongoing .hp-pricing-grid, .hp-pricing-grid--ongoing { max-width: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  .hp-pricing-grid--ongoing { max-width: none; }
+}
+@media (max-width: 767px) {
+  .pricing-page main { padding-top: 6rem; }
+  .pricing-hero-meta { font-size: .68rem; }
+  .pricing-pathway { grid-template-columns: 1fr; margin-bottom: 2rem; }
+  .pricing-pathway__step { padding: 1rem 1.2rem; }
+  .pricing-pathway__step + .pricing-pathway__step { border-left: 0; border-top: 1px solid var(--pp-border, rgba(255,255,255,.1)); }
+  .hp-pricing-card { padding: 1.4rem; }
+  .hp-pricing-card--featured { padding-top: 1.9rem; }
+  .hp-pricing-suggested strong { font-size: 1.75rem; }
+  .hp-billing-toggle { width: 100%; border-radius: 12px; }
+  .hp-billing-toggle__btn { flex: 1; padding: .7rem .55rem; font-size: .82rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hp-pricing-tab-panel { animation: none; }
+  .hp-pricing-card { transition: none; }
+}
