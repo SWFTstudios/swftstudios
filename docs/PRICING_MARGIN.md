@@ -29,3 +29,19 @@ Price scales primarily with **whether SWFT captures content on-site**, then with
 ## Superseded model
 
 The previous public model (Service Pro $200/mo, Growth $400/mo + GHL, E-Commerce $500/mo, Content Starter $600/mo, $1,200+$600 bundle) is retired from customer-facing pages. Do not quote those numbers on the marketing site.
+
+
+## September 2026 preview: recommended selling scopes
+
+The pricing UI now shows a **suggested engagement amount**, alongside the actual published price range and existing Stripe checkout starting charge. These are intentionally different: the highlighted amount is a sales/qualification example, **not an automatic Stripe price update**.
+
+| Sales conversation | Suggested scope | Existing public range | Existing Stripe checkout |
+|---|---:|---:|---:|
+| One-location local visibility sprint / GBP refresh | $500 | $400–$600 one-time | $400 to start |
+| Small-business website with client-supplied assets | $1,200 | $800–$1,500 one-time | $800 to start |
+| Website plus half-day photo/video content | $2,500 | $2,000–$2,800 one-time | $2,000 to start |
+| Monthly local content plan | $650/mo | $450–$800/mo | $450/mo entry-level subscription |
+
+The **$650/mo plan is a proposed scope**, not the current Stripe subscription price. Before selling that plan, send an agreed statement of work and provision a matching $650/mo Stripe price or invoice; never treat a $450/mo subscription as an automatic $650/mo subscription. Website/platform subscriptions, domains, ad spend and other third-party costs remain separately scoped. Avoid claiming every client buys at these suggested values.
+
+**Approval workflow:** This work lives on `feature/clear-pricing-offer-ladder`; preview through the Cloudflare Pages branch alias and **do not merge into main without owner approval**. The original booking URLs and Stripe price identifiers were deliberately preserved to avoid silently charging changed amounts.
