@@ -1,14 +1,14 @@
 {
   "hero": {
-    "headline": "Transparent pricing, scoped to what you need",
-    "sub": "Price scales with whether we capture content on-site, how complex the site is, and how long the shoot runs. No flat minimum that overcharges simple jobs or undersells bigger ones.",
-    "trustLine": "No long contracts. Work directly with the person who builds it. Price follows content capture and site complexity."
+    "headline": "Your business deserves to look as good as the work you do.",
+    "sub": "Start with better visuals, build a site that turns interest into inquiries, or bring both together. Practical website and content packages for NYC + NJ businesses.",
+    "trustLine": "Work directly with the creator · Defined deliverables · Clear scope before work begins"
   },
   "calUrl": "/growth-audit",
   "projectTiers": {
     "id": "project-tiers",
-    "label": "One-time projects",
-    "intro": "Start with the smallest offer that solves the problem. Content capture is the main lever that moves price up.",
+    "label": "Build your online presence",
+    "intro": "Three clear ways to start, plus custom projects for bigger scopes. The highlighted example investment shows a sensible package to discuss; the range and checkout starting amount are shown separately.",
     "tiers": [
       {
         "id": "gbp-refresh",
@@ -35,7 +35,13 @@
           "billingNote": "Starting price within the $400 to $600 range. Final scope is confirmed after a short intake.",
           "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
           "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
-        }
+        },
+        "bestFor": "LOOK GREAT LOCALLY",
+        "recommendedPrice": "$500",
+        "recommendedLabel": "Suggested visibility sprint",
+        "recommendedDetails": "One local shoot, a defined set of edited visuals, and a Google Business Profile refresh.",
+        "checkoutNote": "Secure booking starts at $400. Final deliverables and total are confirmed after intake.",
+        "badge": "Quick first win"
       },
       {
         "id": "website-only",
@@ -62,7 +68,12 @@
           "billingNote": "Starting price within the $800 to $1,500 range. You supply photos and copy. Final scope confirmed after intake.",
           "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
           "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
-        }
+        },
+        "bestFor": "MAKE IT EASY TO BOOK YOU",
+        "recommendedPrice": "$1,200",
+        "recommendedLabel": "Suggested small-business site",
+        "recommendedDetails": "A focused multi-page site using the photos and copy you already have.",
+        "checkoutNote": "Secure booking starts at $800. The $1,200 example is a more complete business-site scope."
       },
       {
         "id": "website-content-half",
@@ -70,7 +81,7 @@
         "priceLabel": "$2,000 to $2,800",
         "priceNote": "one-time · half-day shoot",
         "featured": true,
-        "badge": "Most common",
+        "badge": "Signature package",
         "description": "Website build plus a 2- to 4-hour on-location photo and video shoot, edited and placed on the site and Google Business Profile.",
         "scopeDriver": "Right fit when the business looks better in person than online and needs both a site and real content in one project.",
         "includes": [
@@ -90,7 +101,12 @@
           "billingNote": "Starting price within the $2,000 to $2,800 range for a half-day shoot + site. Final scope confirmed after intake.",
           "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
           "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
-        }
+        },
+        "bestFor": "SHOW THE WORK, THEN SELL IT",
+        "recommendedPrice": "$2,500",
+        "recommendedLabel": "Suggested website + shoot",
+        "recommendedDetails": "A conversion-focused site and one on-location session for authentic photo and video.",
+        "checkoutNote": "Secure booking starts at $2,000. Final project quote depends on pages, shoot time and edits."
       },
       {
         "id": "website-content-full",
@@ -117,14 +133,19 @@
           "billingNote": "Starting price within the $3,000 to $4,500+ range. Multi-location or complex builds may quote higher after intake.",
           "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
           "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
-        }
+        },
+        "bestFor": "GO BEYOND ONE LOCATION",
+        "recommendedPrice": "Custom",
+        "recommendedLabel": "Expanded creative project",
+        "recommendedDetails": "For larger websites, multiple locations, bigger catalogs or more production time.",
+        "checkoutNote": "Secure booking starts at $3,000; expanded scope is quoted individually."
       }
     ]
   },
   "ongoingTiers": {
     "id": "ongoing",
-    "label": "Ongoing",
-    "intro": "Month-to-month retainers for businesses that already have a site and need to stay visually current, or want content plus ads managed together.",
+    "label": "Stay visible after launch",
+    "intro": "Your website is the foundation. Monthly content keeps it fresh. Agree on the shoot schedule, assets, and channels before starting a retainer.",
     "tiers": [
       {
         "id": "content-growth-retainer",
@@ -152,7 +173,12 @@
           "billingNote": "Starting monthly rate within the $450 to $800 band. Month-to-month. Scope (shoot frequency and channels) confirmed after intake.",
           "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
           "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
-        }
+        },
+        "bestFor": "STAY TOP OF MIND",
+        "recommendedPrice": "$650/mo",
+        "recommendedLabel": "Suggested monthly content plan",
+        "recommendedDetails": "One planned local shoot, an agreed photo/video package and light digital-presence updates.",
+        "checkoutNote": "Subscription checkout begins at $450/mo for the entry scope. The $650/mo example must be quoted and agreed before subscribing."
       },
       {
         "id": "full-growth-partner",
@@ -180,44 +206,53 @@
           "billingNote": "Starting monthly rate. Ad spend is billed separately to your ad account. Final deliverables and reporting cadence confirmed after intake.",
           "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
           "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
-        }
+        },
+        "bestFor": "PAIR CONTENT WITH CAMPAIGNS",
+        "recommendedPrice": "From $1,200/mo",
+        "recommendedLabel": "Custom growth partnership",
+        "recommendedDetails": "Ongoing production and Meta campaign management, scoped around your offer and market.",
+        "checkoutNote": "Ad spend is separate and paid from your ad account."
       }
     ]
   },
   "bookCta": {
-    "headline": "Not sure which tier fits?",
-    "quote": "Start with a free Growth Audit. We will map your site, content, and GBP to the right offer.",
-    "sub": "Or jump to the pricing tiers above and pick the scope that matches how much content you need us to capture.",
-    "button": "Get Your Free Growth Audit"
+    "headline": "Not sure what you need yet?",
+    "quote": "Tell us what is holding your business back online. We'll recommend a focused first step.",
+    "sub": "No pressure to buy a bigger package. Start with the problem worth solving now.",
+    "button": "Get My Free Growth Audit"
   },
   "faq": [
     {
-      "q": "How much does a website cost?",
-      "a": "It depends on whether you supply photos and copy or we capture content on-site. Website Only (you supply content) runs $800 to $1,500. Website plus a half-day shoot is $2,000 to $2,800. Website plus a full-day or multi-location shoot starts at $3,000 to $4,500+."
+      "q": "Where should I start if I have a small budget?",
+      "a": "Start with the $400–$600 GBP Content Refresh if you already have a usable website. A focused $500 visibility sprint is the example scope we suggest discussing for one local business location."
     },
     {
-      "q": "What is the GBP Content Refresh?",
-      "a": "A $400 to $600 one-time offer with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile (categories, services, photos, posts), and set up review generation. Fastest entry point if you need to look better locally without a rebuild."
+      "q": "What's the difference between the price range and the highlighted price?",
+      "a": "The published range is what a tier can cost. The highlighted amount is a suggested project scope, not a universal fixed quote. Checkout pages show their exact starting charge and we confirm the remaining project price and deliverables after intake."
+    },
+    {
+      "q": "Can I book a $1,200 website or a $2,500 website and shoot?",
+      "a": "Yes, those are suggested project scopes within Website Only ($800–$1,500) and Website + Content Capture ($2,000–$2,800). Pages, complexity, shoot length and asset edits determine your quote."
+    },
+    {
+      "q": "What does the suggested $650 monthly plan cover?",
+      "a": "It is a planning example for a local business that wants one content session each month, an agreed photo/video package and light digital-presence updates. The published retainer begins at $450 per month for a smaller scope; we confirm deliverables before you subscribe."
+    },
+    {
+      "q": "Do I need to rebuild my website to work with SWFT?",
+      "a": "No. Start with a Google Business Profile/content refresh or a monthly content plan if the website you have is already working."
+    },
+    {
+      "q": "Are ads and third-party subscriptions included?",
+      "a": "Ad spend, Webflow or Shopify plans, domains and other third-party fees are separate unless specifically included in your written proposal. Full Growth Partner management starts at $1,200 per month before ad spend."
     },
     {
       "q": "Do you require long-term contracts?",
-      "a": "No. Project work is scoped and billed per engagement. Retainers are month-to-month."
+      "a": "One-time projects are scoped per engagement. Ongoing content retainers are month-to-month under the agreed scope."
     },
     {
-      "q": "How fast can you turn around a site?",
-      "a": "Simpler builds can turn around in as little as 24 to 48 hours when content and decisions are ready. Larger sites, multi-stakeholder projects, and shoot-inclusive work take longer. We set a realistic timeline after intake."
-    },
-    {
-      "q": "What changes the price within a tier?",
-      "a": "Whether we capture content on-site, site complexity (pages, Shopify vs brochure, forms), shoot duration, and number of locations or product lines. Every quote ties price to those levers."
-    },
-    {
-      "q": "Do you build custom code from scratch?",
-      "a": "Sites are built and customized on Webflow or Shopify, not ground-up custom code frameworks. You get a production site in your account with the structure, design, and integrations scoped for your business."
-    },
-    {
-      "q": "How do I get started?",
-      "a": "Pick a tier that matches your scope, or request a free Growth Audit. We review your online presence and recommend the right project or retainer."
+      "q": "How long does a project take?",
+      "a": "Timing depends on the assets you supply, page count, shoot schedule, feedback and approval turnaround. We confirm a realistic timeline during intake."
     }
   ]
 }
