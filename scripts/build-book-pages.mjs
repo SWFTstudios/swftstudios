@@ -135,8 +135,8 @@ function renderTierPage(tier) {
               <h2>Tell us about your business</h2>
               <p class="book-step-lead">A few details help us make your order feel like yours.</p>
             <div class="ga-hp" aria-hidden="true">
-              <label for="company_website">Company website</label>
-              <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+              <label for="swft_hp_confirm">Leave blank</label>
+              <input type="text" id="swft_hp_confirm" name="swft_hp_confirm" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore="true" data-form-type="other" value="">
             </div>
             <div class="ga-field">
               <label for="book-name">Name <span class="req">*</span></label>
