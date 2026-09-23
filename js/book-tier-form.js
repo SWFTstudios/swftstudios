@@ -125,6 +125,15 @@
   }
 
   function addonPricing(id) { return pricedAddOns[id] || null; }
+
+  function baseInclusionHint(id) {
+    if (id === "extra-photos") return baseCounts.photos + " photos already included; adds 10 per pack";
+    if (id === "extra-reels") return baseCounts.videos + " short videos already included; adds 1 per video";
+    if (id === "extra-pages" || id === "local-page") return "Up to " + baseCounts.pages + " pages already included; adds 1 page";
+    if (id === "extra-shoot") return baseCounts.shootMinutes + " shoot minutes already included; adds 60 minutes";
+    if (id === "location-profiles") return baseCounts.profiles + " profile already included; adds 1 profile";
+    return "";
+  }
   function pricedSubtotal(items) {
     return items.reduce(function (total, item) {
       var p = addonPricing(item.id);
@@ -219,7 +228,9 @@
             '" data-addon-label="' + escapeHtml(item[1]) +
             '"><span class="book-choice-body"><strong>' + escapeHtml(item[1]) +
             '</strong><small>' + escapeHtml(item[2]) +
-            '</small><em>' + (price ? "+" + dollars(price.cents) + " / " + escapeHtml(price.unit) : "Custom quote") +
+            '</small>' + (baseInclusionHint(item[0]) ?
+              '<small class="book-choice-base-hint">' + escapeHtml(baseInclusionHint(item[0])) + '</small>' : '') +
+            '<em>' + (price ? "+" + dollars(price.cents) + " / " + escapeHtml(price.unit) : "Custom quote") +
             '</em></span><span class="book-choice-check" aria-hidden="true">✓</span></label>' + quantity + '</div>';
         }).join("") + '</div></fieldset>';
     }).join("");
