@@ -15,6 +15,36 @@ import { storeCrmLead } from "../_lib/airtable-crm.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
+// Canonical scope + indicative one-time pricing. Do NOT accept prices or labels
+// from the browser. Add-ons are ALWAYS quote-only with no Stripe redirect.
+const ADD_ON_CATALOG = {
+  "extra-pages": ["Additional page", "Website extras", 17500],
+  "booking-advanced": ["Advanced booking setup", "Website extras", null],
+  "shopify-migration": ["Store or catalog migration", "Website extras", null],
+  "automations": ["CRM + email follow-ups", "Website extras", null],
+  "multilingual": ["Multilingual pages", "Website extras", null],
+  "priority-launch": ["Priority launch", "Website extras", null],
+  "extra-reels": ["Extra edited Reel", "Content extras", 12500],
+  "testimonials": ["Filmed testimonial", "Content extras", 17500],
+  "extra-photos": ["10 extra edited photos", "Content extras", 10000],
+  "product-detail": ["Product / detail photos", "Content extras", null],
+  "extra-location": ["Additional location", "Content extras", null],
+  "extra-shoot": ["Extra filming hour", "Content extras", 15000],
+  "raw-assets": ["Raw footage delivery", "Content extras", 10000],
+  "location-profiles": ["Additional Google Business Profile", "Local visibility extras", 17500],
+  "local-page": ["Local landing page", "Local visibility extras", 25000],
+  "review-flow": ["Advanced review follow-up", "Local visibility extras", null],
+  "monthly-visibility": ["Ongoing local content", "Local visibility extras", null],
+  "social-posting": ["Social media posting", "Growth extras", null],
+  "email-campaign": ["Email campaign", "Growth extras", null],
+  "campaign-extra": ["Extra ad campaign", "Growth extras", null],
+  "landing-campaign": ["Dedicated campaign landing page", "Growth extras", null],
+  "reporting-extra": ["Deeper reporting", "Growth extras", null],
+};
+const usd = (cents) => new Intl.NumberFormat("en-US", {
+  style: "currency", currency: "USD", maximumFractionDigits: 0,
+}).format(cents / 100);
+
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
     status,
@@ -112,14 +142,33 @@ export async function onRequestPost(context) {
   // require an individual quote; do not redirect these leads to a base plan.
   const rawChoices = body.customization && typeof body.customization === "object"
     ? body.customization : {};
-  const addOns = Array.isArray(rawChoices.addOns)
-    ? rawChoices.addOns.slice(0, 24).map((item) => ({
-        id: str(item?.id, 80),
-        label: str(item?.label, 140),
-        group: str(item?.group, 80),
-      })).filter((item) => item.id && item.label)
-    : [];
+  const rawAddOns = Array.isArray(rawChoices.addOns) ? rawChoices.addOns : [];
+  if (rawAddOns.length > 24) return json({ ok: false, error: "Too many selected add-ons." }, 400);
+  const seenAddOns = new Set();
+  const addOns = [];
+  for (const raw of rawAddOns) {
+    const id = str(raw?.id, 80);
+    const entry = Object.hasOwn(ADD_ON_CATALOG, id) ? ADD_ON_CATALOG[id] : null;
+    const qty = raw?.quantity === undefined ? 1 : Number(raw.quantity);
+    if (!entry || !Number.isInteger(qty) || qty < 1 || qty > 5) {
+      return json({ ok: false, error: "Invalid add-on selection or quantity." }, 400);
+    }
+    if (seenAddOns.has(id)) return json({ ok: false, error: "Duplicate add-on selection." }, 400);
+    seenAddOns.add(id);
+    addOns.push({ id, label: entry[0], group: entry[1], priceCents: entry[2], quantity: qty });
+  }
   const quoteOnly = body.quoteOnly === true || addOns.length > 0;
+  const pricedSubtotalCents = addOns.reduce(
+    (total, item) => total + (item.priceCents === null ? 0 : item.priceCents * item.quantity), 0
+  );
+  const customCount = addOns.filter((item) => item.priceCents === null).length;
+  const investmentNote = tier.mode === "subscription"
+    ? ("Base " + tier.priceDisplay + " monthly" +
+        (pricedSubtotalCents ? "; ONE-TIME priced extras estimate " + usd(pricedSubtotalCents) : "") +
+        (customCount ? "; " + customCount + " custom-priced items excluded" : ""))
+    : ("Base " + tier.priceDisplay + "; estimated project investment " +
+        usd(tier.amountCents + pricedSubtotalCents) +
+        (customCount ? " PLUS " + customCount + " custom-priced items excluded" : ""));
   const goal = str(rawChoices.goal, 200);
   const timeline = str(rawChoices.timeline, 100);
   const platform = str(rawChoices.platform, 100);
@@ -128,8 +177,12 @@ export async function onRequestPost(context) {
     "ORDER CUSTOMIZATION",
     "Goal: " + (goal || "Not specified"),
     "Requested add-ons: " + (addOns.length
-      ? addOns.map((item) => item.label + " [" + item.group + "]").join(", ")
+      ? addOns.map((item) => item.label + " [" + item.group + "]" +
+          " x" + item.quantity + " - " +
+          (item.priceCents === null ? "custom quote" : usd(item.priceCents * item.quantity) + " indicative one-time"))
+          .join(", ")
       : "None"),
+    "PRE-QUOTE ESTIMATE, NOT CHARGED: " + investmentNote,
     "Timeline: " + (timeline || "Not specified"),
     "Platform: " + (platform || "Not specified"),
     "Request type: " + (quoteOnly ? "Custom quote - NO PAYMENT" : "Base Stripe checkout"),
@@ -151,7 +204,7 @@ export async function onRequestPost(context) {
   const url = new URL(request.url);
   const origin = `${url.protocol}//${url.host}`;
   const amountLabel = quoteOnly
-    ? `Custom quote requested (no charge) · Base ${tier.priceDisplay}`
+    ? `Custom quote requested (no charge) · ${investmentNote}`
     : tier.mode === "subscription"
       ? `${tier.priceDisplay} (subscription)`
       : `${tier.priceDisplay} (one-time start)`;
