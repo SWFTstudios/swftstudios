@@ -56,9 +56,6 @@
     var bestFor = tier.bestFor
       ? '<p class="hp-pricing-best-for">' + escapeHtml(tier.bestFor) + "</p>"
       : "";
-    var suggested = tier.recommendedPrice
-      ? '<div class="hp-pricing-suggested"><span>' + escapeHtml(tier.recommendedLabel || "Suggested scope") + '</span><strong>' + escapeHtml(tier.recommendedPrice) + '</strong>' + (tier.recommendedDetails ? '<p>' + escapeHtml(tier.recommendedDetails) + '</p>' : '') + '</div>'
-      : "";
     var checkoutNote = tier.checkoutNote
       ? '<p class="hp-pricing-checkout-note">' + escapeHtml(tier.checkoutNote) + '</p>'
       : "";
@@ -84,7 +81,6 @@
       " " +
       priceNote +
       "</p>" +
-      suggested +
       '<p class="hp-pricing-desc">' +
       escapeHtml(tier.description || "") +
       "</p>" +
@@ -244,7 +240,7 @@
         html += renderGroup(data.ongoingTiers, layout, null);
       } else if (projectOnly && data.ongoingTiers) {
         html +=
-          '<p class="hp-pricing-desc hp-pricing-ongoing-link">Retainers start at $450/mo. <a href="#homepage-pricing" data-pricing-open-tab="ongoing" class="highlight">See ongoing options</a> or <a href="website-pricing.html#ongoing" class="highlight">full pricing</a>.</p>';
+          '<p class="hp-pricing-desc hp-pricing-ongoing-link">Retainers starting at $450/mo. <a href="#homepage-pricing" data-pricing-open-tab="ongoing" class="highlight">See ongoing options</a> or <a href="website-pricing.html#ongoing" class="highlight">full pricing</a>.</p>';
       }
     }
 
