@@ -1,5 +1,7 @@
 # Copy to .dev.vars for local `npx wrangler pages dev` / `wrangler dev` (never commit .dev.vars).
-# Production: already set on Pages project swftstudios-website as RESEND_API_KEY
+# Production: VERIFY RESEND_API_KEY exists on the Pages project swftstudios-website.
+# If swftstudios.com routes through a separately deployed Worker, set the same secret there.
+# An API key in one Cloudflare project/environment is NOT automatically shared with another.
 # Rotate with: npx wrangler pages secret put RESEND_API_KEY --project-name=swftstudios-website
 # Optional: also set AIRTABLE_TOKEN and STRIPE_SECRET_KEY the same way.
 #
@@ -8,7 +10,7 @@
 
 RESEND_API_KEY=re_xxxxxxxx
 # RESEND_FROM=SWFT Studios <hello@swftstudios.com>
-# NOTIFY_EMAIL=hello@swftstudios.com
+# NOTIFY_EMAIL=elombe@swftstudios.com
 # AIRTABLE_TOKEN=
 # AIRTABLE_BASE_ID=appjwRgcgS0BD4lT7
 # AIRTABLE_TABLE_COMPANIES=tblsWplUc9TypNts6
