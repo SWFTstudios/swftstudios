@@ -126,7 +126,9 @@ export async function onRequestPost(context) {
   // Honeypot only — do not treat visible "website" as spam. Autofill used to fill
   // legacy company_website and silently block Payment Links for real leads.
   if (str(body.honeypot, 200) || str(body.swft_hp_confirm, 200)) {
-    return json({ ok: true, stored: false, checkoutUrl: null });
+    // Never return a fake-success response that leaves the client stranded on
+    // the review step without a quoteRequested or checkoutUrl field.
+    return json({ ok: false, error: "A hidden form field was autofilled. Refresh and try again, or email elombe@swftstudios.com." }, 400);
   }
 
   const tier = getStripeTier(body.tierId);
@@ -239,9 +241,9 @@ export async function onRequestPost(context) {
     },
   });
 
-  if (quoteOnly && !stored) {
-    return json({ ok: false, error: "Unable to save the quote request. Please email hello@swftstudios.com." }, 502);
-  }
+  // Airtable is a helpful CRM backup, not a prerequisite for email delivery.
+  // A valid quote must reach the SWFT inbox OR be stored durably.
+  // Do not discard a customer request solely because Airtable is unavailable.
 
   const cancelPath =
     tier.id === "gbp-refresh" ? "/book/gbp-content-refresh.html" : `/book/${tier.id}.html`;
@@ -269,6 +271,7 @@ export async function onRequestPost(context) {
     kind: "book-tier",
     visitorEmail: email,
     visitorName: name,
+    backupStored: stored,
     idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
     teamSubject: `${quoteOnly ? "Custom quote" : "Stripe book"}: ${tier.name}. ${businessName}`,
     teamHtml: `
@@ -295,12 +298,27 @@ export async function onRequestPost(context) {
     `,
   });
 
+  // Never claim success for an undelivered, unrecorded form.
+  // A customer confirmation alone is not proof the owner received the lead.
+  if (!stored && !emailed.team) {
+    return json({
+      ok: false,
+      error: "We couldn't deliver your request. Please email elombe@swftstudios.com or try again shortly.",
+      stored: false,
+      emailDelivered: false,
+    }, 503);
+  }
+
   return json({
     ok: true,
     stored,
     checkoutUrl,
     quoteRequested: quoteOnly,
-    emailed: !!(emailed.team || emailed.visitor),
+    emailDelivered: !!emailed.team,
+    emailed: !!emailed.team,
+    warning: !emailed.team
+      ? "Your request was saved, but email delivery could not be confirmed. Please email elombe@swftstudios.com if it is urgent."
+      : undefined,
     tierId: tier.id,
   });
 }
