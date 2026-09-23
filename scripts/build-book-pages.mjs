@@ -98,7 +98,7 @@ function renderTierPage(tier) {
         <p class="ps-lead">${escapeHtml(tier.description)}</p>
         <div class="book-price-chip" aria-label="Checkout amount">
           <strong>${escapeHtml(stripe.priceDisplay)}</strong>
-          <span>Published range: ${escapeHtml(tier.priceLabel)}${tier.priceNote ? ` · ${escapeHtml(tier.priceNote)}` : ""}</span>
+          <span>${escapeHtml(tier.priceLabel)}${tier.priceNote ? ` · ${escapeHtml(tier.priceNote)}` : ""}</span>
         </div>
       </header>
 
@@ -181,8 +181,8 @@ function renderIndex(tiers) {
       return (
         `<a class="book-hub-card" href="${escapeHtml(bookBasename(tier))}">` +
         `<h2>${escapeHtml(tier.name)}</h2>` +
-        `<div class="book-hub-price">${escapeHtml(stripe.priceDisplay)} to start</div>` +
-        `<p>${escapeHtml(tier.priceLabel)}${tier.priceNote ? ` · ${escapeHtml(tier.priceNote)}` : ""}</p>` +
+        `<div class="book-hub-price">${escapeHtml(tier.priceLabel)}</div>` +
+        `${tier.priceNote ? `<p>${escapeHtml(tier.priceNote)}</p>` : ""}` +
         `<p>${escapeHtml(tier.description)}</p>` +
         `</a>`
       );
@@ -222,7 +222,7 @@ function renderThankYou() {
         <article class="ga-step">
           <div class="ga-step-num">01</div>
           <h3>We review your intake</h3>
-          <p>We confirm the tier, assets you already have, and anything that could move price within the published range.</p>
+          <p>We confirm the tier, assets you already have, and the final scope and project total before work begins.</p>
         </article>
         <article class="ga-step">
           <div class="ga-step-num">02</div>
