@@ -19,6 +19,7 @@ const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 // from the browser. Add-ons are ALWAYS quote-only with no Stripe redirect.
 const ADD_ON_CATALOG = {
   "extra-pages": ["Additional page", "Website extras", 17500],
+  "content-shoot": ["Add an original photo + video shoot", "Website extras", null],
   "booking-advanced": ["Advanced booking setup", "Website extras", null],
   "shopify-migration": ["Store or catalog migration", "Website extras", null],
   "automations": ["CRM + email follow-ups", "Website extras", null],
