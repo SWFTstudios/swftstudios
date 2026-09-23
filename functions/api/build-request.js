@@ -11,6 +11,7 @@
  *     STRIPE_PRICE_MONTHLY
  */
 import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 
 const DEFAULTS = {
   STRIPE_PRICE_MONTHLY: "price_1Td9xhAF4d9gCyuNnjPgqkho",
@@ -132,7 +133,60 @@ export async function onRequestPost(context) {
     origin,
   });
 
-  return json({ ok: true, stored, checkoutUrl });
+  const buildDetails = [
+    ["Plan", plan],
+    ["One-time amount requested", "$" + oneTimeAmount.toFixed(2)],
+    ["Monthly maintenance", maintenance ? "Yes" : "No"],
+    ["Business", businessName],
+    ["Name", name],
+    ["Email", email],
+    ["Phone", phone],
+    ["Instagram", str(body.instagram, 120)],
+    ["What they sell", str(body.whatYouSell, 4000)],
+    ["Ideal customer", str(body.idealCustomer, 4000)],
+    ["Main goal", str(body.mainGoal, 200)],
+    ["Look and feel", str(body.lookAndFeel, 4000)],
+    ["Features", str(body.features, 4000)],
+    ["Content ready", str(body.contentReady, 200)],
+    ["Has domain", str(body.hasDomain, 200)],
+    ["Timeline", str(body.timeline, 200)],
+    ["Anything else", str(body.anythingElse, 4000)],
+    ["Source page", sourcePage]
+  ];
+  const emailRows = buildDetails.filter(([, value]) => value).map(([label, value]) =>
+    '<tr><td style="padding:6px 12px 6px 0;color:#666;vertical-align:top">' +
+      escapeHtml(label) + '</td><td>' + escapeHtml(value) + '</td></tr>'
+  ).join("");
+  const emailed = await sendLeadEmails(env, {
+    kind: "website-build",
+    visitorEmail: email,
+    visitorName: name,
+    backupStored: stored,
+    idempotencyBase: `website-build/${email.toLowerCase()}/${Date.now()}`,
+    teamSubject: `New website build request: ${businessName || name}`,
+    teamHtml: '<p><strong>New SWFT website build request</strong></p><table>' +
+      emailRows + '</table><p>Airtable backup: ' + (stored ? 'saved' : 'not saved') + '</p>',
+    confirmSubject: "We received your SWFT website build request",
+    confirmHtml: '<p>Hi ' + escapeHtml(name) +
+      ',</p><p>We received your website build details and will contact you about next steps.</p>' +
+      '<p>Questions? Reply to this email or write to elombe@swftstudios.com.</p>'
+  });
+
+  if (!stored && !emailed.team) {
+    return json({ ok: false,
+      error: "We couldn't deliver your build request. Please email elombe@swftstudios.com."
+    }, 503);
+  }
+  return json({
+    ok: true,
+    stored,
+    checkoutUrl,
+    emailDelivered: !!emailed.team,
+    emailed: !!emailed.team,
+    warning: !emailed.team
+      ? "Your request was saved but inbox notification could not be confirmed."
+      : undefined
+  });
 }
 
 export function onRequestOptions() {
