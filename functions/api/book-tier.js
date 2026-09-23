@@ -108,7 +108,34 @@ export async function onRequestPost(context) {
   const businessName = str(body.businessName, 200);
   const phone = str(body.phone, 40);
   const website = str(body.website, 500);
-  const notes = str(body.notes, 4000);
+  // Customization is intake, not a price authority. Selected add-ons always
+  // require an individual quote; do not redirect these leads to a base plan.
+  const rawChoices = body.customization && typeof body.customization === "object"
+    ? body.customization : {};
+  const addOns = Array.isArray(rawChoices.addOns)
+    ? rawChoices.addOns.slice(0, 24).map((item) => ({
+        id: str(item?.id, 80),
+        label: str(item?.label, 140),
+        group: str(item?.group, 80),
+      })).filter((item) => item.id && item.label)
+    : [];
+  const quoteOnly = body.quoteOnly === true || addOns.length > 0;
+  const goal = str(rawChoices.goal, 200);
+  const timeline = str(rawChoices.timeline, 100);
+  const platform = str(rawChoices.platform, 100);
+  const personalNotes = str(body.notes, 2200);
+  const customizationNotes = [
+    "ORDER CUSTOMIZATION",
+    "Goal: " + (goal || "Not specified"),
+    "Requested add-ons: " + (addOns.length
+      ? addOns.map((item) => item.label + " [" + item.group + "]").join(", ")
+      : "None"),
+    "Timeline: " + (timeline || "Not specified"),
+    "Platform: " + (platform || "Not specified"),
+    "Request type: " + (quoteOnly ? "Custom quote - NO PAYMENT" : "Base Stripe checkout"),
+    personalNotes ? "Client notes: " + personalNotes : "",
+  ].filter(Boolean).join("\n");
+  const notes = str(customizationNotes, 4000);
   const sourcePage = str(body.sourcePage, 300);
   const utmSource = str(body.utmSource, 120);
   const utmMedium = str(body.utmMedium, 120);
@@ -123,13 +150,14 @@ export async function onRequestPost(context) {
 
   const url = new URL(request.url);
   const origin = `${url.protocol}//${url.host}`;
-  const amountLabel =
-    tier.mode === "subscription"
+  const amountLabel = quoteOnly
+    ? `Custom quote requested (no charge) · Base ${tier.priceDisplay}`
+    : tier.mode === "subscription"
       ? `${tier.priceDisplay} (subscription)`
       : `${tier.priceDisplay} (one-time start)`;
 
   const stored = await storeCrmLead(env, {
-    formGroup: "Paid Booking",
+    formGroup: "Paid Booking", // Existing CRM booking intake; quoteOnly is labeled explicitly below.
     formType: tier.name,
     person: { name, email, phone },
     company: { name: businessName, website, phone },
@@ -156,9 +184,13 @@ export async function onRequestPost(context) {
     },
   });
 
+  if (quoteOnly && !stored) {
+    return json({ ok: false, error: "Unable to save the quote request. Please email hello@swftstudios.com." }, 502);
+  }
+
   const cancelPath =
     tier.id === "gbp-refresh" ? "/book/gbp-content-refresh.html" : `/book/${tier.id}.html`;
-  const checkoutUrl = await resolveCheckoutUrl(env, {
+  const checkoutUrl = quoteOnly ? null : await resolveCheckoutUrl(env, {
     tier,
     email,
     businessName,
@@ -167,7 +199,7 @@ export async function onRequestPost(context) {
     cancelPath,
   });
 
-  if (!checkoutUrl) {
+  if (!quoteOnly && !checkoutUrl) {
     return json(
       {
         ok: false,
@@ -183,9 +215,9 @@ export async function onRequestPost(context) {
     visitorEmail: email,
     visitorName: name,
     idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
-    teamSubject: `Stripe book: ${tier.name}. ${businessName}`,
+    teamSubject: `${quoteOnly ? "Custom quote" : "Stripe book"}: ${tier.name}. ${businessName}`,
     teamHtml: `
-      <p><strong>New tier booking (heading to Stripe)</strong></p>
+      <p><strong>${quoteOnly ? "Custom order quote request - no charge" : "New tier booking (heading to Stripe)"}</strong></p>
       <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
         ${row("Tier", tier.name)}
         ${row("Checkout", amountLabel)}
@@ -199,11 +231,11 @@ export async function onRequestPost(context) {
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
-    confirmSubject: `Next step: complete checkout for ${tier.name}. SWFT Studios`,
+    confirmSubject: `${quoteOnly ? "We received your custom SWFT request" : "Next step: complete checkout for " + tier.name}. SWFT Studios`,
     confirmHtml: `
       <p>Hi ${escapeHtml(name)},</p>
-      <p>Thanks for choosing <strong>${escapeHtml(tier.name)}</strong>. Complete Stripe Checkout to lock in your start (${escapeHtml(tier.priceDisplay)}).</p>
-      <p>If the checkout tab closed, reopen your booking page or email <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>.</p>
+      <p>Thanks for choosing <strong>${escapeHtml(tier.name)}</strong>. ${quoteOnly ? "We have your preferences and will email you to discuss a scoped quote. No payment was taken." : "Complete Stripe Checkout to lock in your start (" + escapeHtml(tier.priceDisplay) + ")."}</p>
+      <p>${quoteOnly ? "Questions in the meantime?" : "If the checkout tab closed, reopen your booking page or"} Email <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>.</p>
       <p>SWFT Studios</p>
     `,
   });
@@ -212,6 +244,7 @@ export async function onRequestPost(context) {
     ok: true,
     stored,
     checkoutUrl,
+    quoteRequested: quoteOnly,
     emailed: !!(emailed.team || emailed.visitor),
     tierId: tier.id,
   });
