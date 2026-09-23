@@ -564,7 +564,12 @@
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(payload)
     }).then(function (res) {
-      return res.json().then(function (body) { return { ok: res.ok, body: body || {} }; });
+      return res.text().then(function (responseText) {
+        var body;
+        try { body = JSON.parse(responseText); }
+        catch (e) { body = { error: "Server error (" + res.status + "). Please try again or email elombe@swftstudios.com." }; }
+        return { ok: res.ok, body: body || {} };
+      });
     }).then(function (result) {
       if (result.ok && result.body.checkoutUrl && !quoteOnly) {
         track("book_tier_checkout_redirect", { tier_id: tierId });
@@ -577,7 +582,10 @@
         var success = el("div", "book-quote-success");
         success.appendChild(el("p", "book-step-kicker", "YOUR REQUEST IS IN"));
         success.appendChild(el("h2", "", "Thanks. We'll take it from here."));
-        success.appendChild(el("p", "", "We received your preferences and will email you to confirm the scope and next steps. No payment was collected."));
+        success.appendChild(el("p", "", result.body.emailDelivered
+          ? "Your request was sent to SWFT Studios. We'll email you to confirm scope and next steps. No payment was collected."
+          : "Your request was saved. We could not confirm inbox email delivery, so please email elombe@swftstudios.com if it's time-sensitive. No payment was collected."));
+        if (result.body.warning) success.appendChild(el("p", "book-quote-warning", result.body.warning));
         var link = el("a", "book-action-primary", "Back to SWFT Studios");
         link.href = "/";
         success.appendChild(link);
@@ -587,11 +595,11 @@
         return;
       }
       setBusy(false);
-      showStatus(result.body.error || "We couldn't send your request right now. Try again or email hello@swftstudios.com.", "error");
+      showStatus(result.body.error || "We couldn't send your request right now. Try again or email elombe@swftstudios.com.", "error");
       track("book_tier_error", { tier_id: tierId, reason: result.body.error || "no_response" });
     }).catch(function () {
       setBusy(false);
-      showStatus("Network error. Try again or email hello@swftstudios.com.", "error");
+      showStatus("Network error. Try again or email elombe@swftstudios.com.", "error");
       track("book_tier_error", { tier_id: tierId, reason: "network" });
     });
   });

@@ -144,6 +144,7 @@ export async function onRequestPost(context) {
     kind: "growth-audit",
     visitorEmail: email,
     visitorName: firstName,
+    backupStored: stored,
     idempotencyBase,
     teamSubject: `Growth Audit: ${businessName}${desiredServiceLabel ? ` (${desiredServiceLabel})` : ""}`,
     teamHtml: `
@@ -175,7 +176,20 @@ export async function onRequestPost(context) {
     `,
   });
 
-  return json({ ok: true, stored, emailed: !!(emailed.team || emailed.visitor) });
+  if (!stored && !emailed.team) {
+    return json({ ok: false,
+      error: "We couldn't deliver your request. Please email elombe@swftstudios.com or try again shortly."
+    }, 503);
+  }
+  return json({
+    ok: true,
+    stored,
+    emailDelivered: !!emailed.team,
+    emailed: !!emailed.team,
+    warning: !emailed.team
+      ? "Your request was saved but email delivery could not be confirmed."
+      : undefined
+  });
 }
 
 export function onRequestOptions() {

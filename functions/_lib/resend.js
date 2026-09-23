@@ -3,7 +3,7 @@
  * Env: RESEND_API_KEY (secret), optional RESEND_FROM, NOTIFY_EMAIL
  */
 const DEFAULT_FROM = "SWFT Studios <hello@swftstudios.com>";
-const DEFAULT_NOTIFY = "hello@swftstudios.com";
+const DEFAULT_NOTIFY = "elombe@swftstudios.com";
 
 export function escapeHtml(value) {
   return String(value ?? "")
@@ -20,7 +20,10 @@ export function escapeHtml(value) {
  */
 export async function sendResendEmail(env, { to, subject, html, text, replyTo, idempotencyKey }) {
   const apiKey = env.RESEND_API_KEY;
-  if (!apiKey || !to) return false;
+  if (!apiKey || !to) {
+    console.error("Resend skipped: missing RESEND_API_KEY or recipient");
+    return false;
+  }
 
   const from = env.RESEND_FROM || DEFAULT_FROM;
   const payload = {
@@ -57,11 +60,11 @@ export async function sendResendEmail(env, { to, subject, html, text, replyTo, i
 }
 
 export function notifyAddress(env) {
-  return env.NOTIFY_EMAIL || DEFAULT_NOTIFY;
+  return env.NOTIFY_EMAIL || env.FORMSUBMIT_EMAIL || DEFAULT_NOTIFY;
 }
 
 /** Team alert + visitor confirmation. Best-effort; does not throw. */
-export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, teamSubject, teamHtml, confirmSubject, confirmHtml, idempotencyBase }) {
+export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, teamSubject, teamHtml, confirmSubject, confirmHtml, idempotencyBase, backupStored = false }) {
   const notify = notifyAddress(env);
   const base = idempotencyBase || `${kind}/${Date.now()}`;
   const results = { team: false, visitor: false };
@@ -74,7 +77,9 @@ export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, tea
     idempotencyKey: `${base}/team`,
   });
 
-  if (visitorEmail) {
+  // Do not assure a visitor we received an inquiry unless our team email
+  // succeeded or a durable CRM backup was confirmed.
+  if (visitorEmail && (results.team || backupStored)) {
     results.visitor = await sendResendEmail(env, {
       to: visitorEmail,
       subject: confirmSubject,
