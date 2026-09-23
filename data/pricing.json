@@ -8,12 +8,12 @@
   "projectTiers": {
     "id": "project-tiers",
     "label": "Build your online presence",
-    "intro": "Three clear ways to start, plus custom projects for bigger scopes. The highlighted example investment shows a sensible package to discuss; the range and checkout starting amount are shown separately.",
+    "intro": "Choose the smallest package that solves your next business problem. These are starting prices; your final quote is based on the site, shoot and deliverables you actually need.",
     "tiers": [
       {
         "id": "gbp-refresh",
         "name": "GBP Content Refresh",
-        "priceLabel": "$400 to $600",
+        "priceLabel": "Starting at $400",
         "priceNote": "one-time",
         "featured": false,
         "description": "No new website. On-site photo, short-form video, and a cleaned-up Google Business Profile so locals see quality now.",
@@ -32,25 +32,22 @@
           "productName": "SWFT. GBP Content Refresh (project start)",
           "ctaLabel": "Pay $400 to start",
           "priceDisplay": "$400",
-          "billingNote": "Starting price within the $400 to $600 range. Final scope is confirmed after a short intake.",
+          "billingNote": "Starts at $400 for a focused local refresh. Final deliverables and project total are confirmed after intake.",
           "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
           "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
         },
         "bestFor": "LOOK GREAT LOCALLY",
-        "recommendedPrice": "$500",
-        "recommendedLabel": "Suggested visibility sprint",
-        "recommendedDetails": "One local shoot, a defined set of edited visuals, and a Google Business Profile refresh.",
-        "checkoutNote": "Secure booking starts at $400. Final deliverables and total are confirmed after intake.",
+        "checkoutNote": "Final scope and total are confirmed before work begins.",
         "badge": "Quick first win"
       },
       {
         "id": "website-only",
         "name": "Website Only",
-        "priceLabel": "$800 to $1,500",
+        "priceLabel": "Starting at $800",
         "priceNote": "one-time · you supply content",
         "featured": false,
         "description": "A conversion-focused site built and customized on Webflow or Shopify when you already have usable photos and copy.",
-        "scopeDriver": "$800 to $1,000 for a simple 1- to 5-page brochure site. $1,200 to $1,500 for more pages, Shopify setup, booking or lead forms, or extra revision rounds.",
+        "scopeDriver": "Client-supplied photos and copy keep the project lean. Page count, integrations and revision rounds shape the final quote.",
         "includes": [
           "Site built and customized on Webflow or Shopify",
           "Mobile-first layout and clear messaging",
@@ -65,20 +62,17 @@
           "productName": "SWFT. Website Only (project start)",
           "ctaLabel": "Pay $800 to start",
           "priceDisplay": "$800",
-          "billingNote": "Starting price within the $800 to $1,500 range. You supply photos and copy. Final scope confirmed after intake.",
+          "billingNote": "Starts at $800 when you supply photos and copy. Final site scope and project total are confirmed after intake.",
           "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
           "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
         },
         "bestFor": "MAKE IT EASY TO BOOK YOU",
-        "recommendedPrice": "$1,200",
-        "recommendedLabel": "Suggested small-business site",
-        "recommendedDetails": "A focused multi-page site using the photos and copy you already have.",
-        "checkoutNote": "Secure booking starts at $800. The $1,200 example is a more complete business-site scope."
+        "checkoutNote": "Final scope and total are confirmed before work begins."
       },
       {
         "id": "website-content-half",
         "name": "Website + Content Capture",
-        "priceLabel": "$2,000 to $2,800",
+        "priceLabel": "Starting at $2,000",
         "priceNote": "one-time · half-day shoot",
         "featured": true,
         "badge": "Signature package",
@@ -98,24 +92,21 @@
           "productName": "SWFT. Website + Content Capture (project start)",
           "ctaLabel": "Pay $2,000 to start",
           "priceDisplay": "$2,000",
-          "billingNote": "Starting price within the $2,000 to $2,800 range for a half-day shoot + site. Final scope confirmed after intake.",
+          "billingNote": "Starts at $2,000 for a website with on-site content capture. Final shoot and site scope are confirmed after intake.",
           "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
           "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
         },
         "bestFor": "SHOW THE WORK, THEN SELL IT",
-        "recommendedPrice": "$2,500",
-        "recommendedLabel": "Suggested website + shoot",
-        "recommendedDetails": "A conversion-focused site and one on-location session for authentic photo and video.",
-        "checkoutNote": "Secure booking starts at $2,000. Final project quote depends on pages, shoot time and edits."
+        "checkoutNote": "Final scope and total are confirmed before work begins."
       },
       {
         "id": "website-content-full",
         "name": "Website + Extended Content",
-        "priceLabel": "$3,000 to $4,500+",
+        "priceLabel": "Starting at $3,000",
         "priceNote": "one-time · full-day shoot",
         "featured": false,
         "description": "Larger site with more pages or stakeholder complexity, plus a full-day content shoot across multiple locations or product lines.",
-        "scopeDriver": "For multi-location businesses, ministries, or catalogs that need deeper coverage. Larger church and multi-stakeholder projects land near the top of this range.",
+        "scopeDriver": "For multi-location businesses, ministries or catalogs needing broader content coverage and additional stakeholders.",
         "includes": [
           "Expanded site architecture and pages",
           "Full-day content shoot (multiple locations or products)",
@@ -130,27 +121,24 @@
           "productName": "SWFT. Website + Extended Content (project start)",
           "ctaLabel": "Pay $3,000 to start",
           "priceDisplay": "$3,000",
-          "billingNote": "Starting price within the $3,000 to $4,500+ range. Multi-location or complex builds may quote higher after intake.",
+          "billingNote": "Starts at $3,000 for an expanded website and content project. Multi-location or complex builds are quoted after intake.",
           "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
           "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
         },
         "bestFor": "GO BEYOND ONE LOCATION",
-        "recommendedPrice": "Custom",
-        "recommendedLabel": "Expanded creative project",
-        "recommendedDetails": "For larger websites, multiple locations, bigger catalogs or more production time.",
-        "checkoutNote": "Secure booking starts at $3,000; expanded scope is quoted individually."
+        "checkoutNote": "Final scope and total are confirmed before work begins."
       }
     ]
   },
   "ongoingTiers": {
     "id": "ongoing",
     "label": "Stay visible after launch",
-    "intro": "Your website is the foundation. Monthly content keeps it fresh. Agree on the shoot schedule, assets, and channels before starting a retainer.",
+    "intro": "Keep your visuals and website current with a monthly plan scoped to the work your business needs. Choose the starting point and we'll define the deliverables together.",
     "tiers": [
       {
         "id": "content-growth-retainer",
         "name": "Content + Growth Retainer",
-        "priceLabel": "$450 to $800",
+        "priceLabel": "Starting at $450/mo",
         "priceNote": "per month",
         "featured": false,
         "description": "Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site.",
@@ -170,20 +158,17 @@
           "productName": "SWFT. Content + Growth Retainer",
           "ctaLabel": "Start at $450/mo",
           "priceDisplay": "$450/mo",
-          "billingNote": "Starting monthly rate within the $450 to $800 band. Month-to-month. Scope (shoot frequency and channels) confirmed after intake.",
+          "billingNote": "Monthly service starts at $450 for an entry scope. We agree on shoot frequency and channels before you subscribe.",
           "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
           "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
         },
         "bestFor": "STAY TOP OF MIND",
-        "recommendedPrice": "$650/mo",
-        "recommendedLabel": "Suggested monthly content plan",
-        "recommendedDetails": "One planned local shoot, an agreed photo/video package and light digital-presence updates.",
-        "checkoutNote": "Subscription checkout begins at $450/mo for the entry scope. The $650/mo example must be quoted and agreed before subscribing."
+        "checkoutNote": "Monthly scope is confirmed before you subscribe."
       },
       {
         "id": "full-growth-partner",
         "name": "Full Growth Partner",
-        "priceLabel": "From $1,200",
+        "priceLabel": "Starting at $1,200/mo",
         "priceNote": "per month · custom scoped",
         "featured": false,
         "description": "Content plus Meta ads management combined. Scoped to your offer, market, and ad budget. No published ceiling.",
@@ -203,15 +188,12 @@
           "productName": "SWFT. Full Growth Partner",
           "ctaLabel": "Start at $1,200/mo",
           "priceDisplay": "$1,200/mo",
-          "billingNote": "Starting monthly rate. Ad spend is billed separately to your ad account. Final deliverables and reporting cadence confirmed after intake.",
+          "billingNote": "Monthly management starts at $1,200. Ad spend is separate and paid from your ad account. We confirm scope before you subscribe.",
           "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
           "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
         },
         "bestFor": "PAIR CONTENT WITH CAMPAIGNS",
-        "recommendedPrice": "From $1,200/mo",
-        "recommendedLabel": "Custom growth partnership",
-        "recommendedDetails": "Ongoing production and Meta campaign management, scoped around your offer and market.",
-        "checkoutNote": "Ad spend is separate and paid from your ad account."
+        "checkoutNote": "Monthly scope is confirmed before you subscribe."
       }
     ]
   },
@@ -223,28 +205,28 @@
   },
   "faq": [
     {
-      "q": "Where should I start if I have a small budget?",
-      "a": "Start with the $400–$600 GBP Content Refresh if you already have a usable website. A focused $500 visibility sprint is the example scope we suggest discussing for one local business location."
+      "q": "How much does it cost to get started?",
+      "a": "Local content and Google Business Profile work starts at $400. A Webflow or Shopify website starts at $800. A website with on-site photo/video capture starts at $2,000. Larger, multi-location projects start at $3,000."
     },
     {
-      "q": "What's the difference between the price range and the highlighted price?",
-      "a": "The published range is what a tier can cost. The highlighted amount is a suggested project scope, not a universal fixed quote. Checkout pages show their exact starting charge and we confirm the remaining project price and deliverables after intake."
+      "q": "What does “starting at” mean?",
+      "a": "It is the minimum published price for a tightly scoped version of the service. The final quote depends on your pages, content needs, shoot duration, locations and deliverables; we confirm the scope and total with you before starting."
     },
     {
-      "q": "Can I book a $1,200 website or a $2,500 website and shoot?",
-      "a": "Yes, those are suggested project scopes within Website Only ($800–$1,500) and Website + Content Capture ($2,000–$2,800). Pages, complexity, shoot length and asset edits determine your quote."
+      "q": "Can you quote a $1,200 small-business website or a $2,500 website and shoot?",
+      "a": "Yes. Those are examples of expanded project scopes above the minimum. We discuss your goals and existing assets, then quote only the work you need."
     },
     {
-      "q": "What does the suggested $650 monthly plan cover?",
-      "a": "It is a planning example for a local business that wants one content session each month, an agreed photo/video package and light digital-presence updates. The published retainer begins at $450 per month for a smaller scope; we confirm deliverables before you subscribe."
+      "q": "How much is ongoing content?",
+      "a": "Content + Growth starts at $450 per month. A larger monthly plan with regular on-site shooting and more deliverables may cost more; the exact scope and rate are agreed before you subscribe."
     },
     {
-      "q": "Do I need to rebuild my website to work with SWFT?",
-      "a": "No. Start with a Google Business Profile/content refresh or a monthly content plan if the website you have is already working."
+      "q": "Do I need a new website to work with SWFT?",
+      "a": "No. Start with a Google Business Profile/content refresh or a monthly content plan if your existing site is already doing its job."
     },
     {
       "q": "Are ads and third-party subscriptions included?",
-      "a": "Ad spend, Webflow or Shopify plans, domains and other third-party fees are separate unless specifically included in your written proposal. Full Growth Partner management starts at $1,200 per month before ad spend."
+      "a": "Ad spend, Webflow or Shopify subscriptions, domains and other third-party fees are separate unless specifically included in your written proposal. Full Growth Partner management starts at $1,200 per month before ad spend."
     },
     {
       "q": "Do you require long-term contracts?",
