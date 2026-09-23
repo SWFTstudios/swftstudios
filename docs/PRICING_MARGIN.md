@@ -31,17 +31,19 @@ Price scales primarily with **whether SWFT captures content on-site**, then with
 The previous public model (Service Pro $200/mo, Growth $400/mo + GHL, E-Commerce $500/mo, Content Starter $600/mo, $1,200+$600 bundle) is retired from customer-facing pages. Do not quote those numbers on the marketing site.
 
 
-## September 2026 preview: recommended selling scopes
+## September 2026 preview: starting-at pricing
 
-The pricing UI now shows a **suggested engagement amount**, alongside the actual published price range and existing Stripe checkout starting charge. These are intentionally different: the highlighted amount is a sales/qualification example, **not an automatic Stripe price update**.
+Public-facing pages now show one **Starting at** amount per tier, aligned to the existing Stripe checkout. The recommended scopes below are **internal sales examples**, not a second public price and not a change to Stripe prices.
 
-| Sales conversation | Suggested scope | Existing public range | Existing Stripe checkout |
-|---|---:|---:|---:|
-| One-location local visibility sprint / GBP refresh | $500 | $400–$600 one-time | $400 to start |
-| Small-business website with client-supplied assets | $1,200 | $800–$1,500 one-time | $800 to start |
-| Website plus half-day photo/video content | $2,500 | $2,000–$2,800 one-time | $2,000 to start |
-| Monthly local content plan | $650/mo | $450–$800/mo | $450/mo entry-level subscription |
+| Sales conversation | Internal target scope | Public starting at / Stripe |
+|---|---:|---:|
+| One-location local visibility sprint | $500 | $400 one-time |
+| Small-business website with client-supplied assets | $1,200 | $800 one-time |
+| Website plus half-day photo/video content | $2,500 | $2,000 one-time |
+| Monthly local content plan | $650/mo | $450/mo |
+| Website + Extended Content | Quoted | $3,000 one-time |
+| Full Growth Partner | Quoted | $1,200/mo |
 
-The **$650/mo plan is a proposed scope**, not the current Stripe subscription price. Before selling that plan, send an agreed statement of work and provision a matching $650/mo Stripe price or invoice; never treat a $450/mo subscription as an automatic $650/mo subscription. Website/platform subscriptions, domains, ad spend and other third-party costs remain separately scoped. Avoid claiming every client buys at these suggested values.
+Before selling the $650/mo plan, agree on a written statement of work and provision a matching Stripe subscription price or invoice; never treat the existing $450/mo subscription as an automatic $650/mo subscription. Website/platform subscriptions, domains, ad spend and other third-party costs remain separately scoped.
 
-**Approval workflow:** This work lives on `feature/clear-pricing-offer-ladder`; preview through the Cloudflare Pages branch alias and **do not merge into main without owner approval**. The original booking URLs and Stripe price identifiers were deliberately preserved to avoid silently charging changed amounts.
+**Approval workflow:** Changes remain on `feature/clear-pricing-offer-ladder`. Review the Cloudflare Pages branch preview and **do not merge into main without Elombe's approval**. Existing booking URLs, payment amounts and Stripe price identifiers were preserved.
