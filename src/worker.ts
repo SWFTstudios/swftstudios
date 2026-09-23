@@ -5,6 +5,18 @@
  */
 import { handlePortalRoutes, resolvePaymentLinkUrl, resolveStripePriceId, type PortalEnv } from "./portal-handlers";
 
+/* Use the exact same validated form handlers for Worker and Pages deployments.
+   Avoid drift between domain routing and *.pages.dev previews. */
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestPost as handleBuildRequest } from "../functions/api/build-request.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestPost as handleGrowthAudit } from "../functions/api/growth-audit.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestPost as handleContact } from "../functions/api/contact.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestPost as handleBookTier } from "../functions/api/book-tier.js";
+
+
 export interface Env extends PortalEnv {
   ASSETS: Fetcher;
   AI?: { run(model: string, opts: { messages: { role: string; content: string }[] }): Promise<unknown> };
@@ -783,107 +795,10 @@ export default {
         });
       }
 
-      let body: BuildRequestBody;
-      try {
-        const raw = await request.text();
-        if (raw.length > 100_000) {
-          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
-            status: 413,
-            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-          });
-        }
-        body = JSON.parse(raw) as BuildRequestBody;
-      } catch {
-        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      const email = str(body.email, 320);
-      const plan = str(body.plan, 40) === "Monthly Plan" ? "Monthly Plan" : "One-Time Build";
-      const maintenance = body.maintenance === true || str(body.maintenance) === "Yes";
-      const oneTimeAmount = Math.max(0, Math.min(100000, Number(body.oneTimeAmount) || 0));
-      const businessName = str(body.businessName, 200);
-
-      // Build a same-origin redirect base from the request URL (so success/cancel land back here).
-      const reqOrigin = `${url.protocol}//${url.host}`;
-
-      // 1) Store the lead in CRM (best-effort).
-      const stored = await storeCrmLead(env, {
-        formGroup: "Website Build",
-        formType: plan,
-        person: { name: str(body.name, 200), email, phone: str(body.phone, 60) },
-        company: businessName ? { name: businessName, phone: str(body.phone, 60) } : undefined,
-        sourcePage: str(body.sourcePage, 300),
-        utmSource: str(body.utmSource, 120),
-        utmMedium: str(body.utmMedium, 120),
-        utmCampaign: str(body.utmCampaign, 120),
-        notes: str(body.anythingElse, 4000),
-        formFields: {
-          Name: str(body.name, 200),
-          Email: email,
-          Instagram: str(body.instagram, 120),
-          Phone: str(body.phone, 60),
-          "Business Name": businessName,
-          "What They Sell": str(body.whatYouSell, 4000),
-          "Ideal Customer": str(body.idealCustomer, 4000),
-          "Main Goal": str(body.mainGoal, 200),
-          "Look and Feel": str(body.lookAndFeel, 4000),
-          Features: str(body.features, 4000),
-          "Plan Choice": plan,
-          "One-Time Price": oneTimeAmount,
-          "Maintenance Add-On": maintenance ? "Yes" : "No",
-          "Monthly Price": "$299/mo",
-          "Content Ready": str(body.contentReady, 200),
-          "Has Domain": str(body.hasDomain, 200),
-          Timeline: str(body.timeline, 200),
-          "Anything Else": str(body.anythingElse, 4000),
-          "UTM Source": str(body.utmSource, 120),
-          "UTM Medium": str(body.utmMedium, 120),
-          "UTM Campaign": str(body.utmCampaign, 120),
-          "Source Page": str(body.sourcePage, 300),
-          Status: "New",
-        },
-      });
-
-      // 2) Email the team a notification + send the visitor a confirmation
-      //    (48-hour autoresponse). Runs in the background so it never blocks
-      //    the response / Stripe redirect.
-      ctx.waitUntil(
-        sendFormSubmitEmail(env, {
-          email,
-          name: str(body.name, 200),
-          fields: {
-            Instagram: str(body.instagram, 120),
-            Phone: str(body.phone, 60),
-            "Business Name": businessName,
-            "What They Sell": str(body.whatYouSell, 4000),
-            "Main Goal": str(body.mainGoal, 200),
-            Features: str(body.features, 4000),
-            "Plan Choice": plan,
-            "One-Time Price": `$${oneTimeAmount}`,
-            "Maintenance Add-On": maintenance ? "Yes" : "No",
-            "Monthly Price": "$299/mo",
-            Timeline: str(body.timeline, 200),
-            "Anything Else": str(body.anythingElse, 4000),
-          },
-        })
-      );
-
-      // 3) Start Stripe Checkout (best-effort).
-      const checkoutUrl = await createStripeCheckout(env, {
-        plan,
-        oneTimeAmount,
-        maintenance,
-        email,
-        businessName,
-        origin: reqOrigin,
-      });
-
-      return new Response(JSON.stringify({ ok: true, stored, checkoutUrl }), {
-        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-      });
+      const response = await handleBuildRequest({ request, env });
+      const headers = new Headers(response.headers);
+      new Headers(corsHeaders(origin)).forEach((value, key) => headers.set(key, value));
+      return new Response(response.body, { status: response.status, headers });
     }
 
     if (request.method === "POST" && url.pathname === "/api/growth-audit") {
@@ -899,140 +814,10 @@ export default {
         });
       }
 
-      let body: BuildRequestBody;
-      try {
-        const raw = await request.text();
-        if (raw.length > 100_000) {
-          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
-            status: 413,
-            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-          });
-        }
-        body = JSON.parse(raw) as BuildRequestBody;
-      } catch {
-        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      /* Honeypot — bots fill this; humans never see it */
-      if (str(body.honeypot, 200) || str(body.company_website, 200)) {
-        return new Response(JSON.stringify({ ok: true, stored: false }), {
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      const firstName = str(body.firstName, 120);
-      const lastName = str(body.lastName, 120);
-      const email = str(body.email, 320);
-      const businessName = str(body.businessName, 200);
-      const websiteUrl = str(body.websiteUrl || body.website, 500);
-      const instagram = str(body.instagram, 300);
-      const presence = websiteUrl || instagram || str(body.website, 500);
-      const desiredService = str(body.desiredService, 80);
-      const desiredServiceLabel = str(body.desiredServiceLabel, 200) || desiredService;
-      const details = str(body.details, 4000);
-      const photoLinks = str(body.photoLinks, 1000);
-      const businessCategory =
-        str(body.businessCategory, 200) || desiredServiceLabel || "Growth Audit";
-      const challenge = str(body.challenge, 400) || desiredServiceLabel || "Growth Audit inquiry";
-      const desiredOutcome =
-        str(body.desiredOutcome, 4000) || details || `Discuss ${desiredServiceLabel || "next steps"}`;
-
-      if (!firstName || !email || !businessName || !presence || !desiredService) {
-        return new Response(JSON.stringify({ ok: false, error: "Missing required fields." }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return new Response(JSON.stringify({ ok: false, error: "Invalid email." }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      const fullName = [firstName, lastName].filter(Boolean).join(" ");
-      const additionalContext = [details, photoLinks ? `Photo links: ${photoLinks}` : ""]
-        .filter(Boolean)
-        .join("\n\n");
-      const phone = str(body.phone, 40);
-
-      const stored = await storeCrmLead(env, {
-        formGroup: "Growth Audit",
-        formType: desiredServiceLabel || "growth-audit",
-        person: { name: fullName || firstName, email, phone, firstName, lastName },
-        company: {
-          name: businessName,
-          website: websiteUrl || undefined,
-          phone,
-          industry: businessCategory,
-        },
-        sourcePage: str(body.sourcePage, 300),
-        utmSource: str(body.utmSource, 120),
-        utmMedium: str(body.utmMedium, 120),
-        utmCampaign: str(body.utmCampaign, 120),
-        notes: additionalContext,
-        formFields: {
-          "First Name": firstName,
-          "Last Name": lastName,
-          Email: email,
-          Phone: phone,
-          "Business Name": businessName,
-          "Website or Social": presence,
-          "Business Category": businessCategory,
-          "Biggest Challenge": challenge,
-          "Desired Outcome": desiredOutcome,
-          "Desired Service": desiredServiceLabel,
-          Instagram: instagram,
-          "Additional Context": additionalContext,
-          "UTM Source": str(body.utmSource, 120),
-          "UTM Medium": str(body.utmMedium, 120),
-          "UTM Campaign": str(body.utmCampaign, 120),
-          "Source Page": str(body.sourcePage, 300),
-          Status: "New",
-        },
-      });
-
-      const emailed = await sendLeadEmails(env, {
-        kind: "growth-audit",
-        visitorEmail: email,
-        visitorName: firstName,
-        idempotencyBase: `growth-audit/${email.toLowerCase()}/${Date.now()}`,
-        teamSubject: `Growth Audit: ${businessName}${desiredServiceLabel ? ` (${desiredServiceLabel})` : ""}`,
-        teamHtml: `
-      <p><strong>New Growth Audit request</strong></p>
-      <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
-        ${emailRow("Name", fullName || firstName)}
-        ${emailRow("Email", email)}
-        ${emailRow("Phone", phone)}
-        ${emailRow("Business", businessName)}
-        ${emailRow("Website", websiteUrl)}
-        ${emailRow("Social", instagram)}
-        ${emailRow("Desired service", desiredServiceLabel)}
-        ${emailRow("Details", details)}
-        ${emailRow("Photo links", photoLinks)}
-        ${emailRow("UTM", [str(body.utmSource, 80), str(body.utmMedium, 80), str(body.utmCampaign, 80)].filter(Boolean).join(" / "))}
-        ${emailRow("Source page", str(body.sourcePage, 200))}
-        ${emailRow("Stored in Airtable", stored ? "Yes" : "No")}
-      </table>
-      <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
-    `,
-        confirmSubject: "We got your Growth Audit request. SWFT Studios",
-        confirmHtml: `
-      <p>Hi ${escapeHtml(firstName)},</p>
-      <p>Thanks for requesting a Free Growth Audit for <strong>${escapeHtml(businessName)}</strong>.</p>
-      <p>We'll review your site and send personalized recommendations to this email within a few business days.</p>
-      <p>If you haven't booked a call yet, you can pick a time here: <a href="https://cal.com/swftstudios/swft-meeting">cal.com/swftstudios/swft-meeting</a>.</p>
-      <p>Questions in the meantime? Just reply to this message or email hello@swftstudios.com.</p>
-      <p>SWFT Studios</p>
-    `,
-      });
-
-      return new Response(JSON.stringify({ ok: true, stored, emailed: !!(emailed.team || emailed.visitor) }), {
-        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-      });
+      const response = await handleGrowthAudit({ request, env });
+      const headers = new Headers(response.headers);
+      new Headers(corsHeaders(origin)).forEach((value, key) => headers.set(key, value));
+      return new Response(response.body, { status: response.status, headers });
     }
 
     if (request.method === "POST" && url.pathname === "/api/contact") {
@@ -1048,126 +833,10 @@ export default {
         });
       }
 
-      let body: BuildRequestBody;
-      try {
-        const raw = await request.text();
-        if (raw.length > 100_000) {
-          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
-            status: 413,
-            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-          });
-        }
-        body = JSON.parse(raw) as BuildRequestBody;
-      } catch {
-        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      if (str(body.honeypot, 200) || str(body.company_website, 200)) {
-        return new Response(JSON.stringify({ ok: true, stored: false }), {
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      const name = str(body.name, 200);
-      const email = str(body.email, 320);
-      if (!name || !email) {
-        return new Response(JSON.stringify({ ok: false, error: "Name and email are required." }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return new Response(JSON.stringify({ ok: false, error: "Invalid email." }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      const phone = str(body.phone, 40);
-      const businessName = str(body.businessName, 200);
-      const website = str(body.website, 500);
-      const businessType = str(body.businessType || body.serviceNeeded, 200);
-      const challenge = str(body.challenge, 400);
-      const desiredOutcome = str(body.desiredOutcome || body.primaryGoal, 4000);
-      const timeline = str(body.timeline, 200);
-      const budget = str(body.budget, 200);
-      const details = str(body.details, 4000);
-      const sourcePage = str(body.sourcePage, 300);
-      const utmSource = str(body.utmSource, 120);
-      const utmMedium = str(body.utmMedium, 120);
-      const utmCampaign = str(body.utmCampaign, 120);
-
-      const stored = await storeCrmLead(env, {
-        formGroup: "Project Inquiry",
-        formType: "contact",
-        person: { name, email, phone },
-        company: businessName
-          ? { name: businessName, website, phone, industry: businessType }
-          : undefined,
-        sourcePage,
-        utmSource,
-        utmMedium,
-        utmCampaign,
-        notes: details,
-        formFields: {
-          Name: name,
-          Email: email,
-          Phone: phone,
-          Business: businessName,
-          Website: website,
-          "Service needed": businessType,
-          Challenge: challenge,
-          Outcome: desiredOutcome,
-          Timeline: timeline,
-          Budget: budget,
-          Details: details,
-          "UTM Source": utmSource,
-          "UTM Medium": utmMedium,
-          "UTM Campaign": utmCampaign,
-          "Source Page": sourcePage,
-          Status: "New",
-        },
-      });
-
-      const emailed = await sendLeadEmails(env, {
-        kind: "contact",
-        visitorEmail: email,
-        visitorName: name,
-        idempotencyBase: `contact/${email.toLowerCase()}/${Date.now()}`,
-        teamSubject: `Project inquiry: ${businessName || name}`,
-        teamHtml: `
-      <p><strong>New project inquiry</strong></p>
-      <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
-        ${emailRow("Name", name)}
-        ${emailRow("Email", email)}
-        ${emailRow("Phone", phone)}
-        ${emailRow("Business", businessName)}
-        ${emailRow("Website / Social", website)}
-        ${emailRow("Service needed", businessType)}
-        ${emailRow("Challenge", challenge)}
-        ${emailRow("Desired outcome", desiredOutcome)}
-        ${emailRow("Timeline", timeline)}
-        ${emailRow("Budget", budget)}
-        ${emailRow("Details", details)}
-        ${emailRow("Stored in Airtable", stored ? "Yes" : "No")}
-      </table>
-      <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
-    `,
-        confirmSubject: "We got your project inquiry. SWFT Studios",
-        confirmHtml: `
-      <p>Hi ${escapeHtml(name)},</p>
-      <p>Thanks for reaching out. We received your project inquiry and will follow up within one business day.</p>
-      <p>Questions sooner? Reply to this message or email hello@swftstudios.com.</p>
-      <p>SWFT Studios</p>
-    `,
-      });
-
-      return new Response(JSON.stringify({ ok: true, stored, emailed: !!(emailed.team || emailed.visitor) }), {
-        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-      });
+      const response = await handleContact({ request, env });
+      const headers = new Headers(response.headers);
+      new Headers(corsHeaders(origin)).forEach((value, key) => headers.set(key, value));
+      return new Response(response.body, { status: response.status, headers });
     }
 
     if (request.method === "POST" && url.pathname === "/api/book-tier") {
@@ -1183,160 +852,10 @@ export default {
         });
       }
 
-      let body: BuildRequestBody;
-      try {
-        const raw = await request.text();
-        if (raw.length > 50_000) {
-          return new Response(JSON.stringify({ ok: false, error: "Payload too large" }), {
-            status: 413,
-            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-          });
-        }
-        body = JSON.parse(raw) as BuildRequestBody;
-      } catch {
-        return new Response(JSON.stringify({ ok: false, error: "Invalid JSON" }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      // Honeypot only — do not treat visible website as spam (autofill used to fill company_website).
-      if (str(body.honeypot, 200) || str((body as { swft_hp_confirm?: string }).swft_hp_confirm, 200)) {
-        return new Response(JSON.stringify({ ok: true, stored: false, checkoutUrl: null }), {
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-      if (!tier) {
-        return new Response(JSON.stringify({ ok: false, error: "Unknown pricing tier." }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      const name = str(body.name, 200);
-      const email = str(body.email, 320);
-      const businessName = str(body.businessName, 200);
-      const phone = str(body.phone, 40);
-      const website = str(body.website, 500);
-      const notes = str(body.notes, 4000);
-
-      if (!name || !email || !businessName) {
-        return new Response(
-          JSON.stringify({ ok: false, error: "Name, email, and business name are required." }),
-          {
-            status: 400,
-            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-          }
-        );
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return new Response(JSON.stringify({ ok: false, error: "Invalid email." }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        });
-      }
-
-      const reqOrigin = `${url.protocol}//${url.host}`;
-      const amountLabel =
-        tier.mode === "subscription"
-          ? `${tier.priceDisplay} (subscription)`
-          : `${tier.priceDisplay} (one-time start)`;
-
-      const stored = await storeCrmLead(env, {
-        formGroup: "Paid Booking",
-        formType: tier.name,
-        person: { name, email, phone },
-        company: { name: businessName, website, phone },
-        sourcePage: str(body.sourcePage, 300),
-        utmSource: str(body.utmSource, 120),
-        utmMedium: str(body.utmMedium, 120),
-        utmCampaign: str(body.utmCampaign, 120),
-        notes,
-        formFields: {
-          Name: name,
-          Email: email,
-          Business: businessName,
-          Phone: phone,
-          Website: website,
-          "Tier ID": tier.id,
-          "Tier Name": tier.name,
-          "Checkout amount label": amountLabel,
-          Notes: notes,
-          "UTM Source": str(body.utmSource, 120),
-          "UTM Medium": str(body.utmMedium, 120),
-          "UTM Campaign": str(body.utmCampaign, 120),
-          "Source Page": str(body.sourcePage, 300),
-          Status: "New",
-        },
-      });
-
-      const cancelPath =
-        tier.id === "gbp-refresh" ? "/book/gbp-content-refresh.html" : `/book/${tier.id}.html`;
-      const checkoutUrl = await createTierCheckout(env, {
-        tier,
-        email,
-        businessName,
-        name,
-        origin: reqOrigin,
-        cancelPath,
-      });
-
-      if (!checkoutUrl) {
-        return new Response(
-          JSON.stringify({
-            ok: false,
-            stored,
-            error: "Unable to start checkout right now. Please try again or email hello@swftstudios.com.",
-          }),
-          {
-            status: 502,
-            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-          }
-        );
-      }
-
-      const emailed = await sendLeadEmails(env, {
-        kind: "book-tier",
-        visitorEmail: email,
-        visitorName: name,
-        idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
-        teamSubject: `Stripe book: ${tier.name}. ${businessName}`,
-        teamHtml: `
-      <p><strong>New tier booking (heading to Stripe)</strong></p>
-      <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
-        ${emailRow("Tier", tier.name)}
-        ${emailRow("Checkout", amountLabel)}
-        ${emailRow("Name", name)}
-        ${emailRow("Email", email)}
-        ${emailRow("Phone", phone)}
-        ${emailRow("Business", businessName)}
-        ${emailRow("Website / Social", website)}
-        ${emailRow("Notes", notes)}
-        ${emailRow("Stored in Airtable", stored ? "Yes" : "No")}
-      </table>
-      <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
-    `,
-        confirmSubject: `Next step: complete checkout for ${tier.name}. SWFT Studios`,
-        confirmHtml: `
-      <p>Hi ${escapeHtml(name)},</p>
-      <p>Thanks for choosing <strong>${escapeHtml(tier.name)}</strong>. Complete Stripe Checkout to lock in your start (${escapeHtml(tier.priceDisplay)}).</p>
-      <p>If the checkout tab closed, reopen your booking page or email <a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>.</p>
-      <p>SWFT Studios</p>
-    `,
-      });
-
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          stored,
-          checkoutUrl,
-          emailed: !!(emailed.team || emailed.visitor),
-          tierId: tier.id,
-        }),
-        {
-          headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-        }
-      );
+      const response = await handleBookTier({ request, env });
+      const headers = new Headers(response.headers);
+      new Headers(corsHeaders(origin)).forEach((value, key) => headers.set(key, value));
+      return new Response(response.body, { status: response.status, headers });
     }
 
     if (request.method === "POST" && url.pathname === "/api/case-study-match") {
