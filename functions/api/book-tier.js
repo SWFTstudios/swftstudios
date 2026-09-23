@@ -163,12 +163,13 @@ export async function onRequestPost(context) {
   );
   const customCount = addOns.filter((item) => item.priceCents === null).length;
   const investmentNote = tier.mode === "subscription"
-    ? ("Base " + tier.priceDisplay + " monthly" +
+    ? ("Base " + tier.priceDisplay +
         (pricedSubtotalCents ? "; ONE-TIME priced extras estimate " + usd(pricedSubtotalCents) : "") +
-        (customCount ? "; " + customCount + " custom-priced items excluded" : ""))
+        (customCount ? "; " + customCount + " custom-priced " + (customCount === 1 ? "item" : "items") + " excluded" : ""))
     : ("Base " + tier.priceDisplay + "; estimated project investment " +
         usd(tier.amountCents + pricedSubtotalCents) +
-        (customCount ? " PLUS " + customCount + " custom-priced items excluded" : ""));
+        (customCount ? " PLUS " + customCount + " custom-priced " +
+          (customCount === 1 ? "item" : "items") + " excluded" : ""));
   const goal = str(rawChoices.goal, 200);
   const timeline = str(rawChoices.timeline, 100);
   const platform = str(rawChoices.platform, 100);
@@ -182,7 +183,7 @@ export async function onRequestPost(context) {
           (item.priceCents === null ? "custom quote" : usd(item.priceCents * item.quantity) + " indicative one-time"))
           .join(", ")
       : "None"),
-    "PRE-QUOTE ESTIMATE, NOT CHARGED: " + investmentNote,
+    (quoteOnly ? "PRE-QUOTE ESTIMATE, NO PAYMENT: " : "BASE CHECKOUT AMOUNT: ") + investmentNote,
     "Timeline: " + (timeline || "Not specified"),
     "Platform: " + (platform || "Not specified"),
     "Request type: " + (quoteOnly ? "Custom quote - NO PAYMENT" : "Base Stripe checkout"),
