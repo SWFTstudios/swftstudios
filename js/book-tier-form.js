@@ -31,6 +31,7 @@
   };
   var baseCents = Math.round(Number(basePrice.replace(/[^0-9.]/g, "")) * 100) || 0;
   var forcedQuote = false;
+  var customerWantsQuote = false;
   var catalog = {
     website: {
       title: "Website extras",
@@ -263,7 +264,9 @@
       if (priced) mount.appendChild(summaryRow("One-time extras estimate", dollars(priced)));
     }
     mount.appendChild(el("p", "book-live-disclaimer",
-      "Estimate only, not a checkout total. Optional work is confirmed in a custom quote; no extras are charged now."));
+      chosen.length
+        ? "Estimate only, not a checkout total. Optional work is confirmed in a custom quote; no extras are charged now."
+        : "Base package only. With no extras selected, Stripe Checkout charges the published starting price."));
   }
 
   function el(tag, className, value) {
@@ -288,7 +291,7 @@
       forcedQuote = true;
       quoteFirst.closest(".book-quote-option").classList.add("is-required-quote");
     } else {
-      if (forcedQuote) quoteFirst.checked = false;
+      if (forcedQuote) quoteFirst.checked = customerWantsQuote;
       forcedQuote = false;
       quoteFirst.disabled = false;
       quoteFirst.closest(".book-quote-option").classList.remove("is-required-quote");
@@ -454,7 +457,10 @@
       if (currentStep === 2) renderSummary();
     }
   });
-  quoteFirst.addEventListener("change", renderSummary);
+  quoteFirst.addEventListener("change", function () {
+    customerWantsQuote = quoteFirst.checked;
+    renderSummary();
+  });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
