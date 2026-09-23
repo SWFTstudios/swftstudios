@@ -42,13 +42,12 @@
         <span data-book-progress="2">03 <b>Review</b></span>
       </div>
       <div class="book-grid">
-        <div class="book-inclusions">
-          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">What&rsquo;s included</h2>
-          <ul class="book-includes" role="list"><li>On-site photo shoot</li><li>Short-form video content</li><li>Google Business Profile optimization (categories, services, photos, posts)</li><li>Review-generation setup</li></ul>
+        <aside class="book-inclusions" aria-label="Project details">
+          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">Good to know</h2>
           <p class="book-note">Entry offer when you need fresh visuals and GBP setup without rebuilding the site.</p>
           <p class="book-note">Starts at $400 for a focused local refresh. Final deliverables and project total are confirmed after intake.</p>
           <p class="book-alt">Not sure this is the right fit? <a href="/growth-audit?plan=gbp-refresh">Get a Free Growth Audit</a> or <a href="/website-pricing.html#gbp-refresh">compare all pricing</a>.</p>
-        </div>
+        </aside>
 
         <div class="ga-form-card book-order-panel">
           <div id="book-status" class="ga-status" role="alert" hidden></div>
@@ -56,7 +55,17 @@
             <section class="book-step" data-book-step="0" aria-label="Customize your order">
               <p class="book-step-kicker">01 / MAKE IT YOURS</p>
               <h2>What are we creating together?</h2>
-              <p class="book-step-lead">First, pick your priority. Then add anything else you&#39;d like us to quote. You choose the ingredients.</p>
+              <p class="book-step-lead">Here is what you already get at the starting price. Then make it yours with extras, only if you need them.</p>
+              <div class="book-base-included" aria-labelledby="book-base-heading">
+                <div class="book-base-header">
+                  <p class="book-base-eyebrow">YOUR BASE PACKAGE <span class="book-base-badge">Included</span></p>
+                  <h3 id="book-base-heading">GBP Content Refresh</h3>
+                  <strong class="book-base-price">Starting at $400</strong>
+                  <p class="book-base-intro">Everything below is part of your starting package — not an add-on.</p>
+                </div>
+                <ul class="book-includes" role="list"><li>On-site photo shoot</li><li>Short-form video content</li><li>Google Business Profile optimization (categories, services, photos, posts)</li><li>Review-generation setup</li></ul>
+                <p class="book-base-scope">Base covers a focused refresh for one local business location. Shoot duration, edited asset count and access are confirmed with you before work begins; additional locations or edits are extra.</p>
+              </div>
               <div id="book-configurator"></div>
               <div class="book-actions"><button type="button" class="book-action-primary" data-book-next>Continue to your details →</button></div>
             </section>
@@ -106,6 +115,10 @@
               <p class="book-step-kicker">03 / ALMOST THERE</p>
               <h2>Review your order</h2>
               <p class="book-step-lead">Make sure we have it right before sending your request.</p>
+              <div class="book-base-review" aria-label="Included in your base package">
+                <h3>Included in your base package <span>✓ No add-on charge</span></h3>
+                <ul class="book-includes" role="list"><li>On-site photo shoot</li><li>Short-form video content</li><li>Google Business Profile optimization (categories, services, photos, posts)</li><li>Review-generation setup</li></ul>
+              </div>
               <div id="book-order-summary" aria-live="polite"></div>
               <label class="book-quote-option" for="book-quote-first"><input type="checkbox" id="book-quote-first"><span><strong>I&#39;d like a quote before paying</strong><small>No payment today. We&#39;ll review your request and email a scoped quote.</small></span></label>
               <p id="book-payment-explainer" class="book-payment-explainer"></p>
