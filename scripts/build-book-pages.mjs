@@ -108,9 +108,8 @@ function renderTierPage(tier) {
         <span data-book-progress="2">03 <b>Review</b></span>
       </div>
       <div class="book-grid">
-        <div class="book-inclusions">
-          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">What&rsquo;s included</h2>
-          ${renderIncludes(tier.includes)}
+        <aside class="book-inclusions" aria-label="Project details">
+          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">Good to know</h2>
           ${
             tier.scopeDriver
               ? `<p class="book-note">${escapeHtml(tier.scopeDriver)}</p>`
@@ -118,7 +117,7 @@ function renderTierPage(tier) {
           }
           <p class="book-note">${escapeHtml(stripe.billingNote || "")}</p>
           <p class="book-alt">Not sure this is the right fit? <a href="/growth-audit?plan=${encodeURIComponent(tier.id)}">Get a Free Growth Audit</a> or <a href="/website-pricing.html#${escapeHtml(tier.id)}">compare all pricing</a>.</p>
-        </div>
+        </aside>
 
         <div class="ga-form-card book-order-panel">
           <div id="book-status" class="ga-status" role="alert" hidden></div>
@@ -126,7 +125,17 @@ function renderTierPage(tier) {
             <section class="book-step" data-book-step="0" aria-label="Customize your order">
               <p class="book-step-kicker">01 / MAKE IT YOURS</p>
               <h2>What are we creating together?</h2>
-              <p class="book-step-lead">First, pick your priority. Then add anything else you&#39;d like us to quote. You choose the ingredients.</p>
+              <p class="book-step-lead">Here is what you already get at the starting price. Then make it yours with extras, only if you need them.</p>
+              <div class="book-base-included" aria-labelledby="book-base-heading">
+                <div class="book-base-header">
+                  <p class="book-base-eyebrow">YOUR BASE PACKAGE <span class="book-base-badge">Included</span></p>
+                  <h3 id="book-base-heading">${escapeHtml(tier.name)}</h3>
+                  <strong class="book-base-price">${escapeHtml(tier.priceLabel)}</strong>
+                  <p class="book-base-intro">Everything below is part of your starting package — not an add-on.</p>
+                </div>
+                ${renderIncludes(tier.includes)}
+                <p class="book-base-scope">${escapeHtml(tier.baseScopeNote || tier.scopeDriver || "We confirm the final included scope with you before work begins.")}</p>
+              </div>
               <div id="book-configurator"></div>
               <div class="book-actions"><button type="button" class="book-action-primary" data-book-next>Continue to your details →</button></div>
             </section>
@@ -176,6 +185,10 @@ function renderTierPage(tier) {
               <p class="book-step-kicker">03 / ALMOST THERE</p>
               <h2>Review your order</h2>
               <p class="book-step-lead">Make sure we have it right before sending your request.</p>
+              <div class="book-base-review" aria-label="Included in your base package">
+                <h3>Included in your base package <span>✓ No add-on charge</span></h3>
+                ${renderIncludes(tier.includes)}
+              </div>
               <div id="book-order-summary" aria-live="polite"></div>
               <label class="book-quote-option" for="book-quote-first"><input type="checkbox" id="book-quote-first"><span><strong>I&#39;d like a quote before paying</strong><small>No payment today. We&#39;ll review your request and email a scoped quote.</small></span></label>
               <p id="book-payment-explainer" class="book-payment-explainer"></p>
