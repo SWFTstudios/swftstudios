@@ -38,7 +38,8 @@
         },
         "bestFor": "LOOK GREAT LOCALLY",
         "checkoutNote": "Final scope and total are confirmed before work begins.",
-        "badge": "Quick first win"
+        "badge": "Quick first win",
+        "baseScopeNote": "Base covers a focused refresh for one local business location. Shoot duration, edited asset count and access are confirmed with you before work begins; additional locations or edits are extra."
       },
       {
         "id": "website-only",
@@ -67,7 +68,8 @@
           "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
         },
         "bestFor": "MAKE IT EASY TO BOOK YOU",
-        "checkoutNote": "Final scope and total are confirmed before work begins."
+        "checkoutNote": "Final scope and total are confirmed before work begins.",
+        "baseScopeNote": "You supply your photos and copy. We agree on the included page count, one standard lead or booking path, and revision allowance before work begins; additional pages or advanced integrations are extra."
       },
       {
         "id": "website-content-half",
@@ -97,7 +99,8 @@
           "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
         },
         "bestFor": "SHOW THE WORK, THEN SELL IT",
-        "checkoutNote": "Final scope and total are confirmed before work begins."
+        "checkoutNote": "Final scope and total are confirmed before work begins.",
+        "baseScopeNote": "Combines one scoped website with one 2–4-hour on-location photo/video session. Included page count and finished asset count are confirmed before work begins; more filming time or edits are extra."
       },
       {
         "id": "website-content-full",
@@ -126,7 +129,8 @@
           "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
         },
         "bestFor": "GO BEYOND ONE LOCATION",
-        "checkoutNote": "Final scope and total are confirmed before work begins."
+        "checkoutNote": "Final scope and total are confirmed before work begins.",
+        "baseScopeNote": "Covers an expanded website and one full-day content session. The included locations, pages, edited assets and revisions are confirmed before work begins; additional production is extra."
       }
     ]
   },
@@ -163,7 +167,8 @@
           "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
         },
         "bestFor": "STAY TOP OF MIND",
-        "checkoutNote": "Monthly scope is confirmed before you subscribe."
+        "checkoutNote": "Monthly scope is confirmed before you subscribe.",
+        "baseScopeNote": "The base monthly plan includes the agreed photo and/or video deliverables, Google Business Profile posting, and review support. We confirm the monthly content volume and posting cadence before you subscribe; additional work is separate."
       },
       {
         "id": "full-growth-partner",
@@ -193,7 +198,8 @@
           "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
         },
         "bestFor": "PAIR CONTENT WITH CAMPAIGNS",
-        "checkoutNote": "Monthly scope is confirmed before you subscribe."
+        "checkoutNote": "Monthly scope is confirmed before you subscribe.",
+        "baseScopeNote": "The base monthly partnership includes ongoing content and management of agreed Meta ad campaigns, with local profile or review support as scoped. We confirm production volume, campaigns and reporting cadence before you subscribe. Ad spend is separate."
       }
     ]
   },
