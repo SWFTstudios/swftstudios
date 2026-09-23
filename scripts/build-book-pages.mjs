@@ -45,6 +45,25 @@ function renderIncludes(items) {
   );
 }
 
+function renderBaseMetrics(tier) {
+  const c = tier.baseCounts || {};
+  const units = [
+    ["pages", c.pages, "Pages"],
+    ["photos", c.photos, "Edited photos"],
+    ["videos", c.videos, "Short videos"],
+    ["shootMinutes", c.shootMinutes, "Shoot", (n) => n % 60 === 0 ? n / 60 + " hr" : n + " min"],
+    ["products", c.products, "Shopify products"],
+    ["campaigns", c.campaigns, "Meta campaigns"]
+  ].filter(([, value]) => Number(value) > 0);
+  if (!units.length) return "";
+  return '<div class="book-base-metrics" aria-label="Base package quantities">' +
+    units.map(([, value, label, format]) =>
+      '<div class="book-base-metric"><strong>' +
+      escapeHtml(format ? format(value) : value) +
+      '</strong><span>' + escapeHtml(label) + '</span></div>').join("") +
+    '</div>';
+}
+
 function pageShell({ title, description, canonical, bodyClass, body }) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -86,7 +105,7 @@ ${body}
 function renderTierPage(tier) {
   const stripe = tier.stripe;
   const title = `Book ${tier.name} | SWFT Studios`;
-  const description = `${tier.description} Start at ${stripe.priceDisplay}. Secure checkout via Stripe.`;
+  const description = `${tier.description} Customize your request, then book the base at ${stripe.priceDisplay} or ask for a custom quote.`;
   const canonical = `https://www.swftstudios.com/book/${bookBasename(tier)}`;
   const modeLabel = stripe.mode === "subscription" ? "Monthly retainer" : "One-time project";
   const cta = stripe.ctaLabel || `Pay ${stripe.priceDisplay} to start`;
@@ -94,18 +113,22 @@ function renderTierPage(tier) {
   const body = `
       <header class="ps-hero ps-hero--left book-page">
         <p class="ps-eyebrow">${escapeHtml(modeLabel)}</p>
-        <h1 class="ps-title">Book <span class="ps-accent">${escapeHtml(tier.name)}</span></h1>
-        <p class="ps-lead">${escapeHtml(tier.description)}</p>
+        <h1 class="ps-title">Make <span class="ps-accent">${escapeHtml(tier.name)}</span> yours.</h1>
+        <p class="ps-lead">Build a request that feels like your business. Choose the features, content and details you want, one step at a time.</p>
         <div class="book-price-chip" aria-label="Checkout amount">
-          <strong>${escapeHtml(stripe.priceDisplay)}</strong>
-          <span>Published range: ${escapeHtml(tier.priceLabel)}${tier.priceNote ? ` · ${escapeHtml(tier.priceNote)}` : ""}</span>
+          <strong>${escapeHtml(tier.priceLabel)}</strong>
+          <span>${stripe.mode === "subscription" ? "Base monthly plan" : "Base project"} · Extra requests quoted separately</span>
         </div>
       </header>
 
+      <div class="book-flow-progress" aria-label="Order progress">
+        <span data-book-progress="0" aria-current="step">01 <b>Customize</b></span>
+        <span data-book-progress="1">02 <b>Your business</b></span>
+        <span data-book-progress="2">03 <b>Review</b></span>
+      </div>
       <div class="book-grid">
-        <div>
-          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">What&rsquo;s included</h2>
-          ${renderIncludes(tier.includes)}
+        <aside class="book-inclusions" aria-label="Project details">
+          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">Good to know</h2>
           ${
             tier.scopeDriver
               ? `<p class="book-note">${escapeHtml(tier.scopeDriver)}</p>`
@@ -113,16 +136,37 @@ function renderTierPage(tier) {
           }
           <p class="book-note">${escapeHtml(stripe.billingNote || "")}</p>
           <p class="book-alt">Not sure this is the right fit? <a href="/growth-audit?plan=${encodeURIComponent(tier.id)}">Get a Free Growth Audit</a> or <a href="/website-pricing.html#${escapeHtml(tier.id)}">compare all pricing</a>.</p>
-        </div>
+        </aside>
 
-        <div class="ga-form-card">
-          <h2>Your details</h2>
-          <p class="ga-step-help" style="margin-top:-0.5rem;">We&rsquo;ll save your info, then send you to Stripe Checkout.</p>
-          <div id="book-status" class="ga-status" hidden></div>
-          <form id="book-tier-form" data-tier-id="${escapeHtml(tier.id)}" novalidate>
+        <div class="ga-form-card book-order-panel">
+          <div id="book-status" class="ga-status" role="alert" hidden></div>
+          <form id="book-tier-form" data-tier-id="${escapeHtml(tier.id)}" data-base-price="${escapeHtml(stripe.priceDisplay)}" data-billing-mode="${escapeHtml(stripe.mode)}" data-base-photos="${escapeHtml(tier.baseCounts?.photos || 0)}" data-base-videos="${escapeHtml(tier.baseCounts?.videos || 0)}" data-base-pages="${escapeHtml(tier.baseCounts?.pages || 0)}" data-base-shoot-minutes="${escapeHtml(tier.baseCounts?.shootMinutes || 0)}" data-base-profiles="${escapeHtml(tier.baseCounts?.profiles || 0)}" novalidate>
+            <section class="book-step" data-book-step="0" aria-label="Customize your order">
+              <p class="book-step-kicker">01 / MAKE IT YOURS</p>
+              <h2>What are we creating together?</h2>
+              <p class="book-step-lead">Here is what you already get at the starting price. Then make it yours with extras, only if you need them.</p>
+              <div class="book-base-included" aria-labelledby="book-base-heading">
+                <div class="book-base-header">
+                  <p class="book-base-eyebrow">YOUR BASE PACKAGE <span class="book-base-badge">Included</span></p>
+                  <h3 id="book-base-heading">${escapeHtml(tier.name)}</h3>
+                  <strong class="book-base-price">${escapeHtml(tier.priceLabel)}</strong>
+                  <p class="book-base-intro">Everything below is part of your starting package — not an add-on.</p>
+                </div>
+                ${renderBaseMetrics(tier)}
+                <h4 class="book-base-includes-label">EVERYTHING INCLUDED</h4>
+                ${renderIncludes(tier.includes)}
+                <p class="book-base-scope">${escapeHtml(tier.baseScopeNote || tier.scopeDriver || "We confirm the final included scope with you before work begins.")}</p>
+              </div>
+              <div id="book-configurator"></div>
+              <div class="book-actions"><button type="button" class="book-action-primary" data-book-next>Continue to your details →</button></div>
+            </section>
+            <section class="book-step" data-book-step="1" aria-label="Your business details" hidden>
+              <p class="book-step-kicker">02 / THE DETAILS</p>
+              <h2>Tell us about your business</h2>
+              <p class="book-step-lead">A few details help us make your order feel like yours.</p>
             <div class="ga-hp" aria-hidden="true">
-              <label for="company_website">Company website</label>
-              <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+              <label for="swft_hp_confirm">Leave blank</label>
+              <input type="text" id="swft_hp_confirm" name="swft_hp_confirm" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore="true" data-form-type="other" value="">
             </div>
             <div class="ga-field">
               <label for="book-name">Name <span class="req">*</span></label>
@@ -145,20 +189,45 @@ function renderTierPage(tier) {
               <input type="text" id="book-website" name="website" placeholder="https:// or @handle">
             </div>
             <div class="ga-field">
-              <label for="book-notes">Anything we should know?</label>
+              <label for="book-timeline">When would you like to get started?</label>
+              <select id="book-timeline" name="timeline"><option value="">Choose a timeline (optional)</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–2 months</option><option>Just exploring</option></select>
+            </div>
+            <div class="ga-field">
+              <label for="book-platform">Preferred platform (if applicable)</label>
+              <select id="book-platform" name="platform"><option value="">Open to your recommendation</option><option>Webflow</option><option>Shopify</option><option>Keep my existing site</option><option>Not sure / not building a site</option></select>
+            </div>
+            <div class="ga-field">
+              <label for="book-notes">Tell us what you&#39;re envisioning</label>
               <textarea id="book-notes" name="notes" rows="3" placeholder="Locations, timelines, content you already have…"></textarea>
             </div>
+            <div class="book-actions"><button type="button" class="book-action-back" data-book-back>← Back</button><button type="button" class="book-action-primary" data-book-next>Review your order →</button></div>
+            </section>
+            <section class="book-step" data-book-step="2" aria-label="Review and confirm" hidden>
+              <p class="book-step-kicker">03 / ALMOST THERE</p>
+              <h2>Review your order</h2>
+              <p class="book-step-lead">Make sure we have it right before sending your request.</p>
+              <div class="book-base-review" aria-label="Included in your base package">
+                <h3>Included in your base package <span>✓ No add-on charge</span></h3>
+                ${renderBaseMetrics(tier)}
+                ${renderIncludes(tier.includes)}
+              </div>
+              <div id="book-order-summary" aria-live="polite"></div>
+              <label class="book-quote-option" for="book-quote-first"><input type="checkbox" id="book-quote-first"><span><strong>I&#39;d like a quote before paying</strong><small>No payment today. We&#39;ll review your request and email a scoped quote.</small></span></label>
+              <p id="book-payment-explainer" class="book-payment-explainer"></p>
             <div class="ga-field">
               <label for="book-consent" style="text-transform:none;letter-spacing:0;font-weight:500;display:flex;gap:0.55rem;align-items:flex-start;line-height:1.4;">
                 <input type="checkbox" id="book-consent" name="consent" required style="margin-top:0.2rem;flex:0 0 auto;width:auto;min-height:0;">
-                <span>I understand this starts checkout at <strong>${escapeHtml(stripe.priceDisplay)}</strong> and final scope is confirmed after intake. <span class="req">*</span></span>
+                <span id="book-consent-label">I understand this starts checkout at <strong>${escapeHtml(stripe.priceDisplay)}</strong> for the base ${stripe.mode === "subscription" ? "monthly plan" : "project"}; optional extras require my approval of a separate quote. <span class="req">*</span></span>
               </label>
             </div>
-            <button type="submit" id="book-submit" class="button is-course w-inline-block book-submit" style="width:100%;border:0;cursor:pointer;">
+            <div class="book-actions"><button type="button" class="book-action-back" data-book-back>← Back</button>
+            <button type="submit" id="book-submit" class="button is-course w-inline-block book-submit" style="flex:1;min-width:11rem;border:0;cursor:pointer;">
               <div class="button_bg"></div>
               <div class="button_text">${escapeHtml(cta)}</div>
-            </button>
+            </button></div>
+            </section>
           </form>
+          <noscript><p class="book-note">JavaScript is needed to customize your order. <a href="/growth-audit">Tell us about your project here instead.</a></p></noscript>
         </div>
       </div>`;
 
@@ -181,8 +250,8 @@ function renderIndex(tiers) {
       return (
         `<a class="book-hub-card" href="${escapeHtml(bookBasename(tier))}">` +
         `<h2>${escapeHtml(tier.name)}</h2>` +
-        `<div class="book-hub-price">${escapeHtml(stripe.priceDisplay)} to start</div>` +
-        `<p>${escapeHtml(tier.priceLabel)}${tier.priceNote ? ` · ${escapeHtml(tier.priceNote)}` : ""}</p>` +
+        `<div class="book-hub-price">${escapeHtml(tier.priceLabel)}</div>` +
+        `${tier.priceNote ? `<p>${escapeHtml(tier.priceNote)}</p>` : ""}` +
         `<p>${escapeHtml(tier.description)}</p>` +
         `</a>`
       );
@@ -222,7 +291,7 @@ function renderThankYou() {
         <article class="ga-step">
           <div class="ga-step-num">01</div>
           <h3>We review your intake</h3>
-          <p>We confirm the tier, assets you already have, and anything that could move price within the published range.</p>
+          <p>We confirm the tier, assets you already have, and the final scope and project total before work begins.</p>
         </article>
         <article class="ga-step">
           <div class="ga-step-num">02</div>
