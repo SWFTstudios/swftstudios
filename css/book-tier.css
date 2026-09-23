@@ -334,3 +334,55 @@
 @media (max-width: 600px) {
   .book-live-estimate { padding: 1rem; }
 }
+
+
+/* Order of operations: show what the starting price already buys before choices. */
+.book-base-included {
+  border: 1px solid rgba(127,255,229,.48);
+  border-radius: 13px;
+  background: linear-gradient(135deg,rgba(127,255,229,.115),rgba(127,255,229,.025) 74%), #0c110f;
+  padding: clamp(1.15rem,3vw,1.65rem);
+  margin: 0 0 2.1rem;
+}
+.book-base-header { padding: 0 0 1.05rem; border-bottom: 1px solid rgba(127,255,229,.18); margin-bottom: 1.1rem; }
+.book-base-eyebrow {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .75rem;
+  color: #a6ffe8; font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+  margin: 0 0 .7rem;
+}
+.book-base-badge {
+  border: 1px solid rgba(127,255,229,.55); border-radius: 30px; padding: .32rem .6rem;
+  background: rgba(127,255,229,.11); letter-spacing: .035em; font-size: .66rem;
+  text-transform: uppercase; color: #a9ffed;
+}
+.book-base-included h3 { color: #fff; font-size: clamp(1.15rem,2.4vw,1.5rem); font-weight: 650; line-height: 1.3; margin: 0 0 .3rem; }
+.book-base-price { display: block; font-size: clamp(1.45rem,2.8vw,1.9rem); color: #a9ffed; letter-spacing: -.03em; }
+.book-base-intro { color: #c7d9d2; font-size: .82rem; line-height: 1.55; margin: .65rem 0 0; }
+.book-base-included .book-includes { gap: .83rem; margin: 0 0 1.05rem; }
+.book-base-included .book-includes li {
+  color: #eef6f2; font-size: .88rem; line-height: 1.5;
+  padding-left: 1.5rem;
+}
+.book-base-included .book-includes li::before {
+  content: "✓"; border: 0; border-radius: 0; width: auto; height: auto;
+  top: -.09em; background: none; color: #a9ffed; font-size: 1.05rem; font-weight: 750;
+}
+.book-base-scope {
+  margin: 1.1rem 0 0;
+  padding-top: 1rem; border-top: 1px solid rgba(127,255,229,.18);
+  font-size: .78rem; line-height: 1.6; color: #c3d0ca;
+}
+.book-base-review {
+  border: 1px solid rgba(127,255,229,.36); border-radius: 11px;
+  padding: 1.05rem 1.2rem; margin: 0 0 1.1rem;
+  background: rgba(127,255,229,.055);
+}
+.book-base-review h3 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem;
+  font-size: .98rem; color: #fff; font-weight: 650; line-height: 1.4; margin: 0 0 .85rem; }
+.book-base-review h3 span { font-size: .7rem; color: #a9ffed; letter-spacing: .015em; }
+.book-base-review .book-includes { gap: .5rem; margin: 0; }
+.book-base-review .book-includes li { font-size: .83rem; color: #d8e8e2; }
+@media (max-width: 600px) {
+  .book-base-included { padding: 1.1rem .95rem; margin-bottom: 1.6rem; }
+  .book-base-review { padding: 1rem .85rem; }
+}
