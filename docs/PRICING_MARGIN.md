@@ -68,3 +68,9 @@ Each priced add-on offers **quantity 1–5**; the configurator calculates subtot
 **Review logic:** For one-time projects show starting base + priced extras = **estimated investment** and mark custom items as excluded; for recurring retainers show base **monthly** and selected extras **one-time** separately (do not sum them into an ambiguous single recurring price). Every request containing an add-on routes to **custom quote, no payment**. Base-only clients may use the original fixed-price Stripe link or ask for a quote.
 
 The backend has an allowlisted, independently priced catalog and recomputes amounts from tier and add-on IDs and validated quantities. Client-supplied numeric prices are ignored. The quote details go to Airtable Notes and SWFT emails. Review / approve all terms and scope with the customer **before collecting payment**. No subscription price, Stripe Price ID, Stripe Payment Link or production branch was changed as part of this feature.
+
+## Base package visibility before add-ons
+
+All six booking flows render **Included in your base package** ahead of the first goal and every add-on. The list is drawn directly from `data/pricing.json → tier.includes`, so it stays aligned with the price card and generator; the same included list appears again in the final review before the line-item estimate. The new `baseScopeNote` clarifies each starting package's boundaries without inventing fixed page, photo or Reel counts that have not yet been approved.
+
+Prior to publishing, approve and document fixed included counts and revision limits for any offer that will be sold at its checkout starting price. Currently the pages explicitly say the final page count, edit count, deliverables and/or monthly cadence are confirmed before work begins. The extra page, Reel, shoot-hour and photo add-ons refer to work **beyond** that approved base scope. This change does not alter Stripe prices, add-on rates or checkout routing.
