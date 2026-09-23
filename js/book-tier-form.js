@@ -6,6 +6,13 @@
 
   var tierId = form.getAttribute("data-tier-id") || "";
   var basePrice = form.getAttribute("data-base-price") || "";
+  var baseCounts = {
+    photos: Number(form.getAttribute("data-base-photos")) || 0,
+    videos: Number(form.getAttribute("data-base-videos")) || 0,
+    pages: Number(form.getAttribute("data-base-pages")) || 0,
+    shootMinutes: Number(form.getAttribute("data-base-shoot-minutes")) || 0,
+    profiles: Number(form.getAttribute("data-base-profiles")) || 0
+  };
   var billingMode = form.getAttribute("data-billing-mode") || "payment";
   var subscription = billingMode === "subscription";
   var statusEl = document.getElementById("book-status");
@@ -42,7 +49,8 @@
         ["shopify-migration", "Store or catalog migration", "Move products or content from an existing platform."],
         ["automations", "CRM + email follow-ups", "Connect leads to email or follow-up automations."],
         ["multilingual", "Multilingual pages", "Make your site accessible in additional languages."],
-        ["priority-launch", "Priority launch", "Ask about an accelerated production schedule."]
+        ["priority-launch", "Priority launch", "Ask about an accelerated production schedule."],
+        ["content-shoot", "Add an original photo + video shoot", "Custom website-and-content bundle for clients with no included shoot."]
       ]
     },
     content: {
@@ -84,11 +92,11 @@
   var tiers = {
     "gbp-refresh": {
       goals: ["Look more professional locally", "Show my services or space", "Get more Google inquiries", "Build trust with new customers"],
-      groups: ["content", "local", "website"]
+      groups: ["content", "local"]
     },
     "website-only": {
       goals: ["Get more inquiries", "Make booking easier", "Sell products online", "Refresh an outdated site"],
-      groups: ["website", "content", "local"]
+      groups: ["website"]
     },
     "website-content-half": {
       goals: ["Launch a new business", "Show my work with real content", "Get more leads and bookings", "Refresh my whole online presence"],
@@ -189,9 +197,16 @@
 
     var groups = tier.groups.map(function (key) {
       var group = catalog[key];
+      var available = group.items.filter(function (item) {
+        if ((item[0] === "extra-pages" || item[0] === "local-page") && !baseCounts.pages) return false;
+        if (item[0] === "location-profiles" && !baseCounts.profiles) return false;
+        if (item[0] === "content-shoot" && baseCounts.shootMinutes) return false;
+        return true;
+      });
+      if (!available.length) return "";
       return '<fieldset class="book-choice-field"><legend>' + escapeHtml(group.title) +
         '</legend><p class="book-choice-help">' + escapeHtml(group.intro) +
-        '</p><div class="book-choice-grid">' + group.items.map(function (item) {
+        '</p><div class="book-choice-grid">' + available.map(function (item) {
           var price = addonPricing(item[0]);
           var quantity = price
             ? '<div class="book-addon-quantity" hidden><label for="book-qty-' + escapeHtml(item[0]) +
@@ -246,6 +261,29 @@
     return addons().length > 0 || quoteFirst.checked;
   }
 
+  function deliverableChanges(selected) {
+    var morePhotos = 0, moreVideos = 0, morePages = 0, moreMinutes = 0, moreProfiles = 0;
+    selected.forEach(function (a) {
+      if (a.id === "extra-photos") morePhotos += 10 * a.quantity;
+      if (a.id === "extra-reels") moreVideos += a.quantity;
+      if (a.id === "extra-pages" || a.id === "local-page") morePages += a.quantity;
+      if (a.id === "extra-shoot") moreMinutes += 60 * a.quantity;
+      if (a.id === "location-profiles") moreProfiles += a.quantity;
+    });
+    var results = [];
+    if (morePhotos) results.push(baseCounts.photos + " included + " + morePhotos +
+      " added = " + (baseCounts.photos + morePhotos) + " edited photos");
+    if (moreVideos) results.push(baseCounts.videos + " included + " + moreVideos +
+      " added = " + (baseCounts.videos + moreVideos) + " short videos");
+    if (morePages) results.push(baseCounts.pages + " included + " + morePages +
+      " added = " + (baseCounts.pages + morePages) + " website pages");
+    if (moreMinutes) results.push(baseCounts.shootMinutes / 60 + " included + " +
+      moreMinutes / 60 + " added = " + (baseCounts.shootMinutes + moreMinutes) / 60 + " shoot hours");
+    if (moreProfiles) results.push(baseCounts.profiles + " included + " + moreProfiles +
+      " added = " + (baseCounts.profiles + moreProfiles) + " Google Business Profiles");
+    return results;
+  }
+
   function renderLiveEstimate() {
     var mount = document.getElementById("book-live-estimate");
     if (!mount) return;
@@ -262,6 +300,11 @@
     } else {
       mount.appendChild(summaryRow("Estimated monthly base", basePrice));
       if (priced) mount.appendChild(summaryRow("One-time extras estimate", dollars(priced)));
+    }
+    var totals = deliverableChanges(chosen);
+    if (totals.length) {
+      mount.appendChild(el("p", "book-live-deliverables",
+        "Your updated deliverables: " + totals.join(" · ")));
     }
     mount.appendChild(el("p", "book-live-disclaimer",
       chosen.length
@@ -317,6 +360,15 @@
       box.appendChild(ul);
       box.appendChild(el("p", "", "Listed rates cover the described unit. We confirm the complete quote before payment."));
       summary.appendChild(box);
+      var newDeliverables = deliverableChanges(details.addOns);
+      if (newDeliverables.length) {
+        var delta = el("div", "book-summary-deliverables");
+        delta.appendChild(el("h3", "", "What your extras add to the base"));
+        var list = el("ul");
+        newDeliverables.forEach(function (line) { list.appendChild(el("li", "", line)); });
+        delta.appendChild(list);
+        summary.appendChild(delta);
+      }
     }
     summary.appendChild(summaryRow(subscription ? "Base monthly service" : "Base project", basePrice));
     if (priced) summary.appendChild(summaryRow("Priced add-ons · one-time", "+" + dollars(priced)));
