@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <title>Book Content + Growth Retainer | SWFT Studios</title>
-  <meta name="description" content="Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site. Start at $450/mo. Secure checkout via Stripe.">
+  <meta name="description" content="Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site. Customize your request, then book the base at $450/mo or ask for a custom quote.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="canonical" href="https://www.swftstudios.com/book/content-growth-retainer.html">
   <meta property="og:title" content="Book Content + Growth Retainer | SWFT Studios">
-  <meta property="og:description" content="Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site. Start at $450/mo. Secure checkout via Stripe.">
+  <meta property="og:description" content="Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site. Customize your request, then book the base at $450/mo or ask for a custom quote.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.swftstudios.com/book/content-growth-retainer.html">
   <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Book Content + Growth Retainer | SWFT Studios">
-  <meta name="twitter:description" content="Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site. Start at $450/mo. Secure checkout via Stripe.">
+  <meta name="twitter:description" content="Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site. Customize your request, then book the base at $450/mo or ask for a custom quote.">
   <link rel="stylesheet" href="/css/swft-nav.css">
   <link rel="stylesheet" href="/css/page-shell.css">
   <link rel="stylesheet" href="/css/contact-page.css">
@@ -28,16 +28,21 @@
 
       <header class="ps-hero ps-hero--left book-page">
         <p class="ps-eyebrow">Monthly retainer</p>
-        <h1 class="ps-title">Book <span class="ps-accent">Content + Growth Retainer</span></h1>
-        <p class="ps-lead">Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site.</p>
+        <h1 class="ps-title">Make <span class="ps-accent">Content + Growth Retainer</span> yours.</h1>
+        <p class="ps-lead">Build a request that feels like your business. Choose the features, content and details you want, one step at a time.</p>
         <div class="book-price-chip" aria-label="Checkout amount">
-          <strong>$450/mo</strong>
-          <span>Starting at $450/mo · per month</span>
+          <strong>Starting at $450/mo</strong>
+          <span>Base monthly plan · Extra requests quoted separately</span>
         </div>
       </header>
 
+      <div class="book-flow-progress" aria-label="Order progress">
+        <span data-book-progress="0" aria-current="step">01 <b>Customize</b></span>
+        <span data-book-progress="1">02 <b>Your business</b></span>
+        <span data-book-progress="2">03 <b>Review</b></span>
+      </div>
       <div class="book-grid">
-        <div>
+        <div class="book-inclusions">
           <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">What&rsquo;s included</h2>
           <ul class="book-includes" role="list"><li>Monthly photo and/or short-form video</li><li>Google Business Profile posting</li><li>Review management support</li><li>Month-to-month, no long contract</li></ul>
           <p class="book-note">Scope depends on shoot frequency and how many channels we keep current each month.</p>
@@ -45,11 +50,20 @@
           <p class="book-alt">Not sure this is the right fit? <a href="/growth-audit?plan=content-growth-retainer">Get a Free Growth Audit</a> or <a href="/website-pricing.html#content-growth-retainer">compare all pricing</a>.</p>
         </div>
 
-        <div class="ga-form-card">
-          <h2>Your details</h2>
-          <p class="ga-step-help" style="margin-top:-0.5rem;">We&rsquo;ll save your info, then send you to secure Stripe payment.</p>
-          <div id="book-status" class="ga-status" hidden></div>
-          <form id="book-tier-form" data-tier-id="content-growth-retainer" novalidate>
+        <div class="ga-form-card book-order-panel">
+          <div id="book-status" class="ga-status" role="alert" hidden></div>
+          <form id="book-tier-form" data-tier-id="content-growth-retainer" data-base-price="$450/mo" data-billing-mode="subscription" novalidate>
+            <section class="book-step" data-book-step="0" aria-label="Customize your order">
+              <p class="book-step-kicker">01 / MAKE IT YOURS</p>
+              <h2>What are we creating together?</h2>
+              <p class="book-step-lead">First, pick your priority. Then add anything else you&#39;d like us to quote. You choose the ingredients.</p>
+              <div id="book-configurator"></div>
+              <div class="book-actions"><button type="button" class="book-action-primary" data-book-next>Continue to your details →</button></div>
+            </section>
+            <section class="book-step" data-book-step="1" aria-label="Your business details" hidden>
+              <p class="book-step-kicker">02 / THE DETAILS</p>
+              <h2>Tell us about your business</h2>
+              <p class="book-step-lead">A few details help us make your order feel like yours.</p>
             <div class="ga-hp" aria-hidden="true">
               <label for="swft_hp_confirm">Leave blank</label>
               <input type="text" id="swft_hp_confirm" name="swft_hp_confirm" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore="true" data-form-type="other" value="">
@@ -75,20 +89,40 @@
               <input type="text" id="book-website" name="website" placeholder="https:// or @handle">
             </div>
             <div class="ga-field">
-              <label for="book-notes">Anything we should know?</label>
+              <label for="book-timeline">When would you like to get started?</label>
+              <select id="book-timeline" name="timeline"><option value="">Choose a timeline (optional)</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–2 months</option><option>Just exploring</option></select>
+            </div>
+            <div class="ga-field">
+              <label for="book-platform">Preferred platform (if applicable)</label>
+              <select id="book-platform" name="platform"><option value="">Open to your recommendation</option><option>Webflow</option><option>Shopify</option><option>Keep my existing site</option><option>Not sure / not building a site</option></select>
+            </div>
+            <div class="ga-field">
+              <label for="book-notes">Tell us what you&#39;re envisioning</label>
               <textarea id="book-notes" name="notes" rows="3" placeholder="Locations, timelines, content you already have…"></textarea>
             </div>
+            <div class="book-actions"><button type="button" class="book-action-back" data-book-back>← Back</button><button type="button" class="book-action-primary" data-book-next>Review your order →</button></div>
+            </section>
+            <section class="book-step" data-book-step="2" aria-label="Review and confirm" hidden>
+              <p class="book-step-kicker">03 / ALMOST THERE</p>
+              <h2>Review your order</h2>
+              <p class="book-step-lead">Make sure we have it right before sending your request.</p>
+              <div id="book-order-summary" aria-live="polite"></div>
+              <label class="book-quote-option" for="book-quote-first"><input type="checkbox" id="book-quote-first"><span><strong>I&#39;d like a quote before paying</strong><small>No payment today. We&#39;ll review your request and email a scoped quote.</small></span></label>
+              <p id="book-payment-explainer" class="book-payment-explainer"></p>
             <div class="ga-field">
               <label for="book-consent" style="text-transform:none;letter-spacing:0;font-weight:500;display:flex;gap:0.55rem;align-items:flex-start;line-height:1.4;">
                 <input type="checkbox" id="book-consent" name="consent" required style="margin-top:0.2rem;flex:0 0 auto;width:auto;min-height:0;">
-                <span>I understand this starts checkout at <strong>$450/mo</strong> and final scope is confirmed after intake. <span class="req">*</span></span>
+                <span id="book-consent-label">I understand this starts checkout at <strong>$450/mo</strong> for the base monthly plan; optional extras require my approval of a separate quote. <span class="req">*</span></span>
               </label>
             </div>
-            <button type="submit" id="book-submit" class="button is-course w-inline-block book-submit" style="width:100%;border:0;cursor:pointer;">
+            <div class="book-actions"><button type="button" class="book-action-back" data-book-back>← Back</button>
+            <button type="submit" id="book-submit" class="button is-course w-inline-block book-submit" style="flex:1;min-width:11rem;border:0;cursor:pointer;">
               <div class="button_bg"></div>
               <div class="button_text">Start at $450/mo</div>
-            </button>
+            </button></div>
+            </section>
           </form>
+          <noscript><p class="book-note">JavaScript is needed to customize your order. <a href="/growth-audit">Tell us about your project here instead.</a></p></noscript>
         </div>
       </div>
     </div>
