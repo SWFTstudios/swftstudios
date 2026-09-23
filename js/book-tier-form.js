@@ -119,7 +119,7 @@
   function pricedSubtotal(items) {
     return items.reduce(function (total, item) {
       var p = addonPricing(item.id);
-      return total + (p ? p.cents : 0);
+      return total + (p ? p.cents * item.quantity : 0);
     }, 0);
   }
 
@@ -192,13 +192,19 @@
         '</legend><p class="book-choice-help">' + escapeHtml(group.intro) +
         '</p><div class="book-choice-grid">' + group.items.map(function (item) {
           var price = addonPricing(item[0]);
-          return '<label class="book-choice book-choice--addon"><input type="checkbox" name="book-addon" value="' +
+          var quantity = price
+            ? '<div class="book-addon-quantity" hidden><label for="book-qty-' + escapeHtml(item[0]) +
+              '">Quantity</label><select id="book-qty-' + escapeHtml(item[0]) +
+              '" aria-label="' + escapeHtml(item[1]) +
+              ' quantity" disabled><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>'
+            : "";
+          return '<div class="book-addon-item"><label class="book-choice book-choice--addon"><input type="checkbox" name="book-addon" value="' +
             escapeHtml(item[0]) + '" data-addon-group="' + escapeHtml(group.title) +
             '" data-addon-label="' + escapeHtml(item[1]) +
             '"><span class="book-choice-body"><strong>' + escapeHtml(item[1]) +
             '</strong><small>' + escapeHtml(item[2]) +
             '</small><em>' + (price ? "+" + dollars(price.cents) + " / " + escapeHtml(price.unit) : "Custom quote") +
-            '</em></span><span class="book-choice-check" aria-hidden="true">✓</span></label>';
+            '</em></span><span class="book-choice-check" aria-hidden="true">✓</span></label>' + quantity + '</div>';
         }).join("") + '</div></fieldset>';
     }).join("");
 
@@ -215,7 +221,10 @@
       return {
         id: el.value,
         label: el.getAttribute("data-addon-label") || el.value,
-        group: el.getAttribute("data-addon-group") || ""
+        group: el.getAttribute("data-addon-group") || "",
+        quantity: addonPricing(el.value) && el.closest(".book-addon-item").querySelector("select")
+          ? Math.min(5, Math.max(1, Number(el.closest(".book-addon-item").querySelector("select").value) || 1))
+          : 1
       };
     });
   }
@@ -298,8 +307,9 @@
       var ul = el("ul");
       details.addOns.forEach(function (addon) {
         var price = addonPricing(addon.id);
-        ul.appendChild(el("li", "", addon.label + " — " +
-          (price ? "+" + dollars(price.cents) + " / " + price.unit : "Custom quote")));
+        ul.appendChild(el("li", "", addon.label +
+          (price && addon.quantity > 1 ? " × " + addon.quantity : "") + " — " +
+          (price ? "+" + dollars(price.cents * addon.quantity) : "Custom quote")));
       });
       box.appendChild(ul);
       box.appendChild(el("p", "", "Listed rates cover the described unit. We confirm the complete quote before payment."));
@@ -429,6 +439,17 @@
 
   form.addEventListener("change", function (event) {
     if (event.target.matches('input[name="book-addon"]')) {
+      var item = event.target.closest(".book-addon-item");
+      var qty = item && item.querySelector(".book-addon-quantity");
+      if (qty) {
+        qty.hidden = !event.target.checked;
+        var selector = qty.querySelector("select");
+        selector.disabled = !event.target.checked;
+        if (!event.target.checked) selector.value = "1";
+      }
+    }
+    if (event.target.matches('input[name="book-addon"]') ||
+        event.target.closest(".book-addon-quantity")) {
       renderLiveEstimate();
       if (currentStep === 2) renderSummary();
     }
