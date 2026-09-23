@@ -275,3 +275,62 @@
 @media (prefers-reduced-motion: reduce) {
   .book-choice { transition: none; }
 }
+
+
+/* Repeatable add-on rate and live estimate. */
+.book-addon-item { min-width: 0; display: flex; flex-direction: column; }
+.book-addon-item .book-choice { flex: 1; }
+.book-addon-item .book-choice-body em {
+  align-self: flex-start;
+  border: 1px solid rgba(127,255,229,.32);
+  background: rgba(127,255,229,.08);
+  border-radius: 5px;
+  padding: .35rem .55rem;
+  margin-top: .35rem;
+  font-size: .75rem;
+  font-style: normal;
+  line-height: 1.35;
+}
+.book-addon-item .book-choice-body em:empty { display: none; }
+.book-addon-quantity {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: .65rem .8rem;
+  border: 1px solid rgba(127,255,229,.3);
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  background: rgba(127,255,229,.065);
+}
+.book-addon-quantity[hidden] { display: none; }
+.book-addon-quantity label { font-size: .77rem; font-weight: 600; color: #d5e5df; }
+.book-addon-quantity select {
+  min-width: 4.4rem; min-height: 40px; padding: .4rem .65rem; border-radius: 6px;
+  border: 1px solid rgba(127,255,229,.5); background: #101711; color: #fff; font: inherit;
+}
+.book-addon-quantity select:focus-visible { outline: 2px solid #7fffe5; outline-offset: 3px; }
+.book-live-estimate {
+  margin: 1.3rem 0 0;
+  padding: 1.3rem;
+  border: 1px solid rgba(127,255,229,.45);
+  border-radius: 11px;
+  background: linear-gradient(140deg,rgba(127,255,229,.12),rgba(127,255,229,.03) 60%), #0a100e;
+}
+.book-live-kicker {
+  margin: 0 0 .7rem;
+  color: #a9ffea;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+.book-live-estimate .book-summary-row { padding: .75rem 0; }
+.book-live-estimate .book-summary-row:last-of-type {
+  border-top: 1px solid rgba(127,255,229,.24);
+  border-bottom: 0;
+  background: transparent;
+}
+.book-live-disclaimer { font-size: .75rem; line-height: 1.6; color: #bfd0cb; margin: .9rem 0 0; }
+@media (max-width: 600px) {
+  .book-live-estimate { padding: 1rem; }
+}
