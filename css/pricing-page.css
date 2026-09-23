@@ -672,3 +672,21 @@
   .hp-pricing-tab-panel { animation: none; }
   .hp-pricing-card { transition: none; }
 }
+
+/* Single-price cards: the visible number is the genuine checkout-aligned starting rate. */
+.hp-pricing-card .hp-pricing-price {
+  color: var(--pp-accent, #7fffe5);
+  font-size: clamp(1.55rem, 2.6vw, 2.05rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+  margin: .12rem 0 .2rem;
+}
+.hp-pricing-card .hp-pricing-price-note {
+  display: block;
+  margin: .4rem 0 0;
+  letter-spacing: .02em;
+  font-size: .76rem;
+  color: var(--pp-muted, #a8a8a8);
+  font-weight: 450;
+}
