@@ -273,7 +273,20 @@
 
   function renderSummary() {
     var details = customization();
+    if (details.addOns.length) {
+      quoteFirst.checked = true;
+      quoteFirst.disabled = true;
+      forcedQuote = true;
+      quoteFirst.closest(".book-quote-option").classList.add("is-required-quote");
+    } else {
+      if (forcedQuote) quoteFirst.checked = false;
+      forcedQuote = false;
+      quoteFirst.disabled = false;
+      quoteFirst.closest(".book-quote-option").classList.remove("is-required-quote");
+    }
     var quote = isQuote();
+    var priced = pricedSubtotal(details.addOns);
+    var customCount = details.addOns.filter(function (a) { return !addonPricing(a.id); }).length;
     summary.replaceChildren();
     summary.appendChild(summaryRow("Package", document.querySelector(".ps-title .ps-accent").textContent));
     summary.appendChild(summaryRow("Your priority", details.goal));
@@ -283,25 +296,33 @@
       var box = el("div", "book-summary-extras");
       box.appendChild(el("h3", "", "Your requested add-ons"));
       var ul = el("ul");
-      details.addOns.forEach(function (addon) { ul.appendChild(el("li", "", addon.label)); });
+      details.addOns.forEach(function (addon) {
+        var price = addonPricing(addon.id);
+        ul.appendChild(el("li", "", addon.label + " — " +
+          (price ? "+" + dollars(price.cents) + " / " + price.unit : "Custom quote")));
+      });
       box.appendChild(ul);
-      box.appendChild(el("p", "", "We'll price these separately after reviewing your request."));
+      box.appendChild(el("p", "", "Listed rates cover the described unit. We confirm the complete quote before payment."));
       summary.appendChild(box);
     }
-    summary.appendChild(summaryRow(quote ? "Today's payment" : (subscription ? "Base monthly checkout" : "Base checkout amount"),
-      quote ? "$0 · quote request" : basePrice));
+    summary.appendChild(summaryRow(subscription ? "Base monthly service" : "Base project", basePrice));
+    if (priced) summary.appendChild(summaryRow("Priced add-ons · one-time", "+" + dollars(priced)));
+    if (customCount) summary.appendChild(summaryRow("Custom-priced items", customCount + " to be quoted"));
+    if (!subscription && details.addOns.length) {
+      summary.appendChild(summaryRow("Estimated investment", dollars(baseCents + priced) +
+        (customCount ? " + custom quote" : "")));
+    }
+    if (subscription && priced) summary.appendChild(summaryRow("One-time extras estimate", dollars(priced)));
+    summary.appendChild(summaryRow("Today's payment", quote ? "$0 · quote request" : basePrice));
     if (details.addOns.length) {
-      quoteFirst.checked = true;
-      quoteFirst.disabled = true;
-      quoteFirst.closest(".book-quote-option").classList.add("is-required-quote");
-      paymentExplainer.textContent = "Because you selected extras, we'll review and price your custom scope first. No payment is taken on this request.";
+      paymentExplainer.textContent = "The estimate includes the base and listed one-time add-ons only." +
+        (customCount ? " Custom-priced requests are not included in the numeric estimate." : "") +
+        " We'll confirm your full quote before taking payment; today's request is free.";
     } else {
-      quoteFirst.disabled = false;
-      quoteFirst.closest(".book-quote-option").classList.remove("is-required-quote");
       paymentExplainer.textContent = quoteFirst.checked
         ? "We'll email a quote for your base service. Nothing is charged today."
         : (subscription ? "Next: secure Stripe Checkout for the base " + basePrice + " monthly plan."
-          : "Next: secure Stripe Checkout for the " + basePrice + " base project. Any changes require a separate quote and approval.");
+          : "Next: secure Stripe Checkout for the " + basePrice + " base project.");
     }
     consentLabel.textContent = quote
       ? "I understand this sends a custom quote request. No payment will be taken today."
@@ -383,6 +404,7 @@
   }
 
   buildConfigurator();
+  renderLiveEstimate();
   setStep(0);
   try {
     var params = new URLSearchParams(window.location.search);
@@ -405,6 +427,12 @@
     setStep(Math.min(2, currentStep + 1));
   });
 
+  form.addEventListener("change", function (event) {
+    if (event.target.matches('input[name="book-addon"]')) {
+      renderLiveEstimate();
+      if (currentStep === 2) renderSummary();
+    }
+  });
   quoteFirst.addEventListener("change", renderSummary);
 
   form.addEventListener("submit", function (event) {
