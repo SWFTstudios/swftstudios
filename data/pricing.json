@@ -8,7 +8,7 @@
   "projectTiers": {
     "id": "project-tiers",
     "label": "Build your online presence",
-    "intro": "Choose the smallest package that solves your next business problem. These are starting prices; your final quote is based on the site, shoot and deliverables you actually need.",
+    "intro": "Know exactly what comes with your starting package: page count, shoot hours, photos, videos and launch work are itemized before you choose extras.",
     "tiers": [
       {
         "id": "gbp-refresh",
@@ -16,13 +16,16 @@
         "priceLabel": "Starting at $400",
         "priceNote": "one-time",
         "featured": false,
-        "description": "No new website. On-site photo, short-form video, and a cleaned-up Google Business Profile so locals see quality now.",
-        "scopeDriver": "Entry offer when you need fresh visuals and GBP setup without rebuilding the site.",
+        "description": "Refresh your local presence with a 90-minute shoot, 15 edited photos, 1 short video and a Google Business Profile update.",
+        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
         "includes": [
-          "On-site photo shoot",
-          "Short-form video content",
-          "Google Business Profile optimization (categories, services, photos, posts)",
-          "Review-generation setup"
+          "90-minute on-site photo + video session at 1 business location",
+          "15 edited high-resolution photos",
+          "1 edited vertical video (15–30 seconds)",
+          "Optimization of 1 existing Google Business Profile: categories, services and description",
+          "Upload up to 10 selected photos and publish 1 Google Business Profile post",
+          "1 review-request link or QR code setup",
+          "1 consolidated edit/revision round"
         ],
         "cta": "Start with GBP Content Refresh",
         "bookUrl": "/book/gbp-content-refresh.html",
@@ -32,14 +35,22 @@
           "productName": "SWFT. GBP Content Refresh (project start)",
           "ctaLabel": "Pay $400 to start",
           "priceDisplay": "$400",
-          "billingNote": "Starts at $400 for a focused local refresh. Final deliverables and project total are confirmed after intake.",
+          "billingNote": "The $400 starter price covers the included scope shown above; any extras are quoted separately before payment.",
           "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
           "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
         },
         "bestFor": "LOOK GREAT LOCALLY",
-        "checkoutNote": "Final scope and total are confirmed before work begins.",
+        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
         "badge": "Quick first win",
-        "baseScopeNote": "Base covers a focused refresh for one local business location. Shoot duration, edited asset count and access are confirmed with you before work begins; additional locations or edits are extra."
+        "baseScopeNote": "Includes one local business location and one existing, verified Google Business Profile with owner access. Photos are selected from the included shoot. No website build, extra shoot time or additional video edits are included.",
+        "baseCounts": {
+          "photos": 15,
+          "videos": 1,
+          "pages": 0,
+          "shootMinutes": 90,
+          "locations": 1,
+          "profiles": 1
+        }
       },
       {
         "id": "website-only",
@@ -47,13 +58,16 @@
         "priceLabel": "Starting at $800",
         "priceNote": "one-time · you supply content",
         "featured": false,
-        "description": "A conversion-focused site built and customized on Webflow or Shopify when you already have usable photos and copy.",
-        "scopeDriver": "Client-supplied photos and copy keep the project lean. Page count, integrations and revision rounds shape the final quote.",
+        "description": "A responsive site of up to 3 pages using your content, with one contact or booking path and launch support.",
+        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
         "includes": [
-          "Site built and customized on Webflow or Shopify",
-          "Mobile-first layout and clear messaging",
-          "Lead capture or booking path",
-          "Basic SEO foundations and launch support"
+          "Up to 3 responsive site pages (for example: Home, Services/Shop and Contact)",
+          "Design and development in Webflow or Shopify using your supplied branding, copy and photos",
+          "1 standard contact/lead form or link to an existing booking system",
+          "Shopify option: entry of up to 5 client-supplied products and standard existing Shopify checkout",
+          "Basic SEO titles and descriptions on the included pages",
+          "Mobile testing and 1 consolidated revision round",
+          "Domain connection and launch assistance; platform and domain fees separate"
         ],
         "cta": "Start Website Only",
         "bookUrl": "/book/website-only.html",
@@ -63,13 +77,22 @@
           "productName": "SWFT. Website Only (project start)",
           "ctaLabel": "Pay $800 to start",
           "priceDisplay": "$800",
-          "billingNote": "Starts at $800 when you supply photos and copy. Final site scope and project total are confirmed after intake.",
+          "billingNote": "The $800 starter price covers the included scope shown above; any extras are quoted separately before payment.",
           "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
           "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
         },
         "bestFor": "MAKE IT EASY TO BOOK YOU",
-        "checkoutNote": "Final scope and total are confirmed before work begins.",
-        "baseScopeNote": "You supply your photos and copy. We agree on the included page count, one standard lead or booking path, and revision allowance before work begins; additional pages or advanced integrations are extra."
+        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+        "baseScopeNote": "You provide your logo, copy, photos and any product details. No photo/video session is included. Extra pages, additional products, complex bookings, copywriting and integrations are quoted separately.",
+        "baseCounts": {
+          "photos": 0,
+          "videos": 0,
+          "pages": 3,
+          "shootMinutes": 0,
+          "locations": 0,
+          "profiles": 0,
+          "products": 5
+        }
       },
       {
         "id": "website-content-half",
@@ -78,13 +101,17 @@
         "priceNote": "one-time · half-day shoot",
         "featured": true,
         "badge": "Signature package",
-        "description": "Website build plus a 2- to 4-hour on-location photo and video shoot, edited and placed on the site and Google Business Profile.",
-        "scopeDriver": "Right fit when the business looks better in person than online and needs both a site and real content in one project.",
+        "description": "Up to 5 website pages plus a 3-hour shoot: 50 edited photos and 3 short-form videos included.",
+        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
         "includes": [
-          "Website build and customization",
-          "Half-day on-location photo and video shoot",
-          "Edited assets for the site and GBP",
-          "Lead paths wired for inquiries"
+          "Up to 5 responsive website pages built in Webflow or Shopify",
+          "1 on-location photo + video session lasting up to 3 hours at 1 business location",
+          "50 edited high-resolution photos from the included session",
+          "3 edited vertical short-form videos (15–30 seconds each)",
+          "Website image/video placement plus upload of up to 10 photos to your existing Google Business Profile (if access is provided)",
+          "1 standard inquiry form or existing booking link",
+          "Basic on-page SEO, mobile checks and launch support",
+          "1 consolidated website/content revision round"
         ],
         "cta": "Start Website + Content",
         "bookUrl": "/book/website-content-half.html",
@@ -94,13 +121,21 @@
           "productName": "SWFT. Website + Content Capture (project start)",
           "ctaLabel": "Pay $2,000 to start",
           "priceDisplay": "$2,000",
-          "billingNote": "Starts at $2,000 for a website with on-site content capture. Final shoot and site scope are confirmed after intake.",
+          "billingNote": "The $2,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
           "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
           "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
         },
         "bestFor": "SHOW THE WORK, THEN SELL IT",
-        "checkoutNote": "Final scope and total are confirmed before work begins.",
-        "baseScopeNote": "Combines one scoped website with one 2–4-hour on-location photo/video session. Included page count and finished asset count are confirmed before work begins; more filming time or edits are extra."
+        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+        "baseScopeNote": "Your 50 photos and 3 short videos are INCLUDED at $2,000. You supply brand assets and initial site copy; extra photos, extra reels, added pages, filming hours and additional locations are separate. Full GBP optimization is not included.",
+        "baseCounts": {
+          "photos": 50,
+          "videos": 3,
+          "pages": 5,
+          "shootMinutes": 180,
+          "locations": 1,
+          "profiles": 0
+        }
       },
       {
         "id": "website-content-full",
@@ -108,13 +143,16 @@
         "priceLabel": "Starting at $3,000",
         "priceNote": "one-time · full-day shoot",
         "featured": false,
-        "description": "Larger site with more pages or stakeholder complexity, plus a full-day content shoot across multiple locations or product lines.",
-        "scopeDriver": "For multi-location businesses, ministries or catalogs needing broader content coverage and additional stakeholders.",
+        "description": "Up to 7 site pages and a 6-hour shoot covering up to 2 nearby locations, with 80 photos and 5 short videos.",
+        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
         "includes": [
-          "Expanded site architecture and pages",
-          "Full-day content shoot (multiple locations or products)",
-          "Edited photo and video package",
-          "Site and GBP content integration"
+          "Up to 7 responsive website pages in Webflow or Shopify",
+          "1 full-day content session of up to 6 hours, including travel between up to 2 nearby locations",
+          "80 edited high-resolution photos from the included session",
+          "5 edited vertical short-form videos (15–30 seconds each)",
+          "Content placement across the included site plus upload of up to 15 photos to your existing Google Business Profile (with access)",
+          "1 standard lead/booking path and basic on-page SEO",
+          "Mobile testing, launch assistance and up to 2 consolidated revision rounds"
         ],
         "cta": "Start Extended Project",
         "bookUrl": "/book/website-content-full.html",
@@ -124,20 +162,28 @@
           "productName": "SWFT. Website + Extended Content (project start)",
           "ctaLabel": "Pay $3,000 to start",
           "priceDisplay": "$3,000",
-          "billingNote": "Starts at $3,000 for an expanded website and content project. Multi-location or complex builds are quoted after intake.",
+          "billingNote": "The $3,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
           "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
           "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
         },
         "bestFor": "GO BEYOND ONE LOCATION",
-        "checkoutNote": "Final scope and total are confirmed before work begins.",
-        "baseScopeNote": "Covers an expanded website and one full-day content session. The included locations, pages, edited assets and revisions are confirmed before work begins; additional production is extra."
+        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+        "baseScopeNote": "The 6-hour production window includes local travel between the two approved shoot locations. You supply branding and initial copy. Additional pages, products, filming hours, locations or video edits are extras; full GBP optimization is not included.",
+        "baseCounts": {
+          "photos": 80,
+          "videos": 5,
+          "pages": 7,
+          "shootMinutes": 360,
+          "locations": 2,
+          "profiles": 0
+        }
       }
     ]
   },
   "ongoingTiers": {
     "id": "ongoing",
     "label": "Stay visible after launch",
-    "intro": "Keep your visuals and website current with a monthly plan scoped to the work your business needs. Choose the starting point and we'll define the deliverables together.",
+    "intro": "Each monthly tier defines its recurring visits, edited assets and managed channels. Extras are quoted separately before you subscribe.",
     "tiers": [
       {
         "id": "content-growth-retainer",
@@ -145,13 +191,16 @@
         "priceLabel": "Starting at $450/mo",
         "priceNote": "per month",
         "featured": false,
-        "description": "Ongoing monthly photo and video content, GBP posting, and review management for businesses that already have a site.",
-        "scopeDriver": "Scope depends on shoot frequency and how many channels we keep current each month.",
+        "description": "Monthly starter content: 60-minute shoot, 12 edited photos, 1 short video and 2 Google Business Profile posts.",
+        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
         "includes": [
-          "Monthly photo and/or short-form video",
-          "Google Business Profile posting",
-          "Review management support",
-          "Month-to-month, no long contract"
+          "1 on-site photo + video visit of up to 60 minutes per month at 1 location",
+          "12 edited high-resolution photos per month",
+          "1 edited vertical short-form video (15–30 seconds) per month",
+          "2 Google Business Profile posts per month for 1 existing profile",
+          "Monthly review-response guidance/templates (client posts responses)",
+          "1 consolidated revision round per monthly content batch",
+          "Month-to-month service; monthly deliverables do not roll over"
         ],
         "cta": "Start Content Retainer",
         "bookUrl": "/book/content-growth-retainer.html",
@@ -162,13 +211,21 @@
           "productName": "SWFT. Content + Growth Retainer",
           "ctaLabel": "Start at $450/mo",
           "priceDisplay": "$450/mo",
-          "billingNote": "Monthly service starts at $450 for an entry scope. We agree on shoot frequency and channels before you subscribe.",
+          "billingNote": "The $450/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
           "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
           "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
         },
         "bestFor": "STAY TOP OF MIND",
-        "checkoutNote": "Monthly scope is confirmed before you subscribe.",
-        "baseScopeNote": "The base monthly plan includes the agreed photo and/or video deliverables, Google Business Profile posting, and review support. We confirm the monthly content volume and posting cadence before you subscribe; additional work is separate."
+        "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
+        "baseScopeNote": "This is the $450/mo starter scope, not unlimited content. The 12 photos, 1 video and 60-minute visit reset each month. Additional edits, filming time, social publishing or extra locations are quoted separately.",
+        "baseCounts": {
+          "photos": 12,
+          "videos": 1,
+          "pages": 0,
+          "shootMinutes": 60,
+          "locations": 1,
+          "profiles": 1
+        }
       },
       {
         "id": "full-growth-partner",
@@ -176,13 +233,17 @@
         "priceLabel": "Starting at $1,200/mo",
         "priceNote": "per month · custom scoped",
         "featured": false,
-        "description": "Content plus Meta ads management combined. Scoped to your offer, market, and ad budget. No published ceiling.",
-        "scopeDriver": "Bespoke. We define deliverables, ad management load, and reporting after a short intake.",
+        "description": "Monthly creative and campaign support: 3-hour shoot, 30 edited photos, 3 short videos and 1 managed Meta campaign.",
+        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
         "includes": [
-          "Ongoing content production",
-          "Meta ads management",
-          "GBP and review support as needed",
-          "Custom scope and reporting"
+          "1 on-site content session of up to 3 hours each month at 1 business location",
+          "30 edited high-resolution photos per month",
+          "3 edited vertical short-form videos (15–30 seconds each) per month",
+          "Management and optimization of 1 active Meta ad campaign using client-owned ad account",
+          "2 Google Business Profile posts per month for 1 existing profile",
+          "1 monthly performance summary and 1 review-response guidance update",
+          "1 consolidated revision round per monthly content batch",
+          "Month-to-month service; Meta ad spend, domains and platform fees separate"
         ],
         "cta": "Talk About Growth Partner",
         "bookUrl": "/book/full-growth-partner.html",
@@ -193,13 +254,22 @@
           "productName": "SWFT. Full Growth Partner",
           "ctaLabel": "Start at $1,200/mo",
           "priceDisplay": "$1,200/mo",
-          "billingNote": "Monthly management starts at $1,200. Ad spend is separate and paid from your ad account. We confirm scope before you subscribe.",
+          "billingNote": "The $1,200/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
           "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
           "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
         },
         "bestFor": "PAIR CONTENT WITH CAMPAIGNS",
-        "checkoutNote": "Monthly scope is confirmed before you subscribe.",
-        "baseScopeNote": "The base monthly partnership includes ongoing content and management of agreed Meta ad campaigns, with local profile or review support as scoped. We confirm production volume, campaigns and reporting cadence before you subscribe. Ad spend is separate."
+        "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
+        "baseScopeNote": "Starts at $1,200/mo for one location and one managed Meta campaign. Media spend is paid separately by you to Meta. Extra campaigns, locations, posts, production time and edited assets are quoted separately; monthly content does not roll over.",
+        "baseCounts": {
+          "photos": 30,
+          "videos": 3,
+          "pages": 0,
+          "shootMinutes": 180,
+          "locations": 1,
+          "profiles": 1,
+          "campaigns": 1
+        }
       }
     ]
   },
