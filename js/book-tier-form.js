@@ -191,19 +191,23 @@
       return '<fieldset class="book-choice-field"><legend>' + escapeHtml(group.title) +
         '</legend><p class="book-choice-help">' + escapeHtml(group.intro) +
         '</p><div class="book-choice-grid">' + group.items.map(function (item) {
+          var price = addonPricing(item[0]);
           return '<label class="book-choice book-choice--addon"><input type="checkbox" name="book-addon" value="' +
             escapeHtml(item[0]) + '" data-addon-group="' + escapeHtml(group.title) +
             '" data-addon-label="' + escapeHtml(item[1]) +
             '"><span class="book-choice-body"><strong>' + escapeHtml(item[1]) +
             '</strong><small>' + escapeHtml(item[2]) +
-            '</small><em>Quote add-on</em></span><span class="book-choice-check" aria-hidden="true">✓</span></label>';
+            '</small><em>' + (price ? "+" + dollars(price.cents) + " / " + escapeHtml(price.unit) : "Custom quote") +
+            '</em></span><span class="book-choice-check" aria-hidden="true">✓</span></label>';
         }).join("") + '</div></fieldset>';
     }).join("");
 
     mount.innerHTML = '<fieldset class="book-choice-field book-goal-field"><legend>What matters most to you? <span class="req">*</span></legend>' +
       '<p class="book-choice-help">Choose one. We will tailor the project around your priority.</p>' +
       '<div class="book-choice-grid">' + goals + '</div></fieldset>' +
-      '<div class="book-addons-head"><h3>Want to add anything?</h3><p>Every extra is optional. Select what interests you; we will quote additions separately before any extra charge.</p></div>' + groups;
+      '<div class="book-addons-head"><h3>Want to add anything?</h3><p>Choose priced extras or request a custom feature. Displayed rates are for the defined unit of work; we confirm all optional scope before payment.</p></div>' +
+      groups +
+      '<div class="book-live-estimate" aria-live="polite" aria-atomic="true"><p class="book-live-kicker">YOUR ORDER SO FAR</p><div id="book-live-estimate"></div></div>';
   }
 
   function addons() {
@@ -230,6 +234,27 @@
 
   function isQuote() {
     return addons().length > 0 || quoteFirst.checked;
+  }
+
+  function renderLiveEstimate() {
+    var mount = document.getElementById("book-live-estimate");
+    if (!mount) return;
+    var chosen = addons();
+    var priced = pricedSubtotal(chosen);
+    var customCount = chosen.filter(function (a) { return !addonPricing(a.id); }).length;
+    mount.replaceChildren();
+    mount.appendChild(summaryRow(subscription ? "Base monthly plan" : "Base project", basePrice));
+    if (priced) mount.appendChild(summaryRow("Priced add-ons · one-time", "+" + dollars(priced)));
+    if (customCount) mount.appendChild(summaryRow("Custom-priced requests", customCount + " awaiting quote"));
+    if (!subscription) {
+      mount.appendChild(summaryRow("Estimated investment", dollars(baseCents + priced) +
+        (customCount ? " + custom quote" : "")));
+    } else {
+      mount.appendChild(summaryRow("Estimated monthly base", basePrice));
+      if (priced) mount.appendChild(summaryRow("One-time extras estimate", dollars(priced)));
+    }
+    mount.appendChild(el("p", "book-live-disclaimer",
+      "Estimate only, not a checkout total. Optional work is confirmed in a custom quote; no extras are charged now."));
   }
 
   function el(tag, className, value) {
