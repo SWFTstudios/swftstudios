@@ -47,3 +47,24 @@ Public-facing pages now show one **Starting at** amount per tier, aligned to the
 Before selling the $650/mo plan, agree on a written statement of work and provision a matching Stripe subscription price or invoice; never treat the existing $450/mo subscription as an automatic $650/mo subscription. Website/platform subscriptions, domains, ad spend and other third-party costs remain separately scoped.
 
 **Approval workflow:** Changes remain on `feature/clear-pricing-offer-ladder`. Review the Cloudflare Pages branch preview and **do not merge into main without Elombe's approval**. Existing booking URLs, payment amounts and Stripe price identifiers were preserved.
+
+## Guided-order add-ons (preview only, owner approval required)
+
+The onboarding builder displays **eight repeatable one-time add-on rates**. They are indicative pricing for the exact unit described, not a guarantee for more complex circumstances or a change to existing Stripe checkout prices.
+
+| Priced add-on | Displayed rate | Scope boundary |
+|---|---:|---|
+| Additional standard website page | +$175 / page | Beyond approved base page count; custom functionality scoped separately |
+| Local landing page | +$250 / page | Existing client assets and one location-specific page |
+| Extra edited Reel | +$125 / video | Existing footage from same SWFT shoot; capture isn't included |
+| 10 extra edited photos | +$100 / pack | Additional picks from same shoot, not a new product shoot |
+| Extra filming hour | +$150 / hour | Same location, subject to availability |
+| Filmed testimonial | +$175 / testimonial | One interview captured during scheduled shoot and short edited cut |
+| Raw footage delivery | +$100 / shoot | Available source footage for one shoot; transfer arrangements confirmed |
+| Additional Google Business Profile | +$175 / profile | Existing eligible second profile; photography at the location separate |
+
+Each priced add-on offers **quantity 1–5**; the configurator calculates subtotal based on unit rate × quantity. All other selections continue to say **Custom quote**.
+
+**Review logic:** For one-time projects show starting base + priced extras = **estimated investment** and mark custom items as excluded; for recurring retainers show base **monthly** and selected extras **one-time** separately (do not sum them into an ambiguous single recurring price). Every request containing an add-on routes to **custom quote, no payment**. Base-only clients may use the original fixed-price Stripe link or ask for a quote.
+
+The backend has an allowlisted, independently priced catalog and recomputes amounts from tier and add-on IDs and validated quantities. Client-supplied numeric prices are ignored. The quote details go to Airtable Notes and SWFT emails. Review / approve all terms and scope with the customer **before collecting payment**. No subscription price, Stripe Price ID, Stripe Payment Link or production branch was changed as part of this feature.
