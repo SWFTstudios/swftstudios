@@ -74,3 +74,26 @@ The backend has an allowlisted, independently priced catalog and recomputes amou
 All six booking flows render **Included in your base package** ahead of the first goal and every add-on. The list is drawn directly from `data/pricing.json → tier.includes`, so it stays aligned with the price card and generator; the same included list appears again in the final review before the line-item estimate. The new `baseScopeNote` clarifies each starting package's boundaries without inventing fixed page, photo or Reel counts that have not yet been approved.
 
 Prior to publishing, approve and document fixed included counts and revision limits for any offer that will be sold at its checkout starting price. Currently the pages explicitly say the final page count, edit count, deliverables and/or monthly cadence are confirmed before work begins. The extra page, Reel, shoot-hour and photo add-ons refer to work **beyond** that approved base scope. This change does not alter Stripe prices, add-on rates or checkout routing.
+
+## Exact starter-package inclusions — owner-review draft (September 2026)
+
+**These are proposed deliverable commitments now shown in the branch preview, not previously agreed quantities or evidence of work already completed.** Review profitability and feasibility before approving a main-site launch. All content counts below refer to **edited final exports**, not shutter clicks, unedited footage or unlimited revisions.
+
+| Base tier | Project/visit allowance | Edited photos | Vertical shorts, 15–30s | Other firm inclusions |
+|---|---|---:|---:|---|
+| GBP Content Refresh — $400 | One 90-minute shoot, one location | 15 | 1 | One existing GBP refresh, 1 post, up to 10 GBP photo uploads, review link/QR, 1 consolidated edit round |
+| Website Only — $800 | Up to 3 responsive pages, no shoot | 0 | 0 | One form/existing booking link; Shopify alternative up to 5 client-supplied listings; metadata for included pages; 1 consolidated revision and launch help |
+| Website + Content — $2,000 | Up to 5 pages and 3-hour shoot at one location | **50** | **3** | Site placement, up to 10 GBP photo uploads with existing profile access, 1 standard lead path, basic SEO and 1 consolidated revision |
+| Website + Extended Content — $3,000 | Up to 7 pages, 6-hour total session incl. local travel between max 2 approved locations | 80 | 5 | Site placement, up to 15 GBP photo uploads, 1 standard lead path and up to 2 consolidated revisions |
+| Content + Growth — $450/mo | One 60-minute visit/mo at one location | 12/mo | 1/mo | 2 GBP posts/mo, review-response guidance, 1 consolidated content revision; monthly counts do not roll over |
+| Full Growth Partner — $1,200/mo | One 3-hour visit/mo at one location | 30/mo | 3/mo | One managed active Meta campaign, 2 GBP posts, monthly performance summary, review guidance and 1 consolidated content revision; ad spend separate |
+
+Pricing-page cards and onboarding inclusions use the **same source data** in `data/pricing.json`. The booking builder shows a metric strip before the extras and repeats the included list and quantities at review. Browser data attributes also expose the per-package included counts so add-ons can display contextual math, e.g. **50 included + 10 added = 60 edited photos** when selecting one +$100 photo pack.
+
+### Boundaries / acceptance for owner
+
+- This is an **exact defined starter scope**, using “up to” only for maximum quantities such as website pages, products, approved locations and shoot time. Photos/videos are promised edited final deliverable counts, contingent on production access and viable shoot conditions. Explicitly assess whether 50 edited photos, 3 videos, 5-page site and a 3-hour shoot are operationally sustainable at $2,000.
+- Client provides brand assets, initial copy and any Shopify product details; ownership and access to existing GBP and ad accounts are required for the corresponding work. Ad spend, hosting, Shopify/Webflow fees, paid integrations, transportation beyond agreed local coverage, raw footage and extra locations are not included unless expressly specified.
+- “Additional” pages and photo/video edits refer to **work above the included baseline**, not replacement of included quantities; repeatable add-on fees cover only their defined unit.
+- An $800 website-only project includes **no photo/video shoot**, so the configurator now presents “Add an original photo + video shoot — Custom quote” rather than implying an extra Reel can be bought from nonexistent session footage.
+- The starter pricing and existing Stripe links remain unchanged, as does the requirement to quote/approve all add-on combinations before charging them.
