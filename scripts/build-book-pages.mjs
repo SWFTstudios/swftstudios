@@ -45,6 +45,25 @@ function renderIncludes(items) {
   );
 }
 
+function renderBaseMetrics(tier) {
+  const c = tier.baseCounts || {};
+  const units = [
+    ["pages", c.pages, "Pages"],
+    ["photos", c.photos, "Edited photos"],
+    ["videos", c.videos, "Short videos"],
+    ["shootMinutes", c.shootMinutes, "Shoot", (n) => n % 60 === 0 ? n / 60 + " hr" : n + " min"],
+    ["products", c.products, "Shopify products"],
+    ["campaigns", c.campaigns, "Meta campaigns"]
+  ].filter(([, value]) => Number(value) > 0);
+  if (!units.length) return "";
+  return '<div class="book-base-metrics" aria-label="Base package quantities">' +
+    units.map(([, value, label, format]) =>
+      '<div class="book-base-metric"><strong>' +
+      escapeHtml(format ? format(value) : value) +
+      '</strong><span>' + escapeHtml(label) + '</span></div>').join("") +
+    '</div>';
+}
+
 function pageShell({ title, description, canonical, bodyClass, body }) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -121,7 +140,7 @@ function renderTierPage(tier) {
 
         <div class="ga-form-card book-order-panel">
           <div id="book-status" class="ga-status" role="alert" hidden></div>
-          <form id="book-tier-form" data-tier-id="${escapeHtml(tier.id)}" data-base-price="${escapeHtml(stripe.priceDisplay)}" data-billing-mode="${escapeHtml(stripe.mode)}" novalidate>
+          <form id="book-tier-form" data-tier-id="${escapeHtml(tier.id)}" data-base-price="${escapeHtml(stripe.priceDisplay)}" data-billing-mode="${escapeHtml(stripe.mode)}" data-base-photos="${escapeHtml(tier.baseCounts?.photos || 0)}" data-base-videos="${escapeHtml(tier.baseCounts?.videos || 0)}" data-base-pages="${escapeHtml(tier.baseCounts?.pages || 0)}" data-base-shoot-minutes="${escapeHtml(tier.baseCounts?.shootMinutes || 0)}" data-base-profiles="${escapeHtml(tier.baseCounts?.profiles || 0)}" novalidate>
             <section class="book-step" data-book-step="0" aria-label="Customize your order">
               <p class="book-step-kicker">01 / MAKE IT YOURS</p>
               <h2>What are we creating together?</h2>
@@ -133,6 +152,8 @@ function renderTierPage(tier) {
                   <strong class="book-base-price">${escapeHtml(tier.priceLabel)}</strong>
                   <p class="book-base-intro">Everything below is part of your starting package — not an add-on.</p>
                 </div>
+                ${renderBaseMetrics(tier)}
+                <h4 class="book-base-includes-label">EVERYTHING INCLUDED</h4>
                 ${renderIncludes(tier.includes)}
                 <p class="book-base-scope">${escapeHtml(tier.baseScopeNote || tier.scopeDriver || "We confirm the final included scope with you before work begins.")}</p>
               </div>
@@ -187,6 +208,7 @@ function renderTierPage(tier) {
               <p class="book-step-lead">Make sure we have it right before sending your request.</p>
               <div class="book-base-review" aria-label="Included in your base package">
                 <h3>Included in your base package <span>✓ No add-on charge</span></h3>
+                ${renderBaseMetrics(tier)}
                 ${renderIncludes(tier.includes)}
               </div>
               <div id="book-order-summary" aria-live="polite"></div>
