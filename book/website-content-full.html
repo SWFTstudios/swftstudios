@@ -42,13 +42,12 @@
         <span data-book-progress="2">03 <b>Review</b></span>
       </div>
       <div class="book-grid">
-        <div class="book-inclusions">
-          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">What&rsquo;s included</h2>
-          <ul class="book-includes" role="list"><li>Expanded site architecture and pages</li><li>Full-day content shoot (multiple locations or products)</li><li>Edited photo and video package</li><li>Site and GBP content integration</li></ul>
+        <aside class="book-inclusions" aria-label="Project details">
+          <h2 class="ps-title" style="font-size:1.25rem;margin-bottom:1rem;">Good to know</h2>
           <p class="book-note">For multi-location businesses, ministries or catalogs needing broader content coverage and additional stakeholders.</p>
           <p class="book-note">Starts at $3,000 for an expanded website and content project. Multi-location or complex builds are quoted after intake.</p>
           <p class="book-alt">Not sure this is the right fit? <a href="/growth-audit?plan=website-content-full">Get a Free Growth Audit</a> or <a href="/website-pricing.html#website-content-full">compare all pricing</a>.</p>
-        </div>
+        </aside>
 
         <div class="ga-form-card book-order-panel">
           <div id="book-status" class="ga-status" role="alert" hidden></div>
@@ -56,7 +55,17 @@
             <section class="book-step" data-book-step="0" aria-label="Customize your order">
               <p class="book-step-kicker">01 / MAKE IT YOURS</p>
               <h2>What are we creating together?</h2>
-              <p class="book-step-lead">First, pick your priority. Then add anything else you&#39;d like us to quote. You choose the ingredients.</p>
+              <p class="book-step-lead">Here is what you already get at the starting price. Then make it yours with extras, only if you need them.</p>
+              <div class="book-base-included" aria-labelledby="book-base-heading">
+                <div class="book-base-header">
+                  <p class="book-base-eyebrow">YOUR BASE PACKAGE <span class="book-base-badge">Included</span></p>
+                  <h3 id="book-base-heading">Website + Extended Content</h3>
+                  <strong class="book-base-price">Starting at $3,000</strong>
+                  <p class="book-base-intro">Everything below is part of your starting package — not an add-on.</p>
+                </div>
+                <ul class="book-includes" role="list"><li>Expanded site architecture and pages</li><li>Full-day content shoot (multiple locations or products)</li><li>Edited photo and video package</li><li>Site and GBP content integration</li></ul>
+                <p class="book-base-scope">Covers an expanded website and one full-day content session. The included locations, pages, edited assets and revisions are confirmed before work begins; additional production is extra.</p>
+              </div>
               <div id="book-configurator"></div>
               <div class="book-actions"><button type="button" class="book-action-primary" data-book-next>Continue to your details →</button></div>
             </section>
@@ -106,6 +115,10 @@
               <p class="book-step-kicker">03 / ALMOST THERE</p>
               <h2>Review your order</h2>
               <p class="book-step-lead">Make sure we have it right before sending your request.</p>
+              <div class="book-base-review" aria-label="Included in your base package">
+                <h3>Included in your base package <span>✓ No add-on charge</span></h3>
+                <ul class="book-includes" role="list"><li>Expanded site architecture and pages</li><li>Full-day content shoot (multiple locations or products)</li><li>Edited photo and video package</li><li>Site and GBP content integration</li></ul>
+              </div>
               <div id="book-order-summary" aria-live="polite"></div>
               <label class="book-quote-option" for="book-quote-first"><input type="checkbox" id="book-quote-first"><span><strong>I&#39;d like a quote before paying</strong><small>No payment today. We&#39;ll review your request and email a scoped quote.</small></span></label>
               <p id="book-payment-explainer" class="book-payment-explainer"></p>
