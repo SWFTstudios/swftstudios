@@ -18,14 +18,25 @@
   var currentStep = 0;
   var submitting = false;
 
-  // All additions are quote requests, never silently priced or added to the
-  // existing base Stripe Payment Link.
+  // All extras request a scoped quote; the existing Stripe link is base-only.
+  var pricedAddOns = {
+    "extra-pages": { cents: 17500, unit: "page" },
+    "local-page": { cents: 25000, unit: "page" },
+    "extra-reels": { cents: 12500, unit: "video" },
+    "extra-photos": { cents: 10000, unit: "10 edited photos" },
+    "extra-shoot": { cents: 15000, unit: "hour" },
+    "testimonials": { cents: 17500, unit: "testimonial" },
+    "raw-assets": { cents: 10000, unit: "shoot" },
+    "location-profiles": { cents: 17500, unit: "profile" }
+  };
+  var baseCents = Math.round(Number(basePrice.replace(/[^0-9.]/g, "")) * 100) || 0;
+  var forcedQuote = false;
   var catalog = {
     website: {
       title: "Website extras",
       intro: "More than the base build? Tell us what you'd like to explore.",
       items: [
-        ["extra-pages", "Additional pages", "More services, locations or campaign pages."],
+        ["extra-pages", "Additional page", "One standard page beyond the agreed base site; complex features quoted separately."],
         ["booking-advanced", "Advanced booking setup", "More complex calendars, deposits or scheduling workflows."],
         ["shopify-migration", "Store or catalog migration", "Move products or content from an existing platform."],
         ["automations", "CRM + email follow-ups", "Connect leads to email or follow-up automations."],
@@ -37,20 +48,21 @@
       title: "Content extras",
       intro: "Add the shots and formats your customers should see.",
       items: [
-        ["extra-reels", "More short-form videos", "An additional batch of edited Reels or Shorts."],
-        ["testimonials", "Customer testimonials", "Filmed interviews or social proof for your site."],
-        ["product-detail", "Product / detail photos", "A dedicated set of product or process shots."],
+        ["extra-reels", "Extra edited Reel", "One extra short-form edit from footage captured at the same shoot."],
+        ["testimonials", "Filmed testimonial", "One interview captured during your shoot with a short edited cut."],
+        ["extra-photos", "10 extra edited photos", "An additional selection from the same shoot; new product setups quoted separately."],
+        ["product-detail", "Product / detail photos", "A dedicated new set of product or process shots."],
         ["extra-location", "Additional location", "Cover a second address or shoot environment."],
-        ["extra-shoot", "Extra shooting time", "More coverage beyond the base session."],
-        ["raw-assets", "Raw footage delivery", "Request source media in addition to final edits."]
+        ["extra-shoot", "Extra filming hour", "One additional hour at the same location, subject to availability."],
+        ["raw-assets", "Raw footage delivery", "Available source footage from one shoot; transfer method confirmed at kickoff."]
       ]
     },
     local: {
       title: "Local visibility extras",
       intro: "Make it easier for nearby customers to find and trust you.",
       items: [
-        ["location-profiles", "More business locations", "Additional Google Business Profile work."],
-        ["local-page", "Local landing page", "A focused page to send nearby customers to."],
+        ["location-profiles", "Additional Google Business Profile", "One extra existing eligible profile; an on-site shoot at that location is separate."],
+        ["local-page", "Local landing page", "One additional location-focused landing page using existing assets."],
         ["review-flow", "Advanced review follow-up", "A tailored review-request workflow."],
         ["monthly-visibility", "Ongoing local content", "Ask about repeat visits and monthly updates."]
       ]
@@ -96,6 +108,20 @@
   };
 
   var tier = tiers[tierId] || tiers["website-content-half"];
+
+  function dollars(cents) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency", currency: "USD", maximumFractionDigits: 0
+    }).format(cents / 100);
+  }
+
+  function addonPricing(id) { return pricedAddOns[id] || null; }
+  function pricedSubtotal(items) {
+    return items.reduce(function (total, item) {
+      var p = addonPricing(item.id);
+      return total + (p ? p.cents : 0);
+    }, 0);
+  }
 
   function escapeHtml(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
