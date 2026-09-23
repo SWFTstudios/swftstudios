@@ -386,3 +386,65 @@
   .book-base-included { padding: 1.1rem .95rem; margin-bottom: 1.6rem; }
   .book-base-review { padding: 1rem .85rem; }
 }
+
+
+/* Fixed package quantities — glanceable before optional selections. */
+.book-base-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(105px,1fr));
+  gap: .55rem;
+  padding: .1rem 0 1.05rem;
+}
+.book-base-metric {
+  border: 1px solid rgba(127,255,229,.22);
+  background: rgba(3,8,7,.25);
+  border-radius: 9px;
+  padding: .8rem .62rem;
+  min-width: 0;
+}
+.book-base-metric strong {
+  display: block;
+  color: #abffed;
+  font-size: clamp(1.22rem,2.3vw,1.55rem);
+  line-height: 1.15;
+  letter-spacing: -.035em;
+}
+.book-base-metric span {
+  display: block;
+  color: #d0ddd7;
+  font-size: .69rem;
+  line-height: 1.35;
+  margin-top: .35rem;
+}
+.book-base-includes-label {
+  color: #aefff0;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  margin: .5rem 0 .8rem;
+}
+.book-base-review .book-base-metrics { margin-bottom: .6rem; grid-template-columns: repeat(auto-fit,minmax(88px,1fr)); }
+.book-base-review .book-base-metric { padding: .6rem .55rem; }
+.book-base-review .book-base-metric strong { font-size: 1.14rem; }
+.book-choice-body .book-choice-base-hint {
+  color: #b2e6da;
+  border-left: 2px solid rgba(127,255,229,.5);
+  padding-left: .55rem;
+  font-size: .72rem;
+}
+.book-live-deliverables,
+.book-summary-deliverables {
+  border-top: 1px solid rgba(127,255,229,.2);
+  margin: .85rem 0 0;
+  padding-top: .8rem;
+  color: #c4f1e5;
+  font-size: .8rem;
+  line-height: 1.6;
+}
+.book-summary-deliverables { padding: 1rem 1.2rem; margin: 0; }
+.book-summary-deliverables h3 { color: #e9fff8; font-size: .91rem; margin: 0 0 .5rem; }
+.book-summary-deliverables ul { margin: 0; padding-left: 1.2rem; }
+.book-summary-deliverables li { margin: .3rem 0; }
+@media (max-width: 600px) {
+  .book-base-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
