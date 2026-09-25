@@ -15,6 +15,8 @@ import { onRequestPost as handleGrowthAudit } from "../functions/api/growth-audi
 import { onRequestPost as handleContact } from "../functions/api/contact.js";
 // @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
 import { onRequestPost as handleBookTier } from "../functions/api/book-tier.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestGet as handleFormHealth } from "../functions/api/form-health.js";
 
 
 export interface Env extends PortalEnv {
@@ -777,6 +779,10 @@ export default {
         url.pathname === "/api/admin/projects")
     ) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/form-health") {
+      return handleFormHealth({ request, env });
     }
 
     const portalResponse = await handlePortalRoutes(request, env, url);

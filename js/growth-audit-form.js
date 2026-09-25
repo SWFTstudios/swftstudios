@@ -7,6 +7,37 @@
   var TOTAL_STEPS = 5;
   var currentStep = 1;
   var submitted = false;
+
+  /* Stable submission ID so retries never create duplicate leads or emails.
+     `attempt` only increases after the server confirms the owner email failed. */
+  var SUBMISSION_KEY = "swft-submission:" + location.pathname;
+  var submissionMemo = null;
+  function saveSubmission() {
+    try { sessionStorage.setItem(SUBMISSION_KEY, JSON.stringify(submissionMemo)); } catch (e) {}
+  }
+  function submissionState() {
+    if (submissionMemo) return submissionMemo;
+    try { submissionMemo = JSON.parse(sessionStorage.getItem(SUBMISSION_KEY) || "null"); } catch (e) {}
+    if (!submissionMemo || !submissionMemo.id) {
+      submissionMemo = {
+        id: (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID()
+          : "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12),
+        attempt: 0
+      };
+      saveSubmission();
+    }
+    return submissionMemo;
+  }
+  function submissionFailed() {
+    var st = submissionState();
+    st.attempt = (st.attempt || 0) + 1;
+    saveSubmission();
+  }
+  function submissionDone() {
+    submissionMemo = null;
+    try { sessionStorage.removeItem(SUBMISSION_KEY); } catch (e) {}
+  }
   var started = false;
 
   var statusEl = document.getElementById("ga-status");
@@ -248,16 +279,14 @@
       utmSource: utm.utm_source || "",
       utmMedium: utm.utm_medium || "",
       utmCampaign: utm.utm_campaign || "",
-      honeypot: val("company_website"),
+      honeypot: val("swft_hp_confirm"),
+      submissionId: submissionState().id,
+      submissionAttempt: submissionState().attempt || 0,
     };
   }
 
   function submitLead() {
     if (submitted) return Promise.resolve(true);
-    if (val("company_website")) {
-      submitted = true;
-      return Promise.resolve(true);
-    }
 
     var payload = buildPayload();
     if (nextBtn) nextBtn.disabled = true;
@@ -271,12 +300,16 @@
     })
       .then(function (res) {
         return res.json().then(function (data) {
+          if (!res.ok && data) submissionFailed();
           return { ok: res.ok, data: data };
+        }, function () {
+          return { ok: false, data: { error: "Server error (" + res.status + "). Your answers are still here. Try again or email hello@swftstudios.com." } };
         });
       })
       .then(function (result) {
         if (result.ok && result.data && result.data.ok) {
           submitted = true;
+          submissionDone();
           track("growth_audit_submit", {
             page_path: location.pathname,
             form_name: "growth_audit",

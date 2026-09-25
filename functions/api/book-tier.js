@@ -11,7 +11,8 @@
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 import { getStripeTier, resolvePaymentLinkUrl, resolveStripePriceId } from "../_lib/stripe-tiers.js";
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeCrmLeadDetailed } from "../_lib/airtable-crm.js";
+import { crmStatusRow, emailScope, finishSubmission, resolveSubmissionId, shortRef } from "../_lib/form-delivery.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -55,7 +56,7 @@ function json(obj, status = 200) {
 
 function row(label, value) {
   if (!value) return "";
-  return `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;color:#666;">${escapeHtml(label)}</td><td style="padding:6px 0;">${escapeHtml(value)}</td></tr>`;
+  return `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;color:#666;">${escapeHtml(label)}</td><td style="padding:6px 0;white-space:pre-line;">${escapeHtml(value)}</td></tr>`;
 }
 
 /** Prefer Payment Links (no secret key). Optional Checkout Session if STRIPE_SECRET_KEY is set. */
@@ -131,6 +132,7 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: "A hidden form field was autofilled. Refresh and try again, or email elombe@swftstudios.com." }, 400);
   }
 
+  const submissionId = resolveSubmissionId(body);
   const tier = getStripeTier(body.tierId);
   if (!tier) {
     return json({ ok: false, error: "Unknown pricing tier." }, 400);
@@ -213,7 +215,8 @@ export async function onRequestPost(context) {
       ? `${tier.priceDisplay} (subscription)`
       : `${tier.priceDisplay} (one-time start)`;
 
-  const stored = await storeCrmLead(env, {
+  const crm = await storeCrmLeadDetailed(env, {
+    submissionId,
     formGroup: "Paid Booking", // Existing CRM booking intake; quoteOnly is labeled explicitly below.
     formType: tier.name,
     person: { name, email, phone },
@@ -240,6 +243,8 @@ export async function onRequestPost(context) {
       Status: "New",
     },
   });
+
+  const stored = crm.ok;
 
   // Airtable is a helpful CRM backup, not a prerequisite for email delivery.
   // A valid quote must reach the SWFT inbox OR be stored durably.
@@ -272,20 +277,31 @@ export async function onRequestPost(context) {
     visitorEmail: email,
     visitorName: name,
     backupStored: stored,
-    idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
+    idempotencyBase: `book-tier/${emailScope(body, submissionId)}`,
     teamSubject: `${quoteOnly ? "Custom quote" : "Stripe book"}: ${tier.name}. ${businessName}`,
     teamHtml: `
       <p><strong>${quoteOnly ? "Custom order quote request - no charge" : "New tier booking (heading to Stripe)"}</strong></p>
       <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
-        ${row("Tier", tier.name)}
-        ${row("Checkout", amountLabel)}
+        ${row("Reference", shortRef(submissionId))}
+        ${row("Request type", quoteOnly ? "Custom quote - NO PAYMENT" : "Base Stripe checkout")}
+        ${row("Service", tier.name)}
+        ${row("Base price", tier.priceDisplay)}
+        ${row("Add-ons", addOns.length
+          ? addOns.map((item) => "• " + item.label + " x" + item.quantity + " - " +
+              (item.priceCents === null ? "custom quote" : usd(item.priceCents * item.quantity) + " indicative one-time")).join("\n")
+          : "None")}
+        ${row(quoteOnly ? "Estimate" : "Checkout", quoteOnly ? investmentNote : amountLabel)}
         ${row("Name", name)}
         ${row("Email", email)}
         ${row("Phone", phone)}
         ${row("Business", businessName)}
         ${row("Website / Social", website)}
-        ${row("Notes", notes)}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Goal", goal)}
+        ${row("Timeline", timeline)}
+        ${row("Platform", platform)}
+        ${row("Client notes", personalNotes)}
+        ${row("Source page", sourcePage)}
+        ${crmStatusRow(crm)}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
@@ -300,26 +316,12 @@ export async function onRequestPost(context) {
 
   // Never claim success for an undelivered, unrecorded form.
   // A customer confirmation alone is not proof the owner received the lead.
-  if (!stored && !emailed.team) {
-    return json({
-      ok: false,
-      error: "We couldn't deliver your request. Please email elombe@swftstudios.com or try again shortly.",
-      stored: false,
-      emailDelivered: false,
-    }, 503);
-  }
-
-  return json({
-    ok: true,
-    stored,
-    checkoutUrl,
-    quoteRequested: quoteOnly,
-    emailDelivered: !!emailed.team,
-    emailed: !!emailed.team,
-    warning: !emailed.team
-      ? "Your request was saved, but email delivery could not be confirmed. Please email elombe@swftstudios.com if it is urgent."
-      : undefined,
-    tierId: tier.id,
+  return finishSubmission({
+    route: "/api/book-tier",
+    submissionId,
+    crm,
+    emailed,
+    extra: { checkoutUrl, quoteRequested: quoteOnly, tierId: tier.id },
   });
 }
 
