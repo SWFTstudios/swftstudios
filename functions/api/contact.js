@@ -8,7 +8,8 @@
  *   AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeCrmLeadDetailed } from "../_lib/airtable-crm.js";
+import { crmStatusRow, emailScope, finishSubmission, resolveSubmissionId, shortRef } from "../_lib/form-delivery.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -34,7 +35,8 @@ export async function onRequestPost(context) {
   }
 
   if (str(body.honeypot, 200) || str(body.company_website, 200)) {
-    return json({ ok: true, stored: false });
+    // Never fake success: autofill can fill hidden fields on real visitors' phones.
+    return json({ ok: false, error: "A hidden form field was autofilled. Refresh and try again, or email elombe@swftstudios.com." }, 400);
   }
 
   const name = str(body.name, 200);
@@ -60,7 +62,9 @@ export async function onRequestPost(context) {
   const utmMedium = str(body.utmMedium, 120);
   const utmCampaign = str(body.utmCampaign, 120);
 
-  const stored = await storeCrmLead(env, {
+  const submissionId = resolveSubmissionId(body);
+  const crm = await storeCrmLeadDetailed(env, {
+    submissionId,
     formGroup: "Project Inquiry",
     formType: "contact",
     person: { name, email, phone },
@@ -91,13 +95,14 @@ export async function onRequestPost(context) {
       Status: "New",
     },
   });
+  const stored = crm.ok;
 
   const emailed = await sendLeadEmails(env, {
     kind: "contact",
     visitorEmail: email,
     visitorName: name,
     backupStored: stored,
-    idempotencyBase: `contact/${email.toLowerCase()}/${Date.now()}`,
+    idempotencyBase: `contact/${emailScope(body, submissionId)}`,
     teamSubject: `Project inquiry: ${businessName || name}`,
     teamHtml: `
       <p><strong>New project inquiry</strong></p>
@@ -114,7 +119,8 @@ export async function onRequestPost(context) {
         ${row("Budget", budget)}
         ${row("Details", details)}
         ${row("Source page", sourcePage)}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Reference", shortRef(submissionId))}
+        ${crmStatusRow(crm)}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
@@ -127,19 +133,11 @@ export async function onRequestPost(context) {
     `,
   });
 
-  if (!stored && !emailed.team) {
-    return json({ ok: false,
-      error: "We couldn't deliver your request. Please email elombe@swftstudios.com or try again shortly."
-    }, 503);
-  }
-  return json({
-    ok: true,
-    stored,
-    emailDelivered: !!emailed.team,
-    emailed: !!emailed.team,
-    warning: !emailed.team
-      ? "Your request was saved but email delivery could not be confirmed."
-      : undefined
+  return finishSubmission({
+    route: "/api/contact",
+    submissionId,
+    crm,
+    emailed,
   });
 }
 

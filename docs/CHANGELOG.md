@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-25: Diagnosable, duplicate-safe form delivery
+
+### Added
+- `GET /api/form-health` (`?live=1` for token/domain checks) shows which secrets the live deployment can see. It never returns their values.
+- One sanitized `[SWFT Form]` log line per submission with Resend/Airtable status codes. Failed responses carry a customer reference and a short `diagnostic`.
+- `npm run test:forms`: offline tests for all six tiers, Contact, Growth Audit and Website Build.
+
+### Fixed
+- Contact and Growth Audit no longer show success while silently dropping leads when autofill fills the honeypot.
+- Retries reuse a stable submission ID, so they no longer create duplicate Airtable rows or owner emails.
+- A Resend 2xx without a message id is no longer treated as delivered. Airtable stops after the first auth failure.
+- The owner email lists each add-on, quantity, estimate, goal, timeline, platform and notes on separate rows, and flags a failed CRM save.
+
+---
+
 ## 2026-08-20: PostHog on marketing site
 
 ### Added

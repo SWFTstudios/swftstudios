@@ -10,7 +10,8 @@
  *             AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeCrmLeadDetailed } from "../_lib/airtable-crm.js";
+import { crmStatusRow, emailScope, finishSubmission, resolveSubmissionId, shortRef } from "../_lib/form-delivery.js";
 
 const ALLOWED_SERVICES = new Set([
   "gbp-refresh",
@@ -62,7 +63,8 @@ export async function onRequestPost(context) {
 
   /* Honeypot, bots fill this; humans never see it */
   if (str(body.honeypot, 200) || str(body.company_website, 200)) {
-    return json({ ok: true, stored: false });
+    // Never fake success: autofill can fill hidden fields on real visitors' phones.
+    return json({ ok: false, error: "A hidden form field was autofilled. Refresh and try again, or email elombe@swftstudios.com." }, 400);
   }
 
   const firstName = str(body.firstName, 120);
@@ -103,7 +105,9 @@ export async function onRequestPost(context) {
     .filter(Boolean)
     .join("\n\n");
 
-  const stored = await storeCrmLead(env, {
+  const submissionId = resolveSubmissionId(body);
+  const crm = await storeCrmLeadDetailed(env, {
+    submissionId,
     formGroup: "Growth Audit",
     formType: desiredServiceLabel || "growth-audit",
     person: { name: fullName || firstName, email, phone, firstName, lastName },
@@ -138,8 +142,9 @@ export async function onRequestPost(context) {
       Status: "New",
     },
   });
+  const stored = crm.ok;
 
-  const idempotencyBase = `growth-audit/${email.toLowerCase()}/${Date.now()}`;
+  const idempotencyBase = `growth-audit/${emailScope(body, submissionId)}`;
   const emailed = await sendLeadEmails(env, {
     kind: "growth-audit",
     visitorEmail: email,
@@ -161,7 +166,8 @@ export async function onRequestPost(context) {
         ${row("Photo links", photoLinks)}
         ${row("UTM", [utmSource, utmMedium, utmCampaign].filter(Boolean).join(" / "))}
         ${row("Source page", sourcePage)}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Reference", shortRef(submissionId))}
+        ${crmStatusRow(crm)}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
@@ -176,19 +182,11 @@ export async function onRequestPost(context) {
     `,
   });
 
-  if (!stored && !emailed.team) {
-    return json({ ok: false,
-      error: "We couldn't deliver your request. Please email elombe@swftstudios.com or try again shortly."
-    }, 503);
-  }
-  return json({
-    ok: true,
-    stored,
-    emailDelivered: !!emailed.team,
-    emailed: !!emailed.team,
-    warning: !emailed.team
-      ? "Your request was saved but email delivery could not be confirmed."
-      : undefined
+  return finishSubmission({
+    route: "/api/growth-audit",
+    submissionId,
+    crm,
+    emailed,
   });
 }
 

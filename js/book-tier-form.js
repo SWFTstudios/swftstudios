@@ -25,6 +25,37 @@
   var currentStep = 0;
   var submitting = false;
 
+  /* Stable submission ID so retries never create duplicate leads or emails.
+     `attempt` only increases after the server confirms the owner email failed. */
+  var SUBMISSION_KEY = "swft-submission:" + "book:" + tierId;
+  var submissionMemo = null;
+  function saveSubmission() {
+    try { sessionStorage.setItem(SUBMISSION_KEY, JSON.stringify(submissionMemo)); } catch (e) {}
+  }
+  function submissionState() {
+    if (submissionMemo) return submissionMemo;
+    try { submissionMemo = JSON.parse(sessionStorage.getItem(SUBMISSION_KEY) || "null"); } catch (e) {}
+    if (!submissionMemo || !submissionMemo.id) {
+      submissionMemo = {
+        id: (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID()
+          : "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12),
+        attempt: 0
+      };
+      saveSubmission();
+    }
+    return submissionMemo;
+  }
+  function submissionFailed() {
+    var st = submissionState();
+    st.attempt = (st.attempt || 0) + 1;
+    saveSubmission();
+  }
+  function submissionDone() {
+    submissionMemo = null;
+    try { sessionStorage.removeItem(SUBMISSION_KEY); } catch (e) {}
+  }
+
   // All extras request a scoped quote; the existing Stripe link is base-only.
   var pricedAddOns = {
     "extra-pages": { cents: 17500, unit: "page" },
@@ -553,7 +584,9 @@
       utmSource: utm.utm_source || "",
       utmMedium: utm.utm_medium || "",
       utmCampaign: utm.utm_campaign || "",
-      sourcePage: window.location.pathname
+      sourcePage: window.location.pathname,
+      submissionId: submissionState().id,
+      submissionAttempt: submissionState().attempt || 0
     };
 
     setBusy(true);
@@ -567,16 +600,22 @@
       return res.text().then(function (responseText) {
         var body;
         try { body = JSON.parse(responseText); }
-        catch (e) { body = { error: "Server error (" + res.status + "). Please try again or email elombe@swftstudios.com." }; }
-        return { ok: res.ok, body: body || {} };
+        catch (e) { body = null; }
+        // Only a parsed server answer proves the email was not sent; after a
+        // timeout or HTML error page, keep the same key so a retry can't duplicate.
+        if (!res.ok && body) submissionFailed();
+        if (!body) body = { error: "Server error (" + res.status + "). Your answers are still here. Try again or email elombe@swftstudios.com." };
+        return { ok: res.ok, body: body };
       });
     }).then(function (result) {
       if (result.ok && result.body.checkoutUrl && !quoteOnly) {
+        submissionDone();
         track("book_tier_checkout_redirect", { tier_id: tierId });
         window.location.href = result.body.checkoutUrl;
         return;
       }
       if (result.ok && result.body.quoteRequested) {
+        submissionDone();
         form.hidden = true;
         document.querySelector(".book-flow-progress").hidden = true;
         var success = el("div", "book-quote-success");
@@ -585,6 +624,7 @@
         success.appendChild(el("p", "", result.body.emailDelivered
           ? "Your request was sent to SWFT Studios. We'll email you to confirm scope and next steps. No payment was collected."
           : "Your request was saved. We could not confirm inbox email delivery, so please email elombe@swftstudios.com if it's time-sensitive. No payment was collected."));
+        if (result.body.reference) success.appendChild(el("p", "book-quote-reference", "Reference: " + result.body.reference));
         if (result.body.warning) success.appendChild(el("p", "book-quote-warning", result.body.warning));
         var link = el("a", "book-action-primary", "Back to SWFT Studios");
         link.href = "/";
@@ -599,7 +639,7 @@
       track("book_tier_error", { tier_id: tierId, reason: result.body.error || "no_response" });
     }).catch(function () {
       setBusy(false);
-      showStatus("Network error. Try again or email elombe@swftstudios.com.", "error");
+      showStatus("Network error. Your answers are still here. Try again or email elombe@swftstudios.com.", "error");
       track("book_tier_error", { tier_id: tierId, reason: "network" });
     });
   });

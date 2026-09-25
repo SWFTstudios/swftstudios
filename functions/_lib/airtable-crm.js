@@ -45,66 +45,91 @@ function escapeFormula(value) {
   return String(value ?? "").replace(/'/g, "\\'");
 }
 
+function sanitize(text, max = 300) {
+  return String(text ?? "")
+    .replace(/(pat|key)[A-Za-z0-9.]{10,}/g, "$1[redacted]")
+    .replace(/\s+/g, " ")
+    .slice(0, max);
+}
+
 /**
- * @param {Record<string, string|undefined>} env
- * @param {string} table
- * @param {Record<string, unknown>} fields
- * @returns {Promise<{ ok: boolean, id: string|null }>}
+ * One Airtable REST call. Never throws.
+ * @returns {Promise<{ ok: boolean, status: number, code: string, message?: string, data?: any }>}
  */
-async function createRecord(env, table, fields) {
-  if (!env.AIRTABLE_TOKEN || !table) return { ok: false, id: null };
+async function airtableFetch(env, url, init = {}) {
+  if (!env.AIRTABLE_TOKEN) return { ok: false, status: 0, code: "missing_token" };
   try {
-    const res = await fetch(
-      `https://api.airtable.com/v0/${baseId(env)}/${encodeURIComponent(table)}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${env.AIRTABLE_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ records: [{ fields }], typecast: true }),
-      }
-    );
+    const res = await fetch(url, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${env.AIRTABLE_TOKEN}`,
+        ...(init.body ? { "Content-Type": "application/json" } : {}),
+      },
+    });
+    const raw = await res.text().catch(() => "");
+    let data = null;
+    try { data = raw ? JSON.parse(raw) : null; } catch { data = null; }
     if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
-      console.error("Airtable create failed", table, res.status, errBody.slice(0, 400));
-      return { ok: false, id: null };
+      const err = data?.error;
+      const code = sanitize((typeof err === "string" ? err : err?.type) || `http_${res.status}`, 80);
+      const message = sanitize((typeof err === "object" && err?.message) || raw);
+      return { ok: false, status: res.status, code, message };
     }
-    const data = await res.json();
-    const id = data?.records?.[0]?.id || null;
-    return { ok: !!id, id };
+    return { ok: true, status: res.status, code: "ok", data };
   } catch (err) {
-    console.error("Airtable create fetch failed", err);
-    return { ok: false, id: null };
+    return { ok: false, status: 0, code: "network_error", message: sanitize(err?.message || err) };
   }
+}
+
+/** 401/403/404 mean the token/base/table is wrong; later calls cannot succeed either. */
+function isConfigFailure(result) {
+  return result.status === 401 || result.status === 403 || result.status === 404 || result.code === "missing_token";
+}
+
+function logFailure(op, table, result) {
+  console.error("[SWFT Airtable]", `op=${op}`, `table=${table}`, `status=${result.status}`, `error=${result.code}`, result.message || "");
 }
 
 /**
  * @param {Record<string, string|undefined>} env
  * @param {string} table
- * @param {string} formula
- * @returns {Promise<string|null>}
+ * @param {Record<string, unknown>} fields
  */
-async function findFirstId(env, table, formula) {
-  if (!env.AIRTABLE_TOKEN || !table) return null;
-  try {
-    const url = new URL(`https://api.airtable.com/v0/${baseId(env)}/${encodeURIComponent(table)}`);
-    url.searchParams.set("filterByFormula", formula);
-    url.searchParams.set("maxRecords", "1");
-    const res = await fetch(url.toString(), {
-      headers: { Authorization: `Bearer ${env.AIRTABLE_TOKEN}` },
-    });
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
-      console.error("Airtable find failed", table, res.status, errBody.slice(0, 400));
-      return null;
-    }
-    const data = await res.json();
-    return data?.records?.[0]?.id || null;
-  } catch (err) {
-    console.error("Airtable find fetch failed", err);
-    return null;
+async function createRecordDetailed(env, table, fields) {
+  const result = await airtableFetch(
+    env,
+    `https://api.airtable.com/v0/${baseId(env)}/${encodeURIComponent(table)}`,
+    { method: "POST", body: JSON.stringify({ records: [{ fields }], typecast: true }) }
+  );
+  if (!result.ok) {
+    logFailure("create", table, result);
+    return { ...result, id: null };
   }
+  const id = result.data?.records?.[0]?.id || null;
+  return id ? { ...result, id } : { ok: false, status: result.status, code: "no_record_id", id: null };
+}
+
+/** @returns {Promise<{ ok: boolean, id: string|null }>} */
+async function createRecord(env, table, fields) {
+  const r = await createRecordDetailed(env, table, fields);
+  return { ok: r.ok, id: r.id };
+}
+
+async function findFirstDetailed(env, table, formula) {
+  const url = new URL(`https://api.airtable.com/v0/${baseId(env)}/${encodeURIComponent(table)}`);
+  url.searchParams.set("filterByFormula", formula);
+  url.searchParams.set("maxRecords", "1");
+  const result = await airtableFetch(env, url.toString());
+  if (!result.ok) {
+    logFailure("find", table, result);
+    return { ...result, id: null };
+  }
+  return { ...result, id: result.data?.records?.[0]?.id || null };
+}
+
+/** @returns {Promise<string|null>} */
+async function findFirstId(env, table, formula) {
+  return (await findFirstDetailed(env, table, formula)).id;
 }
 
 /**
@@ -156,8 +181,23 @@ export async function findOrCreatePerson(env, person) {
   return created.id;
 }
 
+/** Text field on each form table that carries the submission reference (used to dedupe retries). */
+const FORM_GROUP_TO_REF_FIELD = {
+  "Growth Audit": "Additional Context",
+  "Project Inquiry": "Details",
+  "Paid Booking": "Notes",
+  "Website Build": "Anything Else",
+};
+
+export function submissionTag(submissionId) {
+  return submissionId ? `[SWFT ref ${submissionId}]` : "";
+}
+
 /**
- * Write form intake + Pipeline hub. Falls back to form-only write if hub upserts fail.
+ * Write form intake + Pipeline hub and report what happened.
+ * Falls back to a form-only write if the People/Companies upserts fail.
+ * With `lead.submissionId`, a retry of an already-stored submission is detected
+ * and not written twice.
  *
  * @param {Record<string, string|undefined>} env
  * @param {{
@@ -172,19 +212,31 @@ export async function findOrCreatePerson(env, person) {
  *   utmCampaign?: string,
  *   notes?: string,
  *   submittedAt?: string,
+ *   submissionId?: string,
  * }} lead
- * @returns {Promise<boolean>}
+ * @returns {Promise<{ ok: boolean, status: number, code: string, message?: string, recordId?: string|null, duplicate?: boolean, pipelineOk?: boolean }>}
  */
-export async function storeCrmLead(env, lead) {
-  if (!env.AIRTABLE_TOKEN) return false;
+export async function storeCrmLeadDetailed(env, lead) {
+  if (!env.AIRTABLE_TOKEN) return { ok: false, status: 0, code: "missing_token" };
 
   const formKey = FORM_GROUP_TO_TABLE[lead.formGroup];
   if (!formKey) {
     console.error("Unknown form group", lead.formGroup);
-    return false;
+    return { ok: false, status: 0, code: "unknown_form_group" };
   }
   const formTable = tableId(env, formKey);
   const submittedAt = lead.submittedAt || new Date().toISOString();
+  const refField = FORM_GROUP_TO_REF_FIELD[lead.formGroup];
+  const tag = submissionTag(lead.submissionId);
+
+  // Idempotency: the first call doubles as an auth/base check.
+  if (tag && refField) {
+    const existing = await findFirstDetailed(
+      env, formTable, `FIND('${escapeFormula(tag)}', {${refField}} & '') > 0`
+    );
+    if (existing.id) return { ok: true, status: existing.status, code: "duplicate", duplicate: true, recordId: existing.id };
+    if (isConfigFailure(existing)) return existing;
+  }
 
   let companyId = null;
   let personId = null;
@@ -204,9 +256,12 @@ export async function storeCrmLead(env, lead) {
   if (personId) formFields.Person = [personId];
   if (!formFields.Status) formFields.Status = "New";
   if (!formFields["Submitted At"]) formFields["Submitted At"] = submittedAt;
+  if (tag && refField) {
+    formFields[refField] = [formFields[refField], tag].filter(Boolean).join("\n\n");
+  }
 
-  const formResult = await createRecord(env, formTable, formFields);
-  if (!formResult.ok || !formResult.id) return false;
+  const formResult = await createRecordDetailed(env, formTable, formFields);
+  if (!formResult.ok || !formResult.id) return formResult;
 
   const pipelineTable = tableId(env, "AIRTABLE_TABLE_PIPELINE");
   const linkField = FORM_GROUP_TO_PIPELINE_LINK[lead.formGroup];
@@ -221,16 +276,21 @@ export async function storeCrmLead(env, lead) {
     "UTM Source": String(lead.utmSource || "").slice(0, 120),
     "UTM Medium": String(lead.utmMedium || "").slice(0, 120),
     "UTM Campaign": String(lead.utmCampaign || "").slice(0, 120),
-    Notes: String(lead.notes || "").slice(0, 4000),
+    Notes: [String(lead.notes || "").slice(0, 3900), tag].filter(Boolean).join("\n\n"),
     "Submitted At": submittedAt,
   };
   if (personId) pipelineFields.Person = [personId];
   if (companyId) pipelineFields.Company = [companyId];
   if (linkField) pipelineFields[linkField] = [formResult.id];
 
-  const pipelineResult = await createRecord(env, pipelineTable, pipelineFields);
+  const pipelineResult = await createRecordDetailed(env, pipelineTable, pipelineFields);
   if (!pipelineResult.ok) {
     console.error("Pipeline write failed; form row was stored", formResult.id);
   }
-  return true;
+  return { ok: true, status: formResult.status, code: "created", recordId: formResult.id, pipelineOk: pipelineResult.ok };
+}
+
+/** Boolean wrapper kept for existing callers. */
+export async function storeCrmLead(env, lead) {
+  return (await storeCrmLeadDetailed(env, lead)).ok;
 }

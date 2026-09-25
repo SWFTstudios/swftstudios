@@ -541,6 +541,20 @@
       var done = document.querySelector('.sm-done'); if (done) { done.style.display = 'block'; done.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     }
 
+    // Stable submission ID: retries never duplicate the lead or the owner email.
+    var smSubmission = null;
+    try { smSubmission = JSON.parse(sessionStorage.getItem('swft-submission:build') || 'null'); } catch (err) {}
+    if (!smSubmission || !smSubmission.id) {
+      smSubmission = { id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12), attempt: 0 };
+    }
+    function smSaveSubmission(clear) {
+      try {
+        if (clear) sessionStorage.removeItem('swft-submission:build');
+        else sessionStorage.setItem('swft-submission:build', JSON.stringify(smSubmission));
+      } catch (err) {}
+    }
+    smSaveSubmission(false);
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!stepValid(steps[current])) return;
@@ -560,6 +574,7 @@
         contentReady: val('Content Ready'), hasDomain: val('Has Domain'),
         timeline: val('Launch Timeline'), anythingElse: val('Anything Else'),
         sourcePage: location.pathname + location.search,
+        submissionId: smSubmission.id, submissionAttempt: smSubmission.attempt || 0,
         utmSource: sp.get('utm_source') || '',
         utmMedium: sp.get('utm_medium') || '',
         utmCampaign: sp.get('utm_campaign') || ''
@@ -577,10 +592,13 @@
 
       fetch('/api/build-request', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-      }).then(function (r) { return r.ok ? r.json(): null; })
+      }).then(function (r) {
+          if (r.ok) return r.json();
+          return r.json().then(function () { smSubmission.attempt = (smSubmission.attempt || 0) + 1; smSaveSubmission(false); return null; }, function () { return null; });
+        })
         .then(function (res) {
-          if (res && res.checkoutUrl) { window.location.href = res.checkoutUrl; return; }
-          if (res && res.ok) { showDone(); return; }
+          if (res && res.checkoutUrl) { smSaveSubmission(true); window.location.href = res.checkoutUrl; return; }
+          if (res && res.ok) { smSaveSubmission(true); showDone(); return; }
           failed();
         })
         .catch(failed);

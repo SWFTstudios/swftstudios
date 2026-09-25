@@ -10,7 +10,8 @@
  *     AIRTABLE_TABLE_PEOPLE, AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE,
  *     STRIPE_PRICE_MONTHLY
  */
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeCrmLeadDetailed } from "../_lib/airtable-crm.js";
+import { crmStatusRow, emailScope, finishSubmission, resolveSubmissionId, shortRef } from "../_lib/form-delivery.js";
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 
 const DEFAULTS = {
@@ -87,7 +88,16 @@ export async function onRequestPost(context) {
   const utmMedium = str(body.utmMedium, 120);
   const utmCampaign = str(body.utmCampaign, 120);
 
-  const stored = await storeCrmLead(env, {
+  if (!name || !email) {
+    return json({ ok: false, error: "Name and email are required." }, 400);
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json({ ok: false, error: "Invalid email." }, 400);
+  }
+
+  const submissionId = resolveSubmissionId(body);
+  const crm = await storeCrmLeadDetailed(env, {
+    submissionId,
     formGroup: "Website Build",
     formType: plan,
     person: { name, email, phone },
@@ -123,6 +133,7 @@ export async function onRequestPost(context) {
       Status: "New",
     },
   });
+  const stored = crm.ok;
 
   const checkoutUrl = await createStripeCheckout(env, {
     plan,
@@ -162,30 +173,24 @@ export async function onRequestPost(context) {
     visitorEmail: email,
     visitorName: name,
     backupStored: stored,
-    idempotencyBase: `website-build/${email.toLowerCase()}/${Date.now()}`,
+    idempotencyBase: `website-build/${emailScope(body, submissionId)}`,
     teamSubject: `New website build request: ${businessName || name}`,
     teamHtml: '<p><strong>New SWFT website build request</strong></p><table>' +
-      emailRows + '</table><p>Airtable backup: ' + (stored ? 'saved' : 'not saved') + '</p>',
+      emailRows + '<tr><td style="padding:6px 12px 6px 0;color:#666">Reference</td><td>' +
+      shortRef(submissionId) + '</td></tr>' + crmStatusRow(crm) + '</table>',
     confirmSubject: "We received your SWFT website build request",
     confirmHtml: '<p>Hi ' + escapeHtml(name) +
       ',</p><p>We received your website build details and will contact you about next steps.</p>' +
       '<p>Questions? Reply to this email or write to elombe@swftstudios.com.</p>'
   });
 
-  if (!stored && !emailed.team) {
-    return json({ ok: false,
-      error: "We couldn't deliver your build request. Please email elombe@swftstudios.com."
-    }, 503);
-  }
-  return json({
-    ok: true,
-    stored,
-    checkoutUrl,
-    emailDelivered: !!emailed.team,
-    emailed: !!emailed.team,
-    warning: !emailed.team
-      ? "Your request was saved but inbox notification could not be confirmed."
-      : undefined
+  return finishSubmission({
+    route: "/api/build-request",
+    submissionId,
+    crm,
+    emailed,
+    extra: { checkoutUrl },
+    failureMessage: "We couldn't deliver your build request. Your answers are still here, so you can try again",
   });
 }
 

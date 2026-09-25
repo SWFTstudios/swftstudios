@@ -58,8 +58,8 @@
           <h2>Project details</h2>
           <form id="contact-form" novalidate>
             <div class="ga-hp" aria-hidden="true">
-              <label for="company_website">Company website</label>
-              <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+              <label for="swft_hp_confirm">Leave blank</label>
+              <input type="hidden" id="swft_hp_confirm" name="swft_hp_confirm" value="">
             </div>
             <div class="ga-field">
               <label for="contact-name">Name <span class="req">*</span></label>
@@ -154,6 +154,38 @@
         statusEl.className = "contact-status ga-status is-" + type;
       }
 
+
+      /* Stable submission ID so retries never create duplicate leads or emails.
+         `attempt` only increases after the server confirms the owner email failed. */
+      var SUBMISSION_KEY = "swft-submission:" + location.pathname;
+      var submissionMemo = null;
+      function saveSubmission() {
+        try { sessionStorage.setItem(SUBMISSION_KEY, JSON.stringify(submissionMemo)); } catch (e) {}
+      }
+      function submissionState() {
+        if (submissionMemo) return submissionMemo;
+        try { submissionMemo = JSON.parse(sessionStorage.getItem(SUBMISSION_KEY) || "null"); } catch (e) {}
+        if (!submissionMemo || !submissionMemo.id) {
+          submissionMemo = {
+            id: (window.crypto && window.crypto.randomUUID)
+              ? window.crypto.randomUUID()
+              : "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12),
+            attempt: 0
+          };
+          saveSubmission();
+        }
+        return submissionMemo;
+      }
+      function submissionFailed() {
+        var st = submissionState();
+        st.attempt = (st.attempt || 0) + 1;
+        saveSubmission();
+      }
+      function submissionDone() {
+        submissionMemo = null;
+        try { sessionStorage.removeItem(SUBMISSION_KEY); } catch (e) {}
+      }
+
       function val(name) {
         const el = form.elements.namedItem(name);
         return el ? String(el.value || "").trim(): "";
@@ -161,11 +193,6 @@
 
       form.addEventListener("submit", function (e) {
         e.preventDefault();
-        if (val("company_website")) {
-          showStatus("Message sent, we'll be in touch within one business day.", "success");
-          return;
-        }
-
         const name = val("name");
         const email = val("email");
         const businessName = val("business_name");
@@ -197,7 +224,9 @@
           timeline: val("timeline"),
           budget: val("budget"),
           details: val("details"),
-          honeypot: val("company_website"),
+          honeypot: val("swft_hp_confirm"),
+          submissionId: submissionState().id,
+          submissionAttempt: submissionState().attempt || 0,
           sourcePage: location.pathname + location.search,
           utmSource: (new URLSearchParams(location.search)).get("utm_source") || "",
           utmMedium: (new URLSearchParams(location.search)).get("utm_medium") || "",
@@ -211,13 +240,17 @@
         })
           .then(function (res) {
             return res.json().then(function (data) {
+              if (!res.ok && data) submissionFailed();
               return { ok: res.ok, data: data };
+            }, function () {
+              return { ok: false, data: { error: "Server error (" + res.status + "). Your answers are still here. Try again or email hello@swftstudios.com." } };
             });
           })
           .then(function (result) {
             if (result.ok && result.data.ok) {
+              submissionDone();
               form.reset();
-              showStatus("Project submitted, we'll be in touch within one business day.", "success");
+              showStatus(result.data.warning || "Project submitted, we'll be in touch within one business day.", "success");
               if (window.SWFTAnalytics) {
                 window.SWFTAnalytics.track("contact_form_submit", {
                   page_path: location.pathname,
@@ -227,11 +260,11 @@
                 });
               }
             } else {
-              showStatus("Something went wrong. Email us at hello@swftstudios.com.", "error");
+              showStatus((result.data && result.data.error) || "Something went wrong. Your answers are still here. Try again or email hello@swftstudios.com.", "error");
             }
           })
           .catch(function () {
-            showStatus("Unable to send right now. Email hello@swftstudios.com.", "error");
+            showStatus("Unable to send right now. Your answers are still here. Try again or email hello@swftstudios.com.", "error");
           })
           .finally(function () {
             submitBtn.disabled = false;
