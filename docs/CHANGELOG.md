@@ -1,5 +1,141 @@
 # Changelog
 
+## 2026-09-30: ARAISE-style SWFT preloader on `swft2027`
+
+### Fixed
+- Preloader now shows **SWFT** beside a single cycling word (**Visual → Digital → Studios**), not a lone “VISUAL” stack.
+- Gate reveal: transparent wrap + left/right black gates open (`rotateY`), then wrap lifts off to reveal the hero (matches ARAISE).
+
+### Changed
+- Published to [swft2027.webflow.io](https://swft2027.webflow.io/) subdomain only.
+
+---
+
+## 2026-09-30: ARAISE About scroll gallery on `swft2027`
+
+### Added
+- **About scroll gallery** under the `#about` scrub headline: duplicated SWFT project image strips, top/bottom ornament eclipses, GSAP ScrollTrigger scrubbed horizontal `xPercent` motion (not a free-running marquee).
+- Freeform head CSS (`#swft-about-gallery`) + footer `initAbout` gallery scrub; images from `swftstudios.com` only.
+
+### Changed
+- Published to [swft2027.webflow.io](https://swft2027.webflow.io/) subdomain only (no custom domain).
+
+---
+
+## 2026-09-30: Full Home interactions on `swft2027` (About + Work + Team + Testimonials + Preloader)
+
+### Added
+- **Preloader** — black SWFT + VISUAL/DIGITAL/MARKETING cycle + progress bar; Home-gated in freeform footer.
+- **About** — ARAISE `#about` layout: meta row, massive ALL-CAPS SWFT statement, ScrollTrigger word opacity scrub, horizontal project image gallery.
+- **Sticky Work** — stacked project covers + “View Work” cursor + section-head fade.
+- **Team** — dark ARAISE layout with grayscale portraits (Elombe, Stephen).
+- **Sticky testimonials** — stacked quote cards with SWFT project photos (Brooklyn Steel, Snooze Lane, Manna); photos only (no client testimonial videos in assets).
+
+### Changed
+- Single Home body HtmlEmbed updated; site freeform head/footer append `SWFT2027 HOME INTERACTIONS` CSS + ScrollTrigger scripts.
+- Published to [swft2027.webflow.io](https://swft2027.webflow.io/) subdomain only (no custom domain).
+
+---
+
+## 2026-09-30: ARAISE homepage + pages buildout on `swft2027`
+
+### Added
+- Site-wide clock header (`#swft-nav` with live time + theme toggle) and `.sf-footer` via site freeform CSS/JS on **swft2027**.
+- Home sections: **Trusted by** client logos, **Our Process** (4 steps), **FAQ** (cost, GBP refresh, contracts, timeline).
+- ARAISE-themed secondary routes for testing: Services, Our Work, Website Pricing, Team, Contact, Growth Audit, Case Studies, Apps, Media, 404, plus new **Locations** and **Book** hubs.
+- Docs map in [`docs/ARAISE_THEME.md`](ARAISE_THEME.md) for Webflow staging vs local Pages.
+
+### Changed
+- Home hero embed mounts `#swft-nav` (replaces static `.ar-nav`); legacy `main-wrapper` stays hidden.
+- Publish target remains [swft2027.webflow.io](https://swft2027.webflow.io/) only (no custom domain).
+
+---
+
+## 2026-09-30: Full ARAISE homepage on `swft2027`
+
+### Added
+- Complete Home page on **swft2027**: nav + hero (with corner floats), About, Selected Work, Creative Services, Team, Testimonials, Contact band, and footer — published to [swft2027.webflow.io](https://swft2027.webflow.io/).
+- Section styles in site freeform head (work strip, services list, team grid, testimonials, contact band).
+
+### Changed
+- Hero HtmlEmbed holds nav + hero copy only; body sections live in a sibling HtmlEmbed after `#home-hero` so float `overflow:hidden` does not clip the page.
+
+---
+
+## 2026-09-30: Larger corner hero floats
+
+### Changed
+- Hero float photos enlarged (~1.6–2×) and pushed further into viewport corners so they no longer crowd the SWFT logo (local CSS + Webflow `swft2027`).
+
+---
+## 2026-09-30: Hero float unique IDs
+
+### Changed
+- Homepage hero photos are separate positioned divs with stable IDs (`#home-float-1`…`#home-float-4` and matching `#home-float-N-motion`) for JS targeting; Webflow Home mirrors the same structure.
+
+---
+## 2026-09-30: Webflow ARAISE rebuild on `swft2027`
+
+### Added
+- Webflow site **SWFT STUDIOS 2027** (`swft2027`, ID `6abd3e502eac1e49f19d235a`) now hosts the ARAISE marketing set: Home, Services, Our Work, Website Pricing, Team, Contact, Growth Audit, Case Studies.
+- ARAISE variable collection + base styles; blank **Site Nav** / **Site Footer** components; site custom code for fonts, theme/clock, and hero float hover GSAP.
+- New Webflow pages `/team` and `/growth-audit`.
+
+### Changed
+- MCP connection baseline updated to `swft2027` in [`docs/WEBFLOW_MCP_CONNECTION.md`](WEBFLOW_MCP_CONNECTION.md).
+- Published to [swft2027.webflow.io](https://swft2027.webflow.io/) for review (no git HTML overwrite / no custom-domain publish).
+
+---
+
+## 2026-09-30: Homepage photo hover float
+
+### Changed
+- Hero float photos respond to hover with a lift + bobbing float ([`js/swft-hero-float.js`](../js/swft-hero-float.js)); `pointer-events` enabled for hit-testing; proximity mouse-push removed.
+
+---
+
+## 2026-09-30: Amplified hero float motion
+
+### Changed
+- Hero floats use inner `.home-float__motion` for visible idle bob; outer layer keeps mouse push; enter uses `force3D` and ~1.3s duration so Z fly-in reads clearly.
+
+---
+
+## 2026-09-30: Hero float 3D fly-in + mouse push
+
+### Added
+- Homepage hero floats fly in from Z-depth and gently push away from the cursor ([`js/swft-hero-float.js`](../js/swft-hero-float.js)); desktop only, reduced-motion safe.
+
+---
+
+## 2026-09-30: GSAP letter reveals + ARAISE type polish
+
+### Added
+- Chakra Petch + Inter Tight typography (ARAISE-matched stack) with `.ar-thin` / `.ar-mark` scan hierarchy.
+- Letter-by-letter ScrollTrigger animations: [`js/swft-split-text.js`](../js/swft-split-text.js), [`js/swft-motion.js`](../js/swft-motion.js), [`css/araise-motion.css`](../css/araise-motion.css) (`data-split="scrub|enter"`).
+- Homepage positioning rewrite for digital/video marketing serving Bergen, Hudson, and NYC.
+
+### Changed
+- Marketing pages wire GSAP + motion scripts; heroes use thin body + bold marketing marks.
+
+---
+
+## 2026-09-30: SWFT × ARAISE 2027 redesign (branch `swft-araise-2027`)
+
+### Added
+- Hand-rebuilt ARAISE-inspired marketing theme: [`css/araise-theme.css`](../css/araise-theme.css), [`css/home-araise.css`](../css/home-araise.css), [`css/araise-pages.css`](../css/araise-pages.css).
+- Header live clock + light/dark/auto theme with sunrise/sunset gradual lerp: [`js/swft-theme-clock.js`](../js/swft-theme-clock.js).
+- Theme documentation: [`docs/ARAISE_THEME.md`](ARAISE_THEME.md).
+
+### Changed
+- Shared nav/footer restyled to ARAISE chrome (clock, theme toggle, solid CTA): [`js/swft-nav.js`](../js/swft-nav.js), [`css/swft-nav.css`](../css/swft-nav.css).
+- Rebuilt marketing pages: home, services, our work, pricing, team, contact, growth audit; case-studies hub shell themed (grid JS preserved).
+
+### Security / privacy
+- Theme geolocation is optional, one-shot, and cached locally; denied permission falls back to timezone-based coordinates. No location data is sent to SWFT servers.
+
+---
+
 ## 2026-08-20: PostHog on marketing site
 
 ### Added

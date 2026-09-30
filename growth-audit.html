@@ -14,11 +14,31 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Website Growth Audit | SWFT Studios">
   <meta name="twitter:description" content="Find out what is costing your business customers online.">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/araise-motion.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/page-shell.css">
   <link rel="stylesheet" href="css/contact-page.css">
   <link rel="stylesheet" href="css/growth-audit.css">
+  <link rel="stylesheet" href="css/araise-pages.css">
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+  <style>
+    .ar-body.ps-page {
+      --swft-bg: var(--bg); --swft-text: var(--fg); --swft-text-strong: var(--fg);
+      --swft-muted: var(--muted); --swft-lead: var(--muted); --swft-accent: var(--accent);
+      --swft-border: var(--border); --swft-card: var(--surface);
+      --ps-bg: var(--bg); --ps-text: var(--fg); --ps-muted: var(--muted);
+      --ps-accent: var(--accent); --ps-border: var(--border); --ps-card: var(--surface);
+      background: var(--bg); color: var(--fg); font-weight: 300;
+    }
+    .ar-body .ps-eyebrow { border-color: var(--border); color: var(--muted); border-radius: 4px; font-weight: 300; }
+    .ar-body .ps-title { font-family: var(--ar-display); text-transform: uppercase; letter-spacing: -0.02em; font-weight: 700; }
+    .ar-body .ps-lead { font-weight: 300; }
+    .ar-body .ga-form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; }
+    .ar-body .button.is-course { background: var(--cta-bg) !important; color: var(--cta-fg) !important; border-radius: 4px; }
+    .ar-body .button.is-course.outlined { background: transparent !important; color: var(--fg) !important; border: 1px solid var(--border); }
+  </style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -35,15 +55,19 @@
   }
   </script>
 </head>
-<body class="ps-page ga-page">
+<body class="ar-body ps-page ga-page">
   <div id="swft-nav" data-active="contact"></div>
 
   <main>
     <div class="ps-shell">
-      <header class="ps-hero ps-hero--left">
+      <header class="ps-hero ps-hero--left ar-page-hero" style="padding-top:1rem">
+        <div class="ar-section-label" style="justify-content:flex-start;gap:2rem">
+          <span>→ [ GROWTH AUDIT ]</span>
+          <span>SWFT</span>
+        </div>
         <p class="ps-eyebrow">Free Growth Audit</p>
-        <h1 class="ps-title">Find out what is costing your business customers online.</h1>
-        <p class="ps-lead">Tell us about your business, pick the offer that fits, and book a short call. You&rsquo;ll get a personalized review with the three changes most likely to improve trust, inquiries, and sales.</p>
+        <h1 class="ps-title" data-split="enter">Find out what is costing your business customers online.</h1>
+        <p class="ps-lead ar-thin">Tell us about your business, pick the offer that fits, and book a short call. You&rsquo;ll get a personalized review with the three changes most likely to improve <strong class="ar-mark">trust, inquiries, and sales</strong> — across Bergen, Hudson, and NYC.</p>
       </header>
 
       <div class="ga-grid">
@@ -205,8 +229,13 @@
     </div>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
+  <script src="js/swft-theme-clock.js" defer></script>
+  <script src="js/swft-split-text.js" defer></script>
+  <script src="js/swft-motion.js" defer></script>
   <script src="js/growth-audit-form.js" defer></script>
 </body>
 </html>

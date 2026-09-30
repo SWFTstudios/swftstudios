@@ -20,11 +20,11 @@ npm run build:locations
 
 | Route | Role |
 | --- | --- |
-| `/` | Homepage |
+| `/` | Homepage (ARAISE-inspired redesign on `swft-araise-2027`) |
 | `/growth-audit` | Free Growth Audit lead flow |
 | `/services.html` | Offer ladder |
 | `/website-pricing.html` | Pricing |
-| `/websites.html` | Portfolio |
+| `/websites.html` | Portfolio / Our Work |
 | `/case-studies.html` | Case studies hub |
 | `/team.html` | Team |
 | `/contact.html` | Project inquiry |
@@ -33,6 +33,8 @@ npm run build:locations
 | `/portal/onboard.html` | Client portal signup |
 | `/portal/login.html` | Client portal sign-in |
 | `/portal/dashboard.html` | Client project + performance dashboard |
+
+On branch `swft-araise-2027`, primary marketing routes use the shared ARAISE theme (clock + day/night). See [`docs/ARAISE_THEME.md`](ARAISE_THEME.md).
 
 ## Local SEO coverage
 
