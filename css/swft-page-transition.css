@@ -1,0 +1,53 @@
+/* ============================================================
+   Card → case-study hero page transition.
+   Loaded on the homepage and on project case-study pages, with
+   js/swft-page-transition.js. Browsers with cross-document View
+   Transitions (Chrome/Edge 126+, Safari 18.2+) morph the clicked card
+   image into the case study's cover; others get the JS fallback.
+   ============================================================ */
+
+/* Opt both pages in to cross-document view transitions (same-origin only) */
+@view-transition {
+  navigation: auto;
+}
+
+/* The destination: the case study's full-width cover image */
+.cs-cover img {
+  view-transition-name: cs-hero;
+}
+
+::view-transition-group(cs-hero) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+/* Card and cover have different aspect ratios: crop instead of stretching */
+::view-transition-old(cs-hero),
+::view-transition-new(cs-hero) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  overflow: clip;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+}
+
+/* JS fallback: hide the case study until the flying image has landed */
+html.cs-arriving .main-wrapper {
+  opacity: 0;
+}
+
+html.cs-arrived .main-wrapper {
+  transition: opacity 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

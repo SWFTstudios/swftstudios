@@ -12,6 +12,28 @@
 - The hero intro now waits for the ocean's first frame (`swftocean:ready`, 1.5s fallback) instead of the Vimeo player.
 - The cube sits just above the water (`data-hover-gap`). Waves are centred on the water line, so the reflection starts right under the cube.
 
+- The homepage About section (`#About`) is rebuilt after the swft2027 staging design (branch `swft-araise-2027`). See [`css/home-about.css`](../css/home-about.css) and [`js/swft-about.js`](../js/swft-about.js).
+  - Layout: a `-> [ ABOUT US ] / SWFT` meta row, then a huge uppercase Chakra Petch statement.
+  - Copy: "SWFT Studios creates high-converting marketing content and brand-true digital experiences for Bergen, Hudson, and NYC."
+  - Reveal: the statement starts dim, and its words light up one at a time on scroll. It uses the same window as the staging ScrollTrigger (`top 75%` → `bottom 35%`), with no library dependency.
+  - Carousel: a full-bleed work carousel (Hamper, Brooklyn Steel, Manna Hydration, Thyme & Table, Snooze Lane). Black elliptical bars cut it into a curved window, with sizes taken from the staging site head. Each card links to its case study, and a "View all work" link sits below it.
+  - Carousel motion: `js/swft-about.js` loops it continuously at 70px/s (50px/s on phones).
+    - Touch: the first tap on a card holds the loop for 3s and shows "→ View project", and a second tap during the hold opens the case study. When the hold ends, the loop eases back up to speed from where it stopped.
+    - Mouse and keyboard: a click or Enter opens the case study directly, and keyboard focus holds the loop while it's on a card.
+    - Hovering no longer pauses it, and vertical swipes over it still scroll the page.
+    - Swipeable: drag it with a mouse or finger, or swipe sideways on a trackpad. On release it keeps the fling's speed (capped at 4,000px/s) and direction, either way, then glides back to its default speed over a few seconds (1.1s time constant). A drag never opens or holds a card, and vertical swipes still scroll the page.
+- The hero's work marquee and its "View All" button are removed. The About carousel replaces them.
+- New **Selected Work** section (`#work`), which replaces the "About us" slider (`#Projects`). It's ported from the swft2027 / ARAISE design: `-> [ OUR WORK ]` label, "Selected Work" with the second word outlined, and a lead line. Below that, four full-width project covers (Brooklyn Steel, Manna Hydration, Snooze Lane, Hamper) stack as you scroll, each sticking under the nav. Each cover links to its case study. On desktop a "View Work" circle follows the cursor over the covers, and the heading fades as the covers pass over it. There's a "View all work" button at the end. See [`css/home-work-services.css`](../css/home-work-services.css) and [`js/home-work-stack.js`](../js/home-work-stack.js), which is plain JS with no GSAP.
+- New **Creative Services** section (`#services`), which replaces the "Investment: Pricing that matches the work" section (`#homepage-pricing`). It shows `-> [ OUR SERVICES ]`, "Creative Services", and four linked service rows: GBP Content Refresh $400, Website Only $800, Website + Content $2,000, and Growth Retainers. Alternate rows are outlined, and each row has a cyan ↗ arrow.
+- **Card → case-study transition.** Clicking a Selected Work cover or an About carousel card morphs its image into the case study's full-width cover (`.cs-cover`). See [`css/swft-page-transition.css`](../css/swft-page-transition.css) and [`js/swft-page-transition.js`](../js/swft-page-transition.js), which load on the homepage and on the 14 project case studies.
+  - Chrome, Edge and Safari 18.2+ use cross-document View Transitions (`@view-transition`). The clicked image is named `cs-hero`, matching the cover. Pressing Back morphs the cover back into its card.
+  - Other browsers (Firefox) use a FLIP fallback in plain JS. The card image expands to full screen, the page navigates, and the case study starts on that image before settling it into the cover slot.
+  - Case-study covers are prefetched as the cards come near the viewport, and on hover, tap or focus. Covers load with `fetchpriority="high"`.
+  - Reduced motion, modifier-clicks and the carousel's first tap (which holds the loop) navigate normally.
+- Both sections use a black background, white text and a cyan (`--green`) accent. The homepage no longer loads `js/pricing-render.js` or `js/homepage-pricing.js`, but `website-pricing.html` still uses both.
+  - It replaces the old animated statement, whose Jersey City / Manhattan / North Jersey links left the homepage body. The nav still links to Locations.
+  - Reduced motion: every word is lit, and the carousel is a static strip that can be scrolled sideways.
+
 ### Removed (homepage only)
 - The Vimeo intro loader overlay, `js/hero-vimeo-loader.js`, `css/hero-vimeo-loader.css` and the Vimeo player API script.
 - The hidden legacy "cube night watch" background videos.
