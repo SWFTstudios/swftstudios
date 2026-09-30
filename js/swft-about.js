@@ -84,12 +84,18 @@
      the carousel for HOLD_MS and shows the project; a second tap on that card
      during the hold opens it. When the hold ends the carousel eases back up to
      speed from where it stopped. Mouse clicks and Enter open the project
-     straight away; keyboard focus on a card holds the carousel until it leaves. */
+     straight away; keyboard focus on a card holds the carousel until it leaves.
+     Drag / swipe (mouse, touch, pen) or a sideways trackpad swipe moves it by
+     hand; on release it keeps the fling's speed and direction, then glides
+     back to its default speed. A drag never opens or holds a card. */
   var SPEED_DESKTOP = 70;  // px per second
   var SPEED_MOBILE = 50;
   var HOLD_MS = 3000;
   var EASE_OUT_S = 0.18;   // time constant to glide to a stop
   var EASE_IN_S = 0.9;     // time constant to ramp back up (gradual resume)
+  var GLIDE_S = 1.1;       // time constant for a fling to settle back to default speed
+  var DRAG_SLOP = 6;       // px before a press becomes a drag (below this it's a tap)
+  var MAX_FLING = 4000;    // px per second
 
   function initCarousel(gallery) {
     var track = gallery.querySelector(".swft-about-gallery__track");
@@ -102,6 +108,7 @@
 
     var x = 0, v = 0, setW = 0, last = 0, raf = 0;
     var held = null, holdUntil = 0, focused = false, visible = true, pointerType = "";
+    var drag = null, gliding = false, suppressClick = false, wheelAt = 0;
 
     function speed() {
       return window.matchMedia("(max-width: 767px)").matches ? SPEED_MOBILE : SPEED_DESKTOP;
@@ -126,20 +133,104 @@
       var dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
       last = now;
       if (held && now >= holdUntil) release();
-      var target = held || focused ? 0 : speed();
-      var tau = target < v ? EASE_OUT_S : EASE_IN_S;
-      v += (target - v) * (1 - Math.exp(-dt / tau));
+      if (!drag) {
+        var target = held || focused ? 0 : speed();
+        var tau = gliding ? GLIDE_S : (target < v ? EASE_OUT_S : EASE_IN_S);
+        v += (target - v) * (1 - Math.exp(-dt / tau));
+        if (gliding && Math.abs(target - v) < 2) gliding = false;
+        x += v * dt;
+      }
+      paint();
+      raf = requestAnimationFrame(frame);
+    }
+    function paint() {
       if (setW > 0) {
-        x = (x + v * dt) % setW;
+        x = ((x % setW) + setW) % setW; // wrap both ways
         track.style.transform = "translate3d(" + (-x).toFixed(2) + "px,0,0)";
       }
-      raf = requestAnimationFrame(frame);
     }
     function start() {
       if (!raf) raf = requestAnimationFrame(frame);
     }
+    function fling(vel) {
+      v = Math.max(-MAX_FLING, Math.min(MAX_FLING, vel));
+      gliding = true;
+      release(); // a swipe replaces any tap-hold
+      start();
+    }
 
-    track.addEventListener("pointerdown", function (e) { pointerType = e.pointerType; });
+    /* ---- Drag / swipe ---- */
+    track.addEventListener("pointerdown", function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      drag = null;
+      suppressClick = false;
+      var p = { id: e.pointerId, x0: e.clientX, y0: e.clientY, x: e.clientX, t: e.timeStamp, samples: [], active: false };
+      var onMove = function (ev) {
+        if (ev.pointerId !== p.id) return;
+        var dx = ev.clientX - p.x0, dy = ev.clientY - p.y0;
+        if (!p.active) {
+          if (Math.abs(dx) < DRAG_SLOP) return;
+          if (Math.abs(dy) > Math.abs(dx)) { cleanup(); return; } // vertical: let the page scroll
+          p.active = true;
+          drag = p;
+          gallery.classList.add("is-dragging");
+          try { track.setPointerCapture(p.id); } catch (err) { /* not capturable */ }
+        }
+        ev.preventDefault();
+        x -= ev.clientX - p.x;
+        p.x = ev.clientX;
+        p.samples.push({ x: ev.clientX, t: ev.timeStamp });
+        while (p.samples.length > 2 && ev.timeStamp - p.samples[0].t > 100) p.samples.shift();
+        paint();
+      };
+      var onUp = function (ev) {
+        if (ev.pointerId !== p.id) return;
+        if (p.active) {
+          suppressClick = true; // the click that follows a drag must not open or hold a card
+          var sm = p.samples, vel = 0;
+          if (sm.length > 1) {
+            var a = sm[0], b = sm[sm.length - 1];
+            var dt = (b.t - a.t) / 1000;
+            if (dt > 0 && ev.timeStamp - b.t < 80) vel = -(b.x - a.x) / dt; // stale samples = stopped
+          }
+          drag = null;
+          gallery.classList.remove("is-dragging");
+          fling(vel);
+        }
+        cleanup();
+      };
+      var cleanup = function () {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+      };
+      window.addEventListener("pointermove", onMove, { passive: false });
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    });
+    // Swallow the click after a drag before the card, hold or page-transition handlers see it
+    track.addEventListener("click", function (e) {
+      if (!suppressClick) return;
+      suppressClick = false;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }, true);
+    // No native image / link dragging while swiping with a mouse
+    track.addEventListener("dragstart", function (e) { e.preventDefault(); });
+
+    /* ---- Trackpad sideways swipe ---- */
+    gallery.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // vertical: page scroll
+      e.preventDefault();
+      var now = e.timeStamp, dt = wheelAt ? Math.max(0.008, Math.min(0.1, (now - wheelAt) / 1000)) : 0.016;
+      wheelAt = now;
+      var dx = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX;
+      x += dx;
+      paint();
+      fling(v * 0.5 + (dx / dt) * 0.5);
+    }, { passive: false });
+
+    track.addEventListener("pointerdown", function (e) { pointerType = e.pointerType; }, true);
     track.addEventListener("click", function (e) {
       var card = e.target.closest(".swft-about-gallery__card");
       var type = pointerType;

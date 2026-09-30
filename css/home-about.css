@@ -96,6 +96,25 @@
   animation: none;
 }
 
+/* Draggable: grab cursor on desktop, no text/image selection while swiping */
+.swft-about-gallery.is-js .swft-about-gallery__track {
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.swft-about-gallery.is-dragging .swft-about-gallery__track {
+  cursor: grabbing;
+}
+
+.swft-about-gallery.is-dragging .swft-about-gallery__card {
+  pointer-events: none;
+}
+
+.swft-about-gallery__card img {
+  -webkit-user-drag: none;
+}
+
 /* Two identical sets; moving by one set width (half the track) loops seamlessly */
 @keyframes swft-about-scroll {
   from { transform: translate3d(0, 0, 0); }
