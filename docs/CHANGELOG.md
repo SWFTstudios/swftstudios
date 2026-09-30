@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-09-30: Homepage hero — ocean cube replaces the background video
+
+### Changed
+- The homepage hero's Vimeo background video is replaced by the glowing work cube over the WebGL ocean. It fills the right half of the first screen on desktop. On tablet and mobile it sits above the copy, up to 56svh tall and trimmed on short screens so the copy stays above the fold. See [`css/home-hero-ocean.css`](../css/home-hero-ocean.css) and [`docs/SWFT_CUBE.md`](SWFT_CUBE.md#homepage-hero).
+- New hero copy:
+  - Eyebrow: "Brand · Website · Content"
+  - H1: "Own your blue ocean."
+  - Subhead: "Websites and content that lift your brand out of the crowd and into open water."
+  - The "Named offers with clear scope…" line is removed from the hero.
+- The hero intro now waits for the ocean's first frame (`swftocean:ready`, 1.5s fallback) instead of the Vimeo player.
+- The cube sits just above the water (`data-hover-gap`). Waves are centred on the water line, so the reflection starts right under the cube.
+
+### Removed (homepage only)
+- The Vimeo intro loader overlay, `js/hero-vimeo-loader.js`, `css/hero-vimeo-loader.css` and the Vimeo player API script.
+- The hidden legacy "cube night watch" background videos.
+
+---
+
+## 2026-09-30: Interactive 3D image cube
+
+### Added
+- [`css/swft-cube.css`](../css/swft-cube.css) + [`js/swft-cube.js`](../js/swft-cube.js): a reusable six-face 3D cube with a slideshow on each face. Drag or swipe to rotate (it snaps to a face, and a flick moves at least one face). Tap the front face to change slides or tap a side face to bring it forward. Hover tilts the cube, and the arrow keys and Enter/Space also work. Honors reduced motion. Docs: [`docs/SWFT_CUBE.md`](SWFT_CUBE.md).
+- Idle spin (`data-spin`): the cube spins slowly and continuously. Any interaction stops or coasts it to a stop, and after 3s idle it eases back to level and the spin ramps back up.
+- Ocean stage ([`css/swft-ocean.css`](../css/swft-ocean.css) + [`js/swft-ocean.js`](../js/swft-ocean.js)): the cube glows with ice-blue edges and hovers over a real-time WebGL black sea. Its reflection streaks across the ripples, with bloom, glints and low mist. The water is animated in 3D: a rolling swell under choppy ripples, with crests that glow where the cube's light passes through. The cube bobs gently, and the scene steps down resolution on slow devices.
+- [`cube.html`](../cube.html): a `noindex` demo page built from existing portfolio images. It isn't linked from the nav.
+
+---
+
 ## 2026-08-20: PostHog on marketing site
 
 ### Added

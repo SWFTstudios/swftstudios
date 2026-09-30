@@ -507,21 +507,11 @@ body{
     "description": "Website design and development, photography and video content, and lead-capture systems for growing businesses."
   }
   </script>
-  <link href="css/hero-vimeo-loader.css" rel="stylesheet" type="text/css">
-  <style>
-    /* Critical: paint loader before hero iframe */
-    #swft-hero-loader{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.75rem;background:#1e211e;color:#fff;font-family:"Inter Display",Inter,system-ui,sans-serif}
-    body.hero-loading{overflow:hidden}
-  </style>
+  <link href="css/swft-cube.css" rel="stylesheet" type="text/css">
+  <link href="css/swft-ocean.css" rel="stylesheet" type="text/css">
+  <link href="css/home-hero-ocean.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <div id="swft-hero-loader" class="swft-hero-loader" role="status" aria-live="polite" aria-label="Loading">
-    <div class="swft-hero-loader__brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></div>
-    <div class="swft-hero-loader__progress">
-      <div class="swft-hero-loader__track"><span id="swft-hero-loader-bar" class="swft-hero-loader__bar"></span></div>
-      <div id="swft-hero-loader-pct" class="swft-hero-loader__pct">0%</div>
-    </div>
-  </div>
 
   <div class="page-wrapper">
     <div class="hide w-embed">
@@ -954,57 +944,50 @@ margin: 0rem !important;
           </div>
           <div class="background_edge-gradient"></div>
           <div class="background_image-wrappe">
-                        <div class="hero-background-video _3d hero-vimeo" aria-hidden="true">
-              <iframe id="hero-vimeo" src="https://player.vimeo.com/video/1216244886?background=1&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;autopause=0&amp;badge=0&amp;player_id=0&amp;app_id=58479" title="NYC View" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-              <img class="hero-vimeo-still" src="images/hero-nyc-view-still.jpg" alt="" hidden>
-            </div>
-            <div data-poster-url="videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg" data-video-urls="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4,videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" class="hero-background-video hide w-background-video w-background-video-atom"><video id="4e980cc5-6bd9-d7d0-53d5-69b601f13828-video" autoplay="" loop="" style="background-image:url(&quot;videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-                <source src="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4" data-wf-ignore="true">
-                <source src="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.webm" data-wf-ignore="true">
-              </video><noscript>
-                <style>
-  [data-wf-bgvideo-fallback-img] {
-    display: none;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    [data-wf-bgvideo-fallback-img] {
-      position: absolute;
-      z-index: -100;
-      display: inline-block;
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }
-  }</style><img data-wf-bgvideo-fallback-img="true" src="videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg" alt="SWFT Studios cube night watch video still">
-              </noscript>
-              <div aria-live="polite"><button type="button" data-w-bg-video-control="true" aria-controls="4e980cc5-6bd9-d7d0-53d5-69b601f13828-video" class="w-backgroundvideo-backgroundvideoplaypausebutton w-background-video--control"><span><img src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628299f8aa233b83918e24fd_Pause.svg" loading="lazy" alt="Pause video"></span><span hidden=""><img loading="lazy" alt="Play video" src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628298b20ae0236682d4b87f_Play-24.svg"></span></button></div>
-            </div>
-            <div data-poster-url="videos/swft_cube_night_watch_-_mobile-540p-poster-00001.jpg" data-video-urls="videos/swft_cube_night_watch_-_mobile-540p-transcode.mp4,videos/swft_cube_night_watch_-_mobile-540p-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" class="hero-background-video mobile hide w-background-video w-background-video-atom"><video id="cf96cd26-f40c-12a8-b685-13ee5d5060a4-video" autoplay="" loop="" style="background-image:url(&quot;videos/swft_cube_night_watch_-_mobile-540p-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-                <source src="videos/swft_cube_night_watch_-_mobile-540p-transcode.mp4" data-wf-ignore="true">
-                <source src="videos/swft_cube_night_watch_-_mobile-540p-transcode.webm" data-wf-ignore="true">
-              </video><noscript>
-                <style>
-  [data-wf-bgvideo-fallback-img] {
-    display: none;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    [data-wf-bgvideo-fallback-img] {
-      position: absolute;
-      z-index: -100;
-      display: inline-block;
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }
-  }</style><img data-wf-bgvideo-fallback-img="true" src="videos/swft_cube_night_watch_-_mobile-540p-poster-00001.jpg" alt="SWFT Studios cube night watch video still, mobile">
-              </noscript>
-              <div aria-live="polite"><button type="button" data-w-bg-video-control="true" aria-controls="cf96cd26-f40c-12a8-b685-13ee5d5060a4-video" class="w-backgroundvideo-backgroundvideoplaypausebutton w-background-video--control"><span><img src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628299f8aa233b83918e24fd_Pause.svg" loading="lazy" alt="Pause video"></span><span hidden=""><img loading="lazy" alt="Play video" src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628298b20ae0236682d4b87f_Play-24.svg"></span></button></div>
-            </div>
           </div>
           <div class="background_image-gradient"></div>
         </div>
       </div>
-      <section class="section_gallery">
+      <section class="section_gallery has-hero-ocean">
+        <div class="swft-ocean home-hero-ocean" data-swft-ocean data-hover-gap="0.2">
+          <div class="swft-cube" data-swft-cube data-vertical-swipe="false" data-spin="12" data-slide-interval="3400" tabindex="0" role="region" aria-roledescription="3D image cube" aria-label="SWFT Studios work: drag or use arrow keys to spin, Enter for the next photo">
+            <div class="swft-cube__scene">
+              <div class="swft-cube__body">
+                <div data-face="front" data-label="Websites">
+                  <img class="swft-cube__slide" src="images/thyme-and-table-thumbnail-p-500.webp" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Thyme and Table website" loading="eager" decoding="async">
+                  <img class="swft-cube__slide" src="images/mayim-spa-thumbnail.webp" alt="Mayim Spa website" loading="lazy" decoding="async">
+                  <img class="swft-cube__slide" src="images/tal-hydration-thumbnail-p-500.webp" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="TAL Hydration website" loading="lazy" decoding="async">
+                </div>
+                <div data-face="right" data-label="Brands">
+                  <img class="swft-cube__slide" src="images/manna-hydration-thumbnail-p-500.webp" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Manna Hydration website" loading="eager" decoding="async">
+                  <img class="swft-cube__slide" src="images/alpha-ministries-thumbnail-p-500.webp" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Alpha Ministries website" loading="lazy" decoding="async">
+                  <img class="swft-cube__slide" src="images/hamper_app_website_thumbnail-p-500.webp" srcset="images/hamper_app_website_thumbnail-p-500.webp 500w, images/hamper_app_website_thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Hamper app website" loading="lazy" decoding="async">
+                </div>
+                <div data-face="back" data-label="Content">
+                  <img class="swft-cube__slide" src="images/Roller_Reels_thumbnail-p-500.webp" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Roller Reels production" loading="eager" decoding="async">
+                  <img class="swft-cube__slide" src="images/BLE_SWFT_thumbnail-p-500.webp" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Blurred Lines Entertainment production" loading="lazy" decoding="async">
+                  <img class="swft-cube__slide" src="images/brooklyn-steel-thumbnail-p-500.webp" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Brooklyn Steel project" loading="lazy" decoding="async">
+                </div>
+                <div data-face="left" data-label="Industries">
+                  <img class="swft-cube__slide" src="images/doctor-p-500.webp" srcset="images/doctor-p-500.webp 500w, images/doctor-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Healthcare practice" loading="eager" decoding="async">
+                  <img class="swft-cube__slide" src="images/real-estate-p-500.webp" srcset="images/real-estate-p-500.webp 500w, images/real-estate-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Real estate" loading="lazy" decoding="async">
+                  <img class="swft-cube__slide" src="images/e-commerce-p-500.webp" srcset="images/e-commerce-p-500.webp 500w, images/e-commerce-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="E-commerce" loading="lazy" decoding="async">
+                </div>
+                <div data-face="top" data-label="Messaging">
+                  <img class="swft-cube__slide" src="images/Website-Chatbot-Lifestyle-p-500.webp" srcset="images/Website-Chatbot-Lifestyle-p-500.webp 500w, images/Website-Chatbot-Lifestyle-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Website chatbot in use" loading="eager" decoding="async">
+                  <img class="swft-cube__slide" src="images/Whatsapp-Lifestyle-Photo-p-500.webp" srcset="images/Whatsapp-Lifestyle-Photo-p-500.webp 500w, images/Whatsapp-Lifestyle-Photo-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="WhatsApp messaging" loading="lazy" decoding="async">
+                  <img class="swft-cube__slide" src="images/IG-FB-Messenger-Lifestlye-p-500.webp" srcset="images/IG-FB-Messenger-Lifestlye-p-500.webp 500w, images/IG-FB-Messenger-Lifestlye-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Instagram and Messenger inbox" loading="lazy" decoding="async">
+                </div>
+                <div data-face="bottom" data-label="Studio">
+                  <img class="swft-cube__slide" src="images/swft-thumbnail-p-500.webp" srcset="images/swft-thumbnail-p-500.webp 500w, images/swft-thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="SWFT Studios website" loading="eager" decoding="async">
+                  <img class="swft-cube__slide" src="images/Snooze-Lane-Desktop-thumbnail-p-500.webp" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Snooze Lane website" loading="lazy" decoding="async">
+                  <img class="swft-cube__slide" src="images/built_by_me_ez_thumbnail-p-500.webp" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Built By Me EZ website" loading="lazy" decoding="async">
+                  <img class="swft-cube__slide" src="images/Personal-Trainer-p-500.webp" srcset="images/Personal-Trainer-p-500.webp 500w, images/Personal-Trainer-p-800.webp 800w" sizes="(min-width: 992px) 300px, 46vw" alt="Personal trainer" loading="lazy" decoding="async">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="padding-global">
           <div class="container-large">
             <div class="div-block-3">
@@ -1012,14 +995,14 @@ margin: 0rem !important;
                 <div class="w-layout-grid course_component">
                   <div id="w-node-_8934f37e-af8f-f8cd-214f-b358479c4d84-278ca766" class="course_content">
                     <div class="margin-bottom margin-small">
-                      <div class="text-size-small text-color-green">Web Design + Content for Growing Businesses</div>
+                      <div class="text-size-small text-color-green">Brand · Website · Content</div>
                     </div>
                     <div class="margin-bottom margin-small">
                       <div class="max-width-large">
-                        <h1 class="text-weight-medium">Websites and content that turn attention into booked customers.</h1>
+                        <h1 class="text-weight-medium">Own your blue ocean.</h1>
                       </div>
                     </div>
-                    <p class="testimonial-text">We build the website and capture the photo and video content in person, so local businesses get one clear system instead of juggling separate agencies.</p>
+                    <p class="testimonial-text">Websites and content that lift your brand out of the crowd and into open water.</p>
                     <div class="margin-top margin-medium">
                       <div class="button-group is-course">
                         <a href="/growth-audit" class="button is-course w-inline-block">
@@ -1032,7 +1015,6 @@ margin: 0rem !important;
                         </a>
                       </div>
                     </div>
-                    <p class="text-size-small text-color-green margin-top margin-small">Named offers with clear scope. Price scales with content capture, not a flat minimum.</p>
                   </div>
                   <div id="w-node-_9273b8d8-2395-dafb-0ae5-13a6781fdc25-278ca766" class="course_spacer-block"></div>
                 </div>
@@ -1771,7 +1753,19 @@ tippy('.nav_link.is-muted', {
   <script src="js/homepage-audience.js"></script>
   <script src="js/swft-analytics.js"></script>
   <script src="js/swft-nav.js"></script>
-  <script src="https://player.vimeo.com/api/player.js"></script>
-  <script src="js/hero-vimeo-loader.js"></script>
+  <script src="js/swft-cube.js"></script>
+  <script src="js/swft-ocean.js"></script>
+  <script>
+  // Reveal the hero once the ocean has painted its first frame (or after 1.5s regardless).
+  (function () {
+    function ready() {
+      if (document.body.classList.contains("hero-ready")) return;
+      document.body.classList.add("hero-ready");
+      window.dispatchEvent(new CustomEvent("swft:hero-ready"));
+    }
+    document.addEventListener("swftocean:ready", ready);
+    window.setTimeout(ready, 1500);
+  })();
+  </script>
 </body>
 </html>

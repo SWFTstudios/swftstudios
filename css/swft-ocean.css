@@ -1,0 +1,98 @@
+/* ============================================================
+   SWFT Ocean stage — black glassy sea under a glowing 3D cube.
+   Pair with js/swft-ocean.js (and css/swft-cube.css for the cube).
+   ============================================================ */
+
+.swft-ocean {
+  position: relative;
+  height: clamp(560px, 88svh, 880px);
+  overflow: hidden;
+  isolation: isolate;
+  /* Painted before WebGL starts and kept as the no-WebGL fallback */
+  background:
+    radial-gradient(ellipse 22% 26% at 50% 42%, rgba(140, 200, 255, 0.22), transparent 70%),
+    radial-gradient(ellipse 40% 5% at 50% 74%, rgba(140, 200, 255, 0.18), transparent 70%),
+    linear-gradient(to bottom, #000 0%, #010204 70%, #020409 74%, #000 100%);
+}
+
+.swft-ocean__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.swft-ocean--live .swft-ocean__canvas {
+  opacity: 1;
+}
+
+/* Darken the bottom edge so the HUD stays readable over the water */
+.swft-ocean::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 150px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+}
+
+/* The cube root becomes a full-stage overlay; the scene is placed by JS (--cube-y) */
+.swft-ocean .swft-cube {
+  --cube-size: min(44vw, 250px);
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  gap: 0;
+  justify-content: flex-end;
+  padding: 0 16px 20px;
+}
+
+.swft-ocean .swft-cube__scene {
+  position: absolute;
+  left: 50%;
+  top: var(--cube-y, 38%);
+  translate: -50% -50%;
+  transform: translateY(var(--cube-bob, 0px));
+}
+
+.swft-ocean .swft-cube__hud {
+  position: relative;
+}
+
+/* The cube is the light source: glowing ice-blue edges and a soft inner glow.
+   Box-shadows (not filters) so the faces keep their 3D context. */
+.swft-ocean .swft-cube__face {
+  border: 1.5px solid rgba(210, 238, 255, 0.95);
+  box-shadow:
+    0 0 6px rgba(190, 228, 255, 0.9),
+    0 0 22px rgba(140, 200, 255, 0.55),
+    inset 0 0 18px rgba(160, 215, 255, 0.5);
+}
+
+.swft-ocean .swft-cube__face.is-front {
+  border-color: rgba(230, 246, 255, 1);
+}
+
+.swft-ocean .swft-cube__face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Cool wash so the photos read as lit from within the cube */
+  background: radial-gradient(circle at 50% 50%, rgba(170, 220, 255, 0.04) 40%, rgba(150, 210, 255, 0.22) 100%);
+  mix-blend-mode: screen;
+}
+
+.swft-ocean .swft-cube__slide {
+  filter: saturate(0.8) brightness(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swft-ocean__canvas { transition: none; }
+}
