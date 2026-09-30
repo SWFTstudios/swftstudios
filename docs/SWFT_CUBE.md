@@ -92,7 +92,7 @@ Options and hooks:
 
 The ocean cube replaces the Vimeo background video in the homepage hero (`index.html`, `css/home-hero-ocean.css`).
 - **Desktop (≥ 992px):** the scene fills the right half of the first screen. Its left edge fades into the page black, and the copy sits centred beside it.
-- **Tablet and mobile:** the scene fills the lower 66% of the first screen (`34svh` to `100svh`). The copy sits in the top third, with the buttons side by side (they stack below 360px). On phones the scene runs edge to edge past the body's 12px gutter.
+- **Tablet and mobile:** the scene sits at the top of the hero, straight under the nav, and the copy sits below it. The scene is up to `56svh` tall (`--hero-scene-h`), trimmed on short screens so the headline and buttons stay above the fold, and never under `38svh`. The buttons sit side by side (they stack below 360px). On phones the scene runs edge to edge past the body's 12px gutter.
 - **Controls:** the hero hides the cube's HUD (buttons, dots, hint). The cube can still be dragged, tapped and hovered, and responds to arrow keys once focused. It uses `data-vertical-swipe="false"`, so a vertical swipe that starts on the cube scrolls the page.
 - **Pointer events:** the copy wrappers above the scene pass pointer events through, and only the copy, the buttons and the work marquee take them. That's how the cube stays interactive under the layered Webflow hero.
 - **Removed from the homepage:** the Vimeo intro loader (`#swft-hero-loader`, `js/hero-vimeo-loader.js`, the Vimeo player API) and the hidden legacy cube videos. Other pages still use the Vimeo hero.

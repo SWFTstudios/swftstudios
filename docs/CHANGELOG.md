@@ -3,7 +3,7 @@
 ## 2026-09-30: Homepage hero — ocean cube replaces the background video
 
 ### Changed
-- The homepage hero's Vimeo background video is replaced by the glowing work cube over the WebGL ocean. It fills the right half of the first screen on desktop, and the lower 66% on tablet and mobile. See [`css/home-hero-ocean.css`](../css/home-hero-ocean.css) and [`docs/SWFT_CUBE.md`](SWFT_CUBE.md#homepage-hero).
+- The homepage hero's Vimeo background video is replaced by the glowing work cube over the WebGL ocean. It fills the right half of the first screen on desktop. On tablet and mobile it sits above the copy, up to 56svh tall and trimmed on short screens so the copy stays above the fold. See [`css/home-hero-ocean.css`](../css/home-hero-ocean.css) and [`docs/SWFT_CUBE.md`](SWFT_CUBE.md#homepage-hero).
 - New hero copy:
   - Eyebrow: "Brand · Website · Content"
   - H1: "Own your blue ocean."

@@ -4,8 +4,8 @@
    css/swft-ocean.css, js/swft-cube.js and js/swft-ocean.js.
 
    Desktop (>= 992px): the scene fills the right half of the hero.
-   Tablet / mobile:     the scene fills the lower 66% of the first screen,
-                        with the copy in the top third.
+   Tablet / mobile:     the scene sits at the top of the hero (up to 56svh),
+                        with the copy below it.
    ============================================================ */
 
 /* Hold the hero until the ocean's first frame so the intro fades in cleanly.
@@ -88,32 +88,41 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
 }
 
 /* ---------- Tablet + mobile ---------- */
+/* The scene sits at the top of the hero, straight under the nav, and the copy
+   follows below it. --hero-scene-h is the scene height. */
 @media screen and (max-width: 991px) {
-  /* Lower 66% of the screen: from 34svh down to the bottom of the first screen */
-  .home-hero-ocean.swft-ocean {
-    top: calc(34svh - var(--sn-height, 62px));
-    left: 0;
-    width: 100%;
-    height: 66svh;
+  .section_gallery.has-hero-ocean {
+    /* 56% of the screen, trimmed on short screens so the copy still fits above the fold */
+    --hero-scene-h: max(38svh, min(56svh, calc(100svh - 24rem)));
   }
 
-  /* Fade the top edge into the copy area instead of the side */
+  .home-hero-ocean.swft-ocean {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--hero-scene-h);
+  }
+
+  /* A light fade under the nav; the bottom edge already fades into the copy (::after) */
   .home-hero-ocean.swft-ocean::before {
     inset: 0 0 auto 0;
     width: auto;
-    height: 22%;
+    height: 12%;
     background: linear-gradient(to bottom, var(--black, #010101), rgba(1, 1, 1, 0));
   }
 
   .home-hero-ocean .swft-cube {
-    --cube-size: min(46vw, 230px);
+    --cube-size: min(44vw, 230px);
   }
 
-  /* Copy moves up into the top third; the first screen is reserved for the hero so
-     the work marquee starts below the scene. */
+  /* Copy starts just below the scene */
+  .has-hero-ocean .div-block-3 {
+    padding-top: calc(var(--hero-scene-h) + 0.5rem);
+  }
+
   .has-hero-ocean .course_component {
-    margin-top: 1rem;
-    min-height: calc(100svh - 17.5rem);
+    margin-top: 0;
+    min-height: 0;
     align-items: flex-start;
     align-content: flex-start;
   }
@@ -128,11 +137,7 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
     padding-right: 12px;
   }
 
-  .has-hero-ocean .div-block-3 {
-    padding-top: 84px;
-  }
-
-  /* Buttons side by side so the copy fits the top third */
+  /* Buttons side by side to keep the copy compact */
   .has-hero-ocean .button-group.is-course {
     width: 100%;
     max-width: none;
