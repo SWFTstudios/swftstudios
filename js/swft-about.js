@@ -1,5 +1,5 @@
 /* ============================================================
-   Homepage About: word-by-word scroll highlight.
+   Homepage About: word-by-word scroll highlight + work carousel.
    Splits [data-scroll-highlight] into words; they start dim and light up,
    in reading order, from when the element's top reaches 75% of the viewport
    height until its bottom reaches 35% (the swft2027 ScrollTrigger window). No dependencies. Links and <strong> keep working.
@@ -79,6 +79,103 @@
     update();
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
+  /* ---------- Work carousel ([data-about-carousel]) ----------
+     Loops continuously at a steady speed. Touch: the first tap on a card holds
+     the carousel for HOLD_MS and shows the project; a second tap on that card
+     during the hold opens it. When the hold ends the carousel eases back up to
+     speed from where it stopped. Mouse clicks and Enter open the project
+     straight away; keyboard focus on a card holds the carousel until it leaves. */
+  var SPEED_DESKTOP = 70;  // px per second
+  var SPEED_MOBILE = 50;
+  var HOLD_MS = 3000;
+  var EASE_OUT_S = 0.18;   // time constant to glide to a stop
+  var EASE_IN_S = 0.9;     // time constant to ramp back up (gradual resume)
+
+  function initCarousel(gallery) {
+    var track = gallery.querySelector(".swft-about-gallery__track");
+    if (!track || reducedMotion()) return;
+    var cards = Array.prototype.slice.call(track.querySelectorAll(".swft-about-gallery__card"));
+    var half = cards.length / 2;
+    if (!half || half % 1) return;
+
+    gallery.classList.add("is-js"); // turns off the CSS fallback animation
+
+    var x = 0, v = 0, setW = 0, last = 0, raf = 0;
+    var held = null, holdUntil = 0, focused = false, visible = true, pointerType = "";
+
+    function speed() {
+      return window.matchMedia("(max-width: 767px)").matches ? SPEED_MOBILE : SPEED_DESKTOP;
+    }
+    function measure() {
+      setW = cards[half].offsetLeft - cards[0].offsetLeft; // one full set incl. its gap
+    }
+    function release() {
+      if (held) held.classList.remove("is-held");
+      held = null;
+    }
+    function hold(card) {
+      release();
+      held = card;
+      card.classList.add("is-held");
+      holdUntil = performance.now() + HOLD_MS;
+    }
+
+    function frame(now) {
+      raf = 0;
+      if (!visible || document.hidden) { last = 0; return; }
+      var dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
+      last = now;
+      if (held && now >= holdUntil) release();
+      var target = held || focused ? 0 : speed();
+      var tau = target < v ? EASE_OUT_S : EASE_IN_S;
+      v += (target - v) * (1 - Math.exp(-dt / tau));
+      if (setW > 0) {
+        x = (x + v * dt) % setW;
+        track.style.transform = "translate3d(" + (-x).toFixed(2) + "px,0,0)";
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    function start() {
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    track.addEventListener("pointerdown", function (e) { pointerType = e.pointerType; });
+    track.addEventListener("click", function (e) {
+      var card = e.target.closest(".swft-about-gallery__card");
+      var type = pointerType;
+      pointerType = "";
+      if (!card || (type !== "touch" && type !== "pen")) return; // mouse / keyboard: open it
+      if (card === held && performance.now() < holdUntil) return; // second tap: open it
+      e.preventDefault();
+      hold(card);
+    });
+    // Only keyboard focus holds the loop; a tap also focuses the link, and that
+    // hold is handled (and timed) by the tap itself.
+    track.addEventListener("focusin", function (e) {
+      focused = !!(e.target.matches && e.target.matches(":focus-visible"));
+    });
+    track.addEventListener("focusout", function () { focused = false; });
+
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (visible) start();
+      }).observe(gallery);
+    }
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) start(); });
+    window.addEventListener("resize", measure);
+    window.addEventListener("load", measure);
+
+    measure();
+    v = speed(); // already moving when it first comes into view
+    start();
+  }
+
+  function initAll() {
+    init();
+    Array.prototype.forEach.call(document.querySelectorAll("[data-about-carousel]"), initCarousel);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initAll);
+  else initAll();
 })();

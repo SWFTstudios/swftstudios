@@ -16,7 +16,12 @@
   - Layout: a `-> [ ABOUT US ] / SWFT` meta row, then a huge uppercase Chakra Petch statement.
   - Copy: "SWFT Studios creates high-converting marketing content and brand-true digital experiences for Bergen, Hudson, and NYC."
   - Reveal: the statement starts dim, and its words light up one at a time on scroll. It uses the same window as the staging ScrollTrigger (`top 75%` → `bottom 35%`), with no library dependency.
-  - Carousel: a full-bleed work carousel (Hamper, Brooklyn Steel, Manna Hydration, Thyme & Table, Snooze Lane). It auto-scrolls on a seamless loop and pauses on hover or focus. Black elliptical bars cut it into a curved window, with sizes taken from the staging site head. Each card links to its case study.
+  - Carousel: a full-bleed work carousel (Hamper, Brooklyn Steel, Manna Hydration, Thyme & Table, Snooze Lane). Black elliptical bars cut it into a curved window, with sizes taken from the staging site head. Each card links to its case study, and a "View all work" link sits below it.
+  - Carousel motion: `js/swft-about.js` loops it continuously at 70px/s (50px/s on phones).
+    - Touch: the first tap on a card holds the loop for 3s and shows "→ View project", and a second tap during the hold opens the case study. When the hold ends, the loop eases back up to speed from where it stopped.
+    - Mouse and keyboard: a click or Enter opens the case study directly, and keyboard focus holds the loop while it's on a card.
+    - Hovering no longer pauses it, and vertical swipes over it still scroll the page.
+- The hero's work marquee and its "View All" button are removed. The About carousel replaces them.
   - It replaces the old animated statement, whose Jersey City / Manhattan / North Jersey links left the homepage body. The nav still links to Locations.
   - Reduced motion: every word is lit, and the carousel is a static strip that can be scrolled sideways.
 

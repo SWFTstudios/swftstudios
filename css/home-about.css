@@ -77,6 +77,8 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  /* Vertical swipes still scroll the page; taps go to the cards */
+  touch-action: pan-y;
 }
 
 .swft-about-gallery__track {
@@ -88,9 +90,10 @@
   animation: swft-about-scroll var(--speed) linear infinite;
 }
 
-.swft-about-gallery:hover .swft-about-gallery__track,
-.swft-about-gallery:focus-within .swft-about-gallery__track {
-  animation-play-state: paused;
+/* js/swft-about.js drives the loop (tap-to-hold, eased resume); the CSS
+   animation above is only the no-JS fallback. */
+.swft-about-gallery.is-js .swft-about-gallery__track {
+  animation: none;
 }
 
 /* Two identical sets; moving by one set width (half the track) loops seamlessly */
@@ -118,7 +121,8 @@
 }
 
 .swft-about-gallery__card:hover img,
-.swft-about-gallery__card:focus-visible img {
+.swft-about-gallery__card:focus-visible img,
+.swft-about-gallery__card.is-held img {
   transform: scale(1.03);
 }
 
@@ -145,9 +149,15 @@
 }
 
 .swft-about-gallery__card:hover .swft-about-gallery__name,
-.swft-about-gallery__card:focus-visible .swft-about-gallery__name {
+.swft-about-gallery__card:focus-visible .swft-about-gallery__name,
+.swft-about-gallery__card.is-held .swft-about-gallery__name {
   opacity: 1;
   transform: none;
+}
+
+.swft-about-gallery__card.is-held .swft-about-gallery__name::after {
+  content: " \2192  View project";
+  color: var(--green, #7fffe5);
 }
 
 /* Black elliptical bars over the top and bottom edges cut the strip into a
@@ -171,6 +181,27 @@
 .swft-about-gallery__eclipse--bottom {
   bottom: -74px;
   height: 156px;
+}
+
+.swft-about__more {
+  max-width: 72rem;
+  margin: clamp(1rem, 3vw, 1.75rem) auto 0;
+  text-align: right;
+}
+
+.swft-about__more a {
+  font: 500 0.8rem/1 var(--about-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--about-fg);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 0.3rem;
+}
+
+.swft-about__more a:hover,
+.swft-about__more a:focus-visible {
+  border-bottom-color: var(--green, #7fffe5);
 }
 
 @media screen and (max-width: 767px) {
