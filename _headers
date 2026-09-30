@@ -1,0 +1,9 @@
+# CSS and JS links carry a ?v= version, and these files still revalidate on every
+# visit, so a deploy shows up right away instead of waiting out a browser/CDN cache.
+# (Pages already serves HTML with max-age=0, must-revalidate.)
+/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+/fonts/*
+  Cache-Control: public, max-age=604800

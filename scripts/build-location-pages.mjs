@@ -49,9 +49,9 @@ function pageShell({ title, description, canonical, active, jsonLd, body, cssExt
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/css/swft-nav.css">
-  <link rel="stylesheet" href="/css/page-shell.css">
-  <link rel="stylesheet" href="/css/locations-page.css">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20260930b">
+  <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
+  <link rel="stylesheet" href="/css/locations-page.css?v=20260930b">
   ${cssExtra}
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   ${jsonLd ? `<script type="application/ld+json">\n${jsonLd}\n  </script>` : ""}
@@ -63,8 +63,8 @@ function pageShell({ title, description, canonical, active, jsonLd, body, cssExt
 ${body}
     </div>
   </main>
-  <script src="/js/swft-analytics.js" defer></script>
-  <script src="/js/swft-nav.js" defer></script>
+  <script src="/js/swft-analytics.js?v=20260930b" defer></script>
+  <script src="/js/swft-nav.js?v=20260930b" defer></script>
 </body>
 </html>
 `;

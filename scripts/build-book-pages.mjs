@@ -81,11 +81,11 @@ function pageShell({ title, description, canonical, bodyClass, body }) {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/css/swft-nav.css">
-  <link rel="stylesheet" href="/css/page-shell.css">
-  <link rel="stylesheet" href="/css/contact-page.css">
-  <link rel="stylesheet" href="/css/growth-audit.css">
-  <link rel="stylesheet" href="/css/book-tier.css">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20260930b">
+  <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
+  <link rel="stylesheet" href="/css/contact-page.css?v=20260930b">
+  <link rel="stylesheet" href="/css/growth-audit.css?v=20260930b">
+  <link rel="stylesheet" href="/css/book-tier.css?v=20260930b">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="${escapeHtml(bodyClass)}">
@@ -95,8 +95,8 @@ function pageShell({ title, description, canonical, bodyClass, body }) {
 ${body}
     </div>
   </main>
-  <script src="/js/swft-analytics.js"></script>
-  <script src="/js/swft-nav.js"></script>
+  <script src="/js/swft-analytics.js?v=20260930b"></script>
+  <script src="/js/swft-nav.js?v=20260930b"></script>
 </body>
 </html>
 `;
@@ -238,8 +238,8 @@ function renderTierPage(tier) {
     bodyClass: "ps-page book-page",
     body,
   }).replace(
-    '<script src="/js/swft-nav.js"></script>\n</body>',
-    '<script src="/js/swft-nav.js"></script>\n  <script src="/js/book-tier-form.js"></script>\n</body>'
+    '<script src="/js/swft-nav.js?v=20260930b"></script>\n</body>',
+    '<script src="/js/swft-nav.js?v=20260930b"></script>\n  <script src="/js/book-tier-form.js?v=20260930b"></script>\n</body>'
   );
 }
 

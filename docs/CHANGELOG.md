@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-30: Cache busting for CSS and JS
+
+### Fixed
+- Returning visitors could keep seeing the old fonts and colors after a deploy, because stylesheet URLs never changed and most type rules load through `@import`. Every local CSS/JS link and every `@import` now carries a `?v=` version, and a new [`_headers`](../_headers) file makes `/css/*` and `/js/*` revalidate on each visit. Bump the version (search for `v=20260930b`) when shipping style changes. The book and location page generators use the same version.
+
 ## 2026-09-30: swft2027 type across the site + colorblind-safe accent
 
 ### Changed
