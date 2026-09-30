@@ -54,7 +54,7 @@
 }
 
 .portal-form input:focus {
-  outline: 2px solid rgba(127, 255, 229, 0.45);
+  outline: 2px solid rgba(86, 180, 233, 0.45);
   outline-offset: 1px;
 }
 
@@ -74,14 +74,14 @@
 }
 
 .portal-msg--error {
-  background: rgba(255, 80, 80, 0.12);
-  border: 1px solid rgba(255, 80, 80, 0.35);
-  color: #ffb4b4;
+  background: rgba(230, 159, 0, 0.12);
+  border: 1px solid rgba(230, 159, 0, 0.35);
+  color: var(--swft-error, #e69f00);
 }
 
 .portal-msg--ok {
-  background: rgba(127, 255, 229, 0.08);
-  border: 1px solid rgba(127, 255, 229, 0.3);
+  background: rgba(86, 180, 233, 0.08);
+  border: 1px solid rgba(86, 180, 233, 0.3);
   color: var(--swft-accent);
 }
 
@@ -127,7 +127,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border: 1px solid rgba(127, 255, 229, 0.35);
+  border: 1px solid rgba(86, 180, 233, 0.35);
   color: var(--swft-accent);
 }
 

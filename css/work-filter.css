@@ -38,8 +38,8 @@
 
 .work-filter-btn.is-active,
 .work-filter-btn.swft-btn.is-active {
-  background: var(--green, #9fe870);
-  border-color: var(--green, #9fe870);
+  background: var(--green, #56b4e9);
+  border-color: var(--green, #56b4e9);
   color: #000;
 }
 
@@ -71,7 +71,7 @@
 }
 
 .work-sort select:focus-visible {
-  outline: 2px solid var(--green, #9fe870);
+  outline: 2px solid var(--green, #56b4e9);
   outline-offset: 2px;
 }
 

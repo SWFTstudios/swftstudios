@@ -5,7 +5,7 @@
    Used site-wide. Self-contained, prefixed with .sn-
    ============================================================ */
 :root {
-  --sm-green: #7fffe5;
+  --sm-green: #56b4e9;
   --sn-height: 62px;
   --swft-gutter: 1.5rem;
 }

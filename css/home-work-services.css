@@ -13,7 +13,7 @@
   --muted: #8a8a8a;
   --border: rgba(255, 255, 255, 0.14);
   --ghost: rgba(255, 255, 255, 0.4);
-  --accent: var(--green, #7fffe5);
+  --accent: var(--green, #56b4e9);
   --accent-ink: #010101;
   --ar-display: "Chakra Petch", "Inter Display", Inter, system-ui, sans-serif;
   --ar-font: "Inter Display", Inter, system-ui, sans-serif;
@@ -235,10 +235,10 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: rgba(127, 255, 229, 0.16);
+  background: rgba(86, 180, 233, 0.16);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(127, 255, 229, 0.55);
+  border: 1px solid rgba(86, 180, 233, 0.55);
   color: #fff;
   font-family: var(--ar-display);
   font-size: 0.85rem;

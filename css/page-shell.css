@@ -41,7 +41,7 @@
   font-size: var(--swft-text-tiny);
   font-weight: 600;
   margin-bottom: 0.85rem;
-  border: 1px solid rgba(127, 255, 229, 0.35);
+  border: 1px solid rgba(86, 180, 233, 0.35);
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
 }
@@ -128,7 +128,7 @@
 }
 
 .ps-filter:hover {
-  border-color: rgba(127, 255, 229, 0.5);
+  border-color: rgba(86, 180, 233, 0.5);
 }
 
 .ps-filter.is-active {
@@ -142,7 +142,7 @@
   margin-top: 3rem;
   padding: 2.5rem 2rem;
   border: 1px solid var(--ps-border);
-  background: linear-gradient(180deg, rgba(127, 255, 229, 0.06) 0%, var(--ps-card) 50%);
+  background: linear-gradient(180deg, rgba(86, 180, 233, 0.06) 0%, var(--ps-card) 50%);
   border-radius: 12px;
   text-align: center;
 }
@@ -214,7 +214,7 @@
 }
 
 .ps-page .button_bg {
-  background-color: var(--ps-accent, #7fffe5);
+  background-color: var(--ps-accent, #56b4e9);
   pointer-events: none;
   width: 0%;
   transition: width 1s cubic-bezier(0.165, 0.84, 0.44, 1);

@@ -41,11 +41,11 @@
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 50%;
-  background: var(--ps-accent, #7fffe5);
+  background: var(--ps-accent, #56b4e9);
 }
 
 .ga-expectation {
-  border-left: 2px solid var(--ps-accent, #7fffe5);
+  border-left: 2px solid var(--ps-accent, #56b4e9);
   padding: 0.75rem 0 0.75rem 1rem;
   color: var(--swft-text, #e5e2e1);
   font-size: var(--swft-text-body, 1rem);
@@ -80,7 +80,7 @@
 }
 
 .ga-field .req {
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
 }
 
 .ga-field input,
@@ -106,7 +106,7 @@
 .ga-field input:focus,
 .ga-field select:focus,
 .ga-field textarea:focus {
-  outline: 2px solid var(--ps-accent, #7fffe5);
+  outline: 2px solid var(--ps-accent, #56b4e9);
   outline-offset: 2px;
   border-color: transparent;
 }
@@ -114,11 +114,11 @@
 .ga-field.is-error input,
 .ga-field.is-error select,
 .ga-field.is-error textarea {
-  border-color: #ff6b6b;
+  border-color: var(--swft-error, #e69f00);
 }
 
 .ga-error {
-  color: #ff8a8a;
+  color: var(--swft-error, #e69f00);
   font-size: 0.82rem;
   margin: 0.3rem 0 0;
 }
@@ -139,7 +139,7 @@
 }
 
 .ga-consent a {
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
 }
 
 .ga-status {
@@ -148,11 +148,11 @@
 }
 
 .ga-status.is-error {
-  color: #ff8a8a;
+  color: var(--swft-error, #e69f00);
 }
 
 .ga-status.is-success {
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
 }
 
 .ga-optional-legend {
@@ -178,7 +178,7 @@
 }
 
 .ga-step-num {
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   font-weight: 700;
@@ -242,7 +242,7 @@
 
 .ga-case-card:hover,
 .ga-case-card:focus-visible {
-  border-color: var(--ps-accent, #7fffe5);
+  border-color: var(--ps-accent, #56b4e9);
 }
 
 .ga-case-card img {
@@ -293,7 +293,7 @@
 }
 
 .ga-progress-meta #ga-step-title {
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
   text-align: right;
 }
 
@@ -308,7 +308,7 @@
   height: 100%;
   width: 20%;
   border-radius: inherit;
-  background: var(--ps-accent, #7fffe5);
+  background: var(--ps-accent, #56b4e9);
   transition: width 0.25s ease;
 }
 

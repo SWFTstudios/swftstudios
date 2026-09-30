@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-30: swft2027 type across the site + colorblind-safe accent
+
+### Changed
+- Every heading on the site now uses the swft2027 display face, **Chakra Petch** (700, uppercase), self-hosted in `fonts/`. Body and UI text stay Inter Display. See [`css/swft-fonts.css`](../css/swft-fonts.css).
+- New type scale in [`css/swft-tokens.css`](../css/swft-tokens.css): display, h1–h6 and an uppercase label size. Page heroes, section titles, card titles, label headings and the closing CTA each map to one size, replacing the one-off sizes on individual pages.
+- The accent changes from mint `#7fffe5` to Okabe-Ito sky blue `#56b4e9`. The mint was almost as light as white, so for colorblind visitors accent text looked like body text. The blue stays distinct under every type of color vision and is 9:1 on black.
+- Error text changes from pink-red to Okabe-Ito orange `#e69f00`, so errors and successes differ in hue for everyone. Status messages also get ✓ / ⚠ marks and invalid fields get a dashed border, so color is never the only signal.
+- The homepage now loads its own copy of Chakra Petch instead of Google Fonts.
+
 ## 2026-09-30: Homepage hero — ocean cube replaces the background video
 
 ### Changed

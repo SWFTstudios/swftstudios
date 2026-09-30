@@ -18,7 +18,7 @@
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.webp" rel="apple-touch-icon">
   <style>
-    :root { --sm-green: #7fffe5; }
+    :root { --sm-green: #56b4e9; }
     * { box-sizing: border-box; }
     body { overscroll-behavior: none; background: #010101; }
 
@@ -28,18 +28,18 @@
 
     /* ============ Hero ============ */
     .sm-hero { position: relative; overflow: hidden; padding: clamp(3rem, 9vw, 7rem) 0 clamp(2.5rem, 6vw, 5rem); }
-    .sm-hero-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 60rem; max-width: 130vw; height: 40rem; background: radial-gradient(circle at 50% 40%, rgba(127,255,229,0.16), rgba(1,1,1,0) 60%); pointer-events: none; }
+    .sm-hero-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 60rem; max-width: 130vw; height: 40rem; background: radial-gradient(circle at 50% 40%, rgba(86, 180, 233,0.16), rgba(1,1,1,0) 60%); pointer-events: none; }
     .sm-hero-inner { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1.4rem; max-width: 50rem; }
-    .sm-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sm-green); border: 1px solid rgba(127,255,229,0.35); padding: 0.4rem 0.85rem; border-radius: 999px; width: fit-content; }
+    .sm-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sm-green); border: 1px solid rgba(86, 180, 233,0.35); padding: 0.4rem 0.85rem; border-radius: 999px; width: fit-content; }
     .sm-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sm-green); box-shadow: 0 0 10px var(--sm-green); }
     .sm-h1 { font-size: clamp(2.3rem, 6.5vw, 4.25rem); line-height: 1.03; font-weight: 800; color: #fff; margin: 0; }
     .sm-h1 .hl { color: var(--sm-green); }
     .sm-sub { font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,0.72); max-width: 44rem; line-height: 1.55; margin: 0; }
     .sm-cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
     .sm-btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #010101; background: var(--sm-green); padding: 1rem 1.6rem; border-radius: 999px; text-decoration: none; border: none; cursor: pointer; font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
-    .sm-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(127,255,229,0.25); }
+    .sm-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(86, 180, 233,0.25); }
     .sm-btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: #fff; background: transparent; padding: 1rem 1.6rem; border-radius: 999px; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); transition: border-color 0.2s; }
-    .sm-btn-ghost:hover { border-color: rgba(127,255,229,0.6); }
+    .sm-btn-ghost:hover { border-color: rgba(86, 180, 233,0.6); }
     .sm-trust { display: flex; flex-wrap: wrap; gap: 1.25rem; color: rgba(255,255,255,0.5); font-size: 0.82rem; }
     .sm-trust span { display: inline-flex; align-items: center; gap: 0.4rem; }
     .sm-trust .tick { color: var(--sm-green); }
@@ -63,8 +63,8 @@
     /* Step dots */
     .sm-dots { display: flex; justify-content: center; gap: 0.6rem; margin-bottom: 1.5rem; }
     .sm-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.18); transition: all 0.3s; }
-    .sm-dot.active { background: var(--sm-green); transform: scale(1.25); box-shadow: 0 0 10px rgba(127,255,229,0.6); }
-    .sm-dot.done { background: rgba(127,255,229,0.5); }
+    .sm-dot.active { background: var(--sm-green); transform: scale(1.25); box-shadow: 0 0 10px rgba(86, 180, 233,0.6); }
+    .sm-dot.done { background: rgba(86, 180, 233,0.5); }
 
     .sm-progress-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.55rem; }
     .sm-eystep { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sm-green); font-weight: 700; }
@@ -80,7 +80,7 @@
     .sm-field .sm-hint { display: block; color: rgba(255,255,255,0.45); font-size: 0.8rem; margin-bottom: 0.55rem; }
     .sm-input, .sm-textarea { width: 100%; background: rgba(255,255,255,0.04); color: #fff; border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 0.85rem 1rem; font-size: 0.95rem; font-family: inherit; transition: border-color 0.2s, background 0.2s; }
     .sm-textarea { min-height: 110px; resize: vertical; }
-    .sm-input:focus, .sm-textarea:focus { outline: none; border-color: var(--sm-green); background: rgba(127,255,229,0.05); }
+    .sm-input:focus, .sm-textarea:focus { outline: none; border-color: var(--sm-green); background: rgba(86, 180, 233,0.05); }
     .sm-input::placeholder, .sm-textarea::placeholder { color: rgba(255,255,255,0.35); }
     .sm-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
@@ -89,7 +89,7 @@
     .sm-choice { position: relative; }
     .sm-choice input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
     .sm-choice span { display: block; padding: 0.85rem 1rem; border-radius: 12px; cursor: pointer; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.8); font-size: 0.92rem; transition: all 0.18s; }
-    .sm-choice input:checked + span { border-color: var(--sm-green); background: rgba(127,255,229,0.1); color: #fff; }
+    .sm-choice input:checked + span { border-color: var(--sm-green); background: rgba(86, 180, 233,0.1); color: #fff; }
     .sm-choice input:focus-visible + span { outline: 2px solid var(--sm-green); outline-offset: 2px; }
 
     /* Goal cards (bigger, with emoji) */
@@ -99,7 +99,7 @@
     .sm-goal span { display: flex; align-items: center; gap: 0.7rem; padding: 1rem; border-radius: 14px; cursor: pointer; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.85); font-size: 0.95rem; font-weight: 600; transition: all 0.18s; }
     .sm-goal-ico { flex: 0 0 22px; width: 22px; height: 22px; color: #fff; transition: color 0.18s; }
     .sm-goal-ico svg { width: 100%; height: 100%; display: block; }
-    .sm-goal input:checked + span { border-color: var(--sm-green); background: rgba(127,255,229,0.1); color: #fff; }
+    .sm-goal input:checked + span { border-color: var(--sm-green); background: rgba(86, 180, 233,0.1); color: #fff; }
     .sm-goal input:checked + span .sm-goal-ico { color: var(--sm-green); }
     .sm-goal input:focus-visible + span { outline: 2px solid var(--sm-green); outline-offset: 2px; }
 
@@ -109,7 +109,7 @@
     .sm-feature input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
     .sm-feature span { display: flex; align-items: center; gap: 0.5rem; height: 100%; padding: 0.85rem 0.9rem; border-radius: 12px; cursor: pointer; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.8); font-size: 0.86rem; line-height: 1.25; transition: all 0.18s; }
     .sm-feature span::before { content: ""; flex: 0 0 16px; width: 16px; height: 16px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.35); transition: all 0.18s; }
-    .sm-feature input:checked + span { border-color: var(--sm-green); background: rgba(127,255,229,0.1); color: #fff; }
+    .sm-feature input:checked + span { border-color: var(--sm-green); background: rgba(86, 180, 233,0.1); color: #fff; }
     .sm-feature input:checked + span::before { background: var(--sm-green); border-color: var(--sm-green); box-shadow: inset 0 0 0 3px #0c0c0c; }
     .sm-feature input:focus-visible + span { outline: 2px solid var(--sm-green); outline-offset: 2px; }
     .sm-feature .price-tag { margin-left: auto; font-size: 0.72rem; color: rgba(255,255,255,0.4); white-space: nowrap; }
@@ -118,7 +118,7 @@
     /* Nav buttons */
     .sm-nav-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
     .sm-btn-back { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.85rem 1.4rem; border-radius: 999px; font-weight: 600; cursor: pointer; font-family: inherit; transition: border-color 0.2s; }
-    .sm-btn-back:hover { border-color: rgba(127,255,229,0.6); }
+    .sm-btn-back:hover { border-color: rgba(86, 180, 233,0.6); }
     .sm-btn-next { background: var(--sm-green); border: none; color: #010101; padding: 0.85rem 1.6rem; border-radius: 999px; font-weight: 700; cursor: pointer; font-family: inherit; transition: transform 0.2s; }
     .sm-btn-next:hover { transform: translateY(-2px); }
 
@@ -133,7 +133,7 @@
     .sm-plan { position: relative; }
     .sm-plan input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
     .sm-plan-inner { height: 100%; border-radius: 18px; padding: 1.4rem; cursor: pointer; background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.14); transition: all 0.2s; }
-    .sm-plan input:checked + .sm-plan-inner { border-color: var(--sm-green); background: rgba(127,255,229,0.07); box-shadow: 0 0 0 1px var(--sm-green) inset, 0 18px 40px -24px rgba(127,255,229,0.6); }
+    .sm-plan input:checked + .sm-plan-inner { border-color: var(--sm-green); background: rgba(86, 180, 233,0.07); box-shadow: 0 0 0 1px var(--sm-green) inset, 0 18px 40px -24px rgba(86, 180, 233,0.6); }
     .sm-plan input:focus-visible + .sm-plan-inner { outline: 2px solid var(--sm-green); outline-offset: 2px; }
     .sm-plan-badge { display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #010101; background: var(--sm-green); padding: 0.2rem 0.55rem; border-radius: 999px; margin-bottom: 0.6rem; }
     .sm-plan-name { color: #fff; font-weight: 700; font-size: 1.05rem; margin: 0 0 0.3rem; }
@@ -151,7 +151,7 @@
     .sm-trust2 { display: flex; flex-wrap: wrap; gap: 1.25rem; color: rgba(255,255,255,0.5); font-size: 0.82rem; margin-top: 1.25rem; }
     .sm-trust2 .tick { color: var(--sm-green); }
 
-    .sm-done { text-align: center; background: rgba(127,255,229,0.06); border: 1px solid rgba(127,255,229,0.3); border-radius: 20px; padding: 2.5rem 1.5rem; }
+    .sm-done { text-align: center; background: rgba(86, 180, 233,0.06); border: 1px solid rgba(86, 180, 233,0.3); border-radius: 20px; padding: 2.5rem 1.5rem; }
     .sm-done h3 { color: #fff; font-size: 1.6rem; margin: 0 0 0.6rem; }
     .sm-done p { color: rgba(255,255,255,0.7); margin: 0 auto; max-width: 32rem; line-height: 1.6; }
 
@@ -182,10 +182,10 @@
   <!-- ============ NAV ============ -->
   <div id="swft-nav" data-active=""></div>
   <div class="sm-wrap" style="padding-top:1rem;padding-bottom:0;">
-    <div class="sm-container" style="background:rgba(127,255,229,0.08);border:1px solid rgba(127,255,229,0.35);border-radius:12px;padding:0.9rem 1.1rem;margin-top:0.5rem;">
+    <div class="sm-container" style="background:rgba(86, 180, 233,0.08);border:1px solid rgba(86, 180, 233,0.35);border-radius:12px;padding:0.9rem 1.1rem;margin-top:0.5rem;">
       <p style="margin:0;color:#e5e2e1;font-size:0.95rem;line-height:1.45;">
         Looking for a personalized review first?
-        <a href="/growth-audit" style="color:#7fffe5;font-weight:700;">Get Your Free Growth Audit</a>, the recommended starting point for most businesses.
+        <a href="/growth-audit" style="color:#56b4e9;font-weight:700;">Get Your Free Growth Audit</a>, the recommended starting point for most businesses.
         This Instant Website intake is for visitors ready to order a scoped build.
       </p>
     </div>
@@ -404,7 +404,7 @@
             <h3>You&rsquo;re in.</h3>
             <p>Thanks, we&rsquo;ve got your build plan and your selected option. We&rsquo;ll review everything and reach out within 48 hours to kick off your build and get your site live in 7 days or less.</p>
           </div>
-          <div class="sm-fail w-form-fail" style="display:none; text-align:center; color:#ffb4b4; padding:1rem;">We couldn&rsquo;t submit your plan just now. Please try again in a moment, or email your details to <a href="mailto:hello@swftstudios.com?subject=My%20website%20build%20plan" style="color:#7fffe5;">hello@swftstudios.com</a> and we&rsquo;ll take it from there.</div>
+          <div class="sm-fail w-form-fail" style="display:none; text-align:center; color:var(--swft-error, #e69f00); padding:1rem;">We couldn&rsquo;t submit your plan just now. Please try again in a moment, or email your details to <a href="mailto:hello@swftstudios.com?subject=My%20website%20build%20plan" style="color:#56b4e9;">hello@swftstudios.com</a> and we&rsquo;ll take it from there.</div>
         </div>
       </div>
     </section>
