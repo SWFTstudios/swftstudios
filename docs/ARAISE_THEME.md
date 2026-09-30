@@ -4,7 +4,7 @@ Hand-rebuilt marketing chrome inspired by the ARAISE Webflow aesthetic. Not a We
 
 ## What changed
 
-Redesigned on this branch:
+### Local branch (`swft-araise-2027` / Pages)
 
 - `/` ([`index.html`](../index.html))
 - `/services.html`
@@ -15,7 +15,34 @@ Redesigned on this branch:
 - `/growth-audit.html`
 - `/case-studies.html` (shell only; hub grid JS/data unchanged)
 
-Deferred (shared nav/theme only when those pages already use `#swft-nav`): locations, book, portal, case-study detail pages, apps, media.
+### Webflow staging (`swft2027` → [swft2027.webflow.io](https://swft2027.webflow.io/))
+
+Primary place to test interactions and custom code before git/Pages sync:
+
+| Route | Notes |
+| --- | --- |
+| `/` | Preloader → hero floats → **About** (scrub + gallery) → **sticky Work** → Services → Clients → Process → **Team** (dark) → **sticky Testimonials** → FAQ → Contact |
+| `/services`, `/websites`, `/website-pricing`, `/team`, `/contact`, `/growth-audit`, `/case-studies` | ARAISE chrome + content |
+| `/apps`, `/media`, `/404` | ARAISE-themed |
+| `/locations` | Hub (city detail pages stay on git/Pages) |
+| `/book` | Offer hub (interactive booker stays on Pages/Workers) |
+
+Site freeform head/footer: Chakra Petch + Inter Tight, theme tokens, `#swft-nav` clock header, theme toggle, footer mount, GSAP float hover, hosted `swft-site-head-v2.css`, plus **About gallery** freeform `<style id="swft-about-gallery">` and ScrollTrigger scripts (preloader, About scrub + gallery, sticky work cursor, team dark, sticky testimonials).
+
+### Home interactions (`swft2027`)
+
+| Block | Behavior |
+| --- | --- |
+| **Preloader** | ARAISE-style: always-visible **SWFT** + cycling **Visual → Digital → Studios**; dual black gates (`rotateY`) then wrap lifts (`yPercent: -100`) to reveal hero; transparent wrap so gates expose the page; Home-only; respects `prefers-reduced-motion` |
+| **About (`#about`)** | Meta row `→ [ ABOUT US ]` / SWFT; massive ALL-CAPS statement; ScrollTrigger word opacity scrub (dim → white); **ARAISE-style scroll gallery** under the headline |
+| **About gallery** | `.ar-about-gallery` stage with **3 duplicated** `.ar-about-strip` rows of SWFT project thumbs (`brooklyn-steel`, `manna-hydration`, `thyme-and-table`, `Snooze-Lane-Desktop`, `hamper_app_website` from `swftstudios.com/images` — not ARAISE CDN). Page-scroll scrub moves `.ar-about-scroll-gallery` via `xPercent` (~`0 → -33.333`). Top/bottom `.ar-ornament-eclipse` black rounded bars mask the strip into a curved window. `prefers-reduced-motion`: static strip, no transform |
+| **Work (`#work`)** | Sticky stacked covers + centered “View Work” cursor (`xPercent/yPercent: -50`, desktop fine pointer); head opacity fade |
+| **Team (`#team`)** | Dark section, split head, grayscale portraits + name/role |
+| **Testimonials** | Sticky stacked quote cards with project photos (Brooklyn Steel, Snooze Lane, Manna); no dedicated client video assets yet |
+
+Body HtmlEmbed: `ab8c245b-a2ce-0723-6fb0-b1d0cf4feaf4` on Home `6abd3e502eac1e49f19d232d`.
+
+Deferred elsewhere: portal, case-study detail templates, full book checkout APIs, custom-domain publish, unicode polish on section arrows (`->` ASCII in embed until re-pushed).
 
 ## Fonts (ARAISE-matched)
 
@@ -97,6 +124,16 @@ Characters are only split when GSAP + ScrollTrigger load successfully. Without J
 <script src="js/swft-split-text.js" defer></script>
 <script src="js/swft-motion.js" defer></script>
 ```
+
+## Hero float 3D motion
+
+Homepage only ([`js/swft-hero-float.js`](../js/swft-hero-float.js)):
+
+1. **Z fly-in** — floats scale up from depth (`scale` + `z`) with stagger on load
+2. **Mouse push** — pointer near a float gently repels it (lerped `x`/`y` + slight `rotationX/Y`)
+3. **Idle** — subtle rotation drift after enter
+
+Skipped when `prefers-reduced-motion` or viewport `< 901px` (floats already hidden). Without GSAP, floats stay at CSS rest positions.
 
 ## Failure behavior
 

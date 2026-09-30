@@ -20,6 +20,14 @@ This document explains how Webflow MCP works in this project, when the connectio
 
 ## Project Baseline (Expected Identity)
 
+- Site ID: `6abd3e502eac1e49f19d235a`
+- Site name: `SWFT STUDIOS 2027`
+- Short name: `swft2027`
+- Staging domain: `swft2027.webflow.io`
+- Designer Bridge launch: [Open Designer with MCP app](https://swft2027.design.webflow.com?app=dc8209c65e3ec02254d15275ca056539c89f6d15741893a0adf29ad6f381eb99)
+
+### Legacy baseline (archived reference)
+
 - Site ID: `688e7554265d8089278ca76e`
 - Site name: `SWFT STUDIOS 000 FINAL FOREVER`
 - Short name: `swftstudios000`

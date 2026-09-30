@@ -27,17 +27,25 @@
 
   <main>
     <section class="home-hero ar-container" aria-labelledby="home-hero-title">
-      <div class="home-float home-float--1" aria-hidden="true">
-        <img src="images/brooklyn-steel-thumbnail.webp" alt="" width="220" height="280" loading="eager">
+      <div id="home-float-1" class="home-float home-float--1" data-float="1" aria-hidden="true">
+        <div class="home-float__motion" id="home-float-1-motion">
+          <img src="images/brooklyn-steel-thumbnail.webp" alt="" width="220" height="280" loading="eager">
+        </div>
       </div>
-      <div class="home-float home-float--2" aria-hidden="true">
-        <img src="images/manna-hydration-thumbnail.webp" alt="" width="180" height="180" loading="eager">
+      <div id="home-float-2" class="home-float home-float--2" data-float="2" aria-hidden="true">
+        <div class="home-float__motion" id="home-float-2-motion">
+          <img src="images/manna-hydration-thumbnail.webp" alt="" width="180" height="180" loading="eager">
+        </div>
       </div>
-      <div class="home-float home-float--3" aria-hidden="true">
-        <img src="images/thyme-and-table-thumbnail.webp" alt="" width="260" height="320" loading="lazy">
+      <div id="home-float-3" class="home-float home-float--3" data-float="3" aria-hidden="true">
+        <div class="home-float__motion" id="home-float-3-motion">
+          <img src="images/thyme-and-table-thumbnail.webp" alt="" width="260" height="320" loading="lazy">
+        </div>
       </div>
-      <div class="home-float home-float--4" aria-hidden="true">
-        <img src="images/hamper_app_website_thumbnail.webp" alt="" width="300" height="240" loading="lazy">
+      <div id="home-float-4" class="home-float home-float--4" data-float="4" aria-hidden="true">
+        <div class="home-float__motion" id="home-float-4-motion">
+          <img src="images/hamper_app_website_thumbnail.webp" alt="" width="300" height="240" loading="lazy">
+        </div>
       </div>
 
       <p class="home-hero__eyebrow ar-thin">Digital &amp; video marketing for growing brands</p>
@@ -76,7 +84,7 @@
     </section>
 
     <section class="ar-section" id="work" aria-labelledby="work-heading">
-      <div class="ar-container">
+      <div class="ar-container ar-work-stack-head">
         <div class="ar-section-label">
           <span>→ [ OUR WORK ]</span>
           <span>SWFT</span>
@@ -88,28 +96,51 @@
             <strong class="ar-mark">convert attention into action</strong>.
           </p>
         </div>
-        <div class="home-work-strip" data-fade-up>
-          <a class="home-work-card" href="case-study/brooklyn-steel.html">
-            <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co." width="600" height="800" loading="lazy">
-            <div class="home-work-card__meta"><strong>Brooklyn Steel</strong><span>E-commerce 2026</span></div>
-          </a>
-          <a class="home-work-card" href="case-study/manna-hydration.html">
-            <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration" width="600" height="800" loading="lazy">
-            <div class="home-work-card__meta"><strong>Manna Hydration</strong><span>Brand + Web</span></div>
-          </a>
-          <a class="home-work-card" href="case-study/snooze-lane.html">
-            <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane" width="600" height="800" loading="lazy">
-            <div class="home-work-card__meta"><strong>Snooze Lane</strong><span>Product Story</span></div>
-          </a>
-          <a class="home-work-card" href="case-study/hamper.html">
-            <img src="images/hamper_app_website_thumbnail.webp" alt="Hamper" width="600" height="800" loading="lazy">
-            <div class="home-work-card__meta"><strong>Hamper</strong><span>App + Web</span></div>
-          </a>
-        </div>
-        <p style="margin-top:1.5rem;text-align:right">
-          <a class="ar-btn ar-btn--outline" href="/websites.html">View all work</a>
-        </p>
       </div>
+      <div class="ar-work-pointer-wrap">
+        <div class="ar-works-wrap">
+          <div class="ar-work-item-wrap">
+            <a class="ar-work-item" href="case-study/brooklyn-steel.html">
+              <img class="ar-work-cover" src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co." width="1400" height="788" loading="lazy">
+              <div class="ar-work-title-wrap">
+                <div class="ar-work-title">Brooklyn Steel</div>
+                <div class="ar-work-cats"><span>E-commerce</span><span>2026</span></div>
+              </div>
+            </a>
+          </div>
+          <div class="ar-work-item-wrap">
+            <a class="ar-work-item" href="case-study/manna-hydration.html">
+              <img class="ar-work-cover" src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration" width="1400" height="788" loading="lazy">
+              <div class="ar-work-title-wrap">
+                <div class="ar-work-title">Manna Hydration</div>
+                <div class="ar-work-cats"><span>Brand + Web</span><span>2026</span></div>
+              </div>
+            </a>
+          </div>
+          <div class="ar-work-item-wrap">
+            <a class="ar-work-item" href="case-study/snooze-lane.html">
+              <img class="ar-work-cover" src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane" width="1400" height="788" loading="lazy">
+              <div class="ar-work-title-wrap">
+                <div class="ar-work-title">Snooze Lane</div>
+                <div class="ar-work-cats"><span>Product Story</span><span>2026</span></div>
+              </div>
+            </a>
+          </div>
+          <div class="ar-work-item-wrap">
+            <a class="ar-work-item" href="case-study/hamper.html">
+              <img class="ar-work-cover" src="images/hamper_app_website_thumbnail.webp" alt="Hamper" width="1400" height="788" loading="lazy">
+              <div class="ar-work-title-wrap">
+                <div class="ar-work-title">Hamper</div>
+                <div class="ar-work-cats"><span>App + Web</span><span>2026</span></div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="ar-pointer-work" aria-hidden="true"><span>View Work</span></div>
+      </div>
+      <p class="ar-container" style="margin-top:1.5rem;text-align:right">
+        <a class="ar-btn ar-btn--outline" href="/websites.html">View all work</a>
+      </p>
     </section>
 
     <section class="ar-section" id="services" aria-labelledby="services-heading">
@@ -248,5 +279,7 @@
   <script src="js/swft-theme-clock.js" defer></script>
   <script src="js/swft-split-text.js" defer></script>
   <script src="js/swft-motion.js" defer></script>
+  <script src="js/swft-hero-float.js" defer></script>
+  <script src="js/swft-work-stack.js" defer></script>
 </body>
 </html>
