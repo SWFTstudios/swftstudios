@@ -24,7 +24,7 @@
   var BOB_WORLD = 0.07;          // bob amplitude
   var BOB_SPEED = 1.3;           // radians per second
   var TARGET_PIXELS = 460000;    // render budget before adaptive scaling
-  var STILL_TIME = 7.0;          // frozen wave time for reduced motion
+  var CALM_SPEED = 0.35;         // water speed under prefers-reduced-motion (slowed, not frozen)
 
   var VERT = "attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}";
 
@@ -43,7 +43,7 @@
     "uniform float uHasCube;",
     "uniform mat3 uToLocal;",
 
-    "const float DEPTH = 0.2;",
+    "const float DEPTH = 0.3;",
     "const vec3 ICE = vec3(0.55, 0.8, 1.0);",
 
     // Sum of directional waves with sharp exp(sin) crests; each wave drags
@@ -53,7 +53,7 @@
     "  for (int i = 0; i < 30; i++) {",
     "    if (i >= it) break;",
     "    vec2 d = vec2(sin(a), cos(a));",
-    "    float x = dot(d, p) * f + uTime * tm * 0.7;",
+    "    float x = dot(d, p) * f + uTime * tm * 1.25;",
     "    float w = exp(sin(x) - 1.0);",
     "    p -= d * w * cos(x) * amp * 0.28;",
     "    sum += w * amp; wsum += amp;",
@@ -61,7 +61,13 @@
     "  }",
     "  return sum / wsum;",
     "}",
-    "float hgt(vec2 p, int it) { return (waves(p * 1.3, it) - 1.0) * DEPTH; }",
+    // Long, low swell rolling toward the camera underneath the chop.
+    "float swell(vec2 p) {",
+    "  return 0.09 * sin(p.y * 0.45 + uTime * 1.1 + sin(p.x * 0.18) * 1.5)",
+    "       + 0.05 * sin(dot(p, vec2(0.31, 0.22)) - uTime * 0.8);",
+    "}",
+    // Surface height; always stays below y = 0, where the raymarch starts.
+    "float hgt(vec2 p, int it) { return (waves(p, it) - 1.0) * DEPTH - 0.15 + swell(p); }",
 
     "float march(vec3 ro, vec3 rd) {",
     "  vec3 p = ro + rd * (-ro.y / rd.y);",
@@ -161,8 +167,12 @@
     "    float atten = 6.0 / (1.0 + dl * dl);",
     "    vec3 lit = ICE * atten * (pow(nh, 180.0) * 3.5 + pow(nh, 24.0) * 0.12)",
     "             + vec3(0.01, 0.025, 0.05) * atten * max(dot(N, toL), 0.0);",
-    "    vec3 deep = vec3(0.0005, 0.0012, 0.003);",
-    "    col = mix(deep, refl, fres) + lit;",
+    // Light passing through the thin crests between the viewer and the cube.
+    "    float crest = smoothstep(-0.45, -0.02, p.y);",
+    "    float back = pow(max(dot(rd, toL), 0.0), 3.0);",
+    "    vec3 sss = vec3(0.04, 0.3, 0.55) * atten * crest * crest * (0.2 + 1.6 * back) * 0.45;",
+    "    vec3 deep = vec3(0.0003, 0.0009, 0.0025) * (0.4 + crest);",
+    "    col = mix(deep + sss, refl, fres) + lit;",
     "    col = mix(col, sky(vec3(rd.x, 0.02, rd.z)), 1.0 - exp(-tHit * 0.015));",
     "  } else {",
     "    col = sky(rd);",
@@ -327,7 +337,8 @@
     if (!this.visible || document.hidden) return;
 
     var still = reducedMotion();
-    var t = still ? STILL_TIME : (now - this.start) / 1000;
+    // Reduced motion slows the water instead of freezing it; the bob stops.
+    var t = (now - this.start) / 1000 * (still ? CALM_SPEED : 1);
 
     // Bob the DOM cube and move its world twin by the same amount.
     var bob = still ? 0 : Math.sin(t * BOB_SPEED) * BOB_WORLD + Math.sin(t * BOB_SPEED * 0.43 + 1.7) * BOB_WORLD * 0.35;

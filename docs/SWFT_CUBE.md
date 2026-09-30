@@ -73,11 +73,12 @@ Slideshows and the spin pause while the tab is hidden. With `prefers-reduced-mot
 
 Wrap the cube in `<section class="swft-ocean" data-swft-ocean>` and load `css/swft-ocean.css` and `js/swft-ocean.js` after `js/swft-cube.js`. The cube then hovers over a black, glassy night sea, and the cube itself is the only light:
 - **Cube:** glowing ice-blue edges and an inner glow (CSS box-shadows, so the 3D stays intact), with bloom around it in the WebGL scene.
-- **Reflection:** the camera sits just above the water, so the cube's glowing edges mirror in the ripples as a long, broken streak, with glints where its light catches the water.
+- **Water:** a long, low swell rolls toward the camera with faster, sharp-crested ripples on top. The thin crests between the viewer and the cube glow blue where its light passes through them, and the troughs fall away darker.
+- **Reflection:** the camera sits just above the water, so the cube's glowing edges mirror in the moving ripples as a long, broken streak, with glints where its light catches the water.
 - **Mist:** faint mist lies on the water under the cube.
 - **Alignment:** the cube's on-screen position (`--cube-y`) is solved from the same camera the water uses, so the reflection always lines up. It bobs gently.
 
 Rendering:
 - **Speed:** resolution starts within a fixed pixel budget and steps down when frames run slow. Rendering pauses when the stage is off screen or the tab is hidden.
-- **Reduced motion:** with `prefers-reduced-motion`, the water freezes and the cube stops bobbing. The cube still redraws when someone moves it.
+- **Reduced motion:** with `prefers-reduced-motion`, the water keeps moving at about a third of the speed instead of freezing, and the cube stops bobbing.
 - **No WebGL:** the stage keeps a painted CSS still of the scene (`.swft-ocean--static`).
