@@ -19,7 +19,14 @@ An interactive 3D cube with its own image slideshow on each of its six faces. It
 | Keyboard (cube focused) | `←` `→` `↑` `↓` rotate. `Enter` / `Space` shows the next slide. |
 | HUD buttons / dots | Rotate left or right, or jump to a slide on the front face. |
 
-The idle auto-rotate (`data-auto-rotate`) waits 4s after the last interaction and doesn't run while the cube is hovered, dragged or focused. Slideshows and auto-rotate pause while the tab is hidden. With `prefers-reduced-motion`, auto-rotate and auto-advance are off, and moves happen instantly.
+**Idle spin.** When nobody is using it, the cube spins slowly and continuously (`data-spin`, in degrees per second).
+- A drag, tap, key press or button press stops the spin instantly, and you grab the cube where it is.
+- Hovering with a mouse lets the spin coast to a stop in about 0.3s, so a face is easy to tap.
+- After 3s without input, the cube eases back toward level and the spin ramps up over about 2s.
+- A mouse click that focuses the cube doesn't block the spin. Keyboard focus (`:focus-visible`) does, until focus leaves.
+- While it spins on its own, the HUD label's `aria-live` is off, so screen readers don't announce every face that passes.
+
+Slideshows and the spin pause while the tab is hidden. With `prefers-reduced-motion`, the spin and auto-advance are off, and moves happen instantly.
 
 ## Markup
 
@@ -27,7 +34,7 @@ The idle auto-rotate (`data-auto-rotate`) waits 4s after the last interaction an
 <link href="css/swft-cube.css" rel="stylesheet">
 
 <div class="swft-cube" data-swft-cube
-     data-auto-rotate="5000"
+     data-spin="14"
      data-slide-interval="3200"
      tabindex="0" role="region" aria-roledescription="3D image cube" aria-label="Our work">
   <div class="swft-cube__scene">
@@ -45,7 +52,7 @@ The idle auto-rotate (`data-auto-rotate`) waits 4s after the last interaction an
 <script src="js/swft-cube.js"></script>
 ```
 
-- `data-auto-rotate`: milliseconds between idle face turns. Omit it or set it to `0` to turn auto-rotate off. `data-slide-interval`: milliseconds between slides on each face (default 3500).
+- `data-spin`: idle spin speed in degrees per second. `14` is one full turn about every 26s. Omit it or set it to `0` to turn the spin off. `data-slide-interval`: milliseconds between slides on each face (default 3500).
 - Each face can hold any number of images. A face with 2 or more images gets progress pips and an auto-advancing slideshow. Faces advance at staggered times so they don't flip together.
 - `data-label` shows as a chip on the face and in the HUD, where screen readers hear it through `aria-live`.
 - The script builds the HUD (rotate buttons, current face label, slide dots, hint) automatically.

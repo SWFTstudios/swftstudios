@@ -10,6 +10,8 @@
                     side face: rotate that face to the front
      hover (mouse)  cube tilts toward the pointer, auto-rotate pauses
      keyboard       arrows rotate, Enter/Space = next slide
+     idle           slow continuous spin (data-spin, deg/s) that eases
+                    out on any interaction and eases back in afterwards
    ============================================================ */
 (function () {
   "use strict";
@@ -27,7 +29,10 @@
   var FLICK_PROJECTION = 220;   // ms of momentum projected before snapping
   var HOVER_TILT_DEG = 12;
   var REST_TILT = [-10, 16];    // idle x/y lean so the cube always reads as 3D
-  var IDLE_RESUME_MS = 4000;
+  var IDLE_RESUME_MS = 3000;     // quiet time before the idle spin eases back in
+  var SPIN_EASE_IN_S = 1.6;      // time constant for the spin ramping back up
+  var SPIN_EASE_OUT_S = 0.3;     // ...and for coasting to a stop on hover
+  var IDLE_RETURN = 0.035;       // per-frame pull back to the level ring while idle
 
   var mqReduce = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
   var mqHover = window.matchMedia ? window.matchMedia("(hover: hover) and (pointer: fine)") : null;
@@ -43,7 +48,8 @@
     this.body = root.querySelector(".swft-cube__body");
     if (!this.scene || !this.body) return;
 
-    this.autoRotateMs = parseInt(root.getAttribute("data-auto-rotate"), 10) || 0;
+    this.spinDps = parseFloat(root.getAttribute("data-spin")) || 0;
+    this.spin = 0;               // current spin speed, deg/s
     this.slideMs = parseInt(root.getAttribute("data-slide-interval"), 10) || 3500;
 
     // Rotation state: current (rx, ry), target (tx, ty); hover tilt current/target.
@@ -217,17 +223,50 @@
       "rotateX(" + this.rx.toFixed(3) + "deg) rotateY(" + this.ry.toFixed(3) + "deg)";
   };
 
+  Cube.prototype.isIdle = function () {
+    if (!this.spinDps || reducedMotion() || document.hidden) return false;
+    if (this.pointer || this.hovered) return false;
+    if (Date.now() - this.lastInteraction < IDLE_RESUME_MS) return false;
+    var focused = document.activeElement;
+    // Keyboard users keep control; a mouse click that focused the cube doesn't count.
+    if (focused && this.root.contains(focused) && focused.matches(":focus-visible")) return false;
+    return true;
+  };
+
   Cube.prototype.kick = function () {
     if (this.raf) return;
     var self = this;
-    var step = function () {
-      var k = reducedMotion() ? 1 : (self.pointer && self.pointer.dragging ? 0.4 : 0.14);
+    var last = 0;
+    var step = function (now) {
+      var dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
+      last = now;
+      var frames = dt * 60;
+      var idle = self.isIdle();
+
+      // Ease the spin speed toward its target: slowly back in, quicker coast out.
+      var target = idle ? self.spinDps : 0;
+      var tau = target > self.spin ? SPIN_EASE_IN_S : SPIN_EASE_OUT_S;
+      self.spin += (target - self.spin) * (1 - Math.exp(-dt / tau));
+      if (!idle && self.spin < 0.05) self.spin = 0;
+      if (self.spin) {
+        self.ty -= self.spin * dt;
+        self.updateActive();
+      }
+      if (idle) {
+        self.tx = 0;
+        self.thx = REST_TILT[0]; self.thy = REST_TILT[1];
+      }
+      self.setLive(!self.spin);
+
+      var base = reducedMotion() ? 1 : (self.pointer && self.pointer.dragging ? 0.4 : (idle ? IDLE_RETURN : 0.14));
+      var k = 1 - Math.pow(1 - base, frames);
+      var kt = 1 - Math.pow(0.88, frames);
       self.rx += (self.tx - self.rx) * k;
       self.ry += (self.ty - self.ry) * k;
-      self.hx += (self.thx - self.hx) * 0.12;
-      self.hy += (self.thy - self.hy) * 0.12;
+      self.hx += (self.thx - self.hx) * kt;
+      self.hy += (self.thy - self.hy) * kt;
       self.render();
-      var settled =
+      var settled = !idle && !self.spin &&
         Math.abs(self.tx - self.rx) < 0.02 && Math.abs(self.ty - self.ry) < 0.02 &&
         Math.abs(self.thx - self.hx) < 0.02 && Math.abs(self.thy - self.hy) < 0.02;
       if (settled) {
@@ -243,7 +282,17 @@
 
   /* ---------------- Input ---------------- */
 
-  Cube.prototype.touch = function () { this.lastInteraction = Date.now(); };
+  // Any direct interaction stops the idle spin on the spot and restarts the idle clock.
+  Cube.prototype.touch = function () {
+    this.lastInteraction = Date.now();
+    this.spin = 0;
+  };
+
+  // Don't announce every face that passes while the cube spins on its own.
+  Cube.prototype.setLive = function (on) {
+    var v = on ? "polite" : "off";
+    if (this.current.getAttribute("aria-live") !== v) this.current.setAttribute("aria-live", v);
+  };
 
   Cube.prototype.bind = function () {
     var self = this;
@@ -252,6 +301,8 @@
     scene.addEventListener("pointerdown", function (e) {
       if (e.button !== undefined && e.button !== 0) return;
       self.touch();
+      // Grab the cube exactly where it is, mid-spin or not.
+      self.tx = self.rx; self.ty = self.ry;
       self.pointer = {
         id: e.pointerId, type: e.pointerType,
         x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t: e.timeStamp,
@@ -315,6 +366,7 @@
       if (e.pointerType !== "mouse") return;
       self.hovered = false;
       self.root.classList.remove("is-hovered");
+      self.lastInteraction = Date.now(); // wait the idle pause before spinning again
       self.thx = REST_TILT[0]; self.thy = REST_TILT[1];
       self.kick();
     });
@@ -367,6 +419,10 @@
       this.rotateTo(name);
       return;
     }
+    // Square the face up if it was caught mid-spin.
+    this.ty = snap90(this.ty);
+    this.tx = clamp(snap90(this.tx), -90, 90);
+    this.uprightPoles();
     var r = faceEl.getBoundingClientRect();
     var back = r.width && (e.clientX - r.left) / r.width < 1 / 3;
     this.stepSlide(name, back ? -1 : 1);
@@ -415,13 +471,10 @@
       }, (i * self.slideMs) / names.length);
     });
 
-    if (this.autoRotateMs > 0) {
-      setInterval(function () {
-        if (document.hidden || reducedMotion() || self.hovered || self.pointer) return;
-        if (Date.now() - self.lastInteraction < IDLE_RESUME_MS) return;
-        if (self.root.contains(document.activeElement)) return;
-        self.rotateBy(-1, 0);
-      }, this.autoRotateMs);
+    // The render loop sleeps once the cube settles; wake it when the idle spin is due.
+    if (this.spinDps > 0) {
+      setInterval(function () { if (self.isIdle()) self.kick(); }, 250);
+      this.kick();
     }
   };
 
