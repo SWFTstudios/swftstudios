@@ -19,7 +19,7 @@
 }
 
 .swft-btn:focus-visible {
-  outline: 2px solid var(--green, #9fe870);
+  outline: 2px solid var(--green, #56b4e9);
   outline-offset: 3px;
 }
 
@@ -36,9 +36,9 @@
 
 /* Primary fill */
 .swft-btn.is-primary {
-  background: var(--green, #9fe870);
+  background: var(--green, #56b4e9);
   color: #000;
-  border-color: var(--green, #9fe870);
+  border-color: var(--green, #56b4e9);
 }
 
 .swft-btn.is-primary:hover {
@@ -110,7 +110,7 @@
 }
 
 .swft-btn.is-text:hover {
-  color: var(--green, #9fe870);
+  color: var(--green, #56b4e9);
   transform: none;
   box-shadow: none;
 }

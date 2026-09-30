@@ -146,7 +146,7 @@
 }
 
 .swft-about-gallery__card:focus-visible {
-  outline: 2px solid var(--green, #7fffe5);
+  outline: 2px solid var(--green, #56b4e9);
   outline-offset: -2px;
 }
 
@@ -176,7 +176,7 @@
 
 .swft-about-gallery__card.is-held .swft-about-gallery__name::after {
   content: " \2192  View project";
-  color: var(--green, #7fffe5);
+  color: var(--green, #56b4e9);
 }
 
 /* Black elliptical bars over the top and bottom edges cut the strip into a
@@ -220,7 +220,7 @@
 
 .swft-about__more a:hover,
 .swft-about__more a:focus-visible {
-  border-bottom-color: var(--green, #7fffe5);
+  border-bottom-color: var(--green, #56b4e9);
 }
 
 @media screen and (max-width: 767px) {

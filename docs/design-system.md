@@ -20,7 +20,10 @@ Brand tokens in [`css/swftstudios000.css`](../css/swftstudios000.css) still defi
 | `--swft-text-strong` | `#ffffff` | Headings and strong UI text |
 | `--swft-lead` | `#c4c7c7` | Supporting / lead copy |
 | `--swft-muted` | `#a8a8a8` | Meta, labels, secondary UI |
-| `--swft-accent` | `#7fffe5` (`var(--green)`) | Only accent — CTAs, eyebrows, interactive |
+| `--swft-accent` | `#56b4e9` (`var(--green)`) | Only accent — CTAs, eyebrows, interactive. Okabe-Ito sky blue, colorblind-safe, 9:1 on black |
+| `--swft-accent-soft` | `#9dd3f3` | Lighter accent for hovers / text on tinted fills |
+| `--swft-success` | `var(--swft-accent)` | Success messages, always with a ✓ mark |
+| `--swft-error` | `#e69f00` | Error messages and invalid fields (Okabe-Ito orange), always with a ⚠ mark / dashed border |
 | `--swft-border` | `rgba(255, 255, 255, 0.1)` | Dividers and card edges |
 | `--swft-card` | `#0a0a0a` | Elevated surfaces |
 
@@ -31,10 +34,10 @@ Brand tokens in [`css/swftstudios000.css`](../css/swftstudios000.css) still defi
 | `--black` | `#010101` | Same as `--swft-bg` |
 | `--charcoal` | `#0c0c0c` | Secondary dark surface |
 | `--white` | `#ffffff` | Same as `--swft-text-strong` |
-| `--green` | `#7fffe5` | Same as `--swft-accent` |
+| `--green` | `#56b4e9` | Same as `--swft-accent` (name kept for old rules) |
 | `--glass_edge` | `#ffffff80` | Glass borders |
 | `--glow` | `#dcf3ff57` | Ambient glow |
-| `--green-glow` | `#4cfcff1a` | Subtle green glow |
+| `--green-glow` | `#56b4e91a` | Subtle accent glow |
 
 ### Gray Scale (Untitled UI)
 
@@ -44,7 +47,10 @@ Still present in `swftstudios000.css` for Webflow components. Prefer `--swft-mut
 
 ## Typography
 
-**Font family:** `--swft-font` → `"Inter Display", Inter, sans-serif` (loaded via `swft-fonts.css`)
+**Font families (swft2027):**
+- Headings: `--swft-font-display` → `"Chakra Petch"` 700, uppercase, `-0.01em` tracking. Self-hosted in `fonts/` (OFL) and applied to every `h1`–`h6` and `.heading-style-h*` in `swft-fonts.css`. Long-form rich-text headings stay sentence case.
+- Body and UI: `--swft-font` → `"Inter Display", Inter, sans-serif`.
+- `swft-fonts.css` also pins each heading role (page hero, section title, card title, label heading, closing CTA) to the scale below, so one-off page sizes don't drift.
 
 ### Fluid type scale
 
@@ -52,16 +58,18 @@ Sizes use `clamp()` so type scales continuously across viewports (no hard 4rem �
 
 | Token / element | Size | Line height | Notes |
 |---|---|---|---|
-| `--swft-h1` / `h1` | `clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem)` | `1.05` | Heroes / page titles |
-| `--swft-h2` / `h2` | `clamp(1.75rem, 1.35rem + 1.8vw, 2.75rem)` | `1.1` | Section headings |
-| `--swft-h3` / `h3` | `clamp(1.35rem, 1.15rem + 0.9vw, 2rem)` | `1.1` | Cards / bands |
+| `--swft-display` | `clamp(2.6rem, 1.4rem + 5.4vw, 6.5rem)` | `0.95` | Closing CTA / display lines |
+| `--swft-h1` / `h1` | `clamp(2.4rem, 1.55rem + 3.8vw, 4.75rem)` | `0.98` | Heroes / page titles (40px phone, 76px desktop) |
+| `--swft-h2` / `h2` | `clamp(1.85rem, 1.3rem + 2.5vw, 3.25rem)` | `1.05` | Section headings |
+| `--swft-h3` / `h3` | `clamp(1.4rem, 1.15rem + 1.1vw, 2.1rem)` | `1.1` | Cards / steps |
 | `--swft-h4` / `h4` | `clamp(1.2rem, 1.1rem + 0.45vw, 1.5rem)` | `1.3` | |
-| `--swft-h5` / `h5` | `clamp(1.1rem, 1.05rem + 0.25vw, 1.25rem)` | `1.4` | |
+| `--swft-h5` / `h5` | `clamp(1.05rem, 1rem + 0.25vw, 1.2rem)` | `1.4` | |
 | `--swft-h6` / `h6` | `1rem` | `1.4` | |
 | `--swft-text-body` / `body` / `p` | `clamp(1.0625rem … 1.1875rem)` (~17–19px) | `1.6` | Color: `--swft-text` |
 | `--swft-text-lead` | `clamp(1.125rem … 1.25rem)` | `1.65` | Color: `--swft-lead` |
 | `--swft-text-small` | `clamp(0.9375rem … 1rem)` | `1.6` | |
-| `--swft-text-tiny` | `0.8125rem` | `1.4` | Eyebrows / labels |
+| `--swft-text-tiny` | `0.8125rem` | `1.4` | Meta text |
+| `--swft-text-label` / `.swft-text-label` | `0.75rem`, `0.16em` tracking, uppercase | `1.3` | Eyebrows / section labels |
 
 Utility classes: `.swft-text-body`, `.swft-text-lead`, `.swft-text-small`, `.swft-text-tiny`, `.swft-text-strong`, `.swft-text-accent`.
 
@@ -147,8 +155,9 @@ Legacy Webflow `.button` / `.button_bg` still exist; fill uses `var(--green)` / 
 ## Usage Guidelines
 
 - **Dark backgrounds only** — `--swft-bg` (`#010101`) is the base.
-- **Green is the only accent** — use `--swft-accent` for CTAs, highlights, and interactive states. Never for large text blocks.
-- **Do not invent page-local gray accents** — services/pricing use mint, same as the rest of the site.
+- **Sky blue is the only accent** — use `--swft-accent` for CTAs, highlights, and interactive states. Never for large text blocks.
+- **Do not invent page-local gray accents** — services/pricing use the sky-blue accent, same as the rest of the site.
+- **Color is never the only signal** — success and error states pair color with a mark (✓ / ⚠) and invalid fields add a dashed border, so they read apart for every type of color vision.
 - **No heading margins** — use spacing utilities on wrappers.
 - **New CSS** — reference `--swft-*` tokens instead of hard-coded hex/rem where possible.
 - **Style guide** — open `/style-guide.html` locally or on preview; do not link it from public nav/footer.

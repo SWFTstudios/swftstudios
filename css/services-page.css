@@ -3,7 +3,7 @@
   --svc-bg: var(--swft-bg, #010101);
   --svc-text: var(--swft-text, #e5e2e1);
   --svc-muted: var(--swft-muted, #a8a8a8);
-  --svc-accent: var(--swft-accent, #7fffe5);
+  --svc-accent: var(--swft-accent, #56b4e9);
   --svc-border: var(--swft-border, rgba(255, 255, 255, 0.1));
   --svc-card: var(--swft-card, #0a0a0a);
   background: var(--svc-bg);
@@ -133,7 +133,7 @@
   margin-top: 2.5rem;
   padding: 2rem;
   border: 1px solid var(--svc-border);
-  background: linear-gradient(180deg, rgba(127, 255, 229, 0.06) 0%, var(--svc-card) 40%);
+  background: linear-gradient(180deg, rgba(86, 180, 233, 0.06) 0%, var(--svc-card) 40%);
   text-align: center;
 }
 

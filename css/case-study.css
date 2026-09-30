@@ -169,7 +169,7 @@
 }
 
 .cs-body .uui-text-rich-text a {
-  color: var(--green, #9fe870);
+  color: var(--green, #56b4e9);
 }
 
 /* Outcome scorecard blocks */
@@ -208,7 +208,7 @@
 }
 
 .cs-scorecard-bar--after {
-  background: var(--green, #9fe870);
+  background: var(--green, #56b4e9);
 }
 
 .cs-scroll-arrow {
@@ -258,7 +258,7 @@
 }
 
 .cs-sidebar dd a {
-  color: var(--green, #9fe870);
+  color: var(--green, #56b4e9);
   text-decoration: none;
 }
 
@@ -362,7 +362,7 @@
   gap: 0.5rem;
   padding: 0.875rem 1.25rem;
   border-radius: 999px;
-  background: var(--green, #9fe870);
+  background: var(--green, #56b4e9);
   color: #000;
   font-size: 0.875rem;
   font-weight: 500;

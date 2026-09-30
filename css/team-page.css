@@ -58,7 +58,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
   font-weight: 600;
 }
 
@@ -128,8 +128,8 @@
 }
 
 .team-link:hover {
-  border-color: var(--ps-accent, #7fffe5);
-  color: var(--ps-accent, #7fffe5);
+  border-color: var(--ps-accent, #56b4e9);
+  color: var(--ps-accent, #56b4e9);
 }
 
 .team-link svg {
@@ -143,7 +143,7 @@
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2.5rem;
-  border-left: 3px solid var(--ps-accent, #7fffe5);
+  border-left: 3px solid var(--ps-accent, #56b4e9);
 }
 
 .team-vision h2 {
@@ -194,7 +194,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
   font-weight: 600;
   margin-bottom: 0.35rem;
 }

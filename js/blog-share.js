@@ -136,9 +136,9 @@
     style.id = "swft-blog-share-styles";
     style.textContent =
       ".uui-blogpost01_share a[data-share].is-copied{" +
-      "outline:2px solid #7fffe5;outline-offset:2px;}" +
+      "outline:2px solid #56b4e9;outline-offset:2px;}" +
       ".uui-blogpost01_share a[data-share]:focus-visible{" +
-      "outline:2px solid #7fffe5;outline-offset:2px;}";
+      "outline:2px solid #56b4e9;outline-offset:2px;}";
     document.head.appendChild(style);
   }
 

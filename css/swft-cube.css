@@ -7,7 +7,7 @@
 .swft-cube {
   --cube-size: min(64vw, 320px);
   --cube-half: calc(var(--cube-size) / 2);
-  --cube-accent: var(--swft-accent, #7fffe5);
+  --cube-accent: var(--swft-accent, #56b4e9);
   --cube-radius: 14px;
 
   position: relative;
@@ -313,7 +313,7 @@
 }
 
 .cube-page-eyebrow {
-  color: var(--swft-accent, #7fffe5);
+  color: var(--swft-accent, #56b4e9);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-size: var(--swft-text-tiny, 0.8125rem);

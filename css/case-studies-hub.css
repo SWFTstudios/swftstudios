@@ -30,7 +30,7 @@
 }
 
 .cs-card:hover {
-  border-color: rgba(127, 255, 229, 0.45);
+  border-color: rgba(86, 180, 233, 0.45);
   transform: translateY(-2px);
 }
 
@@ -70,7 +70,7 @@
 
 .cs-card-tag {
   font-size: 0.68rem;
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
   font-weight: 500;
 }
 
@@ -95,7 +95,7 @@
 
 .cs-card-metric {
   font-size: 0.8rem;
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
   font-weight: 600;
   margin: 0.25rem 0 0;
 }
@@ -104,7 +104,7 @@
   position: absolute;
   right: 1.25rem;
   bottom: 1.25rem;
-  color: var(--ps-accent, #7fffe5);
+  color: var(--ps-accent, #56b4e9);
   font-size: 1.1rem;
   opacity: 0;
   transition: opacity 0.2s, transform 0.2s;
