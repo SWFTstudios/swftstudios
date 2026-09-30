@@ -1,0 +1,213 @@
+/* ============================================================
+   Homepage About: ARAISE-style statement + curved work carousel.
+   Ported from the swft2027 staging design (branch swft-araise-2027).
+   Pair with js/swft-about.js (word-by-word scroll highlight).
+   ============================================================ */
+
+.swft-about {
+  --about-fg: #ffffff;
+  --about-dim: rgba(255, 255, 255, 0.22);
+  --about-muted: #8a8a8a;
+  --about-bg: var(--black, #010101);
+  --about-display: "Chakra Petch", "Inter Display", Inter, system-ui, sans-serif;
+  --about-body: "Inter Display", Inter, system-ui, sans-serif;
+
+  position: relative;
+  padding-block: clamp(4rem, 10vw, 8rem) clamp(3rem, 8vw, 6rem);
+  background: var(--about-bg);
+  color: var(--about-fg);
+}
+
+.swft-about__inner {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+/* Meta row: -> [ ABOUT US ]                SWFT */
+.swft-about__label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  font: 400 0.75rem/1 var(--about-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--about-muted);
+}
+
+.swft-about__statement {
+  margin: 0;
+  max-width: 21ch;
+  font-family: var(--about-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 6.4vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--about-fg);
+}
+
+/* Words start dim and light up as the statement scrolls through the viewport.
+   Only once the script has split the words, so the text is readable without JS. */
+.swft-about__statement.is-ready .swft-about__word {
+  color: var(--about-dim);
+  transition: color 0.35s ease;
+}
+
+.swft-about__statement.is-ready .swft-about__word.is-lit {
+  color: var(--about-fg);
+}
+
+/* ---------- Curved auto-scrolling work carousel ----------
+   Sizes and the eclipse bars match the swft2027 site head (#swft-about-gallery).
+   The staging gallery is scroll-scrubbed; this one auto-scrolls on a loop. */
+.swft-about-gallery {
+  --card: clamp(222px, 28vw, 455px);
+  --gap: 1.25rem;
+  --speed: 50s;
+
+  position: relative;
+  /* Full bleed out of the page container */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(2.5rem, 6vw, 4.5rem) 0;
+  min-height: clamp(280px, 42vw, 520px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.swft-about-gallery__track {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  width: max-content;
+  will-change: transform;
+  animation: swft-about-scroll var(--speed) linear infinite;
+}
+
+.swft-about-gallery:hover .swft-about-gallery__track,
+.swft-about-gallery:focus-within .swft-about-gallery__track {
+  animation-play-state: paused;
+}
+
+/* Two identical sets; moving by one set width (half the track) loops seamlessly */
+@keyframes swft-about-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(calc(-50% - var(--gap) / 2), 0, 0); }
+}
+
+.swft-about-gallery__card {
+  position: relative;
+  flex: 0 0 var(--card);
+  width: var(--card);
+  height: var(--card);
+  overflow: hidden;
+  background: #111;
+  display: block;
+}
+
+.swft-about-gallery__card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.swft-about-gallery__card:hover img,
+.swft-about-gallery__card:focus-visible img {
+  transform: scale(1.03);
+}
+
+.swft-about-gallery__card:focus-visible {
+  outline: 2px solid var(--green, #7fffe5);
+  outline-offset: -2px;
+}
+
+.swft-about-gallery__name {
+  position: absolute;
+  left: 1rem;
+  bottom: 3rem;
+  z-index: 1;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font: 600 0.72rem/1 var(--about-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.swft-about-gallery__card:hover .swft-about-gallery__name,
+.swft-about-gallery__card:focus-visible .swft-about-gallery__name {
+  opacity: 1;
+  transform: none;
+}
+
+/* Black elliptical bars over the top and bottom edges cut the strip into a
+   curved window, shallower in the middle than at the sides. */
+.swft-about-gallery__eclipse {
+  position: absolute;
+  left: 50%;
+  width: 120%;
+  z-index: 2;
+  transform: translateX(-50%);
+  border-radius: 100%;
+  background: var(--about-bg);
+  pointer-events: none;
+}
+
+.swft-about-gallery__eclipse--top {
+  top: -40px;
+  height: clamp(80px, 12vw, 140px);
+}
+
+.swft-about-gallery__eclipse--bottom {
+  bottom: -74px;
+  height: 156px;
+}
+
+@media screen and (max-width: 767px) {
+  .swft-about__statement {
+    max-width: none;
+  }
+
+  .swft-about-gallery {
+    --gap: 0.75rem;
+    --speed: 36s;
+    padding: 1.75rem 0;
+    min-height: 240px;
+  }
+
+  .swft-about-gallery__eclipse--top {
+    top: -28px;
+    height: 70px;
+  }
+
+  .swft-about-gallery__eclipse--bottom {
+    bottom: -48px;
+    height: 100px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swft-about__statement.is-ready .swft-about__word {
+    color: var(--about-fg);
+    transition: none;
+  }
+
+  /* Static strip the viewer can swipe or scroll sideways instead */
+  .swft-about-gallery {
+    overflow-x: auto;
+  }
+
+  .swft-about-gallery__track {
+    animation: none;
+  }
+}

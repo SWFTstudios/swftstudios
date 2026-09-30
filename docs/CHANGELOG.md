@@ -12,6 +12,14 @@
 - The hero intro now waits for the ocean's first frame (`swftocean:ready`, 1.5s fallback) instead of the Vimeo player.
 - The cube sits just above the water (`data-hover-gap`). Waves are centred on the water line, so the reflection starts right under the cube.
 
+- The homepage About section (`#About`) is rebuilt after the swft2027 staging design (branch `swft-araise-2027`). See [`css/home-about.css`](../css/home-about.css) and [`js/swft-about.js`](../js/swft-about.js).
+  - Layout: a `-> [ ABOUT US ] / SWFT` meta row, then a huge uppercase Chakra Petch statement.
+  - Copy: "SWFT Studios creates high-converting marketing content and brand-true digital experiences for Bergen, Hudson, and NYC."
+  - Reveal: the statement starts dim, and its words light up one at a time on scroll. It uses the same window as the staging ScrollTrigger (`top 75%` → `bottom 35%`), with no library dependency.
+  - Carousel: a full-bleed work carousel (Hamper, Brooklyn Steel, Manna Hydration, Thyme & Table, Snooze Lane). It auto-scrolls on a seamless loop and pauses on hover or focus. Black elliptical bars cut it into a curved window, with sizes taken from the staging site head. Each card links to its case study.
+  - It replaces the old animated statement, whose Jersey City / Manhattan / North Jersey links left the homepage body. The nav still links to Locations.
+  - Reduced motion: every word is lit, and the carousel is a static strip that can be scrolled sideways.
+
 ### Removed (homepage only)
 - The Vimeo intro loader overlay, `js/hero-vimeo-loader.js`, `css/hero-vimeo-loader.css` and the Vimeo player API script.
 - The hidden legacy "cube night watch" background videos.
