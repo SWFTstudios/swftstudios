@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-30: Interactive 3D image cube
+
+### Added
+- [`css/swft-cube.css`](../css/swft-cube.css) + [`js/swft-cube.js`](../js/swft-cube.js): a reusable six-face 3D cube with a slideshow on each face. Drag or swipe to rotate (it snaps to a face, and a flick moves at least one face). Tap the front face to change slides or tap a side face to bring it forward. Hover tilts the cube, and the arrow keys and Enter/Space also work. Honors reduced motion. Docs: [`docs/SWFT_CUBE.md`](SWFT_CUBE.md).
+- [`cube.html`](../cube.html): a `noindex` demo page built from existing portfolio images. It isn't linked from the nav.
+
+---
+
 ## 2026-08-20: PostHog on marketing site
 
 ### Added
