@@ -125,7 +125,7 @@ function buildCaseStudySection(p, prev, next) {
           </div>
         </div>
         <figure class="cs-cover">
-          <img src="../${p.image}" loading="eager" alt="${escapeHtml(p.name)}" width="1600" height="900">
+          <img src="../${p.image}" loading="eager" fetchpriority="high" alt="${escapeHtml(p.name)}" width="1600" height="900">
         </figure>
         <div class="cs-scroll-cue" aria-hidden="true">
           Scroll Down
@@ -232,6 +232,14 @@ function buildCaseStudyPage(p, prev, next) {
     html = html.replace(
       '<link href="../css/swftstudios000.css" rel="stylesheet" type="text/css">',
       '<link href="../css/swftstudios000.css" rel="stylesheet" type="text/css">\n  <link href="../css/case-study.css" rel="stylesheet" type="text/css">'
+    );
+  }
+
+  // Card -> case-study hero transition (see js/swft-page-transition.js)
+  if (!html.includes('swft-page-transition.js')) {
+    html = html.replace(
+      /(<link href="(?:\.\.|)\/css\/case-study\.css" rel="stylesheet" type="text\/css">)/,
+      '$1\n  <link href="/css/swft-page-transition.css" rel="stylesheet" type="text/css">\n  <script src="/js/swft-page-transition.js"></script>'
     );
   }
 
