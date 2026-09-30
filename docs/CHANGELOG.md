@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-30: Homepage hero — ocean cube replaces the background video
+
+### Changed
+- The homepage hero's Vimeo background video is replaced by the glowing work cube over the WebGL ocean. It fills the right half of the first screen on desktop, and the lower 66% on tablet and mobile. See [`css/home-hero-ocean.css`](../css/home-hero-ocean.css) and [`docs/SWFT_CUBE.md`](SWFT_CUBE.md#homepage-hero).
+- New hero copy:
+  - Eyebrow: "Brand · Website · Content"
+  - H1: "Own your blue ocean."
+  - Subhead: "Websites and content that lift your brand out of the crowd and into open water."
+  - The "Named offers with clear scope…" line is removed from the hero.
+- The hero intro now waits for the ocean's first frame (`swftocean:ready`, 1.5s fallback) instead of the Vimeo player.
+- The cube sits just above the water (`data-hover-gap`). Waves are centred on the water line, so the reflection starts right under the cube.
+
+### Removed (homepage only)
+- The Vimeo intro loader overlay, `js/hero-vimeo-loader.js`, `css/hero-vimeo-loader.css` and the Vimeo player API script.
+- The hidden legacy "cube night watch" background videos.
+
+---
+
 ## 2026-09-30: Interactive 3D image cube
 
 ### Added

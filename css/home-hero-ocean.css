@@ -1,0 +1,162 @@
+/* ============================================================
+   Homepage hero: the glowing work cube over the night ocean.
+   Replaces the Vimeo background video. Uses css/swft-cube.css,
+   css/swft-ocean.css, js/swft-cube.js and js/swft-ocean.js.
+
+   Desktop (>= 992px): the scene fills the right half of the hero.
+   Tablet / mobile:     the scene fills the lower 66% of the first screen,
+                        with the copy in the top third.
+   ============================================================ */
+
+/* Hold the hero until the ocean's first frame so the intro fades in cleanly.
+   Only when JS runs (Webflow adds .w-mod-js); the reveal script has a 1.5s fallback. */
+html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
+  opacity: 0;
+}
+
+.section_gallery.has-hero-ocean {
+  position: relative;
+}
+
+/* Copy sits above the scene. The wrappers let pointer events fall through to the
+   cube wherever there's no copy, marquee or button on top of it. */
+.has-hero-ocean > .padding-global {
+  position: relative;
+  z-index: 1;
+}
+
+.has-hero-ocean > .padding-global,
+.has-hero-ocean > .padding-global > .container-large,
+.has-hero-ocean .div-block-3,
+.has-hero-ocean .div-block-3 > .margin-bottom,
+.has-hero-ocean .course_component,
+.has-hero-ocean .course_spacer-block {
+  pointer-events: none;
+}
+
+.has-hero-ocean .course_content,
+.has-hero-ocean .div-block-3 > :not(.margin-bottom),
+.has-hero-ocean > .padding-global > .container-large > :not(.div-block-3) {
+  pointer-events: auto;
+}
+
+/* ---------- The scene ---------- */
+.home-hero-ocean.swft-ocean {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  /* The first screen under the fixed nav, capped like the old video frame */
+  height: min(calc(100vh - var(--sn-height, 62px)), 50rem);
+  background: #000;
+}
+
+/* Fade the seam into the page's black on the copy side */
+.home-hero-ocean.swft-ocean::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 22%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to right, var(--black, #010101), rgba(1, 1, 1, 0));
+}
+
+.home-hero-ocean.swft-ocean::after {
+  z-index: 1;
+  height: 28%;
+  background: linear-gradient(to bottom, rgba(1, 1, 1, 0), var(--black, #010101));
+}
+
+.home-hero-ocean .swft-cube {
+  --cube-size: min(21vw, 300px);
+  z-index: 2;
+  padding: 0;
+}
+
+/* Desktop: copy centred beside the scene; the work marquee starts where the scene fades out */
+.has-hero-ocean .course_component {
+  min-height: calc(min(calc(100vh - var(--sn-height, 62px)), 50rem) - 16rem);
+  align-items: center;
+}
+
+/* The hero keeps the cube clean: no buttons, dots or hint. Drag, tap, hover and
+   arrow keys still work; the cube itself is focusable. */
+.home-hero-ocean .swft-cube__hud {
+  display: none;
+}
+
+/* ---------- Tablet + mobile ---------- */
+@media screen and (max-width: 991px) {
+  /* Lower 66% of the screen: from 34svh down to the bottom of the first screen */
+  .home-hero-ocean.swft-ocean {
+    top: calc(34svh - var(--sn-height, 62px));
+    left: 0;
+    width: 100%;
+    height: 66svh;
+  }
+
+  /* Fade the top edge into the copy area instead of the side */
+  .home-hero-ocean.swft-ocean::before {
+    inset: 0 0 auto 0;
+    width: auto;
+    height: 22%;
+    background: linear-gradient(to bottom, var(--black, #010101), rgba(1, 1, 1, 0));
+  }
+
+  .home-hero-ocean .swft-cube {
+    --cube-size: min(46vw, 230px);
+  }
+
+  /* Copy moves up into the top third; the first screen is reserved for the hero so
+     the work marquee starts below the scene. */
+  .has-hero-ocean .course_component {
+    margin-top: 1rem;
+    min-height: calc(100svh - 17.5rem);
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  /* Run the scene edge to edge past the body's 12px phone gutter */
+  .section_gallery.has-hero-ocean {
+    margin-left: -12px;
+    margin-right: -12px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .has-hero-ocean .div-block-3 {
+    padding-top: 84px;
+  }
+
+  /* Buttons side by side so the copy fits the top third */
+  .has-hero-ocean .button-group.is-course {
+    width: 100%;
+    max-width: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.625rem;
+  }
+
+  .has-hero-ocean .button-group.is-course .button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    white-space: nowrap;
+  }
+
+  .has-hero-ocean .button-group.is-course .button_text {
+    font-size: 0.9375rem;
+  }
+}
+
+/* Very small phones: side-by-side labels won't fit, so stack them again */
+@media screen and (max-width: 359px) {
+  .has-hero-ocean .button-group.is-course {
+    flex-direction: column;
+  }
+}

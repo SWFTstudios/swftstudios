@@ -5,7 +5,8 @@ An interactive 3D cube with its own image slideshow on each of its six faces. It
 - Styles: [`css/swft-cube.css`](../css/swft-cube.css)
 - Behavior: [`js/swft-cube.js`](../js/swft-cube.js)
 - Ocean stage (optional): [`css/swft-ocean.css`](../css/swft-ocean.css) + [`js/swft-ocean.js`](../js/swft-ocean.js)
-- Demo page: [`/cube.html`](../cube.html) (`noindex` until it is placed on a live page)
+- Live on the homepage hero: [`index.html`](../index.html) with [`css/home-hero-ocean.css`](../css/home-hero-ocean.css)
+- Demo page: [`/cube.html`](../cube.html) (`noindex`)
 
 ## Interactions
 
@@ -82,3 +83,16 @@ Rendering:
 - **Speed:** resolution starts within a fixed pixel budget and steps down when frames run slow. Rendering pauses when the stage is off screen or the tab is hidden.
 - **Reduced motion:** with `prefers-reduced-motion`, the water keeps moving at about a third of the speed instead of freezing, and the cube stops bobbing.
 - **No WebGL:** the stage keeps a painted CSS still of the scene (`.swft-ocean--static`).
+
+Options and hooks:
+- `data-hover-gap` on `.swft-ocean`: water line to cube bottom, in cube widths (default `0.5`; the homepage uses `0.2` so the cube sits just above the crests).
+- `swftocean:ready` bubbles from the stage after its first frame (or at once on the static fallback). The homepage waits for it before running its intro, with a 1.5s fallback.
+
+## Homepage hero
+
+The ocean cube replaces the Vimeo background video in the homepage hero (`index.html`, `css/home-hero-ocean.css`).
+- **Desktop (≥ 992px):** the scene fills the right half of the first screen. Its left edge fades into the page black, and the copy sits centred beside it.
+- **Tablet and mobile:** the scene fills the lower 66% of the first screen (`34svh` to `100svh`). The copy sits in the top third, with the buttons side by side (they stack below 360px). On phones the scene runs edge to edge past the body's 12px gutter.
+- **Controls:** the hero hides the cube's HUD (buttons, dots, hint). The cube can still be dragged, tapped and hovered, and responds to arrow keys once focused. It uses `data-vertical-swipe="false"`, so a vertical swipe that starts on the cube scrolls the page.
+- **Pointer events:** the copy wrappers above the scene pass pointer events through, and only the copy, the buttons and the work marquee take them. That's how the cube stays interactive under the layered Webflow hero.
+- **Removed from the homepage:** the Vimeo intro loader (`#swft-hero-loader`, `js/hero-vimeo-loader.js`, the Vimeo player API) and the hidden legacy cube videos. Other pages still use the Vimeo hero.

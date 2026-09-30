@@ -17,9 +17,9 @@
 
   // World units. The cube is CUBE_SIZE wide; everything else is scaled from it.
   var CUBE_SIZE = 1.6;
-  var HOVER_GAP = 0.8;           // water line to cube bottom
-  var CAM_HEIGHT = 0.55;         // eye just above the water, below the cube
-  var CAM_PITCH = 1.5 * Math.PI / 180; // near level: horizon just above centre, mirror image below
+  var HOVER_GAP = 0.5;           // default water line to cube bottom, in cube widths (data-hover-gap)
+  var CAM_HEIGHT = 0.6;          // eye just above the wave crests
+  var CAM_PITCH = -3.5 * Math.PI / 180; // tipped slightly up: horizon a little below centre
   var FOCAL = 1.6;               // vertical field of view ~ 34deg
   var BOB_WORLD = 0.07;          // bob amplitude
   var BOB_SPEED = 1.3;           // radians per second
@@ -66,11 +66,13 @@
     "  return 0.09 * sin(p.y * 0.45 + uTime * 1.1 + sin(p.x * 0.18) * 1.5)",
     "       + 0.05 * sin(dot(p, vec2(0.31, 0.22)) - uTime * 0.8);",
     "}",
-    // Surface height; always stays below y = 0, where the raymarch starts.
-    "float hgt(vec2 p, int it) { return (waves(p, it) - 1.0) * DEPTH - 0.15 + swell(p); }",
+    // Surface height, centred on y = 0 (the water line the cube's hover gap is measured from).
+    // Crests never pass SURF_TOP, where the raymarch starts.
+    "const float SURF_TOP = 0.34;",
+    "float hgt(vec2 p, int it) { return (waves(p, it) - 1.0) * DEPTH + 0.16 + swell(p); }",
 
     "float march(vec3 ro, vec3 rd) {",
-    "  vec3 p = ro + rd * (-ro.y / rd.y);",
+    "  vec3 p = ro + rd * ((SURF_TOP - ro.y) / rd.y);",
     "  for (int i = 0; i < 40; i++) {",
     "    float h = hgt(p.xz, 10);",
     "    if (h + 0.005 > p.y) break;",
@@ -168,7 +170,7 @@
     "    vec3 lit = ICE * atten * (pow(nh, 180.0) * 3.5 + pow(nh, 24.0) * 0.12)",
     "             + vec3(0.01, 0.025, 0.05) * atten * max(dot(N, toL), 0.0);",
     // Light passing through the thin crests between the viewer and the cube.
-    "    float crest = smoothstep(-0.45, -0.02, p.y);",
+    "    float crest = smoothstep(-0.28, 0.16, p.y);",
     "    float back = pow(max(dot(rd, toL), 0.0), 3.0);",
     "    vec3 sss = vec3(0.04, 0.3, 0.55) * atten * crest * crest * (0.2 + 1.6 * back) * 0.45;",
     "    vec3 deep = vec3(0.0003, 0.0009, 0.0025) * (0.4 + crest);",
@@ -227,6 +229,9 @@
     this.lastKey = "";
     this.start = performance.now();
 
+    var gapAttr = parseFloat(root.getAttribute("data-hover-gap"));
+    this.hoverGap = (isNaN(gapAttr) ? HOVER_GAP : Math.max(0.05, gapAttr)) * CUBE_SIZE;
+
     this.canvas = root.querySelector(".swft-ocean__canvas");
     if (!this.canvas) {
       this.canvas = document.createElement("canvas");
@@ -241,6 +246,7 @@
       if (window.console) console.warn("[swft-ocean] WebGL unavailable, using static scene:", err.message);
       this.gl = null;
       root.classList.add("swft-ocean--static");
+      setTimeout(this.announceReady.bind(this), 0);
     }
 
     this.layout();
@@ -285,7 +291,7 @@
     this.fw = fw; this.up = up;
 
     var cubePx = this.bodyEl ? this.bodyEl.offsetWidth : Math.min(W * 0.44, 250);
-    var cy = CUBE_SIZE / 2 + HOVER_GAP;
+    var cy = CUBE_SIZE / 2 + this.hoverGap;
     // Depth at which a CUBE_SIZE object renders cubePx tall, then back out the distance.
     var zc = CUBE_SIZE * FOCAL * H / cubePx;
     var dist = (zc - (cy - CAM_HEIGHT) * fw[1]) / fw[2];
@@ -377,6 +383,7 @@
     // Column-major upload: M's rows become the columns of M^T (world -> local).
     gl.uniformMatrix3fv(u.uToLocal, false, [].concat(M[0], M[1], M[2]));
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+    this.announceReady();
 
     // Adaptive resolution: back off when frames run long, recover slowly when they're cheap.
     if (this.prevDraw) {
@@ -386,6 +393,16 @@
       }
     }
     this.prevDraw = now;
+  };
+
+  // Fired once, after the first frame (or straight away on the static fallback),
+  // so a page can hold its intro until the scene is actually painted.
+  Ocean.prototype.announceReady = function () {
+    if (this.ready) return;
+    this.ready = true;
+    try {
+      this.root.dispatchEvent(new CustomEvent("swftocean:ready", { bubbles: true }));
+    } catch (err) { /* very old browsers: nothing listens anyway */ }
   };
 
   function init() {
