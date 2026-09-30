@@ -9,18 +9,59 @@
   <meta property="og:title" content="Case Studies | SWFT Studios">
   <meta property="og:description" content="Proven transformations across web, brand, content, and automation.">
   <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/araise-theme.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/page-shell.css">
   <link rel="stylesheet" href="css/case-studies-hub.css">
+  <link rel="stylesheet" href="css/araise-pages.css">
+  <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+  <style>
+    .ar-body.ps-page {
+      --swft-bg: var(--bg); --swft-text: var(--fg); --swft-text-strong: var(--fg);
+      --swft-muted: var(--muted); --swft-lead: var(--muted); --swft-accent: var(--accent);
+      --swft-border: var(--border); --swft-card: var(--surface);
+      --ps-bg: var(--bg); --ps-text: var(--fg); --ps-muted: var(--muted);
+      --ps-accent: var(--accent); --ps-border: var(--border); --ps-card: var(--surface);
+      background: var(--bg); color: var(--fg);
+    }
+    .ar-body .ps-eyebrow { border-color: var(--border); color: var(--muted); border-radius: 4px; }
+    .ar-body .ps-title { font-family: var(--ar-display); text-transform: uppercase; letter-spacing: -0.03em; }
+    .ar-body .ps-filter.is-active,
+    .ar-body .button.is-course {
+      background: var(--cta-bg) !important;
+      color: var(--cta-fg) !important;
+      border-radius: 4px;
+    }
+    .ar-body .ps-filter {
+      border-color: var(--border);
+      color: var(--fg);
+      border-radius: 4px;
+    }
+    .ar-body .button.is-course.outlined {
+      background: transparent !important;
+      color: var(--fg) !important;
+      border: 1px solid var(--border);
+    }
+    .ar-body .ps-search input {
+      background: var(--surface);
+      color: var(--fg);
+      border-color: var(--border);
+    }
+  </style>
 </head>
-<body class="ps-page">
+<body class="ar-body ps-page">
   <div id="swft-nav" data-active="case-studies"></div>
 
   <main>
     <div class="ps-shell">
-      <header class="ps-hero">
+      <header class="ps-hero ar-page-hero" style="padding-top:1rem">
+        <div class="ar-section-label">
+          <span>→ [ CASE STUDIES ]</span>
+          <span>SWFT</span>
+        </div>
         <p class="ps-eyebrow">Case Studies</p>
-        <h1 class="ps-title">Proven <span class="ps-accent">Transformations</span></h1>
+        <h1 class="ps-title">Proven <span class="ghost" style="color:transparent;-webkit-text-stroke:1px var(--ghost)">Transformations</span></h1>
         <p class="ps-lead">Real projects across web development, brand identity, content, and automation, built for brands that need to move fast and look sharp.</p>
       </header>
 
@@ -42,27 +83,14 @@
       <div id="cs-grid" class="cs-grid" aria-live="polite"></div>
       <p id="cs-empty" class="cs-empty" hidden>No case studies match your search. Try a different filter or keyword.</p>
 
-      <div class="ps-cta-band">
+      <div class="ps-cta-band" style="border-color:var(--border);background:var(--surface)">
         <h2>Ready for your Transformation?</h2>
         <p>Book a discovery call or explore how we build websites, content, and automation systems.</p>
-        <div class="ps-cta-row button-group is-course">
-          <a href="/growth-audit" class="button is-course w-inline-block" target="_blank" rel="noopener noreferrer">
-            <div class="button_bg"></div>
-            <div class="button_text">Get Your Free Growth Audit</div>
-          </a>
-          <a href="services.html" class="button is-course outlined w-inline-block">
-            <div class="button_bg"></div>
-            <div class="button_text">View Services</div>
-          </a>
+        <div class="ps-cta-row" style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center">
+          <a href="/growth-audit" class="ar-btn">Get Your Free Growth Audit</a>
+          <a href="services.html" class="ar-btn ar-btn--outline">View Services</a>
         </div>
       </div>
-
-      <footer class="ps-footer">
-        <span>hello@swftstudios.com</span>
-        <span>
-          <a href="https://www.instagram.com/swftstudios/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        </span>
-      </footer>
     </div>
   </main>
 
@@ -81,6 +109,7 @@
   </style>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
+  <script src="js/swft-theme-clock.js" defer></script>
   <script src="js/case-studies-grid.js" defer></script>
 </body>
 </html>

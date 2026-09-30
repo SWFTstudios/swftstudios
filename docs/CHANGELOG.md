@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-30: SWFT × ARAISE 2027 redesign (branch `swft-araise-2027`)
+
+### Added
+- Hand-rebuilt ARAISE-inspired marketing theme: [`css/araise-theme.css`](../css/araise-theme.css), [`css/home-araise.css`](../css/home-araise.css), [`css/araise-pages.css`](../css/araise-pages.css).
+- Header live clock + light/dark/auto theme with sunrise/sunset gradual lerp: [`js/swft-theme-clock.js`](../js/swft-theme-clock.js).
+- Theme documentation: [`docs/ARAISE_THEME.md`](ARAISE_THEME.md).
+
+### Changed
+- Shared nav/footer restyled to ARAISE chrome (clock, theme toggle, solid CTA): [`js/swft-nav.js`](../js/swft-nav.js), [`css/swft-nav.css`](../css/swft-nav.css).
+- Rebuilt marketing pages: home, services, our work, pricing, team, contact, growth audit; case-studies hub shell themed (grid JS preserved).
+
+### Security / privacy
+- Theme geolocation is optional, one-shot, and cached locally; denied permission falls back to timezone-based coordinates. No location data is sent to SWFT servers.
+
+---
+
 ## 2026-08-20: PostHog on marketing site
 
 ### Added

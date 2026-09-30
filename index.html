@@ -1,1777 +1,221 @@
-<!DOCTYPE html><!--  Last Published: Wed Apr 29 2026 12:02:13 GMT+0000 (Coordinated Universal Time)  -->
-<html data-wf-page="688e7554265d8089278ca766" data-wf-site="688e7554265d8089278ca76e" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Web Design + Content for Growing Businesses | SWFT Studios</title>
-  <meta content="We help service businesses and growing brands in NYC, Jersey City, and North Jersey turn attention into booked customers with websites, photo/video content, and lead systems." name="description">
-  <meta content="Web Design + Content for Growing Businesses | SWFT Studios" property="og:title">
-  <meta content="Websites and content that turn attention into booked customers. Transparent project pricing from $400 GBP refreshes to full website + content builds." property="og:description">
-  <meta content="https://cdn.prod.website-files.com/688e7554265d8089278ca76e/688fe8fd55a360a548808bcb_Screenshot%202025-08-03%20at%206.54.36%E2%80%AFPM.png" property="og:image">
-  <meta content="Web Design + Content for Growing Businesses | SWFT Studios" property="twitter:title">
-  <meta content="Websites and content that turn attention into booked customers. Transparent project pricing from $400 GBP refreshes to full website + content builds." property="twitter:description">
-  <meta content="https://cdn.prod.website-files.com/688e7554265d8089278ca76e/688fe8fd55a360a548808bcb_Screenshot%202025-08-03%20at%206.54.36%E2%80%AFPM.png" property="twitter:image">
+  <meta name="description" content="We build the website and capture the photo and video content in person, so local businesses get one clear system instead of juggling separate agencies.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="canonical" href="https://www.swftstudios.com/">
+  <meta property="og:title" content="Web Design + Content for Growing Businesses | SWFT Studios">
+  <meta property="og:description" content="Websites and content that turn attention into booked customers. Serving Jersey City, NYC, and North Jersey.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.swftstudios.com/">
-  <meta content="summary_large_image" name="twitter:card">
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <link href="css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="css/components.css" rel="stylesheet" type="text/css">
-  <link href="css/swftstudios000.css" rel="stylesheet" type="text/css">
-  <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
+  <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Web Design + Content for Growing Businesses | SWFT Studios">
+  <meta name="twitter:description" content="Websites and content that turn attention into booked customers.">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/swft-nav.css">
+  <link rel="stylesheet" href="css/home-araise.css">
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <link href="images/webclip.webp" rel="apple-touch-icon">
-  <style>
-.tippy-box[data-theme~='tooltiptheme'] {
-  background-color: #141416;
-  color: #FFFFFF;
-  border-radius: 0;
-  font-size: 14px;
-  pointer-events: none;
-}
-body{
-  overscroll-behavior: none;
-  }
-</style>
-  <style>
-.loop-marquee_item-top {
-  white-space: nowrap;
-  will-change: transform;
-  animation: loop-marquee_item-top 140s linear infinite;
-  /* manipulate the speed of the marquee by changing "40s" line above*/
-}
-@keyframes loop-marquee_item-top {
-  from { transform: translateX(0); }
-  to { transform: translateX(-70%); }
-}
-.loop-marquee_item-bottom {
-  white-space: nowrap;
-  will-change: transform;
-  animation: loop-marquee_item-bottom  140s linear infinite;
-  /* manipulate the speed of the marquee by changing "40s" line above*/
-}
-@keyframes loop-marquee_item-bottom {
-  from { transform: translateX(-70%); }
-  to { transform: translateX(0%); }
-}
-</style>
-  <link href="css/swft-nav.css" rel="stylesheet" type="text/css">
-  <link href="css/pricing-page.css" rel="stylesheet" type="text/css">
-  <style>
-    /* Homepage redesign, services, proven results, booking (uses --swft-* tokens) */
-    .hp-section {
-      padding: 4rem 0;
-      border-top: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
-    }
-    .hp-section-label {
-      font-size: var(--swft-text-tiny, 0.75rem);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--swft-muted, #a8a8a8);
-      margin-bottom: 1rem;
-    }
-    .hp-section-title {
-      font-size: var(--swft-h2, clamp(1.75rem, 4vw, 2.75rem));
-      font-weight: 600;
-      line-height: var(--swft-lh-heading, 1.1);
-      color: var(--swft-text-strong, #fff);
-      margin-bottom: 2.5rem;
-    }
-    .hp-services-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    @media (min-width: 768px) {
-      .hp-services-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (min-width: 1100px) {
-      .hp-services-grid { grid-template-columns: repeat(4, 1fr); }
-      .hp-services-grid--ongoing { grid-template-columns: 1fr 1fr; max-width: 720px; }
-    }
-    .hp-services-intro {
-      color: var(--swft-lead, #c4c7c7);
-      max-width: 42rem;
-      margin: -1.5rem 0 2rem;
-      line-height: var(--swft-lh-lead, 1.55);
-    }
-    .hp-service-price {
-      font-size: var(--swft-h4, 1.35rem);
-      font-weight: 600;
-      color: var(--swft-accent, #7fffe5);
-      margin: 0 0 0.35rem;
-    }
-    .hp-service-price-note {
-      display: block;
-      font-size: var(--swft-text-tiny, 0.75rem);
-      font-weight: 500;
-      color: var(--swft-muted, #a8a8a8);
-      letter-spacing: 0.04em;
-      margin-top: 0.2rem;
-    }
-    .hp-service-card {
-      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
-      background: var(--swft-card, #0a0a0a);
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 22rem;
-      transition: border-color 0.3s ease;
-    }
-    .hp-service-card:hover { border-color: var(--swft-accent, #7fffe5); }
-    .hp-service-card-num {
-      position: absolute;
-      top: 2rem;
-      right: 2rem;
-      font-size: var(--swft-text-tiny, 0.75rem);
-      letter-spacing: 0.1em;
-      color: var(--swft-muted, #a8a8a8);
-    }
-    .hp-service-card { position: relative; }
-    .hp-service-card-image {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      margin-bottom: 1.5rem;
-      display: block;
-    }
-    .hp-service-card h3 {
-      font-size: var(--swft-h4, 1.5rem);
-      font-weight: 600;
-      margin: 0 0 1rem;
-      color: var(--swft-text-strong, #fff);
-    }
-    .hp-service-card p {
-      color: var(--swft-lead, #c4c7c7);
-      line-height: var(--swft-lh-lead, 1.55);
-      font-size: var(--swft-text-body, 1rem);
-      margin: 0 0 1.25rem;
-    }
-    .hp-service-deliverables {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 1.5rem;
-      color: var(--swft-text, #f0eeec);
-      font-size: var(--swft-text-body, 1.0625rem);
-      font-weight: 400;
-      line-height: 1.75;
-    }
-    .hp-service-deliverables li {
-      margin-bottom: 0.55rem;
-    }
-    .hp-service-deliverables li::before { content: "· "; color: var(--swft-accent, #7fffe5); }
-    #homepage-problems .hp-service-deliverables {
-      font-size: var(--swft-text-lead, 1.125rem);
-      line-height: 1.7;
-      color: var(--swft-text, #f0eeec);
-    }
-    #homepage-problems .hp-service-deliverables li {
-      margin-bottom: 0.75rem;
-    }
-    .hp-proven-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-    @media (min-width: 640px) { .hp-proven-grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 992px) { .hp-proven-grid { grid-template-columns: 1fr 1fr 1fr; } }
-    .hp-proven-card {
-      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
-      background: #131313;
-      overflow: hidden;
-      transition: border-color 0.3s ease, transform 0.3s ease;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .hp-proven-card:hover {
-      border-color: var(--swft-accent, #7fffe5);
-      transform: translateY(-2px);
-    }
-    .hp-proven-card img {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      display: block;
-    }
-    .hp-proven-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      overflow: hidden;
-      background: var(--swft-card, #0a0a0a);
-      line-height: 0;
-    }
-    .hp-proven-thumb img {
-      width: 100%;
-      height: 100%;
-      aspect-ratio: auto;
-      object-fit: cover;
-      object-position: top center;
-    }
-    .hp-proven-card-body { padding: 1.25rem; }
-    .hp-proven-tag {
-      font-size: var(--swft-text-tiny, 0.75rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--swft-muted, #a8a8a8);
-      margin-bottom: 0.5rem;
-    }
-    .hp-proven-card h3 {
-      font-size: var(--swft-text-lead, 1.125rem);
-      font-weight: 600;
-      margin: 0 0 0.75rem;
-      color: var(--swft-text-strong, #fff);
-    }
-    .hp-proven-link {
-      font-size: var(--swft-text-small, 0.875rem);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--swft-accent, #7fffe5);
-    }
-    .hp-view-all {
-      margin-top: 2.5rem;
-      text-align: center;
-    }
-    .hp-booking {
-      padding: 5rem 0;
-      border-top: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
-    }
-    .hp-booking-copy {
-      max-width: 36rem;
-      margin-bottom: 2rem;
-    }
-    .hp-booking-copy h2 {
-      font-size: var(--swft-h2, clamp(1.75rem, 4vw, 2.75rem));
-      font-weight: 600;
-      margin: 0 0 1rem;
-      color: var(--swft-text-strong, #fff);
-    }
-    .hp-booking-copy p {
-      color: var(--swft-lead, #c4c7c7);
-      line-height: var(--swft-lh-lead, 1.55);
-      font-size: var(--swft-text-body, 1rem);
-    }
-    .hp-cal-embed {
-      width: 100%;
-      min-height: 630px;
-      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
-      background: #0e0e0e;
-    }
-    .hp-cal-fallback {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 12rem;
-      padding: 2rem;
-      text-align: center;
-      color: var(--swft-muted, #a8a8a8);
-    }
-    /* Who's this for, horizontal swipe cards */
-    .hp-audience-intro {
-      color: var(--swft-lead, #c4c7c7);
-      max-width: 48rem;
-      margin: -1.5rem 0 1.75rem;
-      line-height: var(--swft-lh-lead, 1.55);
-      font-size: var(--swft-text-body, 1rem);
-    }
-    .hp-audience-track {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      width: 100%;
-      max-width: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding: 0.25rem 0 1.25rem;
-      margin: 0;
-      scrollbar-width: thin;
-      scrollbar-color: var(--swft-accent, #7fffe5) transparent;
-    }
-    .hp-audience-track:focus-visible {
-      outline: 2px solid var(--swft-accent, #7fffe5);
-      outline-offset: 4px;
-    }
-    .hp-audience-card {
-      position: relative;
-      box-sizing: border-box;
-      flex: 0 0 auto;
-      align-self: flex-start;
-      width: calc((100% - 16px) / 1.5);
-      min-width: calc((100% - 16px) / 1.5);
-      max-width: none;
-      height: 420px;
-      min-height: 420px;
-      max-height: 420px;
-      scroll-snap-align: start;
-      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
-      overflow: hidden;
-      cursor: pointer;
-      background: #0a0a0a;
-      color: #fff;
-      transition: border-color 0.25s ease, transform 0.25s ease;
-    }
-    @media (min-width: 1024px) {
-      .hp-audience-card {
-        width: calc((100% - 32px) / 3);
-        min-width: calc((100% - 32px) / 3);
-        height: 560px;
-        min-height: 560px;
-        max-height: 560px;
-      }
-    }
-    .hp-audience-card:hover,
-    .hp-audience-card:focus-within {
-      border-color: var(--swft-accent, #7fffe5);
-    }
-    .hp-audience-card.is-expanded {
-      border-color: var(--swft-accent, #7fffe5);
-    }
-    .hp-audience-card__media {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-    }
-    .hp-audience-card__media img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-      transform: scale(1.04);
-      transition: transform 0.45s ease;
-    }
-    .hp-audience-card.is-expanded .hp-audience-card__media img {
-      transform: scale(1.06);
-    }
-    .hp-audience-card__media::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(1, 1, 1, 0.08) 0%,
-        rgba(1, 1, 1, 0.22) 28%,
-        rgba(1, 1, 1, 0.62) 48%,
-        rgba(1, 1, 1, 0.88) 68%,
-        rgba(1, 1, 1, 0.96) 100%
-      );
-    }
-    .hp-audience-card__body {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 1.35rem 1.25rem 1.25rem;
-      gap: 0.75rem;
-    }
-    .hp-audience-card h3 {
-      margin: 0;
-      font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-      font-weight: 600;
-      line-height: 1.15;
-      color: #fff;
-      text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
-    }
-    .hp-audience-card__blurb {
-      margin: 0;
-      color: rgba(245, 245, 245, 0.92);
-      font-size: 0.95rem;
-      line-height: 1.55;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      pointer-events: none;
-      transition: max-height 0.35s ease, opacity 0.25s ease;
-    }
-    .hp-audience-card.is-expanded .hp-audience-card__blurb {
-      max-height: 14rem;
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .hp-audience-card__toggle {
-      align-self: flex-start;
-      margin-top: 0.25rem;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      background: rgba(1, 1, 1, 0.35);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 0.55rem 0.9rem;
-      cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
-    }
-    .hp-audience-card__toggle:hover,
-    .hp-audience-card__toggle:focus-visible {
-      border-color: var(--swft-accent, #7fffe5);
-      color: var(--swft-accent, #7fffe5);
-      outline: none;
-    }
-    .hp-audience-hint {
-      margin: 0.25rem 0 0;
-      color: var(--swft-muted, #a8a8a8);
-      font-size: var(--swft-text-tiny, 0.75rem);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-  </style>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is the Free Growth Audit?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A personalized strategic review of your website, offer, and customer journey, not an automated score. You receive three prioritized recommendations by email."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Who do we help?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Service businesses, e-commerce brands, restaurants and hospitality, B2B and professional services, creators and personal brands, and health, wellness, and beauty companies, especially in Jersey City, New York City, and North Jersey, who want websites and content that generate inquiries."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I need to book a call first?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Start with the Growth Audit. An optional discovery call is available after you submit if you want to discuss the business beforehand."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What do we deliver?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Website design and development, photo and video content, and lead-capture / follow-up systems, so you are not juggling multiple agencies."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How much does a website cost?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Website Only starts at $800 when you supply photos and copy. Website plus on-site photo and video starts at $2,000. Larger and multi-location projects start at $3,000. Final prices depend on agreed scope."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the GBP Content Refresh?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A one-time service starting at $400 with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile, and set up review generation."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do you require long-term contracts?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Project work is scoped per engagement. Retainers are month-to-month."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How fast can you turn around a site?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Simpler builds can turn around in as little as 24 to 48 hours when content and decisions are ready. Larger sites and shoot-inclusive work take longer."
-        }
-      }
-    ]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "SWFT Studios",
-    "url": "https://www.swftstudios.com/",
-    "email": "hello@swftstudios.com",
-    "areaServed": ["Jersey City", "Hoboken", "Weehawken", "Union City", "Bayonne", "West New York", "Secaucus", "North Bergen", "Hackensack", "Fort Lee", "Englewood", "Teaneck", "Paramus", "Ridgewood", "Montclair", "Newark", "Paterson", "Clifton", "Morristown", "Wayne", "Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island", "North Jersey", "New York City", "Hudson County"],
-    "description": "Website design and development, photography and video content, and lead-capture systems for growing businesses."
-  }
-  </script>
-  <link href="css/hero-vimeo-loader.css" rel="stylesheet" type="text/css">
-  <style>
-    /* Critical: paint loader before hero iframe */
-    #swft-hero-loader{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.75rem;background:#1e211e;color:#fff;font-family:"Inter Display",Inter,system-ui,sans-serif}
-    body.hero-loading{overflow:hidden}
-  </style>
 </head>
-<body>
-  <div id="swft-hero-loader" class="swft-hero-loader" role="status" aria-live="polite" aria-label="Loading">
-    <div class="swft-hero-loader__brand">SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span></div>
-    <div class="swft-hero-loader__progress">
-      <div class="swft-hero-loader__track"><span id="swft-hero-loader-bar" class="swft-hero-loader__bar"></span></div>
-      <div id="swft-hero-loader-pct" class="swft-hero-loader__pct">0%</div>
-    </div>
-  </div>
+<body class="ar-body">
+  <div id="swft-nav" data-active="home"></div>
 
-  <div class="page-wrapper">
-    <div class="hide w-embed">
-      <style>
-@media screen and (max-width: 1280px) and (min-width: 950px) {
- .gallery_list {
- grid-template-columns: 1fr 1fr 1fr;
- }
- .course_component{
- grid-template-columns: 1fr 1fr 1fr;
- }
- .course_spacer-block{
- display:none;
- }
-}
-@media screen and (max-width: 704px) and (min-width: 480px) {
-}
-</style>
-    </div>
-    <div class="grid-container">
-      <div id="w-node-f9fd021e-131e-0abd-093a-7c60b8e9faa9-278ca766" class="grid-line"></div>
-      <div id="w-node-_9fc738b4-7671-c70f-1286-91d920668b81-278ca766" class="grid-line"></div>
-      <div id="w-node-_7b76feca-6ff6-d4b8-9678-ff36e531fc82-278ca766" class="grid-line"></div>
-      <div id="w-node-_14c80b26-5ac5-e7eb-83ce-fff70a89f9fb-278ca766" class="grid-line"></div>
-      <div id="w-node-cc997bac-6a89-125d-c97d-ce800a085f3b-278ca766" class="grid-line"></div>
-      <div id="w-node-_0802d49a-81be-29c1-9de3-9a42242f8e67-278ca766" class="grid-line"></div>
-      <div id="w-node-_0c4f307f-515f-65a6-becc-e4c605c719a4-278ca766" class="grid-line"></div>
-      <div id="w-node-e55cabb8-3582-4164-c790-64eb65ba5d7f-278ca766" class="grid-line"></div>
-      <div id="w-node-_5ac9f69d-4e19-a03d-3bb9-f8c72979adf9-278ca766" class="grid-line"></div>
-      <div id="w-node-b16acb99-a3e3-6896-6a67-b275b7e51525-278ca766" class="grid-line"></div>
-      <div id="w-node-a50d61bc-c061-c8d1-35f4-07bb6e9244dc-278ca766" class="grid-line"></div>
-      <div id="w-node-a9647166-7084-90cf-a01d-6d39ae9e94a3-278ca766" class="grid-line"></div>
-      <div id="w-node-_37043ad3-645b-9594-6360-887d749b79b8-278ca766" class="grid-line"></div>
-      <div id="w-node-_4f782c7a-fb92-c9ee-cde3-0653de310602-278ca766" class="grid-line"></div>
-      <div id="w-node-_4e24afcb-7a13-f866-564c-b8a0001abf21-278ca766" class="grid-line"></div>
-      <div id="w-node-_58236e50-01e1-0633-0b57-01d9145d5e16-278ca766" class="grid-line"></div>
-    </div>
-    <div class="global-styles w-embed">
-      <style>
-  /* Make text look crisper and more legible in all browsers */
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-  /* Focus state style for keyboard navigation for the focusable elements */
-  *[tabindex]:focus-visible,
-  input[type='file']:focus-visible {
-    outline: 0.125rem solid #4d65ff;
-    outline-offset: 0.125rem;
-  }
-  /* Get rid of top margin on first element in any rich text element */
-  .w-richtext > :not(div):first-child,
-  .w-richtext > div:first-child > :first-child {
-    margin-top: 0 !important;
-  }
-  /* Get rid of bottom margin on last element in any rich text element */
-  .w-richtext > :last-child,
-  .w-richtext ol li:last-child,
-  .w-richtext ul li:last-child {
-    margin-bottom: 0 !important;
-  }
-  /* Prevent all click and hover interaction with an element */
-  .pointer-events-off {
-    pointer-events: none;
-  }
-  /* Enables all click and hover interaction with an element */
-  .pointer-events-on {
-    pointer-events: auto;
-  }
-  /* Create a class of .div-square which maintains a 1:1 dimension of a div */
-  .div-square::after {
-    content: '';
-    display: block;
-    padding-bottom: 100%;
-  }
-  /* Make sure containers never lose their center alignment */
-  .container-medium,
-  .container-small,
-  .container-large {
-    margin-right: auto !important;
-    margin-left: auto !important;
-  }
-  /* 
-Make the following elements inherit typography styles from the parent and not have hardcoded values. 
-Important: You will not be able to style for example "All Links" in Designer with this CSS applied.
-Uncomment this CSS to use it in the project. Leave this message for future hand-off.
-*/
-  /*
-a,
-.w-input,
-.w-select,
-.w-tab-link,
-.w-nav-link,
-.w-dropdown-btn,
-.w-dropdown-toggle,
-.w-dropdown-link {
-  color: inherit;
-  text-decoration: inherit;
-  font-size: inherit;
-}
-*/
-  /* Apply ".." after 3 lines of text */
-  .text-style-3lines {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-  /* Apply ".." after 2 lines of text */
-  .text-style-2lines {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  /* Adds inline flex display */
-  .display-inlineflex {
-    display: inline-flex;
-  }
-  /* These classes are never overwritten */
-  .hide {
-    display: none !important;
-  }
-  @media screen and (max-width: 991px) {
-    .hide,
-    .hide-tablet {
-      display: none !important;
-    }
-  }
-  @media screen and (max-width: 767px) {
-    .hide-mobile-landscape {
-      display: none !important;
-    }
-  }
-  @media screen and (max-width: 479px) {
-    .hide-mobile {
-      display: none !important;
-    }
-  }
-  .margin-0 {
-    margin: 0rem !important;
-  }
-  .padding-0 {
-    padding: 0rem !important;
-  }
-  .spacing-clean {
-    padding: 0rem !important;
-    margin: 0rem !important;
-  }
-  .margin-top {
-    margin-right: 0rem !important;
-    margin-bottom: 0rem !important;
-    margin-left: 0rem !important;
-  }
-  .padding-top {
-    padding-right: 0rem !important;
-    padding-bottom: 0rem !important;
-    padding-left: 0rem !important;
-  }
-  .margin-right {
-    margin-top: 0rem !important;
-    margin-bottom: 0rem !important;
-    margin-left: 0rem !important;
-  }
-  .padding-right {
-    padding-top: 0rem !important;
-    padding-bottom: 0rem !important;
-    padding-left: 0rem !important;
-  }
-  .margin-bottom {
-    margin-top: 0rem !important;
-    margin-right: 0rem !important;
-    margin-left: 0rem !important;
-  }
-  .padding-bottom {
-    padding-top: 0rem !important;
-    padding-right: 0rem !important;
-    padding-left: 0rem !important;
-  }
-  .margin-left {
-    margin-top: 0rem !important;
-    margin-right: 0rem !important;
-    margin-bottom: 0rem !important;
-  }
-  .padding-left {
-    padding-top: 0rem !important;
-    padding-right: 0rem !important;
-    padding-bottom: 0rem !important;
-  }
-  .margin-horizontal {
-    margin-top: 0rem !important;
-    margin-bottom: 0rem !important;
-  }
-  .padding-horizontal {
-    padding-top: 0rem !important;
-    padding-bottom: 0rem !important;
-  }
-  .margin-vertical {
-    margin-right: 0rem !important;
-    margin-left: 0rem !important;
-  }
-  .padding-vertical {
-    padding-right: 0rem !important;
-    padding-left: 0rem !important;
-  }
-  /* Custom Styles */
-  .gallery_item:hover .gallery_image {
-    transform: scale(1);
-  }
-  .button:hover .button_bg {
-    width: 100%;
-  }
-  /* Project Marquee Animation*/
-  .projects_marquee-list {
-    animation: marquee 35s linear infinite;
-    animation-delay: 0.2s;
-  }
-  .projects_marquee:hover .projects_marquee-list {
-    animation-play-state: paused;
-  }
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-100%);
-    }
-  }
-  /* Project Marquee Animation*/
-  .faq:first-child {
-    padding-top: 0;
-    border: none;
-  }
-  @media (max-width: 992px) {
-    .menu_button-mobile {
-      display: flex !important;
-    }
-    .menu_button-mobile.w--open .menu_button-icon {
-      display: none;
-    }
-    .menu_button-mobile.w--open .menu_button-icon.is-close {
-      display: block;
-    }
-  }
-</style>
-    </div>
-    <div class="global-styles w-embed">
-      <style>
-/* Make text look crisper and more legible in all browsers */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-/* Focus state style for keyboard navigation for the focusable elements */
-*[tabindex]:focus-visible,
-  input[type="file"]:focus-visible {
-   outline: 0.125rem solid #4d65ff;
-   outline-offset: 0.125rem;
-}
-/* Get rid of top margin on first element in any rich text element */
-.w-richtext > :not(div):first-child, .w-richtext > div:first-child > :first-child {
-  margin-top: 0 !important;
-}
-/* Get rid of bottom margin on last element in any rich text element */
-.w-richtext>:last-child, .w-richtext ol li:last-child, .w-richtext ul li:last-child {
-	margin-bottom: 0 !important;
-}
-/* Prevent all click and hover interaction with an element */
-.pointer-events-off {
-	pointer-events: none;
-}
-/* Enables all click and hover interaction with an element */
-.pointer-events-on {
-  pointer-events: auto;
-}
-/* Create a class of .div-square which maintains a 1:1 dimension of a div */
-.div-square::after {
-	content: "";
-	display: block;
-	padding-bottom: 100%;
-}
-/* Make sure containers never lose their center alignment */
-.container-medium,.container-small, .container-large {
-	margin-right: auto !important;
-  margin-left: auto !important;
-}
-/* 
-Make the following elements inherit typography styles from the parent and not have hardcoded values. 
-Important: You will not be able to style for example "All Links" in Designer with this CSS applied.
-Uncomment this CSS to use it in the project. Leave this message for future hand-off.
-*/
-/*
-a,
-.w-input,
-.w-select,
-.w-tab-link,
-.w-nav-link,
-.w-dropdown-btn,
-.w-dropdown-toggle,
-.w-dropdown-link {
-  color: inherit;
-  text-decoration: inherit;
-  font-size: inherit;
-}
-*/
-/* Apply ".." after 3 lines of text */
-.text-style-3lines {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 3;
-	line-clamp: 3;
-	-webkit-box-orient: vertical;
-}
-/* Apply ".." after 2 lines of text */
-.text-style-2lines {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
-	-webkit-box-orient: vertical;
-}
-/* Adds inline flex display */
-.display-inlineflex {
-  display: inline-flex;
-}
-/* These classes are never overwritten */
-.hide {
-  display: none !important;
-}
-@media screen and (max-width: 991px) {
-    .hide, .hide-tablet {
-        display: none !important;
-    }
-}
-  @media screen and (max-width: 767px) {
-    .hide-mobile-landscape{
-      display: none !important;
-    }
-}
-  @media screen and (max-width: 479px) {
-    .hide-mobile{
-      display: none !important;
-    }
-}
-.margin-0 {
-  margin: 0rem !important;
-}
-.padding-0 {
-  padding: 0rem !important;
-}
-.spacing-clean {
-padding: 0rem !important;
-margin: 0rem !important;
-}
-.margin-top {
-  margin-right: 0rem !important;
-  margin-bottom: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-top {
-  padding-right: 0rem !important;
-  padding-bottom: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-right {
-  margin-top: 0rem !important;
-  margin-bottom: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-right {
-  padding-top: 0rem !important;
-  padding-bottom: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-bottom {
-  margin-top: 0rem !important;
-  margin-right: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-bottom {
-  padding-top: 0rem !important;
-  padding-right: 0rem !important;
-  padding-left: 0rem !important;
-}
-.margin-left {
-  margin-top: 0rem !important;
-  margin-right: 0rem !important;
-  margin-bottom: 0rem !important;
-}
-.padding-left {
-  padding-top: 0rem !important;
-  padding-right: 0rem !important;
-  padding-bottom: 0rem !important;
-}
-.margin-horizontal {
-  margin-top: 0rem !important;
-  margin-bottom: 0rem !important;
-}
-.padding-horizontal {
-  padding-top: 0rem !important;
-  padding-bottom: 0rem !important;
-}
-.margin-vertical {
-  margin-right: 0rem !important;
-  margin-left: 0rem !important;
-}
-.padding-vertical {
-  padding-right: 0rem !important;
-  padding-left: 0rem !important;
-}
-/* Custom Styles */
-.gallery_item:hover .gallery_image{
- transform: scale(1.00);
-}
-.button:hover .button_bg{
- width: 100%;
-}
-</style>
-    </div>
-    <div id="swft-nav" data-active="home"></div>
-    <main class="main-wrapper">
-      <div class="background_component">
-        <div class="background_image-container">
-          <div class="background_gradient-wrapper">
-            <div class="background_gradient"></div>
-          </div>
-          <div class="background_edge-gradient"></div>
-          <div class="background_image-wrappe">
-                        <div class="hero-background-video _3d hero-vimeo" aria-hidden="true">
-              <iframe id="hero-vimeo" src="https://player.vimeo.com/video/1216244886?background=1&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;autopause=0&amp;badge=0&amp;player_id=0&amp;app_id=58479" title="NYC View" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-              <img class="hero-vimeo-still" src="images/hero-nyc-view-still.jpg" alt="" hidden>
-            </div>
-            <div data-poster-url="videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg" data-video-urls="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4,videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" class="hero-background-video hide w-background-video w-background-video-atom"><video id="4e980cc5-6bd9-d7d0-53d5-69b601f13828-video" autoplay="" loop="" style="background-image:url(&quot;videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-                <source src="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4" data-wf-ignore="true">
-                <source src="videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.webm" data-wf-ignore="true">
-              </video><noscript>
-                <style>
-  [data-wf-bgvideo-fallback-img] {
-    display: none;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    [data-wf-bgvideo-fallback-img] {
-      position: absolute;
-      z-index: -100;
-      display: inline-block;
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }
-  }</style><img data-wf-bgvideo-fallback-img="true" src="videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg" alt="SWFT Studios cube night watch video still">
-              </noscript>
-              <div aria-live="polite"><button type="button" data-w-bg-video-control="true" aria-controls="4e980cc5-6bd9-d7d0-53d5-69b601f13828-video" class="w-backgroundvideo-backgroundvideoplaypausebutton w-background-video--control"><span><img src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628299f8aa233b83918e24fd_Pause.svg" loading="lazy" alt="Pause video"></span><span hidden=""><img loading="lazy" alt="Play video" src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628298b20ae0236682d4b87f_Play-24.svg"></span></button></div>
-            </div>
-            <div data-poster-url="videos/swft_cube_night_watch_-_mobile-540p-poster-00001.jpg" data-video-urls="videos/swft_cube_night_watch_-_mobile-540p-transcode.mp4,videos/swft_cube_night_watch_-_mobile-540p-transcode.webm" data-autoplay="true" data-loop="true" data-wf-ignore="true" class="hero-background-video mobile hide w-background-video w-background-video-atom"><video id="cf96cd26-f40c-12a8-b685-13ee5d5060a4-video" autoplay="" loop="" style="background-image:url(&quot;videos/swft_cube_night_watch_-_mobile-540p-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-                <source src="videos/swft_cube_night_watch_-_mobile-540p-transcode.mp4" data-wf-ignore="true">
-                <source src="videos/swft_cube_night_watch_-_mobile-540p-transcode.webm" data-wf-ignore="true">
-              </video><noscript>
-                <style>
-  [data-wf-bgvideo-fallback-img] {
-    display: none;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    [data-wf-bgvideo-fallback-img] {
-      position: absolute;
-      z-index: -100;
-      display: inline-block;
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }
-  }</style><img data-wf-bgvideo-fallback-img="true" src="videos/swft_cube_night_watch_-_mobile-540p-poster-00001.jpg" alt="SWFT Studios cube night watch video still, mobile">
-              </noscript>
-              <div aria-live="polite"><button type="button" data-w-bg-video-control="true" aria-controls="cf96cd26-f40c-12a8-b685-13ee5d5060a4-video" class="w-backgroundvideo-backgroundvideoplaypausebutton w-background-video--control"><span><img src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628299f8aa233b83918e24fd_Pause.svg" loading="lazy" alt="Pause video"></span><span hidden=""><img loading="lazy" alt="Play video" src="https://uploads-ssl.webflow.com/6022af993a6b2191db3ed10c/628298b20ae0236682d4b87f_Play-24.svg"></span></button></div>
-            </div>
-          </div>
-          <div class="background_image-gradient"></div>
+  <main>
+    <section class="home-hero ar-container" aria-labelledby="home-hero-title">
+      <div class="home-float home-float--1" aria-hidden="true">
+        <img src="images/brooklyn-steel-thumbnail.webp" alt="" width="220" height="280" loading="eager">
+      </div>
+      <div class="home-float home-float--2" aria-hidden="true">
+        <img src="images/manna-hydration-thumbnail.webp" alt="" width="180" height="180" loading="eager">
+      </div>
+      <div class="home-float home-float--3" aria-hidden="true">
+        <img src="images/thyme-and-table-thumbnail.webp" alt="" width="260" height="320" loading="lazy">
+      </div>
+      <div class="home-float home-float--4" aria-hidden="true">
+        <img src="images/hamper_app_website_thumbnail.webp" alt="" width="300" height="240" loading="lazy">
+      </div>
+
+      <p class="home-hero__eyebrow">Web Design + Content for Growing Businesses</p>
+      <h1 id="home-hero-title" class="home-hero__title">SWFT</h1>
+      <p class="home-hero__lead">Websites and content that turn attention into booked customers. We build the site and capture photo and video in person — one clear system.</p>
+      <div class="home-hero__actions">
+        <a class="ar-btn" href="/growth-audit">Free Growth Audit</a>
+        <a class="ar-btn ar-btn--outline" href="/websites.html">See Our Work</a>
+      </div>
+    </section>
+
+    <section class="ar-section" id="about" aria-labelledby="about-heading">
+      <div class="ar-container">
+        <div class="ar-section-label">
+          <span>→ [ ABOUT US ]</span>
+          <span>SWFT</span>
+        </div>
+        <div class="home-about-grid">
+          <h2 id="about-heading" class="ar-mega">SWFT builds strong brands by combining clear strategy with creative and effective design solutions.</h2>
+          <p class="ar-lead">Named offers with clear scope. Price scales with content capture, not a flat minimum. Work directly with the person who builds it — across Jersey City, New York City, and North Jersey.</p>
         </div>
       </div>
-      <section class="section_gallery">
-        <div class="padding-global">
-          <div class="container-large">
-            <div class="div-block-3">
-              <div class="margin-bottom margin-xlarge">
-                <div class="w-layout-grid course_component">
-                  <div id="w-node-_8934f37e-af8f-f8cd-214f-b358479c4d84-278ca766" class="course_content">
-                    <div class="margin-bottom margin-small">
-                      <div class="text-size-small text-color-green">Web Design + Content for Growing Businesses</div>
-                    </div>
-                    <div class="margin-bottom margin-small">
-                      <div class="max-width-large">
-                        <h1 class="text-weight-medium">Websites and content that turn attention into booked customers.</h1>
-                      </div>
-                    </div>
-                    <p class="testimonial-text">We build the website and capture the photo and video content in person, so local businesses get one clear system instead of juggling separate agencies.</p>
-                    <div class="margin-top margin-medium">
-                      <div class="button-group is-course">
-                        <a href="/growth-audit" class="button is-course w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">Free Growth Audit</div>
-                        </a>
-                        <a href="websites.html" class="button is-course outlined w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">See Our Work</div>
-                        </a>
-                      </div>
-                    </div>
-                    <p class="text-size-small text-color-green margin-top margin-small">Named offers with clear scope. Price scales with content capture, not a flat minimum.</p>
-                  </div>
-                  <div id="w-node-_9273b8d8-2395-dafb-0ae5-13a6781fdc25-278ca766" class="course_spacer-block"></div>
-                </div>
-              </div>
-              <section>
-                <div class="projects-wrapper">
-                  <div class="home-hero_projects">
-                    <div class="projects_marquee">
-                      <div class="projects_marquee-list">
-                        <a href="case-study/brooklyn-steel.html" aria-label="Brooklyn Steel Co. case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail-p-1600.webp 1600w, images/brooklyn-steel-thumbnail-p-2000.webp 2000w, images/brooklyn-steel-thumbnail-p-2600.webp 2600w, images/brooklyn-steel-thumbnail-p-3200.webp 3200w, images/brooklyn-steel-thumbnail.webp 3600w" alt="Brooklyn Steel Co." loading="lazy" src="images/brooklyn-steel-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/manna-hydration.html" aria-label="Manna Hydration case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail-p-1080.webp 1080w, images/manna-hydration-thumbnail-p-1600.webp 1600w, images/manna-hydration-thumbnail-p-2000.webp 2000w, images/manna-hydration-thumbnail-p-2600.webp 2600w, images/manna-hydration-thumbnail-p-3200.webp 3200w, images/manna-hydration-thumbnail.webp 3600w" alt="Manna Hydration" loading="lazy" src="images/manna-hydration-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/thyme-and-table.html" aria-label="Thyme &amp; Table case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w, images/thyme-and-table-thumbnail-p-1600.webp 1600w, images/thyme-and-table-thumbnail-p-2000.webp 2000w, images/thyme-and-table-thumbnail-p-2600.webp 2600w, images/thyme-and-table-thumbnail-p-3200.webp 3200w, images/thyme-and-table-thumbnail.webp 3600w" alt="Thyme &amp; Table" loading="lazy" src="images/thyme-and-table-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/tal-hydration.html" aria-label="TAL Hydration case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w, images/tal-hydration-thumbnail-p-1600.webp 1600w, images/tal-hydration-thumbnail-p-2000.webp 2000w, images/tal-hydration-thumbnail-p-2600.webp 2600w, images/tal-hydration-thumbnail-p-3200.webp 3200w, images/tal-hydration-thumbnail.webp 3600w" alt="TAL Hydration" loading="lazy" src="images/tal-hydration-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/scribble-and-scribe.html" aria-label="Scribble &amp; Scribe case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 1440px) 100vw, 1440px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1440w" alt="Scribble &amp; Scribe" loading="lazy" src="images/scribble_scribe_thumbnsail.png" class="project_marquee-img"></a>
-                        <a href="case-study/blurred-lines-entertainment.html" aria-label="Blurred Lines Entertainment case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail-p-1600.webp 1600w, images/BLE_SWFT_thumbnail-p-2000.webp 2000w, images/BLE_SWFT_thumbnail-p-2600.webp 2600w, images/BLE_SWFT_thumbnail-p-3200.webp 3200w, images/BLE_SWFT_thumbnail.webp 3600w" alt="Blurred Lines Entertainment" loading="lazy" src="images/BLE_SWFT_thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/built-by-me-ez.html" aria-label="Built By Me EZ case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail-p-1600.webp 1600w, images/built_by_me_ez_thumbnail-p-2000.webp 2000w, images/built_by_me_ez_thumbnail-p-2600.webp 2600w, images/built_by_me_ez_thumbnail-p-3200.webp 3200w, images/built_by_me_ez_thumbnail.webp 3600w" alt="Built By Me EZ" loading="lazy" src="images/built_by_me_ez_thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/roller-reels.html" aria-label="Roller Reels case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w, images/Roller_Reels_thumbnail-p-1600.webp 1600w, images/Roller_Reels_thumbnail-p-2000.webp 2000w, images/Roller_Reels_thumbnail-p-2600.webp 2600w, images/Roller_Reels_thumbnail-p-3200.webp 3200w, images/Roller_Reels_thumbnail.webp 3600w" alt="Roller Reels" loading="lazy" src="images/Roller_Reels_thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/hawthorne-global-ministries.html" aria-label="Hawthorne Global Ministries case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w" alt="Hawthorne Global Ministries" loading="lazy" src="images/Hawthorne_Global_Ministries_thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/alpha-ministries-international.html" aria-label="Alpha Ministries International case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" loading="lazy" src="images/alpha-ministries-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/western-hp.html" aria-label="Western HP case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="Western HP" loading="lazy" src="images/whp_desktop_screenshot.webp" class="project_marquee-img"></a>
-                        <a href="case-study/snooze-lane.html" aria-label="Snooze Lane case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail-p-1080.webp 1080w, images/Snooze-Lane-Desktop-thumbnail-p-1600.webp 1600w, images/Snooze-Lane-Desktop-thumbnail-p-2000.webp 2000w, images/Snooze-Lane-Desktop-thumbnail-p-2600.webp 2600w, images/Snooze-Lane-Desktop-thumbnail-p-3200.webp 3200w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w" alt="Snooze Lane" loading="lazy" src="images/Snooze-Lane-Desktop-thumbnail.webp" class="project_marquee-img"></a>
-                        <a href="case-study/hamper.html" aria-label="Hamper case study" class="projects_marquee-item w-inline-block"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/hamper_app_website_thumbnail-p-500.webp 500w, images/hamper_app_website_thumbnail-p-800.webp 800w, images/hamper_app_website_thumbnail-p-1080.webp 1080w, images/hamper_app_website_thumbnail-p-1600.webp 1600w, images/hamper_app_website_thumbnail-p-2000.webp 2000w, images/hamper_app_website_thumbnail-p-2600.webp 2600w, images/hamper_app_website_thumbnail-p-3200.webp 3200w, images/hamper_app_website_thumbnail.webp 3600w" alt="Hamper" loading="lazy" src="images/hamper_app_website_thumbnail.webp" class="project_marquee-img"></a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="marquee-wrapper">
-                    <div class="marquee-track">
-                      <a href="case-study/brooklyn-steel.html" aria-label="Brooklyn Steel Co. case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail-p-1600.webp 1600w, images/brooklyn-steel-thumbnail-p-2000.webp 2000w, images/brooklyn-steel-thumbnail-p-2600.webp 2600w, images/brooklyn-steel-thumbnail-p-3200.webp 3200w, images/brooklyn-steel-thumbnail.webp 3600w" alt="Brooklyn Steel Co." src="images/brooklyn-steel-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/manna-hydration.html" aria-label="Manna Hydration case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail-p-1080.webp 1080w, images/manna-hydration-thumbnail-p-1600.webp 1600w, images/manna-hydration-thumbnail-p-2000.webp 2000w, images/manna-hydration-thumbnail-p-2600.webp 2600w, images/manna-hydration-thumbnail-p-3200.webp 3200w, images/manna-hydration-thumbnail.webp 3600w" alt="Manna Hydration" src="images/manna-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/thyme-and-table.html" aria-label="Thyme &amp; Table case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w, images/thyme-and-table-thumbnail-p-1600.webp 1600w, images/thyme-and-table-thumbnail-p-2000.webp 2000w, images/thyme-and-table-thumbnail-p-2600.webp 2600w, images/thyme-and-table-thumbnail-p-3200.webp 3200w, images/thyme-and-table-thumbnail.webp 3600w" alt="Thyme &amp; Table" src="images/thyme-and-table-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/tal-hydration.html" aria-label="TAL Hydration case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w, images/tal-hydration-thumbnail-p-1600.webp 1600w, images/tal-hydration-thumbnail-p-2000.webp 2000w, images/tal-hydration-thumbnail-p-2600.webp 2600w, images/tal-hydration-thumbnail-p-3200.webp 3200w, images/tal-hydration-thumbnail.webp 3600w" alt="TAL Hydration" src="images/tal-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/scribble-and-scribe.html" aria-label="Scribble &amp; Scribe case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 1440px) 100vw, 1440px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1440w" alt="Scribble &amp; Scribe" src="images/scribble_scribe_thumbnsail.png" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/blurred-lines-entertainment.html" aria-label="Blurred Lines Entertainment case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail-p-1600.webp 1600w, images/BLE_SWFT_thumbnail-p-2000.webp 2000w, images/BLE_SWFT_thumbnail-p-2600.webp 2600w, images/BLE_SWFT_thumbnail-p-3200.webp 3200w, images/BLE_SWFT_thumbnail.webp 3600w" alt="Blurred Lines Entertainment" src="images/BLE_SWFT_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/built-by-me-ez.html" aria-label="Built By Me EZ case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail-p-1600.webp 1600w, images/built_by_me_ez_thumbnail-p-2000.webp 2000w, images/built_by_me_ez_thumbnail-p-2600.webp 2600w, images/built_by_me_ez_thumbnail-p-3200.webp 3200w, images/built_by_me_ez_thumbnail.webp 3600w" alt="Built By Me EZ" src="images/built_by_me_ez_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/roller-reels.html" aria-label="Roller Reels case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w, images/Roller_Reels_thumbnail-p-1600.webp 1600w, images/Roller_Reels_thumbnail-p-2000.webp 2000w, images/Roller_Reels_thumbnail-p-2600.webp 2600w, images/Roller_Reels_thumbnail-p-3200.webp 3200w, images/Roller_Reels_thumbnail.webp 3600w" alt="Roller Reels" src="images/Roller_Reels_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/hawthorne-global-ministries.html" aria-label="Hawthorne Global Ministries case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w" alt="Hawthorne Global Ministries" src="images/Hawthorne_Global_Ministries_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/alpha-ministries-international.html" aria-label="Alpha Ministries International case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/western-hp.html" aria-label="Western HP case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="Western HP" src="images/whp_desktop_screenshot.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/snooze-lane.html" aria-label="Snooze Lane case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail-p-1080.webp 1080w, images/Snooze-Lane-Desktop-thumbnail-p-1600.webp 1600w, images/Snooze-Lane-Desktop-thumbnail-p-2000.webp 2000w, images/Snooze-Lane-Desktop-thumbnail-p-2600.webp 2600w, images/Snooze-Lane-Desktop-thumbnail-p-3200.webp 3200w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w" alt="Snooze Lane" src="images/Snooze-Lane-Desktop-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/hamper.html" aria-label="Hamper case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/hamper_app_website_thumbnail-p-500.webp 500w, images/hamper_app_website_thumbnail-p-800.webp 800w, images/hamper_app_website_thumbnail-p-1080.webp 1080w, images/hamper_app_website_thumbnail-p-1600.webp 1600w, images/hamper_app_website_thumbnail-p-2000.webp 2000w, images/hamper_app_website_thumbnail-p-2600.webp 2600w, images/hamper_app_website_thumbnail-p-3200.webp 3200w, images/hamper_app_website_thumbnail.webp 3600w" alt="Hamper" src="images/hamper_app_website_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/brooklyn-steel.html" aria-label="Brooklyn Steel Co. case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail-p-1600.webp 1600w, images/brooklyn-steel-thumbnail-p-2000.webp 2000w, images/brooklyn-steel-thumbnail-p-2600.webp 2600w, images/brooklyn-steel-thumbnail-p-3200.webp 3200w, images/brooklyn-steel-thumbnail.webp 3600w" alt="Brooklyn Steel Co." src="images/brooklyn-steel-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/manna-hydration.html" aria-label="Manna Hydration case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail-p-1080.webp 1080w, images/manna-hydration-thumbnail-p-1600.webp 1600w, images/manna-hydration-thumbnail-p-2000.webp 2000w, images/manna-hydration-thumbnail-p-2600.webp 2600w, images/manna-hydration-thumbnail-p-3200.webp 3200w, images/manna-hydration-thumbnail.webp 3600w" alt="Manna Hydration" src="images/manna-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/thyme-and-table.html" aria-label="Thyme &amp; Table case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w, images/thyme-and-table-thumbnail-p-1600.webp 1600w, images/thyme-and-table-thumbnail-p-2000.webp 2000w, images/thyme-and-table-thumbnail-p-2600.webp 2600w, images/thyme-and-table-thumbnail-p-3200.webp 3200w, images/thyme-and-table-thumbnail.webp 3600w" alt="Thyme &amp; Table" src="images/thyme-and-table-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/tal-hydration.html" aria-label="TAL Hydration case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w, images/tal-hydration-thumbnail-p-1600.webp 1600w, images/tal-hydration-thumbnail-p-2000.webp 2000w, images/tal-hydration-thumbnail-p-2600.webp 2600w, images/tal-hydration-thumbnail-p-3200.webp 3200w, images/tal-hydration-thumbnail.webp 3600w" alt="TAL Hydration" src="images/tal-hydration-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/scribble-and-scribe.html" aria-label="Scribble &amp; Scribe case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 1440px) 100vw, 1440px" srcset="images/scribble_scribe_thumbnsail.png 500w, images/scribble_scribe_thumbnsail.png 800w, images/scribble_scribe_thumbnsail.png 1080w, images/scribble_scribe_thumbnsail.png 1440w" alt="Scribble &amp; Scribe" src="images/scribble_scribe_thumbnsail.png" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/blurred-lines-entertainment.html" aria-label="Blurred Lines Entertainment case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail-p-1600.webp 1600w, images/BLE_SWFT_thumbnail-p-2000.webp 2000w, images/BLE_SWFT_thumbnail-p-2600.webp 2600w, images/BLE_SWFT_thumbnail-p-3200.webp 3200w, images/BLE_SWFT_thumbnail.webp 3600w" alt="Blurred Lines Entertainment" src="images/BLE_SWFT_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/built-by-me-ez.html" aria-label="Built By Me EZ case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail-p-1600.webp 1600w, images/built_by_me_ez_thumbnail-p-2000.webp 2000w, images/built_by_me_ez_thumbnail-p-2600.webp 2600w, images/built_by_me_ez_thumbnail-p-3200.webp 3200w, images/built_by_me_ez_thumbnail.webp 3600w" alt="Built By Me EZ" src="images/built_by_me_ez_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/roller-reels.html" aria-label="Roller Reels case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w, images/Roller_Reels_thumbnail-p-1600.webp 1600w, images/Roller_Reels_thumbnail-p-2000.webp 2000w, images/Roller_Reels_thumbnail-p-2600.webp 2600w, images/Roller_Reels_thumbnail-p-3200.webp 3200w, images/Roller_Reels_thumbnail.webp 3600w" alt="Roller Reels" src="images/Roller_Reels_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/hawthorne-global-ministries.html" aria-label="Hawthorne Global Ministries case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w" alt="Hawthorne Global Ministries" src="images/Hawthorne_Global_Ministries_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/alpha-ministries-international.html" aria-label="Alpha Ministries International case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/alpha-ministries-thumbnail-p-500.webp 500w, images/alpha-ministries-thumbnail-p-800.webp 800w, images/alpha-ministries-thumbnail-p-1080.webp 1080w, images/alpha-ministries-thumbnail-p-1600.webp 1600w, images/alpha-ministries-thumbnail-p-2000.webp 2000w, images/alpha-ministries-thumbnail-p-2600.webp 2600w, images/alpha-ministries-thumbnail-p-3200.webp 3200w, images/alpha-ministries-thumbnail.webp 3600w" alt="Alpha Ministries International" src="images/alpha-ministries-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/western-hp.html" aria-label="Western HP case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/whp_desktop_screenshot-p-500.webp 500w, images/whp_desktop_screenshot-p-800.webp 800w, images/whp_desktop_screenshot-p-1080.webp 1080w, images/whp_desktop_screenshot-p-1600.webp 1600w, images/whp_desktop_screenshot-p-2000.webp 2000w, images/whp_desktop_screenshot-p-2600.webp 2600w, images/whp_desktop_screenshot-p-3200.webp 3200w, images/whp_desktop_screenshot.webp 3600w" alt="Western HP" src="images/whp_desktop_screenshot.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/snooze-lane.html" aria-label="Snooze Lane case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail-p-1080.webp 1080w, images/Snooze-Lane-Desktop-thumbnail-p-1600.webp 1600w, images/Snooze-Lane-Desktop-thumbnail-p-2000.webp 2000w, images/Snooze-Lane-Desktop-thumbnail-p-2600.webp 2600w, images/Snooze-Lane-Desktop-thumbnail-p-3200.webp 3200w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w" alt="Snooze Lane" src="images/Snooze-Lane-Desktop-thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                      <a href="case-study/hamper.html" aria-label="Hamper case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/hamper_app_website_thumbnail-p-500.webp 500w, images/hamper_app_website_thumbnail-p-800.webp 800w, images/hamper_app_website_thumbnail-p-1080.webp 1080w, images/hamper_app_website_thumbnail-p-1600.webp 1600w, images/hamper_app_website_thumbnail-p-2000.webp 2000w, images/hamper_app_website_thumbnail-p-2600.webp 2600w, images/hamper_app_website_thumbnail-p-3200.webp 3200w, images/hamper_app_website_thumbnail.webp 3600w" alt="Hamper" src="images/hamper_app_website_thumbnail.webp" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="explore-button-wrapper">
-                    <div class="explore-button-copntainer">
-                      <div data-w-id="d9a607c3-385c-74d6-d24e-d27064e405be" style="opacity:0" class="magnetic-element">
-                        <a href="websites.html" class="button is-course w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">View All</div>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-              <div id="About" class="animated-text-wrapper">
-                <div class="container-2">
-                  <div data-w-id="d8cc7671-41fe-51fd-76c2-250d9ead36b7" class="animated-text-holder">
-                    <div class="animated-text-container">
-                      <div class="gradient-text"></div>
-                      <div class="animated-text">Your business may be better than it looks online. We help local service businesses and growing brands in <a href="/locations/jersey-city.html" class="highlight-2">Jersey City</a>, <a href="/locations/manhattan.html" class="highlight-2">New York City</a>, and <a href="/locations/" class="highlight-2">North Jersey</a> clarify their offer, look the part, and capture the leads they are already earning.</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <section class="hp-section" id="homepage-problems" aria-labelledby="hp-problems-heading">
-                <div class="hp-section-label">The Problem</div>
-                <h2 class="hp-section-title" id="hp-problems-heading">The gap between the work and the website.</h2>
-                <ul class="hp-service-deliverables" role="list" style="max-width:42rem;margin:0;">
-                  <li>Visitors do not immediately understand what you offer</li>
-                  <li>Your website looks credible but does not generate inquiries</li>
-                  <li>Your photos and videos do not reflect the quality of your work</li>
-                  <li>Interested prospects leave without entering a follow-up system</li>
-                  <li>Your brand feels inconsistent across your website and social media</li>
-                </ul>
-              </section>
-              <section class="hp-section" id="homepage-audience" aria-labelledby="hp-audience-heading">
-                <div class="hp-section-label">Who&rsquo;s this for</div>
-                <h2 class="hp-section-title" id="hp-audience-heading">Built for businesses that need leads, not just a pretty site</h2>
-                <p class="hp-audience-intro">We help service businesses, e-commerce brands, restaurants, B2B teams, creators, and health &amp; wellness companies in Jersey City, New York City, and North Jersey. We pair websites with on-brand photo/video content and lead paths so attention turns into booked customers. Browse the cards to find your industry, then select Learn more for how we help.</p>
-                <div class="hp-audience-track" role="list" tabindex="0" aria-label="Industries we help. Browse cards horizontally.">
-                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="service-businesses">
-                    <div class="hp-audience-card__media" aria-hidden="true">
-                      <img src="images/BLE_SWFT_thumbnail.webp" alt="Blurred Lines Entertainment website thumbnail" width="800" height="1000" loading="lazy" decoding="async">
-                    </div>
-                    <div class="hp-audience-card__body">
-                      <h3>Service businesses</h3>
-                      <div class="hp-audience-card__blurb" aria-hidden="true">
-                        <p>Local service pros often look better in person than online. We clarify what you offer, rebuild trust on the site and Google Business Profile, and wire booking or inquiry paths so searches and referrals convert.</p>
-                      </div>
-                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
-                    </div>
-                  </article>
-                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="ecommerce">
-                    <div class="hp-audience-card__media" aria-hidden="true">
-                      <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration product website" width="800" height="1000" loading="lazy" decoding="async">
-                    </div>
-                    <div class="hp-audience-card__body">
-                      <h3>E-commerce</h3>
-                      <div class="hp-audience-card__blurb" aria-hidden="true">
-                        <p>Product brands need a storefront that matches the quality of what ships. We build and customize Shopify experiences, capture product and lifestyle content, and tighten the path from social click to checkout.</p>
-                      </div>
-                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
-                    </div>
-                  </article>
-                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="restaurants">
-                    <div class="hp-audience-card__media" aria-hidden="true">
-                      <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co. website" width="800" height="1000" loading="lazy" decoding="async">
-                    </div>
-                    <div class="hp-audience-card__body">
-                      <h3>Restaurants &amp; hospitality</h3>
-                      <div class="hp-audience-card__blurb" aria-hidden="true">
-                        <p>Guests decide in seconds from photos, menus, and reviews. We shoot food and atmosphere content, refresh Google Business Profile, and build a site that drives reservations, orders, and repeat visits.</p>
-                      </div>
-                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
-                    </div>
-                  </article>
-                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="b2b">
-                    <div class="hp-audience-card__media" aria-hidden="true">
-                      <img src="images/thyme-and-table-thumbnail.webp" alt="Thyme and Table kitchen products website" width="800" height="1000" loading="lazy" decoding="async">
-                    </div>
-                    <div class="hp-audience-card__body">
-                      <h3>B2B &amp; professional services</h3>
-                      <div class="hp-audience-card__blurb" aria-hidden="true">
-                        <p>B2B buyers need clear offers, proof, and an easy next step. We structure messaging for decision-makers, present case-ready visuals, and connect forms or booking so inbound interest becomes qualified conversations.</p>
-                      </div>
-                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
-                    </div>
-                  </article>
-                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="creators">
-                    <div class="hp-audience-card__media" aria-hidden="true">
-                      <img src="images/built_by_me_ez_thumbnail.webp" alt="Built By Me EZ website thumbnail" width="800" height="1000" loading="lazy" decoding="async">
-                    </div>
-                    <div class="hp-audience-card__body">
-                      <h3>Creators &amp; personal brands</h3>
-                      <div class="hp-audience-card__blurb" aria-hidden="true">
-                        <p>Audience on social is not the same as a business online. We turn your content and offer into a site that sells products, bookings, or memberships, with a look that feels like your feed, not a generic template.</p>
-                      </div>
-                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
-                    </div>
-                  </article>
-                  <article class="hp-audience-card" role="listitem" tabindex="0" aria-expanded="false" data-industry="health-wellness">
-                    <div class="hp-audience-card__media" aria-hidden="true">
-                      <img src="images/mayim-spa-thumbnail.webp" alt="Mayim Spa website thumbnail" width="1600" height="1067" loading="lazy" decoding="async">
-                    </div>
-                    <div class="hp-audience-card__body">
-                      <h3>Health, wellness &amp; beauty</h3>
-                      <div class="hp-audience-card__blurb" aria-hidden="true">
-                        <p>Spas, studios, and beauty brands win on trust and atmosphere. We capture product and treatment visuals, clarify services, and build sites that feel as calm and premium as the experience, so new clients find you and book.</p>
-                      </div>
-                      <button type="button" class="hp-audience-card__toggle" aria-expanded="false">Learn more</button>
-                    </div>
-                  </article>
-                </div>
-                <p class="hp-audience-hint">Select a card for details</p>
-              </section>
-            </div>
-          </div>
+    </section>
+
+    <section class="ar-section" id="work" aria-labelledby="work-heading">
+      <div class="ar-container">
+        <div class="ar-section-label">
+          <span>→ [ OUR WORK ]</span>
+          <span>SWFT</span>
         </div>
-      </section>
-      <div class="section-2">
-        <div class="content-container flex-vertical w-container">
-          <div data-w-id="b8abefdb-d7b8-3c7c-63e7-0c574cad4b78" style="-webkit-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="brix---inner-container-574px---center">
-            <div class="brix---mg-bottom-40px">
-              <div class="brix---text-center">
-                <div class="brix---mg-bottom-16px">
-                  <div class="brix---color-neutral-800">
-                    <h2 class="section-heading">What clients had to say</h2>
-                    <p class="paragraph-5 centered">We aim to build long-term relationships.</p>
-                  </div>
-                </div>
-              </div>
+        <div class="home-about-grid" style="margin-bottom:1.5rem">
+          <h2 id="work-heading" class="ar-mega">Selected <span class="ghost">Work</span></h2>
+          <p class="ar-lead">Conversion-focused Webflow and Shopify sites, product stories, and content systems for growing businesses.</p>
+        </div>
+        <div class="home-work-strip">
+          <a class="home-work-card" href="case-study/brooklyn-steel.html">
+            <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co." width="600" height="800" loading="lazy">
+            <div class="home-work-card__meta"><strong>Brooklyn Steel</strong><span>E-commerce 2026</span></div>
+          </a>
+          <a class="home-work-card" href="case-study/manna-hydration.html">
+            <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration" width="600" height="800" loading="lazy">
+            <div class="home-work-card__meta"><strong>Manna Hydration</strong><span>Brand + Web</span></div>
+          </a>
+          <a class="home-work-card" href="case-study/snooze-lane.html">
+            <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane" width="600" height="800" loading="lazy">
+            <div class="home-work-card__meta"><strong>Snooze Lane</strong><span>Product Story</span></div>
+          </a>
+          <a class="home-work-card" href="case-study/hamper.html">
+            <img src="images/hamper_app_website_thumbnail.webp" alt="Hamper" width="600" height="800" loading="lazy">
+            <div class="home-work-card__meta"><strong>Hamper</strong><span>App + Web</span></div>
+          </a>
+        </div>
+        <p style="margin-top:1.5rem;text-align:right">
+          <a class="ar-btn ar-btn--outline" href="/websites.html">View all work</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="ar-section" id="services" aria-labelledby="services-heading">
+      <div class="ar-container">
+        <div class="ar-section-label">
+          <span>→ [ OUR SERVICES ]</span>
+          <span>SWFT</span>
+        </div>
+        <div class="home-about-grid" style="margin-bottom:2rem">
+          <h2 id="services-heading" class="ar-mega">Creative <span class="ghost">Services</span></h2>
+          <p class="ar-lead">From local presence refreshes to full website + content builds and month-to-month growth retainers.</p>
+        </div>
+        <div class="home-services-list">
+          <a class="home-service" href="/services.html#gbp-refresh">
+            <div>
+              <h3>GBP Content Refresh</h3>
+              <p>On-site photo, short-form video, and Google Business Profile optimization — starting at $400.</p>
             </div>
-          </div>
-          <div data-w-id="b8abefdb-d7b8-3c7c-63e7-0c574cad4b81" style="-webkit-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 10%, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="brix---card-testimonial-video-left">
-            <div class="brix---testimonial-video-wrapper">
-              <div class="brix---testimonial-video-image-wrapper"><img width="566" sizes="(max-width: 767px) 100vw, 566px" alt="Yanko Hernando video testimonial still" src="images/Yanko-Hernando-Testimonial-Thumbnail.png" srcset="images/Yanko-Hernando-Testimonial-Thumbnail-p-500.png 500w, images/Yanko-Hernando-Testimonial-Thumbnail-p-800.png 800w, images/Yanko-Hernando-Testimonial-Thumbnail.png 925w" class="brix---video-bg-image-testimonial">
-                <div class="brix---bg-overlay">
-                  <a href="#" data-w-id="b8abefdb-d7b8-3c7c-63e7-0c574cad4b86" style="-webkit-transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 40px, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0" class="brix---lightbox-video-icon-wrapper w-inline-block w-lightbox"><img alt="Play Icon - Elements Webflow Library - BRIX Templates" src="images/play-button-large-brix-templates.svg" class="brix---play-button-100px">
-                    <script type="application/json" class="w-json">{
-  "items": [
-    {
-      "url": "https://vimeo.com/764022783/4d7429ccb7?share=copy",
-      "originalUrl": "https://vimeo.com/764022783/4d7429ccb7?share=copy",
-      "width": 940,
-      "height": 529,
-      "thumbnailUrl": "https://i.vimeocdn.com/video/1534259663-297943b2b67027377222ac7ed16c7202911ce0c77e35a1d23bc23bc05b9e601e-d_1280",
-      "html": "<iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fplayer.vimeo.com%2Fvideo%2F764022783%3Fh%3D4d7429ccb7%26app_id%3D122963&dntp=1&display_name=Vimeo&url=https%3A%2F%2Fvimeo.com%2F764022783%2F4d7429ccb7&image=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F1534259663-297943b2b67027377222ac7ed16c7202911ce0c77e35a1d23bc23bc05b9e601e-d_1280&key=96f1f04c5f4143bcb0f2e68c87d65feb&type=text%2Fhtml&schema=vimeo\" width=\"940\" height=\"529\" scrolling=\"no\" title=\"Vimeo embed\" frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen=\"true\"></iframe>",
-      "type": "video"
-    }
-  ],
-  "group": "Testimonials"
-}</script>
-                  </a>
-                </div>
-              </div>
+            <span class="ar-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="home-service is-muted" href="/services.html#website-development">
+            <div>
+              <h3>Website Only</h3>
+              <p>Webflow or Shopify site with your content — starting at $800.</p>
             </div>
-            <div class="brix---content-inside-card-testimonial-video"><img sizes="(max-width: 767px) 100vw, (max-width: 991px) 728px, 900px" srcset="images/BLE-no-bg-p-500.png 500w, images/BLE-no-bg-p-800.png 800w, images/BLE-no-bg.png 900w" alt="Blurred Lines Entertainment logo" src="images/BLE-no-bg.png" class="testimonial-business-logo">
-              <div class="brix---mg-bottom-24px">
-                <div class="brix---color-neutral-600">
-                  <p class="testimonial-text">&ldquo;It&rsquo;s just so great how SWFT is a one-stop shop for video production and website building. Why go to two different parties instead of going to one who knows everything about what you&rsquo;re trying to accomplish?&rdquo;</p>
-                </div>
-              </div>
-              <div>
-                <div class="user-content-holder">
-                  <div class="user-name">
-                    <div>Yanko Hernando</div>
-                  </div>
-                  <div class="user-job-position">
-                    <div>Owner - <a href="https://madebyoversight.com/" target="_blank" class="highlight-2">Blurred lines entertainment</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <span class="ar-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="home-service" href="/services.html#content-creation">
+            <div>
+              <h3>Website + Content</h3>
+              <p>Site plus half-day or full-day on-location capture — from $2,000.</p>
             </div>
-          </div>
+            <span class="ar-arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="home-service is-muted" href="/website-pricing.html#ongoing">
+            <div>
+              <h3>Growth Retainers</h3>
+              <p>Monthly content, GBP posting, and Full Growth Partner options.</p>
+            </div>
+            <span class="ar-arrow" aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
-      <section id="Projects">
-        <div class="slider-section-wrapper glow-1">
-          <div class="slider-section-container">
-            <div class="section-tag-container">
-              <div>About us</div>
-              <div class="section-tag-line"></div>
-            </div>
-            <div data-w-id="7974c498-4d6e-c808-291d-0b8b5a7d255c" style="opacity:0" class="projects-slider-wrapper">
-              <div data-delay="4000" data-animation="outin" class="project-slider w-slider" data-autoplay="true" data-easing="ease-in-out" data-hide-arrows="false" data-disable-swipe="true" data-autoplay-limit="0" data-nav-spacing="3" data-duration="500" data-infinite="true">
-                <div class="project-sldier-mask w-slider-mask">
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">Why SWFT</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Strategic</div>
-                          <div class="project-tag">Workflows</div>
-                          <div class="project-tag">Facilitating</div>
-                          <div class="project-tag">Transformation</div>
-                        </div>
-                        <p class="testimonial-text">SWFT was built from real operator experience. We deploy the same systems we rely on ourselves so small businesses can access enterprise-level execution without enterprise-level overhead. <span class="highlight">Strategy first. Automation where it counts. Results you can measure.</span></p>
-                        <a href="websites.html" target="_blank" class="button is-course w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">View our work</div>
-                        </a>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                      </div>
-                      <div class="project-image-container">
-                        <a href="#" class="lightbox-wrapper w-inline-block w-lightbox"><img sizes="(max-width: 3156px) 100vw, 3156px" srcset="images/swft-thumbnail-p-500.webp 500w, images/swft-thumbnail-p-800.webp 800w, images/swft-thumbnail-p-1080.webp 1080w, images/swft-thumbnail-p-1600.webp 1600w, images/swft-thumbnail-p-2000.webp 2000w, images/swft-thumbnail-p-2600.webp 2600w, images/swft-thumbnail.webp 3156w" alt="SWFT Studios work thumbnail" src="images/swft-thumbnail.webp" loading="lazy" class="about-video-thumbnail no-border">
-                          <script type="application/json" class="w-json">{
-  "items": [],
-  "group": ""
-}</script>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">What we do</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Branding</div>
-                          <div class="project-tag">Web Development</div>
-                          <div class="project-tag">Mobile Development</div>
-                          <div class="project-tag">And more</div>
-                        </div>
-                        <p class="testimonial-text">We turn ideas into revenue-ready digital systems: brand identity, conversion-focused websites, and backend automations that remove busywork. <span class="highlight">Every deliverable is built to attract leads, convert attention, and support long-term growth.</span></p>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                        <a href="case-studies.html" class="button is-course w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">View our work</div>
-                        </a>
-                      </div>
-                      <div class="project-image-container"><img sizes="(max-width: 2237px) 100vw, 2237px" srcset="images/Frame-13-p-500.jpg 500w, images/Frame-13-p-800.jpg 800w, images/Frame-13-p-1080.jpg 1080w, images/Frame-13-p-1600.jpg 1600w, images/Frame-13-p-2000.jpg 2000w, images/Frame-13.jpg 2237w" alt="SWFT Studios website and content collage" src="images/Frame-13.jpg" loading="lazy" class="about-video-thumbnail no-border"></div>
-                    </div>
-                  </div>
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">Who we work with</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Digital Nomads</div>
-                          <div class="project-tag">Solo-Entrepreneurs</div>
-                          <div class="project-tag">Small-Medium Businesses</div>
-                        </div>
-                        <p class="testimonial-text">We partner with founders, service pros, and lean teams who are done piecing tools together. If you need a clear system that helps you get found, followed up with, and booked, we build it around how you actually work.</p>
-                        <a href="/growth-audit" class="button is-course w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">Get Your Free Growth Audit</div>
-                        </a>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                      </div>
-                      <div class="project-image-container"><img sizes="(max-width: 3000px) 100vw, 3000px" srcset="images/SWFT-Customer-Logos-p-500.webp 500w, images/SWFT-Customer-Logos-p-800.webp 800w, images/SWFT-Customer-Logos-p-1080.webp 1080w, images/SWFT-Customer-Logos-p-1600.webp 1600w, images/SWFT-Customer-Logos-p-2000.webp 2000w, images/SWFT-Customer-Logos-p-2600.webp 2600w, images/SWFT-Customer-Logos.webp 3000w" alt="Logos of SWFT Studios clients" src="images/SWFT-Customer-Logos.webp" loading="lazy" class="about-video-thumbnail no-border"></div>
-                    </div>
-                  </div>
-                  <div class="w-slide">
-                    <div class="project-container">
-                      <div class="project-info-container">
-                        <h2 class="project-title">How we can help you</h2>
-                        <div class="project-tag-container">
-                          <div class="project-tag">Growth Audit</div>
-                          <div class="project-tag">Strategize</div>
-                          <div class="project-tag">Create</div>
-                        </div>
-                        <p class="testimonial-text">You have momentum but not enough bandwidth. We help you clarify your offer, map the customer journey, and launch the website + automation stack that keeps leads moving from first click to paid client.</p>
-                        <a href="/growth-audit" class="button is-course w-inline-block">
-                          <div class="button_bg"></div>
-                          <div class="button_text">Get Your Free Growth Audit</div>
-                        </a>
-                        <a href="#" class="project-link w-inline-block">
-                          <div>Watch Video</div><img loading="lazy" src="images/Arrow.svg" alt="" class="link-arrow">
-                        </a>
-                      </div>
-                      <div class="project-image-container"><img sizes="(max-width: 4080px) 100vw, 4080px" srcset="images/AdobeStock_1431669061-p-500.jpeg 500w, images/AdobeStock_1431669061-p-800.jpeg 800w, images/AdobeStock_1431669061-p-1080.jpeg 1080w, images/AdobeStock_1431669061-p-1600.jpeg 1600w, images/AdobeStock_1431669061-p-2000.jpeg 2000w, images/AdobeStock_1431669061-p-2600.jpeg 2600w, images/AdobeStock_1431669061-p-3200.jpeg 3200w, images/AdobeStock_1431669061.jpeg 4080w" alt="People collaborating on a digital project" src="images/AdobeStock_1431669061.jpeg" loading="lazy" class="about-video-thumbnail no-border"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="left-arrow-slider about w-slider-arrow-left">
-                  <div class="arrow-holder"><img loading="lazy" src="images/Left-Arrow.svg" alt="" class="arrow"></div>
-                </div>
-                <div class="right-arrow-slider about w-slider-arrow-right">
-                  <div class="arrow-holder"><img loading="lazy" src="images/Right-Arrow.svg" alt="" class="arrow"></div>
-                </div>
-                <div class="slide-nav w-slider-nav w-round"></div>
-              </div>
-            </div>
-          </div>
+    </section>
+
+    <section class="ar-section" id="team" aria-labelledby="team-heading">
+      <div class="ar-container">
+        <div class="ar-section-label">
+          <span>→ [ OUR TEAM ]</span>
+          <span>SWFT</span>
         </div>
-      </section>
-      <section class="hp-section" id="proven-results" aria-labelledby="hp-proven-heading">
-                <div class="hp-section-label">Our Work</div>
-                <h2 class="hp-section-title" id="hp-proven-heading">Proven results</h2>
-                <div class="hp-proven-grid">
-                  <a href="case-study/brooklyn-steel.html" class="hp-proven-card">
-                    <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co. website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Brooklyn Steel Co.</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/snooze-lane.html" class="hp-proven-card">
-                    <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane website and app" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Website · App</div>
-                      <h3>Snooze Lane</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/tal-hydration.html" class="hp-proven-card">
-                    <img src="images/tal-hydration-thumbnail.webp" alt="TAL Hydration storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>TAL Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/roller-reels.html" class="hp-proven-card">
-                    <img src="images/Roller_Reels_thumbnail.webp" alt="Roller Reels brand" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Content &amp; Production</div>
-                      <h3>Roller Reels</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/manna-hydration.html" class="hp-proven-card">
-                    <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Manna Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/thyme-and-table.html" class="hp-proven-card">
-                    <img src="images/thyme-and-table-thumbnail.webp" alt="Thyme and Table storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Thyme &amp; Table</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/blurred-lines-entertainment.html" class="hp-proven-card">
-                    <img src="images/BLE_SWFT_thumbnail.webp" alt="Blurred Lines Entertainment brand and film" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Content &amp; Production</div>
-                      <h3>Blurred Lines Entertainment</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/built-by-me-ez.html" class="hp-proven-card">
-                    <img src="images/built_by_me_ez_thumbnail.webp" alt="Built By Me EZ website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Custom Website Build</div>
-                      <h3>Built By Me EZ</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/hawthorne-global-ministries.html" class="hp-proven-card">
-                    <img src="images/Hawthorne_Global_Ministries_thumbnail.webp" alt="Hawthorne Global Ministries website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Custom Website Build</div>
-                      <h3>Hawthorne Global Ministries</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                </div>
-                <div class="hp-view-all">
-                  <a href="case-studies.html" class="button is-course w-inline-block">
-                    <div class="button_bg"></div>
-                    <div class="button_text">View All Work</div>
-                  </a>
-                </div>
-              </section>
-      <section id="How-we-work">
-        <div class="section-wrapper glow-2">
-          <div class="section-container process">
-            <div class="section-tag-container">
-              <div>Our Methodology</div>
-              <div class="section-tag-line"></div>
+        <div class="home-about-grid" style="margin-bottom:2rem">
+          <h2 id="team-heading" class="ar-mega">Our <span class="ghost">Team</span></h2>
+          <p class="ar-lead">A passionate team of strategists, designers, and developers dedicated to creating exceptional brands and digital experiences.</p>
+        </div>
+        <div class="home-team-grid">
+          <a class="home-team-card" href="/team.html">
+            <img src="images/portfolio-website-hero-selfie.png" alt="Elombe Kisala" width="600" height="800" loading="lazy">
+            <div class="home-team-meta">
+              <span>Elombe Kisala</span>
+              <span>Founder &amp; Lead Architect</span>
             </div>
-            <div class="process-content-container">
-              <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d1d" style="opacity:0" class="section-title-container">
-                <h2 class="section-title">How the process works</h2>
-                <div class="testimonial-text">A clear path from understanding your business to improving what converts.</div>
-              </div>
-              <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d22" style="opacity:0" class="process-card-container">
-                <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d23" class="process-card">
-                  <div class="process-card-title">1. Understand</div>
-                  <p class="testimonial-text">We identify the business problem, audience, and desired outcome.</p>
-                </div>
-                <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d28" class="process-card">
-                  <div class="process-card-title">2. Plan</div>
-                  <p class="testimonial-text">We map the messaging, customer journey, content, and technical requirements.</p>
-                </div>
-                <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d2d" class="process-card">
-                  <div class="process-card-title">3. Build</div>
-                  <p class="testimonial-text">We create the website, content, and supporting systems.</p>
-                </div>
-                <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d32" class="process-card">
-                  <div class="process-card-title">4. Improve</div>
-                  <p class="testimonial-text">We review performance, gather feedback, and refine the experience.</p>
-                </div>
-              </div>
+          </a>
+          <a class="home-team-card" href="/team.html">
+            <img src="https://github.com/stephen-iezzi.png" alt="Stephen Iezzi" width="600" height="800" loading="lazy">
+            <div class="home-team-meta">
+              <span>Stephen Iezzi</span>
+              <span>Co-Founder &amp; Technical Architect</span>
             </div>
-          </div>
+          </a>
         </div>
-      </section>
-      <section class="hp-section padding-global" id="homepage-pricing" aria-labelledby="hp-pricing-heading">
-        <div class="container-large">
-          <div class="hp-section-label">Investment</div>
-          <h2 class="hp-section-title" id="hp-pricing-heading">Pricing that matches the work</h2>
-          <p class="hp-services-intro">Toggle between one-time projects and ongoing retainers. No long contracts. Work directly with the person who builds it.</p>
-          <div id="hp-pricing-mount"></div>
+      </div>
+    </section>
+
+    <section class="ar-section" id="testimonials" aria-labelledby="testimonials-heading">
+      <div class="ar-container">
+        <div class="ar-section-label">
+          <span>→ [ TESTIMONIALS ]</span>
+          <span>SWFT</span>
         </div>
-      </section>
-      <section id="growth-audit-cta" class="hp-booking padding-global" aria-labelledby="hp-audit-heading">
-        <div class="container-large">
-          <div class="hp-section-label">Free Growth Audit</div>
-          <div class="hp-booking-copy">
-            <h2 id="hp-audit-heading">Find out what is costing your business customers online.</h2>
-            <p>Submit your website or social profile and receive a personalized review of the three changes most likely to improve trust, inquiries, and sales.</p>
-            <div class="button-group is-course margin-top margin-medium">
-              <a href="/growth-audit" class="button is-course w-inline-block">
-                <div class="button_bg"></div>
-                <div class="button_text">Get Your Free Growth Audit</div>
-              </a>
-              <a href="websites.html" class="button is-course outlined w-inline-block">
-                <div class="button_bg"></div>
-                <div class="button_text">View our work</div>
-              </a>
+        <div class="home-about-grid" style="margin-bottom:2rem">
+          <h2 id="testimonials-heading" class="ar-mega">Client <span class="ghost">Success</span></h2>
+          <p class="ar-lead">Every collaboration is built on trust, creativity, and a shared vision. Here is what partners say about working with SWFT.</p>
+        </div>
+        <div class="home-testimonials">
+          <article class="home-testimonial">
+            <img src="images/brooklyn-steel-thumbnail.webp" alt="" width="280" height="280" loading="lazy">
+            <div>
+              <span class="ar-quote-mark" aria-hidden="true">“</span>
+              <blockquote>SWFT delivered a brand identity and website that captured our vision. The process was seamless, creative, and highly professional from start to finish.</blockquote>
+              <cite>Brooklyn Steel Co.<span>E-commerce brand</span></cite>
             </div>
-          </div>
+          </article>
+          <article class="home-testimonial">
+            <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="" width="280" height="280" loading="lazy">
+            <div>
+              <span class="ar-quote-mark" aria-hidden="true">“</span>
+              <blockquote>Working with SWFT was one of the best decisions for our product story. From discovery to launch, every detail felt modern, distinctive, and aligned with how we want to be understood.</blockquote>
+              <cite>Snooze Lane<span>Product platform</span></cite>
+            </div>
+          </article>
         </div>
-      </section>
-      <section id="homepage-faq" class="hp-section padding-global" aria-labelledby="hp-faq-heading">
-        <div class="container-large">
-          <div class="hp-section-label">FAQ</div>
-          <h2 class="hp-section-title" id="hp-faq-heading">Common questions</h2>
-          <div class="hp-faq" style="max-width:42rem;display:grid;gap:1.25rem;">
-            <details>
-              <summary>What is the Free Growth Audit?</summary>
-              <p>A personalized strategic review of your website, offer, and customer journey, not an automated score. You receive three prioritized recommendations by email.</p>
-            </details>
-            <details>
-              <summary>Who do we help?</summary>
-              <p>Service businesses, e-commerce brands, restaurants and hospitality, B2B and professional services, creators and personal brands, and health, wellness, and beauty companies, especially in Jersey City, New York City, and North Jersey, who want websites and content that generate inquiries.</p>
-            </details>
-            <details>
-              <summary>Do I need to book a call first?</summary>
-              <p>No. Start with the Growth Audit. An optional discovery call is available after you submit if you want to discuss the business beforehand.</p>
-            </details>
-            <details>
-              <summary>What do we deliver?</summary>
-              <p>Website design and development, photo and video content, and lead-capture / follow-up systems, so you are not juggling multiple agencies.</p>
-            </details>
-            <details>
-              <summary>How much does a website cost?</summary>
-              <p>Website Only starts at $800 when you supply photos and copy. Website plus on-site photo and video starts at $2,000. Larger and multi-location projects start at $3,000. Final prices depend on agreed scope. See the pricing section for one-time projects and ongoing retainers.</p>
-            </details>
-            <details>
-              <summary>What&rsquo;s the GBP Content Refresh?</summary>
-              <p>A one-time service starting at $400 with no new website. We shoot on-site photo and short-form video, optimize your Google Business Profile (categories, services, photos, posts), and set up review generation. An easy first step to look better locally without a rebuild.</p>
-            </details>
-            <details>
-              <summary>Do you require long-term contracts?</summary>
-              <p>No. Project work is scoped and billed per engagement. Retainers are month-to-month.</p>
-            </details>
-            <details>
-              <summary>How fast can you turn around a site?</summary>
-              <p>Simpler builds can turn around in as little as 24 to 48 hours when content and decisions are ready. Larger sites, multi-stakeholder projects, and shoot-inclusive work take longer. We set a realistic timeline after intake.</p>
-            </details>
-          </div>
+      </div>
+    </section>
+
+    <section class="ar-section home-contact-band" id="contact" aria-labelledby="contact-heading">
+      <div class="ar-container">
+        <div class="ar-section-label">
+          <span>→ [ CONTACT ]</span>
+          <span>SWFT</span>
         </div>
-      </section>
-    </main>
-  </div>
-  <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=688e7554265d8089278ca76e" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-  <script src="js/swftstudios000.js" type="text/javascript"></script>
-  <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <script src="https://cdn.jsdelivr.net/gh/looper15/thewebproject@main/index.js"></script>
-  <script src="https://unpkg.com/tippy.js@6"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  function runHeroIntro() {
-    const duration = 1.5;
-    const shortDuration = duration * 0.2;
-    const LongDuration = duration * 0.8;
-    var tl = gsap.timeline({
-      defaults: {
-        ease: "power4.out",
-        duration: 2.5,
-      },
-    });
-    tl.set(".nav_component", { y: "-100%" });
-    tl.set(".section_gallery", { y: "100px", opacity: 0 });
-    tl.set(".background_component", { opacity: 0 });
-    tl.to(".background_component", { opacity: 1, duration: shortDuration });
-    tl.to(".nav_component", { y: "0%", duration: LongDuration});
-    tl.to(".section_gallery", { y: "0px", opacity: 1, duration: LongDuration}, "<");
-  }
-  if (document.body.classList.contains("hero-ready")) {
-    runHeroIntro();
-  } else {
-    window.addEventListener("swft:hero-ready", runHeroIntro, { once: true });
-  }
-});
-</script>
-  <script>
-$(document).mousemove(function (event) {
-  let windowWidth = $(window).width();
-  // Only execute if window width is greater than 990px
-  if (windowWidth > 990) {
-    let windowHeight = $(window).height();
-    let intensity = 3;
-    let mouseXpercentage = Math.round((event.pageX / windowWidth) * 100);
-    let mouseYpercentage = Math.round((event.pageY / windowHeight) * 100);
-    let mouseXpercentagetenx = Math.round(
-      ((event.pageX / windowWidth) * 10 - 5) * intensity
-    );
-    let mouseYpercentagetenx = Math.round(
-      ((event.pageY / windowHeight) * 10 - 5) * intensity
-    );
-    console.log(
-      `x-percent is ${mouseXpercentagetenx}`,
-      `y-percent is ${mouseYpercentagetenx}`
-    );
-    $(".background_gradient").css(
-      "background",
-      "radial-gradient(at " +
-        mouseXpercentage +
-        "% " +
-        mouseYpercentage +
-        "%, hsla(0, 0.00%, 0.00%, 0.00), rgba(0, 0, 0, 0.45) 70%)"
-    );
-    $(".background_image").css(
-      "transform",
-      "translate(" + mouseXpercentagetenx + "px," + mouseYpercentagetenx + "px)"
-    );
-  }
-});
-</script>
-  <script>
-tippy('.nav_link.is-muted', {
-  duration: [400, 0],
-  arrow: false,
-  offset: [-5, -5],
-  placement: 'top',
-  content: 'Not taking clients',
-  theme: 'tooltiptheme',
-  interactive: false,
-  delay: 0,
-});
-</script>
-  <script>
-(function () {
-  var STRIPE_LINKS = {
-    websiteDevelopment: "",
-    contentCreation: ""
-  };
-  document.querySelectorAll("[data-stripe-service]").forEach(function (el) {
-    var key = el.getAttribute("data-stripe-service");
-    var custom = el.getAttribute("data-stripe-link");
-    var url = custom || (key === "website-development" ? STRIPE_LINKS.websiteDevelopment: key === "content-creation" ? STRIPE_LINKS.contentCreation: "");
-    if (url) {
-      el.setAttribute("href", url);
-      el.setAttribute("target", "_blank");
-      el.setAttribute("rel", "noopener noreferrer");
-    }
-  });
-})();
-</script>
-  <script src="js/pricing-render.js"></script>
-  <script src="js/homepage-pricing.js"></script>
-  <script src="js/homepage-audience.js"></script>
-  <script src="js/swft-analytics.js"></script>
-  <script src="js/swft-nav.js"></script>
-  <script src="https://player.vimeo.com/api/player.js"></script>
-  <script src="js/hero-vimeo-loader.js"></script>
+        <h2 id="contact-heading" class="ar-mega">Let&rsquo;s start a <span class="ghost">conversation</span></h2>
+        <p class="ar-lead">Whether you have a project in mind or simply want to connect, we&rsquo;d love to hear from you and explore how we can help.</p>
+        <div class="home-hero__actions">
+          <a class="ar-btn" href="/contact.html">Contact Us</a>
+          <a class="ar-btn ar-btn--outline" href="/growth-audit">Free Growth Audit</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/swft-analytics.js" defer></script>
+  <script src="js/swft-nav.js" defer></script>
+  <script src="js/swft-theme-clock.js" defer></script>
 </body>
 </html>
