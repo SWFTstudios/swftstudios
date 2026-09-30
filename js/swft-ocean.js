@@ -1,14 +1,13 @@
 /* ============================================================
-   SWFT Ocean stage — a WebGL night ocean under a spotlight, for the
-   SWFT 3D cube (js/swft-cube.js) to hover over.
+   SWFT Ocean stage — a black, glassy night sea for the SWFT 3D cube
+   (js/swft-cube.js) to hover over, lit only by the cube itself.
 
    Enhances every [data-swft-ocean] element:
-     - raymarched wave heightfield with fresnel sky reflection
-     - spotlight from above: volumetric beam, a lit pool of water,
-       specular glints on the crests, and the cube's shadow in the pool
-     - the cube (if one is inside) is reflected in the water and bobs
-       gently; its on-screen position is solved from the same camera
-       so it sits exactly over its shadow
+     - raymarched ripple heightfield seen from just above the water
+     - the cube glows: bloom around it, its glowing edges mirrored in
+       the water, glints on the ripples beneath it, low mist on the sea
+     - the cube bobs gently; its on-screen position is solved from the
+       same camera, so the reflection always lines up with it
 
    No libraries. Falls back to a static CSS scene without WebGL.
    Docs: docs/SWFT_CUBE.md
@@ -18,11 +17,10 @@
 
   // World units. The cube is CUBE_SIZE wide; everything else is scaled from it.
   var CUBE_SIZE = 1.6;
-  var HOVER_GAP = 0.55;          // water line to cube bottom
-  var CAM_HEIGHT = 2.4;
-  var CAM_PITCH = 11 * Math.PI / 180;
+  var HOVER_GAP = 0.8;           // water line to cube bottom
+  var CAM_HEIGHT = 0.55;         // eye just above the water, below the cube
+  var CAM_PITCH = 1.5 * Math.PI / 180; // near level: horizon just above centre, mirror image below
   var FOCAL = 1.6;               // vertical field of view ~ 34deg
-  var LIGHT_HEIGHT = 9.0;
   var BOB_WORLD = 0.07;          // bob amplitude
   var BOB_SPEED = 1.3;           // radians per second
   var TARGET_PIXELS = 460000;    // render budget before adaptive scaling
@@ -43,13 +41,10 @@
     "uniform vec3 uCube;",
     "uniform float uHalf;",
     "uniform float uHasCube;",
-    "uniform mat3 uToLocal, uToWorld;",
-    "uniform float uYaw;",
-    "uniform vec3 uLight;",
+    "uniform mat3 uToLocal;",
 
-    "const float DEPTH = 0.9;",
-    "const float COS_OUTER = 0.9659;", // 15deg cone edge
-    "const float COS_INNER = 0.9945;", // 6deg full-strength core
+    "const float DEPTH = 0.2;",
+    "const vec3 ICE = vec3(0.55, 0.8, 1.0);",
 
     // Sum of directional waves with sharp exp(sin) crests; each wave drags
     // the sample point along its slope, which bunches the crests like real swell.
@@ -58,7 +53,7 @@
     "  for (int i = 0; i < 30; i++) {",
     "    if (i >= it) break;",
     "    vec2 d = vec2(sin(a), cos(a));",
-    "    float x = dot(d, p) * f + uTime * tm * 0.8;",
+    "    float x = dot(d, p) * f + uTime * tm * 0.7;",
     "    float w = exp(sin(x) - 1.0);",
     "    p -= d * w * cos(x) * amp * 0.28;",
     "    sum += w * amp; wsum += amp;",
@@ -66,13 +61,13 @@
     "  }",
     "  return sum / wsum;",
     "}",
-    "float hgt(vec2 p, int it) { return (waves(p * 1.1, it) - 1.0) * DEPTH; }",
+    "float hgt(vec2 p, int it) { return (waves(p * 1.3, it) - 1.0) * DEPTH; }",
 
     "float march(vec3 ro, vec3 rd) {",
     "  vec3 p = ro + rd * (-ro.y / rd.y);",
-    "  for (int i = 0; i < 48; i++) {",
+    "  for (int i = 0; i < 40; i++) {",
     "    float h = hgt(p.xz, 10);",
-    "    if (h + 0.01 > p.y) break;",
+    "    if (h + 0.005 > p.y) break;",
     "    p += rd * (p.y - h);",
     "  }",
     "  return distance(p, ro);",
@@ -86,37 +81,37 @@
     "  return normalize(cross(a - b, a - c));",
     "}",
 
+    // Near-black night sky with the faintest cool lift at the horizon.
     "vec3 sky(vec3 d) {",
     "  float y = max(d.y, 0.0);",
-    "  return mix(vec3(0.005, 0.014, 0.036), vec3(0.0008, 0.0018, 0.006), pow(y, 0.35));",
+    "  return mix(vec3(0.004, 0.006, 0.012), vec3(0.0006, 0.0008, 0.0016), pow(y, 0.3));",
     "}",
 
-    "float spot(vec3 p) {",
-    "  vec3 v = normalize(p - uLight);",
-    "  return smoothstep(COS_OUTER, COS_INNER, -v.y);",
+    // Bloom around the glowing cube, from the ray's closest approach to its centre.
+    "vec3 glow(vec3 ro, vec3 rd, float tMax) {",
+    "  if (uHasCube < 0.5) return vec3(0.0);",
+    "  vec3 oc = uCube - ro;",
+    "  float t = dot(oc, rd);",
+    "  if (t < 0.0 || t > tMax) return vec3(0.0);",
+    "  float d = length(ro + rd * t - uCube) / uHalf;",
+    "  return ICE * (0.012 / (d * d * 0.9 + 0.15) + 0.55 * exp(-d * 2.4));",
     "}",
 
-    "float sdBox2(vec2 p, vec2 b) {",
-    "  vec2 d = abs(p) - b;",
-    "  return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);",
+    // Low mist lying on the water, lit by the cube and spread sideways.
+    "vec3 mist(vec3 ro, vec3 rd, float tMax) {",
+    "  if (uHasCube < 0.5) return vec3(0.0);",
+    "  vec2 dxz = rd.xz;",
+    "  float t = dot(uCube.xz - ro.xz, dxz) / dot(dxz, dxz);",
+    "  if (t < 0.0 || t > tMax) return vec3(0.0);",
+    "  vec3 p = ro + rd * t;",
+    "  float side = (p.x - uCube.x) / uHalf;",
+    "  float h = max(p.y, 0.0) / uHalf;",
+    "  return ICE * 0.07 * exp(-side * side * 0.35) * exp(-h * 3.5);",
     "}",
 
-    // Soft shadow of the cube, projected from the point light straight above it.
-    "float cubeShadow(vec3 p) {",
-    "  if (uHasCube < 0.5) return 1.0;",
-    "  float bottom = uCube.y - uHalf;",
-    "  if (p.y > bottom) return 1.0;",
-    "  float s = (uLight.y - p.y) / (uLight.y - uCube.y);",
-    "  vec2 q = (p.xz - uCube.xz) / s;",
-    "  float c = cos(uYaw), sn = sin(uYaw);",
-    "  q = mat2(c, -sn, sn, c) * q;",
-    "  float d = sdBox2(q, vec2(uHalf * 0.98)) - uHalf * 0.1;",
-    "  float soft = uHalf * (0.1 + 0.3 * clamp((bottom - p.y) / (bottom + DEPTH), 0.0, 1.0));",
-    "  return mix(0.08, 1.0, smoothstep(-soft, soft, d));",
-    "}",
-
-    "bool hitCube(vec3 ro, vec3 rd, out vec3 nW, out vec3 wp) {",
-    "  if (uHasCube < 0.5) return false;",
+    // Ray vs the cube (in its own rotated space). Returns hit distance or -1; lp = local hit point.
+    "float hitCube(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl) {",
+    "  if (uHasCube < 0.5) return -1.0;",
     "  vec3 o = uToLocal * (ro - uCube);",
     "  vec3 d = uToLocal * rd;",
     "  vec3 m = 1.0 / d;",
@@ -125,46 +120,19 @@
     "  vec3 t1 = -n - k, t2 = -n + k;",
     "  float tN = max(max(t1.x, t1.y), t1.z);",
     "  float tF = min(min(t2.x, t2.y), t2.z);",
-    "  if (tN > tF || tF < 0.0) return false;",
-    "  vec3 nl = -sign(d) * step(t1.yzx, t1.xyz) * step(t1.zxy, t1.xyz);",
-    "  nW = uToWorld * nl;",
-    "  wp = ro + rd * tN;",
-    "  return true;",
+    "  if (tN > tF || tF < 0.0) return -1.0;",
+    "  nl = -sign(d) * step(t1.yzx, t1.xyz) * step(t1.zxy, t1.xyz);",
+    "  lp = o + d * tN;",
+    "  return tN;",
     "}",
 
-    // How the cube looks in the reflection: lit top, sides fading into the dark.
-    "vec3 cubeColor(vec3 nW, vec3 wp) {",
-    "  float h = clamp((wp.y - (uCube.y - uHalf)) / (2.0 * uHalf), 0.0, 1.0);",
-    "  vec3 side = mix(vec3(0.01, 0.025, 0.04), vec3(0.2, 0.3, 0.34), h * h);",
-    "  vec3 top = vec3(0.8, 0.95, 1.0);",
-    "  vec3 under = vec3(0.01, 0.05, 0.07);",
-    "  vec3 col = mix(side, top, smoothstep(0.4, 0.9, nW.y));",
-    "  return mix(col, under, smoothstep(-0.4, -0.9, nW.y));",
-    "}",
-
-    // Light scattered by the air inside the cone, only where the ray crosses the cone's cylinder.
-    "vec3 beam(vec3 ro, vec3 rd, float tMax) {",
-    "  float R = 2.8;",
-    "  vec2 o = ro.xz - uLight.xz;",
-    "  vec2 d = rd.xz;",
-    "  float A = dot(d, d), B = dot(o, d), C = dot(o, o) - R * R;",
-    "  float disc = B * B - A * C;",
-    "  if (disc < 0.0 || A < 1e-6) return vec3(0.0);",
-    "  float sq = sqrt(disc);",
-    "  float t0 = max((-B - sq) / A, 0.0);",
-    "  float t1 = min((-B + sq) / A, tMax);",
-    "  if (t1 <= t0) return vec3(0.0);",
-    "  float dt = (t1 - t0) / 18.0;",
-    "  float j = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);",
-    "  float acc = 0.0;",
-    "  for (int i = 0; i < 18; i++) {",
-    "    vec3 q = ro + rd * (t0 + (float(i) + j) * dt);",
-    "    vec3 v = q - uLight;",
-    "    float cone = smoothstep(COS_OUTER, COS_INNER, -normalize(v).y);",
-    "    float dust = 0.85 + 0.15 * sin(q.y * 3.1 + uTime * 0.6) * sin(q.x * 2.3 - uTime * 0.4);",
-    "    acc += cone * cone * dust * cubeShadow(q) / (1.0 + 0.02 * dot(v, v));",
-    "  }",
-    "  return vec3(0.55, 0.82, 1.0) * acc * dt * 0.022;",
+    // The cube as seen in the water: dim glassy faces with bright glowing edges.
+    "vec3 cubeEmission(vec3 lp, vec3 nl) {",
+    "  vec3 q = abs(lp) / uHalf;",
+    "  vec3 an = abs(nl);",
+    "  float edge = max(q.x * (1.0 - an.x), max(q.y * (1.0 - an.y), q.z * (1.0 - an.z)));",
+    "  float rim = smoothstep(0.84, 0.985, edge);",
+    "  return ICE * (0.05 + 2.0 * rim);",
     "}",
 
     "void main() {",
@@ -172,40 +140,38 @@
     "  vec3 rd = normalize(uFw * uFocal + uRight * uv.x + uUp * uv.y);",
     "  vec3 ro = uCam;",
     "  vec3 col;",
-    "  float tHit = 60.0;",
+    "  float tHit = 80.0;",
     "  if (rd.y < 0.0) {",
     "    tHit = march(ro, rd);",
     "    vec3 p = ro + rd * tHit;",
     "    vec3 N = waterNormal(p.xz, 0.01);",
-    "    N = normalize(mix(N, vec3(0.0, 1.0, 0.0), 0.6 * min(1.0, sqrt(tHit * 0.01) * 1.1)));",
+    "    N = normalize(mix(N, vec3(0.0, 1.0, 0.0), 0.55 * min(1.0, sqrt(tHit * 0.012) * 1.1)));",
     "    float fres = 0.04 + 0.96 * pow(1.0 - max(dot(N, -rd), 0.0), 5.0);",
     "    vec3 R = reflect(rd, N);",
     "    R.y = abs(R.y);",
-    "    vec3 refl = sky(R);",
-    "    vec3 cn, cp;",
-    "    if (hitCube(p, R, cn, cp)) { refl = cubeColor(cn, cp); fres = max(fres, 0.35); }",
-    "    else refl += beam(p, R, 30.0) * 1.6;",   // the light shaft mirrored in the swell
-    "    vec3 toL = uLight - p;",
+    // Mirror image: the cube itself where the reflected ray meets it, its bloom everywhere else.
+    "    vec3 lp, nl;",
+    "    vec3 refl = sky(R) + glow(p, R, 80.0);",
+    "    if (hitCube(p, R, lp, nl) > 0.0) refl += cubeEmission(lp, nl);",
+    // The cube also lights the ripples directly: sharp glints plus a faint cool sheen.
+    "    vec3 toL = uCube - p;",
     "    float dl = length(toL);",
     "    toL /= dl;",
-    "    float lit = spot(p) * cubeShadow(p) * 75.0 / (dl * dl);",
-    "    float crest = smoothstep(-0.78 * DEPTH, -0.3 * DEPTH, p.y);",
-    "    float facing = max(dot(N, toL), 0.0);",
-    "    vec3 scatter = vec3(0.015, 0.26, 0.36) * lit * pow(facing, 6.0) * (0.1 + 1.6 * crest * crest);",
-    "    vec3 deep = vec3(0.001, 0.006, 0.022);",
     "    float nh = max(dot(N, normalize(toL - rd)), 0.0);",
-    "    float spec = (pow(nh, 260.0) * 14.0 + pow(nh, 40.0) * 0.35) * lit;",
-    "    col = mix(deep + scatter, refl, fres) + vec3(0.9, 0.97, 1.0) * spec;",
-    "    col = mix(col, sky(vec3(rd.x, 0.03, rd.z)), 1.0 - exp(-tHit * 0.025));",
+    "    float atten = 6.0 / (1.0 + dl * dl);",
+    "    vec3 lit = ICE * atten * (pow(nh, 180.0) * 3.5 + pow(nh, 24.0) * 0.12)",
+    "             + vec3(0.01, 0.025, 0.05) * atten * max(dot(N, toL), 0.0);",
+    "    vec3 deep = vec3(0.0005, 0.0012, 0.003);",
+    "    col = mix(deep, refl, fres) + lit;",
+    "    col = mix(col, sky(vec3(rd.x, 0.02, rd.z)), 1.0 - exp(-tHit * 0.015));",
     "  } else {",
     "    col = sky(rd);",
     "  }",
-    "  col += beam(ro, rd, tHit);",
-    "  col *= 1.15;",
+    "  col += glow(ro, rd, tHit) + mist(ro, rd, tHit);",
     "  col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);",
     "  col = pow(clamp(col, 0.0, 1.0), vec3(1.0 / 2.2));",
     "  vec2 s = gl_FragCoord.xy / uRes;",
-    "  col *= 0.5 + 0.5 * pow(16.0 * s.x * s.y * (1.0 - s.x) * (1.0 - s.y), 0.18);",
+    "  col *= 0.45 + 0.55 * pow(16.0 * s.x * s.y * (1.0 - s.x) * (1.0 - s.y), 0.22);",
     "  gl_FragColor = vec4(col, 1.0);",
     "}"
   ].join("\n");
@@ -292,7 +258,7 @@
 
     var u = {};
     ["uRes", "uTime", "uCam", "uFw", "uRight", "uUp", "uFocal", "uCube", "uHalf", "uHasCube",
-     "uToLocal", "uToWorld", "uYaw", "uLight"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
+     "uToLocal"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
     this.gl = gl;
     this.u = u;
     this.root.classList.add("swft-ocean--live");
@@ -399,9 +365,6 @@
     gl.uniform1f(u.uHasCube, this.cubeEl ? 1 : 0);
     // Column-major upload: M's rows become the columns of M^T (world -> local).
     gl.uniformMatrix3fv(u.uToLocal, false, [].concat(M[0], M[1], M[2]));
-    gl.uniformMatrix3fv(u.uToWorld, false, [M[0][0], M[1][0], M[2][0], M[0][1], M[1][1], M[2][1], M[0][2], M[1][2], M[2][2]]);
-    gl.uniform1f(u.uYaw, Math.atan2(M[2][0], M[0][0]));
-    gl.uniform3f(u.uLight, 0, LIGHT_HEIGHT, this.cube[2]);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
     // Adaptive resolution: back off when frames run long, recover slowly when they're cheap.
