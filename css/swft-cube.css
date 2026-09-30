@@ -252,10 +252,19 @@
 }
 
 /* ---------- Demo page shell (cube.html) ---------- */
+/* The ocean stage is full-bleed (100vw); clip at the page so it never adds a sideways scroll */
+.cube-page {
+  overflow-x: clip;
+}
+
 .cube-page main {
   padding: clamp(7rem, 12vw, 9rem) 16px 5rem;
-  /* Rotating cube corners can poke past the viewport edge on phones */
-  overflow-x: clip;
+}
+
+.cube-page .swft-ocean {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  margin-top: 2.5rem;
 }
 
 .cube-page-shell {

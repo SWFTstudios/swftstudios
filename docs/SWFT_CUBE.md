@@ -4,6 +4,7 @@ An interactive 3D cube with its own image slideshow on each of its six faces. It
 
 - Styles: [`css/swft-cube.css`](../css/swft-cube.css)
 - Behavior: [`js/swft-cube.js`](../js/swft-cube.js)
+- Ocean stage (optional): [`css/swft-ocean.css`](../css/swft-ocean.css) + [`js/swft-ocean.js`](../js/swft-ocean.js)
 - Demo page: [`/cube.html`](../cube.html) (`noindex` until it is placed on a live page)
 
 ## Interactions
@@ -67,3 +68,15 @@ Slideshows and the spin pause while the tab is hidden. With `prefers-reduced-mot
 - The first slide of each face loads eagerly and the others lazily.
 - When the cube lands on the top or bottom face, its Y rotation resets to the front orientation so the face reads upright.
 - On phones, a rotating cube's corners can extend past the viewport. `cube.html` clips that with `overflow-x: clip` on `main`, and any host page needs the same.
+
+## Ocean stage (optional)
+
+Wrap the cube in `<section class="swft-ocean" data-swft-ocean>` and load `css/swft-ocean.css` and `js/swft-ocean.js` after `js/swft-cube.js`. The cube then hovers over a WebGL night ocean with a spotlight shining down from above:
+- **Water:** a raymarched wave heightfield that reflects the sky and the cube.
+- **Spotlight:** a beam of light through the air and a turquoise pool where it hits the water, with the cube's soft shadow in the middle and glints on the lit crests.
+- **Alignment:** the cube's on-screen position (`--cube-y`) is solved from the same camera the water uses, so it always sits over its shadow. It bobs gently.
+
+Rendering:
+- **Speed:** resolution starts within a fixed pixel budget and steps down when frames run slow. Rendering pauses when the stage is off screen or the tab is hidden.
+- **Reduced motion:** with `prefers-reduced-motion`, the water freezes and the cube stops bobbing. The cube still redraws when someone moves it.
+- **No WebGL:** the stage keeps a painted CSS still of the scene (`.swft-ocean--static`).
