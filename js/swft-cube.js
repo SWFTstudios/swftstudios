@@ -8,7 +8,7 @@
                     a fast flick always advances at least one face
      tap / click    front face: next slide (left third = previous)
                     side face: rotate that face to the front
-     hover (mouse)  cube tilts toward the pointer, auto-rotate pauses
+     hover (mouse)  cube tilts toward the pointer, idle spin coasts to a stop
      keyboard       arrows rotate, Enter/Space = next slide
      idle           slow continuous spin (data-spin, deg/s) that eases
                     out on any interaction and eases back in afterwards

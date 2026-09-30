@@ -15,7 +15,7 @@ An interactive 3D cube with its own image slideshow on each of its six faces. It
 | Vertical swipe | Turns the top or bottom face to the front. A horizontal swipe from there goes back to the four side faces. |
 | Tap / click the front face | Next slide. Tapping the left third shows the previous slide. |
 | Tap / click a side face | Rotates that face to the front. |
-| Hover (fine pointer only) | Tilts the cube toward the pointer, scales it up slightly, pauses auto-rotate and holds the current photo. |
+| Hover (fine pointer only) | Tilts the cube toward the pointer, scales it up slightly, coasts the idle spin to a stop and holds the current photo. |
 | Keyboard (cube focused) | `←` `→` `↑` `↓` rotate. `Enter` / `Space` shows the next slide. |
 | HUD buttons / dots | Rotate left or right, or jump to a slide on the front face. |
 
