@@ -11,6 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/araise-motion.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/page-shell.css">
   <link rel="stylesheet" href="css/case-studies-hub.css">
@@ -23,10 +24,11 @@
       --swft-border: var(--border); --swft-card: var(--surface);
       --ps-bg: var(--bg); --ps-text: var(--fg); --ps-muted: var(--muted);
       --ps-accent: var(--accent); --ps-border: var(--border); --ps-card: var(--surface);
-      background: var(--bg); color: var(--fg);
+      background: var(--bg); color: var(--fg); font-weight: 300;
     }
-    .ar-body .ps-eyebrow { border-color: var(--border); color: var(--muted); border-radius: 4px; }
-    .ar-body .ps-title { font-family: var(--ar-display); text-transform: uppercase; letter-spacing: -0.03em; }
+    .ar-body .ps-eyebrow { border-color: var(--border); color: var(--muted); border-radius: 4px; font-weight: 300; }
+    .ar-body .ps-title { font-family: var(--ar-display); text-transform: uppercase; letter-spacing: -0.02em; font-weight: 700; }
+    .ar-body .ps-lead { font-weight: 300; }
     .ar-body .ps-filter.is-active,
     .ar-body .button.is-course {
       background: var(--cta-bg) !important;
@@ -61,8 +63,8 @@
           <span>SWFT</span>
         </div>
         <p class="ps-eyebrow">Case Studies</p>
-        <h1 class="ps-title">Proven <span class="ghost" style="color:transparent;-webkit-text-stroke:1px var(--ghost)">Transformations</span></h1>
-        <p class="ps-lead">Real projects across web development, brand identity, content, and automation, built for brands that need to move fast and look sharp.</p>
+        <h1 class="ps-title ar-mega" data-split="enter" style="font-size:clamp(2.2rem,7vw,4.5rem)">Proven <span class="ghost" style="color:transparent;-webkit-text-stroke:1px var(--ghost)">Transformations</span></h1>
+        <p class="ps-lead ar-thin">Real projects across web, brand, content, and automation — built so local brands look sharp and <strong class="ar-mark">perform better</strong>.</p>
       </header>
 
       <div class="ps-toolbar">
@@ -107,9 +109,13 @@
       border: 0;
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
   <script src="js/swft-theme-clock.js" defer></script>
+  <script src="js/swft-split-text.js" defer></script>
+  <script src="js/swft-motion.js" defer></script>
   <script src="js/case-studies-grid.js" defer></script>
 </body>
 </html>

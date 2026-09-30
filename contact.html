@@ -3,16 +3,17 @@
 <head>
   <meta charset="utf-8">
   <title>Contact | Tell Us About Your Project | SWFT Studios</title>
-  <meta name="description" content="Ready to start a project with us? Submit your project details for website design, content, or lead systems. Serving Jersey City, NYC, and North Jersey.">
+  <meta name="description" content="Contact SWFT Studios for digital and video marketing, brand websites, and content systems. Serving Bergen, Hudson, and NYC.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="canonical" href="https://www.swftstudios.com/contact.html">
   <meta property="og:title" content="Contact | Tell Us About Your Project | SWFT Studios">
-  <meta property="og:description" content="Tell SWFT about your project, website, content, or lead systems for growing businesses.">
+  <meta property="og:description" content="Tell SWFT about your marketing content, website, or growth campaign.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.swftstudios.com/contact.html">
   <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/araise-motion.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/araise-pages.css">
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
@@ -26,8 +27,12 @@
         <span>→ [ CONTACT ]</span>
         <span>SWFT</span>
       </div>
-      <h1 class="ar-mega">Let&rsquo;s start a <span class="ghost">conversation</span></h1>
-      <p class="ar-lead" style="margin:0 auto">Whether you have a project in mind or simply want to connect, we&rsquo;d love to hear from you and explore how we can help.</p>
+      <h1 class="ar-mega" data-split="enter">Let&rsquo;s start a <span class="ghost">conversation</span></h1>
+      <p class="ar-lead ar-thin" style="margin:0 auto">
+        Whether you need <strong class="ar-mark">marketing content</strong>, a
+        <strong class="ar-mark">content-rich website</strong>, or both —
+        we&rsquo;d love to help you convert while interest is hot.
+      </p>
     </header>
 
     <section class="ar-container" style="padding-bottom:4rem">
@@ -41,12 +46,13 @@
             </li>
             <li>
               <span class="label">Location</span>
-              <a href="/locations/">Jersey City · New York City · North Jersey</a> · Virtual
+              <a href="/locations/">Bergen · Hudson · NYC five boroughs</a> · Virtual
             </li>
           </ul>
-          <p style="color:var(--muted);font-size:0.95rem;max-width:32ch">
+          <p class="ar-thin" style="color:var(--muted);font-size:0.95rem;max-width:32ch">
             <span class="ar-quote-mark" aria-hidden="true">“</span>
-            We help businesses turn attention into customers through websites, content, and lead systems.
+            We help businesses turn attention into customers through
+            <strong class="ar-mark">websites, content, and digital tools</strong>.
           </p>
           <p style="margin-top:1.5rem">
             <a class="ar-btn ar-btn--outline" href="/growth-audit">Free Growth Audit</a>
@@ -121,9 +127,13 @@
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
   <script src="js/swft-theme-clock.js" defer></script>
+  <script src="js/swft-split-text.js" defer></script>
+  <script src="js/swft-motion.js" defer></script>
   <script>
     (function () {
       var form = document.getElementById("contact-form");

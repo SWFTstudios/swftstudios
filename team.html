@@ -11,6 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/araise-motion.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/araise-pages.css">
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
@@ -25,8 +26,12 @@
         <span>SWFT</span>
       </div>
       <div class="ar-split-head">
-        <h1 class="ar-mega">Our <span class="ghost">Team</span></h1>
-        <p class="ar-lead">A passionate team of strategists, designers, and developers dedicated to creating exceptional brands and digital experiences.</p>
+        <h1 class="ar-mega" data-split="enter">Our <span class="ghost">Team</span></h1>
+        <p class="ar-lead ar-thin">
+          Strategists, designers, and developers creating
+          <strong class="ar-mark">high-converting marketing content</strong> and
+          <strong class="ar-mark">brand-true digital experiences</strong> for Bergen, Hudson, and NYC.
+        </p>
       </div>
     </header>
 
@@ -38,7 +43,7 @@
             <span>Elombe Kisala</span>
             <span>Founder &amp; Lead Architect</span>
           </div>
-          <p class="ar-team-bio">Elombe leads discovery, design direction, and delivery across Webflow, Shopify, brand strategy, and content production — systems that look premium and perform under pressure.</p>
+          <p class="ar-team-bio ar-thin">Elombe leads discovery, design direction, and delivery across Webflow, Shopify, brand strategy, and content production — systems that look premium and <strong class="ar-mark">perform under pressure</strong>.</p>
           <div class="ar-team-links">
             <a href="https://www.linkedin.com/in/elombe-kisala/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href="https://github.com/elombe" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -52,7 +57,7 @@
             <span>Stephen Iezzi</span>
             <span>Co-Founder &amp; Technical Architect</span>
           </div>
-          <p class="ar-team-bio">Stephen designs the automation and infrastructure behind SWFT — CI/CD, API integrations, performance, and Cloudflare — turning complex requirements into clean, maintainable systems.</p>
+          <p class="ar-team-bio ar-thin">Stephen designs the automation and infrastructure behind SWFT — CI/CD, API integrations, performance, and Cloudflare — turning complex requirements into clean, maintainable systems.</p>
           <div class="ar-team-links">
             <a href="https://www.linkedin.com/in/stephen-iezzi/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href="https://github.com/stephen-iezzi" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -63,16 +68,20 @@
 
     <section class="ar-section">
       <div class="ar-container" style="text-align:center">
-        <h2 class="ar-mega" style="font-size:clamp(1.8rem,5vw,3rem);margin-bottom:1rem">Work with the architects</h2>
-        <p class="ar-lead" style="margin:0 auto 1.5rem;text-align:center">Ready to transform your brand? Book a discovery call or explore our portfolio.</p>
+        <h2 class="ar-mega" data-split="enter" style="font-size:clamp(1.8rem,5vw,3rem);margin-bottom:1rem">Work with the architects</h2>
+        <p class="ar-lead ar-thin" style="margin:0 auto 1.5rem;text-align:center">Ready to make your marketing content and website <strong class="ar-mark">perform better</strong>? Book a discovery call or explore our portfolio.</p>
         <a class="ar-btn" href="/growth-audit">Get Your Free Growth Audit</a>
         <a class="ar-btn ar-btn--outline" href="websites.html" style="margin-left:0.75rem">View our work</a>
       </div>
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
   <script src="js/swft-theme-clock.js" defer></script>
+  <script src="js/swft-split-text.js" defer></script>
+  <script src="js/swft-motion.js" defer></script>
 </body>
 </html>

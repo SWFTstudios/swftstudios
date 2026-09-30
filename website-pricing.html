@@ -11,6 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/araise-motion.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/pricing-page.css">
   <link rel="stylesheet" href="css/araise-pages.css">
@@ -34,13 +35,16 @@
       --pp-card: var(--surface);
       background: var(--bg);
       color: var(--fg);
+      font-weight: 300;
     }
     .pricing-page.ar-body main { padding-top: 1.5rem; }
-    .pricing-page.ar-body .pricing-hero-title {
+    .pricing-page.ar-body .pricing-hero-title,
+    .pricing-page.ar-body .ar-mega {
       font-family: var(--ar-display);
       text-transform: uppercase;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
       max-width: none;
+      font-weight: 700;
     }
     .pricing-page.ar-body .button.is-course {
       background: var(--cta-bg) !important;
@@ -65,15 +69,18 @@
           <span>SWFT</span>
         </div>
         <div class="ar-split-head">
-          <h1 id="hero-title" class="ar-mega" style="font-size:clamp(2rem,6vw,3.8rem)">Your business deserves to look as good as the work you do.</h1>
-          <p id="hero-lead" class="ar-lead">Better visuals, a website built for inquiries, or both — choose the work that moves your business forward.</p>
+          <h1 id="hero-title" class="ar-mega" data-split="scrub" style="font-size:clamp(2rem,6vw,3.8rem)">Your business deserves to look as good as the work you do.</h1>
+          <p id="hero-lead" class="ar-lead ar-thin">
+            Start with <strong class="ar-mark">better visuals</strong>, build a site that turns interest into inquiries, or bring both together —
+            practical packages for Bergen, Hudson, and NYC.
+          </p>
         </div>
       </header>
 
-      <div class="ar-pathway" aria-label="Find your starting point">
-        <div class="ar-pathway__step"><span class="num">01 / Be seen</span><h2>Show your best work</h2><p>Give people a reason to trust you with real photography, video and an up-to-date local profile.</p></div>
-        <div class="ar-pathway__step"><span class="num">02 / Get inquiries</span><h2>Make the next step obvious</h2><p>Build a sharp website that explains what you do and makes contacting you simple.</p></div>
-        <div class="ar-pathway__step"><span class="num">03 / Keep growing</span><h2>Stay in front of customers</h2><p>Keep content current with a defined monthly partnership, without reinventing the whole site.</p></div>
+      <div class="ar-pathway" aria-label="Find your starting point" data-fade-up>
+        <div class="ar-pathway__step"><span class="num">01 / Be seen</span><h2>Show your best work</h2><p class="ar-thin">Give people a reason to trust you with real photography, video and an up-to-date local profile.</p></div>
+        <div class="ar-pathway__step"><span class="num">02 / Get inquiries</span><h2>Make the next step obvious</h2><p class="ar-thin">Build a sharp website that explains what you do and makes contacting you simple.</p></div>
+        <div class="ar-pathway__step"><span class="num">03 / Keep growing</span><h2>Stay in front of customers</h2><p class="ar-thin">Keep content current with a defined monthly partnership, without reinventing the whole site.</p></div>
       </div>
 
       <section id="pricing" class="pricing-main" aria-label="Pricing plans">
@@ -87,18 +94,22 @@
 
       <section class="ar-section" style="border:none;text-align:center;padding:3rem 0 1rem" aria-labelledby="book-cta-headline">
         <p class="ar-section-label" style="justify-content:center"><span>High-Efficiency Creative</span></p>
-        <h2 id="book-cta-headline" class="ar-mega" style="font-size:clamp(1.8rem,5vw,3rem);margin-bottom:1rem">Not sure which tier fits?</h2>
-        <p id="book-cta-quote" class="ar-lead" style="margin:0 auto 0.5rem;text-align:center"></p>
-        <p id="book-cta-sub" class="ar-lead" style="margin:0 auto 1.5rem;text-align:center"></p>
+        <h2 id="book-cta-headline" class="ar-mega" data-split="enter" style="font-size:clamp(1.8rem,5vw,3rem);margin-bottom:1rem">Not sure which tier fits?</h2>
+        <p id="book-cta-quote" class="ar-lead ar-thin" style="margin:0 auto 0.5rem;text-align:center"></p>
+        <p id="book-cta-sub" class="ar-lead ar-thin" style="margin:0 auto 1.5rem;text-align:center"></p>
         <a href="/growth-audit" class="ar-btn">Get Your Free Growth Audit</a>
       </section>
     </div>
   </main>
 
   <script type="application/ld+json" id="faq-schema"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
   <script src="js/swft-theme-clock.js" defer></script>
+  <script src="js/swft-split-text.js" defer></script>
+  <script src="js/swft-motion.js" defer></script>
   <script src="js/pricing-render.js" defer></script>
   <script src="js/pricing-page.js" defer></script>
 </body>

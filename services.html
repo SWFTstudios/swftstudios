@@ -11,6 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/araise-motion.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/araise-pages.css">
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
@@ -26,8 +27,12 @@
         <span>SWFT</span>
       </div>
       <div class="ar-split-head">
-        <h1 class="ar-mega">Creative <span class="ghost">Services</span></h1>
-        <p class="ar-lead">From disruptive branding to seamless digital journeys, we design visuals that speak and experiences that convert — websites, content capture, and growth retainers.</p>
+        <h1 class="ar-mega" data-split="enter">Creative <span class="ghost">Services</span></h1>
+        <p class="ar-lead ar-thin">
+          <strong class="ar-mark">Marketing content</strong>, brand-true websites, and growth retainers —
+          so you look sharp and <strong class="ar-mark">convert while interest is hot</strong>.
+          Serving Bergen, Hudson, and NYC.
+        </p>
       </div>
     </header>
 
@@ -39,7 +44,7 @@
               <h2>GBP Content Refresh</h2>
               <a class="ar-arrow" href="website-pricing.html#gbp-refresh" aria-label="See GBP pricing">↗</a>
             </div>
-            <p>Starting at $400 · one-time. No new website. On-site photo, short-form video, and Google Business Profile optimization so locals see quality now.</p>
+            <p class="ar-thin">Starting at $400 · one-time. No new website. On-site photo, short-form video, and Google Business Profile optimization so locals see quality now.</p>
             <ul>
               <li>On-site photo shoot</li>
               <li>Short-form video content</li>
@@ -109,15 +114,19 @@
       </div>
 
       <div style="margin-top:3rem;text-align:center">
-        <h2 class="ar-mega" style="font-size:clamp(1.8rem,5vw,3rem);margin-bottom:1rem">Not sure which tier fits?</h2>
-        <p class="ar-lead" style="margin:0 auto 1.5rem;text-align:center">Request a free Growth Audit. We will review your website, content, and GBP, then recommend the right next step.</p>
+        <h2 class="ar-mega" data-split="enter" style="font-size:clamp(1.8rem,5vw,3rem);margin-bottom:1rem">Not sure which tier fits?</h2>
+        <p class="ar-lead ar-thin" style="margin:0 auto 1.5rem;text-align:center">Request a free Growth Audit. We will review your website, content, and GBP, then recommend the right next step.</p>
         <a class="ar-btn" href="/growth-audit">Get Your Free Growth Audit</a>
       </div>
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
   <script src="js/swft-theme-clock.js" defer></script>
+  <script src="js/swft-split-text.js" defer></script>
+  <script src="js/swft-motion.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,46 @@
+/* GSAP letter-reveal helpers — used with js/swft-split-text.js */
+.ar-char {
+  display: inline-block;
+  will-change: opacity, transform;
+}
+
+.ar-char--space {
+  white-space: pre;
+}
+
+/* Before JS succeeds, text stays fully visible (progressive enhancement) */
+[data-split].is-split[data-split="enter"] .ar-char {
+  opacity: 0;
+  transform: translateY(0.35em);
+}
+
+[data-split].is-split[data-split="scrub"] .ar-char {
+  opacity: 0;
+}
+
+[data-split].is-split.is-reduced .ar-char {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.ar-fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.ar-fade-up.is-in,
+html.ar-no-motion .ar-fade-up {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-split] .ar-char {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .ar-fade-up {
+    opacity: 1;
+    transform: none;
+  }
+}

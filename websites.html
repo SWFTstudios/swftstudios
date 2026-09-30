@@ -12,6 +12,7 @@
   <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/araise-theme.css">
+  <link rel="stylesheet" href="css/araise-motion.css">
   <link rel="stylesheet" href="css/swft-nav.css">
   <link rel="stylesheet" href="css/araise-pages.css">
   <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
@@ -27,8 +28,11 @@
         <span>SWFT</span>
       </div>
       <div class="ar-split-head">
-        <h1 class="ar-mega">Selected <span class="ghost">Projects</span></h1>
-        <p class="ar-lead">Conversion-focused Webflow and Shopify sites, product stories, and content systems for growing businesses across Jersey City, NYC, and North Jersey.</p>
+        <h1 class="ar-mega" data-split="enter">Selected <span class="ghost">Projects</span></h1>
+        <p class="ar-lead ar-thin">
+          <strong class="ar-mark">Brand-matched websites</strong> and content systems that help local businesses
+          attract customers across Bergen, Hudson, and NYC.
+        </p>
       </div>
     </header>
 
@@ -147,8 +151,12 @@
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
   <script src="js/swft-analytics.js" defer></script>
   <script src="js/swft-nav.js" defer></script>
   <script src="js/swft-theme-clock.js" defer></script>
+  <script src="js/swft-split-text.js" defer></script>
+  <script src="js/swft-motion.js" defer></script>
 </body>
 </html>

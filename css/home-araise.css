@@ -12,16 +12,17 @@
 .home-hero__eyebrow {
   text-align: center;
   font-size: 0.85rem;
+  font-weight: 300;
   color: var(--muted);
   margin: 0 0 1.25rem;
 }
 
 .home-hero__title {
   font-family: var(--ar-display);
-  font-weight: 800;
+  font-weight: 700;
   text-align: center;
   text-transform: uppercase;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   line-height: 0.9;
   font-size: clamp(3.5rem, 16vw, 11rem);
   margin: 0 0 1.5rem;
@@ -33,6 +34,7 @@
   margin: 0 auto 2rem;
   color: var(--muted);
   font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 300;
 }
 
 .home-hero__actions {

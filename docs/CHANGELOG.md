@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-30: GSAP letter reveals + ARAISE type polish
+
+### Added
+- Chakra Petch + Inter Tight typography (ARAISE-matched stack) with `.ar-thin` / `.ar-mark` scan hierarchy.
+- Letter-by-letter ScrollTrigger animations: [`js/swft-split-text.js`](../js/swft-split-text.js), [`js/swft-motion.js`](../js/swft-motion.js), [`css/araise-motion.css`](../css/araise-motion.css) (`data-split="scrub|enter"`).
+- Homepage positioning rewrite for digital/video marketing serving Bergen, Hudson, and NYC.
+
+### Changed
+- Marketing pages wire GSAP + motion scripts; heroes use thin body + bold marketing marks.
+
+---
+
 ## 2026-09-30: SWFT × ARAISE 2027 redesign (branch `swft-araise-2027`)
 
 ### Added
