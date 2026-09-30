@@ -1,6 +1,6 @@
 /* SWFT shared design tokens — typography + semantic colors
    Source of truth for production pages. See docs/design-system.md and /style-guide.html */
-@import url("swft-fonts.css");
+@import url("swft-fonts.css?v=20260930b");
 
 :root {
   /* Brand (also defined in swftstudios000; duplicated so shell-only pages work) */

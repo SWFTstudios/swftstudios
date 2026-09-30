@@ -1,5 +1,5 @@
 /* Shared SWFT page shell — team, case studies hub, contact */
-@import url("swft-tokens.css");
+@import url("swft-tokens.css?v=20260930b");
 
 .ps-page {
   --ps-bg: var(--swft-bg);
