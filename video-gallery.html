@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Video Gallery | SWFT Studios</title>
+  <meta name="description" content="Films, brand videos and motion work from SWFT Studios.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.swftstudios.com/video-gallery.html">
+  <meta property="og:title" content="Video Gallery | SWFT Studios">
+  <meta property="og:description" content="Films, brand videos and motion work from SWFT Studios.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://player.vimeo.com">
+  <link rel="preconnect" href="https://i.vimeocdn.com">
+  <link rel="stylesheet" href="css/swft-nav.css?v=20261001-visuals">
+  <link rel="stylesheet" href="css/page-shell.css?v=20260930b">
+  <link rel="stylesheet" href="css/video-gallery.css?v=20261001a">
+</head>
+<body class="ps-page vg-page">
+  <div id="swft-nav" data-active="case-studies"></div>
+
+  <main>
+    <section class="vg" aria-roledescription="carousel" aria-label="Video gallery">
+      <header class="vg-head">
+        <div>
+          <p class="ps-eyebrow">Video Gallery</p>
+          <h1 class="vg-title">Selected <span class="ps-accent">Films</span></h1>
+        </div>
+        <div class="vg-counter" aria-hidden="true">
+          <span class="vg-counter-current" data-vg-current>01</span>
+          <span class="vg-counter-sep">/</span>
+          <span class="vg-counter-total" data-vg-total>00</span>
+        </div>
+      </header>
+
+      <!-- Slider 1: the stage. Large 16:9 slides, the active one plays inline. -->
+      <div class="vg-stage" data-vg-stage>
+        <div class="vg-stage-track" data-vg-stage-track></div>
+      </div>
+
+      <div class="vg-bar">
+        <!-- Caption slider: titles move vertically in step with the stage. -->
+        <div class="vg-caption" aria-live="polite">
+          <div class="vg-caption-track" data-vg-caption-track></div>
+        </div>
+        <div class="vg-controls">
+          <button type="button" class="vg-arrow" data-vg-prev aria-label="Previous video">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+          </button>
+          <div class="vg-progress" aria-hidden="true"><span data-vg-progress></span></div>
+          <button type="button" class="vg-arrow" data-vg-next aria-label="Next video">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Slider 2: the thumbnail rail. Synced with the stage; click a thumb to jump. -->
+      <div class="vg-rail" data-vg-rail>
+        <div class="vg-rail-track" data-vg-rail-track role="tablist" aria-label="Choose a video"></div>
+      </div>
+
+      <noscript>
+        <p class="vg-noscript">Turn on JavaScript to watch the videos, or see them on <a href="https://vimeo.com/">Vimeo</a>.</p>
+      </noscript>
+    </section>
+
+    <div class="ps-shell">
+      <div class="ps-cta-band">
+        <h2>Want a film like these?</h2>
+        <p>Tell us about your project and we&rsquo;ll come back with ideas, a timeline and a quote.</p>
+        <div class="ps-cta-row button-group is-course">
+          <a href="contact.html" class="button is-course w-inline-block">
+            <div class="button_bg"></div>
+            <div class="button_text">Start a Project</div>
+          </a>
+          <a href="case-studies.html" class="button is-course outlined w-inline-block">
+            <div class="button_bg"></div>
+            <div class="button_text">See Case Studies</div>
+          </a>
+        </div>
+      </div>
+
+      <footer class="ps-footer">
+        <span>hello@swftstudios.com</span>
+        <span>
+          <a href="https://www.instagram.com/swftstudios/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </span>
+      </footer>
+    </div>
+  </main>
+
+  <script src="js/swft-analytics.js?v=20260930b" defer></script>
+  <script src="js/swft-nav.js?v=20261001-visuals" defer></script>
+  <script src="js/video-gallery.js?v=20261001a" defer></script>
+</body>
+</html>
