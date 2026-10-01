@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-01: Visuals page
+
+### Added
+- **Visuals** ([`/visuals.html`](../visuals.html)), now in the nav after Work: an endless, draggable grid of photo and video projects (drag with momentum, trackpad/wheel, arrow keys or Tab), with All / Video / Photo filters.
+- Clicking a project uses **GSAP Flip** to grow its thumbnail into a full-screen project view (title, client, category, year, description, prev/next). Each project has its own link (`/visuals.html?p=slug`); Back closes it.
+- Video projects show **Play video**, which opens a lightbox playing the Vimeo video (unlisted links supported) or an MP4. Photo projects show **Play slideshow**, which opens an image slideshow lightbox (auto-advance with progress bar, pause, arrows, swipe, thumbnails, keyboard).
+- Content lives in [`data/visuals.json`](../data/visuals.json); add a project by adding an entry (see its `_readme`). Seeded with the SWFT reel and Yanko Hernando story (Vimeo), three SWFT MP4s, a Web Design Highlights slideshow and each case-study project.
+- See [`css/visuals.css`](../css/visuals.css) and [`js/visuals.js`](../js/visuals.js).
+
+### Changed
+- `/videos`, `/media` and `/swft-tv` now redirect to `/visuals.html` instead of `/case-studies.html`.
+
 ## 2026-10-01: SWFT letter cube in "The SWFT Method"
 
 ### Added

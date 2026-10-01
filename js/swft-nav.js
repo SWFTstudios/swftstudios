@@ -12,6 +12,7 @@
     { label: "Home",         href: "/index.html",           key: "home" },
     { label: "Services",     href: "/services.html",        key: "services" },
     { label: "Work",         href: "/case-studies.html",    key: "case-studies" },
+    { label: "Visuals",      href: "/visuals.html",         key: "visuals" },
     { label: "Pricing",      href: "/website-pricing.html", key: "pricing" },
     { label: "Locations",    href: "/locations/",           key: "locations" },
     { label: "Team",         href: "/team.html",            key: "team" },
@@ -117,7 +118,7 @@
   function initTextReveal() {
     if (document.querySelector('script[data-swft-text-reveal]')) return;
     var s = document.createElement("script");
-    s.src = "/js/text-reveal.js?v=20261001k";
+    s.src = "/js/text-reveal.js?v=20261001-vz";
     s.async = true;
     s.setAttribute("data-swft-text-reveal", "");
     document.head.appendChild(s);
