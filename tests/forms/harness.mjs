@@ -3,11 +3,12 @@
  *
  * Serves the site from the repo root and routes the form endpoints to the real
  * Pages Function handlers. Outbound calls are intercepted: Resend emails are
+ * recorded (and can be forced to fail), Google Sheets script calls are
  * recorded (and can be forced to fail), Airtable is off (no token), Stripe
  * Payment Links come from the handlers' built-in defaults.
  *
  *   import { startHarness } from "./harness.mjs";
- *   const h = await startHarness();   // h.url, h.emails, h.failResend(n), h.close()
+ *   const h = await startHarness();   // h.url, h.emails, h.sheets, h.failResend(n), h.failSheets(n), h.close()
  */
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
@@ -34,7 +35,9 @@ const TYPES = {
 
 export async function startHarness({ env: extraEnv = {} } = {}) {
   const emails = [];
+  const sheets = [];
   let failNext = 0;
+  let failSheetsNext = 0;
   const realFetch = globalThis.fetch;
 
   // Intercept the handlers' outbound requests.
@@ -48,6 +51,14 @@ export async function startHarness({ env: extraEnv = {} } = {}) {
       }
       emails.push({ ...payload, idempotencyKey: init.headers?.["Idempotency-Key"] });
       return new Response(JSON.stringify({ id: `test_${emails.length}` }), { status: 200 });
+    }
+    if (url.startsWith("https://script.google.com/")) {
+      if (failSheetsNext > 0) {
+        failSheetsNext--;
+        return new Response("<html>Error</html>", { status: 200 }); // Apps Script errors come back as HTML
+      }
+      sheets.push(JSON.parse(init.body));
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
     }
     if (url.startsWith("https://api.airtable.com/") || url.startsWith("https://api.stripe.com/")) {
       throw new Error(`unexpected outbound call in test: ${url}`);
@@ -93,8 +104,10 @@ export async function startHarness({ env: extraEnv = {} } = {}) {
   return {
     url: `http://127.0.0.1:${port}`,
     emails,
+    sheets,
     failResend(n) { failNext = n; },
-    reset() { emails.length = 0; failNext = 0; },
+    failSheets(n) { failSheetsNext = n; },
+    reset() { emails.length = 0; sheets.length = 0; failNext = 0; failSheetsNext = 0; },
     close() {
       globalThis.fetch = realFetch;
       return new Promise((r) => server.close(r));

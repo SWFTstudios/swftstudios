@@ -171,71 +171,6 @@ body{
     #homepage-problems .hp-service-deliverables li {
       margin-bottom: 0.75rem;
     }
-    .hp-proven-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-    @media (min-width: 640px) { .hp-proven-grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 992px) { .hp-proven-grid { grid-template-columns: 1fr 1fr 1fr; } }
-    .hp-proven-card {
-      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
-      background: #131313;
-      overflow: hidden;
-      transition: border-color 0.3s ease, transform 0.3s ease;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .hp-proven-card:hover {
-      border-color: var(--swft-accent, #56b4e9);
-      transform: translateY(-2px);
-    }
-    .hp-proven-card img {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      display: block;
-    }
-    .hp-proven-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      overflow: hidden;
-      background: var(--swft-card, #0a0a0a);
-      line-height: 0;
-    }
-    .hp-proven-thumb img {
-      width: 100%;
-      height: 100%;
-      aspect-ratio: auto;
-      object-fit: cover;
-      object-position: top center;
-    }
-    .hp-proven-card-body { padding: 1.25rem; }
-    .hp-proven-tag {
-      font-size: var(--swft-text-tiny, 0.75rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--swft-muted, #a8a8a8);
-      margin-bottom: 0.5rem;
-    }
-    .hp-proven-card h3 {
-      font-size: var(--swft-text-lead, 1.125rem);
-      font-weight: 600;
-      margin: 0 0 0.75rem;
-      color: var(--swft-text-strong, #fff);
-    }
-    .hp-proven-link {
-      font-size: var(--swft-text-small, 0.875rem);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--swft-accent, #56b4e9);
-    }
-    .hp-view-all {
-      margin-top: 2.5rem;
-      text-align: center;
-    }
     .hp-booking {
       padding: 5rem 0;
       border-top: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
@@ -628,7 +563,7 @@ body{
   <link href="css/home-hero-ocean.css?v=20260930b" rel="stylesheet" type="text/css">
   <link href="css/hero-intro.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link rel="preload" href="fonts/InterTight-Variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link href="css/home-about.css?v=20261001-type" rel="stylesheet" type="text/css">
+  <link href="css/home-about.css?v=20261001-wide" rel="stylesheet" type="text/css">
   <link href="css/swft-letter-cube.css?v=20261001d" rel="stylesheet" type="text/css">
   <link href="css/home-work-services.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link href="css/home-services.css?v=20261001c" rel="stylesheet" type="text/css">
@@ -1470,90 +1405,6 @@ margin: 0rem !important;
         </div>
         <p class="ar-container ar-work-more"><a class="ar-btn ar-btn--outline" href="case-studies.html">View all work</a></p>
       </section>
-      <section class="hp-section" id="proven-results" aria-labelledby="hp-proven-heading">
-                <div class="hp-section-label">Our Work</div>
-                <h2 class="hp-section-title" id="hp-proven-heading">Proven results</h2>
-                <div class="hp-proven-grid">
-                  <a href="case-study/brooklyn-steel.html" class="hp-proven-card">
-                    <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co. website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Brooklyn Steel Co.</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/snooze-lane.html" class="hp-proven-card">
-                    <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane website and app" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Website · App</div>
-                      <h3>Snooze Lane</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/tal-hydration.html" class="hp-proven-card">
-                    <img src="images/tal-hydration-thumbnail.webp" alt="TAL Hydration storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>TAL Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/roller-reels.html" class="hp-proven-card">
-                    <img src="images/Roller_Reels_thumbnail.webp" alt="Roller Reels brand" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Content &amp; Production</div>
-                      <h3>Roller Reels</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/manna-hydration.html" class="hp-proven-card">
-                    <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Manna Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/thyme-and-table.html" class="hp-proven-card">
-                    <img src="images/thyme-and-table-thumbnail.webp" alt="Thyme and Table storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Thyme &amp; Table</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/blurred-lines-entertainment.html" class="hp-proven-card">
-                    <img src="images/BLE_SWFT_thumbnail.webp" alt="Blurred Lines Entertainment brand and film" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Content &amp; Production</div>
-                      <h3>Blurred Lines Entertainment</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/built-by-me-ez.html" class="hp-proven-card">
-                    <img src="images/built_by_me_ez_thumbnail.webp" alt="Built By Me EZ website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Custom Website Build</div>
-                      <h3>Built By Me EZ</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/hawthorne-global-ministries.html" class="hp-proven-card">
-                    <img src="images/Hawthorne_Global_Ministries_thumbnail.webp" alt="Hawthorne Global Ministries website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Custom Website Build</div>
-                      <h3>Hawthorne Global Ministries</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                </div>
-                <div class="hp-view-all">
-                  <a href="case-studies.html" class="button is-course w-inline-block">
-                    <div class="button_bg"></div>
-                    <div class="button_text">View All Work</div>
-                  </a>
-                </div>
-              </section>
       <section id="How-we-work">
         <div class="section-wrapper glow-2">
           <div class="section-container process">

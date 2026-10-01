@@ -7,6 +7,8 @@
  * address or a comma-separated list) adds more recipients; it never replaces
  * the inbox, so a stale env value can't send leads somewhere else.
  */
+import { notifyViaSheet } from "./sheets.js";
+
 export const LEAD_INBOX = "hello@swftstudios.com";
 const DEFAULT_FROM = `SWFT Studios <${LEAD_INBOX}>`;
 const RETRY_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504]);
@@ -88,7 +90,10 @@ export function notifyAddress() {
   return LEAD_INBOX;
 }
 
-/** Team alert + visitor confirmation. Best-effort; does not throw. */
+/**
+ * Team alert + visitor confirmation. Best-effort; does not throw.
+ * Team alert goes through Resend, falling back to the Google Sheets script.
+ */
 export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, teamSubject, teamHtml, confirmSubject, confirmHtml, idempotencyBase, backupStored = false }) {
   const team = teamRecipients(env);
   const base = idempotencyBase || `${kind}/${Date.now()}`;
@@ -101,6 +106,14 @@ export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, tea
     replyTo: visitorEmail || undefined,
     idempotencyKey: `${base}/team`,
   });
+  results.teamVia = results.team ? "resend" : null;
+
+  // Resend down or not configured: have the Google Sheets script email the
+  // inbox instead, so a lead is never silent. (No-op without its env vars.)
+  if (!results.team) {
+    results.team = await notifyViaSheet(env, { subject: teamSubject, html: teamHtml, replyTo: visitorEmail || undefined });
+    if (results.team) results.teamVia = "google-sheets";
+  }
 
   // Do not assure a visitor we received an inquiry unless our team email
   // succeeded or a durable CRM backup was confirmed.

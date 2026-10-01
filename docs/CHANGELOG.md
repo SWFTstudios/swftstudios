@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-01: Wider About statement; "Proven results" grid removed
+
+### Changed
+- Homepage About statement ("Strategic Workflows Facilitating Transformation...") is wider: its container goes from 72rem to 96rem and the line cap from 24 to 44 characters, so on a laptop it runs about the full content width in three lines instead of four or five. Phones are unchanged. See [`css/home-about.css`](../css/home-about.css).
+
+### Removed
+- The "Our Work / Proven results" three-column card grid (and its "View All Work" button) from the homepage. The stacked "Selected Work" section above it stays, and still links to all work. Its styles are gone too.
+
+## 2026-10-01: Forms also log to Google Sheets, with an email fallback
+
+### Added
+- Every form (contact, Free Growth Audit, booking / quote, website build) now saves to **Airtable and a Google Sheet** in parallel, then emails hello@swftstudios.com as before. The Sheet gets one tab per form with the same columns as Airtable; either copy counts as saved.
+- If the Resend email to hello@ fails (or `RESEND_API_KEY` is missing), the Google Sheets script emails hello@ instead, so a lead is never silent.
+- Runs through a small Google Apps Script web app ([`scripts/google-sheets-leads.gs`](../scripts/google-sheets-leads.gs)); no Google API keys. Turns on when `GOOGLE_SHEETS_WEBHOOK_URL` and `GOOGLE_SHEETS_SECRET` are set in Cloudflare; until then nothing changes. Setup: [`GOOGLE_SHEETS_LEADS.md`](GOOGLE_SHEETS_LEADS.md).
+- Team emails now say where the lead was saved ("Saved to: Airtable + Google Sheet") instead of "Stored in Airtable".
+- 8 new tests (`npm run test:forms`): the handlers and the Apps Script.
+
 ## 2026-10-01: Sticky SWFT Method intro; holographic letter cube
 
 ### Changed

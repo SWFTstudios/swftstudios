@@ -42,6 +42,9 @@ export interface Env extends PortalEnv {
   RESEND_FROM?: string;
   /** Team notify inbox (default hello@swftstudios.com) */
   NOTIFY_EMAIL?: string;
+  /** Google Apps Script web app that logs leads to a Google Sheet and can email hello@ (see docs/GOOGLE_SHEETS_LEADS.md). */
+  GOOGLE_SHEETS_WEBHOOK_URL?: string;
+  GOOGLE_SHEETS_SECRET?: string;
 }
 
 /* Defaults for the resources provisioned for SWFT Studios. Override via env vars. */
