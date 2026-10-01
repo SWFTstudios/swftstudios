@@ -1,5 +1,5 @@
 /* ============================================================
-   SWFT 3D Cube — six-face image slideshow cube.
+   SWFT 3D Cube — six-face image / video slideshow cube.
    Enhances every [data-swft-cube] element. Markup contract and
    options are documented in docs/SWFT_CUBE.md.
 
@@ -12,6 +12,9 @@
      keyboard       arrows rotate, Enter/Space = next slide
      idle           slow continuous spin (data-spin, deg/s) that eases
                     out on any interaction and eases back in afterwards
+
+   Video slides (<video class="swft-cube__slide">) play muted and looped
+   while they are the face's active slide and the cube is on screen.
    ============================================================ */
 (function () {
   "use strict";
@@ -61,6 +64,7 @@
     this.hovered = false;
     this.lastInteraction = 0;
     this.activeName = null;
+    this.inView = true;
 
     this.faces = {};
     this.buildFaces();
@@ -69,6 +73,8 @@
     this.updateActive();
     this.render();
     this.startTimers();
+    this.started = true;
+    this.watchVisibility();
   }
 
   Cube.prototype.buildFaces = function () {
@@ -79,10 +85,13 @@
       el.classList.add("swft-cube__face", "swft-cube__face--" + name);
       var slides = Array.prototype.slice.call(el.querySelectorAll(".swft-cube__slide"));
       if (!slides.length) {
-        slides = Array.prototype.slice.call(el.querySelectorAll("img"));
+        slides = Array.prototype.slice.call(el.querySelectorAll("img, video"));
         slides.forEach(function (img) { img.classList.add("swft-cube__slide"); });
       }
-      slides.forEach(function (img) { img.draggable = false; });
+      slides.forEach(function (img) {
+        img.draggable = false;
+        if (img.tagName === "VIDEO") self.prepVideo(img);
+      });
 
       var pips = null;
       if (slides.length > 1) {
@@ -104,6 +113,60 @@
       self.faces[name] = { name: name, el: el, slides: slides, pips: pips, index: 0, label: label || name };
       self.showSlide(name, 0);
     });
+  };
+
+  // Autoplay is only allowed for muted inline video, so force those flags in JS too.
+  Cube.prototype.prepVideo = function (video) {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.disablePictureInPicture = true;
+    video.removeAttribute("controls");
+    video.removeAttribute("autoplay"); // playback is driven by syncVideos()
+  };
+
+  // Play each face's active video while the cube is visible; pause everything else.
+  Cube.prototype.syncVideos = function () {
+    var on = this.inView && !document.hidden && !reducedMotion();
+    var self = this;
+    Object.keys(this.faces).forEach(function (name) {
+      var face = self.faces[name];
+      face.slides.forEach(function (slide, i) {
+        if (slide.tagName !== "VIDEO") return;
+        if (on && i === face.index) {
+          if (slide.paused) {
+            var p = slide.play();
+            if (p && p.catch) p.catch(function () { /* autoplay blocked: the poster stays */ });
+          }
+        } else if (!slide.paused) {
+          slide.pause();
+        }
+      });
+    });
+  };
+
+  Cube.prototype.watchVisibility = function () {
+    var self = this;
+    var hasVideo = Object.keys(this.faces).some(function (n) {
+      return self.faces[n].slides.some(function (s) { return s.tagName === "VIDEO"; });
+    });
+    if (!hasVideo) return;
+    var sync = function () { self.syncVideos(); };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        self.inView = entries[entries.length - 1].isIntersecting;
+        sync();
+      }, { rootMargin: "100px" }).observe(this.root);
+    }
+    document.addEventListener("visibilitychange", sync);
+    if (mqReduce) {
+      if (mqReduce.addEventListener) mqReduce.addEventListener("change", sync);
+      else if (mqReduce.addListener) mqReduce.addListener(sync);
+    }
+    sync();
   };
 
   Cube.prototype.buildHud = function () {
@@ -140,6 +203,7 @@
       });
     }
     if (name === this.activeName) this.renderDots();
+    if (this.started) this.syncVideos();
   };
 
   Cube.prototype.stepSlide = function (name, delta) {
@@ -156,7 +220,7 @@
       var b = document.createElement("button");
       b.type = "button";
       b.className = "swft-cube__dot";
-      b.setAttribute("aria-label", "Show " + (img.alt || "slide " + (i + 1)));
+      b.setAttribute("aria-label", "Show " + (img.alt || img.getAttribute("aria-label") || "slide " + (i + 1)));
       b.setAttribute("aria-current", i === face.index ? "true" : "false");
       b.addEventListener("click", function () {
         self.touch();

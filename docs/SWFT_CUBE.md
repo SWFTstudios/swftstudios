@@ -1,6 +1,6 @@
 # SWFT 3D Cube
 
-An interactive 3D cube with its own image slideshow on each of its six faces. It uses no dependencies: CSS 3D transforms, Pointer Events and one `requestAnimationFrame` loop.
+An interactive 3D cube with its own image slideshow or muted video loop on each of its six faces. It uses no dependencies: CSS 3D transforms, Pointer Events and one `requestAnimationFrame` loop.
 
 - Styles: [`css/swft-cube.css`](../css/swft-cube.css)
 - Behavior: [`js/swft-cube.js`](../js/swft-cube.js)
@@ -56,6 +56,7 @@ Slideshows and the spin pause while the tab is hidden. With `prefers-reduced-mot
 
 - `data-spin`: idle spin speed in degrees per second. `14` is one full turn about every 26s. Omit it or set it to `0` to turn the spin off. `data-slide-interval`: milliseconds between slides on each face (default 3500).
 - Each face can hold any number of images. A face with 2 or more images gets progress pips and an auto-advancing slideshow. Faces advance at staggered times so they don't flip together.
+- A slide can also be a video: `<video class="swft-cube__slide" poster="…" muted loop playsinline preload="metadata" aria-label="…">` with an MP4 (H.264) `<source>` first and a WebM (VP9) `<source>` as fallback. The script forces muted, looped, inline playback and plays a face's video only while it is that face's active slide and the cube is on screen (paused when scrolled away, when the tab is hidden, and under `prefers-reduced-motion`, where the poster shows instead). Keep cube videos small: the homepage uses 540×540 loops with no audio track, in MP4 and WebM in `videos/cube/` (each under 400 KB).
 - `data-label` shows as a chip on the face and in the HUD, where screen readers hear it through `aria-live`.
 - The script builds the HUD (rotate buttons, current face label, slide dots, hint) automatically.
 - Size: override `--cube-size` on `.swft-cube` (default `min(64vw, 320px)`).
