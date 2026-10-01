@@ -128,7 +128,7 @@ export async function onRequestPost(context) {
   if (str(body.honeypot, 200) || str(body.swft_hp_confirm, 200)) {
     // Never return a fake-success response that leaves the client stranded on
     // the review step without a quoteRequested or checkoutUrl field.
-    return json({ ok: false, error: "A hidden form field was autofilled. Refresh and try again, or email elombe@swftstudios.com." }, 400);
+    return json({ ok: false, error: "A hidden form field was autofilled. Refresh and try again, or email hello@swftstudios.com." }, 400);
   }
 
   const tier = getStripeTier(body.tierId);
@@ -303,7 +303,7 @@ export async function onRequestPost(context) {
   if (!stored && !emailed.team) {
     return json({
       ok: false,
-      error: "We couldn't deliver your request. Please email elombe@swftstudios.com or try again shortly.",
+      error: "We couldn't deliver your request. Please email hello@swftstudios.com or try again shortly.",
       stored: false,
       emailDelivered: false,
     }, 503);
@@ -317,7 +317,7 @@ export async function onRequestPost(context) {
     emailDelivered: !!emailed.team,
     emailed: !!emailed.team,
     warning: !emailed.team
-      ? "Your request was saved, but email delivery could not be confirmed. Please email elombe@swftstudios.com if it is urgent."
+      ? "Your request was saved, but email delivery could not be confirmed. Please email hello@swftstudios.com if it is urgent."
       : undefined,
     tierId: tier.id,
   });

@@ -169,12 +169,12 @@ export async function onRequestPost(context) {
     confirmSubject: "We received your SWFT website build request",
     confirmHtml: '<p>Hi ' + escapeHtml(name) +
       ',</p><p>We received your website build details and will contact you about next steps.</p>' +
-      '<p>Questions? Reply to this email or write to elombe@swftstudios.com.</p>'
+      '<p>Questions? Reply to this email or write to hello@swftstudios.com.</p>'
   });
 
   if (!stored && !emailed.team) {
     return json({ ok: false,
-      error: "We couldn't deliver your build request. Please email elombe@swftstudios.com."
+      error: "We couldn't deliver your build request. Please email hello@swftstudios.com."
     }, 503);
   }
   return json({

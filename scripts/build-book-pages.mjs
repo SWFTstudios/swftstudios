@@ -239,7 +239,7 @@ function renderTierPage(tier) {
     body,
   }).replace(
     '<script src="/js/swft-nav.js?v=20261001h"></script>\n</body>',
-    '<script src="/js/swft-nav.js?v=20261001h"></script>\n  <script src="/js/book-tier-form.js?v=20260930b"></script>\n</body>'
+    '<script src="/js/swft-nav.js?v=20261001h"></script>\n  <script src="/js/book-tier-form.js?v=20261001i"></script>\n</body>'
   );
 }
 

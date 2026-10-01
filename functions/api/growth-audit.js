@@ -180,7 +180,7 @@ export async function onRequestPost(context) {
 
   if (!stored && !emailed.team) {
     return json({ ok: false,
-      error: "We couldn't deliver your request. Please email elombe@swftstudios.com or try again shortly."
+      error: "We couldn't deliver your request. Please email hello@swftstudios.com or try again shortly."
     }, 503);
   }
   return json({
