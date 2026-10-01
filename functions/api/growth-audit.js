@@ -10,7 +10,7 @@
  *             AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeLead } from "../_lib/leads.js";
 
 const ALLOWED_SERVICES = new Set([
   "gbp-refresh",
@@ -104,7 +104,7 @@ export async function onRequestPost(context) {
     .filter(Boolean)
     .join("\n\n");
 
-  const stored = await storeCrmLead(env, {
+  const saved = await storeLead(env, {
     formGroup: "Growth Audit",
     formType: desiredServiceLabel || "growth-audit",
     person: { name: fullName || firstName, email, phone, firstName, lastName },
@@ -145,7 +145,7 @@ export async function onRequestPost(context) {
     kind: "growth-audit",
     visitorEmail: email,
     visitorName: firstName,
-    backupStored: stored,
+    backupStored: saved.stored,
     idempotencyBase,
     teamSubject: `Growth Audit: ${businessName}${desiredServiceLabel ? ` (${desiredServiceLabel})` : ""}`,
     teamHtml: `
@@ -163,7 +163,7 @@ export async function onRequestPost(context) {
         ${row("Photo links", photoLinks)}
         ${row("UTM", [utmSource, utmMedium, utmCampaign].filter(Boolean).join(" / "))}
         ${row("Source page", sourcePage)}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Saved to", saved.label)}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
@@ -178,14 +178,14 @@ export async function onRequestPost(context) {
     `,
   });
 
-  if (!stored && !emailed.team) {
+  if (!saved.stored && !emailed.team) {
     return json({ ok: false,
       error: "We couldn't deliver your request. Please email hello@swftstudios.com or try again shortly."
     }, 503);
   }
   return json({
     ok: true,
-    stored,
+    stored: saved.stored,
     emailDelivered: !!emailed.team,
     emailed: !!emailed.team,
     warning: !emailed.team

@@ -11,7 +11,7 @@
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 import { getStripeTier, resolvePaymentLinkUrl, resolveStripePriceId } from "../_lib/stripe-tiers.js";
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeLead } from "../_lib/leads.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -213,7 +213,7 @@ export async function onRequestPost(context) {
       ? `${tier.priceDisplay} (subscription)`
       : `${tier.priceDisplay} (one-time start)`;
 
-  const stored = await storeCrmLead(env, {
+  const saved = await storeLead(env, {
     formGroup: "Paid Booking", // Existing CRM booking intake; quoteOnly is labeled explicitly below.
     formType: tier.name,
     person: { name, email, phone },
@@ -260,7 +260,7 @@ export async function onRequestPost(context) {
     return json(
       {
         ok: false,
-        stored,
+        stored: saved.stored,
         error: "Unable to start checkout right now. Please try again or email hello@swftstudios.com.",
       },
       502
@@ -271,7 +271,7 @@ export async function onRequestPost(context) {
     kind: "book-tier",
     visitorEmail: email,
     visitorName: name,
-    backupStored: stored,
+    backupStored: saved.stored,
     idempotencyBase: `book-tier/${tier.id}/${email.toLowerCase()}/${Date.now()}`,
     teamSubject: `${quoteOnly ? "Custom quote" : "Stripe book"}: ${tier.name}. ${businessName}`,
     teamHtml: `
@@ -285,7 +285,7 @@ export async function onRequestPost(context) {
         ${row("Business", businessName)}
         ${row("Website / Social", website)}
         ${row("Notes", notes)}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Saved to", saved.label)}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
@@ -300,7 +300,7 @@ export async function onRequestPost(context) {
 
   // Never claim success for an undelivered, unrecorded form.
   // A customer confirmation alone is not proof the owner received the lead.
-  if (!stored && !emailed.team) {
+  if (!saved.stored && !emailed.team) {
     return json({
       ok: false,
       error: "We couldn't deliver your request. Please email hello@swftstudios.com or try again shortly.",
@@ -311,7 +311,7 @@ export async function onRequestPost(context) {
 
   return json({
     ok: true,
-    stored,
+    stored: saved.stored,
     checkoutUrl,
     quoteRequested: quoteOnly,
     emailDelivered: !!emailed.team,
