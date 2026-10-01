@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-01: Pricing page redesign: clear deliverables, side-by-side comparison
+
+### Changed
+- [`/website-pricing`](../website-pricing.html) now shows exactly what each package includes, and what it doesn't:
+  - **Compare packages**: one table with all six packages side by side (pages, photos, videos, shoot time, locations, Google Business Profile work, reviews, Meta ads, revisions). A dash means "not included". On a phone it scrolls inside its own box and keeps the row labels pinned.
+  - **Package cards**: price up front, then four quantity tiles (website pages, edited photos, short videos, on-site shoot) that are identical on every card, so a gap reads as "not included"; then **What you get**, **What you provide** and **Not included** lists. Paired cards line up row for row.
+  - **Monthly plans are no longer hidden behind a tab**; both groups are on the page, with a jump menu at the top. The three "where do you start?" cards now link to the matching package.
+  - **Optional extras** with their indicative rates (extra page $175, local landing page $250, extra Reel $125, 10 extra photos $100, extra filming hour $150, filmed testimonial $175, raw footage $100, extra Google Business Profile $175), plus the extras that are quoted individually.
+  - **What happens after you pick a package** (five steps) and **How we keep pricing fair**.
+- Everything is driven by [`data/pricing.json`](../data/pricing.json): each package gained `compare`, `youProvide` and `notIncluded`, and the file gained `compareRows`, `compareNote`, `extras`, `howItWorks` and `promises`. All of it restates scope already published on the site, the booking pages and the FAQ. No new prices, counts or timelines. Renderer: [`js/pricing-detail.js`](../js/pricing-detail.js), styles: [`css/pricing-detail.css`](../css/pricing-detail.css). The homepage's compact pricing is unchanged.
+
+### Added
+- `npm run test:pricing` checks that the prices shown match the Stripe amounts, that the comparison figures match each package's counted scope, and that the published extras use the same rates as the booking form and quote handler.
+
 ## 2026-10-01: Visuals page is Vimeo videos only
 
 ### Changed

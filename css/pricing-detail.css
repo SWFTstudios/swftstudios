@@ -1,0 +1,706 @@
+/* ============================================================
+   Pricing page (website-pricing.html): compare table, package cards with
+   quantity tiles and clear in / out lists, extras, how it works, fairness
+   promises. Rendered by js/pricing-detail.js from data/pricing.json.
+   ============================================================ */
+.pricing-page .pp-section,
+.pricing-page .pp-jump {
+  --pp-line: var(--pp-border, rgba(255, 255, 255, 0.1));
+  --pp-soft: rgba(255, 255, 255, 0.035);
+}
+
+/* ---------- Where-to-start cards (static HTML above the plans) ---------- */
+.pricing-pathway__link {
+  display: inline-block;
+  margin-top: 0.85rem;
+  color: var(--pp-accent, #56b4e9);
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.pricing-pathway__link:hover,
+.pricing-pathway__link:focus-visible {
+  border-bottom-color: currentColor;
+  outline: none;
+}
+
+/* ---------- Jump nav ---------- */
+.pp-jump {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 auto 3.5rem;
+}
+
+.pp-jump a {
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 999px;
+  color: var(--pp-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.pp-jump a:hover,
+.pp-jump a:focus-visible {
+  color: #fff;
+  border-color: var(--pp-accent);
+  background: rgba(86, 180, 233, 0.08);
+  outline: none;
+}
+
+/* ---------- Sections ---------- */
+.pp-section {
+  margin: 0 0 clamp(3.5rem, 7vw, 5.5rem);
+  scroll-margin-top: 5.5rem;
+}
+
+.pp-section__head {
+  margin: 0 0 2rem;
+  max-width: 46rem;
+}
+
+.pp-section__eyebrow {
+  margin: 0 0 0.6rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--pp-accent);
+}
+
+.pp-section__title {
+  margin: 0;
+  font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--swft-text-strong, #fff);
+}
+
+.pp-section__intro {
+  margin: 0.9rem 0 0;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: var(--swft-text-lead, 1.125rem);
+  line-height: 1.55;
+}
+
+.pp-note {
+  margin: 1rem 0 0;
+  max-width: 52rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--pp-muted);
+}
+
+/* ---------- Compare table ---------- */
+.pp-table-wrap {
+  position: relative; /* contains the absolutely-positioned screen-reader text inside the cells */
+  overflow-x: auto;
+  border: 1px solid var(--pp-line);
+  border-radius: 16px;
+  background: var(--pp-card);
+  -webkit-overflow-scrolling: touch;
+}
+
+.pp-table-wrap:focus-visible { outline: 2px solid var(--pp-accent); outline-offset: 2px; }
+
+.pp-table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+}
+
+.pp-table th,
+.pp-table td {
+  padding: 0.85rem 0.9rem;
+  text-align: center;
+  border-bottom: 1px solid var(--pp-line);
+  vertical-align: middle;
+}
+
+.pp-table tbody tr:last-child th,
+.pp-table tbody tr:last-child td { border-bottom: 0; }
+
+.pp-table__corner,
+.pp-table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  text-align: left;
+  background: var(--pp-card);
+  min-width: 9.5rem;
+}
+
+.pp-table tbody th {
+  font-weight: 500;
+  color: var(--pp-text);
+  box-shadow: 1px 0 0 var(--pp-line);
+}
+
+.pp-table__group {
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.72rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+  border-left: 1px solid var(--pp-line);
+}
+
+.pp-table__group--mo { color: var(--pp-accent); }
+
+.pp-table thead tr:first-child .pp-table__corner { border-bottom: 0; }
+
+.pp-table__pkg {
+  vertical-align: bottom; /* prices line up across columns whatever the name length */
+  min-width: 8.5rem;
+  padding-top: 1.1rem;
+  padding-bottom: 1rem;
+  border-left: 1px solid var(--pp-line);
+}
+
+.pp-table__name {
+  display: block;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.pp-table__name:hover,
+.pp-table__name:focus-visible { color: var(--pp-accent); outline: none; }
+
+.pp-table__price {
+  display: block;
+  margin-top: 0.4rem;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.pp-table__price small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--pp-muted);
+}
+
+.pp-table__badge {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--pp-accent);
+  color: #010101;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.pp-table td { border-left: 1px solid var(--pp-line); color: var(--pp-text); }
+.pp-table td.is-off { color: rgba(255, 255, 255, 0.28); }
+.pp-table td.is-featured,
+.pp-table th.is-featured { background: rgba(86, 180, 233, 0.07); }
+
+.pp-swipe {
+  display: none;
+  margin: 0.75rem 0 0;
+  text-align: right;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+@media (max-width: 900px) {
+  .pp-swipe { display: block; }
+  /* Slim label column so more of the packages show on a phone */
+  .pp-table th, .pp-table td { padding: 0.7rem 0.6rem; }
+  .pp-table__corner, .pp-table tbody th { min-width: 6.4rem; max-width: 6.4rem; font-size: 0.82rem; line-height: 1.25; }
+  .pp-table__pkg { min-width: 7.5rem; }
+}
+
+/* ---------- Package cards ---------- */
+.pp-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (max-width: 960px) {
+  .pp-cards { grid-template-columns: minmax(0, 1fr); }
+}
+
+.pp-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+  border: 1px solid var(--pp-line);
+  border-radius: 20px;
+  background: var(--pp-card);
+  scroll-margin-top: 5.5rem;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.pp-card:hover { border-color: rgba(86, 180, 233, 0.45); }
+
+.pp-card--featured {
+  border-color: var(--pp-accent);
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(86, 180, 233, 0.11), transparent 70%),
+    var(--pp-card);
+  box-shadow: 0 0 0 1px rgba(86, 180, 233, 0.25), 0 24px 70px rgba(86, 180, 233, 0.08);
+}
+
+.pp-card__badge {
+  position: absolute;
+  top: -0.8rem;
+  left: 1.75rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: var(--pp-accent);
+  color: #010101;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.pp-card__stage {
+  margin: 0 0 0.6rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--pp-accent);
+}
+
+.pp-card__name {
+  margin: 0;
+  font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.pp-card__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.6rem;
+  margin: 1.1rem 0 0;
+}
+
+.pp-card__from {
+  flex-basis: 100%;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.pp-card__amount {
+  font-size: clamp(2.8rem, 2rem + 2.4vw, 3.9rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  color: #fff;
+}
+
+.pp-card__per {
+  font-size: 1.05rem;
+  color: var(--swft-lead, #c4c7c7);
+}
+
+.pp-card__note {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--pp-muted);
+}
+
+.pp-card__desc {
+  margin: 1rem 0 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--pp-text);
+}
+
+/* Quantity tiles: the same four slots on every package, so a gap reads as "not included" */
+.pp-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.85rem 0.75rem 0.8rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 14px;
+  background: var(--pp-soft);
+}
+
+.pp-tile .pp-ico {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-bottom: 0.4rem;
+  color: var(--pp-accent);
+}
+
+.pp-tile__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.3rem;
+  font-size: 1.9rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #fff;
+}
+
+.pp-tile__lead,
+.pp-tile__unit {
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.pp-tile__lead { flex-basis: 100%; margin-bottom: 0.2rem; }
+
+.pp-tile__label {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  color: var(--pp-muted);
+}
+
+.pp-tile.is-off {
+  border-style: dashed;
+  background: transparent;
+}
+
+.pp-tile.is-off .pp-ico { color: rgba(255, 255, 255, 0.25); }
+.pp-tile.is-off .pp-tile__value { color: rgba(255, 255, 255, 0.28); }
+.pp-tile.is-off .pp-tile__label { color: rgba(255, 255, 255, 0.45); }
+.pp-tile__off { display: none; }
+
+@media (max-width: 560px) {
+  .pp-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pp-tile__off { display: inline; }
+}
+
+/* Lists */
+.pp-block__title {
+  margin: 0 0 0.85rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.pp-list {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-list li {
+  display: grid;
+  grid-template-columns: 1.3rem 1fr;
+  gap: 0.65rem;
+  align-items: start;
+  line-height: 1.45;
+  color: var(--pp-text);
+}
+
+.pp-list .pp-ico { width: 1.2rem; height: 1.2rem; margin-top: 0.1rem; }
+.pp-list--yes .pp-ico { color: var(--pp-accent); }
+.pp-list--you .pp-ico { color: #d6e9f7; }
+.pp-list--no .pp-ico { color: rgba(255, 255, 255, 0.35); }
+.pp-list--no li { color: var(--swft-lead, #c4c7c7); }
+
+.pp-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 700px) {
+  .pp-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+.pp-block--panel {
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 14px;
+  background: var(--pp-soft);
+}
+
+.pp-block--panel .pp-list { font-size: 0.93rem; }
+
+.pp-card__foot {
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+.pp-card__foot .button { width: 100%; justify-content: center; }
+
+.pp-card__fine {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--pp-muted);
+}
+
+/* Side by side: let paired cards share rows, so the price, the tiles, each
+   list and the buttons sit at the same height in both. Browsers without
+   subgrid keep the flex layout above. */
+@media (min-width: 961px) {
+  @supports (grid-template-rows: subgrid) {
+    .pp-cards { row-gap: 0; margin-bottom: -1.5rem; }
+    .pp-card {
+      display: grid;
+      grid-row: span 5;
+      grid-template-rows: subgrid;
+      row-gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .pp-card__foot { align-self: end; margin-top: 0; }
+  }
+}
+
+/* ---------- Extras ---------- */
+.pp-extras {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 1060px) {
+  .pp-extras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .pp-extras { grid-template-columns: minmax(0, 1fr); }
+}
+
+.pp-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.15rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 16px;
+  background: var(--pp-card);
+}
+
+.pp-extra__group {
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  color: var(--pp-accent);
+}
+
+.pp-extra__label { font-weight: 500; line-height: 1.25; color: #fff; }
+
+.pp-extra__price {
+  margin-top: 0.15rem;
+  font-size: 1.9rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #fff;
+}
+
+.pp-extra__price small {
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--pp-muted);
+}
+
+.pp-extra__detail {
+  margin-top: 0.3rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--pp-muted);
+}
+
+.pp-extras__title {
+  margin: 0 0 0.9rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--pp-accent);
+}
+
+.pp-quoted { margin-top: 1.5rem; }
+
+.pp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-chips li {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 999px;
+  font-size: 0.88rem;
+  color: var(--swft-lead, #c4c7c7);
+}
+
+/* ---------- How it works ---------- */
+.pp-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.pp-step {
+  position: relative;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--pp-line);
+}
+
+.pp-step::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pp-accent);
+  box-shadow: 0 0 14px rgba(86, 180, 233, 0.8);
+}
+
+.pp-step__num {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  color: var(--pp-accent);
+}
+
+.pp-step__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.pp-step p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--pp-muted);
+}
+
+@media (max-width: 960px) {
+  .pp-steps { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .pp-step {
+    padding: 0 0 1.75rem 2rem;
+    border-top: 0;
+    border-left: 1px solid var(--pp-line);
+  }
+  .pp-step:last-child { padding-bottom: 0; border-left-color: transparent; }
+  .pp-step::before { top: 0.15rem; left: -5px; }
+}
+
+/* ---------- Promises ---------- */
+.pp-promises {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-promises li {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 16px;
+  background: var(--pp-card);
+}
+
+.pp-promises li:nth-child(n+4) { grid-column: span 3; }
+
+@media (max-width: 860px) {
+  .pp-promises { grid-template-columns: minmax(0, 1fr); }
+  .pp-promises li,
+  .pp-promises li:nth-child(n+4) { grid-column: auto; }
+}
+
+.pp-promises__ico { width: 1.5rem; height: 1.5rem; color: var(--pp-accent); }
+
+.pp-promises h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.pp-promises p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--pp-muted);
+}
+
+/* ---------- Shared icon ---------- */
+.pp-ico {
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-card,
+  .pp-jump a { transition: none; }
+}
