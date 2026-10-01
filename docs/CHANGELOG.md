@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-01: Hologram city grid beside the Free Growth Audit copy
+
+### Added
+- A 3D hologram city grid to the right of "Find out where your business is leaking customers." on the homepage (below the copy on tablets and phones, where it stays visible). Glowing wireframe towers on a street grid, drawn on a canvas with its own small perspective camera (no 3D library). Every ~15s the city grows from its centre: a wave rolls outward, towers rise as it passes, and their window lights switch on behind it; then it holds while pulse rings sweep the grid, a beacon glows from the tallest tower, and it settles and starts again. The camera turns slowly; drag to turn it (with momentum). Pauses off-screen and in hidden tabs; under reduced motion it shows one still frame of the finished city. See [`js/swft-city.js`](../js/swft-city.js) and [`css/swft-city.css`](../css/swft-city.css).
+
 ## 2026-10-01: Wider About statement; "Proven results" grid removed
 
 ### Changed
