@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-01: Homepage services rebuilt after the ARAISE services section
+
+### Changed
+- The homepage "Creative Services" section (`#services`) now follows the ARAISE layout (araise.webflow.io/#services): a big "Creative Services" title with the subtitle opposite, a list of four services on the left, and a sticky featured project on the right.
+  - Services: **Brand Identity** (TAL Hydration), **Photo/Video** (Roller Reels), **Web Development** (Thyme & Table), **Marketing** (social content).
+  - The service nearest the middle of the screen lights up white, opens its description and draws its rule; its project crossfades in on the right. Hover or keyboard focus activates a service straight away.
+  - On desktop a round accent arrow trails the pointer over the list.
+  - Below 992px it's one column and each open service shows its project inline.
+  - Without JS every service is open. Reduced motion turns the animation off.
+- The old price-led service rows are gone from the homepage; a "See packages & pricing" button links to the pricing page. See [`css/home-services.css`](../css/home-services.css) and [`js/home-services.js`](../js/home-services.js).
+
 ## 2026-09-30: Cache busting for CSS and JS
 
 ### Fixed
