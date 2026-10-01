@@ -12,26 +12,40 @@
 
 .swft-city {
   position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 40rem;
   justify-self: end;
   aspect-ratio: 1 / 1;
-  contain: layout paint;
-}
-
-.swft-city canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: pan-y; /* vertical swipes still scroll the page */
   -webkit-user-select: none;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.swft-city.is-dragging canvas { cursor: grabbing; }
+.swft-city.is-dragging { cursor: grabbing; }
+
+/* The canvas is bigger than the box (15% on every side) so the glow, the
+   rotating plate corners and the beacon are never cut off. It ignores the
+   pointer (the box takes drags and taps), so it can't block the text or
+   buttons it overlaps. js/swft-city.js reads this size, so keep it in sync. */
+.swft-city canvas {
+  position: absolute;
+  left: -15%;
+  top: -15%;
+  width: 130%;
+  height: 130%;
+  display: block;
+  pointer-events: none;
+}
+
+/* The bleed may extend past the section edge on narrow screens. Clip it there
+   (clip, unlike hidden, makes no scroll container) so the page can't scroll
+   sideways, and nothing else in the section gets clipped. */
+.hp-booking {
+  overflow-x: clip;
+}
 
 /* Hologram projector look: faint scan lines and a band sweeping down */
 .swft-city::before,

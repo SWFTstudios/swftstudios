@@ -6,9 +6,12 @@
    a wave rolls outward, towers rise as it passes and their window lights
    switch on behind it. Then it holds, pulsing rings sweep the grid, and it
    settles and starts again. The camera turns slowly; drag to turn it.
+   Tap the ground to send a pulse ring out from that spot: the towers
+   around it light up and glow.
 
    Pauses off-screen and in hidden tabs. Reduced motion: one still frame of
-   the finished city (drag still turns it).
+   the finished city (drag and tap still work; the tap glow fades in place
+   instead of travelling).
    ============================================================ */
 (function () {
   "use strict";
@@ -20,6 +23,10 @@
   var SETTLE = 2;      // seconds to settle back to the ground
   var PITCH = 0.9;     // camera tilt (radians)
   var SPIN = 0.05;     // auto-rotation, rad/s
+  var PULSE_LIFE = 2.6;   // seconds a tapped pulse lasts
+  var PULSE_SPEED = 6;    // ring speed, city units per second
+  var PULSE_AREA = 2.7;   // radius of the lingering glow around a tap
+  var MAX_PULSES = 6;
 
   function rng(seed) {
     return function () {
@@ -64,22 +71,27 @@
     var W = 0, H = 0, dpr = 1, city = null, f = 1, cx0 = 0, cy0 = 0;
     var clock = 0, spinYaw = 0.7, userYaw = 0, velYaw = 0;
     var visible = false, raf = 0, last = 0, dragging = false, dragX = 0, dragT = 0;
+    var downX = 0, downY = 0, downT = 0, moved = 0, pulses = [];
+    var bleedX = 0, bleedY = 0; // the canvas extends past the box by this much on each side
 
     function resize() {
-      var r = el.getBoundingClientRect();
-      if (!r.width || !r.height) return;
+      // The visible box is the layout box; the canvas is larger (see the CSS)
+      // so glow, the rotating plate corners and the beacon never get cut off.
+      var bw = el.clientWidth, bh = el.clientHeight;
+      if (!bw || !bh) return;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = r.width; H = r.height;
+      W = canvas.clientWidth || bw; H = canvas.clientHeight || bh;
+      bleedX = (W - bw) / 2; bleedY = (H - bh) / 2;
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
-      var n = W < 460 ? 9 : 11;
+      var n = bw < 460 ? 9 : 11;
       if (!city || city.n !== n) city = makeCity(n);
       var radius = city.maxD + 1.6;
       var D = city.n * 1.55;
-      var fit = W < 460 ? 0.46 : 0.4;
-      f = fit * Math.min(W, H) * D / radius;
+      var fit = bw < 460 ? 0.46 : 0.4;
+      f = fit * Math.min(bw, bh) * D / radius;
       cx0 = W / 2;
-      cy0 = H * (W < 460 ? 0.56 : 0.6);
+      cy0 = bleedY + bh * (bw < 460 ? 0.56 : 0.6);
       if (!visible || reduce) frame(0, true);
     }
 
@@ -121,9 +133,17 @@
       var life = c < HOLD_END ? 1 : 1 - ease((c - HOLD_END) / SETTLE);   // settle back down
       var ring = (!still && c > GROW && c < HOLD_END) ? ((c - GROW) % 2.6) / 2.6 * (maxD + 3) : -1;
 
+      // Tapped pulses: ring radius, fade, and the area they light up
+      var pr = [];
+      for (var pi = 0; pi < pulses.length; pi++) {
+        var pu = pulses[pi], k0 = 1 - pu.age / PULSE_LIFE;
+        if (k0 <= 0) continue;
+        pr.push({ x: pu.x, z: pu.z, k: k0, rad: reduce ? 2.4 : Math.min(pu.age * PULSE_SPEED, maxD + 3) });
+      }
+
       // Soft light pool under the city
       project(0, 0, 0);
-      var gr = Math.min(W, H) * 0.5;
+      var gr = Math.min(W - 2 * bleedX, H - 2 * bleedY) * 0.55;
       var pool = ctx.createRadialGradient(px, py, 0, px, py, gr);
       pool.addColorStop(0, "rgba(86,180,233," + (0.22 * pulse * (0.4 + 0.6 * life)).toFixed(3) + ")");
       pool.addColorStop(1, "rgba(86,180,233,0)");
@@ -162,6 +182,20 @@
       // Growth wavefront and pulse rings on the ground
       if (wave < maxD + 3 && life > 0) ringOnGround(wave, 0.9, 2.2);
       if (ring >= 0) ringOnGround(ring, 0.55 * (1 - ring / (maxD + 3)) + 0.1, 1.6);
+      for (var gi = 0; gi < pr.length; gi++) {
+        var pk = pr[gi];
+        ctx.beginPath();
+        for (var di = 0; di <= 48; di++) {
+          var dt2 = di / 48 * Math.PI * 2;
+          project(pk.x + Math.cos(dt2) * pk.rad, 0, pk.z + Math.sin(dt2) * pk.rad);
+          if (di) ctx.lineTo(px, py); else ctx.moveTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fillStyle = "rgba(86,180,233," + (0.11 * pk.k).toFixed(3) + ")";
+        ctx.fill();
+        ringOnGround(pk.rad, 0.95 * pk.k, 2.4, pk.x, pk.z);
+        ringOnGround(pk.rad * 0.62, 0.5 * pk.k, 1.3, pk.x, pk.z);
+      }
 
       // Towers
       var dim = [], mid = [], bright = [];
@@ -171,6 +205,14 @@
         var Hc = cell.h * g0 * life;
         var lit = clamp((wave - cell.d) / 7, 0, 1) * life * life;
         var ringBoost = ring >= 0 ? Math.exp(-Math.pow((cell.d - ring) / 0.9, 2)) : 0;
+        var tapGlow = 0;
+        for (var qi = 0; qi < pr.length; qi++) {
+          var tdx = cell.x - pr[qi].x, tdz = cell.z - pr[qi].z, td = Math.sqrt(tdx * tdx + tdz * tdz);
+          tapGlow += pr[qi].k * (1.1 * Math.exp(-(td * td) / (PULSE_AREA * PULSE_AREA)) +
+                                 0.9 * Math.exp(-Math.pow((td - pr[qi].rad) / 0.8, 2)));
+        }
+        ringBoost += tapGlow;
+        lit = clamp(lit + 0.5 * Math.min(tapGlow, 1.2), 0, 1); // more windows flare on
         var s = cell.s, bx = cell.x, bz = cell.z;
 
         // Footprint (the seed waiting to grow)
@@ -307,12 +349,13 @@
       ctx.fill();
     }
 
-    function ringOnGround(rad, alpha, width) {
+    function ringOnGround(rad, alpha, width, ox, oz) {
       var steps = 72, i;
+      ox = ox || 0; oz = oz || 0;
       ctx.beginPath();
       for (i = 0; i <= steps; i++) {
         var t = (i / steps) * Math.PI * 2;
-        project(Math.cos(t) * rad, 0, Math.sin(t) * rad);
+        project(ox + Math.cos(t) * rad, 0, oz + Math.sin(t) * rad);
         if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py);
       }
       ctx.strokeStyle = "rgba(86,180,233," + (alpha * 0.35).toFixed(3) + ")";
@@ -333,12 +376,16 @@
         clock += dt;
         spinYaw += SPIN * dt;
       }
+      for (var pi = pulses.length - 1; pi >= 0; pi--) {
+        pulses[pi].age += dt;
+        if (pulses[pi].age >= PULSE_LIFE) pulses.splice(pi, 1);
+      }
       if (!dragging && Math.abs(velYaw) > 0.01) {
         userYaw += velYaw * dt;
         velYaw *= Math.pow(0.05, dt);
       }
       frame(dt, reduce);
-      if (visible && !document.hidden && (!reduce || dragging || Math.abs(velYaw) > 0.01)) {
+      if (visible && !document.hidden && (!reduce || dragging || pulses.length || Math.abs(velYaw) > 0.01)) {
         raf = requestAnimationFrame(tick);
       } else {
         last = 0;
@@ -346,17 +393,20 @@
     }
     function kick() { if (!raf && visible && !document.hidden) raf = requestAnimationFrame(tick); }
 
-    /* ---- drag to turn ---- */
+    /* ---- drag to turn, tap to pulse (on the visible box; the oversized
+       canvas itself ignores the pointer so it never blocks the copy) ---- */
 
-    canvas.addEventListener("pointerdown", function (e) {
+    el.addEventListener("pointerdown", function (e) {
       if (e.button !== undefined && e.button !== 0) return;
       dragging = true; dragX = e.clientX; dragT = performance.now(); velYaw = 0;
+      downX = e.clientX; downY = e.clientY; downT = dragT; moved = 0;
       el.classList.add("is-dragging");
-      canvas.setPointerCapture(e.pointerId);
+      el.setPointerCapture(e.pointerId);
       kick();
     });
-    canvas.addEventListener("pointermove", function (e) {
+    el.addEventListener("pointermove", function (e) {
       if (!dragging) return;
+      moved = Math.max(moved, Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY));
       var now = performance.now(), dt = Math.max((now - dragT) / 1000, 0.001);
       var dy = (e.clientX - dragX) * 0.008;
       userYaw += dy;
@@ -364,16 +414,34 @@
       dragX = e.clientX; dragT = now;
       if (reduce) frame(0, true);
     });
-    function end() {
+    function end(e) {
       if (!dragging) return;
       dragging = false;
       el.classList.remove("is-dragging");
-      if (performance.now() - dragT > 90) velYaw = 0;
+      var isTap = e && e.type === "pointerup" && moved < 8 && performance.now() - downT < 600;
+      if (performance.now() - dragT > 90 || isTap) velYaw = 0;
       velYaw = clamp(velYaw, -4, 4);
+      if (isTap) tap(e.clientX, e.clientY);
       kick();
     }
-    canvas.addEventListener("pointerup", end);
-    canvas.addEventListener("pointercancel", end);
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
+
+    // Screen point -> spot on the ground (inverse of project() for y = 0)
+    function tap(clientX, clientY) {
+      if (!city) return;
+      var cr = canvas.getBoundingClientRect();
+      var a = (clientX - cr.left - cx0) / f, b = (cy0 - (clientY - cr.top)) / f;
+      var den = sp - b * cp;
+      if (den <= 0.02) return;                      // above the horizon: no ground there
+      var Z = b * DIST / den, Z2 = Z * cp + DIST, X = a * Z2;
+      var wx = X * cyaw + Z * syaw, wz = Z * cyaw - X * syaw;
+      var ext = city.half + 1.2;
+      if (Math.abs(wx) > ext + 2 || Math.abs(wz) > ext + 2) return; // well off the city
+      pulses.push({ x: clamp(wx, -ext, ext), z: clamp(wz, -ext, ext), age: 0 });
+      if (pulses.length > MAX_PULSES) pulses.shift();
+      kick();
+    }
 
     /* ---- lifecycle ---- */
 
