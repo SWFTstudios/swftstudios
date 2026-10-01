@@ -121,9 +121,21 @@
     document.body.insertAdjacentHTML("beforeend", html);
   }
 
+  // Site-wide scroll-in text animation (js/text-reveal.js), loaded once from here
+  // because every page already includes this script.
+  function initTextReveal() {
+    if (document.querySelector('script[data-swft-text-reveal]')) return;
+    var s = document.createElement("script");
+    s.src = "/js/text-reveal.js?v=20261001k";
+    s.async = true;
+    s.setAttribute("data-swft-text-reveal", "");
+    document.head.appendChild(s);
+  }
+
   function init() {
     initNav();
     initFooter();
+    initTextReveal();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

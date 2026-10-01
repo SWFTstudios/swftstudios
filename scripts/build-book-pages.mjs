@@ -96,7 +96,7 @@ ${body}
     </div>
   </main>
   <script src="/js/swft-analytics.js?v=20260930b"></script>
-  <script src="/js/swft-nav.js?v=20261001h"></script>
+  <script src="/js/swft-nav.js?v=20261001k"></script>
 </body>
 </html>
 `;
@@ -238,8 +238,8 @@ function renderTierPage(tier) {
     bodyClass: "ps-page book-page",
     body,
   }).replace(
-    '<script src="/js/swft-nav.js?v=20261001h"></script>\n</body>',
-    '<script src="/js/swft-nav.js?v=20261001h"></script>\n  <script src="/js/book-tier-form.js?v=20261001i"></script>\n</body>'
+    '<script src="/js/swft-nav.js?v=20261001k"></script>\n</body>',
+    '<script src="/js/swft-nav.js?v=20261001k"></script>\n  <script src="/js/book-tier-form.js?v=20261001i"></script>\n</body>'
   );
 }
 

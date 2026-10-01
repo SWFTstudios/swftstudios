@@ -1,9 +1,9 @@
 /* ============================================================
    Homepage load intro (js/hero-intro.js).
-   While the page loads, the hero's ocean fills the screen: a small white
-   cube spins far out over the water with a loading bar under it. When the
-   page is ready the scene shrinks into its hero slot as the cube flies in
-   to its hero size, its glow fading to reveal the photos.
+   While the page loads: a birdseye shot straight down over the dark sea,
+   a small spinning cube of white light in the centre, a loading bar.
+   Then the camera descends to the hero view and the scene frames into its
+   hero slot; the white cube cools to reveal the photos.
    html.swft-intro is set by an inline script in <head> (first visit per
    session, motion allowed), so the first paint is already the intro.
    ============================================================ */
@@ -45,8 +45,10 @@ html.swft-intro .home-hero-ocean.swft-ocean::after {
   opacity: var(--intro-fades, 0);
 }
 
-html.swft-intro .home-hero-ocean .swft-cube {
-  --cube-size: var(--intro-cube, 9vmin);
+/* The DOM cube waits at its hero size; the ocean draws the cube during the
+   camera move, then hands over (--intro-dom 0 -> 1) once the camera lands. */
+html.swft-intro .home-hero-ocean .swft-cube__scene {
+  opacity: var(--intro-dom, 0);
 }
 
 /* White light-source cube: the faces are burned out to white (--intro-white 1)

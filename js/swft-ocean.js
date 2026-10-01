@@ -25,6 +25,7 @@
   var BOB_SPEED = 1.3;           // radians per second
   var TARGET_PIXELS = 460000;    // render budget before adaptive scaling
   var CALM_SPEED = 0.35;
+  var INTRO_BIRDSEYE_DIST = 70;  // camera distance above the cube in the load intro's opening shot
   var PITCH_STEP = 0.25 * Math.PI / 180; // camera tilt step when fitting a big cube (max 6deg extra)
   var TILT_EXTENT = 0.66;        // half-height of the tilted, spinning cube, in cube widths         // water speed under prefers-reduced-motion (slowed, not frozen)
 
@@ -49,6 +50,7 @@
     "uniform mat3 uToLocal;",
     "uniform vec4 uRings[8];",
     "uniform float uIntro;",
+    "uniform float uShowCube;",
 
     "const float DEPTH = 0.3;",
     "const vec3 ICE = vec3(0.55, 0.8, 1.0);",
@@ -186,9 +188,12 @@
     // The mirror image rides the bigger waves only, so it wobbles like liquid instead of shattering.
     "    vec3 Ns = waterNormal(p.xz, 0.025, 16);",
     "    Ns = normalize(mix(Ns, N, 0.35));",
-    "    float near = exp(-tHit * 0.09);",
+    // Detail and haze go by distance across the water (not ray length), so the
+    // waves stay crisp seen from straight above in the intro's birdseye shot.
+    "    float hd = length(p.xz - ro.xz);",
+    "    float near = exp(-hd * 0.09);",
     "    N = normalize(N + vec3(ripple(p.xz), 0.0).xzy * vec3(1.0, 0.0, 1.0) * 0.045 * near);",
-    "    N = normalize(mix(N, vec3(0.0, 1.0, 0.0), 0.55 * min(1.0, sqrt(tHit * 0.012) * 1.1)));",
+    "    N = normalize(mix(N, vec3(0.0, 1.0, 0.0), 0.55 * min(1.0, sqrt(hd * 0.012) * 1.1)));",
     // Rings where the cube's corners touch the water (x, z, age or -1 for a live contact,
     // strength). Each ring is a travelling ripple that tilts the surface, so it shows up the
     // way real ripples do: as bending lines in the glow and reflections.
@@ -233,9 +238,19 @@
     "    col = mix(deep + sss, refl, fres) + lit;",
     // Ring crests catch the cube's light.
     "    col += ICE * atten * min(ringLine, 1.0) * 0.35;",
-    "    col = mix(col, sky(vec3(rd.x, 0.02, rd.z)), 1.0 - exp(-tHit * 0.015));",
+    "    col = mix(col, sky(vec3(rd.x, 0.02, rd.z)), 1.0 - exp(-hd * 0.015));",
     "  } else {",
     "    col = sky(rd);",
+    "  }",
+    // During the intro's camera move the cube is drawn here (the DOM cube can't be
+    // seen from above), then handed back to the DOM cube once the camera lands.
+    "  if (uShowCube > 0.0) {",
+    "    vec3 clp, cnl;",
+    "    float tc = hitCube(ro, rd, clp, cnl);",
+    "    if (tc > 0.0 && tc < tHit) {",
+    "      col = mix(col, cubeEmission(clp, cnl) * 1.4, uShowCube);",
+    "      tHit = tc;",
+    "    }",
     "  }",
     "  col += glow(ro, rd, tHit) + mist(ro, rd, tHit);",
     "  col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);",
@@ -315,6 +330,8 @@
     this.lift = 0;                       // buoyancy: raises the cube when a corner would sink too deep
     // 0..1 white "light source" look for the homepage load intro (js/hero-intro.js drives it).
     this.intro = document.documentElement.classList.contains("swft-intro") ? 1 : 0;
+    this.introCam = this.intro ? 0 : null;     // see introCamera()
+    this.introShowCube = this.intro ? 1 : 0;
     this.corners = [];                   // previous corner positions / depths, for splash detection
     this.ripples = [];
     this.rings = new Float32Array(32);
@@ -361,7 +378,7 @@
 
     var u = {};
     ["uRes", "uTime", "uCam", "uFw", "uRight", "uUp", "uFocal", "uCube", "uHalf", "uHasCube",
-     "uToLocal", "uRings[0]", "uIntro"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
+     "uToLocal", "uRings[0]", "uIntro", "uShowCube"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
     this.gl = gl;
     this.u = u;
     this.root.classList.add("swft-ocean--live");
@@ -527,6 +544,29 @@
     }
   };
 
+  // Camera for this frame. Normally the hero camera from layout(). During the load
+  // intro, this.introCam (0..1) flies it in: 0 = high above the cube looking
+  // straight down (birdseye), 1 = the hero camera. It swings along an arc
+  // around the cube, descending and tilting up toward the horizon.
+  Ocean.prototype.introCamera = function (bob) {
+    var hero = { pos: [0, CAM_HEIGHT, 0], fw: this.fw, up: this.up, showCube: 0, key: "h" };
+    var k = this.introCam;
+    if (k === null || k === undefined || !this.cube) return hero;
+    k = Math.max(0, Math.min(1, k));
+    var cy = this.cube[1] + bob, cz = this.cube[2];
+    var dy = CAM_HEIGHT - cy;                       // hero camera relative to the cube
+    var elF = Math.atan2(dy, cz);                   // elevation of the camera seen from the cube
+    var rF = Math.hypot(dy, cz);
+    var r0 = INTRO_BIRDSEYE_DIST;
+    var el = Math.PI / 2 + (elF - Math.PI / 2) * k; // straight overhead -> hero
+    var r = Math.exp(Math.log(r0) + (Math.log(rF) - Math.log(r0)) * k);
+    var pitch = el + (this.pitch - elF) * k;        // look at the cube, then settle into the hero framing
+    var pos = [0, cy + r * Math.sin(el), cz - r * Math.cos(el)];
+    var fw = [0, -Math.sin(pitch), Math.cos(pitch)];
+    var up = [0, Math.cos(pitch), Math.sin(pitch)];
+    return { pos: pos, fw: fw, up: up, showCube: this.introShowCube || 0, key: k.toFixed(4) + "/" + (this.introShowCube || 0).toFixed(3) };
+  };
+
   // Repaint straight away with the last frame's motion, e.g. after a layout()
   // that resized the canvas (which clears it) outside the render loop.
   Ocean.prototype.redraw = function () {
@@ -539,17 +579,20 @@
     var gl = this.gl, u = this.u;
 
     var intro = this.intro || 0;
-    var key = t.toFixed(3) + "|" + bob.toFixed(4) + "|" + M.join(",") + "|" + this.canvas.width + "|" + intro.toFixed(3);
+    var cam = this.introCamera(bob);
+    var key = t.toFixed(3) + "|" + bob.toFixed(4) + "|" + M.join(",") + "|" + this.canvas.width + "|" + intro.toFixed(3) +
+      "|" + cam.key;
     if (key === this.lastKey) return; // nothing moved (reduced motion, idle)
     this.lastKey = key;
 
     var cube = [this.cube[0], this.cube[1] + bob, this.cube[2]];
     gl.uniform2f(u.uRes, this.canvas.width, this.canvas.height);
     gl.uniform1f(u.uTime, t);
-    gl.uniform3f(u.uCam, 0, CAM_HEIGHT, 0);
-    gl.uniform3fv(u.uFw, this.fw);
+    gl.uniform3fv(u.uCam, cam.pos);
+    gl.uniform3fv(u.uFw, cam.fw);
     gl.uniform3f(u.uRight, 1, 0, 0);
-    gl.uniform3fv(u.uUp, this.up);
+    gl.uniform3fv(u.uUp, cam.up);
+    gl.uniform1f(u.uShowCube, cam.showCube);
     gl.uniform1f(u.uFocal, FOCAL);
     gl.uniform3fv(u.uCube, cube);
     gl.uniform1f(u.uHalf, CUBE_SIZE / 2);
