@@ -21,24 +21,21 @@
   var BRAND = 'SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span>';
 
   function navHTML(active) {
-    var desktop = LINKS.map(function (l) {
-      return '<a href="' + l.href + '" class="sn-link' + (l.key === active ? " is-active": "") + '">' + l.label + "</a>";
-    }).join("");
-    var mobile = LINKS.map(function (l) {
+    var links = LINKS.map(function (l) {
       return '<a href="' + l.href + '"' + (l.key === active ? ' class="is-active"': "") + ">" + l.label + "</a>";
     }).join("");
     return (
       '<nav class="sn-nav">' +
         '<a href="/index.html" class="sn-brand">' + BRAND + "</a>" +
-        '<div class="sn-links">' + desktop +
+        '<div class="sn-actions">' +
           '<a href="' + CTA.href + '" class="sn-cta">' + CTA.label + "</a>" +
+          '<button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sn-panel"><span></span><span></span><span></span></button>' +
         "</div>" +
-        '<button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sn-panel"><span></span><span></span><span></span></button>' +
       "</nav>" +
       '<div class="sn-scrim" id="sn-scrim"></div>' +
       '<aside class="sn-panel" id="sn-panel" aria-hidden="true" aria-label="Site menu">' +
         '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
-        mobile +
+        links +
         '<a href="' + CTA.href + '" class="sn-panel-cta">' + CTA.label + "</a>" +
       "</aside>"
     );
@@ -95,12 +92,6 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
-    // Rotating to desktop width with the menu open: release the page
-    if (window.matchMedia) {
-      var mq = window.matchMedia("(max-width: 860px)");
-      var onChange = function () { if (!mq.matches) shut(false); };
-      if (mq.addEventListener) mq.addEventListener("change", onChange); else if (mq.addListener) mq.addListener(onChange);
-    }
   }
 
   function initNav() {

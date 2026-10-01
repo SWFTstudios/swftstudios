@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-01: One menu at every width
+
+### Changed
+- Desktop now uses the same nav as mobile: the brand on the left, and on the right the **Get Your Free Growth Audit** button next to a menu button that opens the glass slide-over menu. The row of desktop links is gone. On phones (560px and below) the bar shows just the brand and menu button; the audit button stays inside the menu. See [`js/swft-nav.js`](../js/swft-nav.js) and [`css/swft-nav.css`](../css/swft-nav.css).
+
 ## 2026-10-01: New type system (Inter Tight + Space Mono, after Astrox Studio)
 
 ### Changed
