@@ -453,6 +453,26 @@ body{
       flex-wrap: wrap;
       row-gap: 2.5rem;
     }
+    /* Intro column + stage cards share a row, so the sticky intro stops
+       where the cards end (before the content engine bar) */
+    #How-we-work .process-row {
+      flex: 1 1 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      #How-we-work .process-row .section-title-container {
+        position: sticky;
+        top: calc(var(--sn-height, 62px) + var(--sn-curve, 14px) + 2rem);
+        align-self: flex-start;
+      }
+    }
+    @media (max-width: 767px) {
+      #How-we-work .process-row { flex-direction: column; }
+      #How-we-work .process-row > * { width: 100%; max-width: none; }
+    }
     #How-we-work .process-card {
       padding: 2rem 2.25rem;
     }
@@ -609,7 +629,7 @@ body{
   <link href="css/hero-intro.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link rel="preload" href="fonts/InterTight-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link href="css/home-about.css?v=20261001-type" rel="stylesheet" type="text/css">
-  <link href="css/swft-letter-cube.css?v=20261001a" rel="stylesheet" type="text/css">
+  <link href="css/swft-letter-cube.css?v=20261001d" rel="stylesheet" type="text/css">
   <link href="css/home-work-services.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link href="css/home-services.css?v=20261001c" rel="stylesheet" type="text/css">
   <link href="css/home-pain-tabs.css?v=20261001-type" rel="stylesheet" type="text/css">
@@ -1542,6 +1562,7 @@ margin: 0rem !important;
               <div class="section-tag-line"></div>
             </div>
             <div class="process-content-container">
+              <div class="process-row">
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d1d" style="opacity:0" class="section-title-container">
                 <h2 class="section-title">From first scroll to repeat customer.</h2>
                 <div class="testimonial-text">Five stages, one team. We find where your growth is leaking, fix it, then automate the fix so it keeps working.</div>
@@ -1578,6 +1599,7 @@ margin: 0rem !important;
                   <div class="process-card-title">5. Automate &amp; repeat</div>
                   <p class="testimonial-text">We track what worked, automate it and feed the winners back into new content.</p>
                 </div>
+              </div>
               </div>
               <div class="process-engine">
                 <div class="process-engine__label">The content engine</div>

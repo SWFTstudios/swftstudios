@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-01: Sticky SWFT Method intro; holographic letter cube
+
+### Changed
+- Homepage "The SWFT Method": the left column (heading, intro, cube) stays pinned under the nav while the five stage cards scroll past, and lets go before the content-engine bar (tablet and up; phones keep the stacked layout). The intro and cards now share a `.process-row` so the sticky column stops at the end of the cards.
+- The SWFT letter cube is now a glowing digital hologram: light-tube white edges with blue bloom, dark glass faces with a pixel grid and a sweeping scan line, neon white letters, a brief RGB-split glitch every few seconds, a stronger halo and a light pool beneath. Far-side faces show as glowing wireframe only, so letters stay crisp. Animations stop under reduced motion.
+
 ## 2026-10-01: Visuals page
 
 ### Added

@@ -1,5 +1,5 @@
 /* ============================================================
-   SWFT letter cube: a small glowing white 3D cube with S, W, F, T on its
+   SWFT letter cube: a small glowing white hologram cube with S, W, F, T on its
    four sides, in an extended squared face close to the business card
    logo. Spins slowly; drag (or arrow keys) to turn it.
    Pair with js/swft-letter-cube.js.
@@ -37,28 +37,43 @@
   border-radius: 6px;
 }
 
-/* Soft white halo behind the cube */
-.swft-lcube::before {
+/* Bloom behind the cube, plus a light pool on the "floor" below it */
+.swft-lcube::before,
+.swft-lcube::after {
   content: "";
   position: absolute;
-  inset: -45%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.28) 0%, rgba(205, 225, 245, 0.1) 40%, transparent 68%);
-  filter: blur(6px);
   pointer-events: none;
+  border-radius: 50%;
+}
+
+.swft-lcube::before {
+  inset: -60%;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.34) 0%, rgba(140, 205, 245, 0.2) 26%, rgba(86, 180, 233, 0.08) 46%, transparent 66%);
+  filter: blur(8px);
   transition: opacity 0.4s ease, transform 0.4s ease;
-  animation: swft-lcube-breathe 4.5s ease-in-out infinite;
+  animation: swft-lcube-breathe 3.6s ease-in-out infinite;
+}
+
+.swft-lcube::after {
+  left: -10%;
+  right: -10%;
+  bottom: -38%;
+  height: 26%;
+  background: radial-gradient(ellipse at center, rgba(160, 215, 250, 0.55) 0%, rgba(86, 180, 233, 0.18) 45%, transparent 72%);
+  filter: blur(10px);
+  animation: swft-lcube-breathe 3.6s ease-in-out infinite;
 }
 
 .swft-lcube:hover::before,
 .swft-lcube.is-dragging::before {
   opacity: 1;
-  transform: scale(1.12);
+  transform: scale(1.15);
   animation-play-state: paused;
 }
 
 @keyframes swft-lcube-breathe {
-  0%, 100% { opacity: 0.75; }
+  0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
 }
 
@@ -70,56 +85,121 @@
   will-change: transform;
 }
 
+/* Hologram faces: light-tube edges on every face (so the far edges show
+   through like a wireframe), plus dark glass with a pixel grid and an inner
+   blue glow on the faces turned toward you only. Keeping the glass
+   one-sided stops far faces from dimming the letters in front. */
 .swft-lcube__face {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
+  transform-style: preserve-3d;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.9),
+    0 0 18px rgba(140, 205, 245, 0.7),
+    0 0 36px rgba(86, 180, 233, 0.3);
+  transition: box-shadow 0.35s ease;
+}
+
+.swft-lcube__face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   background:
-    radial-gradient(circle at 30% 25%, #ffffff 0%, #f4f7fa 45%, #dde4eb 100%);
-  border: 1px solid rgba(170, 185, 202, 0.85);
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 12.5%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 12.5%),
+    radial-gradient(circle at 50% 50%, rgba(140, 205, 245, 0.16) 0%, rgba(20, 40, 60, 0.3) 70%, rgba(10, 20, 32, 0.45) 100%);
   box-shadow:
-    0 0 22px rgba(255, 255, 255, 0.55),
-    0 0 48px rgba(190, 220, 245, 0.25),
-    inset 0 0 18px rgba(150, 165, 185, 0.35);
+    inset 0 0 6px rgba(255, 255, 255, 0.7),
+    inset 0 0 26px rgba(86, 180, 233, 0.45);
   transition: box-shadow 0.35s ease;
 }
 
 .swft-lcube:hover .swft-lcube__face,
 .swft-lcube.is-dragging .swft-lcube__face {
   box-shadow:
-    0 0 30px rgba(255, 255, 255, 0.8),
-    0 0 70px rgba(190, 220, 245, 0.4),
-    inset 0 0 18px rgba(150, 165, 185, 0.35);
+    0 0 8px #ffffff,
+    0 0 26px rgba(140, 205, 245, 0.95),
+    0 0 56px rgba(86, 180, 233, 0.45);
 }
 
-/* Business-card lettering: wide, squared, heavy, dark chrome */
+.swft-lcube:hover .swft-lcube__face::before,
+.swft-lcube.is-dragging .swft-lcube__face::before {
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.85),
+    inset 0 0 34px rgba(86, 180, 233, 0.6);
+}
+
+/* Scan line sweeping down each face. Drawn as a moving background (not a
+   clipped element) so the faces keep their 3D context and the letters on
+   the far side stay hidden. */
+.swft-lcube__face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(190, 230, 255, 0.28) 70%, rgba(255, 255, 255, 0.6) 96%, transparent) no-repeat;
+  background-size: 100% 30%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  animation: swft-lcube-scan 2.8s linear infinite;
+  pointer-events: none;
+}
+
+.swft-lcube__face--right::after { animation-delay: -0.7s; }
+.swft-lcube__face--back::after  { animation-delay: -1.4s; }
+.swft-lcube__face--left::after  { animation-delay: -2.1s; }
+
+@keyframes swft-lcube-scan {
+  from { background-position: 0 -45%; }
+  to { background-position: 0 145%; }
+}
+
+/* Neon lettering in the business card's wide, squared face. Michroma has
+   one weight, so stacked hairline shadows thicken it before the glow. */
 .swft-lcube__face span {
+  position: relative;
+  z-index: 1;
   font-family: "Michroma", "Eurostile Extended", "Arial Black", sans-serif;
   font-size: calc(var(--lc-size) * 0.54);
   line-height: 1;
   font-weight: 400;
-  color: #14171c;
-  /* Michroma has one weight; stacked hairline shadows thicken it toward the
-     card's heavy extended letters, then a soft drop shadow lifts it */
-  --lc-b: calc(var(--lc-size) * 0.011);
+  color: #ffffff;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  --lc-b: calc(var(--lc-size) * 0.009);
   text-shadow:
-    var(--lc-b) 0 0 #14171c, calc(var(--lc-b) * -1) 0 0 #14171c,
-    0 var(--lc-b) 0 #14171c, 0 calc(var(--lc-b) * -1) 0 #14171c,
-    var(--lc-b) var(--lc-b) 0 #14171c, calc(var(--lc-b) * -1) calc(var(--lc-b) * -1) 0 #14171c,
-    var(--lc-b) calc(var(--lc-b) * -1) 0 #14171c, calc(var(--lc-b) * -1) var(--lc-b) 0 #14171c,
-    0 3px 8px rgba(20, 30, 45, 0.3);
+    var(--lc-b) 0 0 #fff, calc(var(--lc-b) * -1) 0 0 #fff,
+    0 var(--lc-b) 0 #fff, 0 calc(var(--lc-b) * -1) 0 #fff,
+    0 0 4px #ffffff,
+    0 0 10px rgba(200, 235, 255, 0.95),
+    0 0 22px rgba(86, 180, 233, 0.9),
+    0 0 44px rgba(86, 180, 233, 0.6);
   transform: translateY(2%);
+  animation: swft-lcube-glitch 5.5s steps(1, end) infinite;
+}
+
+.swft-lcube__face--right span { animation-delay: -1.3s; }
+.swft-lcube__face--back span  { animation-delay: -2.9s; }
+.swft-lcube__face--left span  { animation-delay: -4.2s; }
+
+/* A quick digital glitch every few seconds: RGB split, jitter, flicker */
+@keyframes swft-lcube-glitch {
+  0%, 91%, 100% { opacity: 1; translate: 0 0; filter: none; }
+  92% { opacity: 0.55; translate: -2px 0; filter: drop-shadow(3px 0 0 rgba(255, 60, 90, 0.85)) drop-shadow(-3px 0 0 rgba(60, 220, 255, 0.85)); }
+  93.5% { opacity: 1; translate: 2px 1px; filter: drop-shadow(-2px 0 0 rgba(255, 60, 90, 0.7)) drop-shadow(2px 0 0 rgba(60, 220, 255, 0.7)); }
+  95% { opacity: 0.8; translate: 0 -1px; filter: none; }
 }
 
 .swft-lcube__face--front  { transform: translateZ(var(--lc-half)); }
 .swft-lcube__face--right  { transform: rotateY(90deg) translateZ(var(--lc-half)); }
 .swft-lcube__face--back   { transform: rotateY(180deg) translateZ(var(--lc-half)); }
 .swft-lcube__face--left   { transform: rotateY(-90deg) translateZ(var(--lc-half)); }
-.swft-lcube__face--top    { transform: rotateX(90deg) translateZ(var(--lc-half)); background: #ffffff; }
-.swft-lcube__face--bottom { transform: rotateX(-90deg) translateZ(var(--lc-half)); background: #c9d2dc; }
+.swft-lcube__face--top    { transform: rotateX(90deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--bottom { transform: rotateX(-90deg) translateZ(var(--lc-half)); }
 
 /* Before the script runs (or without JS): a slow CSS spin */
 .swft-lcube:not(.is-js) .swft-lcube__body {
@@ -146,6 +226,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .swft-lcube::before { animation: none; }
+  .swft-lcube::before,
+  .swft-lcube::after,
+  .swft-lcube__face::after,
+  .swft-lcube__face span { animation: none; }
   .swft-lcube:not(.is-js) .swft-lcube__body { animation: none; }
 }
