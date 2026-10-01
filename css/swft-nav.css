@@ -7,6 +7,9 @@
 :root {
   --sm-green: #56b4e9;
   --sn-height: 62px;
+  /* Extra depth of the nav's curved bottom at its centre. Same arc shape as
+     the work carousel, at about half its depth for a subtler bend. */
+  --sn-curve: clamp(8px, 1vw, 14px);
   --swft-gutter: 1.5rem;
 }
 
@@ -20,11 +23,32 @@
   max-width: 100%;
   z-index: 1000;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.9rem var(--swft-gutter);
+  height: var(--sn-height);
+  padding: 0 var(--swft-gutter);
+  font-family: var(--swft-font, "Inter Tight", Inter, sans-serif);
+}
+/* Curved bottom edge, the same arc as the homepage work carousel's top
+   (.swft-about-gallery__eclipse--top: an ellipse 120% of the width). The bar
+   keeps --sn-height at the sides and dips --sn-curve deeper in the middle.
+   Drawn with clip-path so nothing spills past the viewport edges. */
+.sn-nav::before,
+.sn-nav::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: calc(var(--sn-height) + var(--sn-curve) + 1px);
+  z-index: -1;
+  pointer-events: none;
+}
+.sn-nav::before {
   background: rgba(1,1,1,0.82);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  font-family: var(--swft-font, "Inter Tight", Inter, sans-serif);
+  clip-path: polygon(0 0, 100% 0, 100% var(--sn-height), 93.75% calc(var(--sn-height) + var(--sn-curve) * 0.294), 87.5% calc(var(--sn-height) + var(--sn-curve) * 0.509), 81.25% calc(var(--sn-height) + var(--sn-curve) * 0.673), 75% calc(var(--sn-height) + var(--sn-curve) * 0.797), 68.75% calc(var(--sn-height) + var(--sn-curve) * 0.888), 62.5% calc(var(--sn-height) + var(--sn-curve) * 0.951), 56.25% calc(var(--sn-height) + var(--sn-curve) * 0.988), 50% calc(var(--sn-height) + var(--sn-curve) * 1.0), 43.75% calc(var(--sn-height) + var(--sn-curve) * 0.988), 37.5% calc(var(--sn-height) + var(--sn-curve) * 0.951), 31.25% calc(var(--sn-height) + var(--sn-curve) * 0.888), 25% calc(var(--sn-height) + var(--sn-curve) * 0.797), 18.75% calc(var(--sn-height) + var(--sn-curve) * 0.673), 12.5% calc(var(--sn-height) + var(--sn-curve) * 0.509), 6.25% calc(var(--sn-height) + var(--sn-curve) * 0.294), 0% var(--sn-height));
+}
+/* Hairline along the curve */
+.sn-nav::after {
+  background: rgba(255,255,255,0.08);
+  clip-path: polygon(0% var(--sn-height), 6.25% calc(var(--sn-height) + var(--sn-curve) * 0.294), 12.5% calc(var(--sn-height) + var(--sn-curve) * 0.509), 18.75% calc(var(--sn-height) + var(--sn-curve) * 0.673), 25% calc(var(--sn-height) + var(--sn-curve) * 0.797), 31.25% calc(var(--sn-height) + var(--sn-curve) * 0.888), 37.5% calc(var(--sn-height) + var(--sn-curve) * 0.951), 43.75% calc(var(--sn-height) + var(--sn-curve) * 0.988), 50% calc(var(--sn-height) + var(--sn-curve) * 1.0), 56.25% calc(var(--sn-height) + var(--sn-curve) * 0.988), 62.5% calc(var(--sn-height) + var(--sn-curve) * 0.951), 68.75% calc(var(--sn-height) + var(--sn-curve) * 0.888), 75% calc(var(--sn-height) + var(--sn-curve) * 0.797), 81.25% calc(var(--sn-height) + var(--sn-curve) * 0.673), 87.5% calc(var(--sn-height) + var(--sn-curve) * 0.509), 93.75% calc(var(--sn-height) + var(--sn-curve) * 0.294), 100% var(--sn-height), 100% calc(var(--sn-height) + 1px), 93.75% calc(var(--sn-height) + var(--sn-curve) * 0.294 + 1px), 87.5% calc(var(--sn-height) + var(--sn-curve) * 0.509 + 1px), 81.25% calc(var(--sn-height) + var(--sn-curve) * 0.673 + 1px), 75% calc(var(--sn-height) + var(--sn-curve) * 0.797 + 1px), 68.75% calc(var(--sn-height) + var(--sn-curve) * 0.888 + 1px), 62.5% calc(var(--sn-height) + var(--sn-curve) * 0.951 + 1px), 56.25% calc(var(--sn-height) + var(--sn-curve) * 0.988 + 1px), 50% calc(var(--sn-height) + var(--sn-curve) * 1.0 + 1px), 43.75% calc(var(--sn-height) + var(--sn-curve) * 0.988 + 1px), 37.5% calc(var(--sn-height) + var(--sn-curve) * 0.951 + 1px), 31.25% calc(var(--sn-height) + var(--sn-curve) * 0.888 + 1px), 25% calc(var(--sn-height) + var(--sn-curve) * 0.797 + 1px), 18.75% calc(var(--sn-height) + var(--sn-curve) * 0.673 + 1px), 12.5% calc(var(--sn-height) + var(--sn-curve) * 0.509 + 1px), 6.25% calc(var(--sn-height) + var(--sn-curve) * 0.294 + 1px), 0% calc(var(--sn-height) + 1px));
 }
 .sn-nav *,
 .sn-nav *::before,
