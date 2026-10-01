@@ -53,20 +53,88 @@ body:has(#swft-nav) footer.navbar { display: none !important; }
 @media (max-width: 860px) {
   .sn-links { display: none; }
   .sn-burger { display: flex; }
+
+  /* Glass slide-over: the page stays visible, blurred, behind a frosted panel */
   .sn-panel {
-    position: fixed; inset: 0 0 0 auto; width: min(82vw, 340px); z-index: 1100;
-    background: #0c0c0c; border-left: 1px solid rgba(255,255,255,0.1);
-    transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    display: flex; flex-direction: column; padding: 5rem 1.75rem 2rem;
+    position: fixed; inset: 0 0 0 auto; width: min(84vw, 360px); z-index: 1100;
+    display: flex; flex-direction: column; padding: 5.25rem 1.75rem calc(2rem + env(safe-area-inset-bottom));
+    overflow-y: auto; overscroll-behavior: contain;
+    background:
+      linear-gradient(160deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 38%, rgba(86,180,233,0.06) 100%),
+      rgba(10,12,16,0.42);
+    -webkit-backdrop-filter: blur(26px) saturate(170%);
+    backdrop-filter: blur(26px) saturate(170%);
+    border-left: 1px solid rgba(255,255,255,0.16);
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.06), -24px 0 60px rgba(0,0,0,0.45);
+    border-radius: 22px 0 0 22px;
     font-family: "Inter Display", Inter, sans-serif;
+    transform: translateX(104%);
+    visibility: hidden;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.45s;
   }
-  .sn-panel.open { display: flex; transform: translateX(0); }
-  .sn-panel a { color: #fff; text-decoration: none; font-size: 1.15rem; font-weight: 600; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .sn-panel a.is-active { color: var(--sm-green); }
-  .sn-panel a.sn-panel-cta { margin-top: 1.5rem; border: none; background: var(--sm-green); color: #010101; text-align: center; border-radius: 999px; padding: 1rem; }
-  .sn-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1050; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .sn-panel.open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+  }
+
+  .sn-panel a {
+    color: #fff; text-decoration: none; padding: 1rem 0.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-family: var(--swft-font-display, "Chakra Petch", "Inter Display", sans-serif);
+    font-size: 1.2rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    opacity: 0; transform: translateX(18px);
+    transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.18s;
+  }
+  .sn-panel.open a { opacity: 1; transform: none; }
+  /* Links settle in one after another as the panel arrives */
+  .sn-panel.open a:nth-of-type(1) { transition-delay: 0.08s; }
+  .sn-panel.open a:nth-of-type(2) { transition-delay: 0.11s; }
+  .sn-panel.open a:nth-of-type(3) { transition-delay: 0.14s; }
+  .sn-panel.open a:nth-of-type(4) { transition-delay: 0.17s; }
+  .sn-panel.open a:nth-of-type(5) { transition-delay: 0.20s; }
+  .sn-panel.open a:nth-of-type(6) { transition-delay: 0.23s; }
+  .sn-panel.open a:nth-of-type(7) { transition-delay: 0.26s; }
+  .sn-panel.open a:nth-of-type(8) { transition-delay: 0.29s; }
+  .sn-panel.open a:nth-of-type(9) { transition-delay: 0.32s; }
+  .sn-panel a:hover, .sn-panel a:focus-visible { color: var(--sm-green); outline: none; }
+  /* Current page: accent color plus a bar, so it doesn't rely on color alone */
+  .sn-panel a.is-active { color: var(--sm-green); box-shadow: inset 3px 0 0 var(--sm-green); padding-left: 0.9rem; }
+  .sn-panel a.sn-panel-cta {
+    margin-top: 1.75rem; border: none; background: var(--sm-green); color: #010101; text-align: center;
+    border-radius: 999px; padding: 1rem; font-size: 0.95rem; letter-spacing: 0.06em;
+    box-shadow: 0 10px 30px rgba(86,180,233,0.25);
+  }
+
+  /* Scrim dims and softly blurs the page behind the panel */
+  .sn-scrim {
+    position: fixed; inset: 0; z-index: 1050;
+    background: rgba(1,1,1,0.38);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+  }
   .sn-scrim.open { opacity: 1; pointer-events: auto; }
-  .sn-close { position: absolute; top: 1.4rem; right: 1.5rem; background: none; border: none; color: #fff; font-size: 1.8rem; cursor: pointer; line-height: 1; }
+
+  .sn-close {
+    position: absolute; top: 1.15rem; right: 1.25rem; width: 44px; height: 44px;
+    display: grid; place-items: center; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16);
+    color: #fff; font-size: 1.6rem; cursor: pointer; line-height: 1;
+  }
+  .sn-close:hover, .sn-close:focus-visible { border-color: var(--sm-green); color: var(--sm-green); outline: none; }
+
+  /* No backdrop blur support: fall back to a near-solid panel so text stays readable */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .sn-panel { background: rgba(12,14,18,0.96); }
+    .sn-scrim { background: rgba(0,0,0,0.6); }
+  }
+}
+
+/* Page behind the open menu doesn't scroll */
+html.sn-locked, html.sn-locked body { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sn-panel, .sn-panel a, .sn-scrim { transition-duration: 0.01s !important; transition-delay: 0s !important; }
 }
 
 /* Shared site footer — injected by js/swft-nav.js */
