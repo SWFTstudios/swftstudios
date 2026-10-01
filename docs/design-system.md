@@ -47,9 +47,11 @@ Still present in `swftstudios000.css` for Webflow components. Prefer `--swft-mut
 
 ## Typography
 
-**Font families (swft2027):**
-- Headings: `--swft-font-display` → `"Chakra Petch"` 700, uppercase, `-0.01em` tracking. Self-hosted in `fonts/` (OFL) and applied to every `h1`–`h6` and `.heading-style-h*` in `swft-fonts.css`. Long-form rich-text headings stay sentence case.
-- Body and UI: `--swft-font` → `"Inter Display", Inter, sans-serif`.
+**Font families (Astrox type system):**
+- Headings and display: `--swft-font-display` → `"Inter Tight"` 500, sentence case, `-0.03em` to `-0.05em` tracking (tighter the bigger it gets). Applied to every `h1`–`h6` and `.heading-style-h*` in `swft-fonts.css`.
+- Body and UI: `--swft-font` → `"Inter Tight", Inter, system-ui, sans-serif`.
+- Labels and eyebrows: `--swft-font-mono` → `"Space Mono"` 400, uppercase, 12–14px, no extra tracking (`.swft-text-label`, section labels, step numbers, small label headings).
+- All self-hosted in `fonts/` (OFL, Google Fonts latin + latin-ext subsets). Matches the [Astrox Studio](https://astrox-studio.webflow.io/utility-pages/style-guide) style guide.
 - `swft-fonts.css` also pins each heading role (page hero, section title, card title, label heading, closing CTA) to the scale below, so one-off page sizes don't drift.
 
 ### Fluid type scale

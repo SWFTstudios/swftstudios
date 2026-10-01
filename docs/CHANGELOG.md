@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-01: New type system (Inter Tight + Space Mono, after Astrox Studio)
+
+### Changed
+- Site typography now follows the [Astrox Studio](https://astrox-studio.webflow.io/utility-pages/style-guide) style guide: **Inter Tight** for headings, display lines and body text, **Space Mono** for labels and eyebrows. Headings drop the forced uppercase for sentence case at weight 500 with tight negative tracking; labels (section eyebrows, step numbers, category tags) are uppercase Space Mono. See [`css/swft-fonts.css`](../css/swft-fonts.css) and the new `--swft-font-mono` token in [`css/swft-tokens.css`](../css/swft-tokens.css).
+
+### Removed
+- Chakra Petch and Inter Display font files; both are replaced by self-hosted Inter Tight and Space Mono in `fonts/`.
+
 ## 2026-10-01: Homepage load intro (birdseye descent) + scroll-in text animation
 
 ### Added

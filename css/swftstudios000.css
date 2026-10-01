@@ -139,7 +139,7 @@
 body {
   background-color: var(--swft-bg, var(--black));
   color: var(--swft-text, var(--white));
-  font-family: var(--swft-font, Inter Display, sans-serif);
+  font-family: var(--swft-font, "Inter Tight", sans-serif);
   font-size: var(--swft-text-body, 1rem);
   line-height: var(--swft-lh-body, 1.5);
 }
@@ -874,7 +874,7 @@ figcaption {
 
 .text-size-small.text-color-green {
   color: var(--green);
-  letter-spacing: .16em;
+  letter-spacing: 0;
   text-transform: uppercase;
   font-size: var(--swft-text-label, .75rem);
   font-weight: 500;

@@ -1,4 +1,4 @@
-@import url("swft-fonts.css?v=20260930b");
+@import url("swft-fonts.css?v=20261001-type");
 
 /* ============================================================
    SWFT Studios — shared clean navigation
@@ -24,7 +24,7 @@
   background: rgba(1,1,1,0.82);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  font-family: "Inter Display", Inter, sans-serif;
+  font-family: var(--swft-font, "Inter Tight", Inter, sans-serif);
 }
 .sn-nav *,
 .sn-nav *::before,
@@ -67,7 +67,7 @@ body:has(#swft-nav) footer.navbar { display: none !important; }
     border-left: 1px solid rgba(255,255,255,0.16);
     box-shadow: inset 1px 0 0 rgba(255,255,255,0.06), -24px 0 60px rgba(0,0,0,0.45);
     border-radius: 22px 0 0 22px;
-    font-family: "Inter Display", Inter, sans-serif;
+    font-family: var(--swft-font, "Inter Tight", Inter, sans-serif);
     transform: translateX(104%);
     visibility: hidden;
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.45s;
@@ -81,8 +81,8 @@ body:has(#swft-nav) footer.navbar { display: none !important; }
   .sn-panel a {
     color: #fff; text-decoration: none; padding: 1rem 0.25rem;
     border-bottom: 1px solid rgba(255,255,255,0.1);
-    font-family: var(--swft-font-display, "Chakra Petch", "Inter Display", sans-serif);
-    font-size: 1.2rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    font-family: var(--swft-font-display, "Inter Tight", sans-serif);
+    font-size: 1.35rem; font-weight: 500; letter-spacing: -0.02em;
     opacity: 0; transform: translateX(18px);
     transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.18s;
   }
@@ -151,7 +151,7 @@ body:has(.sf-footer) footer.footer_component {
   padding: 2rem var(--swft-gutter);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background: #010101;
-  font-family: "Inter Display", Inter, sans-serif;
+  font-family: var(--swft-font, "Inter Tight", Inter, sans-serif);
 }
 
 .sf-footer-inner {
