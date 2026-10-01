@@ -1,11 +1,13 @@
 # Changelog
 
-## 2026-10-01: Homepage load intro: the cube flies in from the sea
+## 2026-10-01: Homepage load intro (birdseye descent) + scroll-in text animation
 
 ### Added
-- First visit per session (motion allowed, no `#hash`), the homepage opens on a load intro: the hero ocean fills the screen and a small white-hot cube spins fast far out over the water, its light streaking across the waves, with a "SWFT STUDIOS" loading bar tracking real progress (fonts, the cube's first photos, the ocean's first frame, window load; at least 1.6s, at most 7s).
-- When loading finishes the scene shrinks into its hero slot while the cube grows to its hero size and spins down. The ocean re-solves its camera every frame, so the cube flies in from the distance with its reflection locked under it, and the white glow cools into the photos. Then the hero copy animates in as before.
-- An inline `<head>` script sets `html.swft-intro` before first paint; a 12s failsafe always reveals the page. See [`css/hero-intro.css`](../css/hero-intro.css) and [`js/hero-intro.js`](../js/hero-intro.js). `js/swft-ocean.js` gains an `intro` glow (white reflection and bloom) and `redraw()` so resizing mid-animation never shows a blank frame.
+- **Load intro** (first visit per session, motion allowed, no `#hash`): a birdseye shot straight down over the dark sea with a small spinning cube of white light in the centre, "the spark of ideas in a dark sea", and a SWFT STUDIOS loading bar tracking real progress (fonts, the cube's first photos, the ocean's first frame, window load; 1.6s-7s). Then a 3.6s cinematic descent: the WebGL camera falls in an arc around the cube, tilting up to the horizon until it lands on the hero camera, while the full-screen shot frames into its hero slot. The ocean draws the cube itself during the move; on landing the white cube hands over to the DOM photo cube, which cools from white into its photos, and the hero copy animates in. See [`js/hero-intro.js`](../js/hero-intro.js), [`css/hero-intro.css`](../css/hero-intro.css) and `introCamera()` in [`js/swft-ocean.js`](../js/swft-ocean.js). A 12s failsafe always reveals the page.
+- **Scroll-in text animation** site-wide ([`js/text-reveal.js`](../js/text-reveal.js), loaded by `swft-nav.js`): headings rise in word by word from a mask, paragraphs, list items and labels fade up, staggered as they enter view. Skips the nav, hero copy, About scroll highlight, Webflow interactions, tabs, cards and forms; off under reduced motion; loads GSAP from cdnjs if the page doesn't already.
+
+### Changed
+- The ocean's wave detail and haze now go by distance across the water rather than ray length (no visible change in the hero; keeps the water crisp from above).
 
 ## 2026-10-01: Site-wide message: the SWFT Method; one page per purpose
 
