@@ -1,6 +1,6 @@
 /* ============================================================
-   Visuals page: infinite draggable project grid, GSAP Flip detail
-   view, Vimeo/MP4 video lightbox and image slideshow lightbox.
+   Visuals page: infinite draggable grid of Vimeo films, GSAP Flip
+   detail view, Vimeo player lightbox.
    Pair with js/visuals.js and data/visuals.json.
    ============================================================ */
 :root {
@@ -94,6 +94,20 @@ body.vz-page #swft-nav { min-height: 0; }
   overflow: hidden;
   border-radius: 6px;
   background: #0d0f12;
+}
+
+/* Until Vimeo's thumbnail arrives (or if Vimeo won't share one): a quiet,
+   softly pulsing placeholder instead of an empty hole */
+.vz-tile__media.is-empty {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(86, 180, 233, 0.16), transparent 60%),
+    linear-gradient(160deg, #11151b, #0a0c10);
+  animation: vz-empty 2.4s ease-in-out infinite;
+}
+
+@keyframes vz-empty {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 
 .vz-tile__media img {
@@ -192,35 +206,6 @@ body.vz-page #swft-nav { min-height: 0; }
 .vz-hud__count span:first-child { color: var(--vz-fg); margin-right: 0.5em; }
 .vz-hud__hint { color: var(--vz-muted); text-align: center; transition: opacity 0.6s ease; }
 .vz-hud__hint.is-gone { opacity: 0; }
-
-.vz-filter {
-  justify-self: end;
-  display: flex;
-  gap: 0.25rem;
-  padding: 0.25rem;
-  border-radius: 999px;
-  background: rgba(10, 12, 16, 0.6);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--vz-line);
-  pointer-events: auto;
-}
-
-.vz-filter__btn {
-  border: 0;
-  border-radius: 999px;
-  padding: 0.5rem 0.9rem;
-  background: none;
-  color: var(--vz-muted);
-  font: inherit;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.vz-filter__btn:hover { color: var(--vz-fg); }
-.vz-filter__btn.is-active { background: var(--vz-fg); color: #010101; }
-.vz-filter__btn:focus-visible { outline: 2px solid var(--vz-accent); outline-offset: 2px; }
 
 @media (max-width: 640px) {
   .vz-hud { grid-template-columns: 1fr auto; }
@@ -351,8 +336,6 @@ body.vz-page #swft-nav { min-height: 0; }
   to { transform: scale(1.35); opacity: 0; }
 }
 
-.vz-play[data-kind="photo"] .vz-play__icon svg { margin-left: 0; }
-
 .vz-detail__link {
   color: var(--vz-fg);
   text-decoration: none;
@@ -462,120 +445,6 @@ body.vz-detail-open .vz-detail__close { top: 1.25rem; }
   background: #000;
 }
 
-/* Slideshow */
-.vz-lightbox--slides {
-  grid-template-rows: 1fr auto auto;
-  gap: 1rem;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-}
-
-.vz-slides__stage {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  touch-action: pan-y;
-}
-
-.vz-slides__stage img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  -webkit-user-drag: none;
-}
-
-.vz-slides__arrow {
-  position: absolute;
-  top: 50%;
-  z-index: 2;
-  transform: translateY(-50%);
-}
-
-.vz-slides__arrow--prev { left: var(--swft-gutter, 1.5rem); }
-.vz-slides__arrow--next { right: var(--swft-gutter, 1.5rem); }
-.vz-slides__arrow:hover { transform: translateY(-50%) scale(1.06); }
-
-.vz-slides__bar {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: min(100%, 520px);
-  font-family: var(--swft-font-mono, "Space Mono", monospace);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.vz-slides__progress {
-  flex: 1;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.16);
-  overflow: hidden;
-}
-
-.vz-slides__progress span {
-  display: block;
-  height: 100%;
-  background: #fff;
-  transform-origin: left center;
-  transform: scaleX(0);
-}
-
-.vz-slides__toggle {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  padding: 0.4rem 0.8rem;
-  background: none;
-  color: #fff;
-  font: inherit;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.vz-slides__toggle:hover, .vz-slides__toggle:focus-visible { border-color: #fff; outline: none; }
-
-.vz-slides__thumbs {
-  display: flex;
-  gap: 0.5rem;
-  max-width: 100%;
-  overflow-x: auto;
-  padding: 2px;
-  scrollbar-width: none;
-}
-
-.vz-slides__thumbs::-webkit-scrollbar { display: none; }
-
-.vz-slides__thumb {
-  flex: none;
-  width: 64px;
-  height: 44px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #111;
-  opacity: 0.45;
-  cursor: pointer;
-  transition: opacity 0.2s ease, border-color 0.2s ease;
-}
-
-.vz-slides__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.vz-slides__thumb:hover { opacity: 0.8; }
-.vz-slides__thumb.is-active { opacity: 1; border-color: #fff; }
-.vz-slides__thumb:focus-visible { outline: 2px solid var(--vz-accent); outline-offset: 2px; }
-
-.vz-lightbox--slides.is-single .vz-slides__arrow,
-.vz-lightbox--slides.is-single .vz-slides__bar,
-.vz-lightbox--slides.is-single .vz-slides__thumbs { display: none; }
-
-@media (max-width: 640px) {
-  .vz-slides__arrow { width: 40px; height: 40px; }
-  .vz-slides__arrow--prev { left: 0.5rem; }
-  .vz-slides__arrow--next { right: 0.5rem; }
-}
-
 .vz-noscript {
   position: fixed;
   inset: auto 0 40% 0;
@@ -586,6 +455,7 @@ body.vz-detail-open .vz-detail__close { top: 1.25rem; }
 .vz-noscript a { color: var(--vz-fg); }
 
 @media (prefers-reduced-motion: reduce) {
+  .vz-tile__media.is-empty { animation: none; }
   .vz-play__icon::after { animation: none; }
   .vz-tile__media img { transition: none; }
 }
