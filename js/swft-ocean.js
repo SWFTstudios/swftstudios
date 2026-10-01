@@ -48,6 +48,7 @@
     "uniform float uHasCube;",
     "uniform mat3 uToLocal;",
     "uniform vec4 uRings[8];",
+    "uniform float uIntro;",
 
     "const float DEPTH = 0.3;",
     "const vec3 ICE = vec3(0.55, 0.8, 1.0);",
@@ -128,7 +129,8 @@
     "  float t = dot(oc, rd);",
     "  if (t < 0.0 || t > tMax) return vec3(0.0);",
     "  float d = length(ro + rd * t - uCube) / uHalf;",
-    "  return ICE * (0.016 / (d * d * 0.9 + 0.15) + 0.75 * exp(-d * 2.2));",
+    "  vec3 c = mix(ICE, vec3(1.0, 0.98, 0.95), uIntro);",
+    "  return c * (1.0 + 0.8 * uIntro) * (0.016 / (d * d * 0.9 + 0.15) + 0.75 * exp(-d * 2.2));",
     "}",
 
     // Low mist lying on the water, lit by the cube and spread sideways.
@@ -167,7 +169,8 @@
     "  float edge = max(q.x * (1.0 - an.x), max(q.y * (1.0 - an.y), q.z * (1.0 - an.z)));",
     "  float rim = smoothstep(0.84, 0.985, edge);",
     // Glowing glass: lit panes with bright, sharp edges.
-    "  return ICE * (0.16 + 2.4 * rim);",
+    // During the load intro the cube is a solid white light source.
+    "  return mix(ICE * (0.16 + 2.4 * rim), vec3(1.0, 0.98, 0.95) * (1.6 + 1.2 * rim), uIntro);",
     "}",
 
     "void main() {",
@@ -310,6 +313,8 @@
 
     this.pitch = CAM_PITCH;
     this.lift = 0;                       // buoyancy: raises the cube when a corner would sink too deep
+    // 0..1 white "light source" look for the homepage load intro (js/hero-intro.js drives it).
+    this.intro = document.documentElement.classList.contains("swft-intro") ? 1 : 0;
     this.corners = [];                   // previous corner positions / depths, for splash detection
     this.ripples = [];
     this.rings = new Float32Array(32);
@@ -356,7 +361,7 @@
 
     var u = {};
     ["uRes", "uTime", "uCam", "uFw", "uRight", "uUp", "uFocal", "uCube", "uHalf", "uHasCube",
-     "uToLocal", "uRings[0]"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
+     "uToLocal", "uRings[0]", "uIntro"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
     this.gl = gl;
     this.u = u;
     this.root.classList.add("swft-ocean--live");
@@ -412,7 +417,7 @@
 
   Ocean.prototype.bind = function () {
     var self = this;
-    var relayout = function () { self.scale = 9; self.layout(); };
+    var relayout = function () { self.scale = 9; self.layout(); self.redraw(); };
     if (window.ResizeObserver) new ResizeObserver(relayout).observe(this.root);
     else window.addEventListener("resize", relayout);
     if (window.IntersectionObserver) {
@@ -454,6 +459,7 @@
     // Bob the DOM cube and move its world twin by the same amount.
     if (this.sceneEl) this.sceneEl.style.setProperty("--cube-bob", (-bob * this.pxPerWorld).toFixed(2) + "px");
 
+    this.lastArgs = [t, bob, M, now];
     if (this.gl) this.draw(t, bob, M, now);
     requestAnimationFrame(this.loop);
   };
@@ -521,10 +527,19 @@
     }
   };
 
+  // Repaint straight away with the last frame's motion, e.g. after a layout()
+  // that resized the canvas (which clears it) outside the render loop.
+  Ocean.prototype.redraw = function () {
+    if (!this.gl || !this.lastArgs) return;
+    this.lastKey = "";
+    this.draw(this.lastArgs[0], this.lastArgs[1], this.lastArgs[2], this.lastArgs[3]);
+  };
+
   Ocean.prototype.draw = function (t, bob, M, now) {
     var gl = this.gl, u = this.u;
 
-    var key = t.toFixed(3) + "|" + bob.toFixed(4) + "|" + M.join(",") + "|" + this.canvas.width;
+    var intro = this.intro || 0;
+    var key = t.toFixed(3) + "|" + bob.toFixed(4) + "|" + M.join(",") + "|" + this.canvas.width + "|" + intro.toFixed(3);
     if (key === this.lastKey) return; // nothing moved (reduced motion, idle)
     this.lastKey = key;
 
@@ -540,6 +555,7 @@
     gl.uniform1f(u.uHalf, CUBE_SIZE / 2);
     gl.uniform1f(u.uHasCube, this.cubeEl ? 1 : 0);
     gl.uniform4fv(u["uRings[0]"], this.rings);
+    gl.uniform1f(u.uIntro, intro);
     // Column-major upload: M's rows become the columns of M^T (world -> local).
     gl.uniformMatrix3fv(u.uToLocal, false, [].concat(M[0], M[1], M[2]));
     gl.drawArrays(gl.TRIANGLES, 0, 3);
