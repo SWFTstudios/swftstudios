@@ -1,0 +1,288 @@
+/* ============================================================
+   Homepage "The Problem": auto-playing tabs, one pain point each.
+   Desktop: numbered tab list on the left, the open pain point on the right.
+   Phones: tabs scroll sideways above the panel.
+   The active tab's bar fills while it plays (js/home-pain-tabs.js sets --p).
+   Without JS every pain point is shown in turn, stacked.
+   ============================================================ */
+
+.pain-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 1.25rem 3rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.pain-head .hp-section-title {
+  margin: 0;
+}
+
+.pain-intro {
+  margin: 0;
+  max-width: 38ch;
+  font-size: var(--swft-text-lead, 1.125rem);
+  line-height: 1.6;
+  color: var(--swft-lead, #e3e0de);
+}
+
+.pain-tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.9fr) minmax(0, 2fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+/* ---------- Tabs ---------- */
+.pain-tablist {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
+}
+
+.pain-tab {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 1.05rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
+  background: none;
+  color: #6b6b6b;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.pain-tab__num {
+  font-size: var(--swft-text-label, 0.75rem);
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pain-tab__label {
+  font-family: var(--swft-font-display, "Chakra Petch", sans-serif);
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.pain-tab:hover,
+.pain-tab[aria-selected="true"] {
+  color: #fff;
+}
+
+.pain-tab[aria-selected="true"] .pain-tab__num {
+  color: var(--swft-accent, #56b4e9);
+}
+
+.pain-tab:focus-visible {
+  outline: 2px solid var(--swft-accent, #56b4e9);
+  outline-offset: 2px;
+}
+
+/* Progress: fills along the active tab's bottom rule while it plays */
+.pain-tab__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  overflow: hidden;
+}
+
+.pain-tab__bar span {
+  display: block;
+  height: 100%;
+  background: var(--swft-accent, #56b4e9);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.pain-tab[aria-selected="true"] .pain-tab__bar span {
+  transform: scaleX(var(--p, 1));
+}
+
+/* ---------- Panels ---------- */
+.pain-panels {
+  display: grid;
+}
+
+.pain-panel {
+  grid-area: 1 / 1;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
+  background: linear-gradient(160deg, rgba(86, 180, 233, 0.07), rgba(255, 255, 255, 0.015) 55%);
+}
+
+.pain-panel:focus-visible {
+  outline: 2px solid var(--swft-accent, #56b4e9);
+  outline-offset: 2px;
+}
+
+/* JS mode: one panel at a time, crossfading */
+.pain-tabs.is-js .pain-panel {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.45s;
+}
+
+.pain-tabs.is-js .pain-panel.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.45s ease 0.05s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s, visibility 0s;
+}
+
+/* No JS: stack the panels so every pain point is readable */
+.pain-tabs:not(.is-js) .pain-panels {
+  gap: 1rem;
+}
+
+.pain-tabs:not(.is-js) .pain-panel {
+  grid-area: auto;
+}
+
+.pain-panel__title {
+  margin: 0 0 1rem;
+  font-size: var(--swft-h3, clamp(1.4rem, 1.15rem + 1.1vw, 2.1rem));
+  line-height: 1.1;
+  text-wrap: balance;
+  color: #fff;
+}
+
+.pain-panel__cost {
+  margin: 0 0 1.5rem;
+  max-width: 52ch;
+  font-size: var(--swft-text-body, 1.0625rem);
+  line-height: 1.6;
+  color: var(--swft-lead, #e3e0de);
+}
+
+.pain-panel__fix {
+  margin: 0;
+  padding-top: 1.25rem;
+  max-width: 52ch;
+  border-top: 1px solid var(--swft-border, rgba(255, 255, 255, 0.1));
+  font-size: var(--swft-text-body, 1.0625rem);
+  line-height: 1.6;
+  color: #fff;
+}
+
+.pain-panel__fix-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: var(--swft-text-label, 0.75rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--swft-accent, #56b4e9);
+}
+
+/* Pause / play (WCAG 2.2.2: moving content can be paused) */
+.pain-toggle {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.75rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.16));
+  border-radius: 999px;
+  background: none;
+  color: var(--swft-muted, #b5b5b5);
+  font: 500 0.8rem/1 var(--swft-font, "Inter Display", sans-serif);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.pain-toggle:hover,
+.pain-toggle:focus-visible {
+  border-color: var(--swft-accent, #56b4e9);
+  color: #fff;
+  outline: none;
+}
+
+/* Pause icon: two bars; play icon: a triangle */
+.pain-toggle__icon {
+  width: 9px;
+  height: 10px;
+  border-left: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+}
+
+.pain-toggle[aria-pressed="true"] .pain-toggle__icon {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 9px solid currentColor;
+  border-right: 0;
+}
+
+/* ---------- Tablet / phone ---------- */
+@media (max-width: 860px) {
+  .pain-head,
+  .pain-tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pain-tablist {
+    flex-direction: row;
+    gap: 0.5rem;
+    margin: 0 calc(-1 * var(--swft-gutter, 1rem));
+    padding: 0 var(--swft-gutter, 1rem) 0.25rem;
+    border-top: 0;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .pain-tablist::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pain-tab {
+    flex: 0 0 auto;
+    width: auto;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.14));
+    border-radius: 999px;
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+
+  .pain-tab__label {
+    font-size: 0.95rem;
+  }
+
+  .pain-tab[aria-selected="true"] {
+    border-color: rgba(255, 255, 255, 0.45);
+  }
+
+  .pain-tab__bar {
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.3rem;
+  }
+
+  .pain-toggle {
+    position: static;
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pain-tabs.is-js .pain-panel,
+  .pain-tabs.is-js .pain-panel.is-active {
+    transition: none;
+    transform: none;
+  }
+}
