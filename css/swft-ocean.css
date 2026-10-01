@@ -96,3 +96,18 @@
 @media (prefers-reduced-motion: reduce) {
   .swft-ocean__canvas { transition: none; }
 }
+
+/* Glowing glass cube over the sea: sharp corners, bright ice-blue edges and a
+   strong outer glow that the water picks up (js/swft-ocean.js lights the sea from it) */
+.swft-ocean .swft-cube--glow .swft-cube__face {
+  border: 1.5px solid rgba(225, 244, 255, 0.95);
+  box-shadow:
+    0 0 8px rgba(200, 235, 255, 0.95),
+    0 0 26px rgba(140, 200, 255, 0.7),
+    0 0 60px rgba(110, 180, 255, 0.35),
+    inset 0 0 22px rgba(170, 220, 255, 0.55);
+}
+
+.swft-ocean .swft-cube--glow .swft-cube__face.is-front {
+  border-color: #fff;
+}

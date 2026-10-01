@@ -11,6 +11,12 @@
   - Without JS every service is open. Reduced motion turns the animation off.
 - The old price-led service rows are gone from the homepage; a "See packages & pricing" button links to the pricing page. See [`css/home-services.css`](../css/home-services.css) and [`js/home-services.js`](../js/home-services.js).
 
+## 2026-10-01: Glowing glass cube that ripples the sea
+
+### Changed
+- The homepage cube drops the Rubik's sticker grid for clear glowing glass (`swft-cube--glow`): sharp square corners, crisp photos behind a faint sheen, bright ice-blue edges and a stronger glow that lights the water around and under it.
+- The cube floats lower (`data-hover-gap="0.11"`). As it spins and bobs, its corners touch the wave crests and send ripple rings across the surface (no droplets). It rises (buoyancy) instead of sinking when dragged to a steep angle. See [`js/swft-ocean.js`](../js/swft-ocean.js) and [`docs/SWFT_CUBE.md`](SWFT_CUBE.md).
+
 ## 2026-09-30: Cache busting for CSS and JS
 
 ### Fixed

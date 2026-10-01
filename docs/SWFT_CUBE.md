@@ -59,7 +59,7 @@ Slideshows and the spin pause while the tab is hidden. With `prefers-reduced-mot
 - `data-label` shows as a chip on the face and in the HUD, where screen readers hear it through `aria-live`.
 - The script builds the HUD (rotate buttons, current face label, slide dots, hint) automatically.
 - Size: override `--cube-size` on `.swft-cube` (default `min(64vw, 320px)`).
-- Rubik's look: add `swft-cube--rubik` to `.swft-cube` to set each face as a 3x3 grid of glossy stickers in black plastic. Inside the ocean stage the grid seams also show in the reflection.
+- Glowing glass look: add `swft-cube--glow` to `.swft-cube`. Square, sharp corners (`--cube-radius: 0`), clear photos behind a faint glass sheen; inside the ocean stage the faces get bright ice-blue edges and a strong outer glow.
 - Scrolling on touch: by default the cube handles every swipe that starts on it, so the page doesn't scroll there. Add `data-vertical-swipe="false"` to let vertical swipes scroll the page. Horizontal swipes still spin the cube.
 - Cubes added after page load: call `SwftCube.init()`.
 - Event: the root dispatches `swftcube:facechange` with `detail.face` whenever the front face changes.
@@ -78,6 +78,7 @@ Wrap the cube in `<section class="swft-ocean" data-swft-ocean>` and load `css/sw
 - **Water:** a long, low swell rolls toward the camera with faster, sharp-crested ripples on top. The thin crests between the viewer and the cube glow blue where its light passes through them, and the troughs fall away darker.
 - **Reflection:** the camera sits just above the water, so the cube's glowing edges mirror in the moving ripples as a long, broken streak, with glints where its light catches the water.
 - **Mist:** faint mist lies on the water under the cube.
+- **Touching the water:** the cube floats low (`data-hover-gap`, `0.11` on the homepage), so as it spins and bobs its lowest corners dip into the crests. Each touch sends a ripple ring spreading across the surface; a corner that stays in the water keeps small rings pulsing out from it. The rings tilt the water's surface in the shader, so they show up as bending lines in the cube's glow and reflection. No droplets or spray. If a drag tilts the cube so a corner would sink deep, the cube bobs up (buoyancy). Rings from new touches are off under `prefers-reduced-motion`.
 - **Alignment:** the cube's on-screen position (`--cube-y`) is solved from the same camera the water uses, so the reflection always lines up. It bobs gently. When the stage is short for the cube, the camera tilts up (by up to 6°) so the spinning cube's corners stay clear of the top edge.
 
 Rendering:
