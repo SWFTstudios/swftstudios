@@ -1,9 +1,9 @@
 {
   "hub": {
     "title": "Areas We Serve | Jersey City, North Jersey & NYC | SWFT Studios",
-    "description": "SWFT Studios builds websites, photo and video content, and lead systems for local businesses across Jersey City, North Jersey, and New York City.",
+    "description": "SWFT Studios helps local businesses across Jersey City, North Jersey and New York City get seen, capture attention, convert it into customers and keep them coming back.",
     "h1": "Local websites and content for Jersey City, North Jersey, and NYC",
-    "lead": "We work on site with service businesses and growing brands across Hudson County, North Jersey, and the five boroughs. Pick your area to see how we help nearby businesses turn attention into booked customers."
+    "lead": "We work on site with service businesses and growing brands across Hudson County, North Jersey and the five boroughs. Pick your area to see how we take nearby customers from first search to repeat visit."
   },
   "regions": [
     {
@@ -282,22 +282,22 @@
     {
       "name": "GBP Content Refresh",
       "href": "/website-pricing.html#gbp-refresh",
-      "blurb": "On-site photo, short-form video, and Google Business Profile cleanup without a full website rebuild."
+      "blurb": "Get seen and look great locally: on-site photo, short-form video and a Google Business Profile that shows up in local search."
     },
     {
       "name": "Website Only",
       "href": "/website-pricing.html#website-only",
-      "blurb": "Conversion-focused Webflow or Shopify builds when you already have usable photos and copy."
+      "blurb": "Convert: a fast Webflow or Shopify site that makes booking or buying the obvious next step, using the photos and copy you already have."
     },
     {
       "name": "Website + Content",
       "href": "/website-pricing.html#website-content-half",
-      "blurb": "Website build plus half-day or full-day on-location photo and video capture."
+      "blurb": "Capture and convert together: a website plus a half-day or full-day on-location photo and video shoot."
     },
     {
       "name": "Content + Growth Retainer",
       "href": "/website-pricing.html#ongoing",
-      "blurb": "Month-to-month content, posting, and review support after your site is live."
+      "blurb": "Nurture and repeat: month-to-month content, posting and review support that keep customers coming back."
     }
   ]
 }

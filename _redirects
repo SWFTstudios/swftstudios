@@ -1,3 +1,26 @@
 /book/gbp-refresh.html /book/gbp-content-refresh.html 301!
 /book/gbp-refresh /book/gbp-content-refresh.html 301!
 /book/gbp-refresh/ /book/gbp-content-refresh.html 301!
+
+# 2026-10-01 site restructure: one page per purpose. Retired pages point to
+# the page that now does their job (both .html and clean URLs).
+/websites.html          /case-studies.html          301
+/websites               /case-studies.html          301
+/resources.html         /case-studies.html          301
+/resources              /case-studies.html          301
+/media.html             /case-studies.html          301
+/media                  /case-studies.html          301
+/videos.html            /case-studies.html          301
+/videos                 /case-studies.html          301
+/swft-tv.html           /case-studies.html          301
+/swft-tv                /case-studies.html          301
+/portfolio-review.html  /case-studies.html          301
+/portfolio-review       /case-studies.html          301
+/apps.html              /services.html              301
+/apps                   /services.html              301
+/tools.html             /services.html#automate     301
+/tools                  /services.html#automate     301
+/swft-method.html       /growth-audit               301
+/swft-method            /growth-audit               301
+/pricing.html           /website-pricing.html       301
+/pricing                /website-pricing.html       301

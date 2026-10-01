@@ -38,8 +38,8 @@ These contain custom logic or config and must not be replaced by a Webflow expor
 These page shells can be replaced when they match your Webflow design:
 
 - `index.html`, `404.html`, `401.html`
-- `websites.html`, `apps.html`, `media.html`, `website-pricing.html`
-- `resources.html`, `portfolio-review.html`, `style-guide.html`, `swft-tv.html`, `videos.html`
+- `website-pricing.html`
+- `style-guide.html`
 
 ### Assets
 

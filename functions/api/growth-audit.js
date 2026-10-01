@@ -78,6 +78,7 @@ export async function onRequestPost(context) {
     str(body.desiredServiceLabel, 200) || SERVICE_LABELS[desiredService] || desiredService;
   const details = str(body.details, 4000);
   const photoLinks = str(body.photoLinks, 1000);
+  const biggestLeak = str(body.biggestLeak, 200);
   const phone = str(body.phone, 40);
   const sourcePage = str(body.sourcePage, 300);
   const utmSource = str(body.utmSource, 120);
@@ -156,6 +157,7 @@ export async function onRequestPost(context) {
         ${row("Business", businessName)}
         ${row("Website", websiteUrl)}
         ${row("Social", instagram)}
+        ${row("Biggest leak", biggestLeak)}
         ${row("Desired service", desiredServiceLabel)}
         ${row("Details", details)}
         ${row("Photo links", photoLinks)}
@@ -169,7 +171,7 @@ export async function onRequestPost(context) {
     confirmHtml: `
       <p>Hi ${escapeHtml(firstName)},</p>
       <p>Thanks for requesting a Free Growth Audit for <strong>${escapeHtml(businessName)}</strong>.</p>
-      <p>We'll review your site and send personalized recommendations to this email within a few business days.</p>
+      <p>We'll review how people find you, what they see, how easy it is to buy or book, and what happens afterward, then email you the three fixes that will make the biggest difference within a few business days.</p>
       <p>If you haven't booked a call yet, you can pick a time here: <a href="https://cal.com/swftstudios/swft-meeting">cal.com/swftstudios/swft-meeting</a>.</p>
       <p>Questions in the meantime? Just reply to this message or email hello@swftstudios.com.</p>
       <p>SWFT Studios</p>

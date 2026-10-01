@@ -2,13 +2,13 @@
 <html data-wf-page="688e7554265d8089278ca766" data-wf-site="688e7554265d8089278ca76e" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Web Design + Content for Growing Businesses | SWFT Studios</title>
-  <meta content="We help service businesses and growing brands in NYC, Jersey City, and North Jersey turn attention into booked customers with websites, photo/video content, and lead systems." name="description">
-  <meta content="Web Design + Content for Growing Businesses | SWFT Studios" property="og:title">
-  <meta content="Websites and content that turn attention into booked customers. Transparent project pricing from $400 GBP refreshes to full website + content builds." property="og:description">
+  <title>Marketing From First Scroll to Repeat Customer | SWFT Studios</title>
+  <meta content="SWFT Studios runs your digital marketing end to end for businesses in NYC, Jersey City and North Jersey: get seen, capture attention, convert, nurture and automate what works. Start with a free Growth Audit." name="description">
+  <meta content="Marketing From First Scroll to Repeat Customer | SWFT Studios" property="og:title">
+  <meta content="Content, websites and automation that take a stranger from first scroll to repeat customer. Start with a free Growth Audit." property="og:description">
   <meta content="https://cdn.prod.website-files.com/688e7554265d8089278ca76e/688fe8fd55a360a548808bcb_Screenshot%202025-08-03%20at%206.54.36%E2%80%AFPM.png" property="og:image">
-  <meta content="Web Design + Content for Growing Businesses | SWFT Studios" property="twitter:title">
-  <meta content="Websites and content that turn attention into booked customers. Transparent project pricing from $400 GBP refreshes to full website + content builds." property="twitter:description">
+  <meta content="Marketing From First Scroll to Repeat Customer | SWFT Studios" property="twitter:title">
+  <meta content="Content, websites and automation that take a stranger from first scroll to repeat customer. Start with a free Growth Audit." property="twitter:description">
   <meta content="https://cdn.prod.website-files.com/688e7554265d8089278ca76e/688fe8fd55a360a548808bcb_Screenshot%202025-08-03%20at%206.54.36%E2%80%AFPM.png" property="twitter:image">
   <link rel="canonical" href="https://www.swftstudios.com/">
   <meta property="og:type" content="website">
@@ -446,6 +446,63 @@ body{
       color: var(--swft-accent, #56b4e9);
       outline: none;
     }
+    /* The SWFT Method: five stage cards + the content engine note under them */
+    #How-we-work .process-content-container {
+      flex-wrap: wrap;
+      row-gap: 2.5rem;
+    }
+    #How-we-work .process-card {
+      padding: 2rem 2.25rem;
+    }
+    #How-we-work .process-card-title {
+      font-family: var(--swft-font-display, "Chakra Petch", sans-serif);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .process-engine {
+      flex: 1 1 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr) auto;
+      gap: 1rem 2rem;
+      align-items: center;
+      padding: 1.75rem 2rem;
+      border: 1px solid rgba(86, 180, 233, 0.45);
+      background: linear-gradient(120deg, rgba(86, 180, 233, 0.12), rgba(86, 180, 233, 0.02) 60%);
+    }
+    .process-engine__label {
+      font-size: var(--swft-text-label, 0.75rem);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--swft-accent, #56b4e9);
+    }
+    .process-engine__text {
+      margin: 0;
+      font-size: var(--swft-text-lead, 1.125rem);
+      line-height: 1.55;
+      color: #fff;
+    }
+    .process-engine__link {
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--swft-accent, #56b4e9);
+      padding-bottom: 2px;
+    }
+    .process-engine__link:hover,
+    .process-engine__link:focus-visible {
+      color: var(--swft-accent, #56b4e9);
+    }
+    @media (max-width: 860px) {
+      .process-engine {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 1.5rem;
+      }
+      .process-engine__link {
+        justify-self: start;
+      }
+    }
     .hp-audience-hint {
       margin: 0.25rem 0 0;
       color: var(--swft-muted, #a8a8a8);
@@ -461,10 +518,18 @@ body{
     "mainEntity": [
       {
         "@type": "Question",
+        "name": "What does SWFT stand for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Strategic Workflows Facilitating Transformation. It's how we work: we map the path that takes a stranger from discovering you to buying again, fix the weak links, and automate what works so growth becomes repeatable instead of lucky."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "What is the Free Growth Audit?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A personalized strategic review of your website, offer, and customer journey, not an automated score. You receive three prioritized recommendations by email."
+          "text": "A personal review of your marketing across all five stages: getting seen, capturing attention, converting, nurturing and automating. Not an automated score. You get the three highest-impact fixes by email, free, with no call required."
         }
       },
       {
@@ -488,7 +553,7 @@ body{
         "name": "What do we deliver?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Website design and development, photo and video content, and lead-capture / follow-up systems, so you are not juggling multiple agencies."
+          "text": "Everything between a stranger finding you and a customer coming back: Google Business Profile and local SEO, photo and video content, websites and booking paths, follow-up and review systems, and the automation and reporting that tie it together. One team instead of four vendors."
         }
       },
       {
@@ -1032,21 +1097,21 @@ margin: 0rem !important;
                 <div class="w-layout-grid course_component">
                   <div id="w-node-_8934f37e-af8f-f8cd-214f-b358479c4d84-278ca766" class="course_content">
                     <div class="margin-bottom margin-small">
-                      <div class="text-size-small text-color-green">Brand · Website · Content</div>
+                      <div class="text-size-small text-color-green">Strategic Workflows · Facilitating Transformation</div>
                     </div>
                     <div class="margin-bottom margin-small">
                       <div class="max-width-large">
                         <h1 class="text-weight-medium">Own your blue ocean.</h1>
                       </div>
                     </div>
-                    <p class="testimonial-text">Websites and content that lift your brand out of the crowd and into open water.</p>
+                    <p class="testimonial-text">From first scroll to repeat customer. We create the content that gets you seen, the website that turns attention into inquiries, and the systems that bring customers back.</p>
                     <div class="margin-top margin-medium">
                       <div class="button-group is-course">
                         <a href="/growth-audit" class="button is-course w-inline-block">
                           <div class="button_bg"></div>
                           <div class="button_text">Free Growth Audit</div>
                         </a>
-                        <a href="websites.html" class="button is-course outlined w-inline-block">
+                        <a href="case-studies.html" class="button is-course outlined w-inline-block">
                           <div class="button_bg"></div>
                           <div class="button_text">See Our Work</div>
                         </a>
@@ -1059,7 +1124,7 @@ margin: 0rem !important;
               <section id="About" class="swft-about" aria-labelledby="about-heading">
                 <div class="swft-about__inner">
                   <div class="swft-about__label"><span>-&gt; [ About us ]</span><span>SWFT</span></div>
-                  <h2 id="about-heading" class="swft-about__statement" data-scroll-highlight>SWFT Studios creates high-converting marketing content and brand-true digital experiences for Bergen, Hudson, and NYC.</h2>
+                  <h2 id="about-heading" class="swft-about__statement" data-scroll-highlight>Strategic Workflows Facilitating Transformation. One team that takes a stranger from first scroll to loyal customer, then repeats what works.</h2>
                 </div>
                 <div class="swft-about-gallery" role="region" aria-label="Recent work" data-about-carousel>
                   <div class="swft-about-gallery__eclipse swft-about-gallery__eclipse--top" aria-hidden="true"></div>
@@ -1077,47 +1142,47 @@ margin: 0rem !important;
                   </div>
                   <div class="swft-about-gallery__eclipse swft-about-gallery__eclipse--bottom" aria-hidden="true"></div>
                 </div>
-                <p class="swft-about__more"><a href="websites.html">View all work <span aria-hidden="true">&rarr;</span></a></p>
+                <p class="swft-about__more"><a href="case-studies.html">View all work <span aria-hidden="true">&rarr;</span></a></p>
               </section>
               <section class="hp-section pain" id="homepage-problems" aria-labelledby="hp-problems-heading">
                 <div class="hp-section-label">The Problem</div>
                 <div class="pain-head">
                   <h2 class="hp-section-title" id="hp-problems-heading">Great at the work. Invisible online.</h2>
-                  <p class="pain-intro">Most businesses that come to us are already good at what they do. The trouble starts when a customer goes looking for them online.</p>
+                  <p class="pain-intro">Growth breaks at one of five points between a stranger finding you and a customer coming back. Most businesses are leaking at more than one.</p>
                 </div>
                 <div class="pain-tabs" data-pain-tabs data-interval="7000">
                   <div class="pain-tablist" role="tablist" aria-label="Why businesses struggle online">
-                    <button type="button" class="pain-tab" role="tab" id="pain-tab-1" aria-controls="pain-panel-1" aria-selected="true" tabindex="0"><span class="pain-tab__num">01</span><span class="pain-tab__label">Hard to find</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
-                    <button type="button" class="pain-tab" role="tab" id="pain-tab-2" aria-controls="pain-panel-2" aria-selected="false" tabindex="-1"><span class="pain-tab__num">02</span><span class="pain-tab__label">Unclear</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
-                    <button type="button" class="pain-tab" role="tab" id="pain-tab-3" aria-controls="pain-panel-3" aria-selected="false" tabindex="-1"><span class="pain-tab__num">03</span><span class="pain-tab__label">Weak visuals</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
-                    <button type="button" class="pain-tab" role="tab" id="pain-tab-4" aria-controls="pain-panel-4" aria-selected="false" tabindex="-1"><span class="pain-tab__num">04</span><span class="pain-tab__label">No inquiries</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
-                    <button type="button" class="pain-tab" role="tab" id="pain-tab-5" aria-controls="pain-panel-5" aria-selected="false" tabindex="-1"><span class="pain-tab__num">05</span><span class="pain-tab__label">Inconsistent</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
+                    <button type="button" class="pain-tab" role="tab" id="pain-tab-1" aria-controls="pain-panel-1" aria-selected="true" tabindex="0"><span class="pain-tab__num">01</span><span class="pain-tab__label">Not seen</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
+                    <button type="button" class="pain-tab" role="tab" id="pain-tab-2" aria-controls="pain-panel-2" aria-selected="false" tabindex="-1"><span class="pain-tab__num">02</span><span class="pain-tab__label">Scrolled past</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
+                    <button type="button" class="pain-tab" role="tab" id="pain-tab-3" aria-controls="pain-panel-3" aria-selected="false" tabindex="-1"><span class="pain-tab__num">03</span><span class="pain-tab__label">No inquiries</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
+                    <button type="button" class="pain-tab" role="tab" id="pain-tab-4" aria-controls="pain-panel-4" aria-selected="false" tabindex="-1"><span class="pain-tab__num">04</span><span class="pain-tab__label">One-and-done</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
+                    <button type="button" class="pain-tab" role="tab" id="pain-tab-5" aria-controls="pain-panel-5" aria-selected="false" tabindex="-1"><span class="pain-tab__num">05</span><span class="pain-tab__label">Guesswork</span><span class="pain-tab__bar" aria-hidden="true"><span></span></span></button>
                   </div>
                   <div class="pain-panels">
                     <div class="pain-panel" role="tabpanel" id="pain-panel-1" aria-labelledby="pain-tab-1" tabindex="0">
-                      <h3 class="pain-panel__title">Customers search for exactly what you do, and find someone else.</h3>
-                      <p class="pain-panel__cost">If your Google profile is thin or your site doesn&rsquo;t show up for local searches, the people already looking for you end up booking a competitor.</p>
-                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span>We build out your Google Business Profile, local pages and fresh content so you show up where buying decisions start.</p>
+                      <h3 class="pain-panel__title">The right people never see you.</h3>
+                      <p class="pain-panel__cost">If you don&rsquo;t show up in local search, on Google Maps or in the feeds your customers scroll, the best work in town stays a secret.</p>
+                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span><strong>Get seen.</strong> A Google Business Profile that ranks, local pages and content made for each platform put you where buying decisions start.</p>
                     </div>
                     <div class="pain-panel" role="tabpanel" id="pain-panel-2" aria-labelledby="pain-tab-2" tabindex="0">
-                      <h3 class="pain-panel__title">Visitors can&rsquo;t tell what you do, or why you&rsquo;re the one to choose.</h3>
-                      <p class="pain-panel__cost">People give a website a few seconds. If the offer is vague or buried, they hit back and you never know they were there.</p>
-                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span>We sharpen your message so the first screen says what you do, who it&rsquo;s for and what to do next.</p>
+                      <h3 class="pain-panel__title">They see you, then scroll right past.</h3>
+                      <p class="pain-panel__cost">Generic photos and forgettable posts blend into the feed. Attention lasts about a second, and yours is losing it.</p>
+                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span><strong>Capture.</strong> Scroll-stopping photo and video built around what your audience already responds to, in your look and your voice.</p>
                     </div>
                     <div class="pain-panel" role="tabpanel" id="pain-panel-3" aria-labelledby="pain-tab-3" tabindex="0">
-                      <h3 class="pain-panel__title">Your photos make great work look ordinary.</h3>
-                      <p class="pain-panel__cost">Stock images and old phone shots tell customers you&rsquo;re like everyone else, even when the real thing is better.</p>
-                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span>We shoot on-site photo and video of your space, team and product, so what people see online matches the quality you deliver.</p>
+                      <h3 class="pain-panel__title">People visit, then leave without reaching out.</h3>
+                      <p class="pain-panel__cost">Interest without a clear next step is lost revenue. A vague offer, a buried form or no booking button and warm leads go cold.</p>
+                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span><strong>Convert.</strong> A fast, clear website and booking path that make the next step obvious, so attention turns into inquiries and sales.</p>
                     </div>
                     <div class="pain-panel" role="tabpanel" id="pain-panel-4" aria-labelledby="pain-tab-4" tabindex="0">
-                      <h3 class="pain-panel__title">People browse, then leave without reaching out.</h3>
-                      <p class="pain-panel__cost">Interest without a clear next step is lost revenue. No booking button, a buried form or no follow-up means warm leads go cold.</p>
-                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span>We add booking and inquiry paths wherever someone is ready, and connect follow-up so every lead gets an answer.</p>
+                      <h3 class="pain-panel__title">Customers buy once, then forget you.</h3>
+                      <p class="pain-panel__cost">Without follow-up, reviews and reminders, every sale ends the relationship, and you pay to win the same customer twice.</p>
+                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span><strong>Nurture.</strong> Review requests, follow-ups and reactivation campaigns that turn one-time buyers into regulars and referrers.</p>
                     </div>
                     <div class="pain-panel" role="tabpanel" id="pain-panel-5" aria-labelledby="pain-tab-5" tabindex="0">
-                      <h3 class="pain-panel__title">Your brand looks different everywhere you show up.</h3>
-                      <p class="pain-panel__cost">When your website, Instagram and Google profile don&rsquo;t match, customers hesitate. Inconsistency reads as risk.</p>
-                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span>We build one brand system, from logo to color to voice, and carry it across your site, socials and listings.</p>
+                      <h3 class="pain-panel__title">Every win is luck you can&rsquo;t repeat.</h3>
+                      <p class="pain-panel__cost">When you don&rsquo;t know which post, page or offer brought a customer in, you can&rsquo;t do it again on purpose, and you&rsquo;re doing it all by hand.</p>
+                      <p class="pain-panel__fix"><span class="pain-panel__fix-label">How we fix it</span><strong>Automate &amp; repeat.</strong> We track what works, automate the follow-up and feed the winners into new content, so the cycle runs again and again.</p>
                     </div>
                   </div>
                   <button type="button" class="pain-toggle" aria-pressed="false" hidden><span class="pain-toggle__icon" aria-hidden="true"></span><span class="pain-toggle__text">Pause</span></button>
@@ -1314,7 +1379,7 @@ margin: 0rem !important;
           </div>
           <div class="ar-pointer-work" aria-hidden="true"><span>View Work</span></div>
         </div>
-        <p class="ar-container ar-work-more"><a class="ar-btn ar-btn--outline" href="websites.html">View all work</a></p>
+        <p class="ar-container ar-work-more"><a class="ar-btn ar-btn--outline" href="case-studies.html">View all work</a></p>
       </section>
       <section class="hp-section" id="proven-results" aria-labelledby="hp-proven-heading">
                 <div class="hp-section-label">Our Work</div>
@@ -1404,31 +1469,40 @@ margin: 0rem !important;
         <div class="section-wrapper glow-2">
           <div class="section-container process">
             <div class="section-tag-container">
-              <div>Our Methodology</div>
+              <div>The SWFT Method</div>
               <div class="section-tag-line"></div>
             </div>
             <div class="process-content-container">
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d1d" style="opacity:0" class="section-title-container">
-                <h2 class="section-title">How the process works</h2>
-                <div class="testimonial-text">A clear path from understanding your business to improving what converts.</div>
+                <h2 class="section-title">From first scroll to repeat customer.</h2>
+                <div class="testimonial-text">Five stages, one team. We find where your growth is leaking, fix it, then automate the fix so it keeps working.</div>
               </div>
-              <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d22" style="opacity:0" class="process-card-container">
+              <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d22" style="opacity:0" class="process-card-container process-card-container--five">
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d23" class="process-card">
-                  <div class="process-card-title">1. Understand</div>
-                  <p class="testimonial-text">We identify the business problem, audience, and desired outcome.</p>
+                  <div class="process-card-title">1. Get seen</div>
+                  <p class="testimonial-text">Google Business Profile, local SEO and platform-ready content put you in front of people already looking.</p>
                 </div>
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d28" class="process-card">
-                  <div class="process-card-title">2. Plan</div>
-                  <p class="testimonial-text">We map the messaging, customer journey, content, and technical requirements.</p>
+                  <div class="process-card-title">2. Capture</div>
+                  <p class="testimonial-text">Photo and video built from what your audience stops for, true to your look and your message.</p>
                 </div>
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d2d" class="process-card">
-                  <div class="process-card-title">3. Build</div>
-                  <p class="testimonial-text">We create the website, content, and supporting systems.</p>
+                  <div class="process-card-title">3. Convert</div>
+                  <p class="testimonial-text">A fast, clear website and booking path that turns attention into inquiries and sales.</p>
                 </div>
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d32" class="process-card">
-                  <div class="process-card-title">4. Improve</div>
-                  <p class="testimonial-text">We review performance, gather feedback, and refine the experience.</p>
+                  <div class="process-card-title">4. Nurture</div>
+                  <p class="testimonial-text">Follow-ups, review requests and reactivation that turn one-time buyers into regulars.</p>
                 </div>
+                <div class="process-card">
+                  <div class="process-card-title">5. Automate &amp; repeat</div>
+                  <p class="testimonial-text">We track what worked, automate it and feed the winners back into new content.</p>
+                </div>
+              </div>
+              <div class="process-engine">
+                <div class="process-engine__label">The content engine</div>
+                <p class="process-engine__text">Content that&rsquo;s proven before it&rsquo;s posted. We study what already works with your audience, then produce more of it, fast, in your look and your voice.</p>
+                <a class="process-engine__link" href="services.html">See how the method works <span aria-hidden="true">&rarr;</span></a>
               </div>
             </div>
           </div>
@@ -1439,7 +1513,7 @@ margin: 0rem !important;
           <div class="ar-section-label"><span>-&gt; [ Our services ]</span><span>SWFT</span></div>
           <div class="svc-head">
             <h2 id="services-heading" class="svc-title">Creative <span class="svc-title__dim">Services</span></h2>
-            <p class="svc-subtitle">From brand identity to photo, video, websites and marketing, we build what makes customers stop scrolling and start booking.</p>
+            <p class="svc-subtitle">Brand, photo and video, websites and marketing all plug into the same system, so nothing you pay for works alone.</p>
           </div>
           <div class="svc-rule" aria-hidden="true"></div>
           <div class="svc-body" data-services>
@@ -1500,14 +1574,14 @@ margin: 0rem !important;
         <div class="container-large">
           <div class="hp-section-label">Free Growth Audit</div>
           <div class="hp-booking-copy">
-            <h2 id="hp-audit-heading">Find out what is costing your business customers online.</h2>
-            <p>Submit your website or social profile and receive a personalized review of the three changes most likely to improve trust, inquiries, and sales.</p>
+            <h2 id="hp-audit-heading">Find out where your business is leaking customers.</h2>
+            <p>Send us your website or social profile. We&rsquo;ll review all five stages, from how people find you to whether they come back, and email you the three fixes that will move the needle most. Free, personal, no call required.</p>
             <div class="button-group is-course margin-top margin-medium">
               <a href="/growth-audit" class="button is-course w-inline-block">
                 <div class="button_bg"></div>
                 <div class="button_text">Get Your Free Growth Audit</div>
               </a>
-              <a href="websites.html" class="button is-course outlined w-inline-block">
+              <a href="case-studies.html" class="button is-course outlined w-inline-block">
                 <div class="button_bg"></div>
                 <div class="button_text">View our work</div>
               </a>
@@ -1521,8 +1595,12 @@ margin: 0rem !important;
           <h2 class="hp-section-title" id="hp-faq-heading">Common questions</h2>
           <div class="hp-faq" style="max-width:42rem;display:grid;gap:1.25rem;">
             <details>
+              <summary>What does SWFT stand for?</summary>
+              <p>Strategic Workflows Facilitating Transformation. It&rsquo;s how we work: we map the path that takes a stranger from discovering you to buying again, fix the weak links, and automate what works so growth becomes repeatable instead of lucky.</p>
+            </details>
+            <details>
               <summary>What is the Free Growth Audit?</summary>
-              <p>A personalized strategic review of your website, offer, and customer journey, not an automated score. You receive three prioritized recommendations by email.</p>
+              <p>A personal review of your marketing across all five stages: getting seen, capturing attention, converting, nurturing and automating. Not an automated score. You get the three highest-impact fixes by email, free, with no call required.</p>
             </details>
             <details>
               <summary>Who do we help?</summary>
@@ -1534,7 +1612,7 @@ margin: 0rem !important;
             </details>
             <details>
               <summary>What do we deliver?</summary>
-              <p>Website design and development, photo and video content, and lead-capture / follow-up systems, so you are not juggling multiple agencies.</p>
+              <p>Everything between a stranger finding you and a customer coming back: Google Business Profile and local SEO, photo and video content, websites and booking paths, follow-up and review systems, and the automation and reporting that tie it together. One team instead of four vendors.</p>
             </details>
             <details>
               <summary>How much does a website cost?</summary>
@@ -1655,7 +1733,7 @@ tippy('.nav_link.is-muted', {
 </script>
   <script src="js/homepage-audience.js?v=20260930b"></script>
   <script src="js/swft-analytics.js?v=20260930b"></script>
-  <script src="js/swft-nav.js?v=20261001a"></script>
+  <script src="js/swft-nav.js?v=20261001h"></script>
   <script src="js/swft-cube.js?v=20261001e"></script>
   <script src="js/swft-ocean.js?v=20261001e"></script>
   <script src="js/swft-about.js?v=20260930b"></script>

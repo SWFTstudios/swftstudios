@@ -1,14 +1,14 @@
 {
   "hero": {
-    "headline": "Your business deserves to look as good as the work you do.",
-    "sub": "Start with better visuals, build a site that turns interest into inquiries, or bring both together. Practical website and content packages for NYC + NJ businesses.",
-    "trustLine": "Work directly with the creator · Defined deliverables · Clear scope before work begins"
+    "headline": "Pick the stage that’s costing you the most.",
+    "sub": "Every package plugs into the SWFT Method, from getting seen to bringing customers back. Prices are published, scope is itemized, and nothing starts until you approve it.",
+    "trustLine": "Work directly with the people who create it · Itemized scope before you pay · Month-to-month retainers"
   },
   "calUrl": "/growth-audit",
   "projectTiers": {
     "id": "project-tiers",
-    "label": "Build your online presence",
-    "intro": "Know exactly what comes with your starting package: page count, shoot hours, photos, videos and launch work are itemized before you choose extras.",
+    "label": "Fix a stage",
+    "intro": "One-time projects that get you seen, capture attention and convert it. Page count, shoot hours, photos, videos and launch work are itemized before you choose extras.",
     "tiers": [
       {
         "id": "gbp-refresh",
@@ -39,7 +39,7 @@
           "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
           "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
         },
-        "bestFor": "LOOK GREAT LOCALLY",
+        "bestFor": "GET SEEN + CAPTURE",
         "checkoutNote": "The exact starter scope and optional work are listed before you book.",
         "badge": "Quick first win",
         "baseScopeNote": "Includes one local business location and one existing, verified Google Business Profile with owner access. Photos are selected from the included shoot. No website build, extra shoot time or additional video edits are included.",
@@ -81,7 +81,7 @@
           "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
           "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
         },
-        "bestFor": "MAKE IT EASY TO BOOK YOU",
+        "bestFor": "CONVERT",
         "checkoutNote": "The exact starter scope and optional work are listed before you book.",
         "baseScopeNote": "You provide your logo, copy, photos and any product details. No photo/video session is included. Extra pages, additional products, complex bookings, copywriting and integrations are quoted separately.",
         "baseCounts": {
@@ -125,7 +125,7 @@
           "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
           "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
         },
-        "bestFor": "SHOW THE WORK, THEN SELL IT",
+        "bestFor": "CAPTURE + CONVERT",
         "checkoutNote": "The exact starter scope and optional work are listed before you book.",
         "baseScopeNote": "Your 50 photos and 3 short videos are INCLUDED at $2,000. You supply brand assets and initial site copy; extra photos, extra reels, added pages, filming hours and additional locations are separate. Full GBP optimization is not included.",
         "baseCounts": {
@@ -166,7 +166,7 @@
           "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
           "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
         },
-        "bestFor": "GO BEYOND ONE LOCATION",
+        "bestFor": "CAPTURE + CONVERT AT SCALE",
         "checkoutNote": "The exact starter scope and optional work are listed before you book.",
         "baseScopeNote": "The 6-hour production window includes local travel between the two approved shoot locations. You supply branding and initial copy. Additional pages, products, filming hours, locations or video edits are extras; full GBP optimization is not included.",
         "baseCounts": {
@@ -182,8 +182,8 @@
   },
   "ongoingTiers": {
     "id": "ongoing",
-    "label": "Stay visible after launch",
-    "intro": "Each monthly tier defines its recurring visits, edited assets and managed channels. Extras are quoted separately before you subscribe.",
+    "label": "Run the whole method",
+    "intro": "Monthly content, follow-up and automation that keep the cycle repeating. Each tier defines its recurring visits, edited assets and managed channels; extras are quoted before you subscribe.",
     "tiers": [
       {
         "id": "content-growth-retainer",
@@ -215,7 +215,7 @@
           "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
           "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
         },
-        "bestFor": "STAY TOP OF MIND",
+        "bestFor": "NURTURE + REPEAT",
         "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
         "baseScopeNote": "This is the $450/mo starter scope, not unlimited content. The 12 photos, 1 video and 60-minute visit reset each month. Additional edits, filming time, social publishing or extra locations are quoted separately.",
         "baseCounts": {
@@ -258,7 +258,7 @@
           "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
           "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
         },
-        "bestFor": "PAIR CONTENT WITH CAMPAIGNS",
+        "bestFor": "THE FULL SWFT METHOD",
         "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
         "baseScopeNote": "Starts at $1,200/mo for one location and one managed Meta campaign. Media spend is paid separately by you to Meta. Extra campaigns, locations, posts, production time and edited assets are quoted separately; monthly content does not roll over.",
         "baseCounts": {
@@ -274,12 +274,16 @@
     ]
   },
   "bookCta": {
-    "headline": "Not sure what you need yet?",
-    "quote": "Tell us what is holding your business back online. We'll recommend a focused first step.",
-    "sub": "No pressure to buy a bigger package. Start with the problem worth solving now.",
+    "headline": "Not sure where you’re leaking customers?",
+    "quote": "Send us your website or social profile. We’ll review all five stages and email you the three fixes that will move the needle most.",
+    "sub": "Free and personal. No call, no pressure to buy a bigger package.",
     "button": "Get My Free Growth Audit"
   },
   "faq": [
+    {
+      "q": "Which package should I start with?",
+      "a": "Start where you lose the most customers. If people can’t find you, start with the GBP Content Refresh. If they find you but don’t reach out, start with a website. If you’re not sure, the free Growth Audit will tell you."
+    },
     {
       "q": "How much does it cost to get started?",
       "a": "Local content and Google Business Profile work starts at $400. A Webflow or Shopify website starts at $800. A website with on-site photo/video capture starts at $2,000. Larger, multi-location projects start at $3,000."
