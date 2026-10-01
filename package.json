@@ -8,7 +8,8 @@
     "deploy:pages": "wrangler pages deploy . --project-name=swftstudios-website",
     "test:forms": "node --test tests/forms/api.test.mjs tests/forms/sheets.test.mjs",
     "test:forms:browser": "node tests/forms/browser.mjs",
-    "test:forms:live": "node tests/forms/live-smoke.mjs"
+    "test:forms:live": "node tests/forms/live-smoke.mjs",
+    "test:pricing": "node --test tests/pricing/pricing-data.test.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",

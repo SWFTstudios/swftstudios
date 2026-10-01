@@ -3,7 +3,7 @@
 
   async function init() {
     var mount = document.getElementById("pricing-mount");
-    if (!mount || !window.SwftPricing) return;
+    if (!mount || !window.SwftPricing || !window.SwftPricingDetail) return;
 
     try {
       var res = await fetch("data/pricing.json");
@@ -15,14 +15,7 @@
       if (heroTitle) heroTitle.textContent = data.hero.headline;
       if (heroLead) heroLead.textContent = data.hero.sub;
 
-      var pricingApi = SwftPricing.mountPricing(mount, data, {
-        layout: "full",
-        showHero: false,
-        showFaqLink: false,
-        showOngoing: true,
-        showTrustLine: true,
-        tabs: true
-      });
+      SwftPricingDetail.mount(mount, data);
 
       var faqList = document.getElementById("faq-list");
       if (faqList && data.faq) {
@@ -46,17 +39,6 @@
       }
 
       var hash = window.location.hash.replace("#", "");
-      if (
-        hash === "ongoing" ||
-        hash === "content-creation"
-      ) {
-        if (pricingApi) pricingApi.activateTab("ongoing");
-      } else if (
-        hash === "project-tiers" ||
-        hash === "website-development"
-      ) {
-        if (pricingApi) pricingApi.activateTab("onetime");
-      }
 
       var scrollIds = {
         "content-creation": "ongoing",

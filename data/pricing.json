@@ -50,7 +50,27 @@
           "shootMinutes": 90,
           "locations": 1,
           "profiles": 1
-        }
+        },
+        "compare": {
+          "pages": "—",
+          "photos": "15",
+          "videos": "1",
+          "shoot": "90 min",
+          "locations": "1",
+          "gbp": "Optimized + 1 post",
+          "meta": "—",
+          "reviews": "Review link or QR",
+          "revisions": "1 round"
+        },
+        "youProvide": [
+          "An existing, verified Google Business Profile (owner access)",
+          "One local business location to shoot at"
+        ],
+        "notIncluded": [
+          "Website build",
+          "Extra shoot time",
+          "Extra video edits"
+        ]
       },
       {
         "id": "website-only",
@@ -92,7 +112,31 @@
           "locations": 0,
           "profiles": 0,
           "products": 5
-        }
+        },
+        "compare": {
+          "pages": "Up to 3",
+          "photos": "—",
+          "videos": "—",
+          "shoot": "—",
+          "locations": "—",
+          "gbp": "—",
+          "meta": "—",
+          "reviews": "—",
+          "revisions": "1 round"
+        },
+        "youProvide": [
+          "Logo and branding",
+          "Website copy",
+          "Photos",
+          "Product details (if selling on Shopify)"
+        ],
+        "notIncluded": [
+          "Photo or video shoot",
+          "Copywriting",
+          "Pages beyond 3, or products beyond 5",
+          "Complex bookings and integrations",
+          "Platform and domain fees (billed by those providers)"
+        ]
       },
       {
         "id": "website-content-half",
@@ -135,7 +179,29 @@
           "shootMinutes": 180,
           "locations": 1,
           "profiles": 0
-        }
+        },
+        "compare": {
+          "pages": "Up to 5",
+          "photos": "50",
+          "videos": "3",
+          "shoot": "Up to 3 hrs",
+          "locations": "1",
+          "gbp": "Up to 10 photos added",
+          "meta": "—",
+          "reviews": "—",
+          "revisions": "1 round"
+        },
+        "youProvide": [
+          "Brand assets",
+          "Initial site copy",
+          "Google Business Profile access (so we can add photos)"
+        ],
+        "notIncluded": [
+          "Extra photos or reels",
+          "Added pages",
+          "Extra filming hours or locations",
+          "Full Google Business Profile optimization"
+        ]
       },
       {
         "id": "website-content-full",
@@ -176,7 +242,28 @@
           "shootMinutes": 360,
           "locations": 2,
           "profiles": 0
-        }
+        },
+        "compare": {
+          "pages": "Up to 7",
+          "photos": "80",
+          "videos": "5",
+          "shoot": "Up to 6 hrs",
+          "locations": "Up to 2",
+          "gbp": "Up to 15 photos added",
+          "meta": "—",
+          "reviews": "—",
+          "revisions": "Up to 2 rounds"
+        },
+        "youProvide": [
+          "Branding",
+          "Initial site copy",
+          "Google Business Profile access (so we can add photos)"
+        ],
+        "notIncluded": [
+          "Added pages or products",
+          "Extra filming hours, locations or video edits",
+          "Full Google Business Profile optimization"
+        ]
       }
     ]
   },
@@ -225,7 +312,28 @@
           "shootMinutes": 60,
           "locations": 1,
           "profiles": 1
-        }
+        },
+        "compare": {
+          "pages": "—",
+          "photos": "12 / mo",
+          "videos": "1 / mo",
+          "shoot": "Up to 60 min / mo",
+          "locations": "1",
+          "gbp": "2 posts / mo",
+          "meta": "—",
+          "reviews": "Response templates",
+          "revisions": "1 round / mo"
+        },
+        "youProvide": [
+          "An existing Google Business Profile",
+          "Posting your review responses (we supply the guidance and templates)"
+        ],
+        "notIncluded": [
+          "Unlimited content: monthly amounts reset and don't roll over",
+          "Extra edits or filming time",
+          "Social media publishing",
+          "Extra locations"
+        ]
       },
       {
         "id": "full-growth-partner",
@@ -269,7 +377,29 @@
           "locations": 1,
           "profiles": 1,
           "campaigns": 1
-        }
+        },
+        "compare": {
+          "pages": "—",
+          "photos": "30 / mo",
+          "videos": "3 / mo",
+          "shoot": "Up to 3 hrs / mo",
+          "locations": "1",
+          "gbp": "2 posts / mo",
+          "meta": "1 managed campaign",
+          "reviews": "Response guidance",
+          "revisions": "1 round / mo"
+        },
+        "youProvide": [
+          "Your own Meta ad account",
+          "Ad spend, paid directly to Meta",
+          "An existing Google Business Profile"
+        ],
+        "notIncluded": [
+          "Ad spend and platform fees",
+          "Extra campaigns or locations",
+          "Extra posts, production time or edited assets",
+          "Rollover of monthly content"
+        ]
       }
     ]
   },
@@ -316,5 +446,226 @@
       "q": "How long does a project take?",
       "a": "Timing depends on the assets you supply, page count, shoot schedule, feedback and approval turnaround. We confirm a realistic timeline during intake."
     }
-  ]
+  ],
+  "compareRows": [
+    {
+      "key": "pages",
+      "label": "Website pages"
+    },
+    {
+      "key": "photos",
+      "label": "Edited photos"
+    },
+    {
+      "key": "videos",
+      "label": "Short videos"
+    },
+    {
+      "key": "shoot",
+      "label": "On-site shoot"
+    },
+    {
+      "key": "locations",
+      "label": "Locations covered"
+    },
+    {
+      "key": "gbp",
+      "label": "Google Business Profile"
+    },
+    {
+      "key": "reviews",
+      "label": "Reviews"
+    },
+    {
+      "key": "meta",
+      "label": "Meta ads"
+    },
+    {
+      "key": "revisions",
+      "label": "Revisions"
+    }
+  ],
+  "compareNote": "“Starting at” is the minimum published price for a tightly scoped version of each package. Monthly amounts reset every month and don’t roll over. Anything beyond what’s listed is an extra, quoted before you agree.",
+  "extras": {
+    "intro": "Need more than a package covers? These are optional. Priced extras are indicative one-time rates; everything else is quoted individually. Either way, it’s confirmed in your written proposal before any work starts.",
+    "priced": [
+      {
+        "id": "extra-pages",
+        "group": "Website",
+        "label": "Additional page",
+        "price": 175,
+        "unit": "per page",
+        "detail": "One standard page beyond the agreed base site; complex features quoted separately."
+      },
+      {
+        "id": "local-page",
+        "group": "Local visibility",
+        "label": "Local landing page",
+        "price": 250,
+        "unit": "per page",
+        "detail": "One additional location-focused landing page using existing assets."
+      },
+      {
+        "id": "location-profiles",
+        "group": "Local visibility",
+        "label": "Additional Google Business Profile",
+        "price": 175,
+        "unit": "per profile",
+        "detail": "One extra existing eligible profile; an on-site shoot at that location is separate."
+      },
+      {
+        "id": "extra-reels",
+        "group": "Content",
+        "label": "Extra edited Reel",
+        "price": 125,
+        "unit": "per video",
+        "detail": "One extra short-form edit from footage captured at the same shoot."
+      },
+      {
+        "id": "extra-photos",
+        "group": "Content",
+        "label": "10 extra edited photos",
+        "price": 100,
+        "unit": "per set of 10",
+        "detail": "An additional selection from the same shoot; new product setups quoted separately."
+      },
+      {
+        "id": "extra-shoot",
+        "group": "Content",
+        "label": "Extra filming hour",
+        "price": 150,
+        "unit": "per hour",
+        "detail": "One additional hour at the same location, subject to availability."
+      },
+      {
+        "id": "testimonials",
+        "group": "Content",
+        "label": "Filmed testimonial",
+        "price": 175,
+        "unit": "per testimonial",
+        "detail": "One interview captured during your shoot with a short edited cut."
+      },
+      {
+        "id": "raw-assets",
+        "group": "Content",
+        "label": "Raw footage delivery",
+        "price": 100,
+        "unit": "per shoot",
+        "detail": "Available source footage from one shoot; transfer method confirmed at kickoff."
+      }
+    ],
+    "quotedTitle": "Quoted individually",
+    "quoted": [
+      {
+        "id": "extra-location",
+        "label": "Additional location"
+      },
+      {
+        "id": "product-detail",
+        "label": "Product / detail photos"
+      },
+      {
+        "id": "booking-advanced",
+        "label": "Advanced booking setup"
+      },
+      {
+        "id": "shopify-migration",
+        "label": "Store or catalog migration"
+      },
+      {
+        "id": "automations",
+        "label": "CRM + email follow-ups"
+      },
+      {
+        "id": "multilingual",
+        "label": "Multilingual pages"
+      },
+      {
+        "id": "priority-launch",
+        "label": "Priority launch"
+      },
+      {
+        "id": "content-shoot",
+        "label": "Original photo + video shoot (for website-only clients)"
+      },
+      {
+        "id": "review-flow",
+        "label": "Advanced review follow-up"
+      },
+      {
+        "id": "monthly-visibility",
+        "label": "Ongoing local content"
+      },
+      {
+        "id": "social-posting",
+        "label": "Social media posting"
+      },
+      {
+        "id": "email-campaign",
+        "label": "Email campaign"
+      },
+      {
+        "id": "campaign-extra",
+        "label": "Extra ad campaign"
+      },
+      {
+        "id": "landing-campaign",
+        "label": "Campaign landing page"
+      },
+      {
+        "id": "reporting-extra",
+        "label": "Deeper reporting"
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "What happens after you pick a package",
+    "steps": [
+      {
+        "title": "Choose a package, or start with the free audit",
+        "text": "Not sure which stage is costing you most? The Free Growth Audit tells you, with no call and no pressure to buy."
+      },
+      {
+        "title": "We confirm scope, timeline and total in writing",
+        "text": "Your pages, shoot time, locations and deliverables are itemized first. Nothing starts until you approve it."
+      },
+      {
+        "title": "We build and shoot",
+        "text": "Timing depends on the assets you supply, page count, shoot schedule and how quickly feedback comes back. We confirm a realistic timeline during intake."
+      },
+      {
+        "title": "You review and request changes",
+        "text": "Every package includes the consolidated revision round(s) listed above, so feedback is gathered once and handled together."
+      },
+      {
+        "title": "We launch and deliver",
+        "text": "Sites go live with launch assistance. Photos and videos are delivered as listed. Monthly plans repeat each month under the same scope."
+      }
+    ]
+  },
+  "promises": {
+    "title": "How we keep pricing fair",
+    "items": [
+      {
+        "title": "Exact counts, not vague promises",
+        "text": "Every package states how many pages, photos, videos and shoot hours you get."
+      },
+      {
+        "title": "Scope in writing before you pay",
+        "text": "We confirm the scope and total with you before starting, and nothing starts until you approve."
+      },
+      {
+        "title": "Extras are optional and itemized",
+        "text": "Priced at the rates above or quoted individually. You say yes before they’re added."
+      },
+      {
+        "title": "No long-term contracts",
+        "text": "One-time projects are scoped per engagement. Monthly plans are month-to-month."
+      },
+      {
+        "title": "Third-party costs stay separate",
+        "text": "Ad spend, Webflow or Shopify subscriptions and domains are billed by those providers, unless your proposal says otherwise."
+      }
+    ]
+  }
 }
