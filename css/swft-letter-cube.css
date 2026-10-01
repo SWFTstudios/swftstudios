@@ -1,0 +1,151 @@
+/* ============================================================
+   SWFT letter cube: a small glowing white 3D cube with S, W, F, T on its
+   four sides, in an extended squared face close to the business card
+   logo. Spins slowly; drag (or arrow keys) to turn it.
+   Pair with js/swft-letter-cube.js.
+   ============================================================ */
+@font-face {
+  font-family: "Michroma";
+  src: url("../fonts/Michroma-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF;
+}
+
+.swft-lcube {
+  --lc-size: clamp(96px, 9vw, 132px);
+  --lc-half: calc(var(--lc-size) / 2);
+  position: relative;
+  width: var(--lc-size);
+  height: var(--lc-size);
+  margin: clamp(1.5rem, 4vw, 3rem) 0 1rem clamp(0.5rem, 2vw, 1.5rem);
+  perspective: 700px;
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.swft-lcube:active,
+.swft-lcube.is-dragging { cursor: grabbing; }
+
+.swft-lcube:focus-visible {
+  outline: 2px solid var(--swft-accent, #56b4e9);
+  outline-offset: 14px;
+  border-radius: 6px;
+}
+
+/* Soft white halo behind the cube */
+.swft-lcube::before {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.28) 0%, rgba(205, 225, 245, 0.1) 40%, transparent 68%);
+  filter: blur(6px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  animation: swft-lcube-breathe 4.5s ease-in-out infinite;
+}
+
+.swft-lcube:hover::before,
+.swft-lcube.is-dragging::before {
+  opacity: 1;
+  transform: scale(1.12);
+  animation-play-state: paused;
+}
+
+@keyframes swft-lcube-breathe {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+.swft-lcube__body {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(-18deg) rotateY(-28deg);
+  will-change: transform;
+}
+
+.swft-lcube__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background:
+    radial-gradient(circle at 30% 25%, #ffffff 0%, #f4f7fa 45%, #dde4eb 100%);
+  border: 1px solid rgba(170, 185, 202, 0.85);
+  box-shadow:
+    0 0 22px rgba(255, 255, 255, 0.55),
+    0 0 48px rgba(190, 220, 245, 0.25),
+    inset 0 0 18px rgba(150, 165, 185, 0.35);
+  transition: box-shadow 0.35s ease;
+}
+
+.swft-lcube:hover .swft-lcube__face,
+.swft-lcube.is-dragging .swft-lcube__face {
+  box-shadow:
+    0 0 30px rgba(255, 255, 255, 0.8),
+    0 0 70px rgba(190, 220, 245, 0.4),
+    inset 0 0 18px rgba(150, 165, 185, 0.35);
+}
+
+/* Business-card lettering: wide, squared, heavy, dark chrome */
+.swft-lcube__face span {
+  font-family: "Michroma", "Eurostile Extended", "Arial Black", sans-serif;
+  font-size: calc(var(--lc-size) * 0.54);
+  line-height: 1;
+  font-weight: 400;
+  color: #14171c;
+  /* Michroma has one weight; stacked hairline shadows thicken it toward the
+     card's heavy extended letters, then a soft drop shadow lifts it */
+  --lc-b: calc(var(--lc-size) * 0.011);
+  text-shadow:
+    var(--lc-b) 0 0 #14171c, calc(var(--lc-b) * -1) 0 0 #14171c,
+    0 var(--lc-b) 0 #14171c, 0 calc(var(--lc-b) * -1) 0 #14171c,
+    var(--lc-b) var(--lc-b) 0 #14171c, calc(var(--lc-b) * -1) calc(var(--lc-b) * -1) 0 #14171c,
+    var(--lc-b) calc(var(--lc-b) * -1) 0 #14171c, calc(var(--lc-b) * -1) var(--lc-b) 0 #14171c,
+    0 3px 8px rgba(20, 30, 45, 0.3);
+  transform: translateY(2%);
+}
+
+.swft-lcube__face--front  { transform: translateZ(var(--lc-half)); }
+.swft-lcube__face--right  { transform: rotateY(90deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--back   { transform: rotateY(180deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--left   { transform: rotateY(-90deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--top    { transform: rotateX(90deg) translateZ(var(--lc-half)); background: #ffffff; }
+.swft-lcube__face--bottom { transform: rotateX(-90deg) translateZ(var(--lc-half)); background: #c9d2dc; }
+
+/* Before the script runs (or without JS): a slow CSS spin */
+.swft-lcube:not(.is-js) .swft-lcube__body {
+  animation: swft-lcube-spin 16s linear infinite;
+}
+
+@keyframes swft-lcube-spin {
+  from { transform: rotateX(-18deg) rotateY(0deg); }
+  to { transform: rotateX(-18deg) rotateY(-360deg); }
+}
+
+.swft-lcube__hint {
+  margin: 0 0 0 clamp(0.5rem, 2vw, 1.5rem);
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 767px) {
+  .swft-lcube { margin-left: auto; margin-right: auto; }
+  .swft-lcube__hint { margin-left: 0; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swft-lcube::before { animation: none; }
+  .swft-lcube:not(.is-js) .swft-lcube__body { animation: none; }
+}

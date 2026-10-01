@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-01: SWFT letter cube in "The SWFT Method"
+
+### Added
+- A small glowing white 3D cube under the "From first scroll to repeat customer." text on the homepage, with **S, W, F, T** on its four sides in Michroma (self-hosted, OFL), the closest web font to the business card's wide, squared logo lettering, thickened to match its weight. It spins slowly on its own; drag it to turn it (with momentum), or focus it and use the left/right arrow keys to step a face at a time. Pauses when off-screen; no auto-spin under reduced motion. See [`css/swft-letter-cube.css`](../css/swft-letter-cube.css) and [`js/swft-letter-cube.js`](../js/swft-letter-cube.js).
+
 ## 2026-10-01: Curved nav bar
 
 ### Changed
