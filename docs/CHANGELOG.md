@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-01: Glowing glass cube that ripples the sea
+
+### Changed
+- The homepage cube drops the Rubik's sticker grid for clear glowing glass (`swft-cube--glow`): sharp square corners, crisp photos behind a faint sheen, bright ice-blue edges and a stronger glow that lights the water around and under it.
+- The cube floats lower (`data-hover-gap="0.11"`). As it spins and bobs, its corners touch the wave crests and send ripple rings across the surface (no droplets). It rises (buoyancy) instead of sinking when dragged to a steep angle. See [`js/swft-ocean.js`](../js/swft-ocean.js) and [`docs/SWFT_CUBE.md`](SWFT_CUBE.md).
+
 ## 2026-09-30: Cache busting for CSS and JS
 
 ### Fixed
