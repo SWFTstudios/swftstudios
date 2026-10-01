@@ -30,8 +30,6 @@
 
   // Splashes: the cube floats low enough that its corners clip the crests as it spins.
   var DIP_MAX = 0.07;            // deepest a corner may sink below the mean water line before the cube bobs up
-  var GRAVITY = 5.5;             // world units / s^2 for spray
-  var MAX_DROPS = 180;
 
   var VERT = "attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}";
 
@@ -312,7 +310,6 @@
     this.pitch = CAM_PITCH;
     this.lift = 0;                       // buoyancy: raises the cube when a corner would sink too deep
     this.corners = [];                   // previous corner positions / depths, for splash detection
-    this.drops = [];
     this.ripples = [];
     this.contacts = [];
     this.foam = new Float32Array(32);
@@ -443,7 +440,7 @@
     if (!this.visible || document.hidden) { this.prevLoop = 0; return; }
 
     var still = reducedMotion();
-    // Reduced motion slows the water instead of freezing it; the bob and the spray stop.
+    // Reduced motion slows the water instead of freezing it; the bob and the splash rings stop.
     var t = (now - this.start) / 1000 * (still ? CALM_SPEED : 1);
     var dt = this.prevLoop ? Math.min(0.05, (now - this.prevLoop) / 1000) : 1 / 60;
     this.prevLoop = now;
@@ -482,8 +479,8 @@
     return M;
   };
 
-  // Find the corners touching the water: foam where they sit in it, a splash ring and
-  // spray when one cuts in, a trickle of spray while a submerged corner sweeps along.
+  // Find the corners touching the water: foam where they sit in it, and a foam ring
+  // plus a puff of mist when one cuts in (or a crest slaps up against it).
   Ocean.prototype.updateSplash = function (M, bob, t, dt, still) {
     var half = CUBE_SIZE / 2;
     var cx = this.cube[0], cy = this.cube[1] + bob, cz = this.cube[2];
@@ -505,29 +502,18 @@
         var slap = depth > -0.025 && dDepth > 0.18;   // a crest slapping up against a low corner
         if ((cutIn || slap) && cool <= 0) {
           cool = 0.7;
-          // A corner meeting the water: ring + a burst sized by how hard it hit
+          // A corner meeting the water: a ring sized by how hard it hit
           var impact = Math.min(1, Math.max(0.25, dDepth / 1.2 + Math.hypot(vx, vz) / 3));
           this.ripples.push({ x: x, z: z, age: 0, str: 0.5 + 0.5 * impact });
-          this.emit(x, y + depth, z, cx, cz, vx, vz, Math.round(14 + 26 * impact), impact);
-        } else if (depth > 0) {
-          var sweep = Math.hypot(vx, vz);
-          if (Math.random() < sweep * dt * 10) this.emit(x, y + depth, z, cx, cz, vx, vz, 2, 0.35);
         }
       }
       this.corners[n++] = { x: x, z: z, depth: depth, cool: prev ? cool : 0 };
     }
 
-    // Ripples age out; spray falls under gravity until it drops back into the sea.
+    // Ripples age out.
     for (var i = this.ripples.length - 1; i >= 0; i--) {
       this.ripples[i].age += dt;
       if (this.ripples[i].age > 2.4) this.ripples.splice(i, 1);
-    }
-    for (var j = this.drops.length - 1; j >= 0; j--) {
-      var d = this.drops[j];
-      d.vy -= GRAVITY * dt;
-      d.x += d.vx * dt; d.y += d.vy * dt; d.z += d.vz * dt;
-      d.life += dt;
-      if ((d.vy < 0 && d.y < -0.05) || d.life > 2.5) this.drops.splice(j, 1);
     }
 
     // Pack foam for the shader: live contacts (deepest first), then the newest rings.
@@ -543,24 +529,6 @@
       f[k * 4] = rp.x; f[k * 4 + 1] = rp.z; f[k * 4 + 2] = rp.age; f[k * 4 + 3] = rp.str;
     }
     this.contacts = contacts;
-  };
-
-  Ocean.prototype.emit = function (x, y, z, cx, cz, vx, vz, count, impact) {
-    // Spray flies outward from the cube and along the corner's own motion.
-    var ox = x - cx, oz = z - cz, ol = Math.hypot(ox, oz) || 1;
-    ox /= ol; oz /= ol;
-    for (var i = 0; i < count && this.drops.length < MAX_DROPS; i++) {
-      var out = rand(0.25, 0.9) * (0.6 + impact);
-      var spread = rand(-0.5, 0.5);
-      this.drops.push({
-        x: x + rand(-0.03, 0.03), y: y, z: z + rand(-0.03, 0.03),
-        vx: (ox - oz * spread) * out + vx * rand(0.2, 0.6),
-        vz: (oz + ox * spread) * out + vz * rand(0.2, 0.6),
-        vy: rand(0.8, 2.1) * (0.55 + 0.6 * impact),
-        r: rand(0.009, 0.022) * (0.8 + impact * 0.5),
-        life: 0
-      });
-    }
   };
 
   // Project a world point to CSS pixels in the stage (same camera as the shader).
@@ -580,10 +548,7 @@
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, this.W, this.H);
-    if (!this.drops.length && !this.contacts.length) return;
-
-    var cubeP = this.project(this.cube[0], this.cube[1], this.cube[2]);
-    var cubeR = cubeP ? cubeP[2] * CUBE_SIZE * 0.8 : 0;
+    if (!this.ripples.length && !this.contacts.length) return;
 
     // Whitewater where a corner sits in the water, drawn over the corner's tip.
     for (var k = 0; k < this.contacts.length; k++) {
@@ -620,24 +585,6 @@
       mg.addColorStop(1, "rgba(180, 220, 255, 0)");
       ctx.fillStyle = mg;
       ctx.beginPath(); ctx.arc(mp[0], mp[1], mr, 0, Math.PI * 2); ctx.fill();
-    }
-
-    // Droplets: short motion streaks of ice-white water, fading as they fall.
-    ctx.lineCap = "round";
-    for (var i = 0; i < this.drops.length; i++) {
-      var d = this.drops[i];
-      var q = this.project(d.x, d.y, d.z);
-      if (!q) continue;
-      // Behind the cube and inside its silhouette: hidden by the cube.
-      if (cubeP && q[3] > cubeP[3] && Math.abs(q[0] - cubeP[0]) < cubeR && Math.abs(q[1] - cubeP[1]) < cubeR) continue;
-      var q0 = this.project(d.x - d.vx * 0.035, d.y - d.vy * 0.035, d.z - d.vz * 0.035) || q;
-      var rr = Math.max(0.7, d.r * q[2]);
-      var al = Math.max(0, 1 - d.life / 1.4);
-      ctx.strokeStyle = "rgba(215, 238, 255," + (al * 0.85) + ")";
-      ctx.lineWidth = rr * 1.6;
-      ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
-      ctx.fillStyle = "rgba(245, 251, 255," + al + ")";
-      ctx.beginPath(); ctx.arc(q[0], q[1], rr, 0, Math.PI * 2); ctx.fill();
     }
   };
 

@@ -111,7 +111,7 @@
   border-color: rgba(240, 250, 255, 0.95);
 }
 
-/* Spray from the cube's corners clipping the water, drawn over the cube */
+/* Whitewater and mist where the cube's corners clip the water, drawn over the cube */
 .swft-ocean__spray {
   position: absolute;
   inset: 0;
