@@ -26,6 +26,7 @@ Every public page has one job in the funnel. The site's message is the SWFT Meth
 | `/services.html` | The SWFT Method: what we do at each stage and which offer covers it |
 | `/website-pricing.html` | Pricing: pick the stage that's costing you the most |
 | `/case-studies.html` | Work: proof (case studies) and marketing guides |
+| `/video-gallery.html` | Video work: double slider (stage + thumbnail rail) of Vimeo films |
 | `/growth-audit` | Free Growth Audit: the no-brainer first step (warm lead to the inbox) |
 | `/contact.html` | Project inquiry (hot lead to the inbox) |
 | `/book/` | Stripe booking for each offer (hot lead / sale) |

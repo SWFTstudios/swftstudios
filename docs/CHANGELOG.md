@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-01: Video gallery page
+
+### Added
+- **`/video-gallery.html`**: a double slider of SWFT films. A large 16:9 stage (active video centred, neighbours peeking, plays inline in a Vimeo player on click) is synced with a thumbnail rail below and a caption that slides vertically with it; arrows, a `03 / 13` counter, a progress line, keyboard arrows and swipe. Videos are listed by Vimeo id (plus the private-link hash for unlisted ones) at the top of [`js/video-gallery.js`](../js/video-gallery.js); titles and thumbnails load from Vimeo's public oEmbed, so renaming a video on Vimeo updates the page. Styles in [`css/video-gallery.css`](../css/video-gallery.css). Not in the main nav yet; linked from the sitemaps.
+
 ## 2026-10-01: Homepage load intro (birdseye descent) + scroll-in text animation
 
 ### Added
