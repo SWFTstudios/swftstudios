@@ -1,9 +1,15 @@
 /**
- * Shared Resend helpers for Cloudflare Pages Functions.
+ * Shared Resend helpers for Cloudflare Pages Functions (and the Worker, which
+ * reuses these handlers).
  * Env: RESEND_API_KEY (secret), optional RESEND_FROM, NOTIFY_EMAIL
+ *
+ * Every lead goes to the SWFT inbox, hello@swftstudios.com. NOTIFY_EMAIL (one
+ * address or a comma-separated list) adds more recipients; it never replaces
+ * the inbox, so a stale env value can't send leads somewhere else.
  */
-const DEFAULT_FROM = "SWFT Studios <hello@swftstudios.com>";
-const DEFAULT_NOTIFY = "elombe@swftstudios.com";
+export const LEAD_INBOX = "hello@swftstudios.com";
+const DEFAULT_FROM = `SWFT Studios <${LEAD_INBOX}>`;
+const RETRY_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504]);
 
 export function escapeHtml(value) {
   return String(value ?? "")
@@ -41,36 +47,55 @@ export async function sendResendEmail(env, { to, subject, html, text, replyTo, i
   };
   if (idempotencyKey) headers["Idempotency-Key"] = String(idempotencyKey).slice(0, 256);
 
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
+  // One retry for transient failures (rate limit, 5xx, network). The
+  // Idempotency-Key makes the retry safe: Resend won't send twice.
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) return true;
       const errBody = await res.text().catch(() => "");
-      console.error("Resend error", res.status, errBody.slice(0, 500));
-      return false;
+      console.error("Resend error", res.status, `attempt ${attempt}`, errBody.slice(0, 500));
+      if (!RETRY_STATUSES.has(res.status)) return false;
+    } catch (err) {
+      console.error("Resend fetch failed", `attempt ${attempt}`, err);
     }
-    return true;
-  } catch (err) {
-    console.error("Resend fetch failed", err);
-    return false;
+    if (attempt === 1) await new Promise((r) => setTimeout(r, 600));
   }
+  return false;
 }
 
-export function notifyAddress(env) {
-  return env.NOTIFY_EMAIL || env.FORMSUBMIT_EMAIL || DEFAULT_NOTIFY;
+/** All team recipients: the SWFT inbox first, plus any NOTIFY_EMAIL extras. */
+export function teamRecipients(env) {
+  const extra = String(env.NOTIFY_EMAIL || env.FORMSUBMIT_EMAIL || "")
+    .split(",")
+    .map((a) => a.trim())
+    .filter((a) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a));
+  const seen = new Set();
+  return [LEAD_INBOX, ...extra].filter((a) => {
+    const k = a.toLowerCase();
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+/** Primary address shown to visitors / used as reply-to. */
+export function notifyAddress() {
+  return LEAD_INBOX;
 }
 
 /** Team alert + visitor confirmation. Best-effort; does not throw. */
 export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, teamSubject, teamHtml, confirmSubject, confirmHtml, idempotencyBase, backupStored = false }) {
-  const notify = notifyAddress(env);
+  const team = teamRecipients(env);
   const base = idempotencyBase || `${kind}/${Date.now()}`;
   const results = { team: false, visitor: false };
 
   results.team = await sendResendEmail(env, {
-    to: notify,
+    to: team,
     subject: teamSubject,
     html: teamHtml,
     replyTo: visitorEmail || undefined,
@@ -84,7 +109,7 @@ export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, tea
       to: visitorEmail,
       subject: confirmSubject,
       html: confirmHtml,
-      replyTo: notify,
+      replyTo: LEAD_INBOX,
       idempotencyKey: `${base}/visitor`,
     });
   }

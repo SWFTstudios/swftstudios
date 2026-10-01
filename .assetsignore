@@ -16,3 +16,5 @@ docs/
 *.md
 .env
 .env.*
+tests/
+**/tests/**

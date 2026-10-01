@@ -1,5 +1,13 @@
 # SWFT website form delivery
 
+## Testing
+
+| Command | What it proves |
+|---|---|
+| `npm run test:forms` | Every handler (contact, growth audit, all six booking tiers, checkout and quote) emails hello@swftstudios.com, retries a transient failure, and reports failure instead of fake success when nothing was delivered. No network or secrets needed. |
+| `npm run test:forms:browser` | The same, driven through the real pages in Chromium (needs Playwright; set `CHROMIUM_PATH` for a preinstalled browser). |
+| `npm run test:forms:live -- https://swftstudios.com` | Real delivery: submits three `[SWFT TEST]` leads (contact, audit, booking quote, no charge) to a deployed site and checks the server confirms the email. Then check hello@ for the three emails and delete any Airtable test rows. |
+
 The SWFT website supports four intake endpoints:
 
 | Frontend | Endpoint | Owner notification subject |
@@ -14,7 +22,8 @@ The SWFT website supports four intake endpoints:
 Check **Cloudflare → Workers & Pages → swftstudios-website → Settings → Variables and Secrets**, including the **Production** environment. If there is a separately deployed `swftstudios` Worker routing `swftstudios.com`, configure that Worker separately; secrets do not automatically propagate from Pages to Workers or between preview and production.
 
 - `RESEND_API_KEY`: a valid **secret** for the Resend API, set in the actual runtime serving the domain.
-- `NOTIFY_EMAIL`: `elombe@swftstudios.com` (or explicitly choose another inbox). The code now defaults to this address if unset.
+- Every lead email goes to **hello@swftstudios.com**. This is fixed in code (`LEAD_INBOX` in `functions/_lib/resend.js`).
+- `NOTIFY_EMAIL` (optional): extra recipients, one address or a comma-separated list, e.g. `elombe@swftstudios.com`. It adds copies; it can no longer replace the inbox.
 - `RESEND_FROM`: `SWFT Studios <hello@swftstudios.com>`; the `swftstudios.com` sending domain must be verified with Resend.
 - `AIRTABLE_TOKEN` is optional for email delivery; recommended as a **separate backup** and for the CRM, with correct base/table permissions.
 
@@ -22,7 +31,7 @@ Check **Cloudflare → Workers & Pages → swftstudios-website → Settings → 
 
 ## Reliability behavior
 
-The team email is sent to `NOTIFY_EMAIL` or to the default `elombe@swftstudios.com`. The visitor confirmation is attempted only after SWFT team email delivery succeeds **or** Airtable saved the submission. Customer-facing form success requires at least one of those durable outcomes; an unconfirmed request returns a non-2xx error and actionable contact text.
+The team email is sent to hello@swftstudios.com plus any `NOTIFY_EMAIL` extras, with the lead as reply-to. A transient Resend failure (429/5xx/network) is retried once with the same idempotency key, so it can't double-send. The visitor confirmation is attempted only after SWFT team email delivery succeeds **or** Airtable saved the submission. Customer-facing form success requires at least one of those durable outcomes; an unconfirmed request returns a non-2xx error and actionable contact text.
 
 The CRM is a backup, not a dependency: a custom quote email can succeed even when Airtable is offline or not configured. Selecting extras never charges Stripe and must produce `quoteRequested: true`. A base-only order preserves the original Stripe Payment Link. All Worker routes now delegate to the same Pages Function handlers to prevent the domain using a stale version that lacked quote handling.
 
@@ -30,7 +39,7 @@ The booking pages use a non-autofillable hidden spam field; previously mobile au
 
 ## Smoke test without charging a card
 
-1. Open `https://swftstudios.com/book/gbp-content-refresh.html`, select an add-on, enter your own contact information and select **Request my custom quote**. No payment should occur. Look for `Custom quote: GBP Content Refresh` in `elombe@swftstudios.com`. Check the spam folder.
+1. Open `https://swftstudios.com/book/gbp-content-refresh.html`, select an add-on, enter your own contact information and select **Request my custom quote**. No payment should occur. Look for `Custom quote: GBP Content Refresh` in `hello@swftstudios.com`. Check the spam folder.
 2. Submit the Contact form and Growth Audit using real test details. Confirm a team notification with the submitted fields and, optionally, visitor confirmation.
 3. Use a base-only tier form and stop at Stripe Checkout; do **not** pay just to test the request routing.
 4. If a form still errors, examine the active Cloudflare runtime request logs and Resend Logs. A 503 with neither a CRM row nor sent team email indicates missing credentials, invalid sender/domain verification, rate limiting, or upstream failure.
