@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-01: "The Problem" becomes auto-playing pain-point tabs; "Who's this for" rewritten
+
+### Changed
+- `#homepage-problems` is now an auto-playing tab section, "Great at the work. Invisible online.", with five pain points: Hard to find, Unclear, Weak visuals, No inquiries, Inconsistent. Each tab shows the problem, what it costs and how SWFT fixes it.
+  - Advances every 7 seconds with a progress bar on the active tab. Holds while a mouse is over it, while keyboard focus is inside and while it's off screen; a Pause/Play button stops it (WCAG 2.2.2). Reduced motion starts it paused.
+  - ARIA tabs with arrow keys, Home and End. Numbered list on desktop, sideways-scrolling chips on phones. Without JS all five are shown stacked.
+  - See [`css/home-pain-tabs.css`](../css/home-pain-tabs.css) and [`js/home-pain-tabs.js`](../js/home-pain-tabs.js).
+- `#homepage-audience` copy now speaks to what customers want: "For owners who want a full calendar, not just a nice website", a new intro, and each industry card opens with the outcome that customer is after.
+
 ## 2026-10-01: Homepage services rebuilt after the ARAISE services section
 
 ### Changed
