@@ -26,7 +26,7 @@ Every public page has one job in the funnel. The site's message is the SWFT Meth
 | `/services.html` | The SWFT Method: what we do at each stage and which offer covers it |
 | `/website-pricing.html` | Pricing: pick the stage that's costing you the most |
 | `/case-studies.html` | Work: proof (case studies) and marketing guides |
-| `/visuals.html` | Visuals: photo and video work in a draggable grid; projects open full screen (`?p=slug`) with a Vimeo/MP4 player or image slideshow. Content in `data/visuals.json` |
+| `/visuals.html` | Visuals: the Vimeo films in a draggable grid; each opens full screen (`?p=<vimeo id>`) with the Vimeo player. Films are listed in `data/visuals.json`; titles and thumbnails load from Vimeo |
 | `/video-gallery.html` | Video work: double slider (stage + thumbnail rail) of Vimeo films |
 | `/growth-audit` | Free Growth Audit: the no-brainer first step (warm lead to the inbox) |
 | `/contact.html` | Project inquiry (hot lead to the inbox) |

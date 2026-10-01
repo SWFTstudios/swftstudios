@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-01: Visuals page is Vimeo videos only
+
+### Changed
+- The Visuals page now shows only the SWFT Vimeo films: the 13 from the Video Gallery, plus the SWFT reel and the Yanko Hernando story (15 in all). The photo projects, the website slideshow, the three MP4 files and the All / Video / Photo filter are gone, along with the slideshow lightbox.
+- Add a film by adding `{"vimeo": "<id>"}` (plus `"hash"` for an unlisted video) to [`data/visuals.json`](../data/visuals.json). Its title, thumbnail, description and duration load from Vimeo's public oEmbed; set `title`, `thumb`, `description`, `client`, `category` or `year` on an entry to override. A film Vimeo won't describe still plays, with a numbered title and a plain tile.
+- Each film's full-screen view now has a "Watch on Vimeo" link, and the duration shows on the tile and in the details.
+
+### Fixed
+- Closing a film opened from a direct link (`/visuals.html?p=...`) no longer steps back out of the site. The page only goes "back" over the history entry it added itself.
+
 ## 2026-10-01: Hologram city grid beside the Free Growth Audit copy
 
 ### Added

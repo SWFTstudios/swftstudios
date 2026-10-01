@@ -3,20 +3,24 @@
 
    - Infinite draggable grid: columns of project tiles that wrap in both
      directions. Drag (with momentum), wheel/trackpad, arrow keys or Tab.
+   - The page is Vimeo videos only. List them in data/visuals.json by Vimeo
+     id (plus the private-link hash for unlisted ones). Titles, thumbnails,
+     descriptions and durations load from Vimeo's public oEmbed, unless the
+     JSON gives its own.
    - Click a tile: GSAP Flip grows its thumbnail into a full-screen
-     project view (?p=slug, so projects are linkable and Back closes them).
-   - Video projects: "Play video" opens a Vimeo (or MP4) lightbox.
-     Photo projects: "Play slideshow" opens an image slideshow lightbox.
+     project view (?p=<vimeo id>, so videos are linkable and Back closes them).
+   - "Play video" opens the Vimeo player in a lightbox.
    - Works without GSAP too (no transitions). Reduced motion: no momentum,
-     near-instant transitions, slideshow starts paused.
+     near-instant transitions.
    ============================================================ */
 (function () {
   "use strict";
 
   var DATA_URL = "/data/visuals.json";
-  var SLIDE_MS = 4500;
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var RATIOS = [4 / 5, 16 / 10, 1, 3 / 4, 16 / 10, 4 / 5, 16 / 9]; // masonry rhythm (width / height)
+  var RATIOS = [16 / 10, 4 / 5, 16 / 9, 1, 16 / 10, 3 / 4, 16 / 9]; // masonry rhythm (width / height)
+  var BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"; // 1x1 clear, until a thumbnail arrives
+  var OEMBED_TIMEOUT = 7000;
 
   var $ = function (id) { return document.getElementById(id); };
   var canvas = $("vz-canvas"), track = $("vz-track");
@@ -26,7 +30,7 @@
   var shade = detail.querySelector(".vz-detail__shade");
   var content = detail.querySelector(".vz-detail__content");
   var dnav = detail.querySelector(".vz-detail__nav");
-  var videoBox = $("vz-video"), slidesBox = $("vz-slides");
+  var videoBox = $("vz-video");
 
   var all = [], items = [], tiles = [], cols = [];
   var colW = 0, gap = 0, setW = 0;
@@ -37,6 +41,7 @@
   var detailImg = null;
   var lastFocus = null;
   var closing = false;
+  var pushed = false;      // true when this page added the history entry for the open film
 
   function G() { return window.gsap; }
   function F() { return window.Flip; }
@@ -49,8 +54,66 @@
     return fetch(DATA_URL, { cache: "no-cache" })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) {
-        all = (d.items || []).filter(function (it) { return it && it.slug && it.thumb; });
+        all = (d.videos || []).filter(function (v) { return v && v.vimeo; }).map(function (v) {
+          var id = String(v.vimeo);
+          return {
+            slug: String(v.slug || id), vimeo: id, hash: v.hash || "",
+            title: v.title || "", client: v.client || "", category: v.category || "", year: v.year || "",
+            description: v.description || "", thumb: v.thumb || "", duration: 0
+          };
+        });
       });
+  }
+
+  function pageUrl(item) { return "https://vimeo.com/" + item.vimeo + (item.hash ? "/" + item.hash : ""); }
+  function shownTitle(item) { return item.title || "Film " + String(all.indexOf(item) + 1).padStart(2, "0"); }
+  function fmtDuration(sec) {
+    sec = Math.round(Number(sec) || 0);
+    if (!sec) return "";
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s2 = sec % 60;
+    return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s2).padStart(2, "0");
+  }
+
+  /* Titles, thumbnails, descriptions and durations from Vimeo's public oEmbed.
+     Anything the JSON already gives is kept. A video Vimeo won't describe
+     (private, or embedding restricted) still plays; it just keeps a numbered
+     title and a plain tile. */
+  function loadMeta(item) {
+    if (item.title && item.thumb) return Promise.resolve();
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, OEMBED_TIMEOUT) : 0;
+    return fetch("https://vimeo.com/api/oembed.json?width=1280&url=" + encodeURIComponent(pageUrl(item)), ctrl ? { signal: ctrl.signal } : {})
+      .then(function (r) { if (!r.ok) throw new Error("oEmbed " + r.status); return r.json(); })
+      .then(function (d) {
+        if (!item.title && d.title) item.title = String(d.title);
+        if (!item.thumb && d.thumbnail_url) item.thumb = String(d.thumbnail_url).replace(/_\d+x\d+(?=[.?]|$)/, "_1280x720");
+        if (!item.description && d.description) item.description = String(d.description);
+        if (!item.client && d.author_name) item.client = String(d.author_name);
+        item.duration = Number(d.duration) || 0;
+        refreshItem(item);
+      })
+      .catch(function () { /* keep the plain tile */ })
+      .then(function () { clearTimeout(timer); });
+  }
+
+  // New details arrived: update every tile of this video (and the open view)
+  function refreshItem(item) {
+    tiles.forEach(function (t) {
+      if (t.item !== item) return;
+      if (item.thumb && t.img.getAttribute("src") !== item.thumb) {
+        t.img.onload = function () { t.el.querySelector(".vz-tile__media").classList.remove("is-empty"); };
+        t.img.src = item.thumb;
+      }
+      t.el.querySelector(".vz-tile__title").textContent = shownTitle(item);
+      t.el.querySelector(".vz-tile__type").textContent = fmtDuration(item.duration) || "Film";
+      if (t.el.getAttribute("aria-hidden") !== "true") {
+        t.el.setAttribute("aria-label", shownTitle(item) + ", video. Open");
+      }
+    });
+    if (current === item) {
+      fillDetail(item);
+      if (detailImg && item.thumb && detailImg.getAttribute("src") !== item.thumb) detailImg.src = item.thumb;
+    }
   }
 
   /* ---------------- Grid ---------------- */
@@ -97,7 +160,7 @@
       col.shift = (c % 2) ? -col.tiles[0].el.offsetHeight / 2 : 0;
       cols.push(col);
     }
-    $("vz-count").textContent = items.length + (items.length === 1 ? " project" : " projects");
+    $("vz-count").textContent = items.length + (items.length === 1 ? " video" : " videos");
     render();
   }
 
@@ -107,24 +170,26 @@
     el.className = "vz-tile";
     el.setAttribute("data-slug", item.slug);
     if (primary) {
-      el.setAttribute("aria-label", item.title + ", " + (item.type === "video" ? "video" : "photos") + ". Open project");
+      el.setAttribute("aria-label", shownTitle(item) + ", video. Open");
     } else {
-      // Repeats of a project in the endless grid stay out of the tab order and screen readers
+      // Repeats of a video in the endless grid stay out of the tab order and screen readers
       el.tabIndex = -1;
       el.setAttribute("aria-hidden", "true");
     }
     el.innerHTML =
-      '<span class="vz-tile__media" style="aspect-ratio:' + ratio.toFixed(4) + '">' +
+      '<span class="vz-tile__media' + (item.thumb ? "" : " is-empty") + '" style="aspect-ratio:' + ratio.toFixed(4) + '">' +
         '<img alt="" draggable="false" decoding="async" loading="lazy">' +
-        (item.type === "video" ? '<span class="vz-tile__badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' : "") +
+        '<span class="vz-tile__badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
       "</span>" +
       '<span class="vz-tile__caption" aria-hidden="true">' +
         '<span class="vz-tile__title"></span>' +
-        '<span class="vz-tile__type">' + (item.type === "video" ? "Video" : "Photo") + "</span>" +
+        '<span class="vz-tile__type"></span>' +
       "</span>";
     var img = el.querySelector("img");
-    img.src = item.thumb;
-    el.querySelector(".vz-tile__title").textContent = item.title;
+    img.src = item.thumb || BLANK;
+    if (item.thumb) img.onload = function () { el.querySelector(".vz-tile__media").classList.remove("is-empty"); };
+    el.querySelector(".vz-tile__title").textContent = shownTitle(item);
+    el.querySelector(".vz-tile__type").textContent = fmtDuration(item.duration) || "Film";
     var t = { el: el, img: img, item: item, x: 0, y: 0 };
     el._vz = t;
     return t;
@@ -251,52 +316,24 @@
     if (h) h.classList.add("is-gone");
   }
 
-  /* Filter */
-  document.querySelectorAll(".vz-filter__btn").forEach(function (b) {
-    b.addEventListener("click", function () {
-      var f = b.getAttribute("data-filter");
-      document.querySelectorAll(".vz-filter__btn").forEach(function (o) {
-        var on = o === b;
-        o.classList.toggle("is-active", on);
-        o.setAttribute("aria-pressed", on ? "true" : "false");
-      });
-      var list = f === "all" ? all : all.filter(function (it) { return it.type === f; });
-      var g = G();
-      if (g && !reduce) {
-        g.to(track, { opacity: 0, duration: 0.2, onComplete: function () {
-          offX = offY = 0; build(list);
-          g.fromTo(track, { opacity: 0, scale: 0.98 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power2.out" });
-        } });
-      } else { offX = offY = 0; build(list); }
-    });
-  });
-
   /* ---------------- Detail (Flip) ---------------- */
 
   function fillDetail(item) {
-    var meta = [item.client, item.category, item.year].filter(Boolean);
-    $("vz-detail-meta").innerHTML = meta.map(function (m) { return "<span></span>"; }).join("");
-    $("vz-detail-meta").querySelectorAll("span").forEach(function (s, i) { s.textContent = meta[i]; });
-    $("vz-detail-title").textContent = item.title;
+    var meta = [item.client, item.category, fmtDuration(item.duration), item.year].filter(Boolean);
+    var metaEl = $("vz-detail-meta");
+    metaEl.innerHTML = meta.map(function () { return "<span></span>"; }).join("");
+    metaEl.querySelectorAll("span").forEach(function (sp, i) { sp.textContent = meta[i]; });
+    $("vz-detail-title").textContent = shownTitle(item);
     $("vz-detail-desc").textContent = item.description || "";
-    var isVideo = item.type === "video";
-    var play = $("vz-play");
-    play.setAttribute("data-kind", isVideo ? "video" : "photo");
-    $("vz-play-label").textContent = isVideo ? "Play video" : "Play slideshow";
-    play.querySelector(".vz-play__icon").innerHTML = isVideo
-      ? '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
-      : '<svg viewBox="0 0 24 24"><path d="M4 6h11v12H4zM17 8h3v8h-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>';
-    var hasMedia = isVideo ? !!(item.video && (item.video.vimeo || item.video.file)) : !!(item.images && item.images.length);
-    play.hidden = !hasMedia;
-    var cs = $("vz-detail-case");
-    if (item.caseStudy) { cs.href = item.caseStudy; cs.hidden = false; } else { cs.hidden = true; }
+    var link = $("vz-detail-vimeo");
+    link.href = pageUrl(item);
     var i = all.indexOf(item);
     $("vz-index").textContent = String(i + 1).padStart(2, "0") + " / " + String(all.length).padStart(2, "0");
   }
 
   function newDetailImg(item) {
     var img = document.createElement("img");
-    img.src = item.thumb;
+    img.src = item.thumb || BLANK;
     img.alt = "";
     img.decoding = "async";
     return img;
@@ -326,7 +363,7 @@
     detailMedia.appendChild(detailImg);
     detail.hidden = false;
     document.body.classList.add("vz-detail-open");
-    if (push) history.pushState({ vz: item.slug }, "", "?p=" + encodeURIComponent(item.slug));
+    if (push) { history.pushState({ vz: item.slug }, "", "?p=" + encodeURIComponent(item.slug)); pushed = true; }
 
     var g = G(), flip = F();
     if (g && flip && tile.img && !reduce) {
@@ -372,8 +409,13 @@
     closeLightboxes();
     var item = current, g = G(), flip = F();
     var tile = (source && source.item === item && source.img && source.img.isConnected) ? source : visibleTileFor(item);
-    if (!pop && history.state && history.state.vz) history.back();
-    else if (!pop) history.replaceState(null, "", location.pathname);
+    // Step back only over the entry we added; a film opened from a direct link
+    // has nothing of ours behind it (back would leave the site), so just clean the URL.
+    if (!pop) {
+      if (pushed) history.back();
+      else history.replaceState(null, "", location.pathname);
+    }
+    pushed = false;
 
     function done() {
       detail.hidden = true;
@@ -456,8 +498,7 @@
   $("vz-prev").addEventListener("click", function () { step(-1); });
   $("vz-next").addEventListener("click", function () { step(1); });
   $("vz-play").addEventListener("click", function () {
-    if (!current) return;
-    if (current.type === "video") openVideo(current); else openSlides(current);
+    if (current) openVideo(current);
   });
 
   window.addEventListener("popstate", function () {
@@ -478,7 +519,7 @@
     var g = G();
     if (g) {
       g.fromTo(box, { opacity: 0 }, { opacity: 1, duration: dur(0.35), ease: "power2.out" });
-      var inner = box.querySelector(".vz-lightbox__frame, .vz-slides__stage");
+      var inner = box.querySelector(".vz-lightbox__frame");
       if (inner) g.fromTo(inner, { scale: 0.94, y: 20 }, { scale: 1, y: 0, duration: dur(0.6), ease: "expo.out" });
     }
     setTimeout(function () { var c = box.querySelector("[data-close]"); if (c) c.focus({ preventScroll: true }); }, 30);
@@ -498,34 +539,19 @@
 
   function closeLightboxes() {
     if (!videoBox.hidden) hideBox(videoBox, function () { $("vz-video-frame").innerHTML = ""; });
-    if (!slidesBox.hidden) hideBox(slidesBox, stopSlides);
   }
 
   function openVideo(item) {
-    var v = item.video || {};
     var frame = $("vz-video-frame");
     frame.innerHTML = "";
-    if (v.vimeo) {
-      var q = (v.hash ? "h=" + encodeURIComponent(v.hash) + "&" : "") + "autoplay=1&title=0&byline=0&portrait=0&dnt=1";
-      var ifr = document.createElement("iframe");
-      ifr.src = "https://player.vimeo.com/video/" + encodeURIComponent(v.vimeo) + "?" + q;
-      ifr.allow = "autoplay; fullscreen; picture-in-picture";
-      ifr.allowFullscreen = true;
-      ifr.title = item.title + " (Vimeo)";
-      frame.appendChild(ifr);
-    } else if (v.file) {
-      var vid = document.createElement("video");
-      vid.src = v.file;
-      vid.controls = true;
-      vid.autoplay = true;
-      vid.playsInline = true;
-      vid.poster = item.thumb;
-      vid.setAttribute("aria-label", item.title);
-      frame.appendChild(vid);
-    } else {
-      return;
-    }
-    videoBox.setAttribute("aria-label", item.title + ": video");
+    var q = (item.hash ? "h=" + encodeURIComponent(item.hash) + "&" : "") + "autoplay=1&title=0&byline=0&portrait=0&dnt=1";
+    var ifr = document.createElement("iframe");
+    ifr.src = "https://player.vimeo.com/video/" + encodeURIComponent(item.vimeo) + "?" + q;
+    ifr.allow = "autoplay; fullscreen; picture-in-picture";
+    ifr.allowFullscreen = true;
+    ifr.title = shownTitle(item) + " (Vimeo)";
+    frame.appendChild(ifr);
+    videoBox.setAttribute("aria-label", shownTitle(item) + ": video");
     showBox(videoBox);
   }
 
@@ -536,99 +562,6 @@
     if (e.target === videoBox) hideBox(videoBox, function () { $("vz-video-frame").innerHTML = ""; });
   });
 
-  /* Slideshow */
-  var sl = { images: [], i: 0, playing: false, tween: null, timer: 0, img: null };
-
-  function openSlides(item) {
-    sl.images = item.images || [];
-    if (!sl.images.length) return;
-    sl.i = 0;
-    slidesBox.classList.toggle("is-single", sl.images.length < 2);
-    slidesBox.setAttribute("aria-label", item.title + ": slideshow");
-    $("vz-slides-stage").innerHTML = "";
-    sl.img = null;
-    var thumbs = $("vz-slide-thumbs");
-    thumbs.innerHTML = "";
-    sl.images.forEach(function (im, i) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "vz-slides__thumb";
-      b.setAttribute("aria-label", "Show image " + (i + 1) + (im.alt ? ": " + im.alt : ""));
-      b.innerHTML = '<img alt="" loading="lazy">';
-      b.firstChild.src = im.src;
-      b.addEventListener("click", function () { go(i, true); });
-      thumbs.appendChild(b);
-    });
-    showBox(slidesBox);
-    go(0, false);
-    setPlaying(!reduce && sl.images.length > 1);
-  }
-
-  function go(i, user) {
-    var n = sl.images.length;
-    sl.i = mod(i, n);
-    var data = sl.images[sl.i];
-    var img = document.createElement("img");
-    img.src = data.src;
-    img.alt = data.alt || "";
-    var stage = $("vz-slides-stage"), old = sl.img, g = G();
-    stage.appendChild(img);
-    sl.img = img;
-    if (g && !reduce && old) {
-      g.fromTo(img, { opacity: 0, scale: 1.03 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" });
-      g.to(old, { opacity: 0, duration: 0.5, onComplete: function () { old.remove(); } });
-    } else if (old) { old.remove(); }
-    $("vz-slide-count").textContent = String(sl.i + 1).padStart(2, "0") + " / " + String(n).padStart(2, "0");
-    $("vz-slide-thumbs").querySelectorAll(".vz-slides__thumb").forEach(function (b, k) {
-      b.classList.toggle("is-active", k === sl.i);
-      if (k === sl.i && b.scrollIntoView) b.scrollIntoView({ block: "nearest", inline: "center" });
-    });
-    if (user && sl.playing) restartTimer();
-    else if (sl.playing) restartTimer();
-  }
-
-  function restartTimer() {
-    var g = G(), bar = $("vz-slide-progress");
-    clearTimeout(sl.timer);
-    if (sl.tween) sl.tween.kill();
-    if (!sl.playing) { if (g) g.set(bar, { scaleX: 0 }); return; }
-    if (g) sl.tween = g.fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: SLIDE_MS / 1000, ease: "none" });
-    sl.timer = setTimeout(function () { go(sl.i + 1, false); }, SLIDE_MS);
-  }
-
-  function setPlaying(on) {
-    sl.playing = on;
-    var b = $("vz-slide-toggle");
-    b.textContent = on ? "Pause" : "Play";
-    b.setAttribute("aria-label", on ? "Pause slideshow" : "Play slideshow");
-    restartTimer();
-  }
-
-  function stopSlides() {
-    sl.playing = false;
-    clearTimeout(sl.timer);
-    if (sl.tween) sl.tween.kill();
-    $("vz-slides-stage").innerHTML = "";
-    sl.img = null;
-  }
-
-  $("vz-slide-prev").addEventListener("click", function () { go(sl.i - 1, true); });
-  $("vz-slide-next").addEventListener("click", function () { go(sl.i + 1, true); });
-  $("vz-slide-toggle").addEventListener("click", function () { setPlaying(!sl.playing); });
-  slidesBox.querySelector("[data-close]").addEventListener("click", function () { hideBox(slidesBox, stopSlides); });
-
-  // Swipe between slides
-  (function () {
-    var stage = $("vz-slides-stage"), sx = 0, sy = 0, on = false;
-    stage.addEventListener("pointerdown", function (e) { on = true; sx = e.clientX; sy = e.clientY; });
-    stage.addEventListener("pointerup", function (e) {
-      if (!on) return; on = false;
-      var dx = e.clientX - sx, dy = e.clientY - sy;
-      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(sl.i + (dx < 0 ? 1 : -1), true);
-    });
-    stage.addEventListener("pointercancel", function () { on = false; });
-  })();
-
   /* ---------------- Keyboard: Esc, arrows, focus trap ---------------- */
 
   document.addEventListener("keydown", function (e) {
@@ -637,14 +570,12 @@
     if (e.key === "Escape") {
       e.preventDefault();
       if (top === videoBox) hideBox(videoBox, function () { $("vz-video-frame").innerHTML = ""; });
-      else if (top === slidesBox) hideBox(slidesBox, stopSlides);
       else close(false);
       return;
     }
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       var d = e.key === "ArrowRight" ? 1 : -1;
-      if (top === slidesBox) { e.preventDefault(); go(sl.i + d, true); }
-      else if (top === detail && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); step(d); }
+      if (top === detail && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); step(d); }
       return;
     }
     if (e.key === "Tab") {
@@ -663,11 +594,7 @@
   var resizeT = 0;
   window.addEventListener("resize", function () {
     clearTimeout(resizeT);
-    resizeT = setTimeout(function () {
-      var f = document.querySelector(".vz-filter__btn.is-active");
-      var mode = f ? f.getAttribute("data-filter") : "all";
-      build(mode === "all" ? all : all.filter(function (it) { return it.type === mode; }));
-    }, 150);
+    resizeT = setTimeout(function () { build(all); }, 150);
   });
 
   function boot() {
@@ -679,6 +606,7 @@
         stagger: { each: 0.012, from: "center" }
       });
     }
+    all.forEach(loadMeta);
     var slug = new URLSearchParams(location.search).get("p");
     if (slug) {
       history.replaceState({ vz: slug }, "", location.href);
@@ -691,6 +619,6 @@
     boot();
   }).catch(function () {
     $("vz-count").textContent = "";
-    track.innerHTML = '<p class="vz-noscript">Couldn\'t load the projects. <a href="case-studies.html">See our case studies</a>.</p>';
+    track.innerHTML = '<p class="vz-noscript">Couldn\'t load the videos. <a href="case-studies.html">See our case studies</a>.</p>';
   });
 })();
