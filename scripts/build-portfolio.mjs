@@ -318,38 +318,6 @@ function marqueeItemTrack(p) {
                       </a>`;
 }
 
-function galleryItem(p) {
-  return `                    <div class="gallery_item" data-category="${p.category}" data-name="${escapeHtml(p.name)}" data-order="${p.order}">
-                      <a href="case-study/${p.slug}.html" class="gallery_image-wrapper w-inline-block"><img src="${p.image}" loading="lazy" alt="${escapeHtml(p.name)}" class="gallery_image"></a>
-                      <div class="gallery_content-wrapper">
-                        <div class="margin-bottom">
-                          <div class="gallery_category">${escapeHtml(p.categoryLabel)}</div>
-                          <h3 class="text-size-small">${escapeHtml(p.name)}</h3>
-                        </div>
-                      </div>
-                    </div>`;
-}
-
-function filterBarHtml() {
-  return `                <!-- SWFT custom: do not overwrite on Webflow import -->
-                <div class="work-filter-bar" role="toolbar" aria-label="Filter and sort projects">
-                  <div class="work-filter-buttons">
-                    <button type="button" class="work-filter-btn swft-btn is-outline is-sm is-active" data-filter="all" aria-pressed="true">All</button>
-                    <button type="button" class="work-filter-btn swft-btn is-outline is-sm" data-filter="ecommerce" aria-pressed="false">Ecommerce Brands</button>
-                    <button type="button" class="work-filter-btn swft-btn is-outline is-sm" data-filter="service" aria-pressed="false">Service Pro Websites</button>
-                    <button type="button" class="work-filter-btn swft-btn is-outline is-sm" data-filter="app" aria-pressed="false">App Landing Pages</button>
-                  </div>
-                  <div class="work-sort">
-                    <label for="work-sort-select">Sort by</label>
-                    <select id="work-sort-select" aria-label="Sort projects">
-                      <option value="featured">Featured</option>
-                      <option value="name-asc">Name A-Z</option>
-                      <option value="name-desc">Name Z-A</option>
-                    </select>
-                  </div>
-                </div>`;
-}
-
 // --- Case study pages ---
 const sortedProjects = [...projects].sort((a, b) => a.order - b.order);
 for (let i = 0; i < sortedProjects.length; i++) {
@@ -376,40 +344,16 @@ indexHtml = indexHtml.replace(
   `<div class="marquee-track">\n                      ${trackItems}\n                    </div>\n                  </div>\n                  <div class="explore-button-wrapper">`
 );
 
-// Update View All to websites.html
+// Update View All to the work page
 indexHtml = indexHtml.replace(
   /<a href="contact\.html" target="_blank" class="button is-course w-inline-block">\s*<div class="button_bg"><\/div>\s*<div class="button_text">View All<\/div>\s*<\/a>/,
-  `<a href="websites.html" class="button is-course w-inline-block">\n                          <div class="button_bg"></div>\n                          <div class="button_text">View All</div>\n                        </a>`
+  `<a href="case-studies.html" class="button is-course w-inline-block">\n                          <div class="button_bg"></div>\n                          <div class="button_text">View All</div>\n                        </a>`
 );
 
 writeFileSync(join(ROOT, 'index.html'), indexHtml);
 console.log('Updated index.html marquee');
 
-// --- Update websites.html gallery ---
-let websitesHtml = readFileSync(join(ROOT, 'websites.html'), 'utf8');
-const galleryBlock = filterBarHtml() + '\n                <div class="collection-list-wrapper">\n                  <div class="gallery_list">\n' + projects.map(galleryItem).join('\n') + '\n                    <!-- end SWFT custom -->\n                  </div>\n                </div>';
-
-websitesHtml = websitesHtml.replace(
-  /<div class="margin-bottom margin-small">\s*<h2 class="text-size-small text-weight-normal">Work Gallery<\/h2>\s*<\/div>\s*<div class="collection-list-wrapper">[\s\S]*?<!-- end SWFT custom -->\s*<\/div>\s*<\/div>/,
-  `<div class="margin-bottom margin-small">\n                  <h2 class="text-size-small text-weight-normal">Work Gallery</h2>\n                </div>\n${galleryBlock}`
-);
-
-// Add CSS/JS links if missing
-if (!websitesHtml.includes('work-filter.css')) {
-  websitesHtml = websitesHtml.replace(
-    '<link href="css/swft-nav.css" rel="stylesheet" type="text/css">',
-    '<link href="css/swft-nav.css" rel="stylesheet" type="text/css">\n  <!-- SWFT custom: do not overwrite on Webflow import -->\n  <link href="css/work-filter.css" rel="stylesheet" type="text/css">'
-  );
-}
-if (!websitesHtml.includes('work-filter.js')) {
-  websitesHtml = websitesHtml.replace(
-    '<script src="js/swft-nav.js"></script>',
-    '<script src="js/work-filter.js"></script>\n  <!-- end SWFT custom -->\n  <script src="js/swft-nav.js"></script>'
-  );
-}
-
-writeFileSync(join(ROOT, 'websites.html'), websitesHtml);
-console.log('Updated websites.html gallery');
+// websites.html was retired (2026-10-01); the work gallery lives on case-studies.html.
 
 function metricFromScorecard(scorecard) {
   if (!Array.isArray(scorecard) || !scorecard.length) return undefined;

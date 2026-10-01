@@ -22,9 +22,9 @@
   var STEP_TITLES = {
     1: "Contact info",
     2: "Website & social",
-    3: "Desired service",
+    3: "Your biggest leak",
     4: "Details & photos",
-    5: "Schedule a call",
+    5: "Optional call",
   };
 
   var SERVICE_LABELS = {
@@ -203,7 +203,7 @@
     if (nextBtn) {
       nextBtn.hidden = step === 5;
       if (nextLabel) {
-        nextLabel.textContent = step === 4 ? "Save & schedule call": "Continue";
+        nextLabel.textContent = step === 4 ? "Send my audit request": "Continue";
       }
     }
 
@@ -242,7 +242,8 @@
       photoLinks: photoLinks,
       /* Compatibility aliases for existing Airtable columns */
       businessCategory: serviceLabel(serviceId) || "Growth Audit",
-      challenge: serviceLabel(serviceId) || "Growth Audit inquiry",
+      challenge: val("biggest_leak") || serviceLabel(serviceId) || "Growth Audit inquiry",
+      biggestLeak: val("biggest_leak"),
       desiredOutcome: details || "Discuss " + (serviceLabel(serviceId) || "next steps"),
       sourcePage: location.pathname + location.search,
       utmSource: utm.utm_source || "",

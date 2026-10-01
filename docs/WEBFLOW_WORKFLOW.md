@@ -31,8 +31,8 @@ Do **not** rebase, squash, or force-push `main` unless explicitly agreed and coo
 These are page shells and marketing pages that can match Webflow designs:
 
 - `index.html`, `404.html`, `401.html`
-- `websites.html`, `apps.html`, `media.html`, `website-pricing.html`
-- `resources.html`, `portfolio-review.html`, `style-guide.html`, `swft-tv.html`, `videos.html`
+- `website-pricing.html`
+- `style-guide.html`
 
 ### 3. Assets
 

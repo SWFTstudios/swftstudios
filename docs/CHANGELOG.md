@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-01: Site-wide message: the SWFT Method; one page per purpose
+
+### Changed
+- The whole site now tells one story: **SWFT = Strategic Workflows Facilitating Transformation**. We run digital marketing from every side, in five stages: **Get seen → Capture → Convert → Nurture → Automate & repeat**, powered by a content engine that makes creative proven before it's posted.
+- **Home:** Creative Services now sits right after the five problem tabs (pain, then the offer), ahead of "Who's this for", testimonials and work. New hero line, About statement, the five problem tabs now map to the five stages, "The SWFT Method" replaces the generic 4-step process, the audit CTA and FAQ (plus FAQ schema) explain the method and add "What does SWFT stand for?".
+- **Services → The SWFT Method:** each stage with its goal, what we do (the automation tools from the old Tools page live under Automate) and the offers that cover it; the content engine (Learn, Create, Feed back); and a "Where to start" ladder from the free audit up.
+- **Pricing:** "Pick the stage that's costing you the most." Every tier is tagged with the stages it covers; a new FAQ answers which package to start with. Prices and scope are unchanged.
+- **Free Growth Audit:** reviews all five stages; new optional question "Where are you losing the most customers?" that lands in the team email and the Airtable "Biggest Challenge" field; the submit button reads "Send my audit request" and the call step is clearly optional.
+- **Contact, Team, Work, Book, thank-you and location pages** reworded around the method; nav is now Home, Services, Work, Pricing, Locations, Team, Contact.
+
+### Removed
+- Redundant or unfinished pages: `websites`, `resources`, `media`, `videos`, `swft-tv`, `portfolio-review`, `apps`, `tools`, `swft-method`, the `pricing.html` stub and two empty Webflow component files, plus assets only they used (`work-filter`, `hero-vimeo-loader`). Each has a 301 redirect; see [`SITE_MAP.md`](SITE_MAP.md#retired-pages-2026-10-01).
+
 ## 2026-10-01: Fix clipped text in the "Who's this for" cards on phones
 
 ### Fixed

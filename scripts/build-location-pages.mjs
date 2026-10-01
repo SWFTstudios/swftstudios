@@ -64,7 +64,7 @@ ${body}
     </div>
   </main>
   <script src="/js/swft-analytics.js?v=20260930b" defer></script>
-  <script src="/js/swft-nav.js?v=20261001a" defer></script>
+  <script src="/js/swft-nav.js?v=20261001h" defer></script>
 </body>
 </html>
 `;
@@ -296,10 +296,9 @@ function renderHtmlSitemap(data, locations) {
   const primary = [
     { href: "/", label: "Home", note: "Main marketing homepage" },
     { href: "/growth-audit", label: "Free Growth Audit", note: "Primary lead capture" },
-    { href: "/services.html", label: "Services", note: "Offer ladder overview" },
-    { href: "/website-pricing.html", label: "Pricing", note: "Transparent project and retainer pricing" },
-    { href: "/websites.html", label: "Our Work", note: "Website and content portfolio" },
-    { href: "/case-studies.html", label: "Case Studies", note: "Project stories and insights" },
+    { href: "/services.html", label: "The SWFT Method", note: "How we grow you: get seen, capture, convert, nurture, automate" },
+    { href: "/website-pricing.html", label: "Pricing", note: "Published prices for every offer" },
+    { href: "/case-studies.html", label: "Work", note: "Case studies and marketing guides" },
     { href: "/team.html", label: "Team", note: "Who builds the work" },
     { href: "/contact.html", label: "Contact", note: "Project inquiry form" },
     { href: "/locations/", label: "Locations", note: "Jersey City, North Jersey, and NYC service areas" },
@@ -313,16 +312,6 @@ function renderHtmlSitemap(data, locations) {
     { href: "/book/website-content-full.html", label: "Book Website + Extended Content" },
     { href: "/book/content-growth-retainer.html", label: "Book Content + Growth Retainer" },
     { href: "/book/full-growth-partner.html", label: "Book Full Growth Partner" },
-  ];
-
-  const more = [
-    { href: "/apps.html", label: "Apps" },
-    { href: "/media.html", label: "Media" },
-    { href: "/videos.html", label: "Videos" },
-    { href: "/resources.html", label: "Resources" },
-    { href: "/tools.html", label: "Tools" },
-    { href: "/swft-method.html", label: "SWFT Method" },
-    { href: "/swft-tv.html", label: "SWFT TV" },
   ];
 
   function listBlock(items) {
@@ -393,11 +382,6 @@ function renderHtmlSitemap(data, locations) {
         <section aria-labelledby="sm-book">
           <h2 id="sm-book">Booking and checkout</h2>
           ${listBlock(book)}
-        </section>
-
-        <section aria-labelledby="sm-more">
-          <h2 id="sm-more">Additional pages</h2>
-          ${listBlock(more)}
         </section>
 
         ${

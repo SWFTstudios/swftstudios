@@ -18,21 +18,34 @@ npm run build:locations
 
 ## Primary routes
 
-| Route | Role |
+Every public page has one job in the funnel. The site's message is the SWFT Method: **Strategic Workflows Facilitating Transformation**, five stages from first scroll to repeat customer (Get seen, Capture, Convert, Nurture, Automate & repeat).
+
+| Route | Job |
 | --- | --- |
-| `/` | Homepage |
-| `/growth-audit` | Free Growth Audit lead flow |
-| `/services.html` | Offer ladder |
-| `/website-pricing.html` | Pricing |
-| `/websites.html` | Portfolio |
-| `/case-studies.html` | Case studies hub |
-| `/team.html` | Team |
-| `/contact.html` | Project inquiry |
+| `/` | Homepage: the promise, the five leaks, the method, proof, the audit |
+| `/services.html` | The SWFT Method: what we do at each stage and which offer covers it |
+| `/website-pricing.html` | Pricing: pick the stage that's costing you the most |
+| `/case-studies.html` | Work: proof (case studies) and marketing guides |
+| `/growth-audit` | Free Growth Audit: the no-brainer first step (warm lead to the inbox) |
+| `/contact.html` | Project inquiry (hot lead to the inbox) |
+| `/book/` | Stripe booking for each offer (hot lead / sale) |
+| `/team.html` | Who we are and why SWFT works this way |
 | `/locations/` | Local SEO hub |
-| `/book/` | Stripe booking hub |
 | `/portal/onboard.html` | Client portal signup |
 | `/portal/login.html` | Client portal sign-in |
 | `/portal/dashboard.html` | Client project + performance dashboard |
+
+### Retired pages (2026-10-01)
+
+Redundant or unfinished pages were removed and 301-redirect in [`_redirects`](../_redirects) to the page that now does their job:
+
+| Old route | Now |
+| --- | --- |
+| `/websites.html`, `/resources.html`, `/media.html`, `/videos.html`, `/swft-tv.html`, `/portfolio-review.html` | `/case-studies.html` |
+| `/apps.html` | `/services.html` |
+| `/tools.html` | `/services.html#automate` (the automation tools are now the Automate stage) |
+| `/swft-method.html` | `/growth-audit` |
+| `/pricing.html` | `/website-pricing.html` |
 
 ## Local SEO coverage
 

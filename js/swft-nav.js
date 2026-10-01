@@ -11,10 +11,9 @@
   var LINKS = [
     { label: "Home",         href: "/index.html",           key: "home" },
     { label: "Services",     href: "/services.html",        key: "services" },
-    { label: "Our Work",     href: "/websites.html",        key: "our-work" },
+    { label: "Work",         href: "/case-studies.html",    key: "case-studies" },
     { label: "Pricing",      href: "/website-pricing.html", key: "pricing" },
     { label: "Locations",    href: "/locations/",           key: "locations" },
-    { label: "Case Studies", href: "/case-studies.html",    key: "case-studies" },
     { label: "Team",         href: "/team.html",            key: "team" },
     { label: "Contact",      href: "/contact.html",         key: "contact" }
   ];
@@ -51,7 +50,8 @@
         '<div class="sf-footer-inner">' +
           '<a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>' +
           '<a href="https://www.instagram.com/swftstudios/" target="_blank" rel="noopener noreferrer">Instagram</a>' +
-          '<a href="/websites.html">Our Work</a>' +
+          '<a href="/services.html">The SWFT Method</a>' +
+          '<a href="/case-studies.html">Our Work</a>' +
           '<a href="/locations/">Locations</a>' +
           '<a href="/sitemap.html">Site map</a>' +
           '<a href="/growth-audit">Get Your Free Growth Audit</a>' +
