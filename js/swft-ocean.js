@@ -47,7 +47,7 @@
     "uniform float uHalf;",
     "uniform float uHasCube;",
     "uniform mat3 uToLocal;",
-    "uniform vec4 uFoam[8];",
+    "uniform vec4 uRings[8];",
 
     "const float DEPTH = 0.3;",
     "const vec3 ICE = vec3(0.55, 0.8, 1.0);",
@@ -128,7 +128,7 @@
     "  float t = dot(oc, rd);",
     "  if (t < 0.0 || t > tMax) return vec3(0.0);",
     "  float d = length(ro + rd * t - uCube) / uHalf;",
-    "  return ICE * (0.012 / (d * d * 0.9 + 0.15) + 0.55 * exp(-d * 2.4));",
+    "  return ICE * (0.016 / (d * d * 0.9 + 0.15) + 0.75 * exp(-d * 2.2));",
     "}",
 
     // Low mist lying on the water, lit by the cube and spread sideways.
@@ -166,9 +166,8 @@
     "  vec3 an = abs(nl);",
     "  float edge = max(q.x * (1.0 - an.x), max(q.y * (1.0 - an.y), q.z * (1.0 - an.z)));",
     "  float rim = smoothstep(0.84, 0.985, edge);",
-    // Frosted glass: a milky body that brightens toward the panes' centres, softer rims.
-    "  float haze = 1.0 - 0.5 * max(max(q.x * (1.0 - an.x), q.y * (1.0 - an.y)), q.z * (1.0 - an.z));",
-    "  return ICE * (0.12 + 0.22 * haze + 1.3 * rim);",
+    // Glowing glass: lit panes with bright, sharp edges.
+    "  return ICE * (0.16 + 2.4 * rim);",
     "}",
 
     "void main() {",
@@ -187,6 +186,23 @@
     "    float near = exp(-tHit * 0.09);",
     "    N = normalize(N + vec3(ripple(p.xz), 0.0).xzy * vec3(1.0, 0.0, 1.0) * 0.045 * near);",
     "    N = normalize(mix(N, vec3(0.0, 1.0, 0.0), 0.55 * min(1.0, sqrt(tHit * 0.012) * 1.1)));",
+    // Rings where the cube's corners touch the water (x, z, age or -1 for a live contact,
+    // strength). Each ring is a travelling ripple that tilts the surface, so it shows up the
+    // way real ripples do: as bending lines in the glow and reflections.
+    "    float ringLine = 0.0;",
+    "    for (int i = 0; i < 8; i++) {",
+    "      vec4 f = uRings[i];",
+    "      if (f.w <= 0.0) continue;",
+    "      vec2 dv = p.xz - f.xy;",
+    "      float d = length(dv) + 1e-4;",
+    "      float age = f.z < 0.0 ? fract(uTime * 0.9) : f.z;",
+    "      float r = 0.03 + age * 0.55;",
+    "      float env = exp(-(d - r) * (d - r) / (0.004 + 0.02 * age)) * exp(-age * 1.5) * f.w;",
+    "      if (f.z < 0.0) env *= 0.45;",
+    "      float ph = (d - r) * 70.0;",
+    "      N = normalize(N + vec3(dv.x / d, 0.0, dv.y / d) * sin(ph) * env * 0.5);",
+    "      ringLine += env * max(cos(ph), 0.0);",
+    "    }",
     "    float fres = 0.04 + 0.96 * pow(1.0 - max(dot(N, -rd), 0.0), 5.0);",
     "    vec3 R = reflect(rd, N);",
     "    R.y = abs(R.y);",
@@ -205,30 +221,15 @@
     // Sparkle: the sharpest highlights break into glitter along the light path.
     "    float sparkle = step(0.82, hash(floor(p.xz * 40.0) + floor(uTime * 6.0)));",
     "    vec3 lit = ICE * atten * (pow(nh, 180.0) * 3.5 + pow(nh, 60.0) * sparkle * 1.4 + pow(nh, 24.0) * 0.12)",
-    "             + vec3(0.01, 0.025, 0.05) * atten * max(dot(N, toL), 0.0);",
+    "             + vec3(0.03, 0.075, 0.14) * atten * max(dot(N, toL), 0.0);",
     // Light passing through the thin crests between the viewer and the cube.
     "    float crest = smoothstep(-0.28, 0.16, p.y);",
     "    float back = pow(max(dot(rd, toL), 0.0), 3.0);",
     "    vec3 sss = vec3(0.04, 0.3, 0.55) * atten * crest * crest * (0.2 + 1.6 * back) * 0.45;",
-    "    vec3 deep = vec3(0.0002, 0.0012, 0.0026) * (0.4 + crest) + vec3(0.0, 0.004, 0.007) * atten * 0.15;",
+    "    vec3 deep = vec3(0.0002, 0.0012, 0.0026) * (0.4 + crest) + vec3(0.0, 0.006, 0.012) * atten * 0.3;",
     "    col = mix(deep + sss, refl, fres) + lit;",
-    // Foam where the cube's corners clip the water: a patch at each contact and a ring
-    // spreading from each splash (x, z, age or -1 for a live contact, strength).
-    "    float foam = 0.0;",
-    "    for (int i = 0; i < 8; i++) {",
-    "      vec4 f = uFoam[i];",
-    "      if (f.w <= 0.0) continue;",
-    "      float d = length(p.xz - f.xy);",
-    "      if (f.z < 0.0) {",
-    "        foam += f.w * exp(-d * d / 0.012);",
-    "      } else {",
-    "        float r = 0.06 + f.z * 0.75;",
-    "        float wdt = 0.03 + 0.04 * f.z;",
-    "        foam += f.w * exp(-f.z * 1.6) * (exp(-(d - r) * (d - r) / (wdt * wdt)) + 0.6 * exp(-d * d / 0.01) * exp(-f.z * 4.0));",
-    "      }",
-    "    }",
-    "    foam = clamp(foam, 0.0, 1.0) * (0.55 + 0.45 * vnoise(p.xz * 22.0 + vec2(uTime * 1.3, -uTime)));",
-    "    col = mix(col, vec3(0.6, 0.8, 1.0) * (0.06 + 0.4 * atten), foam * 0.9);",
+    // Ring crests catch the cube's light.
+    "    col += ICE * atten * min(ringLine, 1.0) * 0.35;",
     "    col = mix(col, sky(vec3(rd.x, 0.02, rd.z)), 1.0 - exp(-tHit * 0.015));",
     "  } else {",
     "    col = sky(rd);",
@@ -311,8 +312,7 @@
     this.lift = 0;                       // buoyancy: raises the cube when a corner would sink too deep
     this.corners = [];                   // previous corner positions / depths, for splash detection
     this.ripples = [];
-    this.contacts = [];
-    this.foam = new Float32Array(32);
+    this.rings = new Float32Array(32);
 
     this.canvas = root.querySelector(".swft-ocean__canvas");
     if (!this.canvas) {
@@ -321,14 +321,6 @@
       root.insertBefore(this.canvas, root.firstChild);
     }
     this.canvas.setAttribute("aria-hidden", "true");
-
-    if (this.cubeEl) {
-      this.spray = document.createElement("canvas");
-      this.spray.className = "swft-ocean__spray";
-      this.spray.setAttribute("aria-hidden", "true");
-      root.appendChild(this.spray);
-      this.sprayCtx = this.spray.getContext("2d");
-    }
 
     try {
       this.initGL();
@@ -364,7 +356,7 @@
 
     var u = {};
     ["uRes", "uTime", "uCam", "uFw", "uRight", "uUp", "uFocal", "uCube", "uHalf", "uHasCube",
-     "uToLocal", "uFoam[0]"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
+     "uToLocal", "uRings[0]"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
     this.gl = gl;
     this.u = u;
     this.root.classList.add("swft-ocean--live");
@@ -463,7 +455,6 @@
     if (this.sceneEl) this.sceneEl.style.setProperty("--cube-bob", (-bob * this.pxPerWorld).toFixed(2) + "px");
 
     if (this.gl) this.draw(t, bob, M, now);
-    if (this.sprayCtx && this.gl) this.drawSpray();
     requestAnimationFrame(this.loop);
   };
 
@@ -479,8 +470,8 @@
     return M;
   };
 
-  // Find the corners touching the water: foam where they sit in it, and a foam ring
-  // plus a puff of mist when one cuts in (or a crest slaps up against it).
+  // Find the corners touching the water: small standing rings where they sit in it,
+  // and a ring that spreads out when one cuts in (or a crest slaps up against it).
   Ocean.prototype.updateSplash = function (M, bob, t, dt, still) {
     var half = CUBE_SIZE / 2;
     var cx = this.cube[0], cy = this.cube[1] + bob, cz = this.cube[2];
@@ -516,9 +507,9 @@
       if (this.ripples[i].age > 2.4) this.ripples.splice(i, 1);
     }
 
-    // Pack foam for the shader: live contacts (deepest first), then the newest rings.
+    // Pack rings for the shader: live contacts (deepest first), then the newest spreading rings.
     contacts.sort(function (p, q) { return q[2] - p[2]; });
-    var f = this.foam, k = 0;
+    var f = this.rings, k = 0;
     f.fill(0);
     for (var c = 0; c < contacts.length && k < 4; c++, k++) {
       f[k * 4] = contacts[c][0]; f[k * 4 + 1] = contacts[c][1]; f[k * 4 + 2] = -1;
@@ -527,64 +518,6 @@
     for (var r = this.ripples.length - 1; r >= 0 && k < 8; r--, k++) {
       var rp = this.ripples[r];
       f[k * 4] = rp.x; f[k * 4 + 1] = rp.z; f[k * 4 + 2] = rp.age; f[k * 4 + 3] = rp.str;
-    }
-    this.contacts = contacts;
-  };
-
-  // Project a world point to CSS pixels in the stage (same camera as the shader).
-  Ocean.prototype.project = function (x, y, z) {
-    var vy = y - CAM_HEIGHT;
-    var zc = vy * this.fw[1] + z * this.fw[2];
-    if (zc <= 0.05) return null;
-    var yy = vy * this.up[1] + z * this.up[2];
-    var s = FOCAL * this.H / zc;
-    return [this.W / 2 + x * s, this.H / 2 - yy * s, s, zc];
-  };
-
-  Ocean.prototype.drawSpray = function () {
-    var cv = this.spray, ctx = this.sprayCtx;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var w = Math.round(this.W * dpr), h = Math.round(this.H * dpr);
-    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, this.W, this.H);
-    if (!this.ripples.length && !this.contacts.length) return;
-
-    // Whitewater where a corner sits in the water, drawn over the corner's tip.
-    for (var k = 0; k < this.contacts.length; k++) {
-      var cp = this.contacts[k];
-      var depth = cp[2] + 0.015;
-      if (depth <= 0) continue;
-      var p = this.project(cp[0], cp[3], cp[1]);
-      if (!p) continue;
-      var rx = p[2] * (0.07 + depth * 0.9), ry = rx * 0.34;
-      var g = ctx.createRadialGradient(p[0], p[1], 0, p[0], p[1], rx);
-      var a = Math.min(0.85, depth * 7);
-      g.addColorStop(0, "rgba(225, 242, 255," + a + ")");
-      g.addColorStop(0.5, "rgba(190, 225, 255," + (a * 0.45) + ")");
-      g.addColorStop(1, "rgba(160, 210, 255, 0)");
-      ctx.save();
-      ctx.translate(p[0], p[1]);
-      ctx.scale(1, ry / rx);
-      ctx.translate(-p[0], -p[1]);
-      ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(p[0], p[1], rx, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-    }
-
-    // Mist puff over each fresh splash: a soft cloud that swells and thins out.
-    for (var m = 0; m < this.ripples.length; m++) {
-      var rp = this.ripples[m];
-      if (rp.age > 0.9) continue;
-      var mp = this.project(rp.x, 0.05 + rp.age * 0.12, rp.z);
-      if (!mp) continue;
-      var mr = mp[2] * (0.08 + rp.age * 0.32);
-      var ma = rp.str * 0.5 * (1 - rp.age / 0.9);
-      var mg = ctx.createRadialGradient(mp[0], mp[1], 0, mp[0], mp[1], mr);
-      mg.addColorStop(0, "rgba(220, 240, 255," + ma + ")");
-      mg.addColorStop(1, "rgba(180, 220, 255, 0)");
-      ctx.fillStyle = mg;
-      ctx.beginPath(); ctx.arc(mp[0], mp[1], mr, 0, Math.PI * 2); ctx.fill();
     }
   };
 
@@ -606,7 +539,7 @@
     gl.uniform3fv(u.uCube, cube);
     gl.uniform1f(u.uHalf, CUBE_SIZE / 2);
     gl.uniform1f(u.uHasCube, this.cubeEl ? 1 : 0);
-    gl.uniform4fv(u["uFoam[0]"], this.foam);
+    gl.uniform4fv(u["uRings[0]"], this.rings);
     // Column-major upload: M's rows become the columns of M^T (world -> local).
     gl.uniformMatrix3fv(u.uToLocal, false, [].concat(M[0], M[1], M[2]));
     gl.drawArrays(gl.TRIANGLES, 0, 3);
