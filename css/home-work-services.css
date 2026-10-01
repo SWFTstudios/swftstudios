@@ -1,6 +1,6 @@
 /* ============================================================
    Homepage "Selected Work" (sticky stacked covers + View Work cursor)
-   and "Creative Services" (outlined service list).
+   (Creative Services lives in css/home-services.css.)
    Ported from the swft2027 / ARAISE design (branch swft-araise-2027,
    css/home-araise.css + css/araise-theme.css), recoloured for the main
    site: black background, white text, cyan accent.
@@ -266,64 +266,6 @@
   }
 }
 
-/* ---------- Creative Services ---------- */
-.home-services-list {
-  border-top: 1px solid var(--border);
-}
-
-.home-service {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  align-items: start;
-  padding: 1.5rem 0;
-  border-bottom: 1px solid var(--border);
-  color: inherit;
-  text-decoration: none;
-}
-
-.home-service h3 {
-  margin: 0 0 0.4rem;
-  font-family: var(--ar-display);
-  font-size: clamp(1.4rem, 4vw, 2.4rem);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: var(--fg);
-  transition: color 0.25s ease, -webkit-text-stroke-color 0.25s ease;
-}
-
-.home-service p {
-  margin: 0;
-  max-width: 48ch;
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--muted);
-}
-
-/* Alternate rows are outlined */
-.home-service.is-muted h3 {
-  color: transparent;
-  -webkit-text-stroke: 1px var(--ghost);
-}
-
-.home-service:hover h3,
-.home-service:focus-visible h3 {
-  color: var(--accent);
-  -webkit-text-stroke-color: var(--accent);
-}
-
-.home-service:hover .ar-arrow,
-.home-service:focus-visible .ar-arrow {
-  transform: rotate(45deg) scale(1.06);
-}
-
-.home-service:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-}
-
 @media (max-width: 800px) {
   .home-about-grid {
     grid-template-columns: 1fr;
@@ -341,8 +283,7 @@
   }
 
   .ar-btn,
-  .ar-arrow,
-  .home-service h3 {
+  .ar-arrow {
     transition: none;
   }
 }

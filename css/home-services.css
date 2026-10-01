@@ -1,0 +1,300 @@
+/* ============================================================
+   Homepage "Creative Services", after the ARAISE services section
+   (araise.webflow.io/#services), recoloured for the dark SWFT site.
+
+   Desktop: a list of service names on the left; the one in view (or under
+   the pointer) lights up and opens its description, and its featured project
+   crossfades in a sticky panel on the right. A round accent arrow follows
+   the pointer over the list.
+   Phones/tablets: one column; each open service shows its project inline.
+   Pair with js/home-services.js. Without JS every service is open.
+   ============================================================ */
+
+.svc-section {
+  --svc-dim: #6b6b6b;          /* inactive names: 3.7:1 on black, still large-text legible */
+  --svc-line: rgba(255, 255, 255, 0.14);
+  --svc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Head ---------- */
+.svc-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.svc-title {
+  margin: 0;
+  font-family: var(--ar-display);
+  font-size: var(--swft-h1, clamp(2.4rem, 1.55rem + 3.8vw, 4.75rem));
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.svc-title__dim {
+  color: var(--svc-dim);
+}
+
+.svc-subtitle {
+  margin: 0;
+  justify-self: end;
+  max-width: 34ch;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.svc-rule {
+  height: 1px;
+  margin: clamp(2.5rem, 7vw, 5.5rem) 0 clamp(1.5rem, 4vw, 3rem);
+  background: var(--svc-line);
+}
+
+/* ---------- Body: list + sticky featured project ---------- */
+.svc-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.svc-list {
+  position: relative;
+}
+
+.svc-item {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.4rem) 0;
+  border-bottom: 1px solid var(--svc-line);
+}
+
+.svc-name {
+  margin: 0;
+  font-family: var(--ar-display);
+  font-size: clamp(2rem, 1.2rem + 3.2vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.svc-name a {
+  color: var(--svc-dim);
+  text-decoration: none;
+  transition: color 0.45s var(--svc-ease);
+}
+
+.svc-item.is-active .svc-name a,
+.svc-name a:hover,
+.svc-name a:focus-visible {
+  color: var(--fg);
+}
+
+.svc-name a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
+/* Description opens with a height animation (0fr -> 1fr) */
+.svc-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.6s var(--svc-ease);
+}
+
+.svc-item.is-active .svc-details,
+.svc-list:not(.is-js) .svc-details {
+  grid-template-rows: 1fr;
+}
+
+.svc-details__inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.svc-desc {
+  max-width: 46ch;
+  margin: 0;
+  padding-top: clamp(1rem, 2.4vw, 1.75rem);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.45s ease, transform 0.6s var(--svc-ease);
+}
+
+.svc-item.is-active .svc-desc,
+.svc-list:not(.is-js) .svc-desc {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.1s;
+}
+
+/* Active row draws its bottom rule in white from left to right */
+.svc-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--fg);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.8s var(--svc-ease);
+}
+
+.svc-item.is-active .svc-line {
+  transform: scaleX(1);
+}
+
+/* Round accent arrow that trails the pointer over the list (fine pointers only) */
+.svc-pointer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(4.5rem, 6vw, 6rem);
+  height: clamp(4.5rem, 6vw, 6rem);
+  margin: calc(clamp(4.5rem, 6vw, 6rem) / -2) 0 0 calc(clamp(4.5rem, 6vw, 6rem) / -2);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 2.2rem;
+  font-weight: 700;
+  pointer-events: none;
+  transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(var(--ps, 0));
+  will-change: transform;
+}
+
+/* Featured project: stacked, crossfading, sticky under the nav */
+.svc-featured {
+  position: sticky;
+  top: calc(var(--sn-height, 62px) + 2rem);
+  display: grid;
+}
+
+.svc-featured .svc-feature {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.98);
+  transition: opacity 0.6s ease, transform 0.8s var(--svc-ease), visibility 0s linear 0.6s;
+}
+
+.svc-featured .svc-feature.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.6s ease, transform 0.8s var(--svc-ease), visibility 0s;
+}
+
+.svc-feature {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.svc-feature__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: #111;
+}
+
+.svc-feature__info {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.9rem;
+}
+
+.svc-feature__name {
+  font-family: var(--ar-display);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.6rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.svc-feature__cat {
+  font-size: 0.95rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.svc-feature:hover .svc-feature__name,
+.svc-feature:focus-visible .svc-feature__name {
+  color: var(--accent);
+}
+
+.svc-feature:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.svc-feature--inline {
+  display: none;
+}
+
+.svc-more {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  text-align: right;
+}
+
+/* ---------- Tablet / phone: one column, project inside the open service ---------- */
+@media (max-width: 991px) {
+  .svc-head,
+  .svc-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .svc-subtitle {
+    justify-self: start;
+  }
+
+  .svc-featured,
+  .svc-pointer {
+    display: none;
+  }
+
+  .svc-feature--inline {
+    display: block;
+    margin-top: 1.25rem;
+  }
+
+  .svc-feature--inline .svc-feature__img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .svc-more {
+    text-align: left;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .svc-pointer {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-details,
+  .svc-desc,
+  .svc-line,
+  .svc-name a,
+  .svc-featured .svc-feature {
+    transition: none !important;
+  }
+  .svc-pointer {
+    display: none;
+  }
+}

@@ -512,7 +512,8 @@ body{
   <link href="css/home-hero-ocean.css?v=20260930b" rel="stylesheet" type="text/css">
   <link rel="preload" href="fonts/ChakraPetch-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link href="css/home-about.css?v=20260930b" rel="stylesheet" type="text/css">
-  <link href="css/home-work-services.css?v=20260930b" rel="stylesheet" type="text/css">
+  <link href="css/home-work-services.css?v=20261001c" rel="stylesheet" type="text/css">
+  <link href="css/home-services.css?v=20261001c" rel="stylesheet" type="text/css">
   <link href="css/swft-page-transition.css?v=20260930b" rel="stylesheet" type="text/css">
   <script src="js/swft-page-transition.js?v=20260930b"></script>
 </head>
@@ -1369,31 +1370,66 @@ margin: 0rem !important;
           </div>
         </div>
       </section>
-      <section class="ar-section" id="services" aria-labelledby="services-heading">
+      <section class="ar-section svc-section" id="services" aria-labelledby="services-heading">
         <div class="ar-container">
           <div class="ar-section-label"><span>-&gt; [ Our services ]</span><span>SWFT</span></div>
-          <div class="home-about-grid" style="margin-bottom:2rem">
-            <h2 id="services-heading" class="ar-mega">Creative <span class="ghost">Services</span></h2>
-            <p class="ar-lead ar-thin">From <strong class="ar-mark">on-site photo &amp; video</strong> to brand websites and retainers that keep your campaigns converting.</p>
+          <div class="svc-head">
+            <h2 id="services-heading" class="svc-title">Creative <span class="svc-title__dim">Services</span></h2>
+            <p class="svc-subtitle">From brand identity to photo, video, websites and marketing, we build what makes customers stop scrolling and start booking.</p>
           </div>
-          <div class="home-services-list">
-            <a class="home-service" href="services.html#gbp-refresh">
-              <div><h3>GBP Content Refresh</h3><p class="ar-thin">Starting at $400 &ndash; 90-minute on-site shoot, 15 edited photos, 1 short video, Google Business Profile refresh, and review-link setup.</p></div>
-              <span class="ar-arrow" aria-hidden="true">&nearr;</span>
-            </a>
-            <a class="home-service is-muted" href="services.html#website-development">
-              <div><h3>Website Only</h3><p class="ar-thin">Starting at $800 &ndash; up to 3 pages, contact form or existing booking link, basic SEO, and launch support. You provide the photos and copy.</p></div>
-              <span class="ar-arrow" aria-hidden="true">&nearr;</span>
-            </a>
-            <a class="home-service" href="services.html">
-              <div><h3>Website + Content</h3><p class="ar-thin">Starting at $2,000 &ndash; up to 5 pages, a 3-hour on-site shoot, 50 edited photos, and 3 short videos. Extended projects start at $3,000.</p></div>
-              <span class="ar-arrow" aria-hidden="true">&nearr;</span>
-            </a>
-            <a class="home-service is-muted" href="website-pricing.html">
-              <div><h3>Growth Retainers</h3><p class="ar-thin">From $450/month &ndash; monthly content and GBP posting, with a Full Growth Partner option at $1,200/month including a 3-hour shoot, 30 photos, 3 videos, and management of 1 Meta campaign. Ad spend separate.</p></div>
-              <span class="ar-arrow" aria-hidden="true">&nearr;</span>
-            </a>
+          <div class="svc-rule" aria-hidden="true"></div>
+          <div class="svc-body" data-services>
+            <div class="svc-list">
+            <article class="svc-item is-active" data-svc="0" id="service-brand-identity">
+              <h3 class="svc-name"><a href="services.html">Brand Identity</a></h3>
+              <div class="svc-details">
+                <div class="svc-details__inner">
+                  <p class="svc-desc">Logos, type, color and voice that make you recognizable at a glance, and stay consistent from your storefront to your feed.</p>
+                  <a class="svc-feature svc-feature--inline" href="case-study/tal-hydration.html"><img class="svc-feature__img" src="images/tal-hydration-thumbnail-p-800.webp" srcset="images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="TAL Hydration" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">TAL Hydration</span><span class="svc-feature__cat">Brand Identity</span></span></a>
+                </div>
+              </div>
+              <span class="svc-line" aria-hidden="true"></span>
+            </article>
+            <article class="svc-item" data-svc="1" id="service-photo-video">
+              <h3 class="svc-name"><a href="services.html#content-creation">Photo/Video</a></h3>
+              <div class="svc-details">
+                <div class="svc-details__inner">
+                  <p class="svc-desc">On-site photo and short-form video of your space, team and product, edited and ready for your website, Google profile and social.</p>
+                  <a class="svc-feature svc-feature--inline" href="case-study/roller-reels.html"><img class="svc-feature__img" src="images/Roller_Reels_thumbnail-p-800.webp" srcset="images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="Roller Reels" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">Roller Reels</span><span class="svc-feature__cat">Photo/Video</span></span></a>
+                </div>
+              </div>
+              <span class="svc-line" aria-hidden="true"></span>
+            </article>
+            <article class="svc-item" data-svc="2" id="service-web-development">
+              <h3 class="svc-name"><a href="services.html#website-development">Web Development</a></h3>
+              <div class="svc-details">
+                <div class="svc-details__inner">
+                  <p class="svc-desc">Fast, conversion-focused websites on Webflow or Shopify, built so visitors know what you offer and how to book or buy.</p>
+                  <a class="svc-feature svc-feature--inline" href="case-study/thyme-and-table.html"><img class="svc-feature__img" src="images/thyme-and-table-thumbnail-p-800.webp" srcset="images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="Thyme &amp; Table" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">Thyme &amp; Table</span><span class="svc-feature__cat">Web Development</span></span></a>
+                </div>
+              </div>
+              <span class="svc-line" aria-hidden="true"></span>
+            </article>
+            <article class="svc-item" data-svc="3" id="service-marketing">
+              <h3 class="svc-name"><a href="website-pricing.html">Marketing</a></h3>
+              <div class="svc-details">
+                <div class="svc-details__inner">
+                  <p class="svc-desc">Google Business Profile, reviews, social content and Meta campaigns that keep new customers finding you every month.</p>
+                  <a class="svc-feature svc-feature--inline" href="case-study/social-media-content-2026.html"><img class="svc-feature__img" src="images/IG-FB-Messenger-Lifestlye-p-800.webp" srcset="images/IG-FB-Messenger-Lifestlye-p-800.webp 800w, images/IG-FB-Messenger-Lifestlye-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="Social Content" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">Social Content</span><span class="svc-feature__cat">Marketing</span></span></a>
+                </div>
+              </div>
+              <span class="svc-line" aria-hidden="true"></span>
+            </article>
+              <div class="svc-pointer" aria-hidden="true"><span>&nearr;</span></div>
+            </div>
+            <div class="svc-featured" aria-label="Featured project">
+              <a class="svc-feature is-active" data-svc-feature="0" href="case-study/tal-hydration.html"><img class="svc-feature__img" src="images/tal-hydration-thumbnail-p-800.webp" srcset="images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="TAL Hydration" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">TAL Hydration</span><span class="svc-feature__cat">Brand Identity</span></span></a>
+              <a class="svc-feature" data-svc-feature="1" href="case-study/roller-reels.html" aria-hidden="true" tabindex="-1"><img class="svc-feature__img" src="images/Roller_Reels_thumbnail-p-800.webp" srcset="images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="Roller Reels" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">Roller Reels</span><span class="svc-feature__cat">Photo/Video</span></span></a>
+              <a class="svc-feature" data-svc-feature="2" href="case-study/thyme-and-table.html" aria-hidden="true" tabindex="-1"><img class="svc-feature__img" src="images/thyme-and-table-thumbnail-p-800.webp" srcset="images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="Thyme &amp; Table" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">Thyme &amp; Table</span><span class="svc-feature__cat">Web Development</span></span></a>
+              <a class="svc-feature" data-svc-feature="3" href="case-study/social-media-content-2026.html" aria-hidden="true" tabindex="-1"><img class="svc-feature__img" src="images/IG-FB-Messenger-Lifestlye-p-800.webp" srcset="images/IG-FB-Messenger-Lifestlye-p-800.webp 800w, images/IG-FB-Messenger-Lifestlye-p-1080.webp 1080w" sizes="(min-width: 992px) 34vw, 100vw" alt="Social Content" loading="lazy" decoding="async"><span class="svc-feature__info"><span class="svc-feature__name">Social Content</span><span class="svc-feature__cat">Marketing</span></span></a>
+            </div>
           </div>
+          <div class="svc-more"><a class="ar-btn ar-btn--outline" href="website-pricing.html">See packages &amp; pricing <span aria-hidden="true">&rarr;</span></a></div>
         </div>
       </section>
       <section id="growth-audit-cta" class="hp-booking padding-global" aria-labelledby="hp-audit-heading">
@@ -1560,6 +1596,7 @@ tippy('.nav_link.is-muted', {
   <script src="js/swft-ocean.js?v=20261001e"></script>
   <script src="js/swft-about.js?v=20260930b"></script>
   <script src="js/home-work-stack.js?v=20260930b"></script>
+  <script src="js/home-services.js?v=20261001c"></script>
   <script>
   // Reveal the hero once the ocean has painted its first frame (or after 1.5s regardless).
   (function () {
