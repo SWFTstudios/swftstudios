@@ -31,27 +31,31 @@
   --swft-font-display: "Inter Tight", Inter, system-ui, sans-serif;
   --swft-font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Fluid type scale (16px root baseline; body ~17–19px) */
-  --swft-text-body: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
-  --swft-text-lead: clamp(1.125rem, 1.05rem + 0.4vw, 1.25rem);
-  --swft-text-small: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
-  --swft-text-tiny: 0.8125rem;
-  --swft-text-label: 0.75rem;  /* uppercase eyebrows / section labels (Space Mono) */
+  /* Fluid type scale, after the Astrox Studio style guide (desktop max in
+     px noted). 16px root baseline. */
+  --swft-text-body: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);   /* 18 paragraph */
+  --swft-text-lead: 1.125rem;                                     /* 18 medium paragraph */
+  --swft-text-small: 1rem;                                        /* 16 small paragraph */
+  --swft-text-tiny: 0.875rem;                                     /* 14 body A/B */
+  --swft-text-label: 0.75rem;  /* 12 uppercase eyebrows / section labels (Space Mono) */
 
-  /* display scale (Inter Tight, sentence case) */
-  --swft-display: clamp(2.6rem, 1.4rem + 5.4vw, 6.5rem);
-  --swft-h1: clamp(2.4rem, 1.55rem + 3.8vw, 4.75rem);
-  --swft-h2: clamp(1.85rem, 1.3rem + 2.5vw, 3.25rem);
-  --swft-h3: clamp(1.4rem, 1.15rem + 1.1vw, 2.1rem);
-  --swft-h4: clamp(1.2rem, 1.1rem + 0.45vw, 1.5rem);
-  --swft-h5: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
-  --swft-h6: 1rem;
+  /* Display scale (Inter Tight, sentence case). Astrox sizes by role:
+     display 210, title-xxl 100, title-xl 70, title-l 44, title-m 34,
+     title-s 28, sub-title 24. Our h1s are full sentences, so page heroes
+     use the 100px title rather than Astrox's 240px one-word H1. */
+  --swft-display: clamp(3.5rem, 0.5rem + 12.5vw, 13.125rem);  /* 210 */
+  --swft-h1: clamp(2.75rem, 1rem + 5.6vw, 6.25rem);           /* 100 */
+  --swft-h2: clamp(2.25rem, 1rem + 3.9vw, 4.375rem);          /* 70 */
+  --swft-h3: clamp(1.75rem, 1.2rem + 1.8vw, 2.75rem);         /* 44 */
+  --swft-h4: clamp(1.5rem, 1.2rem + 1vw, 2.125rem);           /* 34 */
+  --swft-h5: clamp(1.3rem, 1.1rem + 0.7vw, 1.75rem);          /* 28 */
+  --swft-h6: clamp(1.2rem, 1.05rem + 0.5vw, 1.5rem);          /* 24 */
 
   /* Line heights */
   --swft-lh-body: 1.6;
   --swft-lh-lead: 1.65;
-  --swft-lh-heading: 1.05;
-  --swft-lh-tight: 0.98;
+  --swft-lh-heading: 1;
+  --swft-lh-tight: 0.95;
 
   /* Shared page chrome — nav, shell main, footer */
   --swft-gutter: 1.5rem;
