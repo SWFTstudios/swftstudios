@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-01: Wider About statement; "Proven results" grid removed
+
+### Changed
+- Homepage About statement ("Strategic Workflows Facilitating Transformation...") is wider: its container goes from 72rem to 96rem and the line cap from 24 to 44 characters, so on a laptop it runs about the full content width in three lines instead of four or five. Phones are unchanged. See [`css/home-about.css`](../css/home-about.css).
+
+### Removed
+- The "Our Work / Proven results" three-column card grid (and its "View All Work" button) from the homepage. The stacked "Selected Work" section above it stays, and still links to all work. Its styles are gone too.
+
 ## 2026-10-01: Forms also log to Google Sheets, with an email fallback
 
 ### Added
