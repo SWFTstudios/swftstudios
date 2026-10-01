@@ -57,7 +57,7 @@ body{
   to { transform: translateX(0%); }
 }
 </style>
-  <link href="css/swft-nav.css?v=20261001-curve2" rel="stylesheet" type="text/css">
+  <link href="css/swft-nav.css?v=20261001-visuals" rel="stylesheet" type="text/css">
   <link href="css/pricing-page.css?v=20260930b" rel="stylesheet" type="text/css">
   <style>
     /* Homepage redesign, services, proven results, booking (uses --swft-* tokens) */
@@ -453,6 +453,26 @@ body{
       flex-wrap: wrap;
       row-gap: 2.5rem;
     }
+    /* Intro column + stage cards share a row, so the sticky intro stops
+       where the cards end (before the content engine bar) */
+    #How-we-work .process-row {
+      flex: 1 1 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      #How-we-work .process-row .section-title-container {
+        position: sticky;
+        top: calc(var(--sn-height, 62px) + var(--sn-curve, 14px) + 2rem);
+        align-self: flex-start;
+      }
+    }
+    @media (max-width: 767px) {
+      #How-we-work .process-row { flex-direction: column; }
+      #How-we-work .process-row > * { width: 100%; max-width: none; }
+    }
     #How-we-work .process-card {
       padding: 2rem 2.25rem;
     }
@@ -609,6 +629,7 @@ body{
   <link href="css/hero-intro.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link rel="preload" href="fonts/InterTight-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link href="css/home-about.css?v=20261001-type" rel="stylesheet" type="text/css">
+  <link href="css/swft-letter-cube.css?v=20261001d" rel="stylesheet" type="text/css">
   <link href="css/home-work-services.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link href="css/home-services.css?v=20261001c" rel="stylesheet" type="text/css">
   <link href="css/home-pain-tabs.css?v=20261001-type" rel="stylesheet" type="text/css">
@@ -1541,9 +1562,21 @@ margin: 0rem !important;
               <div class="section-tag-line"></div>
             </div>
             <div class="process-content-container">
+              <div class="process-row">
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d1d" style="opacity:0" class="section-title-container">
                 <h2 class="section-title">From first scroll to repeat customer.</h2>
                 <div class="testimonial-text">Five stages, one team. We find where your growth is leaking, fix it, then automate the fix so it keeps working.</div>
+                <div class="swft-lcube" tabindex="0" role="img" aria-label="SWFT cube: S, W, F and T on its sides. Drag or use the left and right arrow keys to turn it.">
+                  <div class="swft-lcube__body">
+                    <div class="swft-lcube__face swft-lcube__face--front"><span>S</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--right"><span>W</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--back"><span>F</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--left"><span>T</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--top"></div>
+                    <div class="swft-lcube__face swft-lcube__face--bottom"></div>
+                  </div>
+                </div>
+                <p class="swft-lcube__hint" aria-hidden="true">Drag to turn</p>
               </div>
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d22" style="opacity:0" class="process-card-container process-card-container--five">
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d23" class="process-card">
@@ -1566,6 +1599,7 @@ margin: 0rem !important;
                   <div class="process-card-title">5. Automate &amp; repeat</div>
                   <p class="testimonial-text">We track what worked, automate it and feed the winners back into new content.</p>
                 </div>
+              </div>
               </div>
               <div class="process-engine">
                 <div class="process-engine__label">The content engine</div>
@@ -1744,11 +1778,12 @@ tippy('.nav_link.is-muted', {
 </script>
   <script src="js/homepage-audience.js?v=20260930b"></script>
   <script src="js/swft-analytics.js?v=20260930b"></script>
-  <script src="js/swft-nav.js?v=20261001-curve2"></script>
+  <script src="js/swft-nav.js?v=20261001-visuals"></script>
   <script src="js/swft-cube.js?v=20261001e"></script>
   <script src="js/swft-ocean.js?v=20261001j"></script>
   <script src="js/hero-intro.js?v=20261001j"></script>
   <script src="js/swft-about.js?v=20260930b"></script>
+  <script src="js/swft-letter-cube.js?v=20261001a" defer></script>
   <script src="js/home-work-stack.js?v=20260930b"></script>
   <script src="js/home-services.js?v=20261001c"></script>
   <script src="js/home-pain-tabs.js?v=20261001f"></script>

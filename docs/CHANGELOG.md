@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-10-01: Sticky SWFT Method intro; holographic letter cube
+
+### Changed
+- Homepage "The SWFT Method": the left column (heading, intro, cube) stays pinned under the nav while the five stage cards scroll past, and lets go before the content-engine bar (tablet and up; phones keep the stacked layout). The intro and cards now share a `.process-row` so the sticky column stops at the end of the cards.
+- The SWFT letter cube is now a glowing digital hologram: light-tube white edges with blue bloom, dark glass faces with a pixel grid and a sweeping scan line, neon white letters, a brief RGB-split glitch every few seconds, a stronger halo and a light pool beneath. Far-side faces show as glowing wireframe only, so letters stay crisp. Animations stop under reduced motion.
+
+## 2026-10-01: Visuals page
+
+### Added
+- **Visuals** ([`/visuals.html`](../visuals.html)), now in the nav after Work: an endless, draggable grid of photo and video projects (drag with momentum, trackpad/wheel, arrow keys or Tab), with All / Video / Photo filters.
+- Clicking a project uses **GSAP Flip** to grow its thumbnail into a full-screen project view (title, client, category, year, description, prev/next). Each project has its own link (`/visuals.html?p=slug`); Back closes it.
+- Video projects show **Play video**, which opens a lightbox playing the Vimeo video (unlisted links supported) or an MP4. Photo projects show **Play slideshow**, which opens an image slideshow lightbox (auto-advance with progress bar, pause, arrows, swipe, thumbnails, keyboard).
+- Content lives in [`data/visuals.json`](../data/visuals.json); add a project by adding an entry (see its `_readme`). Seeded with the SWFT reel and Yanko Hernando story (Vimeo), three SWFT MP4s, a Web Design Highlights slideshow and each case-study project.
+- See [`css/visuals.css`](../css/visuals.css) and [`js/visuals.js`](../js/visuals.js).
+
+### Changed
+- `/videos`, `/media` and `/swft-tv` now redirect to `/visuals.html` instead of `/case-studies.html`.
+
+## 2026-10-01: SWFT letter cube in "The SWFT Method"
+
+### Added
+- A small glowing white 3D cube under the "From first scroll to repeat customer." text on the homepage, with **S, W, F, T** on its four sides in Michroma (self-hosted, OFL), the closest web font to the business card's wide, squared logo lettering, thickened to match its weight. It spins slowly on its own; drag it to turn it (with momentum), or focus it and use the left/right arrow keys to step a face at a time. Pauses when off-screen; no auto-spin under reduced motion. See [`css/swft-letter-cube.css`](../css/swft-letter-cube.css) and [`js/swft-letter-cube.js`](../js/swft-letter-cube.js).
+
 ## 2026-10-01: Curved nav bar
 
 ### Changed

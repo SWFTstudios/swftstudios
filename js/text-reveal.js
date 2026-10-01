@@ -32,7 +32,7 @@
     ".pain-tabs", ".svc-details", ".svc-featured", ".svc-pointer",
     ".hp-audience-track", ".ar-work-stack-item", ".swft-cube", ".swft-about-gallery",
     "form", ".ga-form-card", ".book-flow", "[hidden]", "[aria-hidden='true']",
-    ".visually-hidden", ".w-richtext figure", "nav",
+    ".visually-hidden", ".w-richtext figure", "nav", ".vz",
   ].join(", ");
 
   function skip(el) {
