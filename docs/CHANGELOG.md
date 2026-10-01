@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-01: Homepage load intro: the cube flies in from the sea
+
+### Added
+- First visit per session (motion allowed, no `#hash`), the homepage opens on a load intro: the hero ocean fills the screen and a small white-hot cube spins fast far out over the water, its light streaking across the waves, with a "SWFT STUDIOS" loading bar tracking real progress (fonts, the cube's first photos, the ocean's first frame, window load; at least 1.6s, at most 7s).
+- When loading finishes the scene shrinks into its hero slot while the cube grows to its hero size and spins down. The ocean re-solves its camera every frame, so the cube flies in from the distance with its reflection locked under it, and the white glow cools into the photos. Then the hero copy animates in as before.
+- An inline `<head>` script sets `html.swft-intro` before first paint; a 12s failsafe always reveals the page. See [`css/hero-intro.css`](../css/hero-intro.css) and [`js/hero-intro.js`](../js/hero-intro.js). `js/swft-ocean.js` gains an `intro` glow (white reflection and bloom) and `redraw()` so resizing mid-animation never shows a blank frame.
+
 ## 2026-10-01: Site-wide message: the SWFT Method; one page per purpose
 
 ### Changed
