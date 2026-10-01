@@ -9,8 +9,9 @@
   --about-dim: rgba(255, 255, 255, 0.22);
   --about-muted: #8a8a8a;
   --about-bg: var(--black, #010101);
-  --about-display: "Chakra Petch", "Inter Display", Inter, system-ui, sans-serif;
-  --about-body: "Inter Display", Inter, system-ui, sans-serif;
+  --about-display: var(--swft-font-display, "Inter Tight", Inter, system-ui, sans-serif);
+  --about-body: var(--swft-font, "Inter Tight", Inter, system-ui, sans-serif);
+  --about-mono: var(--swft-font-mono, "Space Mono", monospace);
 
   position: relative;
   padding-block: clamp(4rem, 10vw, 8rem) clamp(3rem, 8vw, 6rem);
@@ -30,8 +31,8 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: clamp(2rem, 5vw, 3.5rem);
-  font: 400 0.75rem/1 var(--about-body);
-  letter-spacing: 0.16em;
+  font: 400 0.75rem/1 var(--about-mono);
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--about-muted);
 }
@@ -40,11 +41,10 @@
   margin: 0;
   max-width: 24ch;
   font-family: var(--about-display);
-  font-weight: 700;
+  font-weight: 500;
   font-size: clamp(1.75rem, 4.4vw, 3.9rem);
-  line-height: 0.98;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.04em;
   color: var(--about-fg);
 }
 

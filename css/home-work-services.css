@@ -15,8 +15,9 @@
   --ghost: rgba(255, 255, 255, 0.4);
   --accent: var(--green, #56b4e9);
   --accent-ink: #010101;
-  --ar-display: "Chakra Petch", "Inter Display", Inter, system-ui, sans-serif;
-  --ar-font: "Inter Display", Inter, system-ui, sans-serif;
+  --ar-display: var(--swft-font-display, "Inter Tight", Inter, system-ui, sans-serif);
+  --ar-font: var(--swft-font, "Inter Tight", Inter, system-ui, sans-serif);
+  --ar-mono: var(--swft-font-mono, "Space Mono", monospace);
   --ar-header-h: var(--sn-height, 62px);
   --ar-gutter: clamp(1.25rem, 4vw, 2.5rem);
 
@@ -41,8 +42,9 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  font-family: var(--ar-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -61,11 +63,10 @@
 .ar-mega {
   margin: 0;
   font-family: var(--ar-display);
-  font-weight: 700;
+  font-weight: 500;
   font-size: clamp(2rem, 6vw, 4.2rem);
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
   color: var(--fg);
 }
 
@@ -207,18 +208,18 @@
 .ar-work-title {
   font-family: var(--ar-display);
   font-size: clamp(1.5rem, 3.5vw, 2.4rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
+  letter-spacing: -0.03em;
 }
 
 .ar-work-cats {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  font-family: var(--ar-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--accent);
 }

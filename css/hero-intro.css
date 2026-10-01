@@ -80,7 +80,7 @@ html.swft-intro .home-hero-ocean .swft-cube__face-pips {
   width: min(18rem, 70vw);
   translate: -50% 0;
   color: #fff;
-  font-family: var(--swft-font, "Inter Display", Inter, sans-serif);
+  font-family: var(--swft-font, "Inter Tight", Inter, sans-serif);
   pointer-events: none;
   transition: opacity 0.45s ease, translate 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }

@@ -102,8 +102,9 @@
 }
 
 .method-stage__num {
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: var(--swft-text-label, 0.75rem);
-  letter-spacing: 0.16em;
+  letter-spacing: 0;
   color: var(--svc-accent);
   font-variant-numeric: tabular-nums;
 }
@@ -155,8 +156,9 @@
 
 .method-stage__offers > span {
   margin-right: 0.25rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: var(--swft-text-label, 0.75rem);
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--svc-muted);
 }
@@ -210,8 +212,9 @@
 
 .engine-steps__num {
   display: block;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: var(--swft-text-label, 0.75rem);
-  letter-spacing: 0.16em;
+  letter-spacing: 0;
   color: var(--svc-accent);
 }
 
@@ -271,7 +274,7 @@
 }
 
 .start-row__price {
-  font-family: var(--swft-font-display, "Chakra Petch", sans-serif);
+  font-family: var(--swft-font-display, "Inter Tight", sans-serif);
   font-weight: 700;
   color: #fff;
   white-space: nowrap;

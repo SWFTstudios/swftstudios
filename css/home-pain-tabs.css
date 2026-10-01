@@ -59,17 +59,17 @@
 }
 
 .pain-tab__num {
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: var(--swft-text-label, 0.75rem);
-  letter-spacing: 0.16em;
+  letter-spacing: 0;
   font-variant-numeric: tabular-nums;
 }
 
 .pain-tab__label {
-  font-family: var(--swft-font-display, "Chakra Petch", sans-serif);
+  font-family: var(--swft-font-display, "Inter Tight", sans-serif);
   font-size: clamp(1.1rem, 1rem + 0.5vw, 1.4rem);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .pain-tab:hover,
@@ -178,8 +178,9 @@
 .pain-panel__fix-label {
   display: block;
   margin-bottom: 0.4rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: var(--swft-text-label, 0.75rem);
-  letter-spacing: 0.16em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--swft-accent, #56b4e9);
 }
@@ -197,7 +198,7 @@
   border-radius: 999px;
   background: none;
   color: var(--swft-muted, #b5b5b5);
-  font: 500 0.8rem/1 var(--swft-font, "Inter Display", sans-serif);
+  font: 500 0.8rem/1 var(--swft-font, "Inter Tight", sans-serif);
   letter-spacing: 0.04em;
   cursor: pointer;
 }
