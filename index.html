@@ -17,7 +17,7 @@
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="css/normalize.css?v=20260930b" rel="stylesheet" type="text/css">
   <link href="css/components.css?v=20260930b" rel="stylesheet" type="text/css">
-  <link href="css/swftstudios000.css?v=20260930b" rel="stylesheet" type="text/css">
+  <link href="css/swftstudios000.css?v=20261001-type" rel="stylesheet" type="text/css">
   <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
   <!-- Load intro (js/hero-intro.js): first visit per session, motion allowed, no #hash. Set before first paint. -->
   <script>!function(){try{var d=document.documentElement;if(matchMedia("(prefers-reduced-motion: reduce)").matches||location.hash||sessionStorage.getItem("swft-intro-seen"))return;d.className+=" swft-intro";window.__swftIntroFailsafe=setTimeout(function(){d.classList.remove("swft-intro");var b=document.body;if(b&&!b.classList.contains("hero-ready")){b.classList.add("hero-ready");window.dispatchEvent(new CustomEvent("swft:hero-ready"))}},12000)}catch(e){}}();</script>
@@ -57,7 +57,7 @@ body{
   to { transform: translateX(0%); }
 }
 </style>
-  <link href="css/swft-nav.css?v=20261001a" rel="stylesheet" type="text/css">
+  <link href="css/swft-nav.css?v=20261001-visuals" rel="stylesheet" type="text/css">
   <link href="css/pricing-page.css?v=20260930b" rel="stylesheet" type="text/css">
   <style>
     /* Homepage redesign, services, proven results, booking (uses --swft-* tokens) */
@@ -170,71 +170,6 @@ body{
     }
     #homepage-problems .hp-service-deliverables li {
       margin-bottom: 0.75rem;
-    }
-    .hp-proven-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-    @media (min-width: 640px) { .hp-proven-grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 992px) { .hp-proven-grid { grid-template-columns: 1fr 1fr 1fr; } }
-    .hp-proven-card {
-      border: 1px solid var(--swft-border, rgba(255, 255, 255, 0.08));
-      background: #131313;
-      overflow: hidden;
-      transition: border-color 0.3s ease, transform 0.3s ease;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .hp-proven-card:hover {
-      border-color: var(--swft-accent, #56b4e9);
-      transform: translateY(-2px);
-    }
-    .hp-proven-card img {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      display: block;
-    }
-    .hp-proven-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      overflow: hidden;
-      background: var(--swft-card, #0a0a0a);
-      line-height: 0;
-    }
-    .hp-proven-thumb img {
-      width: 100%;
-      height: 100%;
-      aspect-ratio: auto;
-      object-fit: cover;
-      object-position: top center;
-    }
-    .hp-proven-card-body { padding: 1.25rem; }
-    .hp-proven-tag {
-      font-size: var(--swft-text-tiny, 0.75rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--swft-muted, #a8a8a8);
-      margin-bottom: 0.5rem;
-    }
-    .hp-proven-card h3 {
-      font-size: var(--swft-text-lead, 1.125rem);
-      font-weight: 600;
-      margin: 0 0 0.75rem;
-      color: var(--swft-text-strong, #fff);
-    }
-    .hp-proven-link {
-      font-size: var(--swft-text-small, 0.875rem);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--swft-accent, #56b4e9);
-    }
-    .hp-view-all {
-      margin-top: 2.5rem;
-      text-align: center;
     }
     .hp-booking {
       padding: 5rem 0;
@@ -453,14 +388,33 @@ body{
       flex-wrap: wrap;
       row-gap: 2.5rem;
     }
+    /* Intro column + stage cards share a row, so the sticky intro stops
+       where the cards end (before the content engine bar) */
+    #How-we-work .process-row {
+      flex: 1 1 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      #How-we-work .process-row .section-title-container {
+        position: sticky;
+        top: calc(var(--sn-height, 62px) + var(--sn-curve, 14px) + 2rem);
+        align-self: flex-start;
+      }
+    }
+    @media (max-width: 767px) {
+      #How-we-work .process-row { flex-direction: column; }
+      #How-we-work .process-row > * { width: 100%; max-width: none; }
+    }
     #How-we-work .process-card {
       padding: 2rem 2.25rem;
     }
     #How-we-work .process-card-title {
-      font-family: var(--swft-font-display, "Chakra Petch", sans-serif);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
+      font-family: var(--swft-font-display, "Inter Tight", sans-serif);
+      font-weight: 500;
+      letter-spacing: -0.02em;
     }
     .process-engine {
       flex: 1 1 100%;
@@ -604,15 +558,17 @@ body{
     "description": "Website design and development, photography and video content, and lead-capture systems for growing businesses."
   }
   </script>
-  <link href="css/swft-cube.css?v=20261001e" rel="stylesheet" type="text/css">
+  <link href="css/swft-cube.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link href="css/swft-ocean.css?v=20261001e" rel="stylesheet" type="text/css">
   <link href="css/home-hero-ocean.css?v=20260930b" rel="stylesheet" type="text/css">
-  <link href="css/hero-intro.css?v=20261001j" rel="stylesheet" type="text/css">
-  <link rel="preload" href="fonts/ChakraPetch-Bold.woff2" as="font" type="font/woff2" crossorigin>
-  <link href="css/home-about.css?v=20261001m" rel="stylesheet" type="text/css">
-  <link href="css/home-work-services.css?v=20261001c" rel="stylesheet" type="text/css">
+  <link href="css/hero-intro.css?v=20261001-type" rel="stylesheet" type="text/css">
+  <link rel="preload" href="fonts/InterTight-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link href="css/home-about.css?v=20261001-wide" rel="stylesheet" type="text/css">
+  <link href="css/swft-letter-cube.css?v=20261001d" rel="stylesheet" type="text/css">
+  <link href="css/swft-city.css?v=20261001b" rel="stylesheet" type="text/css">
+  <link href="css/home-work-services.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link href="css/home-services.css?v=20261001c" rel="stylesheet" type="text/css">
-  <link href="css/home-pain-tabs.css?v=20261001f" rel="stylesheet" type="text/css">
+  <link href="css/home-pain-tabs.css?v=20261001-type" rel="stylesheet" type="text/css">
   <link href="css/swft-page-transition.css?v=20260930b" rel="stylesheet" type="text/css">
   <script src="js/swft-page-transition.js?v=20260930b"></script>
 </head>
@@ -1450,90 +1406,6 @@ margin: 0rem !important;
         </div>
         <p class="ar-container ar-work-more"><a class="ar-btn ar-btn--outline" href="case-studies.html">View all work</a></p>
       </section>
-      <section class="hp-section" id="proven-results" aria-labelledby="hp-proven-heading">
-                <div class="hp-section-label">Our Work</div>
-                <h2 class="hp-section-title" id="hp-proven-heading">Proven results</h2>
-                <div class="hp-proven-grid">
-                  <a href="case-study/brooklyn-steel.html" class="hp-proven-card">
-                    <img src="images/brooklyn-steel-thumbnail.webp" alt="Brooklyn Steel Co. website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/brooklyn-steel-thumbnail-p-500.webp 500w, images/brooklyn-steel-thumbnail-p-800.webp 800w, images/brooklyn-steel-thumbnail-p-1080.webp 1080w, images/brooklyn-steel-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Brooklyn Steel Co.</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/snooze-lane.html" class="hp-proven-card">
-                    <img src="images/Snooze-Lane-Desktop-thumbnail.webp" alt="Snooze Lane website and app" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Snooze-Lane-Desktop-thumbnail-p-500.webp 500w, images/Snooze-Lane-Desktop-thumbnail-p-800.webp 800w, images/Snooze-Lane-Desktop-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Website · App</div>
-                      <h3>Snooze Lane</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/tal-hydration.html" class="hp-proven-card">
-                    <img src="images/tal-hydration-thumbnail.webp" alt="TAL Hydration storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/tal-hydration-thumbnail-p-500.webp 500w, images/tal-hydration-thumbnail-p-800.webp 800w, images/tal-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>TAL Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/roller-reels.html" class="hp-proven-card">
-                    <img src="images/Roller_Reels_thumbnail.webp" alt="Roller Reels brand" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Roller_Reels_thumbnail-p-500.webp 500w, images/Roller_Reels_thumbnail-p-800.webp 800w, images/Roller_Reels_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Content &amp; Production</div>
-                      <h3>Roller Reels</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/manna-hydration.html" class="hp-proven-card">
-                    <img src="images/manna-hydration-thumbnail.webp" alt="Manna Hydration website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/manna-hydration-thumbnail-p-500.webp 500w, images/manna-hydration-thumbnail-p-800.webp 800w, images/manna-hydration-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Manna Hydration</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/thyme-and-table.html" class="hp-proven-card">
-                    <img src="images/thyme-and-table-thumbnail.webp" alt="Thyme and Table storefront" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/thyme-and-table-thumbnail-p-500.webp 500w, images/thyme-and-table-thumbnail-p-800.webp 800w, images/thyme-and-table-thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">E-Commerce (Shopify)</div>
-                      <h3>Thyme &amp; Table</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/blurred-lines-entertainment.html" class="hp-proven-card">
-                    <img src="images/BLE_SWFT_thumbnail.webp" alt="Blurred Lines Entertainment brand and film" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/BLE_SWFT_thumbnail-p-500.webp 500w, images/BLE_SWFT_thumbnail-p-800.webp 800w, images/BLE_SWFT_thumbnail-p-1080.webp 1080w, images/BLE_SWFT_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Content &amp; Production</div>
-                      <h3>Blurred Lines Entertainment</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/built-by-me-ez.html" class="hp-proven-card">
-                    <img src="images/built_by_me_ez_thumbnail.webp" alt="Built By Me EZ website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/built_by_me_ez_thumbnail-p-500.webp 500w, images/built_by_me_ez_thumbnail-p-800.webp 800w, images/built_by_me_ez_thumbnail-p-1080.webp 1080w, images/built_by_me_ez_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Custom Website Build</div>
-                      <h3>Built By Me EZ</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                  <a href="case-study/hawthorne-global-ministries.html" class="hp-proven-card">
-                    <img src="images/Hawthorne_Global_Ministries_thumbnail.webp" alt="Hawthorne Global Ministries website" loading="lazy" sizes="(max-width: 3600px) 100vw, 3600px" srcset="images/Hawthorne_Global_Ministries_thumbnail-p-500.webp 500w, images/Hawthorne_Global_Ministries_thumbnail-p-800.webp 800w, images/Hawthorne_Global_Ministries_thumbnail-p-1080.webp 1080w, images/Hawthorne_Global_Ministries_thumbnail-p-1600.webp 1600w, images/Hawthorne_Global_Ministries_thumbnail-p-2000.webp 2000w, images/Hawthorne_Global_Ministries_thumbnail-p-2600.webp 2600w, images/Hawthorne_Global_Ministries_thumbnail-p-3200.webp 3200w, images/Hawthorne_Global_Ministries_thumbnail.webp 3600w">
-                    <div class="hp-proven-card-body">
-                      <div class="hp-proven-tag">Custom Website Build</div>
-                      <h3>Hawthorne Global Ministries</h3>
-                      <span class="hp-proven-link">View Case Study →</span>
-                    </div>
-                  </a>
-                </div>
-                <div class="hp-view-all">
-                  <a href="case-studies.html" class="button is-course w-inline-block">
-                    <div class="button_bg"></div>
-                    <div class="button_text">View All Work</div>
-                  </a>
-                </div>
-              </section>
       <section id="How-we-work">
         <div class="section-wrapper glow-2">
           <div class="section-container process">
@@ -1542,9 +1414,21 @@ margin: 0rem !important;
               <div class="section-tag-line"></div>
             </div>
             <div class="process-content-container">
+              <div class="process-row">
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d1d" style="opacity:0" class="section-title-container">
                 <h2 class="section-title">From first scroll to repeat customer.</h2>
                 <div class="testimonial-text">Five stages, one team. We find where your growth is leaking, fix it, then automate the fix so it keeps working.</div>
+                <div class="swft-lcube" tabindex="0" role="img" aria-label="SWFT cube: S, W, F and T on its sides. Drag or use the left and right arrow keys to turn it.">
+                  <div class="swft-lcube__body">
+                    <div class="swft-lcube__face swft-lcube__face--front"><span>S</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--right"><span>W</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--back"><span>F</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--left"><span>T</span></div>
+                    <div class="swft-lcube__face swft-lcube__face--top"></div>
+                    <div class="swft-lcube__face swft-lcube__face--bottom"></div>
+                  </div>
+                </div>
+                <p class="swft-lcube__hint" aria-hidden="true">Drag to turn</p>
               </div>
               <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d22" style="opacity:0" class="process-card-container process-card-container--five">
                 <div data-w-id="06617fe8-3bbd-4419-a0f9-7a7ca2158d23" class="process-card">
@@ -1568,6 +1452,7 @@ margin: 0rem !important;
                   <p class="testimonial-text">We track what worked, automate it and feed the winners back into new content.</p>
                 </div>
               </div>
+              </div>
               <div class="process-engine">
                 <div class="process-engine__label">The content engine</div>
                 <p class="process-engine__text">Content that&rsquo;s proven before it&rsquo;s posted. We study what already works with your audience, then produce more of it, fast, in your look and your voice.</p>
@@ -1580,6 +1465,7 @@ margin: 0rem !important;
       <section id="growth-audit-cta" class="hp-booking padding-global" aria-labelledby="hp-audit-heading">
         <div class="container-large">
           <div class="hp-section-label">Free Growth Audit</div>
+          <div class="hp-booking-grid">
           <div class="hp-booking-copy">
             <h2 id="hp-audit-heading">Find out where your business is leaking customers.</h2>
             <p>Send us your website or social profile. We&rsquo;ll review all five stages, from how people find you to whether they come back, and email you the three fixes that will move the needle most. Free, personal, no call required.</p>
@@ -1593,6 +1479,11 @@ margin: 0rem !important;
                 <div class="button_text">View our work</div>
               </a>
             </div>
+          </div>
+          <div class="swft-city" data-swft-city role="img" aria-label="Animated hologram of a city grid: towers rise from the centre outward and their lights switch on, like a business growing. Tap it to send a glowing pulse across the towers.">
+            <canvas aria-hidden="true"></canvas>
+            <p class="swft-city__hint" aria-hidden="true">Tap to pulse &middot; drag to turn</p>
+          </div>
           </div>
         </div>
       </section>
@@ -1745,11 +1636,13 @@ tippy('.nav_link.is-muted', {
 </script>
   <script src="js/homepage-audience.js?v=20260930b"></script>
   <script src="js/swft-analytics.js?v=20260930b"></script>
-  <script src="js/swft-nav.js?v=20261001k"></script>
+  <script src="js/swft-nav.js?v=20261001-visuals"></script>
   <script src="js/swft-cube.js?v=20261001e"></script>
   <script src="js/swft-ocean.js?v=20261001j"></script>
   <script src="js/hero-intro.js?v=20261001j"></script>
   <script src="js/swft-about.js?v=20260930b"></script>
+  <script src="js/swft-letter-cube.js?v=20261001a" defer></script>
+  <script src="js/swft-city.js?v=20261001b" defer></script>
   <script src="js/home-work-stack.js?v=20260930b"></script>
   <script src="js/home-services.js?v=20261001c"></script>
   <script src="js/home-pain-tabs.js?v=20261001f"></script>

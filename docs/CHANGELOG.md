@@ -1,5 +1,67 @@
 # Changelog
 
+## 2026-10-01: Hologram city grid beside the Free Growth Audit copy
+
+### Added
+- A 3D hologram city grid to the right of "Find out where your business is leaking customers." on the homepage (below the copy on tablets and phones, where it stays visible). Glowing wireframe towers on a street grid, drawn on a canvas with its own small perspective camera (no 3D library). Every ~15s the city grows from its centre: a wave rolls outward, towers rise as it passes, and their window lights switch on behind it; then it holds while pulse rings sweep the grid, a beacon glows from the tallest tower, and it settles and starts again. The camera turns slowly; drag to turn it (with momentum). **Tap (or click) the ground** to send a pulse ring out from that spot: the towers around it light up, their windows flare, and the glow fades over a couple of seconds (up to six pulses at once). The canvas is 15% larger than its box on every side, so the glow, the rotating plate corners and the beacon are never clipped; the section clips that overflow with `overflow-x: clip`, so the page still can't scroll sideways. Pauses off-screen and in hidden tabs; under reduced motion it shows one still frame of the finished city (taps still glow, in place, without the ring travelling). See [`js/swft-city.js`](../js/swft-city.js) and [`css/swft-city.css`](../css/swft-city.css).
+
+## 2026-10-01: Wider About statement; "Proven results" grid removed
+
+### Changed
+- Homepage About statement ("Strategic Workflows Facilitating Transformation...") is wider: its container goes from 72rem to 96rem and the line cap from 24 to 44 characters, so on a laptop it runs about the full content width in three lines instead of four or five. Phones are unchanged. See [`css/home-about.css`](../css/home-about.css).
+
+### Removed
+- The "Our Work / Proven results" three-column card grid (and its "View All Work" button) from the homepage. The stacked "Selected Work" section above it stays, and still links to all work. Its styles are gone too.
+
+## 2026-10-01: Forms also log to Google Sheets, with an email fallback
+
+### Added
+- Every form (contact, Free Growth Audit, booking / quote, website build) now saves to **Airtable and a Google Sheet** in parallel, then emails hello@swftstudios.com as before. The Sheet gets one tab per form with the same columns as Airtable; either copy counts as saved.
+- If the Resend email to hello@ fails (or `RESEND_API_KEY` is missing), the Google Sheets script emails hello@ instead, so a lead is never silent.
+- Runs through a small Google Apps Script web app ([`scripts/google-sheets-leads.gs`](../scripts/google-sheets-leads.gs)); no Google API keys. Turns on when `GOOGLE_SHEETS_WEBHOOK_URL` and `GOOGLE_SHEETS_SECRET` are set in Cloudflare; until then nothing changes. Setup: [`GOOGLE_SHEETS_LEADS.md`](GOOGLE_SHEETS_LEADS.md).
+- Team emails now say where the lead was saved ("Saved to: Airtable + Google Sheet") instead of "Stored in Airtable".
+- 8 new tests (`npm run test:forms`): the handlers and the Apps Script.
+
+## 2026-10-01: Sticky SWFT Method intro; holographic letter cube
+
+### Changed
+- Homepage "The SWFT Method": the left column (heading, intro, cube) stays pinned under the nav while the five stage cards scroll past, and lets go before the content-engine bar (tablet and up; phones keep the stacked layout). The intro and cards now share a `.process-row` so the sticky column stops at the end of the cards.
+- The SWFT letter cube is now a glowing digital hologram: light-tube white edges with blue bloom, dark glass faces with a pixel grid and a sweeping scan line, neon white letters, a brief RGB-split glitch every few seconds, a stronger halo and a light pool beneath. Far-side faces show as glowing wireframe only, so letters stay crisp. Animations stop under reduced motion.
+
+## 2026-10-01: Visuals page
+
+### Added
+- **Visuals** ([`/visuals.html`](../visuals.html)), now in the nav after Work: an endless, draggable grid of photo and video projects (drag with momentum, trackpad/wheel, arrow keys or Tab), with All / Video / Photo filters.
+- Clicking a project uses **GSAP Flip** to grow its thumbnail into a full-screen project view (title, client, category, year, description, prev/next). Each project has its own link (`/visuals.html?p=slug`); Back closes it.
+- Video projects show **Play video**, which opens a lightbox playing the Vimeo video (unlisted links supported) or an MP4. Photo projects show **Play slideshow**, which opens an image slideshow lightbox (auto-advance with progress bar, pause, arrows, swipe, thumbnails, keyboard).
+- Content lives in [`data/visuals.json`](../data/visuals.json); add a project by adding an entry (see its `_readme`). Seeded with the SWFT reel and Yanko Hernando story (Vimeo), three SWFT MP4s, a Web Design Highlights slideshow and each case-study project.
+- See [`css/visuals.css`](../css/visuals.css) and [`js/visuals.js`](../js/visuals.js).
+
+### Changed
+- `/videos`, `/media` and `/swft-tv` now redirect to `/visuals.html` instead of `/case-studies.html`.
+
+## 2026-10-01: SWFT letter cube in "The SWFT Method"
+
+### Added
+- A small glowing white 3D cube under the "From first scroll to repeat customer." text on the homepage, with **S, W, F, T** on its four sides in Michroma (self-hosted, OFL), the closest web font to the business card's wide, squared logo lettering, thickened to match its weight. It spins slowly on its own; drag it to turn it (with momentum), or focus it and use the left/right arrow keys to step a face at a time. Pauses when off-screen; no auto-spin under reduced motion. See [`css/swft-letter-cube.css`](../css/swft-letter-cube.css) and [`js/swft-letter-cube.js`](../js/swft-letter-cube.js).
+
+## 2026-10-01: Curved nav bar
+
+### Changed
+- The nav bar's bottom edge now curves like the top of the homepage work carousel: the same 120%-wide elliptical arc, dipping a subtle ~14px lower in the middle than at the sides (8px on phones). Frosted background and hairline follow the curve. The bar is pinned to 62px (`--sn-height`) again, so it no longer overlaps the space reserved for it. See [`css/swft-nav.css`](../css/swft-nav.css).
+
+## 2026-10-01: One menu at every width
+
+### Changed
+- Desktop now uses the same nav as mobile: the brand on the left, and on the right the **Get Your Free Growth Audit** button next to a menu button that opens the glass slide-over menu. The row of desktop links is gone. On phones (560px and below) the bar shows just the brand and menu button; the audit button stays inside the menu. See [`js/swft-nav.js`](../js/swft-nav.js) and [`css/swft-nav.css`](../css/swft-nav.css).
+
+## 2026-10-01: New type system (Inter Tight + Space Mono, after Astrox Studio)
+
+### Changed
+- Site typography now follows the [Astrox Studio](https://astrox-studio.webflow.io/utility-pages/style-guide) style guide: **Inter Tight** for headings, display lines and body text, **Space Mono** for labels and eyebrows. Headings drop the forced uppercase for sentence case at weight 500 with tight negative tracking; labels (section eyebrows, step numbers, category tags) are uppercase Space Mono. The type scale follows the Astrox sizes by role, fluid down to phones: page heroes 100px, section titles 70px, card titles 44px, h4/h5/h6 34/28/24px, closing CTA display 210px, body 18px, small 16px, labels 12-14px. Paragraphs drop the old -0.019em tracking (Inter Tight is already tight) and every heading is weight 500. See [`css/swft-fonts.css`](../css/swft-fonts.css) and the new `--swft-font-mono` token in [`css/swft-tokens.css`](../css/swft-tokens.css).
+
+### Removed
+- Chakra Petch and Inter Display font files; both are replaced by self-hosted Inter Tight and Space Mono in `fonts/`.
 ## 2026-10-01: Video gallery page
 
 ### Added

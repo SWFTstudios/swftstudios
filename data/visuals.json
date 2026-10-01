@@ -1,0 +1,360 @@
+{
+  "_readme": "Visuals page content (visuals.html). type 'video' needs video.vimeo (ID, plus 'hash' for unlisted links) or video.file (MP4 path). type 'photo' needs images: [{src, alt}] for the slideshow. thumb is the grid image. Order here is grid order.",
+  "items": [
+    {
+      "slug": "swft-studios-reel",
+      "title": "SWFT Studios Reel",
+      "client": "SWFT Studios",
+      "year": "2026",
+      "category": "Film",
+      "type": "video",
+      "thumb": "images/swft-thumbnail.webp",
+      "video": {
+        "vimeo": "1216244886"
+      },
+      "description": "A cut of the photo, video and web work we make for local brands."
+    },
+    {
+      "slug": "yanko-hernando-story",
+      "title": "Yanko Hernando: Client Story",
+      "client": "Yanko Hernando",
+      "year": "2023",
+      "category": "Testimonial",
+      "type": "video",
+      "thumb": "images/Yanko-Hernando-Testimonial-Thumbnail.png",
+      "video": {
+        "vimeo": "764022783",
+        "hash": "4d7429ccb7"
+      },
+      "description": "Yanko on working with SWFT, in his own words."
+    },
+    {
+      "slug": "welcome-to-swft-studios",
+      "title": "Welcome to SWFT Studios",
+      "client": "SWFT Studios",
+      "year": "2025",
+      "category": "Brand film",
+      "type": "video",
+      "thumb": "videos/welcome_to_swft_studios_v1-1080p_poster.0000000.jpg",
+      "video": {
+        "file": "videos/welcome_to_swft_studios_v1-1080p.mp4"
+      },
+      "description": "Who we are and how we work, in under a minute."
+    },
+    {
+      "slug": "swft-cube-night-watch",
+      "title": "SWFT Cube: Night Watch",
+      "client": "SWFT Studios",
+      "year": "2025",
+      "category": "Motion",
+      "type": "video",
+      "thumb": "videos/swft_cube_night_watch_low_bit_rate-1080p-poster-00001.jpg",
+      "video": {
+        "file": "videos/swft_cube_night_watch_low_bit_rate-1080p-transcode.mp4"
+      },
+      "description": "The SWFT cube after dark: a motion study for our brand world."
+    },
+    {
+      "slug": "snooze-lane-motion",
+      "title": "Snooze Lane Motion",
+      "client": "Snooze Lane",
+      "year": "2025",
+      "category": "Motion",
+      "type": "video",
+      "thumb": "videos/snooze_lane_motion_thumbnail-poster-00001.jpg",
+      "video": {
+        "file": "videos/snooze_lane_motion_thumbnail-transcode.mp4"
+      },
+      "description": "A looping motion piece for the Snooze Lane launch."
+    },
+    {
+      "slug": "web-design-highlights",
+      "title": "Web Design Highlights",
+      "client": "Various",
+      "year": "2026",
+      "category": "Websites",
+      "type": "photo",
+      "thumb": "images/mayim-spa-thumbnail.webp",
+      "images": [
+        {
+          "src": "images/brooklyn-steel-thumbnail.webp",
+          "alt": "Brooklyn Steel Co. website"
+        },
+        {
+          "src": "images/manna-hydration-thumbnail.webp",
+          "alt": "Manna Hydration website"
+        },
+        {
+          "src": "images/thyme-and-table-thumbnail.webp",
+          "alt": "Thyme & Table website"
+        },
+        {
+          "src": "images/tal-hydration-thumbnail.webp",
+          "alt": "TAL Hydration website"
+        },
+        {
+          "src": "images/scribble_scribe_thumbnsail.png",
+          "alt": "Scribble & Scribe website"
+        },
+        {
+          "src": "images/BLE_SWFT_thumbnail.webp",
+          "alt": "Blurred Lines Entertainment website"
+        },
+        {
+          "src": "images/built_by_me_ez_thumbnail.webp",
+          "alt": "Built By Me EZ website"
+        },
+        {
+          "src": "images/Roller_Reels_thumbnail.webp",
+          "alt": "Roller Reels website"
+        },
+        {
+          "src": "images/Hawthorne_Global_Ministries_thumbnail.webp",
+          "alt": "Hawthorne Global Ministries website"
+        },
+        {
+          "src": "images/alpha-ministries-thumbnail.webp",
+          "alt": "Alpha Ministries International website"
+        },
+        {
+          "src": "images/whp_desktop_screenshot.webp",
+          "alt": "Western HP website"
+        },
+        {
+          "src": "images/Snooze-Lane-Desktop-thumbnail.webp",
+          "alt": "Snooze Lane website"
+        },
+        {
+          "src": "images/hamper_app_website_thumbnail.webp",
+          "alt": "Hamper website"
+        },
+        {
+          "src": "images/mayim-spa-thumbnail.webp",
+          "alt": "Mayim Spa website"
+        }
+      ],
+      "description": "Sites we have designed and built for local brands, in one slideshow."
+    },
+    {
+      "slug": "brooklyn-steel",
+      "title": "Brooklyn Steel Co.",
+      "client": "Brooklyn Steel Co.",
+      "year": "",
+      "category": "E-Commerce (Shopify)",
+      "type": "photo",
+      "thumb": "images/brooklyn-steel-thumbnail.webp",
+      "images": [
+        {
+          "src": "images/brooklyn-steel-thumbnail.webp",
+          "alt": "Brooklyn Steel Co. website"
+        }
+      ],
+      "description": "A Brooklyn-inspired café aesthetic meets modern espresso engineering, brand story and Shopify experience for the Talos 20 launch.",
+      "caseStudy": "case-study/brooklyn-steel.html"
+    },
+    {
+      "slug": "manna-hydration",
+      "title": "Manna Hydration",
+      "client": "Manna Hydration",
+      "year": "",
+      "category": "E-Commerce (Shopify)",
+      "type": "photo",
+      "thumb": "images/manna-hydration-thumbnail.webp",
+      "images": [
+        {
+          "src": "images/manna-hydration-thumbnail.webp",
+          "alt": "Manna Hydration website"
+        }
+      ],
+      "description": "E-commerce web experience and product storytelling for a lifestyle hydration brand built around color, style, and sustainability.",
+      "caseStudy": "case-study/manna-hydration.html"
+    },
+    {
+      "slug": "thyme-and-table",
+      "title": "Thyme & Table",
+      "client": "Thyme & Table",
+      "year": "",
+      "category": "E-Commerce (Shopify)",
+      "type": "photo",
+      "thumb": "images/thyme-and-table-thumbnail.webp",
+      "images": [
+        {
+          "src": "images/thyme-and-table-thumbnail.webp",
+          "alt": "Thyme & Table website"
+        }
+      ],
+      "description": "Full e-commerce presence for a Walmart kitchen and home brand spanning cookware, appliances, dinnerware, and drinkware.",
+      "caseStudy": "case-study/thyme-and-table.html"
+    },
+    {
+      "slug": "tal-hydration",
+      "title": "TAL Hydration",
+      "client": "TAL Hydration",
+      "year": "",
+      "category": "E-Commerce (Shopify)",
+      "type": "photo",
+      "thumb": "images/tal-hydration-thumbnail.webp",
+      "images": [
+        {
+          "src": "images/tal-hydration-thumbnail.webp",
+          "alt": "TAL Hydration website"
+        }
+      ],
+      "description": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands, designed to convert at scale.",
+      "caseStudy": "case-study/tal-hydration.html"
+    },
+    {
+      "slug": "scribble-and-scribe",
+      "title": "Scribble & Scribe",
+      "client": "Scribble & Scribe",
+      "year": "",
+      "category": "E-Commerce (Webflow)",
+      "type": "photo",
+      "thumb": "images/scribble_scribe_thumbnsail.png",
+      "images": [
+        {
+          "src": "images/scribble_scribe_thumbnsail.png",
+          "alt": "Scribble & Scribe website"
+        }
+      ],
+      "description": "E-commerce web experience for a creative stationery and lifestyle brand built to showcase products and drive online sales.",
+      "caseStudy": "case-study/scribble-and-scribe.html"
+    },
+    {
+      "slug": "blurred-lines-entertainment",
+      "title": "Blurred Lines Entertainment",
+      "client": "Blurred Lines Entertainment",
+      "year": "",
+      "category": "Content & Production",
+      "type": "photo",
+      "thumb": "images/BLE_SWFT_thumbnail.webp",
+      "images": [
+        {
+          "src": "images/BLE_SWFT_thumbnail.webp",
+          "alt": "Blurred Lines Entertainment website"
+        }
+      ],
+      "description": "Entertainment brand storytelling and web experience.",
+      "caseStudy": "case-study/blurred-lines-entertainment.html"
+    },
+    {
+      "slug": "built-by-me-ez",
+      "title": "Built By Me EZ",
+      "client": "Built By Me EZ",
+      "year": "",
+      "category": "Custom Website Build",
+      "type": "photo",
+      "thumb": "images/built_by_me_ez_thumbnail.webp",
+      "images": [
+        {
+          "src": "images/built_by_me_ez_thumbnail.webp",
+          "alt": "Built By Me EZ website"
+        }
+      ],
+      "description": "Product story and site experience for a DIY builder audience.",
+      "caseStudy": "case-study/built-by-me-ez.html"
+    },
+    {
+      "slug": "roller-reels",
+      "title": "Roller Reels",
+      "client": "Roller Reels",
+      "year": "",
+      "category": "Content & Production",
+      "type": "photo",
+      "thumb": "images/Roller_Reels_thumbnail.webp",
+      "images": [
+        {
+          "src": "images/Roller_Reels_thumbnail.webp",
+          "alt": "Roller Reels website"
+        }
+      ],
+      "description": "A focused look at positioning and web presence for a reels-forward brand.",
+      "caseStudy": "case-study/roller-reels.html"
+    },
+    {
+      "slug": "hawthorne-global-ministries",
+      "title": "Hawthorne Global Ministries",
+      "client": "Hawthorne Global Ministries",
+      "year": "",
+      "category": "Custom Website Build",
+      "type": "photo",
+      "thumb": "images/Hawthorne_Global_Ministries_thumbnail.webp",
+      "images": [
+        {
+          "src": "images/Hawthorne_Global_Ministries_thumbnail.webp",
+          "alt": "Hawthorne Global Ministries website"
+        }
+      ],
+      "description": "Brand and digital presence for a global ministries organization.",
+      "caseStudy": "case-study/hawthorne-global-ministries.html"
+    },
+    {
+      "slug": "alpha-ministries-international",
+      "title": "Alpha Ministries International",
+      "client": "Alpha Ministries International",
+      "year": "",
+      "category": "Custom Website Build",
+      "type": "photo",
+      "thumb": "images/alpha-ministries-thumbnail.webp",
+      "images": [
+        {
+          "src": "images/alpha-ministries-thumbnail.webp",
+          "alt": "Alpha Ministries International website"
+        }
+      ],
+      "description": "How SWFT built a digital home for a 30-year cross-cultural ministry serving communities across Pakistan and New Jersey.",
+      "caseStudy": "case-study/alpha-ministries-international.html"
+    },
+    {
+      "slug": "western-hp",
+      "title": "Western HP",
+      "client": "Western HP",
+      "year": "",
+      "category": "Custom Website Build",
+      "type": "photo",
+      "thumb": "images/whp_desktop_screenshot.webp",
+      "images": [
+        {
+          "src": "images/whp_desktop_screenshot.webp",
+          "alt": "Western HP website"
+        }
+      ],
+      "description": "Professional web presence for a service business focused on digital solutions and client engagement.",
+      "caseStudy": "case-study/western-hp.html"
+    },
+    {
+      "slug": "snooze-lane",
+      "title": "Snooze Lane",
+      "client": "Snooze Lane",
+      "year": "",
+      "category": "Website + iOS App",
+      "type": "photo",
+      "thumb": "images/Snooze-Lane-Desktop-thumbnail.webp",
+      "images": [
+        {
+          "src": "images/Snooze-Lane-Desktop-thumbnail.webp",
+          "alt": "Snooze Lane website"
+        }
+      ],
+      "description": "How SWFT translated a clever commuter app into a product story people could trust, understand, and share.",
+      "caseStudy": "case-study/snooze-lane.html"
+    },
+    {
+      "slug": "hamper",
+      "title": "Hamper",
+      "client": "Hamper",
+      "year": "",
+      "category": "Website + iOS App",
+      "type": "photo",
+      "thumb": "images/hamper_app_website_thumbnail.webp",
+      "images": [
+        {
+          "src": "images/hamper_app_website_thumbnail.webp",
+          "alt": "Hamper website"
+        }
+      ],
+      "description": "App and web case study for Hamper.",
+      "caseStudy": "case-study/hamper.html"
+    }
+  ]
+}
