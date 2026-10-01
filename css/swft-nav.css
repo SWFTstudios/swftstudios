@@ -7,9 +7,9 @@
 :root {
   --sm-green: #56b4e9;
   --sn-height: 62px;
-  /* Extra depth of the nav's curved bottom at its centre (matches the
-     carousel arc: 0.2235 x its clamp(80px, 12vw, 140px) ellipse height) */
-  --sn-curve: clamp(18px, 2.7vw, 31px);
+  /* Extra depth of the nav's curved bottom at its centre. Same arc shape as
+     the work carousel, at about half its depth for a subtler bend. */
+  --sn-curve: clamp(8px, 1vw, 14px);
   --swft-gutter: 1.5rem;
 }
 
