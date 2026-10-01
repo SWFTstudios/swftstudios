@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-01: Fix clipped text in the "Who's this for" cards on phones
+
+### Fixed
+- Opening an industry card on a phone cut off the end of its text. The card had a fixed height and the text a fixed cap, and the new, longer copy plus an oversized paragraph size no longer fit. An opened card now grows to fit its text, the paragraph is set to 15px, and the photo behind an open card is darkened so the words stay readable.
+
 ## 2026-10-01: "The Problem" becomes auto-playing pain-point tabs; "Who's this for" rewritten
 
 ### Changed
