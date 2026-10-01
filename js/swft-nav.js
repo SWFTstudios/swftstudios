@@ -34,10 +34,10 @@
         '<div class="sn-links">' + desktop +
           '<a href="' + CTA.href + '" class="sn-cta">' + CTA.label + "</a>" +
         "</div>" +
-        '<button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>' +
+        '<button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sn-panel"><span></span><span></span><span></span></button>' +
       "</nav>" +
       '<div class="sn-scrim" id="sn-scrim"></div>' +
-      '<aside class="sn-panel" id="sn-panel" aria-hidden="true">' +
+      '<aside class="sn-panel" id="sn-panel" aria-hidden="true" aria-label="Site menu">' +
         '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
         mobile +
         '<a href="' + CTA.href + '" class="sn-panel-cta">' + CTA.label + "</a>" +
@@ -66,12 +66,41 @@
     var scrim = document.getElementById("sn-scrim");
     var close = document.getElementById("sn-close");
     if (!burger || !panel) return;
-    function open() { panel.classList.add("open"); if (scrim) scrim.classList.add("open"); burger.setAttribute("aria-expanded", "true"); panel.setAttribute("aria-hidden", "false"); }
-    function shut() { panel.classList.remove("open"); if (scrim) scrim.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); panel.setAttribute("aria-hidden", "true"); }
+    function isOpen() { return panel.classList.contains("open"); }
+    function open() {
+      panel.classList.add("open"); if (scrim) scrim.classList.add("open");
+      burger.setAttribute("aria-expanded", "true"); panel.setAttribute("aria-hidden", "false");
+      document.documentElement.classList.add("sn-locked");
+      if (close) close.focus({ preventScroll: true });
+    }
+    function shut(returnFocus) {
+      if (!isOpen()) return;
+      panel.classList.remove("open"); if (scrim) scrim.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false"); panel.setAttribute("aria-hidden", "true");
+      document.documentElement.classList.remove("sn-locked");
+      if (returnFocus) burger.focus({ preventScroll: true });
+    }
     burger.addEventListener("click", open);
-    if (close) close.addEventListener("click", shut);
-    if (scrim) scrim.addEventListener("click", shut);
-    panel.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", shut); });
+    if (close) close.addEventListener("click", function () { shut(true); });
+    if (scrim) scrim.addEventListener("click", function () { shut(true); });
+    panel.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { shut(false); }); });
+    document.addEventListener("keydown", function (e) {
+      if (!isOpen()) return;
+      if (e.key === "Escape") { shut(true); return; }
+      // Keep Tab inside the open menu
+      if (e.key === "Tab") {
+        var items = panel.querySelectorAll("button, a");
+        var first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+    // Rotating to desktop width with the menu open: release the page
+    if (window.matchMedia) {
+      var mq = window.matchMedia("(max-width: 860px)");
+      var onChange = function () { if (!mq.matches) shut(false); };
+      if (mq.addEventListener) mq.addEventListener("change", onChange); else if (mq.addListener) mq.addListener(onChange);
+    }
   }
 
   function initNav() {
