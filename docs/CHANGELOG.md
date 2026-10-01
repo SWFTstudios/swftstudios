@@ -4,7 +4,7 @@
 
 ### Changed
 - The whole site now tells one story: **SWFT = Strategic Workflows Facilitating Transformation**. We run digital marketing from every side, in five stages: **Get seen → Capture → Convert → Nurture → Automate & repeat**, powered by a content engine that makes creative proven before it's posted.
-- **Home:** new hero line, About statement, the five problem tabs now map to the five stages, "The SWFT Method" replaces the generic 4-step process, the audit CTA and FAQ (plus FAQ schema) explain the method and add "What does SWFT stand for?".
+- **Home:** Creative Services now sits right after the five problem tabs (pain, then the offer), ahead of "Who's this for", testimonials and work. New hero line, About statement, the five problem tabs now map to the five stages, "The SWFT Method" replaces the generic 4-step process, the audit CTA and FAQ (plus FAQ schema) explain the method and add "What does SWFT stand for?".
 - **Services → The SWFT Method:** each stage with its goal, what we do (the automation tools from the old Tools page live under Automate) and the offers that cover it; the content engine (Learn, Create, Feed back); and a "Where to start" ladder from the free audit up.
 - **Pricing:** "Pick the stage that's costing you the most." Every tier is tagged with the stages it covers; a new FAQ answers which package to start with. Prices and scope are unchanged.
 - **Free Growth Audit:** reviews all five stages; new optional question "Where are you losing the most customers?" that lands in the team email and the Airtable "Biggest Challenge" field; the submit button reads "Send my audit request" and the call step is clearly optional.
