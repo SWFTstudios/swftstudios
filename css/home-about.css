@@ -38,10 +38,10 @@
 
 .swft-about__statement {
   margin: 0;
-  max-width: 21ch;
+  max-width: 24ch;
   font-family: var(--about-display);
   font-weight: 700;
-  font-size: clamp(2.1rem, 6.4vw, 5.6rem);
+  font-size: clamp(1.75rem, 4.4vw, 3.9rem);
   line-height: 0.98;
   letter-spacing: -0.01em;
   text-transform: uppercase;
