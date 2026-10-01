@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-01: Curved nav bar
+
+### Changed
+- The nav bar's bottom edge now curves like the top of the homepage work carousel: the same 120%-wide elliptical arc, dipping up to ~31px lower in the middle than at the sides (less on phones). Frosted background and hairline follow the curve. The bar is pinned to 62px (`--sn-height`) again, so it no longer overlaps the space reserved for it. See [`css/swft-nav.css`](../css/swft-nav.css).
+
 ## 2026-10-01: One menu at every width
 
 ### Changed
