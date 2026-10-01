@@ -10,10 +10,9 @@
 /resources              /case-studies.html          301
 /media.html             /case-studies.html          301
 /media                  /case-studies.html          301
-/videos.html            /case-studies.html          301
-/videos                 /case-studies.html          301
-/swft-tv.html           /case-studies.html          301
-/swft-tv                /case-studies.html          301
+/swft-tv.html           /videos.html                301
+/swft-tv                /videos.html                301
+/videos                 /videos.html                301
 /portfolio-review.html  /case-studies.html          301
 /portfolio-review       /case-studies.html          301
 /apps.html              /services.html              301

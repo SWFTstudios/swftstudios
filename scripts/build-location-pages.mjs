@@ -64,7 +64,7 @@ ${body}
     </div>
   </main>
   <script src="/js/swft-analytics.js?v=20260930b" defer></script>
-  <script src="/js/swft-nav.js?v=20261001k" defer></script>
+  <script src="/js/swft-nav.js?v=20261001l" defer></script>
 </body>
 </html>
 `;

@@ -16,6 +16,7 @@ Do **not** rebase, squash, or force-push `main` unless explicitly agreed and coo
 **Protected (never overwritten by Webflow)**:
 
 - `case-studies.html` – tab + hash routing logic.
+- `videos.html` – Vimeo double-slider gallery (`js/video-slider.js`, `css/video-slider.css`, `data/videos.json`).
 - `case-study/` – all case study slug pages and tag links.
 - `case-study.html` – if used as a template/redirect.
 - `detail_project.html`, `detail_video.html` – project/video detail logic.

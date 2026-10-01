@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-01: Video gallery double slider (`videos.html`)
+
+### Added
+- **[`videos.html`](../videos.html)** — full-viewport Vimeo gallery styled like a synced double slider (main slide + "up next" preview). Driven by [`data/videos.json`](../data/videos.json) (11 films; privacy hashes where needed). Custom assets: [`css/video-slider.css`](../css/video-slider.css), [`js/video-slider.js`](../js/video-slider.js).
+  - Auto-advance every 4s with continuous spinning dashed rings on play/nav (pauses on hover/focus, while the lightbox is open, when the tab is hidden, and under `prefers-reduced-motion`). Horizontal slide on both main and preview tracks (500ms), Ken Burns zoom on the active main slide, expanding pill dots on mobile.
+  - Layout mirrors the SketchzLab reference: centered uppercase title + play, bottom-left watermark, bottom-right arrow controls + next-up card (hidden under 992px).
+  - Keyboard (←/→), swipe, and play; lightbox uses a `<dialog>` with a lazy Vimeo iframe (destroyed on close). Portrait videos (`9:16`) get a tall frame.
+  - Noscript + failed-fetch fallbacks list plain Vimeo links. Descriptions and categories are empty placeholders for copy.
+- Sitemap, site map, and redirects: `/videos` and `/swft-tv` now land on `/videos.html` (no longer 301 to case studies).
+- Nav: **Videos** link added after Work in [`js/swft-nav.js`](../js/swft-nav.js) (desktop + mobile panel).
+
+### Changed
+- `videos.html` is **protected** from Webflow overwrite — any future redesign must keep `#vs-mount` and the links to `css/video-slider.css` / `js/video-slider.js` / `data/videos.json`.
+
 ## 2026-10-01: Homepage load intro (birdseye descent) + scroll-in text animation
 
 ### Added

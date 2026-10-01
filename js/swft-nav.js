@@ -12,6 +12,7 @@
     { label: "Home",         href: "/index.html",           key: "home" },
     { label: "Services",     href: "/services.html",        key: "services" },
     { label: "Work",         href: "/case-studies.html",    key: "case-studies" },
+    { label: "Videos",       href: "/videos.html",          key: "videos" },
     { label: "Pricing",      href: "/website-pricing.html", key: "pricing" },
     { label: "Locations",    href: "/locations/",           key: "locations" },
     { label: "Team",         href: "/team.html",            key: "team" },
