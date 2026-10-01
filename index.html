@@ -362,6 +362,16 @@ body{
         rgba(1, 1, 1, 0.96) 100%
       );
     }
+    /* Open card: the text covers most of the photo, so darken it for easy reading */
+    .hp-audience-card.is-expanded .hp-audience-card__media::after {
+      background: linear-gradient(
+        180deg,
+        rgba(1, 1, 1, 0.45) 0%,
+        rgba(1, 1, 1, 0.78) 30%,
+        rgba(1, 1, 1, 0.92) 55%,
+        rgba(1, 1, 1, 0.97) 100%
+      );
+    }
     .hp-audience-card__body {
       position: absolute;
       inset: 0;
@@ -391,10 +401,30 @@ body{
       pointer-events: none;
       transition: max-height 0.35s ease, opacity 0.25s ease;
     }
+    .hp-audience-card__blurb p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
     .hp-audience-card.is-expanded .hp-audience-card__blurb {
-      max-height: 14rem;
+      max-height: 40rem;
       opacity: 1;
       pointer-events: auto;
+    }
+    /* An opened card grows to fit its text instead of clipping it (the photo still fills it) */
+    .hp-audience-card.is-expanded {
+      height: auto;
+      max-height: none;
+    }
+    .hp-audience-card.is-expanded .hp-audience-card__body {
+      position: relative;
+      inset: auto;
+      min-height: 420px;
+    }
+    @media (min-width: 1024px) {
+      .hp-audience-card.is-expanded .hp-audience-card__body {
+        min-height: 560px;
+      }
     }
     .hp-audience-card__toggle {
       align-self: flex-start;
