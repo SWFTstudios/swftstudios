@@ -6,7 +6,8 @@
    the pointer) lights up and opens its description, and its featured project
    crossfades in a sticky panel on the right. A round accent arrow follows
    the pointer over the list.
-   Phones/tablets: one column; each open service shows its project inline.
+   Phones/tablets: one column; each open service shows its project inline,
+   and the services autoplay every 3s until the visitor taps one.
    Pair with js/home-services.js. Without JS every service is open.
    ============================================================ */
 
@@ -277,6 +278,19 @@
 
   .svc-more {
     text-align: left;
+  }
+
+  /* Autoplay: the open service's underline fills as its timer (js sets --p) */
+  .svc-list.is-auto .svc-line {
+    transition: none;
+  }
+
+  .svc-list.is-auto .svc-item.is-active .svc-line {
+    transform: scaleX(var(--p, 0));
+  }
+
+  .svc-list.is-js .svc-item {
+    cursor: pointer;
   }
 }
 
