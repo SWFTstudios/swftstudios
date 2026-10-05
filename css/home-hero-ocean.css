@@ -3,7 +3,8 @@
    Replaces the Vimeo background video. Uses css/swft-cube.css,
    css/swft-ocean.css, js/swft-cube.js and js/swft-ocean.js.
 
-   Desktop (>= 992px): the scene fills the right half of the hero.
+   Desktop (>= 992px): the ocean is full-bleed; a soft left scrim keeps
+                        the copy readable; the cube sits on the right.
    Tablet / mobile:     the scene sits at the top of the hero (about 60svh),
                         with the copy rising into its faded bottom edge.
    ============================================================ */
@@ -45,22 +46,28 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
   position: absolute;
   z-index: 0;
   top: 0;
-  left: 50%;
-  width: 50%;
+  left: 0;
+  width: 100%;
   /* The first screen under the fixed nav, capped like the old video frame */
   height: min(calc(100vh - var(--sn-height, 62px)), 50rem);
   background: #000;
 }
 
-/* Fade the seam into the page's black on the copy side */
+/* Soft scrim over the copy side — water still reads through, type stays legible */
 .home-hero-ocean.swft-ocean::before {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
-  width: 22%;
+  width: 70%;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(to right, var(--black, #010101), rgba(1, 1, 1, 0));
+  background: linear-gradient(
+    to right,
+    rgba(1, 1, 1, 0.62) 0%,
+    rgba(1, 1, 1, 0.38) 32%,
+    rgba(1, 1, 1, 0.12) 52%,
+    transparent 70%
+  );
 }
 
 .home-hero-ocean.swft-ocean::after {
@@ -73,6 +80,13 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
   --cube-size: min(25vw, 360px);
   z-index: 2;
   padding: 0;
+}
+
+/* Desktop: cube sits in the right half (matches data-cube-bias-x on the stage) */
+@media screen and (min-width: 992px) {
+  .home-hero-ocean .swft-cube__scene {
+    left: 75%;
+  }
 }
 
 /* Desktop: copy centred beside the scene; the work marquee starts where the scene fades out */
@@ -113,6 +127,10 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
 
   .home-hero-ocean .swft-cube {
     --cube-size: min(54vw, 280px);
+  }
+
+  .home-hero-ocean .swft-cube__scene {
+    left: 50%;
   }
 
   /* Copy starts in the scene's bottom fade, over the dark water */
