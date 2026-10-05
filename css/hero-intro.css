@@ -3,8 +3,8 @@
    While the page loads: a birdseye shot straight down over the dark sea,
    four glowing letter cubes (S, W, F, T) at the corners, a loading bar.
    Then they spiral into the centre (3 expo-speed orbits) while the camera
-   pans down into the hero; they collide with a flash, and the white cube
-   cools to the lifestyle photos.
+   pans down into the hero; the letter cubes join with a soft spark,
+   and the white cube cools to the hologram phone with films on the screen.
    html.swft-intro is set by an inline script in <head> (first visit per
    session, motion allowed), so the first paint is already the intro.
    ============================================================ */
@@ -46,36 +46,32 @@ html.swft-intro .home-hero-ocean.swft-ocean::after {
   opacity: var(--intro-fades, 0);
 }
 
-/* The DOM cube waits at its hero size; the ocean draws the cube during the
+/* The phone waits at its hero size; the ocean draws letter cubes during the
    camera move, then hands over (--intro-dom 0 -> 1) once the camera lands. */
 html.swft-intro .home-hero-ocean .swft-cube__scene {
   opacity: var(--intro-dom, 0);
 }
 
-/* White light-source cube: the faces are burned out to white (--intro-white 1)
-   and cool down to the photos (0). A filter, so it sits over the images too. */
-html.swft-intro .home-hero-ocean .swft-cube__face {
-  border-color: #fff;
-  filter: brightness(calc(0.85 + 7 * var(--intro-white, 1))) saturate(calc(1 - var(--intro-white, 1)));
-  box-shadow:
-    0 0 calc(10px + 30px * var(--intro-white, 1)) rgba(255, 255, 255, calc(0.35 + 0.6 * var(--intro-white, 1))),
-    0 0 calc(30px + 90px * var(--intro-white, 1)) rgba(200, 230, 255, calc(0.25 + 0.45 * var(--intro-white, 1))),
-    inset 0 0 22px rgba(255, 255, 255, 0.6);
+/* White light-source cool-down into films (--intro-white 1 → 0). */
+html.swft-intro .home-hero-ocean .swft-cube__slide {
+  filter: brightness(calc(0.9 + 6 * var(--intro-white, 1))) saturate(calc(1 - var(--intro-white, 1)));
   transition: none;
 }
 
-html.swft-intro .home-hero-ocean .swft-cube__face-label,
-html.swft-intro .home-hero-ocean .swft-cube__face-pips {
-  opacity: calc(1 - var(--intro-white, 1));
-}
-
-/* Collision flash — driven by --intro-flash (0..1) from js/hero-intro.js */
+/* Soft join spark — driven by --intro-flash (0..1) from js/hero-intro.js.
+   Cool, localized radial (not a full-viewport whiteout) to keep GPU load light. */
 .swft-intro-flash {
   position: fixed;
   inset: 0;
   z-index: 2002;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 42%, #fff 0%, rgba(255, 255, 255, 0.85) 28%, rgba(220, 235, 255, 0.35) 55%, transparent 72%);
+  background: radial-gradient(
+    circle at 50% 42%,
+    rgba(210, 235, 255, 0.55) 0%,
+    rgba(180, 210, 255, 0.22) 18%,
+    rgba(140, 180, 255, 0.08) 36%,
+    transparent 58%
+  );
   opacity: var(--intro-flash, 0);
   mix-blend-mode: screen;
   transition: none;

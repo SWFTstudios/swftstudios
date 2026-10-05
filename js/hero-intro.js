@@ -1,14 +1,14 @@
 /* ============================================================
    Homepage load intro (css/hero-intro.css).
 
-   1. Load:     cubes hold off-camera for the first 10% of the bar, then fly
+   1. Load:     letter cubes hold off-camera for the first 10% of the bar, then fly
                 into view while the camera already starts rotating down from
                 birdseye. Bar tracks real loading.
    2. Flight:   cubes spiral inward (still spinning) while the camera continues
                 tilting into the hero; orbits shrink so they stay framed.
-   3. Impact:   near the end they collide with a flash; letters clear to one
-                white cube, which hands off to the DOM photo cube.
-   4. Hand-off: the photo cube cools in; then "swft:hero-ready" fires.
+   3. Impact:   near the end the four letter cubes join with a soft spark;
+                letters clear to one white cube, which hands off to the DOM hologram phone.
+   4. Hand-off: the photo/video cube cools in; then "swft:hero-ready" fires.
 
    Runs only when the inline <head> script set html.swft-intro (first visit
    per session, motion allowed, no #hash). Needs js/swft-cube.js and
@@ -20,8 +20,8 @@
   var root = document.documentElement;
   if (!root.classList.contains("swft-intro")) return;
 
-  // swft-cube.js and swft-ocean.js set up on DOMContentLoaded; their listeners
-  // were registered first, so by the time this runs both instances exist.
+  // swft-cube.js and swft-ocean.js set up on DOMContentLoaded;
+  // their listeners were registered first, so by the time this runs both instances exist.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", main);
   else main();
 
@@ -35,7 +35,7 @@
     var MIN_LOAD_MS = 1600;     // let the letters read even on a fast connection
     var MAX_LOAD_MS = 7000;     // never hold the page longer than this
     var FLIGHT_MS = 5800;       // spiral + camera tilt after load
-    var INTRO_SPIN = 120;       // deg/s on the DOM cube near handoff
+    var INTRO_SPIN = 120;       // deg/s on the cube near handoff
     var OFF_SPREAD = 58;        // off-camera at birdseye (half-view ~44 world units)
     var VIEW_SPREAD = 18;       // on-screen corner radius under birdseye
     var LETTER_HALF = 0.42;     // mini-cube half-size
@@ -89,9 +89,12 @@
       Promise.resolve(promise).then(function () { t.done = true; }, function () { t.done = true; });
     }
     if (document.fonts && document.fonts.ready) track(document.fonts.ready);
-    Array.prototype.forEach.call(cubeEl.querySelectorAll('img[loading="eager"]'), function (img) {
-      track(img.decode ? img.decode() : new Promise(function (r) { img.complete ? r() : img.addEventListener("load", r); }));
-    });
+    Array.prototype.forEach.call(
+      cubeEl.querySelectorAll('.swft-cube__poster[loading="eager"], img[loading="eager"]'),
+      function (img) {
+        track(img.decode ? img.decode() : new Promise(function (r) { img.complete ? r() : img.addEventListener("load", r); }));
+      }
+    );
     track(new Promise(function (r) {
       if (ocean && ocean.ready) r();
       else document.addEventListener("swftocean:ready", r, { once: true });
@@ -292,12 +295,12 @@
         set("--intro-fades", frameIn.toFixed(3));
         if (frameIn > 0.02) root.classList.add("swft-intro--zoom");
 
-        // Impact flash near the end; then single white cube → photo handoff.
+        // Soft crystalline click at join (capped — full whiteout stalls mid-tier GPUs).
         var impact = phase(p, 0.86, 1);
         var flash = 0;
         if (impact > 0 && impact < 1) {
           flash = Math.sin(Math.PI * clamp01((impact - 0.05) / 0.5));
-          flash = Math.max(0, flash);
+          flash = Math.max(0, flash) * 0.32;
         }
         setFlash(flash);
 

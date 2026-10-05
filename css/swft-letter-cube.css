@@ -22,7 +22,7 @@
   margin: clamp(1.5rem, 4vw, 3rem) 0 1rem clamp(0.5rem, 2vw, 1.5rem);
   perspective: 700px;
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: none;
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -81,7 +81,7 @@
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  transform: rotateX(-18deg) rotateY(-28deg);
+  transform: rotateZ(8deg) rotateX(-22deg) rotateY(-28deg);
   will-change: transform;
 }
 
@@ -207,8 +207,8 @@
 }
 
 @keyframes swft-lcube-spin {
-  from { transform: rotateX(-18deg) rotateY(0deg); }
-  to { transform: rotateX(-18deg) rotateY(-360deg); }
+  from { transform: rotateZ(8deg) rotateX(-22deg) rotateY(0deg); }
+  to { transform: rotateZ(8deg) rotateX(-22deg) rotateY(-360deg); }
 }
 
 .swft-lcube__hint {

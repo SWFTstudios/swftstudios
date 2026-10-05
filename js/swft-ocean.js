@@ -184,12 +184,13 @@
     "}",
 
     // Ray vs an AABB in a rotated local frame. Returns hit distance or -1.
-    "float hitBox(vec3 ro, vec3 rd, vec3 cPos, float halfSz, mat3 toLocal, out vec3 lp, out vec3 nl) {",
+    // halfExt lets letter prisms be flattened table-cut gems (wide XZ, short Y).
+    "float hitBox(vec3 ro, vec3 rd, vec3 cPos, vec3 halfExt, mat3 toLocal, out vec3 lp, out vec3 nl) {",
     "  vec3 o = toLocal * (ro - cPos);",
     "  vec3 d = toLocal * rd;",
     "  vec3 m = 1.0 / d;",
     "  vec3 n = m * o;",
-    "  vec3 k = abs(m) * halfSz;",
+    "  vec3 k = abs(m) * halfExt;",
     "  vec3 t1 = -n - k, t2 = -n + k;",
     "  float tN = max(max(t1.x, t1.y), t1.z);",
     "  float tF = min(min(t2.x, t2.y), t2.z);",
@@ -199,13 +200,16 @@
     "  return tN;",
     "}",
 
+    // Flattened gem extents: larger faces on XZ, shallow Y (table-cut).
+    "vec3 gemHalf(float halfSz) { return halfSz * vec3(1.32, 0.36, 1.32); }",
+
     "float hitCube(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl) {",
     "  if (uHasCube < 0.5) return -1.0;",
-    "  return hitBox(ro, rd, uCube, uHalf, uToLocal, lp, nl);",
+    "  return hitBox(ro, rd, uCube, vec3(uHalf), uToLocal, lp, nl);",
     "}",
 
-    "vec2 faceUV(vec3 lp, vec3 nl, float halfSz) {",
-    "  vec3 q = lp / halfSz;",
+    "vec2 faceUV(vec3 lp, vec3 nl, vec3 halfExt) {",
+    "  vec3 q = lp / halfExt;",
     "  vec3 an = abs(nl);",
     "  vec2 uv;",
     "  if (an.x > 0.5) uv = vec2(nl.x < 0.0 ? -q.z : q.z, -q.y);",
@@ -226,27 +230,45 @@
     "}",
 
     "vec3 letterEmission(vec3 lp, vec3 nl, float halfSz, float idx) {",
-    "  vec3 q = abs(lp) / halfSz;",
+    "  vec3 halfExt = gemHalf(halfSz);",
+    "  vec3 q = abs(lp) / halfExt;",
     "  vec3 an = abs(nl);",
     "  float edge = max(q.x * (1.0 - an.x), max(q.y * (1.0 - an.y), q.z * (1.0 - an.z)));",
-    "  float rim = smoothstep(0.70, 0.99, edge);",
-    "  vec2 uv = faceUV(lp, nl, halfSz);",
+    "  float rim = smoothstep(0.62, 0.995, edge);",
+    "  vec2 uv = faceUV(lp, nl, halfExt);",
     "  float cell = floor(idx + 0.5);",
     "  vec2 auv = vec2((uv.x + cell) * 0.25, uv.y);",
     "  float glyph = texture2D(uAtlas, auv).a;",
-    // White almost-metallic chassis: bright face + chrome rim + soft sheen.
-    "  float faceSheen = pow(max(0.0, 1.0 - length((uv - 0.5) * vec2(1.35, 1.15))), 2.4);",
-    "  float chrome = pow(rim, 0.55) + faceSheen * 0.65;",
-    "  vec3 metal = WHITE * (1.25 + 2.6 * chrome) + vec3(0.75, 0.88, 1.0) * rim * 2.0;",
-    // Black obsidian glyph with a cool metallic glare for legibility.
-    "  vec2 glarePt = vec2(0.36 + 0.06 * sin(uTime * 1.4), 0.30 + 0.04 * cos(uTime * 1.1));",
-    "  float glare = pow(max(0.0, 1.0 - length(uv - glarePt) * 2.5), 5.5);",
-    "  float stroke = smoothstep(0.12, 0.5, glyph) * (1.0 - smoothstep(0.5, 0.92, glyph));",
-    "  vec3 obsidian = vec3(0.012, 0.014, 0.018);",
-    "  vec3 letter = obsidian",
-    "             + WHITE * (glare * 1.55 + stroke * 0.55)",
-    "             + vec3(0.4, 0.55, 0.7) * glare * 0.4;",
-    "  return mix(metal, letter, clamp(glyph * 1.15, 0.0, 1.0));",
+    // Cut-crystal facets: diamond lattice on each face + sharp edge fire.
+    "  vec2 fu = (uv - 0.5) * 2.0;",
+    "  float facetA = abs(fract(fu.x * 2.4 + fu.y * 1.7) - 0.5);",
+    "  float facetB = abs(fract(fu.x * -1.6 + fu.y * 2.8) - 0.5);",
+    "  float facets = smoothstep(0.42, 0.08, min(facetA, facetB));",
+    "  float facetEdge = smoothstep(0.12, 0.02, abs(facetA - facetB));",
+    // Fresnel glass body — cool ice with soft internal glow (not flat metal).
+    "  float fres = pow(1.0 - clamp(abs(dot(nl, normalize(vec3(0.15, 0.55, 0.85)))), 0.0, 1.0), 2.2);",
+    "  float core = pow(max(0.0, 1.0 - length(fu) * 0.72), 2.8);",
+    "  vec3 iceBody = vec3(0.55, 0.72, 0.92) * (0.22 + 0.55 * core)",
+    "              + vec3(0.85, 0.95, 1.0) * (0.35 * fres + 1.1 * pow(rim, 0.7))",
+    "              + vec3(0.65, 0.85, 1.0) * facets * 0.45",
+    "              + WHITE * facetEdge * 0.55;",
+    // Prismatic RGB split along the Fresnel / facet highlights.
+    "  float prism = fres * 0.55 + facets * 0.35 + pow(rim, 1.2) * 0.4;",
+    "  float ph = uTime * 0.7 + cell * 1.3 + fu.x * 2.0;",
+    "  vec3 chroma = vec3(",
+    "    0.55 + 0.45 * sin(ph),",
+    "    0.55 + 0.45 * sin(ph + 2.094),",
+    "    0.55 + 0.45 * sin(ph + 4.189)",
+    "  );",
+    "  vec3 crystal = iceBody + chroma * prism * 0.85 + WHITE * core * 0.25;",
+    // Carved glyph: recessed trough + lit lip so SWFT stays legible in glass.
+    "  float trough = smoothstep(0.08, 0.55, glyph);",
+    "  float lip = smoothstep(0.08, 0.42, glyph) * (1.0 - smoothstep(0.42, 0.88, glyph));",
+    "  vec3 carved = crystal * (1.0 - trough * 0.72)",
+    "              + vec3(0.02, 0.04, 0.07) * trough",
+    "              + WHITE * lip * 1.35",
+    "              + chroma * lip * 0.55;",
+    "  return mix(crystal, carved, clamp(glyph * 1.2, 0.0, 1.0));",
     "}",
 
     "float hitLetters(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl, out float idx, out float halfSz) {",
@@ -256,7 +278,7 @@
     "    if (float(i) >= uLetterCount) break;",
     "    if (uLHalf[i] < 0.02) continue;",
     "    vec3 tlp, tnl;",
-    "    float t = hitBox(ro, rd, uLPos[i], uLHalf[i], uLMat[i], tlp, tnl);",
+    "    float t = hitBox(ro, rd, uLPos[i], gemHalf(uLHalf[i]), uLMat[i], tlp, tnl);",
     "    if (t > 0.0 && (best < 0.0 || t < best)) {",
     "      best = t; lp = tlp; nl = tnl; idx = uLIdx[i]; halfSz = uLHalf[i];",
     "    }",
@@ -380,14 +402,14 @@
     "    }",
     "  }",
     "  col += glow(ro, rd, tHit) + mist(ro, rd, tHit);",
-    "  col += WHITE * uFlash * 1.35;",
+    "  col += WHITE * uFlash * 0.28;",
     "  col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);",
     "  col = pow(clamp(col, 0.0, 1.0), vec3(1.0 / 2.2));",
     // Dither so the dark gradients don't band.
     "  col += (hash(gl_FragCoord.xy + fract(uTime) * 91.0) - 0.5) / 255.0;",
     "  vec2 s = gl_FragCoord.xy / uRes;",
     "  col *= 0.45 + 0.55 * pow(16.0 * s.x * s.y * (1.0 - s.x) * (1.0 - s.y), 0.22);",
-    "  col = mix(col, vec3(1.0), clamp(uFlash * 0.85, 0.0, 1.0));",
+    "  col = mix(col, vec3(0.85, 0.92, 1.0), clamp(uFlash * 0.22, 0.0, 1.0));",
     "  gl_FragColor = vec4(col, 1.0);",
     "}"
   ].join("\n");
@@ -437,8 +459,7 @@
     ];
   }
 
-  // 4-letter atlas (S W F T) — alpha mask; colour comes from the shader
-  // (white metal faces + black obsidian glyphs).
+  // 4-letter atlas (S W F T) — alpha mask for carved crystal glyphs in the shader.
   function makeLetterAtlas(gl) {
     var W = 512, H = 128, cell = 128;
     var c = document.createElement("canvas");
@@ -452,13 +473,12 @@
     for (var i = 0; i < 4; i++) {
       var cx = i * cell + cell / 2;
       var cy = H / 2;
-      // Soft halo so the glyph reads on the bright metal without glowing white.
-      ctx.shadowColor = "rgba(0,0,0,0.55)";
-      ctx.shadowBlur = 10;
+      // Crisp core for the carved trough; soft outer for the lit lip.
+      ctx.shadowColor = "rgba(255,255,255,0.35)";
+      ctx.shadowBlur = 6;
       ctx.fillStyle = "#ffffff";
       ctx.fillText(letters[i], cx, cy + 3);
       ctx.shadowBlur = 0;
-      // Second pass for a denser alpha core (obsidian fill in the shader).
       ctx.fillText(letters[i], cx, cy + 3);
     }
     var tex = gl.createTexture();
@@ -495,7 +515,7 @@
     this.root = root;
     this.cubeEl = root.querySelector("[data-swft-cube]");
     this.sceneEl = root.querySelector(".swft-cube__scene");
-    this.bodyEl = root.querySelector(".swft-cube__body");
+    this.bodyEl = root.querySelector(".swft-cube__body") || this.sceneEl;
     this.visible = true;
     this.scale = 1;
     this.frameMs = 16;
@@ -598,7 +618,9 @@
     if (!W || !H) return;
     this.W = W; this.H = H;
 
-    var cubePx = this.bodyEl ? this.bodyEl.offsetWidth : Math.min(W * 0.44, 250);
+    var cubePx = this.bodyEl
+      ? Math.max(this.bodyEl.offsetWidth, this.bodyEl.offsetHeight || 0)
+      : Math.min(W * 0.44, 250);
     var cy = CUBE_SIZE / 2 + this.hoverGap;
     // Depth at which a CUBE_SIZE object renders cubePx tall.
     var zc = CUBE_SIZE * FOCAL * H / cubePx;
@@ -695,11 +717,15 @@
     requestAnimationFrame(this.loop);
   };
 
-  // The DOM cube's rotation as a world-space matrix (local -> world).
+  // The DOM cube rotation as a world-space matrix (local -> world).
   Ocean.prototype.cubeMatrix = function () {
     var inst = this.cubeEl && this.cubeEl.__swftCube;
     var rot = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-    if (inst) rot = mul(mul(rotX(inst.hx), rotY(inst.hy)), mul(rotX(inst.rx), rotY(inst.ry)));
+    if (inst) {
+      var body = mul(rotX(inst.rx || 0), rotY(inst.ry || 0));
+      if (inst.rz) body = mul(body, rotZ(inst.rz || 0));
+      rot = mul(mul(rotX(inst.hx || 0), rotY(inst.hy || 0)), body);
+    }
     // CSS space (y down, z to viewer) -> world (y up, z away): M = F R F, F = diag(1,-1,-1)
     var F = [1, -1, -1];
     var M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];

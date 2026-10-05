@@ -43,21 +43,39 @@
 
 /* The cube root becomes a full-stage overlay; the scene is placed by JS (--cube-y) */
 .swft-ocean .swft-cube {
-  --cube-size: min(44vw, 250px);
+  --cube-size: min(48vw, 280px);
   position: absolute;
   inset: 0;
   z-index: 1;
   gap: 0;
   justify-content: flex-end;
   padding: 0 16px 20px;
+  width: auto;
+  height: auto;
+  pointer-events: none;
 }
 
 .swft-ocean .swft-cube__scene {
   position: absolute;
   left: 50%;
   top: var(--cube-y, 38%);
+  width: var(--cube-size);
+  height: var(--cube-size);
   translate: -50% -50%;
   transform: translateY(var(--cube-bob, 0px));
+  pointer-events: auto;
+}
+
+/* Hologram phone: taller scene box matching the CSS 3D shell */
+.swft-ocean .swft-cube--phone .swft-cube__scene {
+  width: calc(var(--phone-w, var(--cube-size)) * 1.55);
+  height: calc(var(--phone-h, calc(var(--cube-size) * 2.06)) * 1.2);
+}
+
+.swft-ocean .swft-cube--phone {
+  --phone-w: min(22vw, 168px);
+  --phone-h: calc(var(--phone-w) * 2.06);
+  --cube-size: var(--phone-w);
 }
 
 .swft-ocean .swft-cube__hud {
@@ -110,4 +128,15 @@
 
 .swft-ocean .swft-cube--glow .swft-cube__face.is-front {
   border-color: #fff;
+}
+
+/* Phone screen: keep film clear; shell panels carry the hologram edges */
+.swft-ocean .swft-cube--phone .swft-cube__face::after {
+  display: none;
+}
+
+.swft-ocean .swft-cube--phone .swft-cube__face {
+  box-shadow:
+    0 0 10px rgba(140, 200, 255, 0.4),
+    inset 0 0 10px rgba(100, 170, 220, 0.18);
 }

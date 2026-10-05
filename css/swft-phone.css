@@ -1,0 +1,250 @@
+/* ============================================================
+   SWFT hologram phone — CSS 3D outline iPhone shell for the
+   homepage hero. Pair with js/swft-cube.js (data-axis="y") and
+   css/swft-cube.css. Hologram language matches swft-letter-cube.
+   ============================================================ */
+
+.swft-cube--phone {
+  --phone-w: min(22vw, 168px);
+  --phone-h: calc(var(--phone-w) * 2.06);
+  --phone-depth: calc(var(--phone-w) * 0.085);
+  --phone-depth-half: calc(var(--phone-depth) / 2);
+  --phone-radius: calc(var(--phone-w) * 0.14);
+  --phone-bezel: calc(var(--phone-w) * 0.045);
+  --cube-size: var(--phone-w);
+  --cube-half: var(--phone-depth-half);
+  --cube-radius: var(--phone-radius);
+}
+
+.swft-cube--phone .swft-cube__body {
+  width: var(--phone-w);
+  height: var(--phone-h);
+}
+
+.swft-cube--phone .swft-cube__scene {
+  width: calc(var(--phone-w) * 1.55);
+  height: calc(var(--phone-h) * 1.35);
+}
+
+/* Bloom + light pool under the phone */
+.swft-cube--phone .swft-cube__scene::before,
+.swft-cube--phone .swft-cube__scene::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+}
+
+.swft-cube--phone .swft-cube__scene::before {
+  inset: 8% 12%;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.28) 0%, rgba(140, 205, 245, 0.16) 28%, rgba(86, 180, 233, 0.06) 48%, transparent 68%);
+  filter: blur(10px);
+  animation: swft-phone-breathe 3.6s ease-in-out infinite;
+}
+
+.swft-cube--phone .swft-cube__scene::after {
+  left: 18%;
+  right: 18%;
+  bottom: 6%;
+  height: 18%;
+  background: radial-gradient(ellipse at center, rgba(160, 215, 250, 0.5) 0%, rgba(86, 180, 233, 0.16) 45%, transparent 72%);
+  filter: blur(12px);
+  animation: swft-phone-breathe 3.6s ease-in-out infinite;
+}
+
+.swft-cube--phone.is-dragging .swft-cube__scene::before,
+.swft-cube--phone.is-hovered .swft-cube__scene::before {
+  opacity: 1;
+  transform: scale(1.08);
+  animation-play-state: paused;
+}
+
+@keyframes swft-phone-breathe {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 1; }
+}
+
+.swft-phone__shell {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.swft-phone__panel {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  border-radius: var(--phone-radius);
+  background: rgba(4, 12, 22, 0.35);
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.85),
+    0 0 18px rgba(140, 200, 255, 0.45),
+    inset 0 0 14px rgba(160, 215, 255, 0.28);
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+
+.swft-phone__panel--front,
+.swft-phone__panel--back {
+  width: var(--phone-w);
+  height: var(--phone-h);
+  left: 0;
+  top: 0;
+}
+
+.swft-phone__panel--front {
+  transform: translateZ(var(--phone-depth-half));
+  background:
+    linear-gradient(180deg, rgba(20, 40, 60, 0.55) 0%, rgba(4, 10, 18, 0.72) 100%);
+}
+
+.swft-phone__panel--back {
+  transform: rotateY(180deg) translateZ(var(--phone-depth-half));
+  background: rgba(4, 12, 22, 0.2);
+  /* Wireframe-only feel: keep edges, mute fill */
+  background: transparent;
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.7),
+    0 0 16px rgba(140, 200, 255, 0.35);
+}
+
+.swft-phone__panel--left,
+.swft-phone__panel--right {
+  width: var(--phone-depth);
+  height: var(--phone-h);
+  left: calc(50% - var(--phone-depth-half));
+  top: 0;
+  border-radius: calc(var(--phone-depth) * 0.35);
+  background: transparent;
+}
+
+.swft-phone__panel--left {
+  transform: rotateY(-90deg) translateZ(calc(var(--phone-w) / 2));
+}
+
+.swft-phone__panel--right {
+  transform: rotateY(90deg) translateZ(calc(var(--phone-w) / 2));
+}
+
+.swft-phone__panel--top,
+.swft-phone__panel--bottom {
+  width: var(--phone-w);
+  height: var(--phone-depth);
+  left: 0;
+  top: calc(50% - var(--phone-depth-half));
+  border-radius: calc(var(--phone-depth) * 0.35);
+  background: transparent;
+}
+
+.swft-phone__panel--top {
+  transform: rotateX(90deg) translateZ(calc(var(--phone-h) / 2));
+}
+
+.swft-phone__panel--bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--phone-h) / 2));
+}
+
+/* Dynamic Island + home indicator (outline only) */
+.swft-phone__island {
+  position: absolute;
+  top: calc(var(--phone-bezel) * 1.15);
+  left: 50%;
+  width: 34%;
+  height: calc(var(--phone-w) * 0.07);
+  translate: -50% 0;
+  border: 1.25px solid rgba(230, 245, 255, 0.9);
+  border-radius: 999px;
+  box-shadow: 0 0 8px rgba(180, 220, 255, 0.65);
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.swft-phone__home {
+  position: absolute;
+  bottom: calc(var(--phone-bezel) * 0.85);
+  left: 50%;
+  width: 28%;
+  height: 2px;
+  translate: -50% 0;
+  border-radius: 999px;
+  background: rgba(230, 245, 255, 0.85);
+  box-shadow: 0 0 6px rgba(180, 220, 255, 0.7);
+}
+
+/* Soft scan line on the bezel (not over the film) */
+.swft-phone__panel--front::after {
+  content: "";
+  position: absolute;
+  left: var(--phone-bezel);
+  right: var(--phone-bezel);
+  top: calc(var(--phone-bezel) * 2.8);
+  height: 18%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(160, 215, 255, 0.12) 45%,
+    transparent 100%
+  );
+  animation: swft-phone-scan 2.8s linear infinite;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  border-radius: 4px;
+}
+
+@keyframes swft-phone-scan {
+  0% { transform: translateY(0); opacity: 0.2; }
+  40% { opacity: 0.55; }
+  100% { transform: translateY(280%); opacity: 0.15; }
+}
+
+/* Screen = cube face with films; sits just in front of the front panel */
+.swft-cube--phone .swft-phone__screen.swft-cube__face,
+.swft-cube--phone .swft-cube__face--front {
+  inset: auto;
+  left: var(--phone-bezel);
+  top: calc(var(--phone-bezel) * 2.6);
+  width: calc(100% - var(--phone-bezel) * 2);
+  height: calc(100% - var(--phone-bezel) * 4.2);
+  border-radius: calc(var(--phone-radius) * 0.55);
+  transform: translateZ(calc(var(--phone-depth-half) + 1px));
+  background: #050505;
+  border: 1px solid rgba(200, 230, 255, 0.55);
+  box-shadow:
+    0 0 10px rgba(140, 200, 255, 0.35),
+    inset 0 0 12px rgba(100, 170, 220, 0.2);
+  filter: none;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.swft-cube--phone .swft-cube__face.is-front {
+  filter: none;
+  border-color: rgba(230, 246, 255, 0.85);
+}
+
+/* Hide per-face chrome on the phone screen */
+.swft-cube--phone .swft-cube__face-label,
+.swft-cube--phone .swft-cube__face-pips {
+  display: none;
+}
+
+/* Don't paint the default cube glass sheen over video */
+.swft-cube--phone.swft-cube--glow .swft-cube__face::before {
+  display: none;
+}
+
+.swft-cube--phone .swft-cube__slide--video .swft-cube__vimeo {
+  transform: scale(1.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swft-cube--phone .swft-cube__scene::before,
+  .swft-cube--phone .swft-cube__scene::after,
+  .swft-phone__panel--front::after {
+    animation: none;
+  }
+}

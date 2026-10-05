@@ -12,6 +12,10 @@
      keyboard       arrows rotate, Enter/Space = next slide
      idle           slow continuous spin (data-spin, deg/s) that eases
                     out on any interaction and eases back in afterwards
+
+   Phone mode (data-axis="y" / .swft-cube--phone)
+     Horizontal Y spin only with a fixed showroom pitch; films live on the
+     screen face. See css/swft-phone.css.
    ============================================================ */
 (function () {
   "use strict";
@@ -29,6 +33,9 @@
   var FLICK_PROJECTION = 220;   // ms of momentum projected before snapping
   var HOVER_TILT_DEG = 12;
   var REST_TILT = [-10, 16];    // idle x/y lean so the cube always reads as 3D
+  var PHONE_SHOWROOM_TX = -18;  // fixed pitch for hologram phone (data-axis="y")
+  var PHONE_REST_TILT = [-18, 10];
+  var PHONE_FACE_DEG = 55;      // |ry| within this → screen faces camera (play video)
   var IDLE_RESUME_MS = 3000;     // quiet time before the idle spin eases back in
   var SPIN_EASE_IN_S = 1.6;      // time constant for the spin ramping back up
   var SPIN_EASE_OUT_S = 0.3;     // ...and for coasting to a stop on hover
@@ -42,6 +49,12 @@
   function snap90(v) { return Math.round(v / 90) * 90; }
   function mod(n, m) { return ((n % m) + m) % m; }
 
+  function vimeoBackgroundUrl(id, hash) {
+    var q = "background=1&autoplay=1&loop=1&muted=1&autopause=0&title=0&byline=0&portrait=0&dnt=1";
+    if (hash) q = "h=" + encodeURIComponent(hash) + "&" + q;
+    return "https://player.vimeo.com/video/" + encodeURIComponent(id) + "?" + q;
+  }
+
   function Cube(root) {
     this.root = root;
     this.scene = root.querySelector(".swft-cube__scene");
@@ -51,16 +64,34 @@
     this.spinDps = parseFloat(root.getAttribute("data-spin")) || 0;
     this.spin = 0;               // current spin speed, deg/s
     this.slideMs = parseInt(root.getAttribute("data-slide-interval"), 10) || 3500;
+    // Horizontal-only turntable (hologram phone): Y drag/spin, fixed showroom pitch.
+    this.yOnly = root.getAttribute("data-axis") === "y" ||
+      root.classList.contains("swft-cube--phone");
 
     // Rotation state: current (rx, ry), target (tx, ty); hover tilt current/target.
     this.rx = 0; this.ry = 0; this.tx = 0; this.ty = 0;
-    this.hx = this.thx = REST_TILT[0];
-    this.hy = this.thy = REST_TILT[1];
+    if (this.yOnly) {
+      this.rx = this.tx = PHONE_SHOWROOM_TX;
+      this.hx = this.thx = PHONE_REST_TILT[0];
+      this.hy = this.thy = PHONE_REST_TILT[1];
+    } else {
+      this.hx = this.thx = REST_TILT[0];
+      this.hy = this.thy = REST_TILT[1];
+    }
     this.raf = 0;
     this.pointer = null;
     this.hovered = false;
     this.lastInteraction = 0;
     this.activeName = null;
+    this.visible = true;
+    this.hasVideo = !!this.body.querySelector(".swft-cube__slide--video");
+    // Multi-face video cubes: idle spin remounts Vimeo; phone mode keeps Y spin.
+    if (this.hasVideo) {
+      this.root.classList.add("swft-cube--video");
+      if (!this.yOnly) this.spinDps = 0;
+    }
+    this._wasSpinning = false;
+    this._wasFacing = true;
 
     this.faces = {};
     this.buildFaces();
@@ -82,7 +113,10 @@
         slides = Array.prototype.slice.call(el.querySelectorAll("img"));
         slides.forEach(function (img) { img.classList.add("swft-cube__slide"); });
       }
-      slides.forEach(function (img) { img.draggable = false; });
+      slides.forEach(function (slide) {
+        if (slide.tagName === "IMG") slide.draggable = false;
+        slide.querySelectorAll("img").forEach(function (img) { img.draggable = false; });
+      });
 
       var pips = null;
       if (slides.length > 1) {
@@ -131,8 +165,8 @@
     var face = this.faces[name];
     if (!face || !face.slides.length) return;
     face.index = mod(index, face.slides.length);
-    face.slides.forEach(function (img, i) {
-      img.classList.toggle("is-active", i === face.index);
+    face.slides.forEach(function (slide, i) {
+      slide.classList.toggle("is-active", i === face.index);
     });
     if (face.pips) {
       Array.prototype.forEach.call(face.pips.children, function (pip, i) {
@@ -140,6 +174,58 @@
       });
     }
     if (name === this.activeName) this.renderDots();
+    this.syncVideoMedia();
+  };
+
+  Cube.prototype.screenFacing = function () {
+    if (!this.yOnly) return true;
+    // Shortest angle from screen-forward (ry mod 360 ≈ 0).
+    return Math.abs(mod(this.ry + 180, 360) - 180) < PHONE_FACE_DEG;
+  };
+
+  Cube.prototype.syncVideoMedia = function () {
+    var self = this;
+    var dragging = !!(this.pointer && this.pointer.dragging);
+    var allowPlay = !reducedMotion() && !document.hidden && !dragging && this.visible !== false;
+    var facing = this.screenFacing();
+    FACE_ORDER.forEach(function (name) {
+      var face = self.faces[name];
+      if (!face) return;
+      face.slides.forEach(function (slide, i) {
+        if (!slide.classList.contains("swft-cube__slide--video")) return;
+        // Keep one looping Vimeo player on the front face's active slide.
+        var shouldPlay = allowPlay && facing && i === face.index && name === self.activeName;
+        self.mountVideoSlide(slide, shouldPlay);
+      });
+    });
+  };
+
+  Cube.prototype.mountVideoSlide = function (slide, play) {
+    var poster = slide.querySelector(".swft-cube__poster");
+    var iframe = slide.querySelector("iframe.swft-cube__vimeo");
+    var id = slide.getAttribute("data-vimeo");
+    if (!id) return;
+    if (!play) {
+      if (iframe) {
+        iframe.removeAttribute("src");
+        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      }
+      if (poster) poster.hidden = false;
+      return;
+    }
+    var hash = slide.getAttribute("data-vimeo-hash") || "";
+    var url = vimeoBackgroundUrl(id, hash);
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.className = "swft-cube__vimeo";
+      iframe.setAttribute("title", slide.getAttribute("aria-label") || "Project film");
+      iframe.setAttribute("allow", "autoplay; fullscreen; picture-in-picture");
+      iframe.setAttribute("loading", "eager");
+      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      slide.appendChild(iframe);
+    }
+    if (iframe.getAttribute("src") !== url) iframe.src = url;
+    if (poster) poster.hidden = true;
   };
 
   Cube.prototype.stepSlide = function (name, delta) {
@@ -152,11 +238,11 @@
     var self = this;
     this.dots.innerHTML = "";
     if (!face || face.slides.length < 2) return;
-    face.slides.forEach(function (img, i) {
+    face.slides.forEach(function (slide, i) {
       var b = document.createElement("button");
       b.type = "button";
       b.className = "swft-cube__dot";
-      b.setAttribute("aria-label", "Show " + (img.alt || "slide " + (i + 1)));
+      b.setAttribute("aria-label", "Show " + (slide.getAttribute("aria-label") || slide.alt || "slide " + (i + 1)));
       b.setAttribute("aria-current", i === face.index ? "true" : "false");
       b.addEventListener("click", function () {
         self.touch();
@@ -169,6 +255,7 @@
   /* ---------------- Orientation ---------------- */
 
   Cube.prototype.faceForTarget = function () {
+    if (this.yOnly) return "front";
     if (this.tx <= -45) return "top";
     if (this.tx >= 45) return "bottom";
     return ["front", "left", "back", "right"][mod(Math.round(this.ty / 90), 4)];
@@ -190,10 +277,18 @@
     });
     this.current.textContent = this.faces[name].label;
     this.renderDots();
+    this.syncVideoMedia();
     this.root.dispatchEvent(new CustomEvent("swftcube:facechange", { detail: { face: name } }));
   };
 
   Cube.prototype.rotateTo = function (name) {
+    if (this.yOnly) {
+      this.tx = PHONE_SHOWROOM_TX;
+      this.ty = Math.round(this.ty / 360) * 360;
+      this.updateActive();
+      this.kick();
+      return;
+    }
     var a = FACE_ANGLES[name];
     if (!a) return;
     this.tx = a[0];
@@ -205,6 +300,13 @@
   };
 
   Cube.prototype.rotateBy = function (dxFaces, dyFaces) {
+    if (this.yOnly) {
+      this.tx = PHONE_SHOWROOM_TX;
+      this.ty = Math.round(this.ty / 360) * 360 + dxFaces * 90;
+      this.updateActive();
+      this.kick();
+      return;
+    }
     // Leaving the top/bottom face horizontally drops back to the ring.
     if (dxFaces && Math.abs(this.tx) >= 45) this.tx = 0;
     this.ty = snap90(this.ty) + dxFaces * 90;
@@ -251,10 +353,22 @@
       if (self.spin) {
         self.ty -= self.spin * dt;
         self.updateActive();
+        if (self.yOnly) {
+          var facing = self.screenFacing();
+          if (facing !== self._wasFacing) {
+            self._wasFacing = facing;
+            self.syncVideoMedia();
+          }
+        }
       }
       if (idle) {
-        self.tx = 0;
-        self.thx = REST_TILT[0]; self.thy = REST_TILT[1];
+        if (self.yOnly) {
+          self.tx = PHONE_SHOWROOM_TX;
+          self.thx = PHONE_REST_TILT[0]; self.thy = PHONE_REST_TILT[1];
+        } else {
+          self.tx = 0;
+          self.thx = REST_TILT[0]; self.thy = REST_TILT[1];
+        }
       }
       self.setLive(!self.spin);
 
@@ -331,12 +445,18 @@
       if (!p.dragging && Math.hypot(e.clientX - p.x0, e.clientY - p.y0) > TAP_SLOP_PX) {
         p.dragging = true;
         self.root.classList.add("is-dragging");
+        if (self.hasVideo) self.syncVideoMedia();
       }
       if (!p.dragging) return;
       e.preventDefault();
       self.ty += dx * DRAG_DEG_PER_PX;
-      self.tx = clamp(self.tx - dy * DRAG_DEG_PER_PX, -90, 90);
+      if (self.yOnly) {
+        self.tx = PHONE_SHOWROOM_TX;
+      } else {
+        self.tx = clamp(self.tx - dy * DRAG_DEG_PER_PX, -90, 90);
+      }
       self.updateActive();
+      if (self.yOnly) self.syncVideoMedia();
       self.kick();
     });
 
@@ -367,7 +487,11 @@
       self.hovered = false;
       self.root.classList.remove("is-hovered");
       self.lastInteraction = Date.now(); // wait the idle pause before spinning again
-      self.thx = REST_TILT[0]; self.thy = REST_TILT[1];
+      if (self.yOnly) {
+        self.thx = PHONE_REST_TILT[0]; self.thy = PHONE_REST_TILT[1];
+      } else {
+        self.thx = REST_TILT[0]; self.thy = REST_TILT[1];
+      }
       self.kick();
     });
 
@@ -392,8 +516,14 @@
       switch (e.key) {
         case "ArrowLeft": self.rotateBy(1, 0); break;
         case "ArrowRight": self.rotateBy(-1, 0); break;
-        case "ArrowUp": self.rotateBy(0, -1); break;
-        case "ArrowDown": self.rotateBy(0, 1); break;
+        case "ArrowUp":
+          if (self.yOnly) handled = false;
+          else self.rotateBy(0, -1);
+          break;
+        case "ArrowDown":
+          if (self.yOnly) handled = false;
+          else self.rotateBy(0, 1);
+          break;
         case "Enter": case " ": self.stepSlide(self.activeName, 1); break;
         default: handled = false;
       }
@@ -406,8 +536,13 @@
     var r = this.scene.getBoundingClientRect();
     var px = (e.clientX - r.left) / r.width - 0.5;
     var py = (e.clientY - r.top) / r.height - 0.5;
-    this.thy = px * 2 * HOVER_TILT_DEG;
-    this.thx = -py * 2 * HOVER_TILT_DEG;
+    if (this.yOnly) {
+      this.thy = px * HOVER_TILT_DEG;
+      this.thx = PHONE_REST_TILT[0];
+    } else {
+      this.thy = px * 2 * HOVER_TILT_DEG;
+      this.thx = -py * 2 * HOVER_TILT_DEG;
+    }
     this.kick();
   };
 
@@ -415,6 +550,15 @@
     var faceEl = target && target.closest ? target.closest(".swft-cube__face") : null;
     if (!faceEl) return;
     var name = faceEl.getAttribute("data-face");
+    if (this.yOnly) {
+      this.tx = PHONE_SHOWROOM_TX;
+      this.ty = Math.round(this.ty / 360) * 360;
+      this.updateActive();
+      var pr = faceEl.getBoundingClientRect();
+      var prev = pr.width && (e.clientX - pr.left) / pr.width < 1 / 3;
+      this.stepSlide("front", prev ? -1 : 1);
+      return;
+    }
     if (name !== this.activeName) {
       this.rotateTo(name);
       return;
@@ -432,8 +576,22 @@
   Cube.prototype.settle = function (p, stale) {
     var vx = stale ? 0 : p.vx;
     var vy = stale ? 0 : p.vy;
-    var horizontal = Math.abs(vx) >= Math.abs(vy);
 
+    if (this.yOnly) {
+      var projected = this.ty + vx * FLICK_PROJECTION * DRAG_DEG_PER_PX;
+      // Ease to nearest screen-facing angle (0° mod 360).
+      var snapped = Math.round(projected / 360) * 360;
+      if (Math.abs(vx) > FLICK_SPEED && snapped === Math.round(p.ty0 / 360) * 360) {
+        snapped += vx > 0 ? 360 : -360;
+      }
+      this.ty = snapped;
+      this.tx = PHONE_SHOWROOM_TX;
+      this.updateActive();
+      this.syncVideoMedia();
+      return;
+    }
+
+    var horizontal = Math.abs(vx) >= Math.abs(vy);
     var ty = snap90(this.ty + vx * FLICK_PROJECTION * DRAG_DEG_PER_PX);
     var tx = clamp(snap90(this.tx - vy * FLICK_PROJECTION * DRAG_DEG_PER_PX), -90, 90);
 
@@ -476,6 +634,15 @@
       setInterval(function () { if (self.isIdle()) self.kick(); }, 250);
       this.kick();
     }
+
+    document.addEventListener("visibilitychange", function () { self.syncVideoMedia(); });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        self.visible = entries[0].isIntersecting;
+        self.syncVideoMedia();
+      }, { threshold: 0.15 }).observe(this.root);
+    }
+    this.syncVideoMedia();
   };
 
   function init() {

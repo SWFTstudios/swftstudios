@@ -1,10 +1,10 @@
 /* ============================================================
-   Homepage hero: the glowing work cube over the night ocean.
-   Replaces the Vimeo background video. Uses css/swft-cube.css,
-   css/swft-ocean.css, js/swft-cube.js and js/swft-ocean.js.
+   Homepage hero: hologram phone over the night ocean.
+   Uses css/swft-cube.css, css/swft-phone.css, css/swft-ocean.css,
+   js/swft-cube.js and js/swft-ocean.js.
 
    Desktop (>= 992px): the ocean is full-bleed; a soft left scrim keeps
-                        the copy readable; the cube sits on the right.
+                        the copy readable; the phone sits on the right.
    Tablet / mobile:     the scene sits at the top of the hero (about 60svh),
                         with the copy rising into its faded bottom edge.
    ============================================================ */
@@ -77,12 +77,17 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
 }
 
 .home-hero-ocean .swft-cube {
-  --cube-size: min(25vw, 360px);
+  --cube-size: min(28vw, 380px);
   z-index: 2;
-  padding: 0;
 }
 
-/* Desktop: cube sits in the right half (matches data-cube-bias-x on the stage) */
+.home-hero-ocean .swft-cube--phone {
+  --phone-w: min(18vw, 176px);
+  --phone-h: calc(var(--phone-w) * 2.06);
+  --cube-size: var(--phone-w);
+}
+
+/* Desktop: phone sits in the right half (matches data-cube-bias-x on the stage) */
 @media screen and (min-width: 992px) {
   .home-hero-ocean .swft-cube__scene {
     left: 75%;
@@ -95,8 +100,7 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
   align-items: center;
 }
 
-/* The hero keeps the cube clean: no buttons, dots or hint. Drag, tap, hover and
-   arrow keys still work; the cube itself is focusable. */
+/* The hero keeps the phone clean: drag and arrow keys still work. */
 .home-hero-ocean .swft-cube__hud {
   display: none;
 }
@@ -106,7 +110,7 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
    follows below it. --hero-scene-h is the scene height. */
 @media screen and (max-width: 991px) {
   .section_gallery.has-hero-ocean {
-    /* Tall enough for the big cube plus its reflection; the copy overlaps the faded bottom */
+    /* Tall enough for the cube plus its reflection; the copy overlaps the faded bottom */
     --hero-scene-h: clamp(24rem, 62svh, 38rem);
   }
 
@@ -126,7 +130,13 @@ html.w-mod-js body:not(.hero-ready) .section_gallery.has-hero-ocean {
   }
 
   .home-hero-ocean .swft-cube {
-    --cube-size: min(54vw, 280px);
+    --cube-size: min(58vw, 300px);
+  }
+
+  .home-hero-ocean .swft-cube--phone {
+    --phone-w: min(42vw, 160px);
+    --phone-h: calc(var(--phone-w) * 2.06);
+    --cube-size: var(--phone-w);
   }
 
   .home-hero-ocean .swft-cube__scene {

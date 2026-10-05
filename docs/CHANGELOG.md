@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-10-05: Hero hologram iPhone
+- Homepage hero replaces the six-face video cube with a **hologram wireframe iPhone** ([`css/swft-phone.css`](../css/swft-phone.css), `.swft-cube--phone`, `data-axis="y"`).
+- Project films play on the **screen** only (one consolidated Vimeo playlist). Horizontal drag + idle Y spin; fixed showroom pitch; tap screen to change film.
+- Ocean/intro still sync via `[data-swft-cube]` / `__swftCube`. [`cube.html`](../cube.html) and method `.swft-lcube` unchanged.
+
+## 2026-10-05: Hero video cube (restore cubes)
+- Homepage hero is again a **CSS 3D cube** ([`js/swft-cube.js`](../js/swft-cube.js)) over the ocean — not a gem polyhedron. Method section letter surface is again `.swft-lcube`.
+- Hero cube faces are a **looping Vimeo film slideshow** drawn from the project films listed on Visuals / Video Gallery ([`data/visuals.json`](../data/visuals.json)). Active front-face slide plays muted/looped via Vimeo background embed; posters show while spinning or under reduced motion.
+- Removed `swft-hero-gem` / `swft-letter-gem` assets.
+
+## 2026-10-05: Rename hero + letter surfaces to gems
+- Homepage crystal rock is now **hero gem**: [`.swft-hero-gem`](../css/swft-hero-gem.css) / [`data-swft-hero-gem`](../js/swft-hero-gem.js) (was `swft-crystal`). Ocean and load intro look up `__swftHeroGem`.
+- Method-section SWFT letter cube is now **letter gem**: [`.swft-letter-gem`](../css/swft-letter-gem.css) / [`js/swft-letter-gem.js`](../js/swft-letter-gem.js) (was `swft-lcube` / `swft-letter-cube`).
+- Demo six-face toolkit on [`cube.html`](../cube.html) stays `swft-cube`.
+
+## 2026-10-05: Flattened gem tumble (crystal + SWFT cubes)
+- Hero gem uses a flatter table-cut mesh (wider XZ, shallow Y) so facets read as large gem faces; swipe freely on pitch / yaw / roll with inertia (vertices can turn toward the viewer).
+- Load-intro letter prisms use anisotropic gem extents in [`js/swft-ocean.js`](../js/swft-ocean.js); ocean splash sync includes gem `rz`.
+- Method-section SWFT letter gem is a flattened gem with the same free-axis swipe ([`js/swft-letter-gem.js`](../js/swft-letter-gem.js), [`css/swft-letter-gem.css`](../css/swft-letter-gem.css)).
+
+## 2026-10-05: Homepage crystal rock hero
+
+### Changed
+- Homepage hero photo **cube** is replaced by a multi-face **geometric hero gem** ([`js/swft-hero-gem.js`](../js/swft-hero-gem.js), [`css/swft-hero-gem.css`](../css/swft-hero-gem.css)): irregular facets (large and small) crossfade project images independently. Drag / arrow keys tumble it; ocean splash sync still follows its rotation.
+- Load intro still joins S/W/F/T letter gems, then hands off into the rock (soft spark unchanged).
+- Hero and letter gems tumble freely on all axes when swiped; mesh is a flattened table-cut so faces read large.
+
+## 2026-10-05: Hero flow headline + crystal letter prisms
+
+### Changed
+- Homepage H1 is now **“Turn your ideas into a flow of customers who stay.”** with a short outcome sub for owners, creators, and founders (replaces “Own your blue ocean.”).
+- Load-intro letter cubes render as **cut-crystal prisms** (faceted ice glass, chromatic prism sheen, carved SWFT glyphs) in [`js/swft-ocean.js`](../js/swft-ocean.js).
+- Join flash is capped and localized (CSS + shader) so the four prisms meet with a soft spark instead of a full-viewport whiteout.
+
 ## 2026-10-05: Homepage Selected Work lineup
 
 ### Changed
@@ -83,7 +117,7 @@
 ## 2026-10-01: SWFT letter cube in "The SWFT Method"
 
 ### Added
-- A small glowing white 3D cube under the "From first scroll to repeat customer." text on the homepage, with **S, W, F, T** on its four sides in Michroma (self-hosted, OFL), the closest web font to the business card's wide, squared logo lettering, thickened to match its weight. It spins slowly on its own; drag it to turn it (with momentum), or focus it and use the left/right arrow keys to step a face at a time. Pauses when off-screen; no auto-spin under reduced motion. See [`css/swft-letter-cube.css`](../css/swft-letter-cube.css) and [`js/swft-letter-cube.js`](../js/swft-letter-cube.js).
+- A small glowing white 3D gem under the "From first scroll to repeat customer." text on the homepage, with **S, W, F, T** on its four sides in Michroma (self-hosted, OFL), the closest web font to the business card's wide, squared logo lettering, thickened to match its weight. It spins slowly on its own; drag it to turn it (with momentum), or focus it and use the left/right arrow keys to step a face at a time. Pauses when off-screen; no auto-spin under reduced motion. See [`css/swft-letter-gem.css`](../css/swft-letter-gem.css) and [`js/swft-letter-gem.js`](../js/swft-letter-gem.js).
 
 ## 2026-10-01: Curved nav bar
 
