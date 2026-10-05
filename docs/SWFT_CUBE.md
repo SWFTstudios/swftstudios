@@ -3,6 +3,7 @@
 An interactive 3D cube with its own image slideshow on each of its six faces. It uses no dependencies: CSS 3D transforms, Pointer Events and one `requestAnimationFrame` loop.
 
 - Styles: [`css/swft-cube.css`](../css/swft-cube.css)
+- Phone skin (homepage): [`css/swft-phone.css`](../css/swft-phone.css)
 - Behavior: [`js/swft-cube.js`](../js/swft-cube.js)
 - Ocean stage (optional): [`css/swft-ocean.css`](../css/swft-ocean.css) + [`js/swft-ocean.js`](../js/swft-ocean.js)
 - Live on the homepage hero: [`index.html`](../index.html) with [`css/home-hero-ocean.css`](../css/home-hero-ocean.css)
@@ -15,7 +16,7 @@ An interactive 3D cube with its own image slideshow on each of its six faces. It
 | Drag / swipe (mouse, touch, pen) | Rotates the cube freely. On release it snaps to the nearest face. |
 | Fast flick | Uses the flick's momentum and always moves at least one face in that direction. |
 | Vertical swipe | Turns the top or bottom face to the front. A horizontal swipe from there goes back to the four side faces. |
-| Tap / click the front face | Next slide. Tapping the left third shows the previous slide. |
+| Tap / click the front face | Next slide. Tapping the left third shows the previous slide. Video slides (`.swft-cube__slide--video`) advance the same way; the active front film loops muted via Vimeo background embed. |
 | Tap / click a side face | Rotates that face to the front. |
 | Hover (fine pointer only) | Tilts the cube toward the pointer, scales it up slightly, coasts the idle spin to a stop and holds the current photo. |
 | Keyboard (cube focused) | `←` `→` `↑` `↓` rotate. `Enter` / `Space` shows the next slide. |
@@ -55,6 +56,7 @@ Slideshows and the spin pause while the tab is hidden. With `prefers-reduced-mot
 ```
 
 - `data-spin`: idle spin speed in degrees per second. `14` is one full turn about every 26s. Omit it or set it to `0` to turn the spin off. `data-slide-interval`: milliseconds between slides on each face (default 3500).
+- `data-axis="y"`: horizontal-only turntable (used with `.swft-cube--phone`). Drag and idle spin change Y only; pitch stays at a fixed showroom tilt. After a flick, rotation eases to the nearest screen-facing angle. `↑`/`↓` are ignored.
 - Each face can hold any number of images. A face with 2 or more images gets progress pips and an auto-advancing slideshow. Faces advance at staggered times so they don't flip together.
 - `data-label` shows as a chip on the face and in the HUD, where screen readers hear it through `aria-live`.
 - The script builds the HUD (rotate buttons, current face label, slide dots, hint) automatically.
@@ -89,13 +91,14 @@ Rendering:
 Options and hooks:
 - `data-hover-gap` on `.swft-ocean`: water line to cube bottom, in cube widths (default `0.5`; the homepage uses `0.2` so the cube sits just above the crests).
 - `swftocean:ready` bubbles from the stage after its first frame (or at once on the static fallback). The homepage waits for it before running its intro, with a 1.5s fallback.
-- Load-intro letter cubes render as **cut-crystal prisms** (faceted ice glass, chromatic prism sheen, carved SWFT glyphs) in [`js/swft-ocean.js`](../js/swft-ocean.js). Metaphor: a prism of ideas in the mind; the four SWFT crystals join like Infinity Stones into one system. Cubes hold off-camera for the first 10% of load, fly into the birdseye frame while the camera stays top-down, then spiral inward as `introCam` tilts into the hero (orbits shrink to stay framed). Near impact they share a soft crystalline spark (capped flash — not a full whiteout) and clear to the single white WebGL cube, which hands off to the **homepage crystal rock** ([`js/swft-crystal.js`](../js/swft-crystal.js)) — an irregular multi-face polyhedron whose faces (big and small) crossfade project photos. Without WebGL, the swirl is skipped and only the camera descent + DOM crystal handoff run. A 20s failsafe (replacing the head script's 12s timer once the intro JS runs) always reveals the page.
+- Load-intro letter cubes render as **cut-crystal prisms** (faceted ice glass, chromatic prism sheen, carved SWFT glyphs) in [`js/swft-ocean.js`](../js/swft-ocean.js). Metaphor: a prism of ideas in the mind; the four SWFT letter cubes join like Infinity Stones into one system. Cubes hold off-camera for the first 10% of load, fly into the birdseye frame while the camera stays top-down, then spiral inward as `introCam` tilts into the hero (orbits shrink to stay framed). Near impact they share a soft crystalline spark (capped flash — not a full whiteout) and clear to the single white WebGL cube, which hands off to the **homepage hologram phone** ([`js/swft-cube.js`](../js/swft-cube.js) + [`css/swft-phone.css`](../css/swft-phone.css)). Without WebGL, the swirl is skipped and only the camera descent + DOM phone handoff run. A 20s failsafe (replacing the head script's 12s timer once the intro JS runs) always reveals the page.
 
 ## Homepage hero
 
-The ocean stage on the homepage hosts a **crystal rock of ideas** ([`js/swft-crystal.js`](../js/swft-crystal.js)) instead of the CSS photo cube. `cube.html` still uses the six-face cube.
-- **Desktop (≥ 992px):** the ocean is full-bleed across the hero. A soft left scrim keeps the copy readable while the water shows through; the crystal sits on the right (`data-cube-bias-x="0.25"`, scene `left: 75%`).
+The ocean stage on the homepage hosts a **hologram wireframe iPhone** ([`.swft-cube--phone`](../css/swft-phone.css), [`data-axis="y"`](../js/swft-cube.js)) instead of a six-face cube. The shell is CSS 3D (light-tube edges, bloom, Dynamic Island + home-indicator outlines). All project films live in **one screen playlist**; the active slide plays muted/looped via Vimeo when the screen faces the camera. Idle spin and drag are **horizontal only** (fixed showroom pitch). `cube.html` remains the photo cube demo.
+- **Desktop (≥ 992px):** the ocean is full-bleed across the hero. A soft left scrim keeps the copy readable while the water shows through; the phone sits on the right (`data-cube-bias-x="0.25"`, scene `left: 75%`).
 - **Tablet and mobile:** the scene sits at the top of the hero, straight under the nav, and the copy sits below it. The scene is up to `56svh` tall (`--hero-scene-h`), trimmed on short screens so the headline and buttons stay above the fold, and never under `38svh`. The buttons sit side by side (they stack below 360px). On phones the scene runs edge to edge past the body's 12px gutter.
-- **Controls:** drag or arrow keys tumble the crystal freely on pitch / yaw / roll (vertices can face the viewer); faces crossfade photos on staggered timers. No cube HUD on the homepage.
-- **Pointer events:** the copy wrappers above the scene pass pointer events through, and only the copy, the buttons and the work marquee take them. The crystal scene alone receives pointer events over the water.
+- **Controls:** horizontal drag or `←`/`→` spin the phone; tap the screen to advance its film (left third = previous). Vertical swipes pass through to page scroll (`data-vertical-swipe="false"`). No HUD on the homepage.
+- **Pointer events:** the copy wrappers above the scene pass pointer events through, and only the copy, the buttons and the work marquee take them. The phone scene alone receives pointer events over the water.
 - **Removed from the homepage:** the Vimeo intro loader (`#swft-hero-loader`, `js/hero-vimeo-loader.js`, the Vimeo player API) and the hidden legacy cube videos. Other pages still use the Vimeo hero. The interactive CSS cube remains on [`cube.html`](../cube.html).
+- **Method letter cube:** [`.swft-lcube`](../css/swft-letter-cube.css) / [`js/swft-letter-cube.js`](../js/swft-letter-cube.js) under The SWFT Method.

@@ -513,9 +513,9 @@
 
   function Ocean(root) {
     this.root = root;
-    this.cubeEl = root.querySelector("[data-swft-crystal]") || root.querySelector("[data-swft-cube]");
-    this.sceneEl = root.querySelector(".swft-crystal__scene") || root.querySelector(".swft-cube__scene");
-    this.bodyEl = this.sceneEl || root.querySelector(".swft-cube__body");
+    this.cubeEl = root.querySelector("[data-swft-cube]");
+    this.sceneEl = root.querySelector(".swft-cube__scene");
+    this.bodyEl = root.querySelector(".swft-cube__body") || this.sceneEl;
     this.visible = true;
     this.scale = 1;
     this.frameMs = 16;
@@ -618,7 +618,9 @@
     if (!W || !H) return;
     this.W = W; this.H = H;
 
-    var cubePx = this.bodyEl ? this.bodyEl.offsetWidth : Math.min(W * 0.44, 250);
+    var cubePx = this.bodyEl
+      ? Math.max(this.bodyEl.offsetWidth, this.bodyEl.offsetHeight || 0)
+      : Math.min(W * 0.44, 250);
     var cy = CUBE_SIZE / 2 + this.hoverGap;
     // Depth at which a CUBE_SIZE object renders cubePx tall.
     var zc = CUBE_SIZE * FOCAL * H / cubePx;
@@ -715,13 +717,13 @@
     requestAnimationFrame(this.loop);
   };
 
-  // The DOM cube / crystal rotation as a world-space matrix (local -> world).
+  // The DOM cube rotation as a world-space matrix (local -> world).
   Ocean.prototype.cubeMatrix = function () {
-    var inst = this.cubeEl && (this.cubeEl.__swftCrystal || this.cubeEl.__swftCube);
+    var inst = this.cubeEl && this.cubeEl.__swftCube;
     var rot = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
     if (inst) {
-      // Free tumble: pitch / yaw / roll (rz so splash follows vertex rolls).
-      var body = mul(mul(rotX(inst.rx || 0), rotY(inst.ry || 0)), rotZ(inst.rz || 0));
+      var body = mul(rotX(inst.rx || 0), rotY(inst.ry || 0));
+      if (inst.rz) body = mul(body, rotZ(inst.rz || 0));
       rot = mul(mul(rotX(inst.hx || 0), rotY(inst.hy || 0)), body);
     }
     // CSS space (y down, z to viewer) -> world (y up, z away): M = F R F, F = diag(1,-1,-1)

@@ -1,18 +1,18 @@
 /* ============================================================
    Homepage load intro (css/hero-intro.css).
 
-   1. Load:     cubes hold off-camera for the first 10% of the bar, then fly
+   1. Load:     letter cubes hold off-camera for the first 10% of the bar, then fly
                 into view while the camera already starts rotating down from
                 birdseye. Bar tracks real loading.
    2. Flight:   cubes spiral inward (still spinning) while the camera continues
                 tilting into the hero; orbits shrink so they stay framed.
-   3. Impact:   near the end the four crystal prisms join with a soft spark;
-                letters clear to one white cube, which hands off to the DOM photo cube.
-   4. Hand-off: the photo cube cools in; then "swft:hero-ready" fires.
+   3. Impact:   near the end the four letter cubes join with a soft spark;
+                letters clear to one white cube, which hands off to the DOM hologram phone.
+   4. Hand-off: the photo/video cube cools in; then "swft:hero-ready" fires.
 
    Runs only when the inline <head> script set html.swft-intro (first visit
-   per session, motion allowed, no #hash). Needs js/swft-crystal.js (or
-   js/swft-cube.js) and js/swft-ocean.js to have initialised first.
+   per session, motion allowed, no #hash). Needs js/swft-cube.js and
+   js/swft-ocean.js to have initialised first.
    ============================================================ */
 (function () {
   "use strict";
@@ -20,22 +20,22 @@
   var root = document.documentElement;
   if (!root.classList.contains("swft-intro")) return;
 
-  // swft-crystal.js / swft-cube.js and swft-ocean.js set up on DOMContentLoaded;
+  // swft-cube.js and swft-ocean.js set up on DOMContentLoaded;
   // their listeners were registered first, so by the time this runs both instances exist.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", main);
   else main();
 
   function main() {
     var oceanEl = document.querySelector(".home-hero-ocean");
-    var cubeEl = oceanEl && (oceanEl.querySelector("[data-swft-crystal]") || oceanEl.querySelector("[data-swft-cube]"));
+    var cubeEl = oceanEl && oceanEl.querySelector("[data-swft-cube]");
     var ocean = oceanEl && oceanEl.__swftOcean;
-    var cube = cubeEl && (cubeEl.__swftCrystal || cubeEl.__swftCube);
+    var cube = cubeEl && cubeEl.__swftCube;
     if (!oceanEl || !cubeEl) { finish(); return; }
 
     var MIN_LOAD_MS = 1600;     // let the letters read even on a fast connection
     var MAX_LOAD_MS = 7000;     // never hold the page longer than this
     var FLIGHT_MS = 5800;       // spiral + camera tilt after load
-    var INTRO_SPIN = 120;       // deg/s on the crystal near handoff
+    var INTRO_SPIN = 120;       // deg/s on the cube near handoff
     var OFF_SPREAD = 58;        // off-camera at birdseye (half-view ~44 world units)
     var VIEW_SPREAD = 18;       // on-screen corner radius under birdseye
     var LETTER_HALF = 0.42;     // mini-cube half-size
@@ -90,7 +90,7 @@
     }
     if (document.fonts && document.fonts.ready) track(document.fonts.ready);
     Array.prototype.forEach.call(
-      cubeEl.querySelectorAll('.swft-crystal__sources img[loading="eager"], img[loading="eager"]'),
+      cubeEl.querySelectorAll('.swft-cube__poster[loading="eager"], img[loading="eager"]'),
       function (img) {
         track(img.decode ? img.decode() : new Promise(function (r) { img.complete ? r() : img.addEventListener("load", r); }));
       }

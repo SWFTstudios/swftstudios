@@ -14,14 +14,11 @@
 }
 
 .swft-lcube {
-  /* Flattened table-cut gem: wide faces, shallow height */
-  --lc-size: clamp(108px, 10vw, 148px);
-  --lc-h: calc(var(--lc-size) * 0.42);
-  --lc-half-w: calc(var(--lc-size) / 2);
-  --lc-half-h: calc(var(--lc-h) / 2);
+  --lc-size: clamp(96px, 9vw, 132px);
+  --lc-half: calc(var(--lc-size) / 2);
   position: relative;
   width: var(--lc-size);
-  height: var(--lc-h);
+  height: var(--lc-size);
   margin: clamp(1.5rem, 4vw, 3rem) 0 1rem clamp(0.5rem, 2vw, 1.5rem);
   perspective: 700px;
   cursor: grab;
@@ -94,7 +91,7 @@
    one-sided stops far faces from dimming the letters in front. */
 .swft-lcube__face {
   position: absolute;
-  inset: auto;
+  inset: 0;
   display: grid;
   place-items: center;
   transform-style: preserve-3d;
@@ -163,30 +160,11 @@
 
 /* Neon lettering in the business card's wide, squared face. Michroma has
    one weight, so stacked hairline shadows thicken it before the glow. */
-/* Side faces (S W F T): wide, short rectangles — large flat gem tables */
-.swft-lcube__face--front,
-.swft-lcube__face--back,
-.swft-lcube__face--left,
-.swft-lcube__face--right {
-  width: var(--lc-size);
-  height: var(--lc-h);
-  left: 0;
-  top: 0;
-}
-
-.swft-lcube__face--top,
-.swft-lcube__face--bottom {
-  width: var(--lc-size);
-  height: var(--lc-size);
-  left: 0;
-  top: calc((var(--lc-h) - var(--lc-size)) / 2);
-}
-
 .swft-lcube__face span {
   position: relative;
   z-index: 1;
   font-family: "Michroma", "Eurostile Extended", "Arial Black", sans-serif;
-  font-size: calc(var(--lc-h) * 0.72);
+  font-size: calc(var(--lc-size) * 0.54);
   line-height: 1;
   font-weight: 400;
   color: #ffffff;
@@ -216,12 +194,12 @@
   95% { opacity: 0.8; translate: 0 -1px; filter: none; }
 }
 
-.swft-lcube__face--front  { transform: translateZ(var(--lc-half-w)); }
-.swft-lcube__face--right  { transform: rotateY(90deg) translateZ(var(--lc-half-w)); }
-.swft-lcube__face--back   { transform: rotateY(180deg) translateZ(var(--lc-half-w)); }
-.swft-lcube__face--left   { transform: rotateY(-90deg) translateZ(var(--lc-half-w)); }
-.swft-lcube__face--top    { transform: rotateX(90deg) translateZ(var(--lc-half-h)); }
-.swft-lcube__face--bottom { transform: rotateX(-90deg) translateZ(var(--lc-half-h)); }
+.swft-lcube__face--front  { transform: translateZ(var(--lc-half)); }
+.swft-lcube__face--right  { transform: rotateY(90deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--back   { transform: rotateY(180deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--left   { transform: rotateY(-90deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--top    { transform: rotateX(90deg) translateZ(var(--lc-half)); }
+.swft-lcube__face--bottom { transform: rotateX(-90deg) translateZ(var(--lc-half)); }
 
 /* Before the script runs (or without JS): a slow CSS spin */
 .swft-lcube:not(.is-js) .swft-lcube__body {

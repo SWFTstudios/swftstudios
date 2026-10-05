@@ -3,8 +3,8 @@
    While the page loads: a birdseye shot straight down over the dark sea,
    four glowing letter cubes (S, W, F, T) at the corners, a loading bar.
    Then they spiral into the centre (3 expo-speed orbits) while the camera
-   pans down into the hero; the crystal letter prisms join with a soft spark,
-   and the white cube cools to the lifestyle photos.
+   pans down into the hero; the letter cubes join with a soft spark,
+   and the white cube cools to the hologram phone with films on the screen.
    html.swft-intro is set by an inline script in <head> (first visit per
    session, motion allowed), so the first paint is already the intro.
    ============================================================ */
@@ -46,14 +46,14 @@ html.swft-intro .home-hero-ocean.swft-ocean::after {
   opacity: var(--intro-fades, 0);
 }
 
-/* The crystal waits at its hero size; the ocean draws letter prisms during the
+/* The phone waits at its hero size; the ocean draws letter cubes during the
    camera move, then hands over (--intro-dom 0 -> 1) once the camera lands. */
-html.swft-intro .home-hero-ocean .swft-crystal__scene {
+html.swft-intro .home-hero-ocean .swft-cube__scene {
   opacity: var(--intro-dom, 0);
 }
 
-/* White light-source cool-down into photos (--intro-white 1 → 0). */
-html.swft-intro .home-hero-ocean .swft-crystal__canvas {
+/* White light-source cool-down into films (--intro-white 1 → 0). */
+html.swft-intro .home-hero-ocean .swft-cube__slide {
   filter: brightness(calc(0.9 + 6 * var(--intro-white, 1))) saturate(calc(1 - var(--intro-white, 1)));
   transition: none;
 }
