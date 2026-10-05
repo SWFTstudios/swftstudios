@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-05: Hero flow headline + crystal letter prisms
+
+### Changed
+- Homepage H1 is now **“Turn your ideas into a flow of customers who stay.”** with a short outcome sub for owners, creators, and founders (replaces “Own your blue ocean.”).
+- Load-intro letter cubes render as **cut-crystal prisms** (faceted ice glass, chromatic prism sheen, carved SWFT glyphs) in [`js/swft-ocean.js`](../js/swft-ocean.js).
+- Join flash is capped and localized (CSS + shader) so the four prisms meet with a soft spark instead of a full-viewport whiteout.
+
 ## 2026-10-05: Homepage Selected Work lineup
 
 ### Changed

@@ -6,8 +6,8 @@
                 birdseye. Bar tracks real loading.
    2. Flight:   cubes spiral inward (still spinning) while the camera continues
                 tilting into the hero; orbits shrink so they stay framed.
-   3. Impact:   near the end they collide with a flash; letters clear to one
-                white cube, which hands off to the DOM photo cube.
+   3. Impact:   near the end the four crystal prisms join with a soft spark;
+                letters clear to one white cube, which hands off to the DOM photo cube.
    4. Hand-off: the photo cube cools in; then "swft:hero-ready" fires.
 
    Runs only when the inline <head> script set html.swft-intro (first visit
@@ -292,12 +292,12 @@
         set("--intro-fades", frameIn.toFixed(3));
         if (frameIn > 0.02) root.classList.add("swft-intro--zoom");
 
-        // Impact flash near the end; then single white cube → photo handoff.
+        // Soft crystalline click at join (capped — full whiteout stalls mid-tier GPUs).
         var impact = phase(p, 0.86, 1);
         var flash = 0;
         if (impact > 0 && impact < 1) {
           flash = Math.sin(Math.PI * clamp01((impact - 0.05) / 0.5));
-          flash = Math.max(0, flash);
+          flash = Math.max(0, flash) * 0.32;
         }
         setFlash(flash);
 

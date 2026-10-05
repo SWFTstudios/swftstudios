@@ -229,24 +229,41 @@
     "  vec3 q = abs(lp) / halfSz;",
     "  vec3 an = abs(nl);",
     "  float edge = max(q.x * (1.0 - an.x), max(q.y * (1.0 - an.y), q.z * (1.0 - an.z)));",
-    "  float rim = smoothstep(0.70, 0.99, edge);",
+    "  float rim = smoothstep(0.62, 0.995, edge);",
     "  vec2 uv = faceUV(lp, nl, halfSz);",
     "  float cell = floor(idx + 0.5);",
     "  vec2 auv = vec2((uv.x + cell) * 0.25, uv.y);",
     "  float glyph = texture2D(uAtlas, auv).a;",
-    // White almost-metallic chassis: bright face + chrome rim + soft sheen.
-    "  float faceSheen = pow(max(0.0, 1.0 - length((uv - 0.5) * vec2(1.35, 1.15))), 2.4);",
-    "  float chrome = pow(rim, 0.55) + faceSheen * 0.65;",
-    "  vec3 metal = WHITE * (1.25 + 2.6 * chrome) + vec3(0.75, 0.88, 1.0) * rim * 2.0;",
-    // Black obsidian glyph with a cool metallic glare for legibility.
-    "  vec2 glarePt = vec2(0.36 + 0.06 * sin(uTime * 1.4), 0.30 + 0.04 * cos(uTime * 1.1));",
-    "  float glare = pow(max(0.0, 1.0 - length(uv - glarePt) * 2.5), 5.5);",
-    "  float stroke = smoothstep(0.12, 0.5, glyph) * (1.0 - smoothstep(0.5, 0.92, glyph));",
-    "  vec3 obsidian = vec3(0.012, 0.014, 0.018);",
-    "  vec3 letter = obsidian",
-    "             + WHITE * (glare * 1.55 + stroke * 0.55)",
-    "             + vec3(0.4, 0.55, 0.7) * glare * 0.4;",
-    "  return mix(metal, letter, clamp(glyph * 1.15, 0.0, 1.0));",
+    // Cut-crystal facets: diamond lattice on each face + sharp edge fire.
+    "  vec2 fu = (uv - 0.5) * 2.0;",
+    "  float facetA = abs(fract(fu.x * 2.4 + fu.y * 1.7) - 0.5);",
+    "  float facetB = abs(fract(fu.x * -1.6 + fu.y * 2.8) - 0.5);",
+    "  float facets = smoothstep(0.42, 0.08, min(facetA, facetB));",
+    "  float facetEdge = smoothstep(0.12, 0.02, abs(facetA - facetB));",
+    // Fresnel glass body — cool ice with soft internal glow (not flat metal).
+    "  float fres = pow(1.0 - clamp(abs(dot(nl, normalize(vec3(0.15, 0.55, 0.85)))), 0.0, 1.0), 2.2);",
+    "  float core = pow(max(0.0, 1.0 - length(fu) * 0.72), 2.8);",
+    "  vec3 iceBody = vec3(0.55, 0.72, 0.92) * (0.22 + 0.55 * core)",
+    "              + vec3(0.85, 0.95, 1.0) * (0.35 * fres + 1.1 * pow(rim, 0.7))",
+    "              + vec3(0.65, 0.85, 1.0) * facets * 0.45",
+    "              + WHITE * facetEdge * 0.55;",
+    // Prismatic RGB split along the Fresnel / facet highlights.
+    "  float prism = fres * 0.55 + facets * 0.35 + pow(rim, 1.2) * 0.4;",
+    "  float ph = uTime * 0.7 + cell * 1.3 + fu.x * 2.0;",
+    "  vec3 chroma = vec3(",
+    "    0.55 + 0.45 * sin(ph),",
+    "    0.55 + 0.45 * sin(ph + 2.094),",
+    "    0.55 + 0.45 * sin(ph + 4.189)",
+    "  );",
+    "  vec3 crystal = iceBody + chroma * prism * 0.85 + WHITE * core * 0.25;",
+    // Carved glyph: recessed trough + lit lip so SWFT stays legible in glass.
+    "  float trough = smoothstep(0.08, 0.55, glyph);",
+    "  float lip = smoothstep(0.08, 0.42, glyph) * (1.0 - smoothstep(0.42, 0.88, glyph));",
+    "  vec3 carved = crystal * (1.0 - trough * 0.72)",
+    "              + vec3(0.02, 0.04, 0.07) * trough",
+    "              + WHITE * lip * 1.35",
+    "              + chroma * lip * 0.55;",
+    "  return mix(crystal, carved, clamp(glyph * 1.2, 0.0, 1.0));",
     "}",
 
     "float hitLetters(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl, out float idx, out float halfSz) {",
@@ -380,14 +397,14 @@
     "    }",
     "  }",
     "  col += glow(ro, rd, tHit) + mist(ro, rd, tHit);",
-    "  col += WHITE * uFlash * 1.35;",
+    "  col += WHITE * uFlash * 0.28;",
     "  col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);",
     "  col = pow(clamp(col, 0.0, 1.0), vec3(1.0 / 2.2));",
     // Dither so the dark gradients don't band.
     "  col += (hash(gl_FragCoord.xy + fract(uTime) * 91.0) - 0.5) / 255.0;",
     "  vec2 s = gl_FragCoord.xy / uRes;",
     "  col *= 0.45 + 0.55 * pow(16.0 * s.x * s.y * (1.0 - s.x) * (1.0 - s.y), 0.22);",
-    "  col = mix(col, vec3(1.0), clamp(uFlash * 0.85, 0.0, 1.0));",
+    "  col = mix(col, vec3(0.85, 0.92, 1.0), clamp(uFlash * 0.22, 0.0, 1.0));",
     "  gl_FragColor = vec4(col, 1.0);",
     "}"
   ].join("\n");
@@ -437,8 +454,7 @@
     ];
   }
 
-  // 4-letter atlas (S W F T) — alpha mask; colour comes from the shader
-  // (white metal faces + black obsidian glyphs).
+  // 4-letter atlas (S W F T) — alpha mask for carved crystal glyphs in the shader.
   function makeLetterAtlas(gl) {
     var W = 512, H = 128, cell = 128;
     var c = document.createElement("canvas");
@@ -452,13 +468,12 @@
     for (var i = 0; i < 4; i++) {
       var cx = i * cell + cell / 2;
       var cy = H / 2;
-      // Soft halo so the glyph reads on the bright metal without glowing white.
-      ctx.shadowColor = "rgba(0,0,0,0.55)";
-      ctx.shadowBlur = 10;
+      // Crisp core for the carved trough; soft outer for the lit lip.
+      ctx.shadowColor = "rgba(255,255,255,0.35)";
+      ctx.shadowBlur = 6;
       ctx.fillStyle = "#ffffff";
       ctx.fillText(letters[i], cx, cy + 3);
       ctx.shadowBlur = 0;
-      // Second pass for a denser alpha core (obsidian fill in the shader).
       ctx.fillText(letters[i], cx, cy + 3);
     }
     var tex = gl.createTexture();
