@@ -1,8 +1,13 @@
 /* ============================================================
    Homepage "Creative Services" (css/home-services.css).
-   - The service nearest the middle of the screen is active: its name lights
-     up, its description opens and its featured project fades in on the right.
-   - Hovering or focusing a service makes it active straight away.
+   - Desktop: the service nearest the middle of the screen is active: its name
+     lights up, its description opens and its featured project fades in on the
+     right. Hovering or focusing a service makes it active straight away.
+   - Phones/tablets (<= 991px): scrolling doesn't change anything. While the
+     section is on screen, each service stays open for data-interval ms
+     (default 3000; its underline fills as a timer), then the next one opens.
+     Tapping a service opens it and stops the autoplay; tapping the name of
+     the open service follows its link. prefers-reduced-motion: no autoplay.
    - Desktop, fine pointer: a round accent arrow trails the pointer over the list.
    No dependencies. Without this script every service is shown open.
    ============================================================ */
@@ -11,6 +16,10 @@
 
   var mqReduce = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
   var mqFine = window.matchMedia ? window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 992px)") : null;
+  var mqStack = window.matchMedia ? window.matchMedia("(max-width: 991px)") : null;
+
+  function stacked() { return !!(mqStack && mqStack.matches); }
+  function reducedMotion() { return !!(mqReduce && mqReduce.matches); }
 
   function init(root) {
     var list = root.querySelector(".svc-list");
@@ -22,6 +31,8 @@
     list.classList.add("is-js");
     var active = -1;
     var hovering = false;
+    var holder = root.querySelector("[data-services]") || root;
+    var interval = parseInt(holder.getAttribute("data-interval"), 10) || 3000;
 
     function setActive(i) {
       if (i === active || i < 0) return;
@@ -40,7 +51,7 @@
     var ticking = false;
     function fromScroll() {
       ticking = false;
-      if (hovering) return;
+      if (hovering || stacked()) return;
       var mid = window.innerHeight / 2;
       var best = 0, bestD = Infinity;
       items.forEach(function (el, n) {
@@ -57,9 +68,73 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
 
+    // ---- Phones/tablets: timed autoplay instead of scroll ----
+    var userPicked = false, onScreen = false, elapsed = 0, last = 0, autoRaf = 0;
+
+    function autoplaying() {
+      return stacked() && !userPicked && !reducedMotion() && onScreen && !document.hidden;
+    }
+    function paintProgress() {
+      var on = stacked() && !userPicked && !reducedMotion();
+      list.classList.toggle("is-auto", on);
+      items.forEach(function (el, n) {
+        el.style.setProperty("--p", n === active ? Math.min(1, elapsed / interval).toFixed(4) : "0");
+      });
+    }
+    function autoFrame(now) {
+      autoRaf = 0;
+      if (!autoplaying()) { last = 0; paintProgress(); return; }
+      if (last) elapsed += now - last;
+      last = now;
+      if (elapsed >= interval) {
+        elapsed = 0;
+        setActive((active + 1) % items.length);
+      }
+      paintProgress();
+      autoRaf = requestAnimationFrame(autoFrame);
+    }
+    function kickAuto() {
+      if (!autoRaf && autoplaying()) { last = 0; autoRaf = requestAnimationFrame(autoFrame); }
+      paintProgress();
+    }
+    function pick(n) {
+      userPicked = true;
+      elapsed = 0;
+      setActive(n);
+      paintProgress();
+    }
+
     items.forEach(function (el, n) {
       el.addEventListener("mouseenter", function () { if (mqFine && mqFine.matches) { hovering = true; setActive(n); } });
-      el.addEventListener("focusin", function () { setActive(n); });
+      el.addEventListener("focusin", function (e) {
+        if (!stacked()) { setActive(n); return; }
+        // Keyboard focus takes over from the autoplay; a tap is handled by click below,
+        // which needs to see whether this service was closed before the tap.
+        if (e.target.matches && e.target.matches(":focus-visible")) pick(n);
+      });
+      el.addEventListener("click", function (e) {
+        if (!stacked()) return;
+        var opening = n !== active;
+        pick(n);
+        // First tap on a closed service's name opens it; a tap on the open one follows the link.
+        if (opening && e.target.closest(".svc-name a")) e.preventDefault();
+      });
+    });
+
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        kickAuto();
+      }, { threshold: 0.25 }).observe(list);
+    } else {
+      onScreen = true;
+    }
+    document.addEventListener("visibilitychange", kickAuto);
+    function onModeChange() { elapsed = 0; kickAuto(); onScroll(); }
+    [mqStack, mqReduce].forEach(function (mq) {
+      if (!mq) return;
+      if (mq.addEventListener) mq.addEventListener("change", onModeChange);
+      else if (mq.addListener) mq.addListener(onModeChange);
     });
     list.addEventListener("mouseleave", function () { hovering = false; onScroll(); });
 
@@ -89,6 +164,7 @@
 
     setActive(0);
     fromScroll();
+    kickAuto();
   }
 
   function boot() {
