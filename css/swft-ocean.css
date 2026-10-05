@@ -41,23 +41,32 @@
   background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
 }
 
-/* The cube root becomes a full-stage overlay; the scene is placed by JS (--cube-y) */
-.swft-ocean .swft-cube {
+/* The cube / crystal root becomes a full-stage overlay; the scene is placed by JS (--cube-y) */
+.swft-ocean .swft-cube,
+.swft-ocean .swft-crystal {
   --cube-size: min(44vw, 250px);
+  --crystal-size: min(48vw, 280px);
   position: absolute;
   inset: 0;
   z-index: 1;
   gap: 0;
   justify-content: flex-end;
   padding: 0 16px 20px;
+  width: auto;
+  height: auto;
+  pointer-events: none;
 }
 
-.swft-ocean .swft-cube__scene {
+.swft-ocean .swft-cube__scene,
+.swft-ocean .swft-crystal__scene {
   position: absolute;
   left: 50%;
   top: var(--cube-y, 38%);
+  width: var(--crystal-size, var(--cube-size));
+  height: var(--crystal-size, var(--cube-size));
   translate: -50% -50%;
   transform: translateY(var(--cube-bob, 0px));
+  pointer-events: auto;
 }
 
 .swft-ocean .swft-cube__hud {

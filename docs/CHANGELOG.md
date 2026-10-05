@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-05: Homepage crystal rock hero
+
+### Changed
+- Homepage hero photo **cube** is replaced by a multi-face **geometric crystal rock** ([`js/swft-crystal.js`](../js/swft-crystal.js), [`css/swft-crystal.css`](../css/swft-crystal.css)): irregular facets (large and small) crossfade project images independently. Drag / arrow keys tumble it; ocean splash sync still follows its rotation.
+- Load intro still joins S/W/F/T letter crystals, then hands off into the rock (soft spark unchanged).
+
 ## 2026-10-05: Hero flow headline + crystal letter prisms
 
 ### Changed

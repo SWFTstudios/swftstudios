@@ -11,8 +11,8 @@
    4. Hand-off: the photo cube cools in; then "swft:hero-ready" fires.
 
    Runs only when the inline <head> script set html.swft-intro (first visit
-   per session, motion allowed, no #hash). Needs js/swft-cube.js and
-   js/swft-ocean.js to have initialised first.
+   per session, motion allowed, no #hash). Needs js/swft-crystal.js (or
+   js/swft-cube.js) and js/swft-ocean.js to have initialised first.
    ============================================================ */
 (function () {
   "use strict";
@@ -20,22 +20,22 @@
   var root = document.documentElement;
   if (!root.classList.contains("swft-intro")) return;
 
-  // swft-cube.js and swft-ocean.js set up on DOMContentLoaded; their listeners
-  // were registered first, so by the time this runs both instances exist.
+  // swft-crystal.js / swft-cube.js and swft-ocean.js set up on DOMContentLoaded;
+  // their listeners were registered first, so by the time this runs both instances exist.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", main);
   else main();
 
   function main() {
     var oceanEl = document.querySelector(".home-hero-ocean");
-    var cubeEl = oceanEl && oceanEl.querySelector("[data-swft-cube]");
+    var cubeEl = oceanEl && (oceanEl.querySelector("[data-swft-crystal]") || oceanEl.querySelector("[data-swft-cube]"));
     var ocean = oceanEl && oceanEl.__swftOcean;
-    var cube = cubeEl && cubeEl.__swftCube;
+    var cube = cubeEl && (cubeEl.__swftCrystal || cubeEl.__swftCube);
     if (!oceanEl || !cubeEl) { finish(); return; }
 
     var MIN_LOAD_MS = 1600;     // let the letters read even on a fast connection
     var MAX_LOAD_MS = 7000;     // never hold the page longer than this
     var FLIGHT_MS = 5800;       // spiral + camera tilt after load
-    var INTRO_SPIN = 120;       // deg/s on the DOM cube near handoff
+    var INTRO_SPIN = 120;       // deg/s on the crystal near handoff
     var OFF_SPREAD = 58;        // off-camera at birdseye (half-view ~44 world units)
     var VIEW_SPREAD = 18;       // on-screen corner radius under birdseye
     var LETTER_HALF = 0.42;     // mini-cube half-size
@@ -89,9 +89,12 @@
       Promise.resolve(promise).then(function () { t.done = true; }, function () { t.done = true; });
     }
     if (document.fonts && document.fonts.ready) track(document.fonts.ready);
-    Array.prototype.forEach.call(cubeEl.querySelectorAll('img[loading="eager"]'), function (img) {
-      track(img.decode ? img.decode() : new Promise(function (r) { img.complete ? r() : img.addEventListener("load", r); }));
-    });
+    Array.prototype.forEach.call(
+      cubeEl.querySelectorAll('.swft-crystal__sources img[loading="eager"], img[loading="eager"]'),
+      function (img) {
+        track(img.decode ? img.decode() : new Promise(function (r) { img.complete ? r() : img.addEventListener("load", r); }));
+      }
+    );
     track(new Promise(function (r) {
       if (ocean && ocean.ready) r();
       else document.addEventListener("swftocean:ready", r, { once: true });

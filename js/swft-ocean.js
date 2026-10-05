@@ -508,9 +508,9 @@
 
   function Ocean(root) {
     this.root = root;
-    this.cubeEl = root.querySelector("[data-swft-cube]");
-    this.sceneEl = root.querySelector(".swft-cube__scene");
-    this.bodyEl = root.querySelector(".swft-cube__body");
+    this.cubeEl = root.querySelector("[data-swft-crystal]") || root.querySelector("[data-swft-cube]");
+    this.sceneEl = root.querySelector(".swft-crystal__scene") || root.querySelector(".swft-cube__scene");
+    this.bodyEl = this.sceneEl || root.querySelector(".swft-cube__body");
     this.visible = true;
     this.scale = 1;
     this.frameMs = 16;
@@ -710,11 +710,11 @@
     requestAnimationFrame(this.loop);
   };
 
-  // The DOM cube's rotation as a world-space matrix (local -> world).
+  // The DOM cube / crystal rotation as a world-space matrix (local -> world).
   Ocean.prototype.cubeMatrix = function () {
-    var inst = this.cubeEl && this.cubeEl.__swftCube;
+    var inst = this.cubeEl && (this.cubeEl.__swftCrystal || this.cubeEl.__swftCube);
     var rot = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-    if (inst) rot = mul(mul(rotX(inst.hx), rotY(inst.hy)), mul(rotX(inst.rx), rotY(inst.ry)));
+    if (inst) rot = mul(mul(rotX(inst.hx || 0), rotY(inst.hy || 0)), mul(rotX(inst.rx || 0), rotY(inst.ry || 0)));
     // CSS space (y down, z to viewer) -> world (y up, z away): M = F R F, F = diag(1,-1,-1)
     var F = [1, -1, -1];
     var M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];

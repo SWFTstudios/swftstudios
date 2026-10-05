@@ -46,27 +46,16 @@ html.swft-intro .home-hero-ocean.swft-ocean::after {
   opacity: var(--intro-fades, 0);
 }
 
-/* The DOM cube waits at its hero size; the ocean draws the cube during the
+/* The crystal waits at its hero size; the ocean draws letter prisms during the
    camera move, then hands over (--intro-dom 0 -> 1) once the camera lands. */
-html.swft-intro .home-hero-ocean .swft-cube__scene {
+html.swft-intro .home-hero-ocean .swft-crystal__scene {
   opacity: var(--intro-dom, 0);
 }
 
-/* White light-source cube: the faces are burned out to white (--intro-white 1)
-   and cool down to the photos (0). A filter, so it sits over the images too. */
-html.swft-intro .home-hero-ocean .swft-cube__face {
-  border-color: #fff;
-  filter: brightness(calc(0.85 + 7 * var(--intro-white, 1))) saturate(calc(1 - var(--intro-white, 1)));
-  box-shadow:
-    0 0 calc(10px + 30px * var(--intro-white, 1)) rgba(255, 255, 255, calc(0.35 + 0.6 * var(--intro-white, 1))),
-    0 0 calc(30px + 90px * var(--intro-white, 1)) rgba(200, 230, 255, calc(0.25 + 0.45 * var(--intro-white, 1))),
-    inset 0 0 22px rgba(255, 255, 255, 0.6);
+/* White light-source cool-down into photos (--intro-white 1 → 0). */
+html.swft-intro .home-hero-ocean .swft-crystal__canvas {
+  filter: brightness(calc(0.9 + 6 * var(--intro-white, 1))) saturate(calc(1 - var(--intro-white, 1)));
   transition: none;
-}
-
-html.swft-intro .home-hero-ocean .swft-cube__face-label,
-html.swft-intro .home-hero-ocean .swft-cube__face-pips {
-  opacity: calc(1 - var(--intro-white, 1));
 }
 
 /* Soft join spark — driven by --intro-flash (0..1) from js/hero-intro.js.
