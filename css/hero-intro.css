@@ -1,9 +1,10 @@
 /* ============================================================
    Homepage load intro (js/hero-intro.js).
    While the page loads: a birdseye shot straight down over the dark sea,
-   a small spinning cube of white light in the centre, a loading bar.
-   Then the camera descends to the hero view and the scene frames into its
-   hero slot; the white cube cools to reveal the photos.
+   four glowing letter cubes (S, W, F, T) at the corners, a loading bar.
+   Then they spiral into the centre (3 expo-speed orbits) while the camera
+   pans down into the hero; they collide with a flash, and the white cube
+   cools to the lifestyle photos.
    html.swft-intro is set by an inline script in <head> (first visit per
    session, motion allowed), so the first paint is already the intro.
    ============================================================ */
@@ -68,6 +69,18 @@ html.swft-intro .home-hero-ocean .swft-cube__face-pips {
   opacity: calc(1 - var(--intro-white, 1));
 }
 
+/* Collision flash — driven by --intro-flash (0..1) from js/hero-intro.js */
+.swft-intro-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 2002;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 42%, #fff 0%, rgba(255, 255, 255, 0.85) 28%, rgba(220, 235, 255, 0.35) 55%, transparent 72%);
+  opacity: var(--intro-flash, 0);
+  mix-blend-mode: screen;
+  transition: none;
+}
+
 /* ---------- Loading UI ---------- */
 .swft-intro-ui {
   position: fixed;
@@ -83,6 +96,7 @@ html.swft-intro .home-hero-ocean .swft-cube__face-pips {
   font-family: var(--swft-font, "Inter Display", Inter, sans-serif);
   pointer-events: none;
   transition: opacity 0.45s ease, translate 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.72;
 }
 
 .swft-intro-ui.is-leaving {
@@ -92,8 +106,9 @@ html.swft-intro .home-hero-ocean .swft-cube__face-pips {
 
 .swft-intro-ui__brand {
   font-weight: 800;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   letter-spacing: 0.28em;
+  opacity: 0.55;
 }
 
 .swft-intro-ui__brand span {

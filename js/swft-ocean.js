@@ -51,9 +51,17 @@
     "uniform vec4 uRings[8];",
     "uniform float uIntro;",
     "uniform float uShowCube;",
+    "uniform float uLetterCount;",
+    "uniform vec3 uLPos[4];",
+    "uniform float uLHalf[4];",
+    "uniform mat3 uLMat[4];",
+    "uniform float uLIdx[4];",
+    "uniform float uFlash;",
+    "uniform sampler2D uAtlas;",
 
     "const float DEPTH = 0.3;",
     "const vec3 ICE = vec3(0.55, 0.8, 1.0);",
+    "const vec3 WHITE = vec3(1.0, 0.98, 0.95);",
 
     // Sum of directional waves with sharp exp(sin) crests; each wave drags
     // the sample point along its slope, which bunches the crests like real swell.
@@ -124,37 +132,64 @@
     "              vnoise(q + vec2(0.0, e)) + 0.5 * vnoise(r + vec2(0.0, e)) - a) / e;",
     "}",
 
-    // Bloom around the glowing cube, from the ray's closest approach to its centre.
-    "vec3 glow(vec3 ro, vec3 rd, float tMax) {",
-    "  if (uHasCube < 0.5) return vec3(0.0);",
-    "  vec3 oc = uCube - ro;",
+    // Bloom around one glowing cube centre.
+    "vec3 glowAt(vec3 ro, vec3 rd, float tMax, vec3 cPos, float halfSz, vec3 tint) {",
+    "  vec3 oc = cPos - ro;",
     "  float t = dot(oc, rd);",
     "  if (t < 0.0 || t > tMax) return vec3(0.0);",
-    "  float d = length(ro + rd * t - uCube) / uHalf;",
-    "  vec3 c = mix(ICE, vec3(1.0, 0.98, 0.95), uIntro);",
-    "  return c * (1.0 + 0.8 * uIntro) * (0.016 / (d * d * 0.9 + 0.15) + 0.75 * exp(-d * 2.2));",
+    "  float d = length(ro + rd * t - cPos) / max(halfSz, 0.05);",
+    "  return tint * (0.016 / (d * d * 0.9 + 0.15) + 0.75 * exp(-d * 2.2));",
+    "}",
+
+    "vec3 glow(vec3 ro, vec3 rd, float tMax) {",
+    "  vec3 c = mix(ICE, WHITE, uIntro) * (1.0 + 0.8 * uIntro);",
+    "  vec3 g = vec3(0.0);",
+    "  if (uLetterCount > 0.5) {",
+    "    for (int i = 0; i < 4; i++) {",
+    "      if (float(i) >= uLetterCount) break;",
+    "      if (uLHalf[i] < 0.02) continue;",
+    "      g += glowAt(ro, rd, tMax, uLPos[i], uLHalf[i], WHITE * 1.7);",
+    "    }",
+    "    return g;",
+    "  }",
+    "  if (uHasCube < 0.5) return vec3(0.0);",
+    "  return glowAt(ro, rd, tMax, uCube, uHalf, c);",
     "}",
 
     // Low mist lying on the water, lit by the cube and spread sideways.
-    "vec3 mist(vec3 ro, vec3 rd, float tMax) {",
-    "  if (uHasCube < 0.5) return vec3(0.0);",
+    "vec3 mistAt(vec3 ro, vec3 rd, float tMax, vec3 cPos, float halfSz) {",
     "  vec2 dxz = rd.xz;",
-    "  float t = dot(uCube.xz - ro.xz, dxz) / dot(dxz, dxz);",
+    "  float den = dot(dxz, dxz);",
+    "  if (den < 1e-6) return vec3(0.0);",
+    "  float t = dot(cPos.xz - ro.xz, dxz) / den;",
     "  if (t < 0.0 || t > tMax) return vec3(0.0);",
     "  vec3 p = ro + rd * t;",
-    "  float side = (p.x - uCube.x) / uHalf;",
-    "  float h = max(p.y, 0.0) / uHalf;",
+    "  float side = (p.x - cPos.x) / halfSz;",
+    "  float h = max(p.y, 0.0) / halfSz;",
     "  return ICE * 0.07 * exp(-side * side * 0.35) * exp(-h * 3.5);",
     "}",
 
-    // Ray vs the cube (in its own rotated space). Returns hit distance or -1; lp = local hit point.
-    "float hitCube(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl) {",
-    "  if (uHasCube < 0.5) return -1.0;",
-    "  vec3 o = uToLocal * (ro - uCube);",
-    "  vec3 d = uToLocal * rd;",
+    "vec3 mist(vec3 ro, vec3 rd, float tMax) {",
+    "  if (uLetterCount > 0.5) {",
+    "    vec3 m = vec3(0.0);",
+    "    for (int i = 0; i < 4; i++) {",
+    "      if (float(i) >= uLetterCount) break;",
+    "      if (uLHalf[i] < 0.02) continue;",
+    "      m += mistAt(ro, rd, tMax, uLPos[i], uLHalf[i]);",
+    "    }",
+    "    return m;",
+    "  }",
+    "  if (uHasCube < 0.5) return vec3(0.0);",
+    "  return mistAt(ro, rd, tMax, uCube, uHalf);",
+    "}",
+
+    // Ray vs an AABB in a rotated local frame. Returns hit distance or -1.
+    "float hitBox(vec3 ro, vec3 rd, vec3 cPos, float halfSz, mat3 toLocal, out vec3 lp, out vec3 nl) {",
+    "  vec3 o = toLocal * (ro - cPos);",
+    "  vec3 d = toLocal * rd;",
     "  vec3 m = 1.0 / d;",
     "  vec3 n = m * o;",
-    "  vec3 k = abs(m) * uHalf;",
+    "  vec3 k = abs(m) * halfSz;",
     "  vec3 t1 = -n - k, t2 = -n + k;",
     "  float tN = max(max(t1.x, t1.y), t1.z);",
     "  float tF = min(min(t2.x, t2.y), t2.z);",
@@ -162,6 +197,21 @@
     "  nl = -sign(d) * step(t1.yzx, t1.xyz) * step(t1.zxy, t1.xyz);",
     "  lp = o + d * tN;",
     "  return tN;",
+    "}",
+
+    "float hitCube(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl) {",
+    "  if (uHasCube < 0.5) return -1.0;",
+    "  return hitBox(ro, rd, uCube, uHalf, uToLocal, lp, nl);",
+    "}",
+
+    "vec2 faceUV(vec3 lp, vec3 nl, float halfSz) {",
+    "  vec3 q = lp / halfSz;",
+    "  vec3 an = abs(nl);",
+    "  vec2 uv;",
+    "  if (an.x > 0.5) uv = vec2(nl.x < 0.0 ? -q.z : q.z, -q.y);",
+    "  else if (an.y > 0.5) uv = vec2(q.x, nl.y > 0.0 ? -q.z : q.z);",
+    "  else uv = vec2(nl.z > 0.0 ? -q.x : q.x, -q.y);",
+    "  return clamp(uv * 0.5 + 0.5, 0.0, 1.0);",
     "}",
 
     // The cube as seen in the water: dim glassy faces with bright glowing edges.
@@ -172,7 +222,61 @@
     "  float rim = smoothstep(0.84, 0.985, edge);",
     // Glowing glass: lit panes with bright, sharp edges.
     // During the load intro the cube is a solid white light source.
-    "  return mix(ICE * (0.16 + 2.4 * rim), vec3(1.0, 0.98, 0.95) * (1.6 + 1.2 * rim), uIntro);",
+    "  return mix(ICE * (0.16 + 2.4 * rim), WHITE * (1.6 + 1.2 * rim), uIntro);",
+    "}",
+
+    "vec3 letterEmission(vec3 lp, vec3 nl, float halfSz, float idx) {",
+    "  vec3 q = abs(lp) / halfSz;",
+    "  vec3 an = abs(nl);",
+    "  float edge = max(q.x * (1.0 - an.x), max(q.y * (1.0 - an.y), q.z * (1.0 - an.z)));",
+    "  float rim = smoothstep(0.70, 0.99, edge);",
+    "  vec2 uv = faceUV(lp, nl, halfSz);",
+    "  float cell = floor(idx + 0.5);",
+    "  vec2 auv = vec2((uv.x + cell) * 0.25, uv.y);",
+    "  float glyph = texture2D(uAtlas, auv).a;",
+    // White almost-metallic chassis: bright face + chrome rim + soft sheen.
+    "  float faceSheen = pow(max(0.0, 1.0 - length((uv - 0.5) * vec2(1.35, 1.15))), 2.4);",
+    "  float chrome = pow(rim, 0.55) + faceSheen * 0.65;",
+    "  vec3 metal = WHITE * (1.25 + 2.6 * chrome) + vec3(0.75, 0.88, 1.0) * rim * 2.0;",
+    // Black obsidian glyph with a cool metallic glare for legibility.
+    "  vec2 glarePt = vec2(0.36 + 0.06 * sin(uTime * 1.4), 0.30 + 0.04 * cos(uTime * 1.1));",
+    "  float glare = pow(max(0.0, 1.0 - length(uv - glarePt) * 2.5), 5.5);",
+    "  float stroke = smoothstep(0.12, 0.5, glyph) * (1.0 - smoothstep(0.5, 0.92, glyph));",
+    "  vec3 obsidian = vec3(0.012, 0.014, 0.018);",
+    "  vec3 letter = obsidian",
+    "             + WHITE * (glare * 1.55 + stroke * 0.55)",
+    "             + vec3(0.4, 0.55, 0.7) * glare * 0.4;",
+    "  return mix(metal, letter, clamp(glyph * 1.15, 0.0, 1.0));",
+    "}",
+
+    "float hitLetters(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl, out float idx, out float halfSz) {",
+    "  float best = -1.0;",
+    "  lp = vec3(0.0); nl = vec3(0.0); idx = 0.0; halfSz = 0.0;",
+    "  for (int i = 0; i < 4; i++) {",
+    "    if (float(i) >= uLetterCount) break;",
+    "    if (uLHalf[i] < 0.02) continue;",
+    "    vec3 tlp, tnl;",
+    "    float t = hitBox(ro, rd, uLPos[i], uLHalf[i], uLMat[i], tlp, tnl);",
+    "    if (t > 0.0 && (best < 0.0 || t < best)) {",
+    "      best = t; lp = tlp; nl = tnl; idx = uLIdx[i]; halfSz = uLHalf[i];",
+    "    }",
+    "  }",
+    "  return best;",
+    "}",
+
+    "vec3 waterLightAt(vec3 p, vec3 N, vec3 rd, vec3 cPos) {",
+    "  vec3 toL = cPos - p;",
+    "  float dl = length(toL);",
+    "  toL /= max(dl, 1e-4);",
+    "  float nh = max(dot(N, normalize(toL - rd)), 0.0);",
+    "  float atten = 6.0 / (1.0 + dl * dl);",
+    "  float sparkle = step(0.82, hash(floor(p.xz * 40.0) + floor(uTime * 6.0)));",
+    "  vec3 lit = WHITE * atten * (pow(nh, 180.0) * 3.5 + pow(nh, 60.0) * sparkle * 1.4 + pow(nh, 24.0) * 0.12)",
+    "           + vec3(0.03, 0.075, 0.14) * atten * max(dot(N, toL), 0.0);",
+    "  float crest = smoothstep(-0.28, 0.16, p.y);",
+    "  float back = pow(max(dot(rd, toL), 0.0), 3.0);",
+    "  vec3 sss = vec3(0.04, 0.3, 0.55) * atten * crest * crest * (0.2 + 1.6 * back) * 0.45;",
+    "  return lit + sss + vec3(0.0, 0.006, 0.012) * atten * 0.3;",
     "}",
 
     "void main() {",
@@ -219,46 +323,71 @@
     // Mirror image: the cube itself where the reflected ray meets it, its bloom everywhere else.
     "    vec3 lp, nl;",
     "    vec3 refl = sky(R) + glow(p, R, 80.0);",
-    "    if (hitCube(p, Rs, lp, nl) > 0.0) refl += cubeEmission(lp, nl) * (0.75 + 0.5 * crestShade(p.y));",
-    // The cube also lights the ripples directly: sharp glints plus a faint cool sheen.
-    "    vec3 toL = uCube - p;",
-    "    float dl = length(toL);",
-    "    toL /= dl;",
-    "    float nh = max(dot(N, normalize(toL - rd)), 0.0);",
-    "    float atten = 6.0 / (1.0 + dl * dl);",
-    // Sparkle: the sharpest highlights break into glitter along the light path.
-    "    float sparkle = step(0.82, hash(floor(p.xz * 40.0) + floor(uTime * 6.0)));",
-    "    vec3 lit = ICE * atten * (pow(nh, 180.0) * 3.5 + pow(nh, 60.0) * sparkle * 1.4 + pow(nh, 24.0) * 0.12)",
-    "             + vec3(0.03, 0.075, 0.14) * atten * max(dot(N, toL), 0.0);",
-    // Light passing through the thin crests between the viewer and the cube.
+    "    if (uLetterCount > 0.5) {",
+    "      float lidx, lhalf;",
+    "      if (hitLetters(p, Rs, lp, nl, lidx, lhalf) > 0.0)",
+    "        refl += letterEmission(lp, nl, lhalf, lidx) * (0.75 + 0.5 * crestShade(p.y));",
+    "    } else if (hitCube(p, Rs, lp, nl) > 0.0) {",
+    "      refl += cubeEmission(lp, nl) * (0.75 + 0.5 * crestShade(p.y));",
+    "    }",
+    // Cube(s) light the ripples: sharp glints plus a faint cool sheen.
+    "    vec3 lit = vec3(0.0);",
     "    float crest = smoothstep(-0.28, 0.16, p.y);",
-    "    float back = pow(max(dot(rd, toL), 0.0), 3.0);",
-    "    vec3 sss = vec3(0.04, 0.3, 0.55) * atten * crest * crest * (0.2 + 1.6 * back) * 0.45;",
-    "    vec3 deep = vec3(0.0002, 0.0012, 0.0026) * (0.4 + crest) + vec3(0.0, 0.006, 0.012) * atten * 0.3;",
-    "    col = mix(deep + sss, refl, fres) + lit;",
+    "    if (uLetterCount > 0.5) {",
+    "      for (int i = 0; i < 4; i++) {",
+    "        if (float(i) >= uLetterCount) break;",
+    "        if (uLHalf[i] < 0.02) continue;",
+    "        lit += waterLightAt(p, N, rd, uLPos[i]);",
+    "      }",
+    "    } else {",
+    "      lit = waterLightAt(p, N, rd, uCube);",
+    "    }",
+    "    vec3 deep = vec3(0.0002, 0.0012, 0.0026) * (0.4 + crest);",
+    "    col = mix(deep, refl, fres) + lit;",
     // Ring crests catch the cube's light.
-    "    col += ICE * atten * min(ringLine, 1.0) * 0.35;",
+    "    float attenRing = 0.0;",
+    "    if (uLetterCount > 0.5) {",
+    "      for (int i = 0; i < 4; i++) {",
+    "        if (float(i) >= uLetterCount) break;",
+    "        float dl = length(uLPos[i] - p);",
+    "        attenRing += 6.0 / (1.0 + dl * dl);",
+    "      }",
+    "    } else {",
+    "      float dl = length(uCube - p);",
+    "      attenRing = 6.0 / (1.0 + dl * dl);",
+    "    }",
+    "    col += ICE * attenRing * min(ringLine, 1.0) * 0.35;",
     "    col = mix(col, sky(vec3(rd.x, 0.02, rd.z)), 1.0 - exp(-hd * 0.015));",
     "  } else {",
     "    col = sky(rd);",
     "  }",
-    // During the intro's camera move the cube is drawn here (the DOM cube can't be
-    // seen from above), then handed back to the DOM cube once the camera lands.
+    // During the intro the cube(s) are drawn here (the DOM cube can't be seen from above).
     "  if (uShowCube > 0.0) {",
-    "    vec3 clp, cnl;",
-    "    float tc = hitCube(ro, rd, clp, cnl);",
-    "    if (tc > 0.0 && tc < tHit) {",
-    "      col = mix(col, cubeEmission(clp, cnl) * 1.4, uShowCube);",
-    "      tHit = tc;",
+    "    if (uLetterCount > 0.5) {",
+    "      vec3 clp, cnl; float cidx, chalf;",
+    "      float tc = hitLetters(ro, rd, clp, cnl, cidx, chalf);",
+    "      if (tc > 0.0 && tc < tHit) {",
+    "        col = mix(col, letterEmission(clp, cnl, chalf, cidx) * 1.4, uShowCube);",
+    "        tHit = tc;",
+    "      }",
+    "    } else {",
+    "      vec3 clp, cnl;",
+    "      float tc = hitCube(ro, rd, clp, cnl);",
+    "      if (tc > 0.0 && tc < tHit) {",
+    "        col = mix(col, cubeEmission(clp, cnl) * 1.4, uShowCube);",
+    "        tHit = tc;",
+    "      }",
     "    }",
     "  }",
     "  col += glow(ro, rd, tHit) + mist(ro, rd, tHit);",
+    "  col += WHITE * uFlash * 1.35;",
     "  col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);",
     "  col = pow(clamp(col, 0.0, 1.0), vec3(1.0 / 2.2));",
     // Dither so the dark gradients don't band.
     "  col += (hash(gl_FragCoord.xy + fract(uTime) * 91.0) - 0.5) / 255.0;",
     "  vec2 s = gl_FragCoord.xy / uRes;",
     "  col *= 0.45 + 0.55 * pow(16.0 * s.x * s.y * (1.0 - s.x) * (1.0 - s.y), 0.22);",
+    "  col = mix(col, vec3(1.0), clamp(uFlash * 0.85, 0.0, 1.0));",
     "  gl_FragColor = vec4(col, 1.0);",
     "}"
   ].join("\n");
@@ -285,12 +414,62 @@
     var a = deg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
     return [[c, 0, s], [0, 1, 0], [-s, 0, c]];
   }
+  function rotZ(deg) {
+    var a = deg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+    return [[c, -s, 0], [s, c, 0], [0, 0, 1]];
+  }
   function mul(A, B) {
     var R = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
     for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) {
       R[i][j] = A[i][0] * B[0][j] + A[i][1] * B[1][j] + A[i][2] * B[2][j];
     }
     return R;
+  }
+  // Local->world rotation from euler degrees (rx, ry, rz), returned as world->local
+  // column-major floats for uniformMatrix3fv.
+  function eulerToLocalMat(rx, ry, rz) {
+    var R = mul(mul(rotX(rx), rotY(ry)), rotZ(rz));
+    // world->local = R^T; column-major of R^T = rows of R concatenated.
+    return [
+      R[0][0], R[0][1], R[0][2],
+      R[1][0], R[1][1], R[1][2],
+      R[2][0], R[2][1], R[2][2]
+    ];
+  }
+
+  // 4-letter atlas (S W F T) — alpha mask; colour comes from the shader
+  // (white metal faces + black obsidian glyphs).
+  function makeLetterAtlas(gl) {
+    var W = 512, H = 128, cell = 128;
+    var c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, W, H);
+    var letters = ["S", "W", "F", "T"];
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "900 96px system-ui, -apple-system, Segoe UI, sans-serif";
+    for (var i = 0; i < 4; i++) {
+      var cx = i * cell + cell / 2;
+      var cy = H / 2;
+      // Soft halo so the glyph reads on the bright metal without glowing white.
+      ctx.shadowColor = "rgba(0,0,0,0.55)";
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(letters[i], cx, cy + 3);
+      ctx.shadowBlur = 0;
+      // Second pass for a denser alpha core (obsidian fill in the shader).
+      ctx.fillText(letters[i], cx, cy + 3);
+    }
+    var tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return tex;
   }
 
   // Same surface as the shader's hgt(p, 10), so splashes line up with the waves drawn.
@@ -332,6 +511,8 @@
     this.intro = document.documentElement.classList.contains("swft-intro") ? 1 : 0;
     this.introCam = this.intro ? 0 : null;     // see introCamera()
     this.introShowCube = this.intro ? 1 : 0;
+    this.introLetters = null;                // set by setIntroLetters() during load swirl
+    this.introFlash = 0;
     this.corners = [];                   // previous corner positions / depths, for splash detection
     this.ripples = [];
     this.rings = new Float32Array(32);
@@ -378,10 +559,37 @@
 
     var u = {};
     ["uRes", "uTime", "uCam", "uFw", "uRight", "uUp", "uFocal", "uCube", "uHalf", "uHasCube",
-     "uToLocal", "uRings[0]", "uIntro", "uShowCube"].forEach(function (n) { u[n] = gl.getUniformLocation(prog, n); });
+     "uToLocal", "uRings[0]", "uIntro", "uShowCube", "uLetterCount", "uFlash", "uAtlas"].forEach(function (n) {
+      u[n] = gl.getUniformLocation(prog, n);
+    });
+    for (var i = 0; i < 4; i++) {
+      u["uLPos" + i] = gl.getUniformLocation(prog, "uLPos[" + i + "]");
+      u["uLHalf" + i] = gl.getUniformLocation(prog, "uLHalf[" + i + "]");
+      u["uLMat" + i] = gl.getUniformLocation(prog, "uLMat[" + i + "]");
+      u["uLIdx" + i] = gl.getUniformLocation(prog, "uLIdx[" + i + "]");
+    }
     this.gl = gl;
     this.u = u;
+    this.letterAtlas = makeLetterAtlas(gl);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this.letterAtlas);
+    if (u.uAtlas) gl.uniform1i(u.uAtlas, 0);
     this.root.classList.add("swft-ocean--live");
+  };
+
+  // Drive the four letter cubes during the homepage load intro.
+  // state: { cubes:[{x,y,z,half,rx,ry,rz,letter}], flash } or null to clear.
+  Ocean.prototype.setIntroLetters = function (state) {
+    if (!state || !state.cubes || !state.cubes.length) {
+      this.introLetters = null;
+      this.introFlash = 0;
+      this.lastKey = "";
+      return;
+    }
+    var cubes = state.cubes.slice(0, 4);
+    this.introLetters = cubes;
+    this.introFlash = state.flash || 0;
+    this.lastKey = "";
   };
 
   // Solve the camera + cube placement so the WebGL world and the DOM cube line up.
@@ -411,6 +619,12 @@
     this.fw = fw; this.up = up;
     this.cube = [0, cy, dist];
     this.pxPerWorld = FOCAL * H / zc;
+    // Optional horizontal bias (fraction of stage width from centre). Homepage
+    // uses 0.25 so the cube sits in the right half of a full-bleed ocean.
+    var bias = parseFloat(this.root.getAttribute("data-cube-bias-x"));
+    if (!isNaN(bias) && bias !== 0 && this.pxPerWorld) {
+      this.cube[0] = bias * W / this.pxPerWorld;
+    }
     this.root.style.setProperty("--cube-y", centerY.toFixed(1) + "px");
 
     if (this.gl) {
@@ -549,6 +763,7 @@
   // straight down (birdseye), 1 = the hero camera. It swings along an arc
   // around the cube, descending and tilting up toward the horizon.
   Ocean.prototype.introCamera = function (bob) {
+    var cx = this.cube ? this.cube[0] : 0;
     var hero = { pos: [0, CAM_HEIGHT, 0], fw: this.fw, up: this.up, showCube: 0, key: "h" };
     var k = this.introCam;
     if (k === null || k === undefined || !this.cube) return hero;
@@ -561,10 +776,12 @@
     var el = Math.PI / 2 + (elF - Math.PI / 2) * k; // straight overhead -> hero
     var r = Math.exp(Math.log(r0) + (Math.log(rF) - Math.log(r0)) * k);
     var pitch = el + (this.pitch - elF) * k;        // look at the cube, then settle into the hero framing
-    var pos = [0, cy + r * Math.sin(el), cz - r * Math.cos(el)];
+    // Birdseye sits over the (possibly biased) cube; as we land, cam X eases to 0
+    // so the cube settles into the right half of the full-bleed hero.
+    var pos = [cx * (1 - k), cy + r * Math.sin(el), cz - r * Math.cos(el)];
     var fw = [0, -Math.sin(pitch), Math.cos(pitch)];
     var up = [0, Math.cos(pitch), Math.sin(pitch)];
-    return { pos: pos, fw: fw, up: up, showCube: this.introShowCube || 0, key: k.toFixed(4) + "/" + (this.introShowCube || 0).toFixed(3) };
+    return { pos: pos, fw: fw, up: up, showCube: this.introShowCube || 0, key: k.toFixed(4) + "/" + (this.introShowCube || 0).toFixed(3) + "/" + cx.toFixed(3) };
   };
 
   // Repaint straight away with the last frame's motion, e.g. after a layout()
@@ -580,8 +797,18 @@
 
     var intro = this.intro || 0;
     var cam = this.introCamera(bob);
+    var letters = this.introLetters;
+    var letterCount = letters ? letters.length : 0;
+    var flash = this.introFlash || 0;
     var key = t.toFixed(3) + "|" + bob.toFixed(4) + "|" + M.join(",") + "|" + this.canvas.width + "|" + intro.toFixed(3) +
-      "|" + cam.key;
+      "|" + cam.key + "|" + letterCount + "|" + flash.toFixed(3);
+    if (letters) {
+      for (var li = 0; li < letters.length; li++) {
+        var L = letters[li];
+        key += "|" + L.x.toFixed(2) + "," + L.y.toFixed(2) + "," + L.z.toFixed(2) + "," +
+          (L.half || 0).toFixed(3) + "," + (L.rx || 0).toFixed(1) + "," + (L.ry || 0).toFixed(1) + "," + (L.rz || 0).toFixed(1);
+      }
+    }
     if (key === this.lastKey) return; // nothing moved (reduced motion, idle)
     this.lastKey = key;
 
@@ -596,11 +823,33 @@
     gl.uniform1f(u.uFocal, FOCAL);
     gl.uniform3fv(u.uCube, cube);
     gl.uniform1f(u.uHalf, CUBE_SIZE / 2);
+    // While letter cubes are active they are the light source; keep hasCube for splash/rings.
     gl.uniform1f(u.uHasCube, this.cubeEl ? 1 : 0);
     gl.uniform4fv(u["uRings[0]"], this.rings);
     gl.uniform1f(u.uIntro, intro);
     // Column-major upload: M's rows become the columns of M^T (world -> local).
     gl.uniformMatrix3fv(u.uToLocal, false, [].concat(M[0], M[1], M[2]));
+    gl.uniform1f(u.uLetterCount, letterCount);
+    gl.uniform1f(u.uFlash, flash);
+    if (this.letterAtlas) {
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.letterAtlas);
+      if (u.uAtlas) gl.uniform1i(u.uAtlas, 0);
+    }
+    for (var i = 0; i < 4; i++) {
+      var cubeL = letters && letters[i];
+      if (cubeL) {
+        gl.uniform3f(u["uLPos" + i], cubeL.x, cubeL.y, cubeL.z);
+        gl.uniform1f(u["uLHalf" + i], cubeL.half != null ? cubeL.half : 0.4);
+        gl.uniformMatrix3fv(u["uLMat" + i], false, eulerToLocalMat(cubeL.rx || 0, cubeL.ry || 0, cubeL.rz || 0));
+        gl.uniform1f(u["uLIdx" + i], cubeL.letter != null ? cubeL.letter : i);
+      } else {
+        gl.uniform3f(u["uLPos" + i], 0, 0, 0);
+        gl.uniform1f(u["uLHalf" + i], 0);
+        gl.uniformMatrix3fv(u["uLMat" + i], false, [1, 0, 0, 0, 1, 0, 0, 0, 1]);
+        gl.uniform1f(u["uLIdx" + i], i);
+      }
+    }
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     this.announceReady();
 
@@ -631,7 +880,7 @@
     });
   }
 
-  window.SwftOcean = { init: init };
+  window.SwftOcean = { init: init, CUBE_SIZE: CUBE_SIZE, eulerToLocalMat: eulerToLocalMat };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
