@@ -89,11 +89,12 @@ Rendering:
 Options and hooks:
 - `data-hover-gap` on `.swft-ocean`: water line to cube bottom, in cube widths (default `0.5`; the homepage uses `0.2` so the cube sits just above the crests).
 - `swftocean:ready` bubbles from the stage after its first frame (or at once on the static fallback). The homepage waits for it before running its intro, with a 1.5s fallback.
+- **Load intro (homepage):** when `html.swft-intro` is set, [`js/hero-intro.js`](../js/hero-intro.js) drives a four-letter-cube sequence via `ocean.setIntroLetters({ cubes, flash })`: canvas atlas glyphs **S / W / F / T**. Cubes hold off-camera for the first 10% of load, fly into the birdseye frame while the camera stays top-down, then spiral inward as `introCam` tilts into the hero (orbits shrink to stay framed). Near impact they flash and clear to the single white WebGL cube, which hands off to the DOM photo cube. Without WebGL, the swirl is skipped and only the camera descent runs. A 20s failsafe (replacing the head script's 12s timer once the intro JS runs) always reveals the page.
 
 ## Homepage hero
 
 The ocean cube replaces the Vimeo background video in the homepage hero (`index.html`, `css/home-hero-ocean.css`).
-- **Desktop (≥ 992px):** the scene fills the right half of the first screen. Its left edge fades into the page black, and the copy sits centred beside it.
+- **Desktop (≥ 992px):** the ocean is full-bleed across the hero. A soft left scrim keeps the copy readable while the water shows through; the cube sits on the right (`data-cube-bias-x="0.25"`, scene `left: 75%`).
 - **Tablet and mobile:** the scene sits at the top of the hero, straight under the nav, and the copy sits below it. The scene is up to `56svh` tall (`--hero-scene-h`), trimmed on short screens so the headline and buttons stay above the fold, and never under `38svh`. The buttons sit side by side (they stack below 360px). On phones the scene runs edge to edge past the body's 12px gutter.
 - **Controls:** the hero hides the cube's HUD (buttons, dots, hint). The cube can still be dragged, tapped and hovered, and responds to arrow keys once focused. It uses `data-vertical-swipe="false"`, so a vertical swipe that starts on the cube scrolls the page.
 - **Pointer events:** the copy wrappers above the scene pass pointer events through, and only the copy, the buttons and the work marquee take them. That's how the cube stays interactive under the layered Webflow hero.

@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-10-05: Full-bleed hero ocean + text scrim
+
+### Changed
+- Homepage hero ocean is **full-bleed** on desktop; a soft semi-opaque left scrim keeps the copy readable while the dark water shows through. Cube stays on the right via `data-cube-bias-x="0.25"` + CSS `left: 75%`. See [`css/home-hero-ocean.css`](../css/home-hero-ocean.css), [`js/swft-ocean.js`](../js/swft-ocean.js). Intro frame-in now settles into that full-width stage (no hard left black panel).
+
+## 2026-10-05: Staged birdseye fly-in, then camera tilt
+
+### Changed
+- Load intro staging in [`js/hero-intro.js`](../js/hero-intro.js): cubes hold off-camera for the first **10%** of the bar, fly into the top-down frame during the rest of load, then after load spiral inward while the camera tilts—orbits shrink so spins stay framed. Impact flash + photo handoff unchanged at the end.
+
+## 2026-10-05: Letter cubes — white metal + black obsidian glyphs
+
+### Changed
+- Load-intro letter cubes now render as **glowing white metallic** faces with chrome rim/sheen; glyphs are **black obsidian** with a cool metallic glare for contrast. Shader + atlas in [`js/swft-ocean.js`](../js/swft-ocean.js).
+
+## 2026-10-05: Intro swirl + camera descent run together
+
+### Changed
+- Homepage load intro **flight** phase: the S/W/F/T letter cubes spiral inward (3 expo orbits) **while** the WebGL camera pans from birdseye into the hero and the scene frames into its slot. Impact flash + photo-cube handoff happen at the end of the same timeline (no separate post-swirl descent). See [`js/hero-intro.js`](../js/hero-intro.js).
+
+## 2026-10-05: Four-letter cube load intro
+
+### Changed
+- **Homepage load intro** now opens with four glowing letter cubes (**S**, **W**, **F**, **T**) at the viewport corners over the dark sea (birdseye). They idle while the progress bar fills, then spiral toward the centre for three orbits (each ~2× faster than the last), collide with a white flash, and hand off into the existing camera descent → DOM lifestyle photo cube → hero copy. WebGL letter cubes + multi-glow live in [`js/swft-ocean.js`](../js/swft-ocean.js) (`setIntroLetters`); choreography in [`js/hero-intro.js`](../js/hero-intro.js); flash overlay in [`css/hero-intro.css`](../css/hero-intro.css). Session skip and reduced-motion skip unchanged; failsafe extended to 20s once the intro script runs. Merged cube faces still use the existing photo slideshow (no video textures).
+
 ## 2026-10-01: Visuals page is Vimeo videos only
 
 ### Changed
