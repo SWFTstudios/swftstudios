@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-05: Homepage Selected Work lineup
+
+### Changed
+- Homepage **Selected Work** stack (`#work`) now features Blurred Lines Entertainment, Built By Me EZ, Snooze Lane, and Hawthorne Global Ministries (replacing Brooklyn Steel, Manna Hydration, and Hamper). Each cover still uses `data-cs-transition` / `data-cs-cover` for the card→case-study morph into the matching project page.
+
 ## 2026-10-05: Full-bleed hero ocean + text scrim
 
 ### Changed
