@@ -1,10 +1,16 @@
 # Changelog
 
+## 2026-10-05: Flattened gem tumble (crystal + SWFT cubes)
+- Hero crystal rock uses a flatter table-cut mesh (wider XZ, shallow Y) so facets read as large gem faces; swipe freely on pitch / yaw / roll with inertia (vertices can turn toward the viewer).
+- Load-intro letter prisms use anisotropic gem extents in [`js/swft-ocean.js`](../js/swft-ocean.js); ocean splash sync includes crystal `rz`.
+- Method-section SWFT letter cube is a flattened gem with the same free-axis swipe ([`js/swft-letter-cube.js`](../js/swft-letter-cube.js), [`css/swft-letter-cube.css`](../css/swft-letter-cube.css)).
+
 ## 2026-10-05: Homepage crystal rock hero
 
 ### Changed
 - Homepage hero photo **cube** is replaced by a multi-face **geometric crystal rock** ([`js/swft-crystal.js`](../js/swft-crystal.js), [`css/swft-crystal.css`](../css/swft-crystal.css)): irregular facets (large and small) crossfade project images independently. Drag / arrow keys tumble it; ocean splash sync still follows its rotation.
 - Load intro still joins S/W/F/T letter crystals, then hands off into the rock (soft spark unchanged).
+- Crystal and letter gems tumble freely on all axes when swiped; mesh is a flattened table-cut so faces read large.
 
 ## 2026-10-05: Hero flow headline + crystal letter prisms
 

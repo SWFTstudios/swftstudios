@@ -184,12 +184,13 @@
     "}",
 
     // Ray vs an AABB in a rotated local frame. Returns hit distance or -1.
-    "float hitBox(vec3 ro, vec3 rd, vec3 cPos, float halfSz, mat3 toLocal, out vec3 lp, out vec3 nl) {",
+    // halfExt lets letter prisms be flattened table-cut gems (wide XZ, short Y).
+    "float hitBox(vec3 ro, vec3 rd, vec3 cPos, vec3 halfExt, mat3 toLocal, out vec3 lp, out vec3 nl) {",
     "  vec3 o = toLocal * (ro - cPos);",
     "  vec3 d = toLocal * rd;",
     "  vec3 m = 1.0 / d;",
     "  vec3 n = m * o;",
-    "  vec3 k = abs(m) * halfSz;",
+    "  vec3 k = abs(m) * halfExt;",
     "  vec3 t1 = -n - k, t2 = -n + k;",
     "  float tN = max(max(t1.x, t1.y), t1.z);",
     "  float tF = min(min(t2.x, t2.y), t2.z);",
@@ -199,13 +200,16 @@
     "  return tN;",
     "}",
 
+    // Flattened gem extents: larger faces on XZ, shallow Y (table-cut).
+    "vec3 gemHalf(float halfSz) { return halfSz * vec3(1.32, 0.36, 1.32); }",
+
     "float hitCube(vec3 ro, vec3 rd, out vec3 lp, out vec3 nl) {",
     "  if (uHasCube < 0.5) return -1.0;",
-    "  return hitBox(ro, rd, uCube, uHalf, uToLocal, lp, nl);",
+    "  return hitBox(ro, rd, uCube, vec3(uHalf), uToLocal, lp, nl);",
     "}",
 
-    "vec2 faceUV(vec3 lp, vec3 nl, float halfSz) {",
-    "  vec3 q = lp / halfSz;",
+    "vec2 faceUV(vec3 lp, vec3 nl, vec3 halfExt) {",
+    "  vec3 q = lp / halfExt;",
     "  vec3 an = abs(nl);",
     "  vec2 uv;",
     "  if (an.x > 0.5) uv = vec2(nl.x < 0.0 ? -q.z : q.z, -q.y);",
@@ -226,11 +230,12 @@
     "}",
 
     "vec3 letterEmission(vec3 lp, vec3 nl, float halfSz, float idx) {",
-    "  vec3 q = abs(lp) / halfSz;",
+    "  vec3 halfExt = gemHalf(halfSz);",
+    "  vec3 q = abs(lp) / halfExt;",
     "  vec3 an = abs(nl);",
     "  float edge = max(q.x * (1.0 - an.x), max(q.y * (1.0 - an.y), q.z * (1.0 - an.z)));",
     "  float rim = smoothstep(0.62, 0.995, edge);",
-    "  vec2 uv = faceUV(lp, nl, halfSz);",
+    "  vec2 uv = faceUV(lp, nl, halfExt);",
     "  float cell = floor(idx + 0.5);",
     "  vec2 auv = vec2((uv.x + cell) * 0.25, uv.y);",
     "  float glyph = texture2D(uAtlas, auv).a;",
@@ -273,7 +278,7 @@
     "    if (float(i) >= uLetterCount) break;",
     "    if (uLHalf[i] < 0.02) continue;",
     "    vec3 tlp, tnl;",
-    "    float t = hitBox(ro, rd, uLPos[i], uLHalf[i], uLMat[i], tlp, tnl);",
+    "    float t = hitBox(ro, rd, uLPos[i], gemHalf(uLHalf[i]), uLMat[i], tlp, tnl);",
     "    if (t > 0.0 && (best < 0.0 || t < best)) {",
     "      best = t; lp = tlp; nl = tnl; idx = uLIdx[i]; halfSz = uLHalf[i];",
     "    }",
@@ -714,7 +719,11 @@
   Ocean.prototype.cubeMatrix = function () {
     var inst = this.cubeEl && (this.cubeEl.__swftCrystal || this.cubeEl.__swftCube);
     var rot = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-    if (inst) rot = mul(mul(rotX(inst.hx || 0), rotY(inst.hy || 0)), mul(rotX(inst.rx || 0), rotY(inst.ry || 0)));
+    if (inst) {
+      // Free tumble: pitch / yaw / roll (rz so splash follows vertex rolls).
+      var body = mul(mul(rotX(inst.rx || 0), rotY(inst.ry || 0)), rotZ(inst.rz || 0));
+      rot = mul(mul(rotX(inst.hx || 0), rotY(inst.hy || 0)), body);
+    }
     // CSS space (y down, z to viewer) -> world (y up, z away): M = F R F, F = diag(1,-1,-1)
     var F = [1, -1, -1];
     var M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];

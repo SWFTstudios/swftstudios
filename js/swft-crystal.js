@@ -3,7 +3,7 @@
    Irregular multi-face polyhedron; each face crossfades project photos.
    Markup: .swft-crystal[data-swft-crystal] > .swft-crystal__scene > canvas
            + .swft-crystal__sources > img…
-   Exposes root.__swftCrystal { hx,hy,rx,ry,spinDps } for ocean splash sync.
+   Exposes root.__swftCrystal { hx,hy,rx,ry,rz,vx,vy,vz,spinDps } for ocean splash sync.
    ============================================================ */
 (function () {
   "use strict";
@@ -109,11 +109,13 @@
       return [v[0] / L, v[1] / L, v[2] / L];
     }
     var verts = raw.map(norm);
-    // Uneven crystal: push some verts out, pull others in.
-    var scales = [1.22, 0.78, 1.05, 0.88, 1.35, 0.72, 1.12, 0.95, 1.28, 0.82, 1.08, 0.9];
+    // Flattened table-cut gem: squash Y, widen XZ so facets read as large flat faces.
+    // Mild radial variance keeps faces uneven without spiked points.
+    var scales = [1.06, 0.94, 1.04, 0.96, 1.1, 0.9, 1.02, 0.98, 1.08, 0.92, 1.03, 0.97];
     for (var i = 0; i < verts.length; i++) {
       var s = scales[i % scales.length];
-      verts[i] = [verts[i][0] * s, verts[i][1] * s, verts[i][2] * s];
+      var v = verts[i];
+      verts[i] = [v[0] * 1.36 * s, v[1] * 0.32 * s, v[2] * 1.36 * s];
     }
     var faces = [
       [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
@@ -200,11 +202,11 @@
     var cx = Math.cos(rx), sx = Math.sin(rx);
     var cy = Math.cos(ry), sy = Math.sin(ry);
     var cz = Math.cos(rz), sz = Math.sin(rz);
-    // Y * X * Z
+    // Z * Y * X — free tumble including roll around view / vertices
     return new Float32Array([
-      cy * cz + sy * sx * sz, cx * sz, -sy * cz + cy * sx * sz, 0,
-      -cy * sz + sy * sx * cz, cx * cz, sy * sz + cy * sx * cz, 0,
-      sy * cx, -sx, cy * cx, 0,
+      cy * cz, sx * sy * cz - cx * sz, cx * sy * cz + sx * sz, 0,
+      cy * sz, sx * sy * sz + cx * cz, cx * sy * sz - sx * cz, 0,
+      -sy, sx * cy, cx * cy, 0,
       0, 0, 0, 1
     ]);
   }
@@ -224,11 +226,14 @@
     }
     this.spinDps = parseFloat(root.getAttribute("data-spin")) || 10;
     this.fadeMs = parseFloat(root.getAttribute("data-fade-interval")) || 3200;
-    this.hx = 0; this.hy = 0; this.rx = -12; this.ry = 18; this.rz = 8;
+    this.hx = 0; this.hy = 0;
+    this.rx = -18; this.ry = 22; this.rz = 12;
+    this.vx = 0; this.vy = 0; this.vz = 0;
     this.white = 0;
     this.visible = true;
     this.dragging = false;
     this.lastX = 0; this.lastY = 0;
+    this.prevDx = 0; this.prevDy = 0;
     this.reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
     var imgs = root.querySelectorAll(".swft-crystal__sources img");
@@ -354,11 +359,17 @@
   Crystal.prototype.bind = function () {
     var self = this;
     var el = this.root;
+    var SENS = 0.55;       // deg per px — pitch / yaw
+    var ROLL_SENS = 0.22;  // deg per px² curl — roll around view / vertices
+
     function down(e) {
       self.dragging = true;
       el.classList.add("is-dragging");
+      self.vx = 0; self.vy = 0; self.vz = 0;
       var p = e.touches ? e.touches[0] : e;
       self.lastX = p.clientX; self.lastY = p.clientY;
+      self.prevDx = 0; self.prevDy = 0;
+      try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
       e.preventDefault();
     }
     function move(e) {
@@ -366,8 +377,18 @@
       var p = e.touches ? e.touches[0] : e;
       var dx = p.clientX - self.lastX, dy = p.clientY - self.lastY;
       self.lastX = p.clientX; self.lastY = p.clientY;
-      self.ry += dx * 0.45;
-      self.rx += dy * 0.45;
+      // Screen-space free tumble: yaw (Y), pitch (X), and roll (Z) from swipe curl
+      // so the gem can turn over any face or vertex.
+      self.ry += dx * SENS;
+      self.rx += dy * SENS;
+      var roll = (dx * self.prevDy - dy * self.prevDx) * ROLL_SENS * 0.08;
+      // Also blend a bit of roll from diagonal swipes
+      roll += (dx * 0.08 - dy * 0.04) * SENS * 0.35;
+      self.rz += roll;
+      self.vx = dx * SENS * 60;
+      self.vy = dy * SENS * 60;
+      self.vz = roll * 60;
+      self.prevDx = dx; self.prevDy = dy;
       self.hx = 0; self.hy = 0;
     }
     function up() {
@@ -377,11 +398,12 @@
     el.addEventListener("pointerdown", down);
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
     el.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowLeft") self.ry -= 18;
-      if (e.key === "ArrowRight") self.ry += 18;
-      if (e.key === "ArrowUp") self.rx -= 14;
-      if (e.key === "ArrowDown") self.rx += 14;
+      if (e.key === "ArrowLeft") { self.ry -= 18; self.rz -= 6; }
+      if (e.key === "ArrowRight") { self.ry += 18; self.rz += 6; }
+      if (e.key === "ArrowUp") { self.rx -= 14; self.rz += 4; }
+      if (e.key === "ArrowDown") { self.rx += 14; self.rz -= 4; }
     });
     if (window.IntersectionObserver) {
       new IntersectionObserver(function (entries) {
@@ -407,9 +429,18 @@
     if (!this.visible || document.hidden) { this.prev = 0; return; }
     var dt = this.prev ? Math.min(0.05, (now - this.prev) / 1000) : 1 / 60;
     this.prev = now;
-    if (!this.dragging && !this.reduce && this.spinDps) {
-      this.ry += this.spinDps * dt;
-      this.rx += Math.sin(now / 1000 * 0.4) * 0.08;
+    if (!this.dragging && !this.reduce) {
+      // Inertia on all axes after swipe; idle spin on Y when nearly still
+      var damp = Math.exp(-dt * 2.4);
+      this.vx *= damp; this.vy *= damp; this.vz *= damp;
+      this.rx += this.vy * dt;
+      this.ry += this.vx * dt;
+      this.rz += this.vz * dt;
+      if (this.spinDps && Math.sqrt(this.vx * this.vx + this.vy * this.vy + this.vz * this.vz) < 8) {
+        this.ry += this.spinDps * dt;
+        this.rx += Math.sin(now / 1000 * 0.35) * 0.06;
+        this.rz += Math.cos(now / 1000 * 0.28) * 0.04;
+      }
     }
     // Per-face crossfade (skip tiny faces for readability: still fade but slower via speed).
     if (!this.reduce) {
