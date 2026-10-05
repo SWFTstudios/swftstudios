@@ -23,7 +23,6 @@ This file describes how to work in this repo: Git branching, Webflow imports, an
 These contain custom logic or config and must not be replaced by a Webflow export:
 
 - `case-studies.html` – Videos & Insights hub (Match-style cards, prompt, modal; `js/case-studies-hub.js`, `css/case-studies-hub.css`, `data/case-studies-index.json`)
-- `videos.html` – Vimeo double-slider gallery (`js/video-slider.js`, `css/video-slider.css`, `data/videos.json`); keep the `#vs-mount` mount and asset links on any redesign
 - `case-study/` – all case study slug pages and tag links
 - `case-study.html` – template or redirect if used
 - `detail_project.html`, `detail_video.html` – project/video detail logic

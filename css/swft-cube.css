@@ -140,7 +140,7 @@
   z-index: 2;
   padding: 0.35rem 0.65rem;
   border-radius: 999px;
-  font: 600 0.75rem/1 var(--swft-font, "Inter Display", Inter, sans-serif);
+  font: 600 0.75rem/1 var(--swft-font, "Inter Tight", Inter, sans-serif);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #fff;
@@ -177,7 +177,7 @@
   align-items: center;
   gap: 0.9rem;
   color: var(--swft-text, #f0eeec);
-  font-family: var(--swft-font, "Inter Display", Inter, sans-serif);
+  font-family: var(--swft-font, "Inter Tight", Inter, sans-serif);
 }
 
 .swft-cube__controls {

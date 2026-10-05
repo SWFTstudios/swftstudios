@@ -1,0 +1,71 @@
+{
+  "_readme": "Visuals page = Vimeo videos only. Add a film by adding {\"vimeo\": \"<id>\"} (plus \"hash\": \"<key>\" for an unlisted video: the part after the id in vimeo.com/<id>/<hash>). Its title, thumbnail, description and duration load from Vimeo automatically. To override any of them, set title, thumb (an image path or URL), description, client, category or year on that entry. Order here is grid order.",
+  "videos": [
+    {
+      "vimeo": "1216244886",
+      "title": "SWFT Studios Reel",
+      "client": "SWFT Studios",
+      "year": "2026",
+      "category": "Reel",
+      "thumb": "images/swft-thumbnail.webp",
+      "description": "A cut of the photo, video and web work we make for local brands."
+    },
+    {
+      "vimeo": "764022783",
+      "hash": "4d7429ccb7",
+      "title": "Yanko Hernando: Client Story",
+      "client": "Yanko Hernando",
+      "year": "2023",
+      "category": "Testimonial",
+      "thumb": "images/Yanko-Hernando-Testimonial-Thumbnail.png",
+      "description": "Yanko on working with SWFT, in his own words."
+    },
+    {
+      "vimeo": "1174189190",
+      "hash": "65b57ab239"
+    },
+    {
+      "vimeo": "1174180245",
+      "hash": "8eb63b9ca8"
+    },
+    {
+      "vimeo": "1174158034",
+      "hash": "c80e23ac22"
+    },
+    {
+      "vimeo": "560930257",
+      "hash": "6815e3ec74"
+    },
+    {
+      "vimeo": "644113323",
+      "hash": "81bf60a904"
+    },
+    {
+      "vimeo": "758129469",
+      "hash": "ddf3e2edba"
+    },
+    {
+      "vimeo": "658023657"
+    },
+    {
+      "vimeo": "482515388"
+    },
+    {
+      "vimeo": "446756609"
+    },
+    {
+      "vimeo": "1019207124"
+    },
+    {
+      "vimeo": "589028712",
+      "hash": "9f3505de73"
+    },
+    {
+      "vimeo": "589026463",
+      "hash": "1c61253b73"
+    },
+    {
+      "vimeo": "1066971784"
+    }
+  ]
+}

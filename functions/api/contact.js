@@ -1,14 +1,15 @@
 /**
  * Cloudflare Pages Function. POST /api/contact
- * Writes project inquiries to Airtable CRM (Contact Inquiries + Pipeline).
- * Sends Resend team notify + visitor confirmation when RESEND_API_KEY is set.
+ * Writes project inquiries to Airtable CRM (Contact Inquiries + Pipeline) and
+ * the Google Sheets lead log, then emails hello@swftstudios.com (Resend) with a
+ * visitor confirmation. If Resend fails, the Google Sheets script emails hello@.
  *
- * Env: AIRTABLE_TOKEN, RESEND_API_KEY;
+ * Env: AIRTABLE_TOKEN, RESEND_API_KEY, GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET;
  * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT, AIRTABLE_TABLE_PEOPLE,
  *   AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeLead } from "../_lib/leads.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -60,7 +61,7 @@ export async function onRequestPost(context) {
   const utmMedium = str(body.utmMedium, 120);
   const utmCampaign = str(body.utmCampaign, 120);
 
-  const stored = await storeCrmLead(env, {
+  const saved = await storeLead(env, {
     formGroup: "Project Inquiry",
     formType: "contact",
     person: { name, email, phone },
@@ -96,7 +97,7 @@ export async function onRequestPost(context) {
     kind: "contact",
     visitorEmail: email,
     visitorName: name,
-    backupStored: stored,
+    backupStored: saved.stored,
     idempotencyBase: `contact/${email.toLowerCase()}/${Date.now()}`,
     teamSubject: `Project inquiry: ${businessName || name}`,
     teamHtml: `
@@ -114,7 +115,7 @@ export async function onRequestPost(context) {
         ${row("Budget", budget)}
         ${row("Details", details)}
         ${row("Source page", sourcePage)}
-        ${row("Stored in Airtable", stored ? "Yes" : "No")}
+        ${row("Saved to", saved.label)}
       </table>
       <p style="color:#666;font-size:12px;">Reply to this email to respond to the lead.</p>
     `,
@@ -127,14 +128,14 @@ export async function onRequestPost(context) {
     `,
   });
 
-  if (!stored && !emailed.team) {
+  if (!saved.stored && !emailed.team) {
     return json({ ok: false,
       error: "We couldn't deliver your request. Please email hello@swftstudios.com or try again shortly."
     }, 503);
   }
   return json({
     ok: true,
-    stored,
+    stored: saved.stored,
     emailDelivered: !!emailed.team,
     emailed: !!emailed.team,
     warning: !emailed.team

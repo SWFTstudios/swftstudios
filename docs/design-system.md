@@ -47,9 +47,11 @@ Still present in `swftstudios000.css` for Webflow components. Prefer `--swft-mut
 
 ## Typography
 
-**Font families (swft2027):**
-- Headings: `--swft-font-display` → `"Chakra Petch"` 700, uppercase, `-0.01em` tracking. Self-hosted in `fonts/` (OFL) and applied to every `h1`–`h6` and `.heading-style-h*` in `swft-fonts.css`. Long-form rich-text headings stay sentence case.
-- Body and UI: `--swft-font` → `"Inter Display", Inter, sans-serif`.
+**Font families (Astrox type system):**
+- Headings and display: `--swft-font-display` → `"Inter Tight"` 500, sentence case, `-0.03em` to `-0.05em` tracking (tighter the bigger it gets). Applied to every `h1`–`h6` and `.heading-style-h*` in `swft-fonts.css`.
+- Body and UI: `--swft-font` → `"Inter Tight", Inter, system-ui, sans-serif`.
+- Labels and eyebrows: `--swft-font-mono` → `"Space Mono"` 400, uppercase, 12–14px, no extra tracking (`.swft-text-label`, section labels, step numbers, small label headings).
+- All self-hosted in `fonts/` (OFL, Google Fonts latin + latin-ext subsets). Matches the [Astrox Studio](https://astrox-studio.webflow.io/utility-pages/style-guide) style guide.
 - `swft-fonts.css` also pins each heading role (page hero, section title, card title, label heading, closing CTA) to the scale below, so one-off page sizes don't drift.
 
 ### Fluid type scale
@@ -58,18 +60,18 @@ Sizes use `clamp()` so type scales continuously across viewports (no hard 4rem �
 
 | Token / element | Size | Line height | Notes |
 |---|---|---|---|
-| `--swft-display` | `clamp(2.6rem, 1.4rem + 5.4vw, 6.5rem)` | `0.95` | Closing CTA / display lines |
-| `--swft-h1` / `h1` | `clamp(2.4rem, 1.55rem + 3.8vw, 4.75rem)` | `0.98` | Heroes / page titles (40px phone, 76px desktop) |
-| `--swft-h2` / `h2` | `clamp(1.85rem, 1.3rem + 2.5vw, 3.25rem)` | `1.05` | Section headings |
-| `--swft-h3` / `h3` | `clamp(1.4rem, 1.15rem + 1.1vw, 2.1rem)` | `1.1` | Cards / steps |
-| `--swft-h4` / `h4` | `clamp(1.2rem, 1.1rem + 0.45vw, 1.5rem)` | `1.3` | |
-| `--swft-h5` / `h5` | `clamp(1.05rem, 1rem + 0.25vw, 1.2rem)` | `1.4` | |
-| `--swft-h6` / `h6` | `1rem` | `1.4` | |
-| `--swft-text-body` / `body` / `p` | `clamp(1.0625rem … 1.1875rem)` (~17–19px) | `1.6` | Color: `--swft-text` |
-| `--swft-text-lead` | `clamp(1.125rem … 1.25rem)` | `1.65` | Color: `--swft-lead` |
-| `--swft-text-small` | `clamp(0.9375rem … 1rem)` | `1.6` | |
-| `--swft-text-tiny` | `0.8125rem` | `1.4` | Meta text |
-| `--swft-text-label` / `.swft-text-label` | `0.75rem`, `0.16em` tracking, uppercase | `1.3` | Eyebrows / section labels |
+| `--swft-display` | `clamp(3.5rem … 13.125rem)` (210px desktop) | `0.95` | Closing CTA / display lines (Astrox Display) |
+| `--swft-h1` / `h1` | `clamp(2.75rem … 6.25rem)` (44px phone, 100px desktop) | `0.95` | Heroes / page titles (Astrox title-xxl; our h1s are sentences, so not the 240px one-word H1) |
+| `--swft-h2` / `h2` | `clamp(2.25rem … 4.375rem)` (70px) | `1` | Section headings (Astrox title-xl) |
+| `--swft-h3` / `h3` | `clamp(1.75rem … 2.75rem)` (44px) | `1.1` | Cards / steps (Astrox title-l) |
+| `--swft-h4` / `h4` | `clamp(1.5rem … 2.125rem)` (34px) | `1.3` | Astrox title-m |
+| `--swft-h5` / `h5` | `clamp(1.3rem … 1.75rem)` (28px) | `1.4` | Astrox title-s |
+| `--swft-h6` / `h6` | `clamp(1.2rem … 1.5rem)` (24px) | `1.4` | Astrox sub-title |
+| `--swft-text-body` / `body` / `p` | `clamp(1.0625rem … 1.125rem)` (18px) | `1.6` | Regular paragraph. Color: `--swft-text` |
+| `--swft-text-lead` | `1.125rem` (18px) | `1.65` | Color: `--swft-lead` |
+| `--swft-text-small` | `1rem` (16px) | `1.6` | Small paragraph |
+| `--swft-text-tiny` | `0.875rem` (14px) | `1.4` | Body A/B, meta text |
+| `--swft-text-label` / `.swft-text-label` | `0.75rem` (12px), Space Mono, uppercase, no tracking | `1.3` | Eyebrows / section labels / tags / step numbers |
 
 Utility classes: `.swft-text-body`, `.swft-text-lead`, `.swft-text-small`, `.swft-text-tiny`, `.swft-text-strong`, `.swft-text-accent`.
 

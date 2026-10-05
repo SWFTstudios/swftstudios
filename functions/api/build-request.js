@@ -10,7 +10,7 @@
  *     AIRTABLE_TABLE_PEOPLE, AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE,
  *     STRIPE_PRICE_MONTHLY
  */
-import { storeCrmLead } from "../_lib/airtable-crm.js";
+import { storeLead } from "../_lib/leads.js";
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 
 const DEFAULTS = {
@@ -87,7 +87,7 @@ export async function onRequestPost(context) {
   const utmMedium = str(body.utmMedium, 120);
   const utmCampaign = str(body.utmCampaign, 120);
 
-  const stored = await storeCrmLead(env, {
+  const saved = await storeLead(env, {
     formGroup: "Website Build",
     formType: plan,
     person: { name, email, phone },
@@ -161,25 +161,25 @@ export async function onRequestPost(context) {
     kind: "website-build",
     visitorEmail: email,
     visitorName: name,
-    backupStored: stored,
+    backupStored: saved.stored,
     idempotencyBase: `website-build/${email.toLowerCase()}/${Date.now()}`,
     teamSubject: `New website build request: ${businessName || name}`,
     teamHtml: '<p><strong>New SWFT website build request</strong></p><table>' +
-      emailRows + '</table><p>Airtable backup: ' + (stored ? 'saved' : 'not saved') + '</p>',
+      emailRows + '</table><p>Saved to: ' + saved.label + '</p>',
     confirmSubject: "We received your SWFT website build request",
     confirmHtml: '<p>Hi ' + escapeHtml(name) +
       ',</p><p>We received your website build details and will contact you about next steps.</p>' +
       '<p>Questions? Reply to this email or write to hello@swftstudios.com.</p>'
   });
 
-  if (!stored && !emailed.team) {
+  if (!saved.stored && !emailed.team) {
     return json({ ok: false,
       error: "We couldn't deliver your build request. Please email hello@swftstudios.com."
     }, 503);
   }
   return json({
     ok: true,
-    stored,
+    stored: saved.stored,
     checkoutUrl,
     emailDelivered: !!emailed.team,
     emailed: !!emailed.team,

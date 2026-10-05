@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Visuals | Films by SWFT Studios</title>
+  <meta name="description" content="Films and video work by SWFT Studios. Drag through the grid, open a film, press play.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="canonical" href="https://www.swftstudios.com/visuals.html">
+  <meta property="og:title" content="Visuals | Films by SWFT Studios">
+  <meta property="og:description" content="Films and video work by SWFT Studios.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.swftstudios.com/visuals.html">
+  <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://player.vimeo.com">
+  <link rel="preconnect" href="https://i.vimeocdn.com">
+  <link rel="stylesheet" href="css/swft-nav.css?v=20261001-visuals">
+  <link rel="stylesheet" href="css/visuals.css?v=20261001b">
+  <link href="images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="vz-page">
+  <div id="swft-nav" data-active="visuals"></div>
+
+  <main class="vz" aria-labelledby="vz-title">
+    <h1 id="vz-title" class="vz-sr">Visuals: films by SWFT Studios</h1>
+
+    <!-- Infinite draggable grid (built by js/visuals.js from data/visuals.json) -->
+    <div class="vz-canvas" id="vz-canvas" aria-label="Video grid. Drag, scroll or use Tab to move through the films." role="region">
+      <div class="vz-track" id="vz-track"></div>
+    </div>
+
+    <div class="vz-hud" aria-hidden="false">
+      <p class="vz-hud__count"><span>Visuals</span> <span id="vz-count">&nbsp;</span></p>
+      <p class="vz-hud__hint" aria-hidden="true">Drag to explore</p>
+    </div>
+
+    <!-- Film detail: the clicked thumbnail flips into this full-screen view -->
+    <section class="vz-detail" id="vz-detail" role="dialog" aria-modal="true" aria-labelledby="vz-detail-title" hidden>
+      <div class="vz-detail__media" id="vz-detail-media"></div>
+      <div class="vz-detail__shade" aria-hidden="true"></div>
+      <button type="button" class="vz-icon-btn vz-detail__close" id="vz-detail-close" aria-label="Close film">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="vz-detail__content">
+        <p class="vz-detail__meta" id="vz-detail-meta"></p>
+        <h2 class="vz-detail__title" id="vz-detail-title"></h2>
+        <p class="vz-detail__desc" id="vz-detail-desc"></p>
+        <div class="vz-detail__actions">
+          <button type="button" class="vz-play" id="vz-play">
+            <span class="vz-play__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="vz-play__label" id="vz-play-label">Play video</span>
+          </button>
+          <a class="vz-detail__link" id="vz-detail-vimeo" href="#" target="_blank" rel="noopener noreferrer">Watch on Vimeo &#8599;</a>
+        </div>
+      </div>
+      <div class="vz-detail__nav">
+        <button type="button" class="vz-detail__step" id="vz-prev" aria-label="Previous film">&larr; Prev</button>
+        <span class="vz-detail__index" id="vz-index" aria-hidden="true"></span>
+        <button type="button" class="vz-detail__step" id="vz-next" aria-label="Next film">Next &rarr;</button>
+      </div>
+    </section>
+
+    <!-- Video lightbox (Vimeo player) -->
+    <div class="vz-lightbox vz-lightbox--video" id="vz-video" role="dialog" aria-modal="true" aria-label="Video player" hidden>
+      <button type="button" class="vz-icon-btn vz-lightbox__close" data-close aria-label="Close video">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="vz-lightbox__frame" id="vz-video-frame"></div>
+    </div>
+
+    <noscript>
+      <p class="vz-noscript">The Visuals grid needs JavaScript. See our <a href="case-studies.html">case studies</a>, or find us on <a href="https://vimeo.com/">Vimeo</a>.</p>
+    </noscript>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/Flip.min.js" defer></script>
+  <script src="js/swft-nav.js?v=20261001-visuals" defer></script>
+  <script src="js/visuals.js?v=20261001b" defer></script>
+</body>
+</html>

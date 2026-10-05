@@ -25,19 +25,82 @@
 ### Changed
 - **Homepage load intro** now opens with four glowing letter cubes (**S**, **W**, **F**, **T**) at the viewport corners over the dark sea (birdseye). They idle while the progress bar fills, then spiral toward the centre for three orbits (each ~2× faster than the last), collide with a white flash, and hand off into the existing camera descent → DOM lifestyle photo cube → hero copy. WebGL letter cubes + multi-glow live in [`js/swft-ocean.js`](../js/swft-ocean.js) (`setIntroLetters`); choreography in [`js/hero-intro.js`](../js/hero-intro.js); flash overlay in [`css/hero-intro.css`](../css/hero-intro.css). Session skip and reduced-motion skip unchanged; failsafe extended to 20s once the intro script runs. Merged cube faces still use the existing photo slideshow (no video textures).
 
-## 2026-10-01: Video gallery double slider (`videos.html`)
-
-### Added
-- **[`videos.html`](../videos.html)** — full-viewport Vimeo gallery styled like a synced double slider (main slide + "up next" preview). Driven by [`data/videos.json`](../data/videos.json) (11 films; privacy hashes where needed). Custom assets: [`css/video-slider.css`](../css/video-slider.css), [`js/video-slider.js`](../js/video-slider.js).
-  - Auto-advance every 4s with continuous spinning dashed rings on play/nav (pauses on hover/focus, while the lightbox is open, when the tab is hidden, and under `prefers-reduced-motion`). Horizontal slide on both main and preview tracks (500ms), Ken Burns zoom on the active main slide, expanding pill dots on mobile.
-  - Layout mirrors the SketchzLab reference: centered uppercase title + play, bottom-left watermark, bottom-right arrow controls + next-up card (hidden under 992px).
-  - Keyboard (←/→), swipe, and play; lightbox uses a `<dialog>` with a lazy Vimeo iframe (destroyed on close). Portrait videos (`9:16`) get a tall frame.
-  - Noscript + failed-fetch fallbacks list plain Vimeo links. Descriptions and categories are empty placeholders for copy.
-- Sitemap, site map, and redirects: `/videos` and `/swft-tv` now land on `/videos.html` (no longer 301 to case studies).
-- Nav: **Videos** link added after Work in [`js/swft-nav.js`](../js/swft-nav.js) (desktop + mobile panel).
+## 2026-10-01: Visuals page is Vimeo videos only
 
 ### Changed
-- `videos.html` is **protected** from Webflow overwrite — any future redesign must keep `#vs-mount` and the links to `css/video-slider.css` / `js/video-slider.js` / `data/videos.json`.
+- The Visuals page now shows only the SWFT Vimeo films: the 13 from the Video Gallery, plus the SWFT reel and the Yanko Hernando story (15 in all). The photo projects, the website slideshow, the three MP4 files and the All / Video / Photo filter are gone, along with the slideshow lightbox.
+- Add a film by adding `{"vimeo": "<id>"}` (plus `"hash"` for an unlisted video) to [`data/visuals.json`](../data/visuals.json). Its title, thumbnail, description and duration load from Vimeo's public oEmbed; set `title`, `thumb`, `description`, `client`, `category` or `year` on an entry to override. A film Vimeo won't describe still plays, with a numbered title and a plain tile.
+- Each film's full-screen view now has a "Watch on Vimeo" link, and the duration shows on the tile and in the details.
+
+### Fixed
+- Closing a film opened from a direct link (`/visuals.html?p=...`) no longer steps back out of the site. The page only goes "back" over the history entry it added itself.
+
+## 2026-10-01: Hologram city grid beside the Free Growth Audit copy
+
+### Added
+- A 3D hologram city grid to the right of "Find out where your business is leaking customers." on the homepage (below the copy on tablets and phones, where it stays visible). Glowing wireframe towers on a street grid, drawn on a canvas with its own small perspective camera (no 3D library). Every ~15s the city grows from its centre: a wave rolls outward, towers rise as it passes, and their window lights switch on behind it; then it holds while pulse rings sweep the grid, a beacon glows from the tallest tower, and it settles and starts again. The camera turns slowly; drag to turn it (with momentum). **Tap (or click) the ground** to send a pulse ring out from that spot: the towers around it light up, their windows flare, and the glow fades over a couple of seconds (up to six pulses at once). The canvas is 15% larger than its box on every side, so the glow, the rotating plate corners and the beacon are never clipped; the section clips that overflow with `overflow-x: clip`, so the page still can't scroll sideways. Pauses off-screen and in hidden tabs; under reduced motion it shows one still frame of the finished city (taps still glow, in place, without the ring travelling). See [`js/swft-city.js`](../js/swft-city.js) and [`css/swft-city.css`](../css/swft-city.css).
+
+## 2026-10-01: Wider About statement; "Proven results" grid removed
+
+### Changed
+- Homepage About statement ("Strategic Workflows Facilitating Transformation...") is wider: its container goes from 72rem to 96rem and the line cap from 24 to 44 characters, so on a laptop it runs about the full content width in three lines instead of four or five. Phones are unchanged. See [`css/home-about.css`](../css/home-about.css).
+
+### Removed
+- The "Our Work / Proven results" three-column card grid (and its "View All Work" button) from the homepage. The stacked "Selected Work" section above it stays, and still links to all work. Its styles are gone too.
+
+## 2026-10-01: Forms also log to Google Sheets, with an email fallback
+
+### Added
+- Every form (contact, Free Growth Audit, booking / quote, website build) now saves to **Airtable and a Google Sheet** in parallel, then emails hello@swftstudios.com as before. The Sheet gets one tab per form with the same columns as Airtable; either copy counts as saved.
+- If the Resend email to hello@ fails (or `RESEND_API_KEY` is missing), the Google Sheets script emails hello@ instead, so a lead is never silent.
+- Runs through a small Google Apps Script web app ([`scripts/google-sheets-leads.gs`](../scripts/google-sheets-leads.gs)); no Google API keys. Turns on when `GOOGLE_SHEETS_WEBHOOK_URL` and `GOOGLE_SHEETS_SECRET` are set in Cloudflare; until then nothing changes. Setup: [`GOOGLE_SHEETS_LEADS.md`](GOOGLE_SHEETS_LEADS.md).
+- Team emails now say where the lead was saved ("Saved to: Airtable + Google Sheet") instead of "Stored in Airtable".
+- 8 new tests (`npm run test:forms`): the handlers and the Apps Script.
+
+## 2026-10-01: Sticky SWFT Method intro; holographic letter cube
+
+### Changed
+- Homepage "The SWFT Method": the left column (heading, intro, cube) stays pinned under the nav while the five stage cards scroll past, and lets go before the content-engine bar (tablet and up; phones keep the stacked layout). The intro and cards now share a `.process-row` so the sticky column stops at the end of the cards.
+- The SWFT letter cube is now a glowing digital hologram: light-tube white edges with blue bloom, dark glass faces with a pixel grid and a sweeping scan line, neon white letters, a brief RGB-split glitch every few seconds, a stronger halo and a light pool beneath. Far-side faces show as glowing wireframe only, so letters stay crisp. Animations stop under reduced motion.
+
+## 2026-10-01: Visuals page
+
+### Added
+- **Visuals** ([`/visuals.html`](../visuals.html)), now in the nav after Work: an endless, draggable grid of photo and video projects (drag with momentum, trackpad/wheel, arrow keys or Tab), with All / Video / Photo filters.
+- Clicking a project uses **GSAP Flip** to grow its thumbnail into a full-screen project view (title, client, category, year, description, prev/next). Each project has its own link (`/visuals.html?p=slug`); Back closes it.
+- Video projects show **Play video**, which opens a lightbox playing the Vimeo video (unlisted links supported) or an MP4. Photo projects show **Play slideshow**, which opens an image slideshow lightbox (auto-advance with progress bar, pause, arrows, swipe, thumbnails, keyboard).
+- Content lives in [`data/visuals.json`](../data/visuals.json); add a project by adding an entry (see its `_readme`). Seeded with the SWFT reel and Yanko Hernando story (Vimeo), three SWFT MP4s, a Web Design Highlights slideshow and each case-study project.
+- See [`css/visuals.css`](../css/visuals.css) and [`js/visuals.js`](../js/visuals.js).
+
+### Changed
+- `/videos`, `/media` and `/swft-tv` now redirect to `/visuals.html` instead of `/case-studies.html`.
+
+## 2026-10-01: SWFT letter cube in "The SWFT Method"
+
+### Added
+- A small glowing white 3D cube under the "From first scroll to repeat customer." text on the homepage, with **S, W, F, T** on its four sides in Michroma (self-hosted, OFL), the closest web font to the business card's wide, squared logo lettering, thickened to match its weight. It spins slowly on its own; drag it to turn it (with momentum), or focus it and use the left/right arrow keys to step a face at a time. Pauses when off-screen; no auto-spin under reduced motion. See [`css/swft-letter-cube.css`](../css/swft-letter-cube.css) and [`js/swft-letter-cube.js`](../js/swft-letter-cube.js).
+
+## 2026-10-01: Curved nav bar
+
+### Changed
+- The nav bar's bottom edge now curves like the top of the homepage work carousel: the same 120%-wide elliptical arc, dipping a subtle ~14px lower in the middle than at the sides (8px on phones). Frosted background and hairline follow the curve. The bar is pinned to 62px (`--sn-height`) again, so it no longer overlaps the space reserved for it. See [`css/swft-nav.css`](../css/swft-nav.css).
+
+## 2026-10-01: One menu at every width
+
+### Changed
+- Desktop now uses the same nav as mobile: the brand on the left, and on the right the **Get Your Free Growth Audit** button next to a menu button that opens the glass slide-over menu. The row of desktop links is gone. On phones (560px and below) the bar shows just the brand and menu button; the audit button stays inside the menu. See [`js/swft-nav.js`](../js/swft-nav.js) and [`css/swft-nav.css`](../css/swft-nav.css).
+
+## 2026-10-01: New type system (Inter Tight + Space Mono, after Astrox Studio)
+
+### Changed
+- Site typography now follows the [Astrox Studio](https://astrox-studio.webflow.io/utility-pages/style-guide) style guide: **Inter Tight** for headings, display lines and body text, **Space Mono** for labels and eyebrows. Headings drop the forced uppercase for sentence case at weight 500 with tight negative tracking; labels (section eyebrows, step numbers, category tags) are uppercase Space Mono. The type scale follows the Astrox sizes by role, fluid down to phones: page heroes 100px, section titles 70px, card titles 44px, h4/h5/h6 34/28/24px, closing CTA display 210px, body 18px, small 16px, labels 12-14px. Paragraphs drop the old -0.019em tracking (Inter Tight is already tight) and every heading is weight 500. See [`css/swft-fonts.css`](../css/swft-fonts.css) and the new `--swft-font-mono` token in [`css/swft-tokens.css`](../css/swft-tokens.css).
+
+### Removed
+- Chakra Petch and Inter Display font files; both are replaced by self-hosted Inter Tight and Space Mono in `fonts/`.
+## 2026-10-01: Video gallery page
+
+### Added
+- **`/video-gallery.html`**: a double slider of SWFT films. A large 16:9 stage (active video centred, neighbours peeking, plays inline in a Vimeo player on click) is synced with a thumbnail rail below and a caption that slides vertically with it; arrows, a `03 / 13` counter, a progress line, keyboard arrows and swipe. Videos are listed by Vimeo id (plus the private-link hash for unlisted ones) at the top of [`js/video-gallery.js`](../js/video-gallery.js); titles and thumbnails load from Vimeo's public oEmbed, so renaming a video on Vimeo updates the page. Styles in [`css/video-gallery.css`](../css/video-gallery.css). Not in the main nav yet; linked from the sitemaps.
 
 ## 2026-10-01: Homepage load intro (birdseye descent) + scroll-in text animation
 

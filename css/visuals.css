@@ -1,0 +1,461 @@
+/* ============================================================
+   Visuals page: infinite draggable grid of Vimeo films, GSAP Flip
+   detail view, Vimeo player lightbox.
+   Pair with js/visuals.js and data/visuals.json.
+   ============================================================ */
+:root {
+  --vz-bg: #010101;
+  --vz-fg: #ffffff;
+  --vz-muted: rgba(255, 255, 255, 0.55);
+  --vz-line: rgba(255, 255, 255, 0.14);
+  --vz-accent: var(--sm-green, #56b4e9);
+  --vz-col: clamp(170px, 19vw, 300px);
+  --vz-gap: clamp(14px, 1.6vw, 26px);
+  --vz-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:has(body.vz-page),
+body.vz-page {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body.vz-page {
+  margin: 0;
+  background: var(--vz-bg);
+  color: var(--vz-fg);
+  font-family: var(--swft-font, "Inter Tight", Inter, system-ui, sans-serif);
+}
+
+/* Full-screen app page: the shared footer has no room here */
+body.vz-page .sf-footer { display: none; }
+body.vz-page #swft-nav { min-height: 0; }
+
+.vz-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Grid canvas ---------- */
+.vz-canvas {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+}
+
+.vz-canvas.is-dragging { cursor: grabbing; }
+
+/* Fade the edges so tiles drift in and out of the dark */
+.vz-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--vz-bg) 0, transparent 18%, transparent 80%, var(--vz-bg) 100%),
+    linear-gradient(to right, rgba(1, 1, 1, 0.75) 0, transparent 12%, transparent 88%, rgba(1, 1, 1, 0.75) 100%);
+}
+
+.vz-track {
+  position: absolute;
+  inset: 0;
+}
+
+.vz-tile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--vz-col);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: inherit;
+  will-change: transform;
+}
+
+.vz-tile__media {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #0d0f12;
+}
+
+/* Until Vimeo's thumbnail arrives (or if Vimeo won't share one): a quiet,
+   softly pulsing placeholder instead of an empty hole */
+.vz-tile__media.is-empty {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(86, 180, 233, 0.16), transparent 60%),
+    linear-gradient(160deg, #11151b, #0a0c10);
+  animation: vz-empty 2.4s ease-in-out infinite;
+}
+
+@keyframes vz-empty {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.vz-tile__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s var(--vz-ease), filter 0.5s ease;
+  filter: saturate(0.92) brightness(0.88);
+  -webkit-user-drag: none;
+}
+
+.vz-tile:hover .vz-tile__media img,
+.vz-tile:focus-visible .vz-tile__media img {
+  transform: scale(1.05);
+  filter: none;
+}
+
+.vz-tile:focus-visible { outline: none; }
+.vz-tile:focus-visible .vz-tile__media {
+  outline: 2px solid var(--vz-accent);
+  outline-offset: 3px;
+}
+
+/* Little "play" chip on video tiles */
+.vz-tile__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(1, 1, 1, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.vz-tile__badge svg { width: 12px; height: 12px; fill: #fff; margin-left: 2px; }
+
+.vz-tile__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.3;
+  color: var(--vz-muted);
+  transition: color 0.3s ease;
+}
+
+.vz-tile__title {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vz-tile__type {
+  flex: none;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  padding-top: 0.15em;
+}
+
+.vz-tile:hover .vz-tile__caption,
+.vz-tile:focus-visible .vz-tile__caption { color: var(--vz-fg); }
+
+/* ---------- HUD ---------- */
+.vz-hud {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 1rem;
+  padding: 0 var(--swft-gutter, 1.5rem) calc(1.25rem + env(safe-area-inset-bottom));
+  pointer-events: none;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.vz-hud p { margin: 0; }
+.vz-hud__count { color: var(--vz-muted); }
+.vz-hud__count span:first-child { color: var(--vz-fg); margin-right: 0.5em; }
+.vz-hud__hint { color: var(--vz-muted); text-align: center; transition: opacity 0.6s ease; }
+.vz-hud__hint.is-gone { opacity: 0; }
+
+@media (max-width: 640px) {
+  .vz-hud { grid-template-columns: 1fr auto; }
+  .vz-hud__hint { display: none; }
+}
+
+/* ---------- Detail view (Flip target) ---------- */
+.vz-detail {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: var(--vz-fg);
+}
+
+.vz-detail[hidden] { display: none; }
+
+.vz-detail__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--vz-bg);
+}
+
+.vz-detail__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vz-detail__shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(1, 1, 1, 0.92) 0%, rgba(1, 1, 1, 0.55) 34%, rgba(1, 1, 1, 0.08) 62%, rgba(1, 1, 1, 0.35) 100%);
+}
+
+.vz-detail__content {
+  position: relative;
+  max-width: 62rem;
+  padding: 0 var(--swft-gutter, 1.5rem) clamp(5rem, 9vh, 7rem);
+}
+
+.vz-detail__meta {
+  margin: 0 0 1rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.vz-detail__meta span + span::before { content: " / "; color: rgba(255, 255, 255, 0.4); }
+
+.vz-detail__title {
+  margin: 0;
+  font-family: var(--swft-font-display, "Inter Tight", sans-serif);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 1rem + 6.4vw, 7.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.vz-detail__desc {
+  max-width: 36rem;
+  margin: 1.25rem 0 0;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.vz-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.vz-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.5rem 1.4rem 0.5rem 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--vz-fg);
+  color: #010101;
+  font: 500 1rem/1 var(--swft-font, "Inter Tight", sans-serif);
+  cursor: pointer;
+  transition: transform 0.25s var(--vz-ease), box-shadow 0.25s ease;
+  box-shadow: 0 10px 40px rgba(255, 255, 255, 0.18);
+}
+
+.vz-play:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 14px 50px rgba(255, 255, 255, 0.28); }
+.vz-play:focus-visible { outline: 2px solid var(--vz-accent); outline-offset: 3px; }
+
+.vz-play__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #010101;
+}
+
+.vz-play__icon svg { width: 18px; height: 18px; fill: #fff; margin-left: 3px; }
+
+/* Pulsing ring around the play icon */
+.vz-play__icon::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(1, 1, 1, 0.35);
+  animation: vz-pulse 2s ease-out infinite;
+}
+
+@keyframes vz-pulse {
+  from { transform: scale(0.85); opacity: 1; }
+  to { transform: scale(1.35); opacity: 0; }
+}
+
+.vz-detail__link {
+  color: var(--vz-fg);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.vz-detail__link:hover { color: var(--vz-accent); border-color: var(--vz-accent); }
+
+.vz-detail__nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--swft-gutter, 1.5rem) calc(1.25rem + env(safe-area-inset-bottom));
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.vz-detail__step {
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.vz-detail__step:hover, .vz-detail__step:focus-visible { color: var(--vz-fg); outline: none; text-decoration: underline; }
+.vz-detail__index { color: rgba(255, 255, 255, 0.5); }
+
+.vz-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(10, 12, 16, 0.45);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.vz-icon-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vz-icon-btn:hover, .vz-icon-btn:focus-visible { border-color: var(--vz-fg); background: rgba(255, 255, 255, 0.12); outline: none; }
+
+.vz-detail__close {
+  position: absolute;
+  top: calc(var(--sn-height, 62px) + 1rem);
+  right: var(--swft-gutter, 1.5rem);
+  z-index: 2;
+}
+
+/* Detail sits above the nav; nav stays reachable after the detail closes */
+body.vz-detail-open .sn-nav { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+body.vz-detail-open .vz-detail__close { top: 1.25rem; }
+
+/* ---------- Lightboxes ---------- */
+.vz-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: grid;
+  place-items: center;
+  padding: clamp(3.5rem, 8vh, 5rem) clamp(0.75rem, 4vw, 4rem);
+  background: rgba(1, 1, 1, 0.94);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.vz-lightbox[hidden] { display: none; }
+
+.vz-lightbox__close {
+  position: absolute;
+  top: 1.25rem;
+  right: var(--swft-gutter, 1.5rem);
+  z-index: 3;
+}
+
+.vz-lightbox__frame {
+  position: relative;
+  width: min(100%, calc((100vh - 10rem) * 16 / 9), 1400px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 30px 120px rgba(0, 0, 0, 0.6);
+}
+
+.vz-lightbox__frame iframe,
+.vz-lightbox__frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
+
+.vz-noscript {
+  position: fixed;
+  inset: auto 0 40% 0;
+  text-align: center;
+  color: var(--vz-muted);
+}
+
+.vz-noscript a { color: var(--vz-fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .vz-tile__media.is-empty { animation: none; }
+  .vz-play__icon::after { animation: none; }
+  .vz-tile__media img { transition: none; }
+}
