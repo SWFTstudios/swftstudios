@@ -9,15 +9,12 @@
     "tag": "E-Commerce (Shopify)",
     "image": "images/brooklyn-steel-thumbnail.webp",
     "liveUrl": "https://brooklynsteelco.com/",
-    "hubDetails": "A Brooklyn-inspired café aesthetic meets modern espresso engineering, brand story and Shopify experience for the Talos 20 launch.",
-    "summary": "Brooklyn Steel Co. needed a digital flagship that could sell a $499 espresso machine by educating buyers, not overwhelming them. SWFT built a Shopify experience that turns product specs into confidence.",
-    "bottomLine": "Brooklyn Steel Co. launched the Talos 20 with a storefront that educates first-time buyers, showcases the brand’s Brooklyn identity, and drives accessory upsells, turning a considered purchase into a confident one.",
-    "whoTheyAre": "Brooklyn Steel Co. is a kitchen appliance brand inspired by Brooklyn's creative energy. Their flagship Talos 20 Espresso Machine brings café-quality brewing, built-in grinding, and milk frothing to home kitchens.",
+    "hubDetails": "How SWFT Studios built a Shopify store that sells a $499 espresso machine by teaching shoppers what it does, then raises order value with bundles and accessories.",
     "challenge": [
-      "Home espresso is a considered purchase, customers need to understand features before committing $499.",
-      "The brand’s Brooklyn-inspired identity had to come through in every scroll, not just product photos.",
-      "Bundle and accessory merchandising needed to support higher average order values.",
-      "Brew Guides and educational content were needed to reduce post-purchase uncertainty."
+      "At $499, nobody buys an espresso machine on impulse. Shoppers want to know how it works and whether they can use it before they pay.",
+      "Spec sheets alone (bar pressure, grind settings) don't tell a beginner why any of it matters.",
+      "The Brooklyn café identity had to show up across the whole store, not only in the photos.",
+      "Profit depends on more than the machine, so cups and accessories needed a real place in the buying path."
     ],
     "built": [
       "Shopify storefront with a feature-education product page for the Talos 20 (grind settings, pressure gauge, steam wand, dual spout).",
@@ -26,40 +23,45 @@
       "Machines, Mugs, and Accessories collection pages with Brooklyn-branded typography and tone.",
       "Brew Guides content section for post-purchase confidence."
     ],
-    "impact": [
-      "Product education reduces purchase hesitation for a premium appliance.",
-      "Brand storytelling reinforces Brooklyn Steel's unique café-at-home positioning.",
-      "Bundle merchandising supports higher average order values.",
-      "Brew Guides build loyalty and reduce return risk."
-    ],
-    "whyMatters": "If you sell a product that requires explanation before purchase, your website is your best salesperson. We build storefronts that educate, inspire, and convert, so visitors become confident buyers, not confused browsers.",
-    "scorecard": [
-      {
-        "label": "Product education clarity",
-        "before": 38,
-        "after": 86
-      },
-      {
-        "label": "Brand differentiation",
-        "before": 44,
-        "after": 88
-      },
-      {
-        "label": "Average order value readiness",
-        "before": 32,
-        "after": 79
-      },
-      {
-        "label": "Post-purchase confidence",
-        "before": 35,
-        "after": 82
-      }
-    ],
+    "whyMatters": "If you sell something people need to understand before they buy, your website is your best salesperson. We build stores that teach, reassure and then sell.",
     "outcomeType": "storefront",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios built a Shopify store that sells a $499 espresso machine by teaching shoppers what it does, then raises order value with bundles and accessories.",
+    "highlight": "Shopify launch: product education, bundle builder, Brew Guides",
+    "snapshot": "Brooklyn Steel Co. is a kitchen appliance brand launching the Talos 20, a $499 home espresso machine with a built-in grinder and milk frother. We built their Shopify store and shaped how the product is explained, merchandised and supported after the sale.",
+    "goal": "Sell a premium appliance online to people who have never used an espresso machine like it, and grow the size of each order.",
+    "approach": [
+      {
+        "title": "Explain the machine in plain benefits",
+        "detail": "We turned each feature (grind settings, pressure gauge, steam wand, dual spout) into a visual card that says what it does for your morning coffee. Shoppers who understand a product are far more likely to buy it."
+      },
+      {
+        "title": "Make bundles easy to build",
+        "detail": "A mix and match builder for the limited edition cup collections lets shoppers add to their order in a couple of taps instead of hunting through the catalog."
+      },
+      {
+        "title": "Organize the catalog the way people shop",
+        "detail": "Machines, Mugs and Accessories each got their own collection page with the same Brooklyn type and voice, so the store feels like one brand."
+      },
+      {
+        "title": "Support the customer after checkout",
+        "detail": "Brew Guides give new owners recipes and how-tos. Customers who succeed with a product leave better reviews and send fewer returns."
+      }
+    ],
+    "measure": [
+      "Product page conversion rate for the Talos 20 (sessions that add to cart, then purchase)",
+      "Average order value, and the share of orders that include a bundle or accessory",
+      "Traffic and time on page for Brew Guides, plus returns and support requests per order"
+    ],
+    "takeaways": [
+      "If your product needs explaining, your product page has to do the explaining. Lead with what it does for the buyer, then show the specs.",
+      "Bundles raise order value when they take one tap, not a second shopping trip.",
+      "Content that helps people after they buy (guides, recipes, how-tos) protects your reviews and cuts returns."
+    ],
+    "results": []
   },
   {
     "order": 2,
@@ -71,15 +73,12 @@
     "tag": "E-Commerce (Shopify)",
     "image": "images/manna-hydration-thumbnail.webp",
     "liveUrl": "https://mannahydration.com/",
-    "hubDetails": "E-commerce web experience and product storytelling for a lifestyle hydration brand built around color, style, and sustainability.",
-    "summary": "Manna Hydration needed a storefront as vibrant as its product line. SWFT built a Shopify experience that drives seasonal discovery, social shopping, and repeat visits.",
-    "bottomLine": "Manna Hydration now has a digital sales channel that matches the energy of its drinkware, seasonal campaigns, social proof, and collection-based shopping that keeps customers coming back for the next drop.",
-    "whoTheyAre": "Manna Hydration is a lifestyle drinkware brand built around style, affordability, and sustainability, from color-changing cups to workout-ready bottles and everyday tumblers.",
+    "hubDetails": "How SWFT Studios organized a fast moving drinkware catalog into a Shopify store built for seasonal drops, social traffic and repeat buyers.",
     "challenge": [
-      "A wide, fast-evolving product catalog needed to feel organized, not cluttered.",
-      "Seasonal collections and new arrivals required dedicated merchandising homes.",
-      "Social traffic and influencer content needed clear paths to purchase.",
-      "The brand had to communicate sustainability and style without slowing checkout."
+      "New products and seasonal colors arrive often, and a growing catalog quickly starts to feel cluttered.",
+      "Every seasonal launch needed its own spot on the store to get attention.",
+      "Much of the traffic comes from Instagram and influencers, and those visitors need a short path to the exact product they saw.",
+      "The brand wanted to talk about sustainability and style without slowing anyone down at checkout."
     ],
     "built": [
       "Shopify storefront organized by use case (Everyday Favorites, Workout Ready, Travel Essentials) and product type.",
@@ -88,40 +87,45 @@
       "Instagram integration and shop-the-look experiences.",
       "Liquid Lingo blog for hydration, wellness, and style content plus newsletter signup."
     ],
-    "impact": [
-      "Product discovery is faster and more visually engaging.",
-      "Seasonal campaigns have a dedicated home on the storefront.",
-      "The site supports social traffic and influencer-driven shopping journeys.",
-      "Manna has a scalable e-commerce foundation for future product launches."
-    ],
-    "whyMatters": "Lifestyle brands win when their storefront feels as alive as their Instagram feed. We build e-commerce experiences that turn product catalogs into discovery engines, driving repeat visits and higher conversion.",
-    "scorecard": [
-      {
-        "label": "Collection discoverability",
-        "before": 41,
-        "after": 87
-      },
-      {
-        "label": "Seasonal campaign readiness",
-        "before": 35,
-        "after": 84
-      },
-      {
-        "label": "Social-to-shop conversion",
-        "before": 38,
-        "after": 81
-      },
-      {
-        "label": "Mobile shopping experience",
-        "before": 45,
-        "after": 86
-      }
-    ],
+    "whyMatters": "Lifestyle brands sell more when the store feels as alive as their Instagram feed. We build stores that make browsing fun and buying easy.",
     "outcomeType": "storefront",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios organized a fast moving drinkware catalog into a Shopify store built for seasonal drops, social traffic and repeat buyers.",
+    "highlight": "Shopify store: seasonal drops, shop the look, blog and newsletter",
+    "snapshot": "Manna Hydration sells colorful, affordable and sustainable drinkware, from color changing cups to workout bottles and everyday tumblers. We built their Shopify store around how customers actually shop: by use, by season and straight from Instagram.",
+    "goal": "Turn a large, fast changing catalog and steady social traffic into repeat online sales.",
+    "approach": [
+      {
+        "title": "Shop by use, not only by product type",
+        "detail": "Collections like Everyday Favorites, Workout Ready and Travel Essentials match how people decide what to buy, so they find the right bottle faster."
+      },
+      {
+        "title": "Give every drop a home",
+        "detail": "Campaign sections for launches like Summer Stripes and Color Changing Cups make each new release feel like an event, with Best Sellers and New Arrivals blocks to keep the homepage fresh."
+      },
+      {
+        "title": "Connect Instagram to the cart",
+        "detail": "An Instagram feed and shop the look sections let social visitors buy what they saw in a post without searching for it."
+      },
+      {
+        "title": "Bring people back",
+        "detail": "The Liquid Lingo blog and a newsletter signup give customers a reason to return between purchases."
+      }
+    ],
+    "measure": [
+      "Revenue and conversion rate from Instagram and influencer traffic (tag links with UTM codes)",
+      "Sales in the first two weeks of each seasonal drop",
+      "Repeat purchase rate and newsletter signups per 100 visitors"
+    ],
+    "takeaways": [
+      "Organize products around the reason people buy them. Use cases beat long lists of SKUs.",
+      "If social media drives your traffic, every post should land on a page where the product in the post can be bought.",
+      "An email list turns one time buyers into repeat customers. Ask for the signup on every visit."
+    ],
+    "results": []
   },
   {
     "order": 3,
@@ -133,15 +137,12 @@
     "tag": "E-Commerce (Shopify)",
     "image": "images/thyme-and-table-thumbnail.webp",
     "liveUrl": "https://shopthymeandtable.com/",
-    "hubDetails": "Full e-commerce presence for a Walmart kitchen and home brand spanning cookware, appliances, dinnerware, and drinkware.",
-    "summary": "Thyme & Table needed a digital flagship for a wide kitchen catalog. SWFT built navigation and storytelling that makes a massive product range feel inspiring, not overwhelming.",
-    "bottomLine": "Thyme & Table now has a storefront that handles a wide catalog with ease, bold navigation, lifestyle content, and social proof that help shoppers find the right product and buy with confidence.",
-    "whoTheyAre": "Thyme & Table is a trend-forward kitchen and home brand offering cookware, bakeware, dinnerware, drinkware, kitchen appliances, and lifestyle content with bold colors and effortless function.",
+    "hubDetails": "How SWFT Studios made a wide kitchen and home catalog easy to shop with clear navigation, recipes and reviews that support bigger purchases.",
     "challenge": [
-      "The catalog spans Prep, Cook, Serve, Drinkware, Appliances, and Lifestyle, each with multiple sub-categories.",
-      "Customers shop by category and by lifestyle moment, requiring flexible navigation.",
-      "Higher-ticket items like espresso machines needed testimonials and recipe content for purchase confidence.",
-      "The site had to feel as polished as the products themselves."
+      "The catalog covers Prep, Cook, Serve, Drinkware, Appliances and Lifestyle, each with many subcategories.",
+      "Some people shop by category (a skillet) and others by moment (hosting dinner), so navigation had to work both ways.",
+      "Appliances like espresso machines cost more and need proof before people buy.",
+      "Existing owners needed help with manuals, registration and replacement parts without calling support."
     ],
     "built": [
       "Multi-level mega-menu navigation organized around Prep, Cook, Serve, Drinkware, Appliances, and Lifestyle.",
@@ -150,40 +151,45 @@
       "Customer testimonials for high-ticket appliance purchases.",
       "Support hub with FAQ, How-tos, Product Registration, and Replacement Parts."
     ],
-    "impact": [
-      "Navigation makes a wide catalog feel approachable and inspiring.",
-      "Lifestyle and recipe content support discovery beyond the product grid.",
-      "Testimonials build confidence for higher-ticket appliance purchases.",
-      "The site is a scalable foundation for seasonal campaigns and new launches."
-    ],
-    "whyMatters": "When your catalog is wide, clarity is your competitive advantage. We build e-commerce architectures that turn complexity into confidence, so every product finds its buyer.",
-    "scorecard": [
-      {
-        "label": "Catalog navigation",
-        "before": 40,
-        "after": 89
-      },
-      {
-        "label": "Lifestyle content integration",
-        "before": 33,
-        "after": 82
-      },
-      {
-        "label": "High-ticket purchase confidence",
-        "before": 36,
-        "after": 80
-      },
-      {
-        "label": "Support and retention pathways",
-        "before": 42,
-        "after": 85
-      }
-    ],
+    "whyMatters": "When your catalog is wide, clarity is your advantage. We build stores that make a big range feel simple, so every product finds its buyer.",
     "outcomeType": "storefront",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios made a wide kitchen and home catalog easy to shop with clear navigation, recipes and reviews that support bigger purchases.",
+    "highlight": "Shopify store: mega menu, recipes, support hub",
+    "snapshot": "Thyme & Table is a kitchen and home brand sold at Walmart, with cookware, bakeware, dinnerware, drinkware, appliances and lifestyle products. We built their direct online store and the structure that keeps a very large range easy to shop.",
+    "goal": "Help shoppers find the right product quickly across hundreds of items, and give them the confidence to buy higher priced appliances online.",
+    "approach": [
+      {
+        "title": "A menu that mirrors the kitchen",
+        "detail": "A mega menu built around Prep, Cook, Serve, Drinkware, Appliances and Lifestyle gets shoppers to the right collection in one or two clicks."
+      },
+      {
+        "title": "Recipes that sell the tools",
+        "detail": "An Original Recipes section shows the products in use, which gives people a reason to browse beyond the product grid and a reason to buy the pan in the photo."
+      },
+      {
+        "title": "Proof where the price is higher",
+        "detail": "Customer testimonials sit next to the appliances, where hesitation is highest."
+      },
+      {
+        "title": "Self service support",
+        "detail": "A support hub with FAQs, how-tos, product registration and replacement parts answers common questions and keeps owners loyal."
+      }
+    ],
+    "measure": [
+      "Clicks from the menu into collections, and how many searches end with no result",
+      "Conversion rate on appliance pages compared with the store average",
+      "Visits from recipe pages to product pages, and support hub usage"
+    ],
+    "takeaways": [
+      "With a big catalog, navigation is your salesperson. Group products the way your customers think, not the way your warehouse does.",
+      "Show your products in real life. Recipes, room photos and how-tos sell better than a white background.",
+      "Put reviews right next to your most expensive items. That is where buyers hesitate."
+    ],
+    "results": []
   },
   {
     "order": 4,
@@ -195,15 +201,12 @@
     "tag": "E-Commerce (Shopify)",
     "image": "images/tal-hydration-thumbnail.webp",
     "liveUrl": "https://talhydration.com/",
-    "hubDetails": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands, designed to convert at scale.",
-    "summary": "TAL Hydration needed a brand destination that complements retail presence. SWFT built a storefront that showcases the full range and makes the 2-in-1 differentiator impossible to miss.",
-    "bottomLine": "TAL Hydration now has a direct brand destination that complements its Walmart retail presence, organized product families, social proof, and retail-aware CTAs that convert at scale.",
-    "whoTheyAre": "TAL Hydration is one of the most recognized hydration brands at Walmart, offering water bottles, tumblers, coffee mugs, and kids’ drinkware at accessible price points.",
+    "hubDetails": "How SWFT Studios built a brand store for a Walmart hydration brand that showcases the full range, highlights its 2 in 1 bottle and still sends shoppers to Walmart.",
     "challenge": [
-      "The product catalog spans bottles, tumblers, coffee travel mugs, and kids’ lines with many variants.",
-      "The signature 2-in-1 bottle feature needed prominent, clear placement.",
-      "Social proof was needed to reinforce value against premium competitors.",
-      "The site had to serve both Walmart shoppers and direct visitors."
+      "Bottles, tumblers, travel mugs and kids' lines each come in many sizes and colors.",
+      "The signature 2 in 1 bottle (sip through the straw or drink from the open top) was easy to miss.",
+      "TAL competes with pricier brands, so shoppers needed proof that the value is real.",
+      "Some visitors want to buy online and others want to pick it up at Walmart. The site had to serve both."
     ],
     "built": [
       "Shopify storefront with multi-level navigation by product family (Water Bottles, Tumblers, Coffee & Travel, Children & Tweens).",
@@ -212,40 +215,45 @@
       "Strategic Shop at Walmart links connecting digital to in-store purchase.",
       "Newsletter signup and customer support pathways."
     ],
-    "impact": [
-      "Product discovery is organized by use case and product family.",
-      "The 2-in-1 differentiator is clear from the first scroll.",
-      "Social proof reinforces value against premium competitors.",
-      "The site supports both direct shopping and retail discovery journeys."
-    ],
-    "whyMatters": "Retail-first brands need a digital home that builds affinity without competing against their partners. We build storefronts that strengthen brand recognition and drive confident purchase decisions.",
-    "scorecard": [
-      {
-        "label": "Product family navigation",
-        "before": 43,
-        "after": 88
-      },
-      {
-        "label": "Differentiator visibility",
-        "before": 37,
-        "after": 90
-      },
-      {
-        "label": "Social proof impact",
-        "before": 40,
-        "after": 83
-      },
-      {
-        "label": "Retail-to-digital bridge",
-        "before": 35,
-        "after": 81
-      }
-    ],
+    "whyMatters": "Retail first brands need a home online that builds loyalty without competing with their partners. We build stores that make the brand easy to recognize and easy to choose.",
     "outcomeType": "storefront",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios built a brand store for a Walmart hydration brand that showcases the full range, highlights its 2 in 1 bottle and still sends shoppers to Walmart.",
+    "highlight": "Shopify store: product families, 2 in 1 story, Shop at Walmart links",
+    "snapshot": "TAL Hydration is one of the most recognized hydration brands at Walmart, with water bottles, tumblers, travel mugs and kids' drinkware at accessible prices. We built a brand store that shows the full range and works alongside their retail partner instead of competing with it.",
+    "goal": "Give a retail first brand its own online home that builds loyalty and helps shoppers choose, whether they buy online or at Walmart.",
+    "approach": [
+      {
+        "title": "Navigation by product family",
+        "detail": "Water Bottles, Tumblers, Coffee & Travel and Children & Tweens give each line a clear home, so shoppers compare the right products."
+      },
+      {
+        "title": "Lead with the differentiator",
+        "detail": "The 2 in 1 straw and chug feature gets hero placement, so a first time visitor understands why TAL is different in a few seconds."
+      },
+      {
+        "title": "Let customers make the case",
+        "detail": "Review sections and TAL Buzz testimonials answer the question every value brand faces: is it good?"
+      },
+      {
+        "title": "Respect the retail partner",
+        "detail": "Shop at Walmart links send in store shoppers to the right place, and a newsletter keeps all visitors connected to the brand."
+      }
+    ],
+    "measure": [
+      "Clicks on Shop at Walmart links, tracked as an event so retail intent shows up in reports",
+      "Online conversion rate by product family",
+      "Newsletter signups and returning visitors"
+    ],
+    "takeaways": [
+      "If you sell through retailers, your website's job is to build preference. Make it easy to buy wherever the customer likes to shop.",
+      "Find the one feature that sets you apart and put it at the top of the page.",
+      "Value brands win on proof. Show real reviews early and often."
+    ],
+    "results": []
   },
   {
     "order": 5,
@@ -257,15 +265,12 @@
     "tag": "E-Commerce (Webflow)",
     "image": "images/scribble_scribe_thumbnsail.png",
     "liveUrl": "https://scribbleandscribe.webflow.io/",
-    "hubDetails": "E-commerce web experience for a creative stationery and lifestyle brand built to showcase products and drive online sales.",
-    "summary": "Scribble & Scribe needed a storefront that matched the creativity of its products. SWFT built a web experience that turns browsing into buying for a design-forward audience.",
-    "bottomLine": "Scribble & Scribe launched with a web presence that showcases its creative product line with the same care it puts into every design, making it easy for customers to discover, fall in love, and purchase.",
-    "whoTheyAre": "Scribble & Scribe is a creative stationery and lifestyle brand offering thoughtfully designed products for people who appreciate quality materials and distinctive aesthetics.",
+    "hubDetails": "How SWFT Studios built a custom Webflow store for a creative stationery brand so the website feels as thoughtful as the products.",
     "challenge": [
-      "The brand needed a digital home that reflected its creative identity, not a generic template.",
-      "Product presentation had to inspire browsing and reduce friction to purchase.",
-      "The site needed to work as both a brand showcase and a functional sales channel.",
-      "Mobile shopping experience was critical for a design-conscious audience."
+      "A generic template would have undercut a brand whose whole promise is thoughtful design.",
+      "Product pages had to inspire browsing and still make buying quick.",
+      "The site had to be both a brand showcase and a working store.",
+      "Most of the audience arrives from social media on their phones."
     ],
     "built": [
       "Custom web design and development with brand-accurate typography, layout, and imagery.",
@@ -273,40 +278,45 @@
       "Responsive build tuned for mobile shopping and social traffic.",
       "Clear calls to action that move visitors from inspiration to purchase."
     ],
-    "impact": [
-      "The brand has a digital presence that matches the quality of its products.",
-      "Product discovery feels intentional and visually engaging.",
-      "The site supports both brand storytelling and direct sales.",
-      "Mobile experience keeps pace with how the audience actually shops."
-    ],
-    "whyMatters": "Creative brands lose sales when their website feels generic. We build storefronts that carry your brand identity through every pixel, so the online experience is as distinctive as what you sell.",
-    "scorecard": [
-      {
-        "label": "Brand identity online",
-        "before": 42,
-        "after": 87
-      },
-      {
-        "label": "Product presentation",
-        "before": 38,
-        "after": 85
-      },
-      {
-        "label": "Purchase flow clarity",
-        "before": 40,
-        "after": 82
-      },
-      {
-        "label": "Mobile experience",
-        "before": 44,
-        "after": 86
-      }
-    ],
+    "whyMatters": "Creative brands lose sales when their website feels generic. We build stores that carry your identity through every page, so shopping online feels as special as what you make.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios built a custom Webflow store for a creative stationery brand so the website feels as thoughtful as the products.",
+    "highlight": "Custom Webflow store built for mobile and social traffic",
+    "snapshot": "Scribble & Scribe is a creative stationery and lifestyle brand for people who care about good materials and distinctive design. We designed and built a custom Webflow store that carries the brand into every page.",
+    "goal": "Sell online to a design conscious audience that judges the brand by how the website looks and feels.",
+    "approach": [
+      {
+        "title": "Design from the brand out",
+        "detail": "Custom typography, layout and imagery built from the brand's own look instead of a theme, so the site feels like part of the product."
+      },
+      {
+        "title": "Built for visual discovery",
+        "detail": "Pages are arranged around large product imagery so browsing feels like flipping through a catalog."
+      },
+      {
+        "title": "Mobile first",
+        "detail": "Every page was tuned for phones, where social visitors land and decide."
+      },
+      {
+        "title": "Clear next steps",
+        "detail": "Each page ends with an obvious action, moving visitors from inspiration to the cart."
+      }
+    ],
+    "measure": [
+      "Mobile conversion rate compared with desktop",
+      "Add to cart rate on product pages",
+      "Sales and visits from social referrals"
+    ],
+    "takeaways": [
+      "If design is what you sell, your website is part of the product. A template tells customers you cut corners.",
+      "Check your store on a phone first. That is where most of your social traffic decides.",
+      "Every page needs one clear next step."
+    ],
+    "results": []
   },
   {
     "order": 6,
@@ -318,15 +328,12 @@
     "tag": "Content & Production",
     "image": "images/BLE_SWFT_thumbnail.webp",
     "liveUrl": "https://blurredlinesentertainment.com/",
-    "hubDetails": "Entertainment brand storytelling and web experience.",
-    "summary": "Blurred Lines Entertainment needed a site that could pack venues and book gigs. SWFT built a digital presence that captures the brand vision and converts visitors into fans and clients.",
-    "bottomLine": "Blurred Lines Entertainment now has a website that captures the brand’s live energy online, helping the owner pack venues, book more gigs, and present a professional face to potential clients.",
-    "whoTheyAre": "Blurred Lines Entertainment is a live entertainment brand that needed a digital presence as bold as its performances, one that could attract bookings and build a fan base.",
+    "hubDetails": "How SWFT Studios built a video first website and Google Ads setup that helps a live entertainment brand win bookings and fill venues.",
     "challenge": [
-      "The brand needed a website that reflected its live performance energy, not a static brochure.",
-      "Video and media content had to load fast and look premium on mobile.",
-      "The site needed to support booking inquiries and venue outreach.",
-      "Google Ads integration was needed to drive targeted traffic to shows and events."
+      "A static brochure site could not show what a night with Blurred Lines feels like.",
+      "Performance video had to look great and load fast on phones.",
+      "Venue owners and planners needed a simple way to ask about availability and pricing.",
+      "The brand needed a steady, targeted source of traffic beyond word of mouth."
     ],
     "built": [
       "Custom website design and development with media-first layout.",
@@ -335,40 +342,45 @@
       "Google Ads campaign setup to drive targeted traffic.",
       "Mobile-optimized media playback and fast-loading pages."
     ],
-    "impact": [
-      "The brand captures its live energy in a professional digital format.",
-      "Video content helps potential clients visualize the experience.",
-      "Booking pathways make it easier to convert interest into gigs.",
-      "Paid traffic campaigns drive measurable audience growth."
-    ],
-    "whyMatters": "Entertainment brands live or die by first impressions. We build websites that turn your best moments into your strongest sales tool, so the energy on stage shows up online too.",
-    "scorecard": [
-      {
-        "label": "Brand energy online",
-        "before": 40,
-        "after": 88
-      },
-      {
-        "label": "Media presentation quality",
-        "before": 35,
-        "after": 85
-      },
-      {
-        "label": "Booking inquiry flow",
-        "before": 38,
-        "after": 82
-      },
-      {
-        "label": "Paid traffic readiness",
-        "before": 30,
-        "after": 78
-      }
-    ],
+    "whyMatters": "Entertainment brands live on first impressions. We turn your best moments into your strongest sales tool, so the energy on stage shows up online too.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": true,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios built a video first website and Google Ads setup that helps a live entertainment brand win bookings and fill venues.",
+    "highlight": "Video first website, booking path and Google Ads setup",
+    "snapshot": "Blurred Lines Entertainment is a live entertainment brand. We built a website that shows the energy of their performances, filmed the footage that powers it, and set up Google Ads to bring the right people to it.",
+    "goal": "Get more bookings from venues and event planners, and bring bigger crowds to shows.",
+    "approach": [
+      {
+        "title": "Let the footage sell",
+        "detail": "We filmed live performances and built the site around that video, so planners can picture the experience before they call."
+      },
+      {
+        "title": "Fast media on mobile",
+        "detail": "Video is compressed and loaded smartly, so pages stay quick on a phone signal."
+      },
+      {
+        "title": "A short path to a booking",
+        "detail": "Booking and contact forms are a tap away from every page, written for venue owners and event planners."
+      },
+      {
+        "title": "Paid traffic with a target",
+        "detail": "Google Ads campaigns reach people searching for live entertainment and events in their area, and send them to pages built to convert."
+      }
+    ],
+    "measure": [
+      "Booking inquiries per month, and which page or ad each one came from",
+      "Google Ads cost per inquiry, not only cost per click",
+      "Video plays and how much of each video people watch"
+    ],
+    "takeaways": [
+      "If you sell an experience, show it. Real footage beats any description.",
+      "Ads only pay off when they land on a page with one clear action. Track inquiries, not clicks.",
+      "Make the booking form easy to find on every page."
+    ],
+    "results": []
   },
   {
     "order": 7,
@@ -380,15 +392,12 @@
     "tag": "Custom Website Build",
     "image": "images/built_by_me_ez_thumbnail.webp",
     "liveUrl": "https://builtbymeez.com/",
-    "hubDetails": "Product story and site experience for a DIY builder audience.",
-    "summary": "Built By Me EZ needed a platform to showcase fitness content and sell courses. SWFT built a site that elevated a personal training business into a scalable digital brand.",
-    "bottomLine": "Built By Me EZ went from social-only to a sleek platform that showcases video content, sells courses online, and gives potential clients a reason to trust the brand before the first session.",
-    "whoTheyAre": "Built By Me EZ is a personal training brand that needed to move beyond Instagram and TikTok into a owned digital platform with course sales and client conversion.",
+    "hubDetails": "How SWFT Studios moved a personal trainer from social only to an owned website that sells online courses and books new clients.",
     "challenge": [
-      "The trainer's best content lived on social platforms with no owned destination.",
-      "Course sales required a trustworthy, professional checkout experience.",
-      "Photography and social media content needed a curated home on the website.",
-      "The site had to convert social followers into paying clients and course buyers."
+      "The best content lived on social apps the brand doesn't control, with no home base.",
+      "Selling courses needed a checkout people trust.",
+      "Photos and videos were scattered across platforms.",
+      "Followers needed a reason and a path to become clients."
     ],
     "built": [
       "Custom website design showcasing fitness photography and video content.",
@@ -397,40 +406,45 @@
       "Contact and booking pathways for personal training inquiries.",
       "Mobile-first responsive build for social traffic conversion."
     ],
-    "impact": [
-      "The brand has a professional platform beyond social media alone.",
-      "Course sales create a new revenue stream beyond in-person training.",
-      "Social content is curated into a conversion-focused portfolio.",
-      "Potential clients can evaluate the brand before reaching out."
-    ],
-    "whyMatters": "If your business runs on social media, you are renting your audience. We build owned platforms that turn followers into customers, with the professionalism to justify premium pricing.",
-    "scorecard": [
-      {
-        "label": "Owned platform credibility",
-        "before": 36,
-        "after": 86
-      },
-      {
-        "label": "Course sales readiness",
-        "before": 28,
-        "after": 80
-      },
-      {
-        "label": "Social-to-site conversion",
-        "before": 34,
-        "after": 83
-      },
-      {
-        "label": "Client trust signals",
-        "before": 40,
-        "after": 87
-      }
-    ],
+    "whyMatters": "If your business runs on social media, give your followers somewhere to go. We build owned platforms that turn followers into customers.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios moved a personal trainer from social only to an owned website that sells online courses and books new clients.",
+    "highlight": "Owned platform with online course sales and client booking",
+    "snapshot": "Built By Me EZ is a personal training brand that grew on Instagram and TikTok. We built a website that gathers the best photo and video content in one place, sells online training courses and books new clients.",
+    "goal": "Turn social followers into paying clients and course buyers on a platform the brand owns.",
+    "approach": [
+      {
+        "title": "One home for the best work",
+        "detail": "We curated photography and video from social channels into a portfolio that shows results and coaching style at a glance."
+      },
+      {
+        "title": "A new revenue stream",
+        "detail": "Online course sales let the trainer earn from people who can't train in person."
+      },
+      {
+        "title": "A clear booking path",
+        "detail": "Contact and booking forms turn interest into consultations."
+      },
+      {
+        "title": "Built for social visitors",
+        "detail": "A mobile first build, because almost everyone arrives from a link in bio."
+      }
+    ],
+    "measure": [
+      "Course sales and revenue per month",
+      "Consultation requests from the website",
+      "Conversion rate of visits that come from the link in bio"
+    ],
+    "takeaways": [
+      "On social media you rent your audience. A website and email list are the audience you own.",
+      "Digital products like courses let you earn beyond the hours you can train in person.",
+      "Your link in bio should go to a page built for phones with one clear action."
+    ],
+    "results": []
   },
   {
     "order": 8,
@@ -442,15 +456,12 @@
     "tag": "Content & Production",
     "image": "images/Roller_Reels_thumbnail.webp",
     "liveUrl": "https://rollerreels.com/",
-    "hubDetails": "A focused look at positioning and web presence for a reels-forward brand.",
-    "summary": "Roller Reels needed a portfolio site that sells taste and range in seconds. SWFT rebuilt the experience so prospects move from browsing to briefing faster.",
-    "bottomLine": "Roller Reels now has a portfolio-led website that showcases work with clarity, presents the brand with authority, and helps prospects move from inspiration to inquiry with less friction.",
-    "whoTheyAre": "Roller Reels is a production company where the work has to sell itself fast, prospects scan for proof of taste, range, professionalism, and capability before they reach out.",
+    "hubDetails": "How SWFT Studios rebuilt a production company's portfolio site so prospects can judge the work fast and send a project brief with less back and forth.",
     "challenge": [
-      "Excellent work was packaged weakly, costing inquiries.",
-      "The portfolio needed clearer organization and faster discoverability.",
-      "Media-heavy pages had to balance visual quality with load performance.",
-      "The site needed to function as portfolio, pitch deck, and client filter simultaneously."
+      "Great work was presented poorly, which cost inquiries.",
+      "Projects were hard to browse and find.",
+      "Video heavy pages had to look sharp without loading slowly.",
+      "The site had to work as a portfolio, a pitch and a filter for the right clients all at once."
     ],
     "built": [
       "Portfolio-led website structure optimized for discoverability and confidence.",
@@ -458,40 +469,45 @@
       "Media-first UX balancing visual impact with usability and mobile performance.",
       "Lead support with calls to action treated as business tools, not afterthoughts."
     ],
-    "impact": [
-      "Cleaner platform for sharing projects, reels, and capabilities.",
-      "The brand feels more intentional and premium, attracting better-fit clients.",
-      "The portfolio is easier to navigate and easier to remember after a visit.",
-      "The site supports business development instead of acting only as a showcase."
-    ],
-    "whyMatters": "Creative studios grow faster when presentation matches the quality of the work. We build portfolio sites that filter for better clients and accelerate the path from admiration to inquiry.",
-    "scorecard": [
-      {
-        "label": "Portfolio discoverability",
-        "before": 45,
-        "after": 90
-      },
-      {
-        "label": "Service clarity",
-        "before": 39,
-        "after": 84
-      },
-      {
-        "label": "Inquiry flow",
-        "before": 42,
-        "after": 80
-      },
-      {
-        "label": "Mobile media performance",
-        "before": 34,
-        "after": 76
-      }
-    ],
+    "whyMatters": "Creative studios grow faster when the presentation matches the work. We build portfolio sites that attract better clients and shorten the path from wow to inquiry.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": true,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios rebuilt a production company's portfolio site so prospects can judge the work fast and send a project brief with less back and forth.",
+    "highlight": "Portfolio site rebuilt to turn viewers into project inquiries",
+    "snapshot": "Roller Reels is a video production company in the New Jersey and New York City area. Their work was strong, but the old site made it hard to see. We rebuilt it so the work sells itself and prospects know how to start a project.",
+    "goal": "Get more and better fitting project inquiries from people who are already impressed by the work.",
+    "approach": [
+      {
+        "title": "Portfolio first structure",
+        "detail": "Work is organized so a prospect can find the type of project they need in seconds."
+      },
+      {
+        "title": "Context around every project",
+        "detail": "Clear service descriptions explain what Roller Reels does and for whom, so the work isn't just floating on the page."
+      },
+      {
+        "title": "Quality without the wait",
+        "detail": "A media first layout balances image quality with fast loading on mobile."
+      },
+      {
+        "title": "Calls to action that do a job",
+        "detail": "Every page leads to an inquiry, written to bring in the kind of projects Roller Reels wants."
+      }
+    ],
+    "measure": [
+      "Inquiries per month and how many become paid projects",
+      "Which portfolio pieces get viewed before someone inquires",
+      "Mobile load time on video pages"
+    ],
+    "takeaways": [
+      "Prospects decide in seconds. Put your best work first and make it easy to browse.",
+      "Explain who each project was for and what it achieved. Context turns a pretty reel into a reason to hire you.",
+      "Your inquiry form is a filter. Ask the questions that tell you whether a lead is a good fit."
+    ],
+    "results": []
   },
   {
     "order": 9,
@@ -503,15 +519,12 @@
     "tag": "Custom Website Build",
     "image": "images/Hawthorne_Global_Ministries_thumbnail.webp",
     "liveUrl": "https://www.hawthorneglobalministries.org/",
-    "hubDetails": "Brand and digital presence for a global ministries organization.",
-    "summary": "Hawthorne Global Ministries needed trust and clarity online. SWFT built a website that communicates mission, invites support, and gives visitors a credible path to engagement.",
-    "bottomLine": "Hawthorne Global Ministries now has a digital front door that makes the mission easier to understand, creates better conditions for donations and involvement, and presents a more professional presence to new audiences.",
-    "whoTheyAre": "Hawthorne Global Ministries is a mission-driven organization that needed a platform to build trust, communicate purpose, and help supporters understand where they fit into the work.",
+    "hubDetails": "How SWFT Studios gave a global ministry a website that explains the mission quickly and gives supporters clear ways to pray, give and stay informed.",
     "challenge": [
-      "Powerful stories were losing momentum because the digital experience was unclear.",
-      "Visitors needed clearer paths to learn about the mission, stay informed, and get involved.",
-      "Trust-sensitive actions like donations required a site that felt established, not overwhelming.",
-      "The ministry needed a stronger foundation for ongoing updates, events, and supporter communication."
+      "Strong stories were getting lost because the old site was hard to follow.",
+      "Visitors didn't have clear ways to learn more, stay updated or get involved.",
+      "People only give to organizations that look established and trustworthy.",
+      "The team needed a site they could keep updated with news and events."
     ],
     "built": [
       "Mission-first messaging so purpose is graspable immediately.",
@@ -519,40 +532,45 @@
       "Supporter journey mapping from awareness to prayer, updates, giving, or direct connection.",
       "Long-term usability platform for ongoing communication and community growth."
     ],
-    "impact": [
-      "The mission is easier to understand for first-time visitors.",
-      "The site creates better conditions for donations, updates, and supporter involvement.",
-      "The ministry has a more trustworthy and organized communication hub.",
-      "The platform is better prepared for future outreach, storytelling, and growth."
-    ],
-    "whyMatters": "Mission-driven organizations lose support when their story is hard to find online. We build websites that turn purpose into action, clearer messaging, trusted design, and paths that invite engagement.",
-    "scorecard": [
-      {
-        "label": "Mission clarity",
-        "before": 46,
-        "after": 88
-      },
-      {
-        "label": "Supporter path",
-        "before": 39,
-        "after": 81
-      },
-      {
-        "label": "Trust and credibility",
-        "before": 50,
-        "after": 87
-      },
-      {
-        "label": "Donation readiness",
-        "before": 34,
-        "after": 79
-      }
-    ],
+    "whyMatters": "Mission driven organizations lose support when their story is hard to find. We build websites that turn purpose into action.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios gave a global ministry a website that explains the mission quickly and gives supporters clear ways to pray, give and stay informed.",
+    "highlight": "Mission first website with clear paths to give and get involved",
+    "snapshot": "Hawthorne Global Ministries is a mission driven organization with powerful stories to tell. We built a website that makes the mission clear to newcomers and shows supporters exactly how to help.",
+    "goal": "Build trust with new visitors and turn interest into prayer, giving and long term involvement.",
+    "approach": [
+      {
+        "title": "Mission first messaging",
+        "detail": "The homepage says who Hawthorne serves and why in the first screen."
+      },
+      {
+        "title": "Design that earns trust",
+        "detail": "A clean layout, clear headings and focused calls to action make the organization look as credible as it is."
+      },
+      {
+        "title": "A path for every supporter",
+        "detail": "We mapped the journey from first visit to prayer, newsletter, giving and direct contact, and made each step obvious."
+      },
+      {
+        "title": "Easy to keep current",
+        "detail": "A structure the team can update with news and events, so the site stays alive between campaigns."
+      }
+    ],
+    "measure": [
+      "Online donations, and how many donors give again",
+      "Newsletter signups per month",
+      "Visits that go from the homepage to the giving page"
+    ],
+    "takeaways": [
+      "Say what you do and who you serve in one sentence at the top of your homepage.",
+      "Give people more than one way to help. Not everyone is ready to give money on their first visit.",
+      "Keep your site updated. Recent stories and events signal that the work is active."
+    ],
+    "results": []
   },
   {
     "order": 10,
@@ -564,15 +582,12 @@
     "tag": "Custom Website Build",
     "image": "images/alpha-ministries-thumbnail.webp",
     "liveUrl": "https://www.alphaministriesinternational.org/",
-    "hubDetails": "How SWFT built a digital home for a 30-year cross-cultural ministry serving communities across Pakistan and New Jersey.",
-    "summary": "Alpha Ministries International needed one digital home for decades of cross-cultural work. SWFT built a site that organizes ministries, events, and giving into a clear supporter journey.",
-    "bottomLine": "Alpha Ministries International now has a digital front door for its cross-cultural mission, visitors can explore ministries, discover events, connect with leadership, and support the work with confidence.",
-    "whoTheyAre": "Alpha Ministries International is a Christ-centered ministry founded in 1995, serving communities across Pakistan and the United States through education, outreach, and relationship-based ministry.",
+    "hubDetails": "How SWFT Studios organized 30 years of cross cultural ministry across Pakistan and New Jersey into one website with clear paths to events and giving.",
     "challenge": [
-      "Multiple ministry areas needed to feel organized, not fragmented.",
-      "Visitors needed clearer paths to events, donations, and leadership contact.",
-      "The organization needed a credible platform for newsletter signups and ongoing outreach.",
-      "Trust-sensitive actions like giving required an established, easy-to-navigate site."
+      "Several ministries (South Asian Fellowship, Children's Ministry, Outreach and ESL) needed to feel like one organization.",
+      "People had trouble finding events, giving options and leadership contacts.",
+      "The ministry needed a dependable way to collect newsletter signups.",
+      "Giving requires a site that feels established and is easy to use."
     ],
     "built": [
       "Mission-first information architecture across South Asian Fellowship, Children's Ministry, Outreach, and ESL.",
@@ -580,40 +595,45 @@
       "Supporter and donor journey with clear calls to action for donations, events, and newsletter signup.",
       "Email and communication readiness for ongoing outreach and event promotion."
     ],
-    "impact": [
-      "The mission and ministry scope are easier to understand for first-time visitors.",
-      "Event and donation pathways are clearer and more accessible.",
-      "The organization has a more professional communication hub for ongoing outreach.",
-      "The platform supports future growth across Pakistan and the United States."
-    ],
-    "whyMatters": "Organizations with decades of impact deserve a website that reflects the breadth of their work. We build ministry platforms that organize complexity into clarity, so supporters find their place faster.",
-    "scorecard": [
-      {
-        "label": "Ministry organization",
-        "before": 41,
-        "after": 87
-      },
-      {
-        "label": "Event and donation paths",
-        "before": 36,
-        "after": 83
-      },
-      {
-        "label": "Communication readiness",
-        "before": 38,
-        "after": 85
-      },
-      {
-        "label": "First-visit comprehension",
-        "before": 44,
-        "after": 88
-      }
-    ],
+    "whyMatters": "Organizations with decades of impact deserve a website that shows the full picture. We build platforms that turn complexity into clarity, so supporters find their place faster.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios organized 30 years of cross cultural ministry across Pakistan and New Jersey into one website with clear paths to events and giving.",
+    "highlight": "One home for four ministries, events and giving",
+    "snapshot": "Alpha Ministries International is a Christ centered ministry founded in 1995, serving communities in Pakistan and the United States through education, outreach and fellowship. We built one website that brings all of their ministries together.",
+    "goal": "Help visitors understand the full scope of the work, find events and support the ministry with confidence.",
+    "approach": [
+      {
+        "title": "Structure around the mission",
+        "detail": "Each ministry area has its own page under one clear menu, so visitors see the breadth of the work without getting lost."
+      },
+      {
+        "title": "Stories for each area",
+        "detail": "Each page explains who the ministry serves and how, in plain language."
+      },
+      {
+        "title": "Clear supporter actions",
+        "detail": "Donate, events and newsletter calls to action appear where people are ready for them."
+      },
+      {
+        "title": "Ready for ongoing outreach",
+        "detail": "Email signup and event promotion are built in, so the team can keep supporters informed."
+      }
+    ],
+    "measure": [
+      "Event signups and attendance driven by the site",
+      "Online gifts per month",
+      "Newsletter list growth"
+    ],
+    "takeaways": [
+      "When you do many things, give each one its own page and connect them with one clear menu.",
+      "Put your events and giving options one click from the homepage.",
+      "Your email list is your most reliable outreach channel. Grow it on purpose."
+    ],
+    "results": []
   },
   {
     "order": 11,
@@ -625,15 +645,12 @@
     "tag": "Website",
     "image": "images/core_home_desktop_thumbnail.jpg",
     "liveUrl": "https://corehome.com",
-    "hubDetails": "Web design and development for a home and lifestyle brand focused on quality products and customer experience.",
-    "summary": "Core Home needed a web presence that matched its product quality. SWFT built a site that communicates brand value and drives customer engagement from the first visit.",
-    "bottomLine": "Core Home launched with a professional web presence that showcases its product line with clarity and credibility, giving customers a reason to explore, trust, and buy.",
-    "whoTheyAre": "Core Home is a home and lifestyle brand focused on quality products and customer experience, needing a digital presence that reflects its commitment to craftsmanship and design.",
+    "hubDetails": "How SWFT Studios built a website for a home and lifestyle brand that shows product quality clearly and guides visitors to buy or get in touch.",
     "challenge": [
-      "The brand needed a website that communicated product quality and brand values, not just listed items.",
-      "Customer engagement required clear navigation and compelling product presentation.",
-      "The site had to support both brand discovery and direct customer action.",
-      "Mobile experience was essential for a broad consumer audience."
+      "The site needed to explain product quality and brand values, not just list items.",
+      "Visitors needed clear navigation and strong product presentation.",
+      "It had to support both brand discovery and direct action.",
+      "A broad audience meant the mobile experience had to be excellent."
     ],
     "built": [
       "Custom website design and development with brand-accurate visual identity.",
@@ -641,41 +658,46 @@
       "Responsive build tuned for mobile and desktop shopping journeys.",
       "Clear calls to action guiding visitors from browsing to purchase or inquiry."
     ],
-    "impact": [
-      "The brand has a credible digital home that matches product quality.",
-      "Product presentation drives engagement and reduces bounce rates.",
-      "The site supports both brand storytelling and customer conversion.",
-      "Mobile experience meets customers where they actually browse."
-    ],
-    "whyMatters": "Home and lifestyle brands compete on trust as much as product. We build websites that communicate quality before the first click, so visitors feel confident exploring your catalog.",
-    "scorecard": [
-      {
-        "label": "Brand credibility online",
-        "before": 40,
-        "after": 86
-      },
-      {
-        "label": "Product presentation",
-        "before": 38,
-        "after": 84
-      },
-      {
-        "label": "Customer engagement paths",
-        "before": 35,
-        "after": 81
-      },
-      {
-        "label": "Mobile experience",
-        "before": 42,
-        "after": 87
-      }
-    ],
+    "whyMatters": "Home and lifestyle brands compete on trust as much as product. We build websites that show quality before the first click.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": false,
     "public": false,
-    "hiddenFromGallery": true
+    "hiddenFromGallery": true,
+    "description": "How SWFT Studios built a website for a home and lifestyle brand that shows product quality clearly and guides visitors to buy or get in touch.",
+    "highlight": "Custom website built to show quality and drive inquiries",
+    "snapshot": "Core Home is a home and lifestyle brand focused on quality products and customer experience. We designed and built a website that makes that quality obvious from the first visit.",
+    "goal": "Show why the products are worth it and guide visitors to buy or reach out.",
+    "approach": [
+      {
+        "title": "Brand first design",
+        "detail": "A custom design built on Core Home's identity, so the site feels as considered as the products."
+      },
+      {
+        "title": "Products front and center",
+        "detail": "Page structure built around discovering products and what makes them better."
+      },
+      {
+        "title": "Every device",
+        "detail": "A responsive build tuned for phones and desktops."
+      },
+      {
+        "title": "Clear next steps",
+        "detail": "Calls to action guide visitors to buy or inquire."
+      }
+    ],
+    "measure": [
+      "Product page views per visit",
+      "Purchases and inquiries from the website",
+      "Mobile conversion rate"
+    ],
+    "takeaways": [
+      "Quality has to be shown, not claimed. Close up photos and specific details beat adjectives.",
+      "Make the next step obvious on every page.",
+      "Most shoppers browse on their phones first. Design for that screen."
+    ],
+    "results": []
   },
   {
     "order": 12,
@@ -687,15 +709,12 @@
     "tag": "Custom Website Build",
     "image": "images/whp_desktop_screenshot.webp",
     "liveUrl": "https://whp-digital.webflow.io/",
-    "hubDetails": "Professional web presence for a service business focused on digital solutions and client engagement.",
-    "summary": "Western HP needed a professional digital face for its service business. SWFT built a site that communicates expertise and makes it easy for prospects to take the next step.",
-    "bottomLine": "Western HP now has a professional web presence that communicates expertise, builds client confidence, and provides clear pathways for prospects to connect and engage.",
-    "whoTheyAre": "Western HP is a service business that needed a professional digital presence to communicate its expertise and convert visitors into clients.",
+    "hubDetails": "How SWFT Studios built a website for a service business that explains its services clearly and makes it easy for prospects to get in touch.",
     "challenge": [
-      "The business needed a website that communicated professionalism and expertise quickly.",
-      "Service offerings had to be presented clearly without overwhelming visitors.",
-      "Contact and inquiry pathways needed to be obvious and low-friction.",
-      "The site had to work as both a credibility tool and a lead generation engine."
+      "Prospects needed to see professionalism and expertise quickly.",
+      "Services had to be easy to understand without overwhelming visitors.",
+      "Contact options needed to be obvious and quick to use.",
+      "The site had to build trust and generate leads."
     ],
     "built": [
       "Custom website design reflecting the brand’s professional identity.",
@@ -703,40 +722,45 @@
       "Contact and inquiry pathways optimized for conversion.",
       "Responsive build ensuring a polished experience on every device."
     ],
-    "impact": [
-      "The business has a credible digital presence that builds client confidence.",
-      "Service offerings are presented with clarity and purpose.",
-      "Inquiry pathways make it easy for prospects to take action.",
-      "The site functions as both a credibility anchor and a lead generation tool."
-    ],
-    "whyMatters": "Service businesses win clients on first impressions. We build websites that communicate expertise in seconds, so prospects trust you before they ever pick up the phone.",
-    "scorecard": [
-      {
-        "label": "Professional credibility",
-        "before": 38,
-        "after": 85
-      },
-      {
-        "label": "Service clarity",
-        "before": 40,
-        "after": 83
-      },
-      {
-        "label": "Lead generation paths",
-        "before": 35,
-        "after": 80
-      },
-      {
-        "label": "Mobile professionalism",
-        "before": 42,
-        "after": 86
-      }
-    ],
+    "whyMatters": "Service businesses win clients on first impressions. We build websites that show your expertise in seconds, so prospects trust you before they call.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": false,
-    "public": true
+    "public": true,
+    "description": "How SWFT Studios built a website for a service business that explains its services clearly and makes it easy for prospects to get in touch.",
+    "highlight": "Service website built to turn visits into inquiries",
+    "snapshot": "Western HP is a service business that needed a professional website to explain its expertise and win new clients. We designed and built a site focused on clear services and easy contact.",
+    "goal": "Look credible right away and turn website visitors into inquiries.",
+    "approach": [
+      {
+        "title": "Professional design",
+        "detail": "A custom design that reflects the brand and signals an established business."
+      },
+      {
+        "title": "One page per service",
+        "detail": "Each service gets a clear explanation of what it is, who it's for and the result it delivers."
+      },
+      {
+        "title": "Easy to reach",
+        "detail": "Contact and inquiry forms are short and visible from every page."
+      },
+      {
+        "title": "Polished on every device",
+        "detail": "A responsive build that looks right on phones, tablets and desktops."
+      }
+    ],
+    "measure": [
+      "Form submissions and calls from the website",
+      "Which service pages people view before they inquire",
+      "Inquiry rate on mobile"
+    ],
+    "takeaways": [
+      "Service buyers want to know three things: what you do, whether you've done it before and how to reach you. Answer all three on your homepage.",
+      "Short forms get more submissions. Ask only what you need for a first conversation.",
+      "Give each service its own page. It helps visitors and it helps Google."
+    ],
+    "results": []
   },
   {
     "order": 13,
@@ -748,15 +772,12 @@
     "tag": "App",
     "image": "images/Snooze-Lane-Desktop-thumbnail.webp",
     "liveUrl": "https://snoozelane.webflow.io/",
-    "hubDetails": "How SWFT translated a clever commuter app into a product story people could trust, understand, and share.",
-    "summary": "Snooze Lane needed a product story people could trust before downloading. SWFT built a landing experience that explains the app, builds confidence, and drives installs.",
-    "bottomLine": "Snooze Lane now has a product landing page that translates a clever commuter app into a story people trust, understand, and share, driving downloads with less explanation needed.",
-    "whoTheyAre": "Snooze Lane is a commuter app that helps riders optimize their sleep schedule around transit, a clever concept that needed clear storytelling to drive adoption.",
+    "hubDetails": "How SWFT Studios built a landing page that explains a new commuter app in seconds and sends visitors to the App Store.",
     "challenge": [
-      "A novel app concept required explanation before users would download.",
-      "The landing page had to build trust quickly for a product users had never seen before.",
-      "App Store conversion depended on a clear, compelling product narrative.",
-      "The site needed to work as both marketing page and product education tool."
+      "A new kind of app needs explaining before anyone will download it.",
+      "People had never heard of the product, so trust had to be built quickly.",
+      "App Store downloads depended on a clear and convincing story.",
+      "The page had to market the app and teach people how it works."
     ],
     "built": [
       "Product landing page with clear value proposition and use-case storytelling.",
@@ -764,39 +785,44 @@
       "Trust-building design with social proof and feature explanations.",
       "Mobile-first responsive build optimized for social and search traffic."
     ],
-    "impact": [
-      "The product story is clear enough to drive downloads without hand-holding.",
-      "Trust signals reduce hesitation for first-time users.",
-      "The landing page supports App Store conversion with a cohesive narrative.",
-      "Social sharing is easier when the product is easy to explain."
-    ],
-    "whyMatters": "App launches fail when users cannot understand the value in 10 seconds. We build landing pages that explain, convince, and convert, turning clever ideas into downloaded products.",
-    "scorecard": [
-      {
-        "label": "Product story clarity",
-        "before": 37,
-        "after": 89
-      },
-      {
-        "label": "Download conversion readiness",
-        "before": 33,
-        "after": 84
-      },
-      {
-        "label": "Trust and credibility",
-        "before": 40,
-        "after": 86
-      },
-      {
-        "label": "Social shareability",
-        "before": 35,
-        "after": 82
-      }
-    ],
+    "whyMatters": "App launches fail when people can't see the value in a few seconds. We build landing pages that explain, convince and convert.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
-    "film": false
+    "film": false,
+    "description": "How SWFT Studios built a landing page that explains a new commuter app in seconds and sends visitors to the App Store.",
+    "highlight": "App landing page and brand for an iOS launch",
+    "snapshot": "Snooze Lane is an iOS app that helps commuters plan their sleep around their transit schedule. We created the brand and the landing page that explains the idea and sends people to the App Store.",
+    "goal": "Get people to understand and trust a brand new app concept fast enough to download it.",
+    "approach": [
+      {
+        "title": "Explain it in one line",
+        "detail": "A clear headline and use case story show the problem and the solution in seconds."
+      },
+      {
+        "title": "Straight to the App Store",
+        "detail": "Download buttons sit where people are ready to act."
+      },
+      {
+        "title": "Build trust early",
+        "detail": "Feature explanations and social proof answer the questions a first time user has."
+      },
+      {
+        "title": "Built for phones",
+        "detail": "A mobile first page, since people download apps on their phones and often arrive from social posts."
+      }
+    ],
+    "measure": [
+      "Clicks on the App Store button, tracked as an event",
+      "App Store page views compared with installs",
+      "Traffic from social posts and how much of it clicks through"
+    ],
+    "takeaways": [
+      "If people can't explain your product to a friend in one sentence, they won't download it. Write that sentence first.",
+      "Put the download button where the reader is convinced, and again at the end.",
+      "Track App Store clicks as a conversion so you can see which channels bring real installs."
+    ],
+    "results": []
   },
   {
     "order": 14,
@@ -808,15 +834,12 @@
     "tag": "App",
     "image": "images/hamper_app_website_thumbnail.webp",
     "liveUrl": "https://hamperapp.webflow.io/",
-    "hubDetails": "App and web case study for Hamper.",
-    "summary": "Hamper needed to feel like a reliable everyday service, not just another on-demand app. SWFT simplified the story and clarified the user flow to drive adoption.",
-    "bottomLine": "Hamper came out with a clearer digital system for acquisition and adoption, presenting itself as a practical, reliable service instead of an idea users still have to decode.",
-    "whoTheyAre": "Hamper is an on-demand laundry and delivery app that needed a digital experience making the service feel straightforward, trustworthy, and worth trying.",
+    "hubDetails": "How SWFT Studios simplified an on demand laundry app's story and signup path so it feels like a dependable everyday service.",
     "challenge": [
-      "If the landing experience felt confusing or unfinished, adoption dropped before the service could prove itself.",
-      "The brand needed to feel like a reliable everyday solution, not a concept.",
-      "Scheduling, onboarding, and action paths had to feel straightforward.",
-      "The site and app story had to work together as one cohesive product narrative."
+      "If the landing page felt confusing or unfinished, people left before trying the service.",
+      "The brand had to feel like a reliable everyday solution, not an experiment.",
+      "Scheduling and signup had to feel simple.",
+      "The website and the app had to tell the same story."
     ],
     "built": [
       "Simplified product story framing Hamper as a practical everyday service.",
@@ -824,38 +847,43 @@
       "Brand presentation tuned for trust and reliability over hype.",
       "iOS app landing page integration with clear download and signup pathways."
     ],
-    "impact": [
-      "Hamper presents itself more like a practical, reliable service.",
-      "User onboarding friction is reduced from first visit to first order.",
-      "The digital touchpoints support behavior change instead of creating extra friction.",
-      "The brand has a stronger base for growth and user acquisition."
-    ],
-    "whyMatters": "On-demand apps live or die on first-use clarity. We build product experiences that remove friction from the very first visit, so users understand the value before they download.",
-    "scorecard": [
-      {
-        "label": "Service clarity",
-        "before": 38,
-        "after": 85
-      },
-      {
-        "label": "Onboarding simplicity",
-        "before": 32,
-        "after": 82
-      },
-      {
-        "label": "Trust presentation",
-        "before": 40,
-        "after": 86
-      },
-      {
-        "label": "Adoption readiness",
-        "before": 35,
-        "after": 80
-      }
-    ],
+    "whyMatters": "On demand apps live or die on first use clarity. We build product experiences that remove friction from the first visit.",
     "outcomeType": "website",
     "branding": false,
     "website": true,
-    "film": false
+    "film": false,
+    "description": "How SWFT Studios simplified an on demand laundry app's story and signup path so it feels like a dependable everyday service.",
+    "highlight": "App landing page focused on trust and easy signup",
+    "snapshot": "Hamper is an on demand laundry pickup and delivery app. We simplified how it explains itself and how people sign up, so it feels like a dependable service you can use this week.",
+    "goal": "Get more people to try the service for the first time, and make that first order feel easy.",
+    "approach": [
+      {
+        "title": "A simple story",
+        "detail": "We framed Hamper around one everyday problem (laundry takes time) and one clear solution."
+      },
+      {
+        "title": "An easy first order",
+        "detail": "The page walks through scheduling and signup in a few clear steps, so trying it feels low effort."
+      },
+      {
+        "title": "Calm, trustworthy design",
+        "detail": "Design tuned for reliability over hype, because people are handing over their clothes."
+      },
+      {
+        "title": "One story across web and app",
+        "detail": "Download and signup buttons connect the website to the iOS app with the same message."
+      }
+    ],
+    "measure": [
+      "App downloads and signups from the landing page",
+      "How many new users place a first order",
+      "Drop off at each step of signup"
+    ],
+    "takeaways": [
+      "Describe your service through the customer's problem, not your features.",
+      "Show how easy the first step is. Most people quit at the first moment of confusion.",
+      "When people trust you with their stuff, calm and clear beats loud and clever."
+    ],
+    "results": []
   }
 ]

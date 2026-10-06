@@ -28,13 +28,13 @@
       <div class="portal-grid">
         <section class="portal-card" id="project-card">
           <p class="portal-stat-label">Project</p>
-          <h2 id="tier-name" style="margin:0.35rem 0 0.5rem;font-size:1.35rem;">—</h2>
-          <p><span id="status-badge" class="portal-badge portal-badge--muted">—</span></p>
+          <h2 id="tier-name" style="margin:0.35rem 0 0.5rem;font-size:1.35rem;">Loading…</h2>
+          <p><span id="status-badge" class="portal-badge portal-badge--muted">Loading…</span></p>
           <p class="portal-muted" id="project-meta"></p>
         </section>
         <section class="portal-card" id="billing-card">
           <p class="portal-stat-label">Billing</p>
-          <p class="portal-stat" id="billing-status">—</p>
+          <p class="portal-stat" id="billing-status">Loading…</p>
           <p class="portal-muted" id="billing-note">Stripe status for your engagement.</p>
         </section>
       </div>
@@ -128,7 +128,7 @@
         SWFTPortal.qs("#tier-name").textContent = data.project.tierName;
         SWFTPortal.qs("#project-meta").textContent = data.project.hasAnalyticsHost
           ? "Tracking host assigned."
-          : "Analytics pending — we install tracking when your site is live.";
+          : "Analytics pending. We install tracking when your site is live.";
         statusBadge(data.project.status);
 
         var metrics = await SWFTPortal.api("/api/portal/metrics");

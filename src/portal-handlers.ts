@@ -557,7 +557,7 @@ async function fetchHostMetrics(env: PortalEnv, siteHost: string | null) {
     return {
       ok: false,
       reason: "no_host",
-      message: "Analytics pending — we install tracking when your site is live.",
+      message: "Analytics pending. We install tracking when your site is live.",
     };
   }
   const projectId = env.POSTHOG_PROJECT_ID || DEFAULT_PROJECT_ID;
@@ -609,7 +609,7 @@ async function fetchHostMetrics(env: PortalEnv, siteHost: string | null) {
         ok: true,
         host,
         empty: true,
-        message: "Not tracking yet — no pageviews for this site in the last 30 days.",
+        message: "Not tracking yet. No pageviews for this site in the last 30 days.",
         visitors: 0,
         pageviews: 0,
         topPages: [],

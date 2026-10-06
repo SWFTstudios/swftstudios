@@ -150,7 +150,7 @@ function renderTierPage(tier) {
                   <p class="book-base-eyebrow">YOUR BASE PACKAGE <span class="book-base-badge">Included</span></p>
                   <h3 id="book-base-heading">${escapeHtml(tier.name)}</h3>
                   <strong class="book-base-price">${escapeHtml(tier.priceLabel)}</strong>
-                  <p class="book-base-intro">Everything below is part of your starting package — not an add-on.</p>
+                  <p class="book-base-intro">Everything below is part of your starting package, not an add-on.</p>
                 </div>
                 ${renderBaseMetrics(tier)}
                 <h4 class="book-base-includes-label">EVERYTHING INCLUDED</h4>
@@ -190,7 +190,7 @@ function renderTierPage(tier) {
             </div>
             <div class="ga-field">
               <label for="book-timeline">When would you like to get started?</label>
-              <select id="book-timeline" name="timeline"><option value="">Choose a timeline (optional)</option><option>As soon as possible</option><option>Within 2–4 weeks</option><option>Within 1–2 months</option><option>Just exploring</option></select>
+              <select id="book-timeline" name="timeline"><option value="">Choose a timeline (optional)</option><option>As soon as possible</option><option>Within 2 to 4 weeks</option><option>Within 1 to 2 months</option><option>Just exploring</option></select>
             </div>
             <div class="ga-field">
               <label for="book-platform">Preferred platform (if applicable)</label>
@@ -306,7 +306,7 @@ function renderThankYou() {
       </div>
       <div class="ga-cal" style="margin-top:2rem;">
         <h2>Want a live kickoff call?</h2>
-        <p>Optional — grab a time on the calendar if you want to talk through details sooner.</p>
+        <p>Optional: grab a time on the calendar if you want to talk through details sooner.</p>
         <a href="https://cal.com/swftstudios/swft-meeting" target="_blank" rel="noopener noreferrer" class="button is-course w-inline-block">
           <div class="button_bg"></div>
           <div class="button_text">Book a kickoff call</div>

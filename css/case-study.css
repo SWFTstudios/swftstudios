@@ -451,3 +451,49 @@
     display: none !important;
   }
 }
+
+/* "What we did and why": bold lead-in per decision */
+.cs-body .uui-text-rich-text .cs-approach li {
+  margin-bottom: 0.85rem;
+}
+
+.cs-body .uui-text-rich-text .cs-approach strong {
+  color: #fff;
+}
+
+/* Measured results (only rendered when data/portfolio-projects.json has "results") */
+.cs-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.cs-result {
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cs-body .uui-text-rich-text .cs-result p {
+  margin: 0;
+}
+
+.cs-body .uui-text-rich-text .cs-result__value {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--green, #56b4e9);
+}
+
+.cs-body .uui-text-rich-text .cs-result__label {
+  margin-top: 0.35rem;
+  color: #fff;
+}
+
+.cs-body .uui-text-rich-text .cs-result__source {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  opacity: 0.7;
+}

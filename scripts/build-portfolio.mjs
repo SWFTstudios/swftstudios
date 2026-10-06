@@ -5,22 +5,11 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { buildRichText, escapeHtml, domain } from './lib/case-study-copy.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const projects = JSON.parse(readFileSync(join(ROOT, 'data/portfolio-projects.json'), 'utf8'));
 const template = readFileSync(join(ROOT, 'case-study/hawthorne-global-ministries.html'), 'utf8');
-
-function domain(url) {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
-
-function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 
 function serviceTags(p) {
   var tags = [];
@@ -32,73 +21,6 @@ function serviceTags(p) {
       return '<span class="cs-tag-pill">' + escapeHtml(t) + "</span>";
     })
     .join("");
-}
-
-function buildScorecards(scorecard) {
-  return (
-    '<div class="cs-scorecard-grid">' +
-    scorecard
-      .map(function (s) {
-        return (
-          '<div class="cs-scorecard-item">' +
-          "<p><strong>" +
-          escapeHtml(s.label) +
-          "</strong>: " +
-          s.before +
-          " to " +
-          s.after +
-          " / 100</p>" +
-          '<div class="cs-scorecard-bars">' +
-          '<div class="cs-scorecard-bar cs-scorecard-bar--before" style="width: ' +
-          s.before +
-          '%;"></div>' +
-          '<div class="cs-scorecard-bar cs-scorecard-bar--after" style="width: ' +
-          s.after +
-          '%;"></div>' +
-          "</div></div>"
-        );
-      })
-      .join("") +
-    "</div>"
-  );
-}
-
-function buildRichText(p) {
-  const outcomeWord = p.outcomeType === 'storefront' ? 'storefront' : 'website';
-  const challengeList = p.challenge.map((c) => `<li>${escapeHtml(c)}</li>`).join('\n');
-  const builtList = p.built.map((b) => `<li>${escapeHtml(b)}</li>`).join('\n');
-  const impactList = p.impact.map((i) => `<li>${escapeHtml(i)}</li>`).join('\n');
-
-  return `
-<h2>Overview</h2>
-<p>${escapeHtml(p.bottomLine)}</p>
-<p>${escapeHtml(p.whoTheyAre)}</p>
-<h2>The Problem</h2>
-<ul>
-${challengeList}
-</ul>
-<h2>The Solution</h2>
-<ul>
-${builtList}
-</ul>
-<h2>The Outcome</h2>
-<p>The ${outcomeWord} at <a href="${p.liveUrl}" target="_blank" rel="noopener">${domain(p.liveUrl)}</a> now delivers measurable improvements for the business and its customers.</p>
-<ul>
-${impactList}
-</ul>
-<h2>Results</h2>
-<p><em>SWFT strategic scoring based on the pre-launch audit and the final launch experience. These numbers represent readiness improvement on a 100-point scale, not claimed analytics from a private client dashboard.</em></p>
-${buildScorecards(p.scorecard)}
-<h2>Closing</h2>
-<p>${escapeHtml(p.whyMatters)}</p>
-<div class="cs-cta-block">
-  <h3>Ready for results like this?</h3>
-  <p>See the live project or start building your own with SWFT Studios.</p>
-  <div class="cs-cta-actions">
-    <a href="${p.liveUrl}" target="_blank" rel="noopener" class="swft-btn is-primary">View Website</a>
-    <a href="../website-pricing.html" class="swft-btn is-outline">Start a Project</a>
-  </div>
-</div>`;
 }
 
 function servicesLabel(p) {
@@ -355,20 +277,13 @@ console.log('Updated index.html marquee');
 
 // websites.html was retired (2026-10-01); the work gallery lives on case-studies.html.
 
-function metricFromScorecard(scorecard) {
-  if (!Array.isArray(scorecard) || !scorecard.length) return undefined;
-  const top = scorecard[0];
-  if (top?.after == null || !top?.label) return undefined;
-  return `${top.label}: ${top.after}/100`;
-}
-
 // --- Update case-studies-index.json ---
 const indexPath = join(ROOT, 'data/case-studies-index.json');
 let hubIndex = JSON.parse(readFileSync(indexPath, 'utf8'));
 const existingSlugs = new Set(hubIndex.map((e) => e.slug));
 
 for (const p of projects) {
-  const metric = metricFromScorecard(p.scorecard);
+  const metric = p.highlight;
   const entry = {
     type: 'case-study',
     name: p.name,

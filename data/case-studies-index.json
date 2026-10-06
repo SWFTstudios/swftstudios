@@ -5,11 +5,11 @@
     "slug": "snooze-lane",
     "href": "case-study/snooze-lane.html",
     "image": "images/Snooze-Lane-Desktop-thumbnail.webp",
-    "details": "How SWFT translated a clever commuter app into a product story people could trust, understand, and share.",
+    "details": "How SWFT Studios built a landing page that explains a new commuter app in seconds and sends visitors to the App Store.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Product story clarity: 89/100"
+    "metric": "App landing page and brand for an iOS launch"
   },
   {
     "type": "case-study",
@@ -17,11 +17,11 @@
     "slug": "roller-reels",
     "href": "case-study/roller-reels.html",
     "image": "images/Roller_Reels_thumbnail.webp",
-    "details": "A focused look at positioning and web presence for a reels-forward brand.",
+    "details": "How SWFT Studios rebuilt a production company's portfolio site so prospects can judge the work fast and send a project brief with less back and forth.",
     "branding": true,
     "website": false,
     "film": true,
-    "metric": "Portfolio discoverability: 90/100"
+    "metric": "Portfolio site rebuilt to turn viewers into project inquiries"
   },
   {
     "type": "case-study",
@@ -29,11 +29,11 @@
     "slug": "built-by-me-ez",
     "href": "case-study/built-by-me-ez.html",
     "image": "images/built_by_me_ez_thumbnail.webp",
-    "details": "Product story and site experience for a DIY builder audience.",
+    "details": "How SWFT Studios moved a personal trainer from social only to an owned website that sells online courses and books new clients.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Owned platform credibility: 86/100"
+    "metric": "Owned platform with online course sales and client booking"
   },
   {
     "type": "case-study",
@@ -41,11 +41,11 @@
     "slug": "hamper",
     "href": "case-study/hamper.html",
     "image": "images/hamper_app_website_thumbnail.webp",
-    "details": "App and web case study for Hamper.",
+    "details": "How SWFT Studios simplified an on demand laundry app's story and signup path so it feels like a dependable everyday service.",
     "branding": false,
     "website": true,
     "film": false,
-    "metric": "Service clarity: 85/100"
+    "metric": "App landing page focused on trust and easy signup"
   },
   {
     "type": "case-study",
@@ -53,11 +53,11 @@
     "slug": "hawthorne-global-ministries",
     "href": "case-study/hawthorne-global-ministries.html",
     "image": "images/Hawthorne_Global_Ministries_thumbnail.webp",
-    "details": "Brand and digital presence for a global ministries organization.",
+    "details": "How SWFT Studios gave a global ministry a website that explains the mission quickly and gives supporters clear ways to pray, give and stay informed.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Mission clarity: 88/100"
+    "metric": "Mission first website with clear paths to give and get involved"
   },
   {
     "type": "case-study",
@@ -65,11 +65,11 @@
     "slug": "blurred-lines-entertainment",
     "href": "case-study/blurred-lines-entertainment.html",
     "image": "images/BLE_SWFT_thumbnail.webp",
-    "details": "Entertainment brand storytelling and web experience.",
+    "details": "How SWFT Studios built a video first website and Google Ads setup that helps a live entertainment brand win bookings and fill venues.",
     "branding": true,
     "website": false,
     "film": true,
-    "metric": "Brand energy online: 88/100"
+    "metric": "Video first website, booking path and Google Ads setup"
   },
   {
     "type": "tips",
@@ -132,11 +132,11 @@
     "slug": "alpha-ministries-international",
     "href": "case-study/alpha-ministries-international.html",
     "image": "images/alpha-ministries-thumbnail.webp",
-    "details": "How SWFT built a digital home for a 30-year cross-cultural ministry serving communities across Pakistan and New Jersey.",
+    "details": "How SWFT Studios organized 30 years of cross cultural ministry across Pakistan and New Jersey into one website with clear paths to events and giving.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Ministry organization: 87/100"
+    "metric": "One home for four ministries, events and giving"
   },
   {
     "type": "case-study",
@@ -144,11 +144,11 @@
     "slug": "manna-hydration",
     "href": "case-study/manna-hydration.html",
     "image": "images/manna-hydration-thumbnail.webp",
-    "details": "E-commerce web experience and product storytelling for a lifestyle hydration brand built around color, style, and sustainability.",
+    "details": "How SWFT Studios organized a fast moving drinkware catalog into a Shopify store built for seasonal drops, social traffic and repeat buyers.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Collection discoverability: 87/100"
+    "metric": "Shopify store: seasonal drops, shop the look, blog and newsletter"
   },
   {
     "type": "case-study",
@@ -156,11 +156,11 @@
     "slug": "tal-hydration",
     "href": "case-study/tal-hydration.html",
     "image": "images/tal-hydration-thumbnail.webp",
-    "details": "Accessible, trend-forward storefront for one of Walmart's most recognized hydration brands, designed to convert at scale.",
+    "details": "How SWFT Studios built a brand store for a Walmart hydration brand that showcases the full range, highlights its 2 in 1 bottle and still sends shoppers to Walmart.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Product family navigation: 88/100"
+    "metric": "Shopify store: product families, 2 in 1 story, Shop at Walmart links"
   },
   {
     "type": "case-study",
@@ -168,11 +168,11 @@
     "slug": "thyme-and-table",
     "href": "case-study/thyme-and-table.html",
     "image": "images/thyme-and-table-thumbnail.webp",
-    "details": "Full e-commerce presence for a Walmart kitchen and home brand spanning cookware, appliances, dinnerware, and drinkware.",
+    "details": "How SWFT Studios made a wide kitchen and home catalog easy to shop with clear navigation, recipes and reviews that support bigger purchases.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Catalog navigation: 89/100"
+    "metric": "Shopify store: mega menu, recipes, support hub"
   },
   {
     "type": "case-study",
@@ -180,11 +180,11 @@
     "slug": "brooklyn-steel",
     "href": "case-study/brooklyn-steel.html",
     "image": "images/brooklyn-steel-thumbnail.webp",
-    "details": "A Brooklyn-inspired café aesthetic meets modern espresso engineering, brand story and Shopify experience for the Talos 20 launch.",
+    "details": "How SWFT Studios built a Shopify store that sells a $499 espresso machine by teaching shoppers what it does, then raises order value with bundles and accessories.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Product education clarity: 86/100"
+    "metric": "Shopify launch: product education, bundle builder, Brew Guides"
   },
   {
     "type": "case-study",
@@ -192,11 +192,11 @@
     "slug": "scribble-and-scribe",
     "href": "case-study/scribble-and-scribe.html",
     "image": "images/scribble_scribe_thumbnsail.png",
-    "details": "E-commerce web experience for a creative stationery and lifestyle brand built to showcase products and drive online sales.",
+    "details": "How SWFT Studios built a custom Webflow store for a creative stationery brand so the website feels as thoughtful as the products.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Brand identity online: 87/100"
+    "metric": "Custom Webflow store built for mobile and social traffic"
   },
   {
     "type": "case-study",
@@ -204,10 +204,10 @@
     "slug": "western-hp",
     "href": "case-study/western-hp.html",
     "image": "images/whp_desktop_screenshot.webp",
-    "details": "Professional web presence for a service business focused on digital solutions and client engagement.",
+    "details": "How SWFT Studios built a website for a service business that explains its services clearly and makes it easy for prospects to get in touch.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Professional credibility: 85/100"
+    "metric": "Service website built to turn visits into inquiries"
   }
 ]

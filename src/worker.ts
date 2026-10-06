@@ -391,11 +391,11 @@ async function sendFormSubmitEmail(
 ): Promise<boolean> {
   const to = env.FORMSUBMIT_EMAIL || NOTIFY_EMAIL_DEFAULT;
   const autoresponse =
-    "Thanks for your website request — we've got it! Our team will review your " +
+    "Thanks for your website request. We've got it! Our team will review your " +
     "build plan and reach out within 48 hours with your next steps to get your site " +
-    "live in 7 days or less. If it's urgent, email us anytime at hello@swftstudios.com. — SWFT Studios";
+    "live in 7 days or less. If it's urgent, email us anytime at hello@swftstudios.com. SWFT Studios";
   const payload: Record<string, unknown> = {
-    _subject: "New SWFT Build Plan — Instagram → Online Business",
+    _subject: "New SWFT Build Plan: Instagram to Online Business",
     _template: "table",
     _captcha: "false",
     _autoresponse: autoresponse,

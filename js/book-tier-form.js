@@ -365,7 +365,7 @@
       details.addOns.forEach(function (addon) {
         var price = addonPricing(addon.id);
         ul.appendChild(el("li", "", addon.label +
-          (price && addon.quantity > 1 ? " × " + addon.quantity : "") + " — " +
+          (price && addon.quantity > 1 ? " × " + addon.quantity : "") + ": " +
           (price ? "+" + dollars(price.cents * addon.quantity) : "Custom quote")));
       });
       box.appendChild(ul);
