@@ -23,8 +23,8 @@ Every public page has one job in the funnel. The site's message is the SWFT Meth
 | Route | Job |
 | --- | --- |
 | `/` | Homepage: the promise, the five leaks, the method, proof, the audit |
-| `/services.html` | The SWFT Method: what we do at each stage and which offer covers it |
-| `/website-pricing.html` | Pricing: pick the stage that's costing you the most |
+| `/services.html` | Services in two categories, Digital (web design and development, app design and development, analytics, marketing) and Visual (photography, videography, social media management, live streaming), with each offer's starting price; then the SWFT Method stages each service covers |
+| `/website-pricing.html` | Pricing: Digital / Visual tabs → services → offers, each with its price, deliverables and what is not included. Rendered from `data/pricing.json` |
 | `/case-studies.html` | Work: proof (case studies) and marketing guides |
 | `/visuals.html` | Visuals: the Vimeo films in a draggable grid; each opens full screen (`?p=<vimeo id>`) with the Vimeo player. Films are listed in `data/visuals.json`; titles and thumbnails load from Vimeo |
 | `/video-gallery.html` | Video work: double slider (stage + thumbnail rail) of Vimeo films |

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-07: Services organized into Digital and Visual
+
+### Changed
+- **Services are now two categories.** Digital: Web Design & Development, App Design & Development, Analytics, Marketing. Visual: Photography, Videography, Social Media Management, Live Streaming.
+- [`data/pricing.json`](../data/pricing.json) is restructured from `projectTiers` / `ongoingTiers` into `categories → services → offers`. Every offer lists its price, a "What you get" deliverables list and a "Not included" line. See [`PRICING_MARGIN.md`](PRICING_MARGIN.md).
+- **Pricing page** ([`website-pricing.html`](../website-pricing.html), [`js/pricing-render.js`](../js/pricing-render.js), [`js/pricing-page.js`](../js/pricing-page.js), [`css/pricing-page.css`](../css/pricing-page.css)): Digital / Visual tabs replace the one-time / ongoing toggle and the five-stage pathway. Each tab lists its services with offer cards. Cards are marked "Book online" (Stripe) or "Quote first" (contact form). The URL hash follows the open tab (`#digital`, `#visual`); a service or offer id in the hash opens its tab and scrolls to it. Old anchors (`#ongoing`, `#project-tiers`, `#website-development`, `#content-creation`, offer ids) still land in the right place.
+- **Services page** ([`services.html`](../services.html)): Digital and Visual sections with the four services each, key deliverables and starting-price chips that link to the matching pricing card. The SWFT Method stages follow, with "Covered by" chips pointing at services. The "Where to start" list is gone (the categories replace it). Old anchors `#website-development`, `#gbp-refresh` and `#content-creation` still resolve.
+- **Homepage** services list is now Digital and Visual, each listing its four services; FAQ and structured data describe the two categories. Brand Identity is no longer listed as a separate service.
+- **Contact form**: services grouped under Digital / Visual; `?service=<service id>` preselects one (used by quote-first offers). Budget ranges widened to fit the full catalog.
+- [`scripts/build-book-pages.mjs`](../scripts/build-book-pages.mjs) reads Stripe offers from the new structure. Booking pages, Stripe prices, Payment Links and the `/api/book-tier` catalog are unchanged.
+
+### Needs owner approval
+- 13 new offers (app, analytics, ads, lead follow-up, photography, videography, managed social, live streaming) show **proposed** starting prices and deliverables. They are quote-first and have no Stripe checkout.
+
 ## 2026-10-05: Homepage Selected Work lineup
 
 ### Changed

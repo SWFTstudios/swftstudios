@@ -30,10 +30,13 @@ function bookBasename(tier) {
   return name.endsWith(".html") ? name : `${name}.html`;
 }
 
+// Offers live under categories → services → offers; only offers with a Stripe
+// config get a booking page (the rest are quote-first via /contact.html).
 function collectTiers(data) {
-  const project = (data.projectTiers && data.projectTiers.tiers) || [];
-  const ongoing = (data.ongoingTiers && data.ongoingTiers.tiers) || [];
-  return [...project, ...ongoing].filter((t) => t && t.id && t.stripe);
+  return (data.categories || [])
+    .flatMap((c) => c.services || [])
+    .flatMap((s) => s.offers || [])
+    .filter((t) => t && t.id && t.stripe);
 }
 
 function renderIncludes(items) {

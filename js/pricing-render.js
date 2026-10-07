@@ -1,7 +1,16 @@
+/* ============================================================
+   Pricing renderer (data/pricing.json → HTML).
+   Data shape: categories (Digital, Visual) → services → offers.
+   - An offer with a bookUrl (and a stripe config) books online at /book/.
+   - Any other offer is quote-first: its CTA opens /contact.html?service=<service id>.
+   With tabs: true each category is a tab panel (id = category id); otherwise
+   the categories render stacked. Offer cards keep their id, so old links like
+   website-pricing.html#gbp-refresh still land on the right card.
+   ============================================================ */
 (function (global) {
   "use strict";
 
-  var CAL_URL = "/growth-audit";
+  var QUOTE_URL = "/contact.html";
 
   function escapeHtml(str) {
     return String(str)
@@ -11,20 +20,18 @@
       .replace(/"/g, "&quot;");
   }
 
-  function tierCardClass(tier, layout) {
-    var base = "hp-pricing-card";
-    if (layout === "compact") base += " hp-pricing-card--compact";
-    if (tier.featured) base += " hp-pricing-card--featured";
-    return base;
+  function pad2(n) {
+    return n < 10 ? "0" + n : String(n);
   }
 
   function renderIncludesList(items, layout) {
     if (!items || !items.length) return "";
     var limit = layout === "compact" ? 4 : items.length;
-    var slice = items.slice(0, limit);
     var list =
+      '<p class="hp-pricing-includes-label">What you get</p>' +
       '<ul class="hp-pricing-includes" role="list">' +
-      slice
+      items
+        .slice(0, limit)
         .map(function (item) {
           return "<li>" + escapeHtml(item) + "</li>";
         })
@@ -37,140 +44,154 @@
     return list;
   }
 
-  function renderTierCard(tier, groupId, layout) {
-    var featured = tier.featured
-      ? '<span class="hp-pricing-badge">' + escapeHtml(tier.badge || "Featured") + "</span>"
+  function offerHref(offer, service, data) {
+    if (offer.bookUrl) return offer.bookUrl;
+    var base = (data && data.quoteUrl) || QUOTE_URL;
+    return base + (base.indexOf("?") === -1 ? "?" : "&") + "service=" + encodeURIComponent(service.id);
+  }
+
+  function renderOfferCard(offer, service, data, layout) {
+    var bookable = !!offer.bookUrl;
+    var cls = "hp-pricing-card";
+    if (layout === "compact") cls += " hp-pricing-card--compact";
+    if (offer.featured) cls += " hp-pricing-card--featured";
+
+    var badge = offer.featured
+      ? '<span class="hp-pricing-badge">' + escapeHtml(offer.badge || "Featured") + "</span>"
       : "";
-    var btnClass = tier.featured
+    var kicker =
+      '<p class="hp-pricing-kicker">' +
+      (offer.kind ? "<span>" + escapeHtml(offer.kind) + "</span>" : "") +
+      '<span class="hp-pricing-kicker__how' + (bookable ? " is-bookable" : "") + '">' +
+      (bookable ? "Book online" : "Quote first") +
+      "</span></p>";
+    var crossover = offer.crossover
+      ? '<p class="hp-pricing-crossover">' + escapeHtml(offer.crossover) + "</p>"
+      : "";
+    var priceNote = offer.priceNote
+      ? '<span class="hp-pricing-price-note">' + escapeHtml(offer.priceNote) + "</span>"
+      : "";
+    var notIncluded =
+      offer.notIncluded && layout !== "compact"
+        ? '<p class="hp-pricing-not-included"><span>Not included</span>' + escapeHtml(offer.notIncluded) + "</p>"
+        : "";
+    var note = bookable ? data && data.bookNote : data && data.quoteNote;
+    var checkoutNote = note && layout !== "compact"
+      ? '<p class="hp-pricing-checkout-note">' + escapeHtml(note) + "</p>"
+      : "";
+    var btnClass = offer.featured
       ? "button is-course w-inline-block"
       : "button is-course outlined w-inline-block";
-    var calUrl = (global.SwftPricingConfig && global.SwftPricingConfig.calUrl) || CAL_URL;
-    var planHref = tier.bookUrl || calUrl;
-    if (!tier.bookUrl && tier.id) {
-      planHref +=
-        (calUrl.indexOf("?") === -1 ? "?" : "&") + "plan=" + encodeURIComponent(tier.id);
-    }
-    var priceNote = tier.priceNote
-      ? '<span class="hp-pricing-price-note">' + escapeHtml(tier.priceNote) + "</span>"
-      : "";
-    var bestFor = tier.bestFor
-      ? '<p class="hp-pricing-best-for">' + escapeHtml(tier.bestFor) + "</p>"
-      : "";
-    var checkoutNote = tier.checkoutNote
-      ? '<p class="hp-pricing-checkout-note">' + escapeHtml(tier.checkoutNote) + '</p>'
-      : "";
-    var scopeDriver = tier.scopeDriver
-      ? '<p class="hp-pricing-scope">' + escapeHtml(tier.scopeDriver) + "</p>"
-      : "";
 
     return (
-      '<article class="' +
-      tierCardClass(tier, layout) +
-      '" data-tier-id="' +
-      escapeHtml(tier.id) +
-      '" id="' +
-      escapeHtml(tier.id) +
-      '">' +
-      featured +
-      bestFor +
-      "<h3>" +
-      escapeHtml(tier.name) +
-      "</h3>" +
-      '<p class="hp-pricing-price">' +
-      escapeHtml(tier.priceLabel || "") +
-      " " +
-      priceNote +
-      "</p>" +
-      '<p class="hp-pricing-desc">' +
-      escapeHtml(tier.description || "") +
-      "</p>" +
-      scopeDriver +
-      renderIncludesList(tier.includes || [], layout) +
+      '<article class="' + cls + '" data-tier-id="' + escapeHtml(offer.id) + '" id="' + escapeHtml(offer.id) + '">' +
+      badge +
+      kicker +
+      '<h4 class="hp-pricing-name">' + escapeHtml(offer.name) + "</h4>" +
+      crossover +
+      '<p class="hp-pricing-price">' + escapeHtml(offer.priceLabel || "") + " " + priceNote + "</p>" +
+      '<p class="hp-pricing-desc">' + escapeHtml(offer.description || "") + "</p>" +
+      renderIncludesList(offer.includes || [], layout) +
+      notIncluded +
       checkoutNote +
-      '<a href="' +
-      escapeHtml(planHref) +
-      '" class="' +
-      btnClass +
-      '" data-stripe-tier="' +
-      escapeHtml(groupId + ":" + tier.id) +
-      '" data-plan="' +
-      escapeHtml(tier.id) +
-      '">' +
+      '<a href="' + escapeHtml(offerHref(offer, service, data)) + '" class="' + btnClass + '"' +
+      ' data-plan="' + escapeHtml(offer.id) + '"' +
+      (bookable ? ' data-stripe-tier="' + escapeHtml(service.id + ":" + offer.id) + '"' : "") +
+      ">" +
       '<div class="button_bg"></div>' +
-      '<div class="button_text">' +
-      escapeHtml(tier.cta || "Get started") +
-      "</div></a></article>"
+      '<div class="button_text">' + escapeHtml(offer.cta || (bookable ? "Book now" : "Request a quote")) + "</div></a>" +
+      "</article>"
     );
   }
 
-  function renderTierGrid(tiers, groupId, layout) {
+  function renderService(service, index, data, layout) {
+    var offers = service.offers || [];
+    if (!offers.length) return "";
+    var headingId = "pr-" + service.id + "-heading";
+    var cols = offers.length === 3 ? " pr-offer-grid--3" : "";
     return (
-      '<div class="hp-pricing-grid' +
-      (layout === "compact" ? " hp-pricing-grid--compact" : "") +
-      (groupId === "ongoing" ? " hp-pricing-grid--ongoing" : "") +
-      '">' +
-      tiers
-        .map(function (tier) {
-          return renderTierCard(tier, groupId, layout);
+      '<section class="pr-service" id="' + escapeHtml(service.id) + '" aria-labelledby="' + escapeHtml(headingId) + '">' +
+      '<header class="pr-service__head">' +
+      '<span class="pr-service__num" aria-hidden="true">' + pad2(index + 1) + "</span>" +
+      '<h3 class="pr-service__name" id="' + escapeHtml(headingId) + '">' + escapeHtml(service.name) + "</h3>" +
+      (service.summary ? '<p class="pr-service__summary">' + escapeHtml(service.summary) + "</p>" : "") +
+      "</header>" +
+      '<div class="hp-pricing-grid pr-offer-grid' + cols + (layout === "compact" ? " hp-pricing-grid--compact" : "") + '">' +
+      offers
+        .map(function (offer) {
+          return renderOfferCard(offer, service, data, layout);
+        })
+        .join("") +
+      "</div></section>"
+    );
+  }
+
+  function renderCategoryBody(category, data, layout) {
+    var services = category.services || [];
+    var jump = services.length > 1
+      ? '<nav class="pr-jump" aria-label="' + escapeHtml(category.label) + ' services">' +
+        services
+          .map(function (s) {
+            return '<a href="#' + escapeHtml(s.id) + '">' + escapeHtml(s.name) + "</a>";
+          })
+          .join("") +
+        "</nav>"
+      : "";
+    return (
+      '<header class="pr-cat__head">' +
+      '<p class="pr-cat__eyebrow">' + escapeHtml(category.label) + "</p>" +
+      '<h2 class="pr-cat__title">' + escapeHtml(category.tagline || category.label) + "</h2>" +
+      (category.intro ? '<p class="pr-cat__intro">' + escapeHtml(category.intro) + "</p>" : "") +
+      jump +
+      "</header>" +
+      services
+        .map(function (s, i) {
+          return renderService(s, i, data, layout);
+        })
+        .join("")
+    );
+  }
+
+  function serviceNames(category) {
+    return (category.services || [])
+      .map(function (s) {
+        return s.name;
+      })
+      .join(" · ");
+  }
+
+  function renderTabs(categories, data, layout) {
+    return (
+      '<div class="pr-tabs" data-pricing-tabs>' +
+      '<div class="pr-cat-tabs" role="tablist" aria-label="Service category">' +
+      categories
+        .map(function (c, i) {
+          var on = i === 0;
+          return (
+            '<button type="button" class="pr-cat-tab' + (on ? " is-active" : "") + '" role="tab"' +
+            ' id="pr-tab-' + escapeHtml(c.id) + '" aria-selected="' + (on ? "true" : "false") + '"' +
+            ' aria-controls="' + escapeHtml(c.id) + '" data-pricing-tab="' + escapeHtml(c.id) + '"' +
+            (on ? "" : ' tabindex="-1"') + ">" +
+            '<span class="pr-cat-tab__label">' + escapeHtml(c.label) + "</span>" +
+            '<span class="pr-cat-tab__sub">' + escapeHtml(serviceNames(c)) + "</span>" +
+            "</button>"
+          );
+        })
+        .join("") +
+      "</div>" +
+      categories
+        .map(function (c, i) {
+          var on = i === 0;
+          return (
+            '<div class="hp-pricing-tab-panel pr-cat' + (on ? " is-active" : "") + '" role="tabpanel"' +
+            ' id="' + escapeHtml(c.id) + '" aria-labelledby="pr-tab-' + escapeHtml(c.id) + '"' +
+            ' data-pricing-panel="' + escapeHtml(c.id) + '"' + (on ? "" : " hidden") + ">" +
+            renderCategoryBody(c, data, layout) +
+            "</div>"
+          );
         })
         .join("") +
       "</div>"
-    );
-  }
-
-  function renderGroup(group, layout, options) {
-    if (!group || !group.tiers || !group.tiers.length) return "";
-    var hideTitle = options && options.hideTitle;
-    var intro = group.intro
-      ? '<p class="hp-pricing-group-intro">' + escapeHtml(group.intro) + "</p>"
-      : "";
-    var title = hideTitle
-      ? ""
-      : '<h3 id="hp-pricing-' +
-        escapeHtml(group.id) +
-        '-heading" class="hp-pricing-group-title">' +
-        escapeHtml(group.label) +
-        "</h3>";
-    return (
-      '<section class="hp-pricing-group" id="' +
-      escapeHtml(group.id) +
-      '" aria-labelledby="hp-pricing-' +
-      escapeHtml(group.id) +
-      '-heading">' +
-      title +
-      intro +
-      renderTierGrid(group.tiers, group.id, layout) +
-      "</section>"
-    );
-  }
-
-  function renderTabs(projectGroup, ongoingGroup, layout) {
-    return (
-      '<div class="hp-pricing-tabs" data-pricing-tabs>' +
-      '<div class="hp-billing-toggle" role="tablist" aria-label="Pricing type">' +
-      '<button type="button" class="hp-billing-toggle__btn is-active" role="tab" id="hp-tab-onetime" aria-selected="true" aria-controls="project-tiers" data-pricing-tab="onetime">One-time projects</button>' +
-      '<button type="button" class="hp-billing-toggle__btn" role="tab" id="hp-tab-ongoing" aria-selected="false" aria-controls="ongoing" data-pricing-tab="ongoing" tabindex="-1">Ongoing retainers</button>' +
-      "</div>" +
-      '<div class="hp-pricing-tab-panels">' +
-      '<div class="hp-pricing-tab-panel is-active" role="tabpanel" id="project-tiers" aria-labelledby="hp-tab-onetime" data-pricing-panel="onetime">' +
-      '<h3 id="hp-pricing-project-tiers-heading" class="visually-hidden">' +
-      escapeHtml(projectGroup.label || "One-time projects") +
-      "</h3>" +
-      (projectGroup.intro
-        ? '<p class="hp-pricing-group-intro">' + escapeHtml(projectGroup.intro) + "</p>"
-        : "") +
-      renderTierGrid(projectGroup.tiers, projectGroup.id, layout) +
-      "</div>" +
-      '<div class="hp-pricing-tab-panel" role="tabpanel" id="ongoing" aria-labelledby="hp-tab-ongoing" data-pricing-panel="ongoing" hidden>' +
-      '<h3 id="hp-pricing-ongoing-heading" class="visually-hidden">' +
-      escapeHtml(ongoingGroup.label || "Ongoing") +
-      "</h3>" +
-      (ongoingGroup.intro
-        ? '<p class="hp-pricing-group-intro">' + escapeHtml(ongoingGroup.intro) + "</p>"
-        : "") +
-      renderTierGrid(ongoingGroup.tiers, ongoingGroup.id, layout) +
-      "</div>" +
-      "</div></div>"
     );
   }
 
@@ -206,45 +227,37 @@
 
   function buildPricingHtml(data, options) {
     var layout = options.layout || "full";
-    var showHero = options.showHero !== false;
-    var showFaqLink = options.showFaqLink === true;
-    var showOngoing = options.showOngoing !== false;
-    var projectOnly = options.projectOnly === true;
-    var useTabs = options.tabs === true && !projectOnly && showOngoing && data.ongoingTiers;
+    var categories = (data.categories || []).filter(function (c) {
+      return c && c.services && c.services.length;
+    });
     var html = "";
 
-    if (showHero && data.hero) {
+    if (options.showHero !== false && data.hero) {
       html +=
         '<header class="hp-pricing-hero">' +
-        "<h2>" +
-        escapeHtml(data.hero.headline) +
-        "</h2>" +
-        "<p>" +
-        escapeHtml(data.hero.sub) +
-        "</p></header>";
+        "<h2>" + escapeHtml(data.hero.headline) + "</h2>" +
+        "<p>" + escapeHtml(data.hero.sub) + "</p></header>";
     }
 
     if (data.hero && data.hero.trustLine && options.showTrustLine) {
-      html +=
-        '<p class="hp-pricing-trust">' +
-        escapeHtml(data.hero.trustLine) +
-        "</p>";
+      html += '<p class="hp-pricing-trust">' + escapeHtml(data.hero.trustLine) + "</p>";
     }
 
-    if (useTabs) {
-      html += renderTabs(data.projectTiers, data.ongoingTiers, layout);
+    if (options.tabs === true && categories.length > 1) {
+      html += renderTabs(categories, data, layout);
     } else {
-      html += renderGroup(data.projectTiers, layout, { hideTitle: false });
-
-      if (showOngoing && !projectOnly && data.ongoingTiers) {
-        html += renderGroup(data.ongoingTiers, layout, null);
-      } else if (projectOnly && data.ongoingTiers) {
-        html +=
-          '<p class="hp-pricing-desc hp-pricing-ongoing-link">Retainers starting at $450/mo. <a href="#homepage-pricing" data-pricing-open-tab="ongoing" class="highlight">See ongoing options</a> or <a href="website-pricing.html#ongoing" class="highlight">full pricing</a>.</p>';
-      }
+      html += categories
+        .map(function (c) {
+          return (
+            '<section class="pr-cat" id="' + escapeHtml(c.id) + '" aria-label="' + escapeHtml(c.label) + ' services">' +
+            renderCategoryBody(c, data, layout) +
+            "</section>"
+          );
+        })
+        .join("");
     }
 
-    if (showFaqLink) {
+    if (options.showFaqLink === true) {
       html +=
         '<div class="hp-pricing-full-link">' +
         '<a href="website-pricing.html#pricing" class="button is-course outlined w-inline-block">' +
@@ -256,9 +269,14 @@
   }
 
   function activateTab(rootEl, tabKey) {
-    if (!rootEl) return;
+    if (!rootEl) return false;
     var tabs = rootEl.querySelectorAll("[data-pricing-tab]");
     var panels = rootEl.querySelectorAll("[data-pricing-panel]");
+    var found = false;
+    panels.forEach(function (panel) {
+      if (panel.getAttribute("data-pricing-panel") === tabKey) found = true;
+    });
+    if (!found) return false;
     tabs.forEach(function (tab) {
       var active = tab.getAttribute("data-pricing-tab") === tabKey;
       tab.classList.toggle("is-active", active);
@@ -274,18 +292,24 @@
         panel.setAttribute("hidden", "");
       }
     });
+    return true;
   }
 
-  function bindTabs(rootEl) {
+  function bindTabs(rootEl, options) {
     var wrap = rootEl.querySelector("[data-pricing-tabs]");
     if (!wrap) return null;
 
     var tabs = Array.prototype.slice.call(wrap.querySelectorAll("[data-pricing-tab]"));
+    function select(key) {
+      if (activateTab(rootEl, key) && options && typeof options.onTabChange === "function") {
+        options.onTabChange(key);
+      }
+    }
 
     wrap.addEventListener("click", function (e) {
       var btn = e.target.closest("[data-pricing-tab]");
       if (!btn || !wrap.contains(btn)) return;
-      activateTab(rootEl, btn.getAttribute("data-pricing-tab"));
+      select(btn.getAttribute("data-pricing-tab"));
     });
 
     wrap.addEventListener("keydown", function (e) {
@@ -307,20 +331,19 @@
       }
       e.preventDefault();
       tabs[nextIdx].focus();
-      activateTab(rootEl, tabs[nextIdx].getAttribute("data-pricing-tab"));
+      select(tabs[nextIdx].getAttribute("data-pricing-tab"));
     });
 
     document.addEventListener("click", function (e) {
       var link = e.target.closest("[data-pricing-open-tab]");
       if (!link) return;
       var key = link.getAttribute("data-pricing-open-tab");
-      if (!key) return;
-      activateTab(rootEl, key);
+      if (key) select(key);
     });
 
     return {
       activate: function (tabKey) {
-        activateTab(rootEl, tabKey);
+        return activateTab(rootEl, tabKey);
       }
     };
   }
@@ -332,15 +355,15 @@
     options.layout = options.layout || "full";
 
     rootEl.innerHTML = buildPricingHtml(data, options);
-    var tabApi = bindTabs(rootEl);
+    var tabApi = bindTabs(rootEl, options);
 
     return {
       refresh: function () {
         rootEl.innerHTML = buildPricingHtml(data, options);
-        tabApi = bindTabs(rootEl);
+        tabApi = bindTabs(rootEl, options);
       },
       activateTab: function (tabKey) {
-        if (tabApi) tabApi.activate(tabKey);
+        return tabApi ? tabApi.activate(tabKey) : false;
       }
     };
   }
