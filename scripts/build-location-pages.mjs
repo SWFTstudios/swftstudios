@@ -296,8 +296,8 @@ function renderHtmlSitemap(data, locations) {
   const primary = [
     { href: "/", label: "Home", note: "Main marketing homepage" },
     { href: "/growth-audit", label: "Free Growth Audit", note: "Primary lead capture" },
-    { href: "/services.html", label: "The SWFT Method", note: "How we grow you: get seen, capture, convert, nurture, automate" },
-    { href: "/website-pricing.html", label: "Pricing", note: "Published prices for every offer" },
+    { href: "/services.html", label: "Services", note: "Digital (web, apps, analytics, marketing) and Visual (photo, video, social, live streaming)" },
+    { href: "/website-pricing.html", label: "Pricing", note: "Starting prices and deliverables for every offer" },
     { href: "/case-studies.html", label: "Work", note: "Case studies and marketing guides" },
     { href: "/team.html", label: "Team", note: "Who builds the work" },
     { href: "/contact.html", label: "Contact", note: "Project inquiry form" },

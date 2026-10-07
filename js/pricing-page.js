@@ -1,6 +1,15 @@
 (function () {
   "use strict";
 
+  // Old anchors from earlier pricing layouts (location pages, past links).
+  // Offer ids (gbp-refresh, website-only, ...) still exist as card ids.
+  var HASH_ALIASES = {
+    ongoing: "content-growth-retainer",
+    "project-tiers": "digital",
+    "website-development": "web-design",
+    "content-creation": "visual"
+  };
+
   async function init() {
     var mount = document.getElementById("pricing-mount");
     if (!mount || !window.SwftPricing) return;
@@ -19,9 +28,14 @@
         layout: "full",
         showHero: false,
         showFaqLink: false,
-        showOngoing: true,
         showTrustLine: true,
-        tabs: true
+        tabs: true,
+        onTabChange: function (key) {
+          // Keep the chosen category in the URL so it can be shared.
+          if (window.history && history.replaceState) {
+            history.replaceState(null, "", "#" + key);
+          }
+        }
       });
 
       var faqList = document.getElementById("faq-list");
@@ -45,35 +59,33 @@
         if (bookBtn && data.bookCta.button) bookBtn.textContent = data.bookCta.button;
       }
 
-      var hash = window.location.hash.replace("#", "");
-      if (
-        hash === "ongoing" ||
-        hash === "content-creation"
-      ) {
-        if (pricingApi) pricingApi.activateTab("ongoing");
-      } else if (
-        hash === "project-tiers" ||
-        hash === "website-development"
-      ) {
-        if (pricingApi) pricingApi.activateTab("onetime");
+      // #digital / #visual open a category; a service or offer id opens the
+      // category that holds it and scrolls to it.
+      function showHashTarget(smooth) {
+        var hash = "";
+        try {
+          hash = decodeURIComponent(window.location.hash.replace("#", ""));
+        } catch (e) {
+          return;
+        }
+        if (!hash) return;
+        var target = document.getElementById(HASH_ALIASES[hash] || hash);
+        if (!target || !mount.contains(target)) {
+          if (target) target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+          return;
+        }
+        var panel = target.closest("[data-pricing-panel]");
+        if (panel && pricingApi) pricingApi.activateTab(panel.getAttribute("data-pricing-panel"));
+        var scrollTo = target.hasAttribute("data-pricing-panel") ? document.getElementById("pricing") : target;
+        requestAnimationFrame(function () {
+          (scrollTo || target).scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+        });
       }
 
-      var scrollIds = {
-        "content-creation": "ongoing",
-        "website-development": "project-tiers",
-        pricing: "pricing",
-        ongoing: "ongoing",
-        "project-tiers": "project-tiers"
-      };
-      var targetId = scrollIds[hash] || hash;
-      if (targetId) {
-        var target = document.getElementById(targetId);
-        if (target) {
-          requestAnimationFrame(function () {
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-          });
-        }
-      }
+      showHashTarget(true);
+      window.addEventListener("hashchange", function () {
+        showHashTarget(true);
+      });
     } catch (err) {
       console.error(err);
       if (mount) {

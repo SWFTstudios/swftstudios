@@ -30,10 +30,13 @@ function bookBasename(tier) {
   return name.endsWith(".html") ? name : `${name}.html`;
 }
 
+// Offers live under categories → services → offers; only offers with a Stripe
+// config get a booking page (the rest are quote-first via /contact.html).
 function collectTiers(data) {
-  const project = (data.projectTiers && data.projectTiers.tiers) || [];
-  const ongoing = (data.ongoingTiers && data.ongoingTiers.tiers) || [];
-  return [...project, ...ongoing].filter((t) => t && t.id && t.stripe);
+  return (data.categories || [])
+    .flatMap((c) => c.services || [])
+    .flatMap((s) => s.offers || [])
+    .filter((t) => t && t.id && t.stripe);
 }
 
 function renderIncludes(items) {
@@ -155,6 +158,8 @@ function renderTierPage(tier) {
                 ${renderBaseMetrics(tier)}
                 <h4 class="book-base-includes-label">EVERYTHING INCLUDED</h4>
                 ${renderIncludes(tier.includes)}
+                ${tier.rhythm ? `<h4 class="book-base-includes-label">${escapeHtml(String(tier.rhythm.title || "How each month runs").toUpperCase())}</h4>${renderIncludes(tier.rhythm.steps)}` : ""}
+                ${tier.handoff ? `<h4 class="book-base-includes-label">AT HANDOFF</h4>${renderIncludes(tier.handoff)}` : ""}
                 <p class="book-base-scope">${escapeHtml(tier.baseScopeNote || tier.scopeDriver || "We confirm the final included scope with you before work begins.")}</p>
               </div>
               <div id="book-configurator"></div>

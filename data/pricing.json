@@ -1,320 +1,1758 @@
 {
   "hero": {
-    "headline": "Pick the stage that’s costing you the most.",
-    "sub": "Every package plugs into the SWFT Method, from getting seen to bringing customers back. Prices are published, scope is itemized, and nothing starts until you approve it.",
-    "trustLine": "Work directly with the people who create it · Itemized scope before you pay · Month-to-month retainers"
+    "headline": "Digital and Visual services, priced clearly.",
+    "sub": "Every service lists its offers, its starting price and exactly what you get. Pick a category, compare the offers inside each service, and nothing starts until you approve the scope.",
+    "trustLine": "Work directly with the people who create it · Itemized deliverables before you pay · Month-to-month plans"
   },
   "calUrl": "/growth-audit",
-  "projectTiers": {
-    "id": "project-tiers",
-    "label": "Fix a stage",
-    "intro": "One-time projects that get you seen, capture attention and convert it. Page count, shoot hours, photos, videos and launch work are itemized before you choose extras.",
-    "tiers": [
-      {
-        "id": "gbp-refresh",
-        "name": "GBP Content Refresh",
-        "priceLabel": "Starting at $400",
-        "priceNote": "one-time",
-        "featured": false,
-        "description": "Refresh your local presence with a 90-minute shoot, 15 edited photos, 1 short video and a Google Business Profile update.",
-        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
-        "includes": [
-          "90-minute on-site photo + video session at 1 business location",
-          "15 edited high-resolution photos",
-          "1 edited vertical video (15 to 30 seconds)",
-          "Optimization of 1 existing Google Business Profile: categories, services and description",
-          "Upload up to 10 selected photos and publish 1 Google Business Profile post",
-          "1 review-request link or QR code setup",
-          "1 consolidated edit/revision round"
-        ],
-        "cta": "Start with GBP Content Refresh",
-        "bookUrl": "/book/gbp-content-refresh.html",
-        "stripe": {
-          "mode": "payment",
-          "amountCents": 40000,
-          "productName": "SWFT. GBP Content Refresh (project start)",
-          "ctaLabel": "Pay $400 to start",
-          "priceDisplay": "$400",
-          "billingNote": "The $400 starter price covers the included scope shown above; any extras are quoted separately before payment.",
-          "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
-          "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
+  "quoteUrl": "/contact.html",
+  "bookNote": "Book online. The exact starter scope and optional extras are listed before you pay.",
+  "quoteNote": "Quote first. We confirm scope, dates and total with you before any payment.",
+  "categories": [
+    {
+      "id": "digital",
+      "label": "Digital",
+      "tagline": "Build, measure and grow online.",
+      "intro": "Websites, apps, tracking and marketing that turn attention into inquiries, bookings and sales.",
+      "services": [
+        {
+          "id": "web-design",
+          "name": "Web Design & Development",
+          "summary": "Fast, mobile-first websites on Webflow or Shopify that say what you do in seconds and make booking or buying the obvious next step.",
+          "offers": [
+            {
+              "id": "website-only",
+              "name": "Website Only",
+              "kind": "One-time",
+              "priceLabel": "Starting at $800",
+              "priceNote": "one-time · you supply content",
+              "featured": false,
+              "description": "A responsive site of up to 3 pages using your content, with one contact or booking path and launch support.",
+              "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
+              "includes": [
+                "Up to 3 responsive site pages (for example: Home, Services/Shop and Contact)",
+                "Design and development in Webflow or Shopify using your supplied branding, copy and photos",
+                "1 standard contact/lead form or link to an existing booking system",
+                "Shopify option: entry of up to 5 client-supplied products and standard existing Shopify checkout",
+                "Basic SEO titles and descriptions on the included pages",
+                "Mobile testing and 1 consolidated revision round",
+                "Domain connection and launch assistance; platform and domain fees separate"
+              ],
+              "notIncluded": "Photo/video shoot, copywriting, extra pages ($175 each), complex booking and integrations.",
+              "cta": "Start Website Only",
+              "bookUrl": "/book/website-only.html",
+              "stripe": {
+                "mode": "payment",
+                "amountCents": 80000,
+                "productName": "SWFT. Website Only (project start)",
+                "ctaLabel": "Pay $800 to start",
+                "priceDisplay": "$800",
+                "billingNote": "The $800 starter price covers the included scope shown above; any extras are quoted separately before payment.",
+                "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
+                "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
+              },
+              "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+              "baseScopeNote": "You provide your logo, copy, photos and any product details. No photo/video session is included. Extra pages, additional products, complex bookings, copywriting and integrations are quoted separately.",
+              "baseCounts": {
+                "photos": 0,
+                "videos": 0,
+                "pages": 3,
+                "shootMinutes": 0,
+                "locations": 0,
+                "profiles": 0,
+                "products": 5
+              },
+              "specs": [
+                {
+                  "value": "Up to 3",
+                  "label": "Pages"
+                },
+                {
+                  "value": "Up to 5",
+                  "label": "Shopify products"
+                },
+                {
+                  "value": "1",
+                  "label": "Revision round"
+                },
+                {
+                  "value": "1 to 2 weeks",
+                  "label": "Typical launch"
+                }
+              ],
+              "handoff": [
+                "Site built in, or transferred to, your own Webflow or Shopify account",
+                "Admin access plus a 30-minute training call",
+                "Recorded walkthrough on editing text, images and products",
+                "14 days of launch support for fixes"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "website-care"
+              }
+            },
+            {
+              "id": "website-content-half",
+              "name": "Website + Content Capture",
+              "kind": "One-time",
+              "crossover": "Includes photo + video",
+              "priceLabel": "Starting at $2,000",
+              "priceNote": "one-time · half-day shoot",
+              "featured": true,
+              "badge": "Signature package",
+              "description": "Up to 5 website pages plus a 3-hour shoot: 50 edited photos and 3 short-form videos included.",
+              "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
+              "includes": [
+                "Up to 5 responsive website pages built in Webflow or Shopify",
+                "1 on-location photo + video session lasting up to 3 hours at 1 business location",
+                "50 edited high-resolution photos from the included session",
+                "3 edited vertical short-form videos (15 to 30 seconds each)",
+                "Website image/video placement plus upload of up to 10 photos to your existing Google Business Profile (if access is provided)",
+                "1 standard inquiry form or existing booking link",
+                "Basic on-page SEO, mobile checks and launch support",
+                "1 consolidated website/content revision round"
+              ],
+              "notIncluded": "Copywriting, full Google Business Profile optimization, extra pages, filming hours and locations.",
+              "cta": "Start Website + Content",
+              "bookUrl": "/book/website-content-half.html",
+              "stripe": {
+                "mode": "payment",
+                "amountCents": 200000,
+                "productName": "SWFT. Website + Content Capture (project start)",
+                "ctaLabel": "Pay $2,000 to start",
+                "priceDisplay": "$2,000",
+                "billingNote": "The $2,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
+                "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
+                "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
+              },
+              "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+              "baseScopeNote": "Your 50 photos and 3 short videos are INCLUDED at $2,000. You supply brand assets and initial site copy; extra photos, extra reels, added pages, filming hours and additional locations are separate. Full GBP optimization is not included.",
+              "baseCounts": {
+                "photos": 50,
+                "videos": 3,
+                "pages": 5,
+                "shootMinutes": 180,
+                "locations": 1,
+                "profiles": 0
+              },
+              "specs": [
+                {
+                  "value": "Up to 5",
+                  "label": "Pages"
+                },
+                {
+                  "value": "3 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "50",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "3",
+                  "label": "Short videos"
+                },
+                {
+                  "value": "1",
+                  "label": "Location"
+                },
+                {
+                  "value": "2 to 4 weeks",
+                  "label": "Typical launch"
+                }
+              ],
+              "handoff": [
+                "Site built in, or transferred to, your own Webflow or Shopify account",
+                "All 50 edited photos and 3 videos in a shared folder, licensed for your business marketing",
+                "Admin access, a 30-minute training call and a recorded walkthrough",
+                "30 days of launch support for fixes"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "website-care"
+              }
+            },
+            {
+              "id": "website-content-full",
+              "name": "Website + Extended Content",
+              "kind": "One-time",
+              "crossover": "Includes photo + video",
+              "priceLabel": "Starting at $3,000",
+              "priceNote": "one-time · full-day shoot",
+              "featured": false,
+              "description": "Up to 7 site pages and a 6-hour shoot covering up to 2 nearby locations, with 80 photos and 5 short videos.",
+              "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
+              "includes": [
+                "Up to 7 responsive website pages in Webflow or Shopify",
+                "1 full-day content session of up to 6 hours, including travel between up to 2 nearby locations",
+                "80 edited high-resolution photos from the included session",
+                "5 edited vertical short-form videos (15 to 30 seconds each)",
+                "Content placement across the included site plus upload of up to 15 photos to your existing Google Business Profile (with access)",
+                "1 standard lead/booking path and basic on-page SEO",
+                "Mobile testing, launch assistance and up to 2 consolidated revision rounds"
+              ],
+              "notIncluded": "Copywriting, full Google Business Profile optimization, extra pages, products, filming hours and locations.",
+              "cta": "Start Extended Project",
+              "bookUrl": "/book/website-content-full.html",
+              "stripe": {
+                "mode": "payment",
+                "amountCents": 300000,
+                "productName": "SWFT. Website + Extended Content (project start)",
+                "ctaLabel": "Pay $3,000 to start",
+                "priceDisplay": "$3,000",
+                "billingNote": "The $3,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
+                "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
+                "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
+              },
+              "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+              "baseScopeNote": "The 6-hour production window includes local travel between the two approved shoot locations. You supply branding and initial copy. Additional pages, products, filming hours, locations or video edits are extras; full GBP optimization is not included.",
+              "baseCounts": {
+                "photos": 80,
+                "videos": 5,
+                "pages": 7,
+                "shootMinutes": 360,
+                "locations": 2,
+                "profiles": 0
+              },
+              "specs": [
+                {
+                  "value": "Up to 7",
+                  "label": "Pages"
+                },
+                {
+                  "value": "6 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "80",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "5",
+                  "label": "Short videos"
+                },
+                {
+                  "value": "2",
+                  "label": "Locations"
+                },
+                {
+                  "value": "3 to 5 weeks",
+                  "label": "Typical launch"
+                }
+              ],
+              "handoff": [
+                "Site built in, or transferred to, your own Webflow or Shopify account",
+                "All 80 edited photos and 5 videos in a shared folder, licensed for your business marketing",
+                "Admin access, a 60-minute training call and a recorded walkthrough",
+                "30 days of launch support for fixes"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "website-care"
+              }
+            },
+            {
+              "id": "website-care",
+              "name": "Website Care",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $150/mo",
+              "priceNote": "per month",
+              "description": "Keep your site fast, secure and current without learning the platform. We handle checks, updates and small edits every month.",
+              "specs": [
+                {
+                  "value": "1 hr",
+                  "label": "Edits / mo"
+                },
+                {
+                  "value": "2 business days",
+                  "label": "Response"
+                },
+                {
+                  "value": "Monthly",
+                  "label": "Health check"
+                }
+              ],
+              "includes": [
+                "Up to 1 hour of edits each month: text, photos, prices, menus, team or blog posts",
+                "Monthly health check: forms, booking links, checkout, mobile layout and page speed",
+                "Uptime monitoring, with us alerted if the site goes down",
+                "Platform, theme and app settings checked and updated",
+                "Monthly backup or export where your platform allows it",
+                "A short monthly note on what changed and anything that needs attention",
+                "Month-to-month; unused hours do not roll over"
+              ],
+              "scale": {
+                "title": "Care plans",
+                "columns": [
+                  "Plan",
+                  "Edits / mo",
+                  "Response",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Care",
+                    "1 hr",
+                    "2 business days",
+                    "$150/mo"
+                  ],
+                  [
+                    "Care Plus",
+                    "3 hrs",
+                    "1 business day",
+                    "$350/mo"
+                  ],
+                  [
+                    "Care Pro",
+                    "6 hrs",
+                    "1 business day",
+                    "$650/mo"
+                  ]
+                ],
+                "note": "Care Pro hours can go toward new pages or landing pages. Sites we didn't build start with a one-time review, quoted first."
+              },
+              "notIncluded": "Platform, domain and app subscriptions, redesigns and new features beyond your monthly hours.",
+              "cta": "Request Website Care"
+            }
+          ]
         },
-        "bestFor": "GET SEEN + CAPTURE",
-        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
-        "badge": "Quick first win",
-        "baseScopeNote": "Includes one local business location and one existing, verified Google Business Profile with owner access. Photos are selected from the included shoot. No website build, extra shoot time or additional video edits are included.",
-        "baseCounts": {
-          "photos": 15,
-          "videos": 1,
-          "pages": 0,
-          "shootMinutes": 90,
-          "locations": 1,
-          "profiles": 1
-        }
-      },
-      {
-        "id": "website-only",
-        "name": "Website Only",
-        "priceLabel": "Starting at $800",
-        "priceNote": "one-time · you supply content",
-        "featured": false,
-        "description": "A responsive site of up to 3 pages using your content, with one contact or booking path and launch support.",
-        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
-        "includes": [
-          "Up to 3 responsive site pages (for example: Home, Services/Shop and Contact)",
-          "Design and development in Webflow or Shopify using your supplied branding, copy and photos",
-          "1 standard contact/lead form or link to an existing booking system",
-          "Shopify option: entry of up to 5 client-supplied products and standard existing Shopify checkout",
-          "Basic SEO titles and descriptions on the included pages",
-          "Mobile testing and 1 consolidated revision round",
-          "Domain connection and launch assistance; platform and domain fees separate"
-        ],
-        "cta": "Start Website Only",
-        "bookUrl": "/book/website-only.html",
-        "stripe": {
-          "mode": "payment",
-          "amountCents": 80000,
-          "productName": "SWFT. Website Only (project start)",
-          "ctaLabel": "Pay $800 to start",
-          "priceDisplay": "$800",
-          "billingNote": "The $800 starter price covers the included scope shown above; any extras are quoted separately before payment.",
-          "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
-          "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
+        {
+          "id": "app-development",
+          "name": "App Design & Development",
+          "summary": "Web apps, customer portals and internal tools designed around how people actually use them, from clickable prototype to launch.",
+          "offers": [
+            {
+              "id": "app-design-sprint",
+              "name": "App Design Sprint",
+              "kind": "One-time",
+              "priceLabel": "Starting at $1,500",
+              "priceNote": "one-time",
+              "description": "Turn an app idea into a clickable prototype your team, investors or developer can test and build from.",
+              "includes": [
+                "1 discovery workshop (up to 2 hours) to define users, goals and core features",
+                "User flow map for up to 3 core user journeys",
+                "Up to 12 high-fidelity screens designed in Figma for mobile, desktop or both",
+                "Clickable prototype you can share with customers, partners or investors",
+                "Starter UI kit: type, color, buttons and form components",
+                "2 consolidated revision rounds",
+                "Developer handoff file with specs and exported assets"
+              ],
+              "notIncluded": "Development, copywriting, branding and user research beyond the workshop.",
+              "cta": "Request a design sprint quote",
+              "specs": [
+                {
+                  "value": "Up to 12",
+                  "label": "Screens"
+                },
+                {
+                  "value": "3",
+                  "label": "User journeys"
+                },
+                {
+                  "value": "2",
+                  "label": "Revision rounds"
+                },
+                {
+                  "value": "2 to 3 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "scale": {
+                "title": "Sprint sizes",
+                "columns": [
+                  "Screens",
+                  "User journeys",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 12",
+                    "3",
+                    "$1,500"
+                  ],
+                  [
+                    "Up to 25",
+                    "6",
+                    "$2,800"
+                  ],
+                  [
+                    "26+",
+                    "Custom",
+                    "Quote"
+                  ]
+                ]
+              },
+              "handoff": [
+                "Figma file transferred to your account, with every screen and component",
+                "Shareable prototype link you keep using",
+                "Specs and exported assets ready for any developer",
+                "60-minute handoff call with you or your developer"
+              ],
+              "next": {
+                "label": "Next step",
+                "offer": "app-mvp"
+              }
+            },
+            {
+              "id": "app-mvp",
+              "name": "App MVP Build",
+              "kind": "One-time",
+              "priceLabel": "Starting at $6,000",
+              "priceNote": "one-time · scoped in writing",
+              "description": "A launch-ready first version of your web app with the core features customers need on day one.",
+              "includes": [
+                "Design and development of up to 5 core features agreed in a written scope",
+                "Responsive web app that works on phones, tablets and desktop and can be added to a home screen",
+                "User accounts with email sign-in and password reset",
+                "Database plus a simple admin view to manage users and content",
+                "Up to 2 standard integrations (for example Stripe payments, email or text messages)",
+                "Testing on current iOS, Android and desktop browsers",
+                "Launch on your domain and 30 days of post-launch bug fixes"
+              ],
+              "notIncluded": "Native iOS/Android store apps, hosting and third-party subscriptions, and new features after launch.",
+              "cta": "Request an app quote",
+              "specs": [
+                {
+                  "value": "Up to 5",
+                  "label": "Core features"
+                },
+                {
+                  "value": "2",
+                  "label": "Integrations"
+                },
+                {
+                  "value": "30 days",
+                  "label": "Bug fixes"
+                },
+                {
+                  "value": "6 to 10 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "handoff": [
+                "Source code in a GitHub repository you own",
+                "App deployed to hosting and database accounts in your name",
+                "Technical docs: setup, settings, architecture and how to deploy",
+                "Admin guide plus a recorded walkthrough for your team",
+                "30 days of bug fixes after launch"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "app-care"
+              }
+            },
+            {
+              "id": "app-care",
+              "name": "App Care & Support",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $400/mo",
+              "priceNote": "per month · hosting separate",
+              "description": "Monitoring, security updates, bug fixes and small improvements so your app keeps working as you grow.",
+              "specs": [
+                {
+                  "value": "4 hrs",
+                  "label": "Dev time / mo"
+                },
+                {
+                  "value": "1 business day",
+                  "label": "Critical response"
+                },
+                {
+                  "value": "24/7",
+                  "label": "Uptime monitoring"
+                }
+              ],
+              "includes": [
+                "Uptime and error monitoring with alerts",
+                "Security patches and dependency updates each month",
+                "Bug fixes for issues in the code we delivered",
+                "Up to 4 hours a month for small improvements or content changes",
+                "Monthly backup check and a restore test each quarter",
+                "Monthly summary: uptime, errors, changes made and what's next",
+                "Month-to-month; unused hours do not roll over"
+              ],
+              "scale": {
+                "title": "Care plans",
+                "columns": [
+                  "Plan",
+                  "Dev time / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Care",
+                    "4 hrs",
+                    "$400/mo"
+                  ],
+                  [
+                    "Care Plus",
+                    "10 hrs",
+                    "$900/mo"
+                  ],
+                  [
+                    "Growth",
+                    "20 hrs",
+                    "$1,700/mo"
+                  ]
+                ],
+                "note": "Apps we didn't build start with a one-time code review, quoted first."
+              },
+              "notIncluded": "Hosting and third-party fees, and new features larger than your monthly hours.",
+              "cta": "Request App Care"
+            }
+          ]
         },
-        "bestFor": "CONVERT",
-        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
-        "baseScopeNote": "You provide your logo, copy, photos and any product details. No photo/video session is included. Extra pages, additional products, complex bookings, copywriting and integrations are quoted separately.",
-        "baseCounts": {
-          "photos": 0,
-          "videos": 0,
-          "pages": 3,
-          "shootMinutes": 0,
-          "locations": 0,
-          "profiles": 0,
-          "products": 5
-        }
-      },
-      {
-        "id": "website-content-half",
-        "name": "Website + Content Capture",
-        "priceLabel": "Starting at $2,000",
-        "priceNote": "one-time · half-day shoot",
-        "featured": true,
-        "badge": "Signature package",
-        "description": "Up to 5 website pages plus a 3-hour shoot: 50 edited photos and 3 short-form videos included.",
-        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
-        "includes": [
-          "Up to 5 responsive website pages built in Webflow or Shopify",
-          "1 on-location photo + video session lasting up to 3 hours at 1 business location",
-          "50 edited high-resolution photos from the included session",
-          "3 edited vertical short-form videos (15 to 30 seconds each)",
-          "Website image/video placement plus upload of up to 10 photos to your existing Google Business Profile (if access is provided)",
-          "1 standard inquiry form or existing booking link",
-          "Basic on-page SEO, mobile checks and launch support",
-          "1 consolidated website/content revision round"
-        ],
-        "cta": "Start Website + Content",
-        "bookUrl": "/book/website-content-half.html",
-        "stripe": {
-          "mode": "payment",
-          "amountCents": 200000,
-          "productName": "SWFT. Website + Content Capture (project start)",
-          "ctaLabel": "Pay $2,000 to start",
-          "priceDisplay": "$2,000",
-          "billingNote": "The $2,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
-          "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
-          "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
+        {
+          "id": "analytics",
+          "name": "Analytics",
+          "summary": "Tracking and reporting that show where every lead came from, what it cost and what to do next.",
+          "offers": [
+            {
+              "id": "analytics-setup",
+              "name": "Tracking Setup",
+              "kind": "One-time",
+              "priceLabel": "Starting at $500",
+              "priceNote": "one-time",
+              "description": "Connect your website, Google profile and ads so every call, form and sale is counted and has a source.",
+              "includes": [
+                "Google Analytics 4 and Google Tag Manager set up on 1 website",
+                "Up to 5 conversion events tracked (for example calls, forms, bookings and purchases)",
+                "Meta Pixel installed, plus Conversions API where your platform supports it",
+                "Google Search Console connected and sitemap submitted",
+                "UTM link guide so social, email and ad traffic is labeled correctly",
+                "1 live Looker Studio dashboard with your key numbers",
+                "30-minute walkthrough call"
+              ],
+              "notIncluded": "Custom app tracking, server-side tagging and data warehouse work. Admin access to your site and accounts is required.",
+              "cta": "Request a tracking quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Website"
+                },
+                {
+                  "value": "Up to 5",
+                  "label": "Conversion events"
+                },
+                {
+                  "value": "1",
+                  "label": "Dashboard"
+                },
+                {
+                  "value": "1 to 2 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "scale": {
+                "title": "Setup sizes",
+                "columns": [
+                  "Scope",
+                  "Events",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "1 website",
+                    "Up to 5",
+                    "$500"
+                  ],
+                  [
+                    "Website + online store",
+                    "Up to 10",
+                    "$850"
+                  ],
+                  [
+                    "2+ sites or an app",
+                    "Custom",
+                    "Quote"
+                  ]
+                ]
+              },
+              "handoff": [
+                "Every account (GA4, Tag Manager, Search Console, Looker Studio) owned by you, with admin access",
+                "Tracking plan listing each event and where it fires",
+                "Recorded walkthrough of your dashboard"
+              ],
+              "next": {
+                "label": "Ongoing",
+                "offer": "analytics-reporting"
+              }
+            },
+            {
+              "id": "analytics-reporting",
+              "name": "Monthly Insights",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $250/mo",
+              "priceNote": "per month",
+              "description": "A monthly read on what is working, what slipped and the three moves that matter next.",
+              "includes": [
+                "Dashboard kept current across your website, Google Business Profile, social and ads",
+                "Monthly written report: traffic, leads by source, conversion rate and top content",
+                "3 prioritized recommendations each month",
+                "Alerts when leads, bookings or response times drop below an agreed level",
+                "One 30-minute review call each month",
+                "Month-to-month service"
+              ],
+              "notIncluded": "Carrying out the recommendations. Tracking must already be in place (Tracking Setup or equivalent).",
+              "cta": "Request a reporting quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Report / mo"
+                },
+                {
+                  "value": "3",
+                  "label": "Recommendations"
+                },
+                {
+                  "value": "30 min",
+                  "label": "Review call"
+                }
+              ]
+            }
+          ]
         },
-        "bestFor": "CAPTURE + CONVERT",
-        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
-        "baseScopeNote": "Your 50 photos and 3 short videos are INCLUDED at $2,000. You supply brand assets and initial site copy; extra photos, extra reels, added pages, filming hours and additional locations are separate. Full GBP optimization is not included.",
-        "baseCounts": {
-          "photos": 50,
-          "videos": 3,
-          "pages": 5,
-          "shootMinutes": 180,
-          "locations": 1,
-          "profiles": 0
+        {
+          "id": "marketing",
+          "name": "Marketing",
+          "summary": "Get found in local search, run ads that reach the right neighborhoods and follow up with every lead automatically.",
+          "offers": [
+            {
+              "id": "gbp-refresh",
+              "name": "GBP Content Refresh",
+              "kind": "One-time",
+              "crossover": "Includes photo + video",
+              "priceLabel": "Starting at $400",
+              "priceNote": "one-time",
+              "featured": false,
+              "description": "Refresh your local presence with a 90-minute shoot, 15 edited photos, 1 short video and a Google Business Profile update.",
+              "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
+              "includes": [
+                "90-minute on-site photo + video session at 1 business location",
+                "15 edited high-resolution photos",
+                "1 edited vertical video (15 to 30 seconds)",
+                "Optimization of 1 existing Google Business Profile: categories, services and description",
+                "Upload up to 10 selected photos and publish 1 Google Business Profile post",
+                "1 review-request link or QR code setup",
+                "1 consolidated edit/revision round"
+              ],
+              "notIncluded": "Website work, extra shoot time, extra video edits and additional profiles ($175 each).",
+              "cta": "Start with GBP Content Refresh",
+              "bookUrl": "/book/gbp-content-refresh.html",
+              "stripe": {
+                "mode": "payment",
+                "amountCents": 40000,
+                "productName": "SWFT. GBP Content Refresh (project start)",
+                "ctaLabel": "Pay $400 to start",
+                "priceDisplay": "$400",
+                "billingNote": "The $400 starter price covers the included scope shown above; any extras are quoted separately before payment.",
+                "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
+                "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
+              },
+              "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+              "badge": "Quick first win",
+              "baseScopeNote": "Includes one local business location and one existing, verified Google Business Profile with owner access. Photos are selected from the included shoot. No website build, extra shoot time or additional video edits are included.",
+              "baseCounts": {
+                "photos": 15,
+                "videos": 1,
+                "pages": 0,
+                "shootMinutes": 90,
+                "locations": 1,
+                "profiles": 1
+              },
+              "specs": [
+                {
+                  "value": "90 min",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "15",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "1",
+                  "label": "Short video"
+                },
+                {
+                  "value": "1",
+                  "label": "Google profile"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Typical delivery"
+                }
+              ],
+              "handoff": [
+                "All 15 edited photos and the video in a shared folder, licensed for your marketing",
+                "Review-request link plus a printable QR code",
+                "Before and after summary of your profile changes"
+              ],
+              "next": {
+                "label": "Keep it fresh",
+                "offer": "content-growth-retainer"
+              }
+            },
+            {
+              "id": "lead-follow-up",
+              "name": "Lead Follow-up Automation",
+              "kind": "One-time",
+              "priceLabel": "Starting at $750",
+              "priceNote": "one-time setup",
+              "description": "Stop losing leads to missed calls and slow replies. We set up the texts, emails and reminders that follow up for you.",
+              "includes": [
+                "Missed-call text-back for 1 business phone number",
+                "Instant text and email reply to new form and booking leads",
+                "1 follow-up sequence (up to 3 emails and 2 texts) for leads who have not booked",
+                "Automatic review request after each completed job or order",
+                "Booking confirmations and reminders to cut no-shows",
+                "Simple lead pipeline so you can see every lead and its status",
+                "Setup on GoHighLevel or your existing CRM, plus a recorded walkthrough"
+              ],
+              "notIncluded": "CRM subscription, phone numbers and message fees, billed by those platforms (for example GoHighLevel and Twilio).",
+              "cta": "Request an automation quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Phone number"
+                },
+                {
+                  "value": "1",
+                  "label": "Follow-up sequence"
+                },
+                {
+                  "value": "5",
+                  "label": "Emails + texts"
+                },
+                {
+                  "value": "2 to 3 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "handoff": [
+                "Every automation built in your own CRM account",
+                "One-page map of each automation and what triggers it",
+                "Recorded walkthrough plus 14 days of tweaks after launch"
+              ],
+              "next": {
+                "label": "Ongoing",
+                "offer": "analytics-reporting"
+              }
+            },
+            {
+              "id": "ads-management",
+              "name": "Ads Management",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $500/mo",
+              "priceNote": "per month · ad spend separate",
+              "description": "Meta ad campaigns on Facebook and Instagram, set up, run and optimized using the photos and video you already have.",
+              "includes": [
+                "Campaign strategy plus audience and location targeting for 1 active campaign",
+                "Up to 4 ad variations per month built from your supplied photo and video",
+                "Pixel and lead form checks before launch",
+                "Weekly optimization of budget, audiences and creative",
+                "Monthly performance summary with cost per lead",
+                "Campaigns, audiences and results stay in your ad account if you stop",
+                "Month-to-month service, run in your own ad account"
+              ],
+              "notIncluded": "Ad spend (paid by you directly to Meta) and new photo/video production. For both content and ads, see Full Growth Partner.",
+              "cta": "Request an ads quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Active campaign"
+                },
+                {
+                  "value": "4",
+                  "label": "Ad variations / mo"
+                },
+                {
+                  "value": "Weekly",
+                  "label": "Optimization"
+                },
+                {
+                  "value": "Monthly",
+                  "label": "Report"
+                }
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Campaigns",
+                  "Ad variations / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "1",
+                    "4",
+                    "$500/mo"
+                  ],
+                  [
+                    "2",
+                    "8",
+                    "$850/mo"
+                  ],
+                  [
+                    "3+ or more platforms",
+                    "Custom",
+                    "Quote"
+                  ]
+                ],
+                "note": "Ad spend is separate and paid by you directly to Meta."
+              }
+            },
+            {
+              "id": "full-growth-partner",
+              "name": "Full Growth Partner",
+              "kind": "Monthly",
+              "crossover": "Includes monthly photo + video",
+              "priceLabel": "Starting at $1,200/mo",
+              "priceNote": "per month · custom scoped",
+              "featured": false,
+              "description": "Monthly creative and campaign support: 3-hour shoot, 30 edited photos, 3 short videos and 1 managed Meta campaign.",
+              "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
+              "includes": [
+                "1 on-site content session of up to 3 hours each month at 1 business location",
+                "30 edited high-resolution photos per month",
+                "3 edited vertical short-form videos (15 to 30 seconds each) per month",
+                "Management and optimization of 1 active Meta ad campaign using client-owned ad account",
+                "2 Google Business Profile posts per month for 1 existing profile",
+                "1 monthly performance summary and 1 review-response guidance update",
+                "1 consolidated revision round per monthly content batch",
+                "Month-to-month service; Meta ad spend, domains and platform fees separate"
+              ],
+              "notIncluded": "Ad spend, extra campaigns, locations and production time. Monthly content does not roll over.",
+              "cta": "Talk About Growth Partner",
+              "bookUrl": "/book/full-growth-partner.html",
+              "stripe": {
+                "mode": "subscription",
+                "amountCents": 120000,
+                "interval": "month",
+                "productName": "SWFT. Full Growth Partner",
+                "ctaLabel": "Start at $1,200/mo",
+                "priceDisplay": "$1,200/mo",
+                "billingNote": "The $1,200/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
+                "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
+                "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
+              },
+              "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
+              "baseScopeNote": "Starts at $1,200/mo for one location and one managed Meta campaign. Media spend is paid separately by you to Meta. Extra campaigns, locations, posts, production time and edited assets are quoted separately; monthly content does not roll over.",
+              "baseCounts": {
+                "photos": 30,
+                "videos": 3,
+                "pages": 0,
+                "shootMinutes": 180,
+                "locations": 1,
+                "profiles": 1,
+                "campaigns": 1
+              },
+              "specs": [
+                {
+                  "value": "3 hrs",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "30",
+                  "label": "Edited photos / mo"
+                },
+                {
+                  "value": "3",
+                  "label": "Short videos / mo"
+                },
+                {
+                  "value": "1",
+                  "label": "Meta campaign"
+                },
+                {
+                  "value": "2",
+                  "label": "Google posts / mo"
+                }
+              ],
+              "rhythm": {
+                "title": "How each month runs",
+                "steps": [
+                  "Week 1: Planning call, then a content plan and shot list built from last month's results",
+                  "Week 2: On-site shoot of up to 3 hours at your location",
+                  "Week 3: Edited photos and videos delivered; up to 4 new ad variations and 2 Google posts go live",
+                  "Week 4: Performance summary with cost per lead, what worked and what changes next month"
+                ]
+              }
+            }
+          ]
         }
-      },
-      {
-        "id": "website-content-full",
-        "name": "Website + Extended Content",
-        "priceLabel": "Starting at $3,000",
-        "priceNote": "one-time · full-day shoot",
-        "featured": false,
-        "description": "Up to 7 site pages and a 6-hour shoot covering up to 2 nearby locations, with 80 photos and 5 short videos.",
-        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
-        "includes": [
-          "Up to 7 responsive website pages in Webflow or Shopify",
-          "1 full-day content session of up to 6 hours, including travel between up to 2 nearby locations",
-          "80 edited high-resolution photos from the included session",
-          "5 edited vertical short-form videos (15 to 30 seconds each)",
-          "Content placement across the included site plus upload of up to 15 photos to your existing Google Business Profile (with access)",
-          "1 standard lead/booking path and basic on-page SEO",
-          "Mobile testing, launch assistance and up to 2 consolidated revision rounds"
-        ],
-        "cta": "Start Extended Project",
-        "bookUrl": "/book/website-content-full.html",
-        "stripe": {
-          "mode": "payment",
-          "amountCents": 300000,
-          "productName": "SWFT. Website + Extended Content (project start)",
-          "ctaLabel": "Pay $3,000 to start",
-          "priceDisplay": "$3,000",
-          "billingNote": "The $3,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
-          "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
-          "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
+      ]
+    },
+    {
+      "id": "visual",
+      "label": "Visual",
+      "tagline": "Get seen and remembered.",
+      "intro": "Photo, video, social and live streaming that show customers what you do, captured on-site by the people who plan it.",
+      "services": [
+        {
+          "id": "photography",
+          "name": "Photography",
+          "summary": "On-site photos of your space, team and product, edited and sized for your website, Google profile and social.",
+          "offers": [
+            {
+              "id": "photo-session",
+              "name": "Brand Photo Session",
+              "kind": "One-time",
+              "priceLabel": "Starting at $450",
+              "priceNote": "one-time",
+              "description": "A 2-hour on-site shoot that gives you a library of real, on-brand photos to use everywhere.",
+              "includes": [
+                "Pre-shoot call and a shot list planned with you",
+                "Up to 2 hours of on-site photography at 1 location",
+                "Proofing gallery of every usable frame, so you pick your favorites",
+                "25 edited high-resolution photos of your picks",
+                "Web and social sized exports of every edited photo",
+                "1 consolidated retouch round",
+                "Commercial use license for your business marketing"
+              ],
+              "notIncluded": "Models, props, studio rental, hair and makeup, and raw files.",
+              "cta": "Request a photo quote",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "150+",
+                  "label": "Frames captured"
+                },
+                {
+                  "value": "25",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "1",
+                  "label": "Location"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "scale": {
+                "title": "Session sizes",
+                "columns": [
+                  "Session",
+                  "Edited photos",
+                  "Locations",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "2 hrs",
+                    "25",
+                    "1",
+                    "$450"
+                  ],
+                  [
+                    "4 hrs (half day)",
+                    "60",
+                    "Up to 2",
+                    "$850"
+                  ],
+                  [
+                    "8 hrs (full day)",
+                    "120",
+                    "Up to 3",
+                    "$1,600"
+                  ]
+                ],
+                "note": "More edited photos from the same shoot are $100 per 10."
+              },
+              "handoff": [
+                "Online gallery with full-resolution and web-sized downloads",
+                "Proofs stay in your gallery for 90 days for extra picks"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "photo-plan"
+              }
+            },
+            {
+              "id": "product-photos",
+              "name": "Product Photography",
+              "kind": "One-time",
+              "priceLabel": "Starting at $400",
+              "priceNote": "one-time · up to 10 products",
+              "description": "Clean, consistent product shots for your online store, menu or catalog.",
+              "includes": [
+                "Up to 10 products photographed at your location",
+                "3 edited images per product: front, angle and detail on a clean background",
+                "3 styled lifestyle images featuring your products",
+                "Background cleanup, color correction and consistent sizing across your catalog",
+                "Exports sized for Shopify, marketplaces and social",
+                "1 consolidated retouch round"
+              ],
+              "notIncluded": "Props, models, studio rental and complex compositing.",
+              "cta": "Request a product photo quote",
+              "specs": [
+                {
+                  "value": "Up to 10",
+                  "label": "Products"
+                },
+                {
+                  "value": "1.5 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "30",
+                  "label": "Edited images"
+                },
+                {
+                  "value": "3",
+                  "label": "Lifestyle images"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "scale": {
+                "title": "More products, more shoot time",
+                "columns": [
+                  "Products",
+                  "Shoot time",
+                  "Edited images",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 10",
+                    "1.5 hrs",
+                    "30 + 3 lifestyle",
+                    "$400"
+                  ],
+                  [
+                    "Up to 25",
+                    "3 hrs",
+                    "75 + 6 lifestyle",
+                    "$850"
+                  ],
+                  [
+                    "Up to 50",
+                    "6 hrs",
+                    "150 + 10 lifestyle",
+                    "$1,600"
+                  ],
+                  [
+                    "50+",
+                    "Custom",
+                    "3 per product",
+                    "Quote"
+                  ]
+                ],
+                "note": "Large, reflective or multi-part products can need extra time; we confirm before the shoot."
+              },
+              "handoff": [
+                "Gallery with every image named by product or SKU, ready to upload",
+                "Matching web and full-resolution versions of each image"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "photo-plan"
+              }
+            },
+            {
+              "id": "photo-plan",
+              "name": "Monthly Photo Plan",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $400/mo",
+              "priceNote": "per month",
+              "description": "A standing monthly shoot so your website, menu and feed always have fresh, real photos.",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "25",
+                  "label": "Edited photos / mo"
+                },
+                {
+                  "value": "1",
+                  "label": "Location"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "includes": [
+                "1 on-site shoot of up to 2 hours each month at 1 location",
+                "Monthly shot list built around your promotions, new products and season",
+                "25 edited high-resolution photos per month, or up to 10 products in a product month",
+                "Web and social sized exports in a shared library that grows every month",
+                "Priority booking for shoot dates",
+                "1 consolidated retouch round per month",
+                "Month-to-month; monthly photos do not roll over"
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Shoot / mo",
+                  "Edited photos / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "2 hrs",
+                    "25",
+                    "$400/mo"
+                  ],
+                  [
+                    "4 hrs",
+                    "60",
+                    "$750/mo"
+                  ]
+                ]
+              },
+              "notIncluded": "Video (see Monthly Video Plan or the Content + Growth Retainer), models, props and studio rental.",
+              "cta": "Request a monthly photo quote"
+            }
+          ]
         },
-        "bestFor": "CAPTURE + CONVERT AT SCALE",
-        "checkoutNote": "The exact starter scope and optional work are listed before you book.",
-        "baseScopeNote": "The 6-hour production window includes local travel between the two approved shoot locations. You supply branding and initial copy. Additional pages, products, filming hours, locations or video edits are extras; full GBP optimization is not included.",
-        "baseCounts": {
-          "photos": 80,
-          "videos": 5,
-          "pages": 7,
-          "shootMinutes": 360,
-          "locations": 2,
-          "profiles": 0
-        }
-      }
-    ]
-  },
-  "ongoingTiers": {
-    "id": "ongoing",
-    "label": "Run the whole method",
-    "intro": "Monthly content, follow-up and automation that keep the cycle repeating. Each tier defines its recurring visits, edited assets and managed channels; extras are quoted before you subscribe.",
-    "tiers": [
-      {
-        "id": "content-growth-retainer",
-        "name": "Content + Growth Retainer",
-        "priceLabel": "Starting at $450/mo",
-        "priceNote": "per month",
-        "featured": false,
-        "description": "Monthly starter content: 60-minute shoot, 12 edited photos, 1 short video and 2 Google Business Profile posts.",
-        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
-        "includes": [
-          "1 on-site photo + video visit of up to 60 minutes per month at 1 location",
-          "12 edited high-resolution photos per month",
-          "1 edited vertical short-form video (15 to 30 seconds) per month",
-          "2 Google Business Profile posts per month for 1 existing profile",
-          "Monthly review-response guidance/templates (client posts responses)",
-          "1 consolidated revision round per monthly content batch",
-          "Month-to-month service; monthly deliverables do not roll over"
-        ],
-        "cta": "Start Content Retainer",
-        "bookUrl": "/book/content-growth-retainer.html",
-        "stripe": {
-          "mode": "subscription",
-          "amountCents": 45000,
-          "interval": "month",
-          "productName": "SWFT. Content + Growth Retainer",
-          "ctaLabel": "Start at $450/mo",
-          "priceDisplay": "$450/mo",
-          "billingNote": "The $450/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
-          "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
-          "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
+        {
+          "id": "videography",
+          "name": "Videography",
+          "summary": "Short-form video and brand films that stop the scroll and explain what you do in seconds.",
+          "offers": [
+            {
+              "id": "short-form-pack",
+              "name": "Short-Form Video Pack",
+              "kind": "One-time",
+              "priceLabel": "Starting at $600",
+              "priceNote": "one-time",
+              "description": "A shoot planned for Reels, TikTok and Shorts, edited into ready-to-post vertical videos.",
+              "includes": [
+                "Up to 2 hours of on-site filming at 1 location",
+                "Creative plan with hooks and a shot list built from what your audience already watches",
+                "4 edited vertical videos (15 to 45 seconds each)",
+                "Captions, licensed music and your logo on every video",
+                "A cover frame for each video",
+                "1 consolidated revision round"
+              ],
+              "notIncluded": "Actors, voiceover talent and extra locations. Extra edits from the same shoot are $125 each.",
+              "cta": "Request a video quote",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "4",
+                  "label": "Edited videos"
+                },
+                {
+                  "value": "15 to 45 sec",
+                  "label": "Length"
+                },
+                {
+                  "value": "10 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "scale": {
+                "title": "Pack sizes",
+                "columns": [
+                  "Videos",
+                  "Shoot time",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "4",
+                    "2 hrs",
+                    "$600"
+                  ],
+                  [
+                    "8",
+                    "4 hrs",
+                    "$1,100"
+                  ],
+                  [
+                    "12",
+                    "6 hrs",
+                    "$1,600"
+                  ]
+                ],
+                "note": "Extra edits from the same shoot are $125 each."
+              },
+              "handoff": [
+                "Final vertical videos (1080 x 1920) with and without captions",
+                "A cover frame for each video",
+                "Raw footage kept for 90 days in case you want more edits"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "video-plan"
+              }
+            },
+            {
+              "id": "brand-film",
+              "name": "Brand Film",
+              "kind": "One-time",
+              "priceLabel": "Starting at $1,800",
+              "priceNote": "one-time",
+              "description": "A polished story film for your homepage, pitch or launch, with cutdowns for social.",
+              "includes": [
+                "Pre-production: creative brief, script outline and shot list",
+                "Up to 4 hours of filming at up to 2 nearby locations",
+                "1 hero film (60 to 120 seconds) in widescreen",
+                "1 vertical 30-second cutdown plus 3 short social clips",
+                "Interview audio, licensed music, color grading and captions",
+                "2 consolidated revision rounds"
+              ],
+              "notIncluded": "Talent, voiceover, drone, studio rental and travel beyond local coverage.",
+              "cta": "Request a brand film quote",
+              "specs": [
+                {
+                  "value": "4 hrs",
+                  "label": "Filming"
+                },
+                {
+                  "value": "60 to 120 sec",
+                  "label": "Hero film"
+                },
+                {
+                  "value": "4",
+                  "label": "Social cutdowns"
+                },
+                {
+                  "value": "2",
+                  "label": "Revision rounds"
+                },
+                {
+                  "value": "3 to 4 weeks",
+                  "label": "Typical delivery"
+                }
+              ],
+              "handoff": [
+                "Final film in widescreen and vertical, as web and full-quality files",
+                "Music licensed for your marketing use",
+                "Project files kept for 6 months for future edits"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "video-plan"
+              }
+            },
+            {
+              "id": "video-plan",
+              "name": "Monthly Video Plan",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $500/mo",
+              "priceNote": "per month",
+              "description": "Fresh short-form video every month, planned from what performed last month.",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "4",
+                  "label": "Videos / mo"
+                },
+                {
+                  "value": "15 to 45 sec",
+                  "label": "Length"
+                },
+                {
+                  "value": "10 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "includes": [
+                "1 on-site shoot each month at 1 location",
+                "Monthly creative plan with hooks and formats based on last month's results",
+                "Edited vertical videos with captions, licensed music and your logo",
+                "Cover frames and suggested captions for each video",
+                "1 consolidated revision round per monthly batch",
+                "Month-to-month; monthly videos do not roll over"
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Videos / mo",
+                  "Shoot / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "4",
+                    "2 hrs",
+                    "$500/mo"
+                  ],
+                  [
+                    "8",
+                    "3 hrs",
+                    "$900/mo"
+                  ],
+                  [
+                    "12",
+                    "4 hrs",
+                    "$1,250/mo"
+                  ]
+                ]
+              },
+              "notIncluded": "Posting (see Managed Social), actors, voiceover and extra locations.",
+              "cta": "Request a monthly video quote"
+            }
+          ]
         },
-        "bestFor": "NURTURE + REPEAT",
-        "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
-        "baseScopeNote": "This is the $450/mo starter scope, not unlimited content. The 12 photos, 1 video and 60-minute visit reset each month. Additional edits, filming time, social publishing or extra locations are quoted separately.",
-        "baseCounts": {
-          "photos": 12,
-          "videos": 1,
-          "pages": 0,
-          "shootMinutes": 60,
-          "locations": 1,
-          "profiles": 1
-        }
-      },
-      {
-        "id": "full-growth-partner",
-        "name": "Full Growth Partner",
-        "priceLabel": "Starting at $1,200/mo",
-        "priceNote": "per month · custom scoped",
-        "featured": false,
-        "description": "Monthly creative and campaign support: 3-hour shoot, 30 edited photos, 3 short videos and 1 managed Meta campaign.",
-        "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
-        "includes": [
-          "1 on-site content session of up to 3 hours each month at 1 business location",
-          "30 edited high-resolution photos per month",
-          "3 edited vertical short-form videos (15 to 30 seconds each) per month",
-          "Management and optimization of 1 active Meta ad campaign using client-owned ad account",
-          "2 Google Business Profile posts per month for 1 existing profile",
-          "1 monthly performance summary and 1 review-response guidance update",
-          "1 consolidated revision round per monthly content batch",
-          "Month-to-month service; Meta ad spend, domains and platform fees separate"
-        ],
-        "cta": "Talk About Growth Partner",
-        "bookUrl": "/book/full-growth-partner.html",
-        "stripe": {
-          "mode": "subscription",
-          "amountCents": 120000,
-          "interval": "month",
-          "productName": "SWFT. Full Growth Partner",
-          "ctaLabel": "Start at $1,200/mo",
-          "priceDisplay": "$1,200/mo",
-          "billingNote": "The $1,200/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
-          "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
-          "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
+        {
+          "id": "social-media",
+          "name": "Social Media Management",
+          "summary": "Fresh content every month and a feed that stays active, so customers see you before they need you.",
+          "offers": [
+            {
+              "id": "social-setup",
+              "name": "Social Profile Setup",
+              "kind": "One-time",
+              "priceLabel": "Starting at $350",
+              "priceNote": "one-time",
+              "description": "Get your profiles looking right and a clear plan before you post, so every visit can turn into a follow.",
+              "specs": [
+                {
+                  "value": "Up to 3",
+                  "label": "Profiles"
+                },
+                {
+                  "value": "30 days",
+                  "label": "Content plan"
+                },
+                {
+                  "value": "9",
+                  "label": "Post templates"
+                },
+                {
+                  "value": "1 to 2 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "includes": [
+                "Audit of up to 3 profiles (for example Instagram, Facebook and TikTok)",
+                "Optimized bio, profile photo, links and contact buttons on each",
+                "Highlight covers and a link-in-bio page",
+                "30-day content plan with post ideas, hooks and posting times",
+                "9 branded post templates in Canva you can reuse",
+                "Brand voice and hashtag guide"
+              ],
+              "handoff": [
+                "Canva templates shared to your account",
+                "Content plan and voice guide as a shareable doc",
+                "30-minute walkthrough call"
+              ],
+              "notIncluded": "Photo/video production, posting and paid ads.",
+              "cta": "Request a setup quote",
+              "next": {
+                "label": "Monthly",
+                "offer": "managed-social"
+              }
+            },
+            {
+              "id": "content-growth-retainer",
+              "name": "Content + Growth Retainer",
+              "kind": "Monthly",
+              "crossover": "Includes Google Business posts",
+              "priceLabel": "Starting at $450/mo",
+              "priceNote": "per month",
+              "featured": false,
+              "description": "Monthly starter content: 60-minute shoot, 12 edited photos, 1 short video and 2 Google Business Profile posts.",
+              "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
+              "includes": [
+                "1 on-site photo + video visit of up to 60 minutes per month at 1 location",
+                "12 edited high-resolution photos per month",
+                "1 edited vertical short-form video (15 to 30 seconds) per month",
+                "2 Google Business Profile posts per month for 1 existing profile",
+                "Monthly review-response guidance/templates (client posts responses)",
+                "1 consolidated revision round per monthly content batch",
+                "Month-to-month service; monthly deliverables do not roll over"
+              ],
+              "notIncluded": "Posting to social channels (add Managed Social), extra edits, filming time and locations.",
+              "cta": "Start Content Retainer",
+              "bookUrl": "/book/content-growth-retainer.html",
+              "stripe": {
+                "mode": "subscription",
+                "amountCents": 45000,
+                "interval": "month",
+                "productName": "SWFT. Content + Growth Retainer",
+                "ctaLabel": "Start at $450/mo",
+                "priceDisplay": "$450/mo",
+                "billingNote": "The $450/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
+                "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
+                "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
+              },
+              "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
+              "baseScopeNote": "This is the $450/mo starter scope, not unlimited content. The 12 photos, 1 video and 60-minute visit reset each month. Additional edits, filming time, social publishing or extra locations are quoted separately.",
+              "baseCounts": {
+                "photos": 12,
+                "videos": 1,
+                "pages": 0,
+                "shootMinutes": 60,
+                "locations": 1,
+                "profiles": 1
+              },
+              "specs": [
+                {
+                  "value": "60 min",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "12",
+                  "label": "Edited photos / mo"
+                },
+                {
+                  "value": "1",
+                  "label": "Short video / mo"
+                },
+                {
+                  "value": "2",
+                  "label": "Google posts / mo"
+                }
+              ],
+              "next": {
+                "label": "Add posting",
+                "offer": "managed-social"
+              }
+            },
+            {
+              "id": "managed-social",
+              "name": "Managed Social",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $500/mo",
+              "priceNote": "per month",
+              "description": "We plan, write and post your social content and answer comments, so your feed never goes quiet.",
+              "includes": [
+                "2 platforms (for example Instagram and Facebook, or Instagram and TikTok)",
+                "12 posts per month, built from your content or SWFT shoot content",
+                "Monthly content calendar you approve before anything goes live",
+                "Captions, hashtags and scheduling for every post",
+                "Comment and DM replies on business days, with sales questions passed to you",
+                "Monthly report: reach, engagement, follower growth and top posts",
+                "Your accounts and content stay yours; we work with your login access",
+                "Month-to-month service"
+              ],
+              "notIncluded": "New photo/video production (pair with the Content + Growth Retainer) and paid boosts.",
+              "cta": "Request a social quote",
+              "specs": [
+                {
+                  "value": "2",
+                  "label": "Platforms"
+                },
+                {
+                  "value": "12",
+                  "label": "Posts / mo"
+                },
+                {
+                  "value": "Business days",
+                  "label": "Comment replies"
+                },
+                {
+                  "value": "Monthly",
+                  "label": "Report"
+                }
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Platforms",
+                  "Posts / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "2",
+                    "12",
+                    "$500/mo"
+                  ],
+                  [
+                    "3",
+                    "20",
+                    "$800/mo"
+                  ],
+                  [
+                    "4",
+                    "30",
+                    "$1,150/mo"
+                  ]
+                ]
+              },
+              "next": {
+                "label": "Add fresh content",
+                "offer": "content-growth-retainer"
+              }
+            }
+          ]
         },
-        "bestFor": "THE FULL SWFT METHOD",
-        "checkoutNote": "Monthly base scope and optional work are listed before you subscribe.",
-        "baseScopeNote": "Starts at $1,200/mo for one location and one managed Meta campaign. Media spend is paid separately by you to Meta. Extra campaigns, locations, posts, production time and edited assets are quoted separately; monthly content does not roll over.",
-        "baseCounts": {
-          "photos": 30,
-          "videos": 3,
-          "pages": 0,
-          "shootMinutes": 180,
-          "locations": 1,
-          "profiles": 1,
-          "campaigns": 1
+        {
+          "id": "live-streaming",
+          "name": "Live Streaming",
+          "summary": "Professional live broadcasts of your events, launches, services and classes, with a recording you keep.",
+          "offers": [
+            {
+              "id": "livestream-single",
+              "name": "Single-Camera Stream",
+              "kind": "One-time",
+              "priceLabel": "Starting at $900",
+              "priceNote": "per event",
+              "description": "A clean, reliable stream for talks, classes, services and smaller events.",
+              "includes": [
+                "1 camera operator and 1 HD camera",
+                "Up to 2 hours of live coverage, plus setup and a test before you go live",
+                "Audio from a wireless mic or your venue's sound system",
+                "Stream to 1 destination: YouTube, Facebook, Instagram or a private link",
+                "Branded title card and on-screen name graphics",
+                "Full recording delivered after the event"
+              ],
+              "notIncluded": "Venue internet (wired, at least 10 Mbps upload, is required) and cellular backup.",
+              "cta": "Request a livestream quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Camera"
+                },
+                {
+                  "value": "2 hrs",
+                  "label": "Live coverage"
+                },
+                {
+                  "value": "1",
+                  "label": "Destination"
+                },
+                {
+                  "value": "2 business days",
+                  "label": "Recording delivered"
+                }
+              ],
+              "scale": {
+                "title": "Coverage",
+                "columns": [
+                  "Live coverage",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 2 hrs",
+                    "$900"
+                  ],
+                  [
+                    "Up to 4 hrs",
+                    "$1,300"
+                  ],
+                  [
+                    "Up to 8 hrs",
+                    "$2,100"
+                  ]
+                ],
+                "note": "Setup and testing time is included on top of live coverage."
+              },
+              "handoff": [
+                "Full recording as a download, ready to upload or replay",
+                "The replay stays on your channel"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "livestream-recurring"
+              }
+            },
+            {
+              "id": "livestream-multi",
+              "name": "Multi-Camera Production",
+              "kind": "One-time",
+              "priceLabel": "Starting at $2,500",
+              "priceNote": "per event",
+              "description": "A broadcast-style show for conferences, launches, performances and big moments.",
+              "includes": [
+                "Up to 3 cameras with 2 operators and a live director switching shots",
+                "Up to 4 hours of live coverage, plus setup and a pre-show test",
+                "Audio mixed from your venue's sound board or our mics",
+                "Stream to up to 3 platforms at once",
+                "Live graphics: logo, lower thirds, slides or screen share",
+                "Full recording plus 3 edited highlight clips"
+              ],
+              "notIncluded": "Venue internet requirements apply. Extra cameras, hours and cellular bonding are quoted separately.",
+              "cta": "Request a production quote",
+              "specs": [
+                {
+                  "value": "3",
+                  "label": "Cameras"
+                },
+                {
+                  "value": "3",
+                  "label": "Crew"
+                },
+                {
+                  "value": "4 hrs",
+                  "label": "Live coverage"
+                },
+                {
+                  "value": "3",
+                  "label": "Destinations at once"
+                },
+                {
+                  "value": "3",
+                  "label": "Highlight clips"
+                }
+              ],
+              "scale": {
+                "title": "Coverage",
+                "columns": [
+                  "Live coverage",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 4 hrs",
+                    "$2,500"
+                  ],
+                  [
+                    "Up to 8 hrs",
+                    "$4,200"
+                  ],
+                  [
+                    "Multi-day or 4+ cameras",
+                    "Quote"
+                  ]
+                ]
+              },
+              "handoff": [
+                "Full program recording within 2 business days",
+                "3 edited highlight clips within 5 business days",
+                "Separate recordings from each camera, on request"
+              ]
+            },
+            {
+              "id": "livestream-recurring",
+              "name": "Recurring Streams",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $1,800/mo",
+              "priceNote": "per month",
+              "description": "Weekly services, classes or shows streamed by the same crew at the same venue, every time.",
+              "specs": [
+                {
+                  "value": "4",
+                  "label": "Streams / mo"
+                },
+                {
+                  "value": "2 hrs",
+                  "label": "Each stream"
+                },
+                {
+                  "value": "1",
+                  "label": "Camera"
+                },
+                {
+                  "value": "1",
+                  "label": "Clip per stream"
+                }
+              ],
+              "includes": [
+                "4 single-camera streams per month at the same venue, up to 2 hours each",
+                "The same operator and a saved setup, so every week starts on time",
+                "Stream to 1 destination, with your branded title card and name graphics",
+                "Full recording of every stream within 2 business days",
+                "1 short highlight clip from each stream for social",
+                "Month-to-month; unused streams do not roll over"
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Streams / mo",
+                  "Cameras",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "4",
+                    "1",
+                    "$1,800/mo"
+                  ],
+                  [
+                    "4",
+                    "2",
+                    "$2,600/mo"
+                  ],
+                  [
+                    "8",
+                    "1",
+                    "$3,200/mo"
+                  ]
+                ]
+              },
+              "notIncluded": "Venue internet requirements apply. Equipment installs and training your own team are quoted separately.",
+              "cta": "Request a recurring stream quote"
+            }
+          ]
         }
-      }
-    ]
-  },
+      ]
+    }
+  ],
   "bookCta": {
-    "headline": "Not sure where you’re leaking customers?",
-    "quote": "Send us your website or social profile. We’ll review all five stages and email you the three fixes that will move the needle most.",
+    "headline": "Not sure which service you need?",
+    "quote": "Send us your website or social profile. We’ll review your Digital and Visual presence and email you the three fixes that will move the needle most.",
     "sub": "Free and personal. No call, no pressure to buy a bigger package.",
     "button": "Get My Free Growth Audit"
   },
   "faq": [
     {
-      "q": "Which package should I start with?",
-      "a": "Start where you lose the most customers. If people can’t find you, start with the GBP Content Refresh. If they find you but don’t reach out, start with a website. If you’re not sure, the free Growth Audit will tell you."
+      "q": "What’s the difference between Digital and Visual?",
+      "a": "Digital is what we build and run online: websites, apps, analytics and marketing. Visual is what your customers see: photography, videography, social media management and live streaming. Most clients use both, and packages like Website + Content Capture already include a shoot."
+    },
+    {
+      "q": "Which service should I start with?",
+      "a": "Start where you lose the most customers. If people can’t find you, start with Marketing and the GBP Content Refresh. If they find you but don’t reach out, start with Web Design & Development. If your photos and feed feel stale, start with Photography, Videography or a monthly content plan. Not sure? The free Growth Audit will tell you."
     },
     {
       "q": "How much does it cost to get started?",
-      "a": "Local content and Google Business Profile work starts at $400. A Webflow or Shopify website starts at $800. A website with on-site photo/video capture starts at $2,000. Larger, multi-location projects start at $3,000."
+      "a": "Digital: Google Business Profile work starts at $400, tracking setup at $500 and a Webflow or Shopify website at $800. Visual: social profile setup starts at $350, product photography at $400, a brand photo session at $450, a short-form video pack at $600 and live streaming at $900 per event."
+    },
+    {
+      "q": "What monthly plans do you offer?",
+      "a": "Every service has a monthly option. Digital: Website Care from $150/mo, Monthly Insights from $250/mo, App Care from $400/mo, Ads Management from $500/mo and Full Growth Partner from $1,200/mo. Visual: Monthly Photo Plan from $400/mo, Content + Growth Retainer from $450/mo, Monthly Video Plan and Managed Social from $500/mo each, and Recurring Streams from $1,800/mo. All are month-to-month under the agreed scope."
+    },
+    {
+      "q": "Which offers can I book online?",
+      "a": "Six packages have online checkout: GBP Content Refresh, Website Only, Website + Content Capture, Website + Extended Content, Content + Growth Retainer and Full Growth Partner. Every other offer starts with a quick quote so we can confirm scope, dates and total first."
+    },
+    {
+      "q": "What do I get at handoff?",
+      "a": "You own what we make. Websites are built in, or moved to, your own Webflow or Shopify account. Apps ship with the code in a GitHub repository you own and hosting in your name. Photos and videos come licensed for your business marketing. Every project ends with a training call or recorded walkthrough and a support window for fixes; each offer lists its exact handoff."
+    },
+    {
+      "q": "Do you maintain websites and apps after launch?",
+      "a": "Yes. Website Care starts at $150/mo and App Care & Support at $400/mo. Both include monitoring, updates and a set number of edit or development hours each month. Sites and apps we didn't build start with a one-time review."
+    },
+    {
+      "q": "How do bigger shoots and more products change the price?",
+      "a": "More products, photos, videos or live hours take more time on site, so each offer shows its size table. For example, product photography is $400 for up to 10 products, $850 for up to 25 and $1,600 for up to 50."
     },
     {
       "q": "What does “starting at” mean?",
-      "a": "It is the minimum published price for a tightly scoped version of the service. The final quote depends on your pages, content needs, shoot duration, locations and deliverables; we confirm the scope and total with you before starting."
+      "a": "It is the minimum published price for the deliverables listed on that offer. The final quote depends on your pages, features, shoot time, locations and deliverables; we confirm the scope and total with you before starting."
     },
     {
       "q": "Can you quote a $1,200 small-business website or a $2,500 website and shoot?",
       "a": "Yes. Those are examples of expanded project scopes above the minimum. We discuss your goals and existing assets, then quote only the work you need."
     },
     {
-      "q": "How much is ongoing content?",
-      "a": "Content + Growth starts at $450 per month. A larger monthly plan with regular on-site shooting and more deliverables may cost more; the exact scope and rate are agreed before you subscribe."
-    },
-    {
       "q": "Do I need a new website to work with SWFT?",
-      "a": "No. Start with a Google Business Profile/content refresh or a monthly content plan if your existing site is already doing its job."
+      "a": "No. Start with any single service, like a photo session, a Google Business Profile refresh or a monthly content plan, if your existing site is already doing its job."
     },
     {
       "q": "Are ads and third-party subscriptions included?",
-      "a": "Ad spend, Webflow or Shopify subscriptions, domains and other third-party fees are separate unless specifically included in your written proposal. Full Growth Partner management starts at $1,200 per month before ad spend."
+      "a": "Ad spend, Webflow or Shopify subscriptions, domains, hosting, CRM and messaging fees and other third-party costs are separate unless specifically included in your written proposal."
     },
     {
       "q": "Do you require long-term contracts?",
-      "a": "One-time projects are scoped per engagement. Ongoing content retainers are month-to-month under the agreed scope."
+      "a": "No. One-time projects are scoped per engagement. Monthly plans are month-to-month under the agreed scope."
     },
     {
       "q": "How long does a project take?",
-      "a": "Timing depends on the assets you supply, page count, shoot schedule, feedback and approval turnaround. We confirm a realistic timeline during intake."
+      "a": "Timing depends on the assets you supply, page count, features, shoot schedule, feedback and approval turnaround. We confirm a realistic timeline during intake."
     }
   ]
 }
