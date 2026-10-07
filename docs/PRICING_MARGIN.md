@@ -6,20 +6,32 @@
 
 `data/pricing.json` is now organized as **categories → services → offers**:
 
-| Category | Service (`id`) | Offers |
+| Category | Service (`id`) | One-time | Monthly |
+|---|---|---|---|
+| Digital | Web Design & Development (`web-design`) | Website Only $800 · Website + Content Capture $2,000 · Website + Extended Content $3,000 | **Website Care $150/mo** (Care Plus $350, Care Pro $650) |
+| Digital | App Design & Development (`app-development`) | **App Design Sprint $1,500** (25 screens $2,800) · **App MVP Build $6,000** | **App Care & Support $400/mo** (10 hrs $900, 20 hrs $1,700) |
+| Digital | Analytics (`analytics`) | **Tracking Setup $500** (site + store $850) | **Monthly Insights $250/mo** |
+| Digital | Marketing (`marketing`) | GBP Content Refresh $400 · **Lead Follow-up Automation $750** | **Ads Management $500/mo** (2 campaigns $850) · Full Growth Partner $1,200/mo |
+| Visual | Photography (`photography`) | **Brand Photo Session $450** (4 hrs $850, 8 hrs $1,600) · **Product Photography $400** (25 products $850, 50 products $1,600) | **Monthly Photo Plan $400/mo** (4 hrs $750) |
+| Visual | Videography (`videography`) | **Short-Form Video Pack $600** (8 videos $1,100, 12 videos $1,600) · **Brand Film $1,800** | **Monthly Video Plan $500/mo** (8 videos $900, 12 videos $1,250) |
+| Visual | Social Media Management (`social-media`) | **Social Profile Setup $350** | Content + Growth Retainer $450/mo · **Managed Social $500/mo** (3 platforms $800, 4 platforms $1,150) |
+| Visual | Live Streaming (`live-streaming`) | **Single-Camera Stream $900** (4 hrs $1,300, 8 hrs $2,100) · **Multi-Camera Production $2,500** (8 hrs $4,200) | **Recurring Streams $1,800/mo** (4 streams; 2 cameras $2,600; 8 streams $3,200) |
+
+Every offer can carry these display fields (rendered by `js/pricing-render.js`):
+
+| Field | Shows as | Example |
 |---|---|---|
-| Digital | Web Design & Development (`web-design`) | Website Only $800 · Website + Content Capture $2,000 · Website + Extended Content $3,000 |
-| Digital | App Design & Development (`app-development`) | **App Design Sprint $1,500** · **App MVP Build $6,000** |
-| Digital | Analytics (`analytics`) | **Tracking Setup $500** · **Monthly Insights $250/mo** |
-| Digital | Marketing (`marketing`) | GBP Content Refresh $400 · **Ads Management $500/mo** · **Lead Follow-up Automation $750** · Full Growth Partner $1,200/mo |
-| Visual | Photography (`photography`) | **Product Photography $400** · **Brand Photo Session $450** |
-| Visual | Videography (`videography`) | **Short-Form Video Pack $600** · **Brand Film $1,800** |
-| Visual | Social Media Management (`social-media`) | Content + Growth Retainer $450/mo · **Managed Social $500/mo** |
-| Visual | Live Streaming (`live-streaming`) | **Single-Camera Stream $900** · **Multi-Camera Production $2,500** |
+| `specs` | Quick-look tiles under the description | 2 hrs shoot · 25 edited photos · 7 business days delivery |
+| `includes` | "What you get" (one-time) or "Every month you get" (monthly) | |
+| `scale` | Size table; the first row is the starting price | Product Photography by product count |
+| `rhythm` | "How each month runs" steps | Full Growth Partner week 1 to 4 |
+| `handoff` | "At handoff": what the client keeps at the end | Accounts, files, training, support window |
+| `next` | Link to the matching care plan or monthly option | Website Only → Website Care |
 
 - **Unchanged:** the six Stripe-backed packages (plain text above). Their ids, prices, includes, base counts, booking pages, Price IDs and Payment Links are exactly as before; they were only moved under the service they fit best. Packages that span both categories carry a `crossover` tag on the card (for example "Includes photo + video").
+- **Also new on the six Stripe packages (approve before merge):** `specs` (including typical launch/delivery times), `handoff` lists (account ownership, training call length, a 14 or 30 day launch support window) and the Full Growth Partner `rhythm` (a monthly planning call and up to 4 new ad variations a month). Their `includes`, prices and checkout are unchanged, but these lists now also appear on the booking pages, so they read as commitments.
 - **New (bold above): proposed starting prices and deliverables, not yet approved.** They have no Stripe product. Their cards say "Quote first" and link to `/contact.html?service=<service id>`, which preselects the service. Nothing is charged until a quote is agreed. Confirm each price and deliverable list is sustainable before merging; adjust in `data/pricing.json` and the matching chips in `services.html`.
-- How the new numbers were derived: photo/video offers sit near the existing add-on rate card ($150 per filming hour, $100 per 10 edited photos, $125 per extra Reel) with a small package discount. Ads Management + Content + Growth Retainer ($950/mo) stays below Full Growth Partner ($1,200/mo), which adds a longer monthly shoot and more edits. Managed Social excludes production on purpose so it pairs with the Content + Growth Retainer instead of competing with it. App, analytics and live streaming numbers are first drafts with no SWFT precedent; app work in particular should always get a written scope.
+- How the new numbers were derived: photo/video offers sit near the existing add-on rate card ($150 per filming hour, $100 per 10 edited photos, $125 per extra Reel) with a small package discount. Ads Management + Content + Growth Retainer ($950/mo) stays below Full Growth Partner ($1,200/mo), which adds a longer monthly shoot and more edits. Managed Social excludes production on purpose so it pairs with the Content + Growth Retainer instead of competing with it. App, analytics and live streaming numbers are first drafts with no SWFT precedent; app work in particular should always get a written scope. Monthly plans sit a little under the matching one-time offer in exchange for a standing booking (Monthly Photo Plan $400/mo vs Brand Photo Session $450; Monthly Video Plan $500/mo for 4 videos vs $600 one-time). Recurring Streams work out to $450 a stream because the venue, operator and setup repeat every week. Care plans price edit or dev time at roughly $100 to $150 an hour, cheaper per hour on larger plans.
 - To make a new offer bookable online: create the Stripe product, price and Payment Link, then add a `stripe` block and `bookUrl` to the offer and register it in `functions/_lib/stripe-tiers.js`, `data/stripe-catalog.json` and `growth-audit.html`; run `npm run build:book` to generate its page.
 
 ---

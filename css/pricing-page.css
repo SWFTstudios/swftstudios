@@ -795,7 +795,10 @@
   line-height: 1.55;
 }
 
-.hp-pricing-card { scroll-margin-top: calc(var(--sn-height, 62px) + 1rem); }
+.hp-pricing-card {
+  min-width: 0; /* let wide size tables scroll inside the card instead of widening the grid */
+  scroll-margin-top: calc(var(--sn-height, 62px) + 1rem);
+}
 .hp-pricing-kicker {
   display: flex;
   flex-wrap: wrap;
@@ -836,9 +839,166 @@
 .hp-pricing-not-included { font-size: .8rem; }
 .hp-pricing-not-included span { font-family: var(--swft-font-mono, "Space Mono", monospace); }
 
+/* Card footer (not included, note, CTA) sits at the bottom of every card */
+.pr-offer-grid .hp-pricing-includes { flex-grow: 0; }
+.hp-pricing-card__foot {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+  margin-top: auto;
+}
+.hp-pricing-card__foot .button { margin-top: .15rem; }
+
+/* One-time vs monthly label */
+.hp-pricing-kicker__kind.is-monthly {
+  padding: .1rem .45rem;
+  border: 1px solid rgba(86, 180, 233, .45);
+  border-radius: 999px;
+  color: var(--swft-accent-soft, #9dd3f3);
+}
+
+/* Quick-look specs */
+.hp-pricing-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  margin: .2rem 0 0;
+  border: 1px solid var(--pp-border, rgba(255,255,255,.1));
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--pp-border, rgba(255,255,255,.1));
+}
+.hp-pricing-specs > div {
+  flex: 1 1 6.5rem;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: .15rem;
+  padding: .6rem .7rem;
+  background: var(--pp-card, #0a0a0a);
+}
+.hp-pricing-specs dt {
+  color: var(--pp-muted, #a8a8a8);
+  font-size: .72rem;
+  line-height: 1.3;
+}
+.hp-pricing-specs dd {
+  margin: 0;
+  color: var(--swft-text-strong, #fff);
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Size table */
+.hp-pricing-scale__wrap {
+  overflow-x: auto;
+  border: 1px solid var(--pp-border, rgba(255,255,255,.1));
+  border-radius: 8px;
+}
+.hp-pricing-scale table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .8rem;
+  line-height: 1.35;
+}
+.hp-pricing-scale th,
+.hp-pricing-scale td {
+  padding: .5rem .6rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--pp-border, rgba(255,255,255,.1));
+}
+.hp-pricing-scale tbody tr:last-child th,
+.hp-pricing-scale tbody tr:last-child td { border-bottom: 0; }
+.hp-pricing-scale thead th {
+  color: var(--pp-muted, #a8a8a8);
+  font-weight: 500;
+  font-size: .72rem;
+  white-space: nowrap;
+}
+.hp-pricing-scale tbody th { color: var(--swft-text-strong, #fff); font-weight: 600; }
+.hp-pricing-scale td { color: var(--swft-lead, #c4c7c7); }
+.hp-pricing-scale td:last-child {
+  color: var(--swft-text-strong, #fff);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.hp-pricing-scale tr.is-base { background: rgba(86, 180, 233, .07); }
+.hp-pricing-scale__note {
+  margin: .45rem 0 0;
+  color: var(--pp-muted, #a8a8a8);
+  font-size: .75rem;
+  line-height: 1.45;
+}
+
+/* Monthly steps (ordered) and handoff lists */
+.hp-pricing-includes--steps { counter-reset: pr-step; }
+.hp-pricing-includes--steps li { counter-increment: pr-step; padding-left: 1.6rem; }
+.hp-pricing-includes--steps li::before {
+  content: counter(pr-step);
+  top: .05rem;
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: .72rem;
+  font-weight: 400;
+}
+.hp-pricing-includes--handoff li::before { content: "\2713"; font-size: .75rem; top: .1rem; }
+.hp-pricing-includes--steps,
+.hp-pricing-includes--handoff { flex-grow: 0; }
+
+/* Link to the matching care plan / monthly option */
+.hp-pricing-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .25rem .6rem;
+  margin: 0;
+  padding: .65rem .8rem;
+  border: 1px dashed rgba(86, 180, 233, .4);
+  border-radius: 8px;
+  font-size: .85rem;
+}
+.hp-pricing-next > span {
+  color: var(--pp-muted, #a8a8a8);
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: .7rem;
+  text-transform: uppercase;
+}
+.hp-pricing-next a { color: var(--pp-accent, #56b4e9); text-decoration: none; }
+.hp-pricing-next a:hover,
+.hp-pricing-next a:focus-visible { text-decoration: underline; }
+
 @media (min-width: 1100px) {
   .hp-pricing-grid.pr-offer-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+/* Phones: each size row stacks, with the size and price on top and the rest below */
+@media (max-width: 520px) {
+  .hp-pricing-scale__wrap { overflow: visible; }
+  .hp-pricing-scale thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .hp-pricing-scale tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .15rem .75rem;
+    padding: .55rem .65rem;
+    border-bottom: 1px solid var(--pp-border, rgba(255,255,255,.1));
+  }
+  .hp-pricing-scale tbody tr:last-child { border-bottom: 0; }
+  .hp-pricing-scale tbody th,
+  .hp-pricing-scale tbody td { padding: 0; border: 0; }
+  .hp-pricing-scale tbody td:last-child { grid-column: 2; grid-row: 1; text-align: right; }
+  .hp-pricing-scale tbody td:not(:last-child) { grid-column: 1 / -1; font-size: .78rem; }
+  .hp-pricing-scale tbody td:not(:last-child)::before {
+    content: attr(data-label) ": ";
+    color: var(--pp-muted, #a8a8a8);
+  }
+}
+
 @media (max-width: 767px) {
   .pr-cat-tabs { gap: .5rem; margin-bottom: 2rem; }
   .pr-cat-tab { padding: .9rem 1rem; }

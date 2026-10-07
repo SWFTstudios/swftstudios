@@ -158,6 +158,8 @@ function renderTierPage(tier) {
                 ${renderBaseMetrics(tier)}
                 <h4 class="book-base-includes-label">EVERYTHING INCLUDED</h4>
                 ${renderIncludes(tier.includes)}
+                ${tier.rhythm ? `<h4 class="book-base-includes-label">${escapeHtml(String(tier.rhythm.title || "How each month runs").toUpperCase())}</h4>${renderIncludes(tier.rhythm.steps)}` : ""}
+                ${tier.handoff ? `<h4 class="book-base-includes-label">AT HANDOFF</h4>${renderIncludes(tier.handoff)}` : ""}
                 <p class="book-base-scope">${escapeHtml(tier.baseScopeNote || tier.scopeDriver || "We confirm the final included scope with you before work begins.")}</p>
               </div>
               <div id="book-configurator"></div>

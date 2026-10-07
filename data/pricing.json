@@ -61,6 +61,34 @@
                 "locations": 0,
                 "profiles": 0,
                 "products": 5
+              },
+              "specs": [
+                {
+                  "value": "Up to 3",
+                  "label": "Pages"
+                },
+                {
+                  "value": "Up to 5",
+                  "label": "Shopify products"
+                },
+                {
+                  "value": "1",
+                  "label": "Revision round"
+                },
+                {
+                  "value": "1 to 2 weeks",
+                  "label": "Typical launch"
+                }
+              ],
+              "handoff": [
+                "Site built in, or transferred to, your own Webflow or Shopify account",
+                "Admin access plus a 30-minute training call",
+                "Recorded walkthrough on editing text, images and products",
+                "14 days of launch support for fixes"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "website-care"
               }
             },
             {
@@ -106,6 +134,42 @@
                 "shootMinutes": 180,
                 "locations": 1,
                 "profiles": 0
+              },
+              "specs": [
+                {
+                  "value": "Up to 5",
+                  "label": "Pages"
+                },
+                {
+                  "value": "3 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "50",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "3",
+                  "label": "Short videos"
+                },
+                {
+                  "value": "1",
+                  "label": "Location"
+                },
+                {
+                  "value": "2 to 4 weeks",
+                  "label": "Typical launch"
+                }
+              ],
+              "handoff": [
+                "Site built in, or transferred to, your own Webflow or Shopify account",
+                "All 50 edited photos and 3 videos in a shared folder, licensed for your business marketing",
+                "Admin access, a 30-minute training call and a recorded walkthrough",
+                "30 days of launch support for fixes"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "website-care"
               }
             },
             {
@@ -149,7 +213,106 @@
                 "shootMinutes": 360,
                 "locations": 2,
                 "profiles": 0
+              },
+              "specs": [
+                {
+                  "value": "Up to 7",
+                  "label": "Pages"
+                },
+                {
+                  "value": "6 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "80",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "5",
+                  "label": "Short videos"
+                },
+                {
+                  "value": "2",
+                  "label": "Locations"
+                },
+                {
+                  "value": "3 to 5 weeks",
+                  "label": "Typical launch"
+                }
+              ],
+              "handoff": [
+                "Site built in, or transferred to, your own Webflow or Shopify account",
+                "All 80 edited photos and 5 videos in a shared folder, licensed for your business marketing",
+                "Admin access, a 60-minute training call and a recorded walkthrough",
+                "30 days of launch support for fixes"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "website-care"
               }
+            },
+            {
+              "id": "website-care",
+              "name": "Website Care",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $150/mo",
+              "priceNote": "per month",
+              "description": "Keep your site fast, secure and current without learning the platform. We handle checks, updates and small edits every month.",
+              "specs": [
+                {
+                  "value": "1 hr",
+                  "label": "Edits / mo"
+                },
+                {
+                  "value": "2 business days",
+                  "label": "Response"
+                },
+                {
+                  "value": "Monthly",
+                  "label": "Health check"
+                }
+              ],
+              "includes": [
+                "Up to 1 hour of edits each month: text, photos, prices, menus, team or blog posts",
+                "Monthly health check: forms, booking links, checkout, mobile layout and page speed",
+                "Uptime monitoring, with us alerted if the site goes down",
+                "Platform, theme and app settings checked and updated",
+                "Monthly backup or export where your platform allows it",
+                "A short monthly note on what changed and anything that needs attention",
+                "Month-to-month; unused hours do not roll over"
+              ],
+              "scale": {
+                "title": "Care plans",
+                "columns": [
+                  "Plan",
+                  "Edits / mo",
+                  "Response",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Care",
+                    "1 hr",
+                    "2 business days",
+                    "$150/mo"
+                  ],
+                  [
+                    "Care Plus",
+                    "3 hrs",
+                    "1 business day",
+                    "$350/mo"
+                  ],
+                  [
+                    "Care Pro",
+                    "6 hrs",
+                    "1 business day",
+                    "$650/mo"
+                  ]
+                ],
+                "note": "Care Pro hours can go toward new pages or landing pages. Sites we didn't build start with a one-time review, quoted first."
+              },
+              "notIncluded": "Platform, domain and app subscriptions, redesigns and new features beyond your monthly hours.",
+              "cta": "Request Website Care"
             }
           ]
         },
@@ -175,7 +338,60 @@
                 "Developer handoff file with specs and exported assets"
               ],
               "notIncluded": "Development, copywriting, branding and user research beyond the workshop.",
-              "cta": "Request a design sprint quote"
+              "cta": "Request a design sprint quote",
+              "specs": [
+                {
+                  "value": "Up to 12",
+                  "label": "Screens"
+                },
+                {
+                  "value": "3",
+                  "label": "User journeys"
+                },
+                {
+                  "value": "2",
+                  "label": "Revision rounds"
+                },
+                {
+                  "value": "2 to 3 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "scale": {
+                "title": "Sprint sizes",
+                "columns": [
+                  "Screens",
+                  "User journeys",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 12",
+                    "3",
+                    "$1,500"
+                  ],
+                  [
+                    "Up to 25",
+                    "6",
+                    "$2,800"
+                  ],
+                  [
+                    "26+",
+                    "Custom",
+                    "Quote"
+                  ]
+                ]
+              },
+              "handoff": [
+                "Figma file transferred to your account, with every screen and component",
+                "Shareable prototype link you keep using",
+                "Specs and exported assets ready for any developer",
+                "60-minute handoff call with you or your developer"
+              ],
+              "next": {
+                "label": "Next step",
+                "offer": "app-mvp"
+              }
             },
             {
               "id": "app-mvp",
@@ -194,7 +410,95 @@
                 "Launch on your domain and 30 days of post-launch bug fixes"
               ],
               "notIncluded": "Native iOS/Android store apps, hosting and third-party subscriptions, and new features after launch.",
-              "cta": "Request an app quote"
+              "cta": "Request an app quote",
+              "specs": [
+                {
+                  "value": "Up to 5",
+                  "label": "Core features"
+                },
+                {
+                  "value": "2",
+                  "label": "Integrations"
+                },
+                {
+                  "value": "30 days",
+                  "label": "Bug fixes"
+                },
+                {
+                  "value": "6 to 10 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "handoff": [
+                "Source code in a GitHub repository you own",
+                "App deployed to hosting and database accounts in your name",
+                "Technical docs: setup, settings, architecture and how to deploy",
+                "Admin guide plus a recorded walkthrough for your team",
+                "30 days of bug fixes after launch"
+              ],
+              "next": {
+                "label": "Ongoing care",
+                "offer": "app-care"
+              }
+            },
+            {
+              "id": "app-care",
+              "name": "App Care & Support",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $400/mo",
+              "priceNote": "per month · hosting separate",
+              "description": "Monitoring, security updates, bug fixes and small improvements so your app keeps working as you grow.",
+              "specs": [
+                {
+                  "value": "4 hrs",
+                  "label": "Dev time / mo"
+                },
+                {
+                  "value": "1 business day",
+                  "label": "Critical response"
+                },
+                {
+                  "value": "24/7",
+                  "label": "Uptime monitoring"
+                }
+              ],
+              "includes": [
+                "Uptime and error monitoring with alerts",
+                "Security patches and dependency updates each month",
+                "Bug fixes for issues in the code we delivered",
+                "Up to 4 hours a month for small improvements or content changes",
+                "Monthly backup check and a restore test each quarter",
+                "Monthly summary: uptime, errors, changes made and what's next",
+                "Month-to-month; unused hours do not roll over"
+              ],
+              "scale": {
+                "title": "Care plans",
+                "columns": [
+                  "Plan",
+                  "Dev time / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Care",
+                    "4 hrs",
+                    "$400/mo"
+                  ],
+                  [
+                    "Care Plus",
+                    "10 hrs",
+                    "$900/mo"
+                  ],
+                  [
+                    "Growth",
+                    "20 hrs",
+                    "$1,700/mo"
+                  ]
+                ],
+                "note": "Apps we didn't build start with a one-time code review, quoted first."
+              },
+              "notIncluded": "Hosting and third-party fees, and new features larger than your monthly hours.",
+              "cta": "Request App Care"
             }
           ]
         },
@@ -220,7 +524,59 @@
                 "30-minute walkthrough call"
               ],
               "notIncluded": "Custom app tracking, server-side tagging and data warehouse work. Admin access to your site and accounts is required.",
-              "cta": "Request a tracking quote"
+              "cta": "Request a tracking quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Website"
+                },
+                {
+                  "value": "Up to 5",
+                  "label": "Conversion events"
+                },
+                {
+                  "value": "1",
+                  "label": "Dashboard"
+                },
+                {
+                  "value": "1 to 2 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "scale": {
+                "title": "Setup sizes",
+                "columns": [
+                  "Scope",
+                  "Events",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "1 website",
+                    "Up to 5",
+                    "$500"
+                  ],
+                  [
+                    "Website + online store",
+                    "Up to 10",
+                    "$850"
+                  ],
+                  [
+                    "2+ sites or an app",
+                    "Custom",
+                    "Quote"
+                  ]
+                ]
+              },
+              "handoff": [
+                "Every account (GA4, Tag Manager, Search Console, Looker Studio) owned by you, with admin access",
+                "Tracking plan listing each event and where it fires",
+                "Recorded walkthrough of your dashboard"
+              ],
+              "next": {
+                "label": "Ongoing",
+                "offer": "analytics-reporting"
+              }
             },
             {
               "id": "analytics-reporting",
@@ -238,7 +594,21 @@
                 "Month-to-month service"
               ],
               "notIncluded": "Carrying out the recommendations. Tracking must already be in place (Tracking Setup or equivalent).",
-              "cta": "Request a reporting quote"
+              "cta": "Request a reporting quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Report / mo"
+                },
+                {
+                  "value": "3",
+                  "label": "Recommendations"
+                },
+                {
+                  "value": "30 min",
+                  "label": "Review call"
+                }
+              ]
             }
           ]
         },
@@ -289,25 +659,38 @@
                 "shootMinutes": 90,
                 "locations": 1,
                 "profiles": 1
-              }
-            },
-            {
-              "id": "ads-management",
-              "name": "Ads Management",
-              "kind": "Monthly",
-              "priceLabel": "Starting at $500/mo",
-              "priceNote": "per month · ad spend separate",
-              "description": "Meta ad campaigns on Facebook and Instagram, set up, run and optimized using the photos and video you already have.",
-              "includes": [
-                "Campaign strategy plus audience and location targeting for 1 active campaign",
-                "Up to 4 ad variations per month built from your supplied photo and video",
-                "Pixel and lead form checks before launch",
-                "Weekly optimization of budget, audiences and creative",
-                "Monthly performance summary with cost per lead",
-                "Month-to-month service, run in your own ad account"
+              },
+              "specs": [
+                {
+                  "value": "90 min",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "15",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "1",
+                  "label": "Short video"
+                },
+                {
+                  "value": "1",
+                  "label": "Google profile"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Typical delivery"
+                }
               ],
-              "notIncluded": "Ad spend (paid by you directly to Meta) and new photo/video production. For both content and ads, see Full Growth Partner.",
-              "cta": "Request an ads quote"
+              "handoff": [
+                "All 15 edited photos and the video in a shared folder, licensed for your marketing",
+                "Review-request link plus a printable QR code",
+                "Before and after summary of your profile changes"
+              ],
+              "next": {
+                "label": "Keep it fresh",
+                "offer": "content-growth-retainer"
+              }
             },
             {
               "id": "lead-follow-up",
@@ -326,7 +709,97 @@
                 "Setup on GoHighLevel or your existing CRM, plus a recorded walkthrough"
               ],
               "notIncluded": "CRM subscription, phone numbers and message fees, billed by those platforms (for example GoHighLevel and Twilio).",
-              "cta": "Request an automation quote"
+              "cta": "Request an automation quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Phone number"
+                },
+                {
+                  "value": "1",
+                  "label": "Follow-up sequence"
+                },
+                {
+                  "value": "5",
+                  "label": "Emails + texts"
+                },
+                {
+                  "value": "2 to 3 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "handoff": [
+                "Every automation built in your own CRM account",
+                "One-page map of each automation and what triggers it",
+                "Recorded walkthrough plus 14 days of tweaks after launch"
+              ],
+              "next": {
+                "label": "Ongoing",
+                "offer": "analytics-reporting"
+              }
+            },
+            {
+              "id": "ads-management",
+              "name": "Ads Management",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $500/mo",
+              "priceNote": "per month · ad spend separate",
+              "description": "Meta ad campaigns on Facebook and Instagram, set up, run and optimized using the photos and video you already have.",
+              "includes": [
+                "Campaign strategy plus audience and location targeting for 1 active campaign",
+                "Up to 4 ad variations per month built from your supplied photo and video",
+                "Pixel and lead form checks before launch",
+                "Weekly optimization of budget, audiences and creative",
+                "Monthly performance summary with cost per lead",
+                "Campaigns, audiences and results stay in your ad account if you stop",
+                "Month-to-month service, run in your own ad account"
+              ],
+              "notIncluded": "Ad spend (paid by you directly to Meta) and new photo/video production. For both content and ads, see Full Growth Partner.",
+              "cta": "Request an ads quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Active campaign"
+                },
+                {
+                  "value": "4",
+                  "label": "Ad variations / mo"
+                },
+                {
+                  "value": "Weekly",
+                  "label": "Optimization"
+                },
+                {
+                  "value": "Monthly",
+                  "label": "Report"
+                }
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Campaigns",
+                  "Ad variations / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "1",
+                    "4",
+                    "$500/mo"
+                  ],
+                  [
+                    "2",
+                    "8",
+                    "$850/mo"
+                  ],
+                  [
+                    "3+ or more platforms",
+                    "Custom",
+                    "Quote"
+                  ]
+                ],
+                "note": "Ad spend is separate and paid by you directly to Meta."
+              }
             },
             {
               "id": "full-growth-partner",
@@ -372,6 +845,37 @@
                 "locations": 1,
                 "profiles": 1,
                 "campaigns": 1
+              },
+              "specs": [
+                {
+                  "value": "3 hrs",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "30",
+                  "label": "Edited photos / mo"
+                },
+                {
+                  "value": "3",
+                  "label": "Short videos / mo"
+                },
+                {
+                  "value": "1",
+                  "label": "Meta campaign"
+                },
+                {
+                  "value": "2",
+                  "label": "Google posts / mo"
+                }
+              ],
+              "rhythm": {
+                "title": "How each month runs",
+                "steps": [
+                  "Week 1: Planning call, then a content plan and shot list built from last month's results",
+                  "Week 2: On-site shoot of up to 3 hours at your location",
+                  "Week 3: Edited photos and videos delivered; up to 4 new ad variations and 2 Google posts go live",
+                  "Week 4: Performance summary with cost per lead, what worked and what changes next month"
+                ]
               }
             }
           ]
@@ -397,16 +901,76 @@
               "priceNote": "one-time",
               "description": "A 2-hour on-site shoot that gives you a library of real, on-brand photos to use everywhere.",
               "includes": [
+                "Pre-shoot call and a shot list planned with you",
                 "Up to 2 hours of on-site photography at 1 location",
-                "Shot list planned with you before the shoot",
-                "25 edited high-resolution photos",
+                "Proofing gallery of every usable frame, so you pick your favorites",
+                "25 edited high-resolution photos of your picks",
                 "Web and social sized exports of every edited photo",
-                "Online gallery for easy download and sharing",
                 "1 consolidated retouch round",
                 "Commercial use license for your business marketing"
               ],
-              "notIncluded": "Models, props, studio rental, hair and makeup, and extra locations. Extra edited photos are $100 per 10.",
-              "cta": "Request a photo quote"
+              "notIncluded": "Models, props, studio rental, hair and makeup, and raw files.",
+              "cta": "Request a photo quote",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "150+",
+                  "label": "Frames captured"
+                },
+                {
+                  "value": "25",
+                  "label": "Edited photos"
+                },
+                {
+                  "value": "1",
+                  "label": "Location"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "scale": {
+                "title": "Session sizes",
+                "columns": [
+                  "Session",
+                  "Edited photos",
+                  "Locations",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "2 hrs",
+                    "25",
+                    "1",
+                    "$450"
+                  ],
+                  [
+                    "4 hrs (half day)",
+                    "60",
+                    "Up to 2",
+                    "$850"
+                  ],
+                  [
+                    "8 hrs (full day)",
+                    "120",
+                    "Up to 3",
+                    "$1,600"
+                  ]
+                ],
+                "note": "More edited photos from the same shoot are $100 per 10."
+              },
+              "handoff": [
+                "Online gallery with full-resolution and web-sized downloads",
+                "Proofs stay in your gallery for 90 days for extra picks"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "photo-plan"
+              }
             },
             {
               "id": "product-photos",
@@ -416,15 +980,138 @@
               "priceNote": "one-time · up to 10 products",
               "description": "Clean, consistent product shots for your online store, menu or catalog.",
               "includes": [
-                "Up to 10 products photographed in 1 session at your location",
-                "3 edited images per product (30 total): clean background plus detail angles",
-                "Up to 3 styled lifestyle images featuring your products",
-                "Background cleanup and color correction for consistent listings",
+                "Up to 10 products photographed at your location",
+                "3 edited images per product: front, angle and detail on a clean background",
+                "3 styled lifestyle images featuring your products",
+                "Background cleanup, color correction and consistent sizing across your catalog",
                 "Exports sized for Shopify, marketplaces and social",
                 "1 consolidated retouch round"
               ],
               "notIncluded": "Props, models, studio rental and complex compositing.",
-              "cta": "Request a product photo quote"
+              "cta": "Request a product photo quote",
+              "specs": [
+                {
+                  "value": "Up to 10",
+                  "label": "Products"
+                },
+                {
+                  "value": "1.5 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "30",
+                  "label": "Edited images"
+                },
+                {
+                  "value": "3",
+                  "label": "Lifestyle images"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "scale": {
+                "title": "More products, more shoot time",
+                "columns": [
+                  "Products",
+                  "Shoot time",
+                  "Edited images",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 10",
+                    "1.5 hrs",
+                    "30 + 3 lifestyle",
+                    "$400"
+                  ],
+                  [
+                    "Up to 25",
+                    "3 hrs",
+                    "75 + 6 lifestyle",
+                    "$850"
+                  ],
+                  [
+                    "Up to 50",
+                    "6 hrs",
+                    "150 + 10 lifestyle",
+                    "$1,600"
+                  ],
+                  [
+                    "50+",
+                    "Custom",
+                    "3 per product",
+                    "Quote"
+                  ]
+                ],
+                "note": "Large, reflective or multi-part products can need extra time; we confirm before the shoot."
+              },
+              "handoff": [
+                "Gallery with every image named by product or SKU, ready to upload",
+                "Matching web and full-resolution versions of each image"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "photo-plan"
+              }
+            },
+            {
+              "id": "photo-plan",
+              "name": "Monthly Photo Plan",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $400/mo",
+              "priceNote": "per month",
+              "description": "A standing monthly shoot so your website, menu and feed always have fresh, real photos.",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "25",
+                  "label": "Edited photos / mo"
+                },
+                {
+                  "value": "1",
+                  "label": "Location"
+                },
+                {
+                  "value": "7 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "includes": [
+                "1 on-site shoot of up to 2 hours each month at 1 location",
+                "Monthly shot list built around your promotions, new products and season",
+                "25 edited high-resolution photos per month, or up to 10 products in a product month",
+                "Web and social sized exports in a shared library that grows every month",
+                "Priority booking for shoot dates",
+                "1 consolidated retouch round per month",
+                "Month-to-month; monthly photos do not roll over"
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Shoot / mo",
+                  "Edited photos / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "2 hrs",
+                    "25",
+                    "$400/mo"
+                  ],
+                  [
+                    "4 hrs",
+                    "60",
+                    "$750/mo"
+                  ]
+                ]
+              },
+              "notIncluded": "Video (see Monthly Video Plan or the Content + Growth Retainer), models, props and studio rental.",
+              "cta": "Request a monthly photo quote"
             }
           ]
         },
@@ -449,7 +1136,60 @@
                 "1 consolidated revision round"
               ],
               "notIncluded": "Actors, voiceover talent and extra locations. Extra edits from the same shoot are $125 each.",
-              "cta": "Request a video quote"
+              "cta": "Request a video quote",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot"
+                },
+                {
+                  "value": "4",
+                  "label": "Edited videos"
+                },
+                {
+                  "value": "15 to 45 sec",
+                  "label": "Length"
+                },
+                {
+                  "value": "10 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "scale": {
+                "title": "Pack sizes",
+                "columns": [
+                  "Videos",
+                  "Shoot time",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "4",
+                    "2 hrs",
+                    "$600"
+                  ],
+                  [
+                    "8",
+                    "4 hrs",
+                    "$1,100"
+                  ],
+                  [
+                    "12",
+                    "6 hrs",
+                    "$1,600"
+                  ]
+                ],
+                "note": "Extra edits from the same shoot are $125 each."
+              },
+              "handoff": [
+                "Final vertical videos (1080 x 1920) with and without captions",
+                "A cover frame for each video",
+                "Raw footage kept for 90 days in case you want more edits"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "video-plan"
+              }
             },
             {
               "id": "brand-film",
@@ -467,7 +1207,99 @@
                 "2 consolidated revision rounds"
               ],
               "notIncluded": "Talent, voiceover, drone, studio rental and travel beyond local coverage.",
-              "cta": "Request a brand film quote"
+              "cta": "Request a brand film quote",
+              "specs": [
+                {
+                  "value": "4 hrs",
+                  "label": "Filming"
+                },
+                {
+                  "value": "60 to 120 sec",
+                  "label": "Hero film"
+                },
+                {
+                  "value": "4",
+                  "label": "Social cutdowns"
+                },
+                {
+                  "value": "2",
+                  "label": "Revision rounds"
+                },
+                {
+                  "value": "3 to 4 weeks",
+                  "label": "Typical delivery"
+                }
+              ],
+              "handoff": [
+                "Final film in widescreen and vertical, as web and full-quality files",
+                "Music licensed for your marketing use",
+                "Project files kept for 6 months for future edits"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "video-plan"
+              }
+            },
+            {
+              "id": "video-plan",
+              "name": "Monthly Video Plan",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $500/mo",
+              "priceNote": "per month",
+              "description": "Fresh short-form video every month, planned from what performed last month.",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "4",
+                  "label": "Videos / mo"
+                },
+                {
+                  "value": "15 to 45 sec",
+                  "label": "Length"
+                },
+                {
+                  "value": "10 business days",
+                  "label": "Delivery"
+                }
+              ],
+              "includes": [
+                "1 on-site shoot each month at 1 location",
+                "Monthly creative plan with hooks and formats based on last month's results",
+                "Edited vertical videos with captions, licensed music and your logo",
+                "Cover frames and suggested captions for each video",
+                "1 consolidated revision round per monthly batch",
+                "Month-to-month; monthly videos do not roll over"
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Videos / mo",
+                  "Shoot / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "4",
+                    "2 hrs",
+                    "$500/mo"
+                  ],
+                  [
+                    "8",
+                    "3 hrs",
+                    "$900/mo"
+                  ],
+                  [
+                    "12",
+                    "4 hrs",
+                    "$1,250/mo"
+                  ]
+                ]
+              },
+              "notIncluded": "Posting (see Managed Social), actors, voiceover and extra locations.",
+              "cta": "Request a monthly video quote"
             }
           ]
         },
@@ -476,6 +1308,51 @@
           "name": "Social Media Management",
           "summary": "Fresh content every month and a feed that stays active, so customers see you before they need you.",
           "offers": [
+            {
+              "id": "social-setup",
+              "name": "Social Profile Setup",
+              "kind": "One-time",
+              "priceLabel": "Starting at $350",
+              "priceNote": "one-time",
+              "description": "Get your profiles looking right and a clear plan before you post, so every visit can turn into a follow.",
+              "specs": [
+                {
+                  "value": "Up to 3",
+                  "label": "Profiles"
+                },
+                {
+                  "value": "30 days",
+                  "label": "Content plan"
+                },
+                {
+                  "value": "9",
+                  "label": "Post templates"
+                },
+                {
+                  "value": "1 to 2 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "includes": [
+                "Audit of up to 3 profiles (for example Instagram, Facebook and TikTok)",
+                "Optimized bio, profile photo, links and contact buttons on each",
+                "Highlight covers and a link-in-bio page",
+                "30-day content plan with post ideas, hooks and posting times",
+                "9 branded post templates in Canva you can reuse",
+                "Brand voice and hashtag guide"
+              ],
+              "handoff": [
+                "Canva templates shared to your account",
+                "Content plan and voice guide as a shareable doc",
+                "30-minute walkthrough call"
+              ],
+              "notIncluded": "Photo/video production, posting and paid ads.",
+              "cta": "Request a setup quote",
+              "next": {
+                "label": "Monthly",
+                "offer": "managed-social"
+              }
+            },
             {
               "id": "content-growth-retainer",
               "name": "Content + Growth Retainer",
@@ -518,6 +1395,28 @@
                 "shootMinutes": 60,
                 "locations": 1,
                 "profiles": 1
+              },
+              "specs": [
+                {
+                  "value": "60 min",
+                  "label": "Shoot / mo"
+                },
+                {
+                  "value": "12",
+                  "label": "Edited photos / mo"
+                },
+                {
+                  "value": "1",
+                  "label": "Short video / mo"
+                },
+                {
+                  "value": "2",
+                  "label": "Google posts / mo"
+                }
+              ],
+              "next": {
+                "label": "Add posting",
+                "offer": "managed-social"
               }
             },
             {
@@ -534,10 +1433,58 @@
                 "Captions, hashtags and scheduling for every post",
                 "Comment and DM replies on business days, with sales questions passed to you",
                 "Monthly report: reach, engagement, follower growth and top posts",
+                "Your accounts and content stay yours; we work with your login access",
                 "Month-to-month service"
               ],
               "notIncluded": "New photo/video production (pair with the Content + Growth Retainer) and paid boosts.",
-              "cta": "Request a social quote"
+              "cta": "Request a social quote",
+              "specs": [
+                {
+                  "value": "2",
+                  "label": "Platforms"
+                },
+                {
+                  "value": "12",
+                  "label": "Posts / mo"
+                },
+                {
+                  "value": "Business days",
+                  "label": "Comment replies"
+                },
+                {
+                  "value": "Monthly",
+                  "label": "Report"
+                }
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Platforms",
+                  "Posts / mo",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "2",
+                    "12",
+                    "$500/mo"
+                  ],
+                  [
+                    "3",
+                    "20",
+                    "$800/mo"
+                  ],
+                  [
+                    "4",
+                    "30",
+                    "$1,150/mo"
+                  ]
+                ]
+              },
+              "next": {
+                "label": "Add fresh content",
+                "offer": "content-growth-retainer"
+              }
             }
           ]
         },
@@ -562,7 +1509,55 @@
                 "Full recording delivered after the event"
               ],
               "notIncluded": "Venue internet (wired, at least 10 Mbps upload, is required) and cellular backup.",
-              "cta": "Request a livestream quote"
+              "cta": "Request a livestream quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Camera"
+                },
+                {
+                  "value": "2 hrs",
+                  "label": "Live coverage"
+                },
+                {
+                  "value": "1",
+                  "label": "Destination"
+                },
+                {
+                  "value": "2 business days",
+                  "label": "Recording delivered"
+                }
+              ],
+              "scale": {
+                "title": "Coverage",
+                "columns": [
+                  "Live coverage",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 2 hrs",
+                    "$900"
+                  ],
+                  [
+                    "Up to 4 hrs",
+                    "$1,300"
+                  ],
+                  [
+                    "Up to 8 hrs",
+                    "$2,100"
+                  ]
+                ],
+                "note": "Setup and testing time is included on top of live coverage."
+              },
+              "handoff": [
+                "Full recording as a download, ready to upload or replay",
+                "The replay stays on your channel"
+              ],
+              "next": {
+                "label": "Monthly",
+                "offer": "livestream-recurring"
+              }
             },
             {
               "id": "livestream-multi",
@@ -580,7 +1575,116 @@
                 "Full recording plus 3 edited highlight clips"
               ],
               "notIncluded": "Venue internet requirements apply. Extra cameras, hours and cellular bonding are quoted separately.",
-              "cta": "Request a production quote"
+              "cta": "Request a production quote",
+              "specs": [
+                {
+                  "value": "3",
+                  "label": "Cameras"
+                },
+                {
+                  "value": "3",
+                  "label": "Crew"
+                },
+                {
+                  "value": "4 hrs",
+                  "label": "Live coverage"
+                },
+                {
+                  "value": "3",
+                  "label": "Destinations at once"
+                },
+                {
+                  "value": "3",
+                  "label": "Highlight clips"
+                }
+              ],
+              "scale": {
+                "title": "Coverage",
+                "columns": [
+                  "Live coverage",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "Up to 4 hrs",
+                    "$2,500"
+                  ],
+                  [
+                    "Up to 8 hrs",
+                    "$4,200"
+                  ],
+                  [
+                    "Multi-day or 4+ cameras",
+                    "Quote"
+                  ]
+                ]
+              },
+              "handoff": [
+                "Full program recording within 2 business days",
+                "3 edited highlight clips within 5 business days",
+                "Separate recordings from each camera, on request"
+              ]
+            },
+            {
+              "id": "livestream-recurring",
+              "name": "Recurring Streams",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $1,800/mo",
+              "priceNote": "per month",
+              "description": "Weekly services, classes or shows streamed by the same crew at the same venue, every time.",
+              "specs": [
+                {
+                  "value": "4",
+                  "label": "Streams / mo"
+                },
+                {
+                  "value": "2 hrs",
+                  "label": "Each stream"
+                },
+                {
+                  "value": "1",
+                  "label": "Camera"
+                },
+                {
+                  "value": "1",
+                  "label": "Clip per stream"
+                }
+              ],
+              "includes": [
+                "4 single-camera streams per month at the same venue, up to 2 hours each",
+                "The same operator and a saved setup, so every week starts on time",
+                "Stream to 1 destination, with your branded title card and name graphics",
+                "Full recording of every stream within 2 business days",
+                "1 short highlight clip from each stream for social",
+                "Month-to-month; unused streams do not roll over"
+              ],
+              "scale": {
+                "title": "Plan sizes",
+                "columns": [
+                  "Streams / mo",
+                  "Cameras",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "4",
+                    "1",
+                    "$1,800/mo"
+                  ],
+                  [
+                    "4",
+                    "2",
+                    "$2,600/mo"
+                  ],
+                  [
+                    "8",
+                    "1",
+                    "$3,200/mo"
+                  ]
+                ]
+              },
+              "notIncluded": "Venue internet requirements apply. Equipment installs and training your own team are quoted separately.",
+              "cta": "Request a recurring stream quote"
             }
           ]
         }
@@ -604,15 +1708,27 @@
     },
     {
       "q": "How much does it cost to get started?",
-      "a": "Digital: Google Business Profile work starts at $400, tracking setup at $500 and a Webflow or Shopify website at $800. Visual: product photography starts at $400, a brand photo session at $450, a short-form video pack at $600 and live streaming at $900 per event."
+      "a": "Digital: Google Business Profile work starts at $400, tracking setup at $500 and a Webflow or Shopify website at $800. Visual: social profile setup starts at $350, product photography at $400, a brand photo session at $450, a short-form video pack at $600 and live streaming at $900 per event."
     },
     {
       "q": "What monthly plans do you offer?",
-      "a": "Monthly Insights starts at $250/mo, the Content + Growth Retainer at $450/mo, Ads Management and Managed Social at $500/mo each, and Full Growth Partner at $1,200/mo. Every monthly plan is month-to-month under the agreed scope."
+      "a": "Every service has a monthly option. Digital: Website Care from $150/mo, Monthly Insights from $250/mo, App Care from $400/mo, Ads Management from $500/mo and Full Growth Partner from $1,200/mo. Visual: Monthly Photo Plan from $400/mo, Content + Growth Retainer from $450/mo, Monthly Video Plan and Managed Social from $500/mo each, and Recurring Streams from $1,800/mo. All are month-to-month under the agreed scope."
     },
     {
       "q": "Which offers can I book online?",
       "a": "Six packages have online checkout: GBP Content Refresh, Website Only, Website + Content Capture, Website + Extended Content, Content + Growth Retainer and Full Growth Partner. Every other offer starts with a quick quote so we can confirm scope, dates and total first."
+    },
+    {
+      "q": "What do I get at handoff?",
+      "a": "You own what we make. Websites are built in, or moved to, your own Webflow or Shopify account. Apps ship with the code in a GitHub repository you own and hosting in your name. Photos and videos come licensed for your business marketing. Every project ends with a training call or recorded walkthrough and a support window for fixes; each offer lists its exact handoff."
+    },
+    {
+      "q": "Do you maintain websites and apps after launch?",
+      "a": "Yes. Website Care starts at $150/mo and App Care & Support at $400/mo. Both include monitoring, updates and a set number of edit or development hours each month. Sites and apps we didn't build start with a one-time review."
+    },
+    {
+      "q": "How do bigger shoots and more products change the price?",
+      "a": "More products, photos, videos or live hours take more time on site, so each offer shows its size table. For example, product photography is $400 for up to 10 products, $850 for up to 25 and $1,600 for up to 50."
     },
     {
       "q": "What does “starting at” mean?",

@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-07: Detailed deliverables, handoff and monthly options for every service
+
+### Changed
+- Every service now has both a one-time and a monthly option. New monthly plans: Website Care, App Care & Support, Monthly Photo Plan, Monthly Video Plan and Recurring Streams. New one-time offer: Social Profile Setup.
+- Offer cards show quick-look specs (shoot time, edited photos, products, pages, typical delivery), a size table where scope grows (session length, product count, video count, platforms, live hours, care plan hours), an "At handoff" list for one-time work, and a link to the matching care plan or monthly option. Full Growth Partner shows how each month runs, week by week. Fields are documented in [`PRICING_MARGIN.md`](PRICING_MARGIN.md).
+- Booking pages for the six Stripe packages list the handoff (and the Full Growth Partner monthly steps) under the base package. Prices and checkout are unchanged.
+- Services page chips and bullets include the new monthly and setup offers; pricing FAQ adds handoff, maintenance and sizing answers.
+
+### Needs owner approval
+- All new prices, size tables, delivery times and handoff commitments (see `PRICING_MARGIN.md`).
+
 ## 2026-10-07: Services organized into Digital and Visual
 
 ### Changed
