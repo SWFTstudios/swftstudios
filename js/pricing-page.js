@@ -24,17 +24,38 @@
       if (heroTitle) heroTitle.textContent = data.hero.headline;
       if (heroLead) heroLead.textContent = data.hero.sub;
 
+      // The category (#digital / #visual) and billing (?billing=monthly) stay
+      // in the URL so a shared link opens the same view.
+      function writeUrl(hash, billing) {
+        if (!window.history || !history.replaceState) return;
+        var params = new URLSearchParams(window.location.search);
+        if (billing === "monthly") params.set("billing", "monthly");
+        else if (billing) params.delete("billing");
+        var query = params.toString();
+        var nextHash = hash === undefined ? window.location.hash : hash ? "#" + hash : "";
+        history.replaceState(null, "", window.location.pathname + (query ? "?" + query : "") + nextHash);
+      }
+
+      var startBilling = "one-time";
+      try {
+        if (new URLSearchParams(window.location.search).get("billing") === "monthly") startBilling = "monthly";
+      } catch (e) {
+        /* bad query string: start on one-time */
+      }
+
       var pricingApi = SwftPricing.mountPricing(mount, data, {
         layout: "full",
         showHero: false,
         showFaqLink: false,
         showTrustLine: true,
         tabs: true,
+        billingToggle: true,
+        billing: startBilling,
         onTabChange: function (key) {
-          // Keep the chosen category in the URL so it can be shared.
-          if (window.history && history.replaceState) {
-            history.replaceState(null, "", "#" + key);
-          }
+          writeUrl(key);
+        },
+        onBillingChange: function (mode) {
+          writeUrl(undefined, mode);
         }
       });
 
@@ -76,6 +97,12 @@
         }
         var panel = target.closest("[data-pricing-panel]");
         if (panel && pricingApi) pricingApi.activateTab(panel.getAttribute("data-pricing-panel"));
+        // A one-time or monthly card opens with the switch on its side.
+        var group = target.closest("[data-billing-group]");
+        if (group && pricingApi && pricingApi.billing() !== group.getAttribute("data-billing-group")) {
+          pricingApi.setBilling(group.getAttribute("data-billing-group"));
+          writeUrl(undefined, group.getAttribute("data-billing-group"));
+        }
         var scrollTo = target.hasAttribute("data-pricing-panel") ? document.getElementById("pricing") : target;
         requestAnimationFrame(function () {
           (scrollTo || target).scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
@@ -84,6 +111,18 @@
 
       showHashTarget(true);
       window.addEventListener("hashchange", function () {
+        showHashTarget(true);
+      });
+
+      // In-page links (service chips, "Ongoing care" links): handle them here so
+      // a second click on the same link still switches tab/billing and scrolls.
+      mount.addEventListener("click", function (e) {
+        var link = e.target.closest('a[href^="#"]');
+        if (!link || !mount.contains(link)) return;
+        var id = link.getAttribute("href").slice(1);
+        if (!id || !document.getElementById(HASH_ALIASES[id] || id)) return;
+        e.preventDefault();
+        writeUrl(id);
         showHashTarget(true);
       });
     } catch (err) {

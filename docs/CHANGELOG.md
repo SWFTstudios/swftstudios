@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-07: One-time / Monthly pricing switch
+
+### Added
+- [`website-pricing.html`](../website-pricing.html) has a **One-time / Monthly switch** under the Digital / Visual tabs. It shows each service's one-time offers or its monthly plans, so the same services can be compared both ways. The switch stays pinned under the nav while scrolling, and flipping it keeps the service you are reading in place.
+- Next to each service's cards, an "Also monthly" / "Also one-time" panel lists the other mode's offers with their starting prices and a button that flips the switch.
+- The mode is kept in the URL (`?billing=monthly`) alongside the category hash. Links to a specific card (for example `#website-care` or the "Ongoing care" links on one-time cards) flip the switch to that card's mode automatically. Old `#ongoing` links open on monthly.
+- Code: `billingToggle` option in [`js/pricing-render.js`](../js/pricing-render.js) (offers are grouped by `kind`), URL handling in [`js/pricing-page.js`](../js/pricing-page.js), styles in [`css/pricing-page.css`](../css/pricing-page.css), and `billingNote` in [`data/pricing.json`](../data/pricing.json).
+
 ## 2026-10-07: Detailed deliverables, handoff and monthly options for every service
 
 ### Changed

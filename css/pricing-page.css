@@ -971,6 +971,162 @@
 @media (min-width: 1100px) {
   .hp-pricing-grid.pr-offer-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+/* ---------- One-time / Monthly switch ---------- */
+[data-billing="one-time"] [data-billing-group="monthly"],
+[data-billing="monthly"] [data-billing-group="one-time"] { display: none; }
+
+/* Pinned under the nav while the visitor scrolls through the services */
+.pr-billing-bar {
+  position: sticky;
+  top: calc(var(--sn-height, 62px) + var(--sn-curve, 12px) + .5rem);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  margin: -1rem 0 2rem;
+  pointer-events: none;
+}
+.pr-billing {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .45rem .9rem;
+  border: 1px solid var(--pp-border, rgba(255,255,255,.1));
+  border-radius: 999px;
+  background: rgba(10, 10, 10, .88);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+  pointer-events: auto;
+}
+.pr-billing__label {
+  color: var(--pp-muted, #a8a8a8);
+  font-size: .95rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: color .2s ease;
+}
+.pr-billing__label.is-active { color: var(--swft-text-strong, #fff); font-weight: 600; }
+.pr-billing__switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 3.25rem;
+  height: 1.85rem;
+  padding: 0;
+  border: 1px solid var(--pp-border, rgba(255,255,255,.15));
+  border-radius: 999px;
+  background: #1c1c1c;
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.pr-billing__switch[aria-checked="true"] {
+  background: var(--pp-accent, #56b4e9);
+  border-color: var(--pp-accent, #56b4e9);
+}
+.pr-billing__switch:focus-visible { outline: 2px solid var(--pp-accent, #56b4e9); outline-offset: 3px; }
+.pr-billing__knob {
+  position: absolute;
+  top: 50%;
+  left: .2rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(0, -50%);
+  transition: transform .25s cubic-bezier(.22, 1, .36, 1);
+}
+.pr-billing__switch[aria-checked="true"] .pr-billing__knob { transform: translate(1.35rem, -50%); }
+.pr-billing-note {
+  margin: 0;
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  background: rgba(1, 1, 1, .75);
+  color: var(--pp-muted, #a8a8a8);
+  font-size: .75rem;
+  text-align: center;
+}
+[data-billing] .pr-service,
+[data-billing] .hp-pricing-card {
+  scroll-margin-top: calc(var(--sn-height, 62px) + var(--sn-curve, 12px) + 4.5rem);
+}
+
+/* The other mode's offers for the same service */
+.pr-switch-teaser {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .85rem;
+  padding: 1.6rem;
+  border: 1px dashed rgba(86, 180, 233, .45);
+  border-radius: 12px;
+  background: rgba(86, 180, 233, .04);
+}
+.pr-switch-teaser__label {
+  margin: 0;
+  color: var(--pp-accent, #56b4e9);
+  font-family: var(--swft-font-mono, "Space Mono", monospace);
+  font-size: .72rem;
+  text-transform: uppercase;
+}
+.pr-switch-teaser__list {
+  display: grid;
+  gap: .45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pr-switch-teaser__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--swft-lead, #c4c7c7);
+  font-size: .92rem;
+}
+.pr-switch-teaser__list b { color: var(--swft-text-strong, #fff); font-weight: 600; white-space: nowrap; }
+.pr-switch-teaser__btn {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: .55rem 1.1rem;
+  border: 1px solid var(--pp-accent, #56b4e9);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pp-accent, #56b4e9);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+.pr-switch-teaser__btn:hover,
+.pr-switch-teaser__btn:focus-visible {
+  background: var(--pp-accent, #56b4e9);
+  color: var(--swft-bg, #010101);
+  outline: none;
+}
+/* Beside a lone card it stays compact at the top of the row */
+.pr-offer-grid--1 .pr-switch-teaser { align-self: start; }
+/* Under a full row of cards the teaser is a slim bar */
+.pr-offer-grid:not(.pr-offer-grid--1) .pr-switch-teaser {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem 1.5rem;
+  padding: .9rem 1.2rem;
+}
+.pr-offer-grid:not(.pr-offer-grid--1) .pr-switch-teaser__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1.25rem;
+  flex: 1 1 auto;
+}
+.pr-offer-grid:not(.pr-offer-grid--1) .pr-switch-teaser__list li { gap: .45rem; }
+.pr-offer-grid:not(.pr-offer-grid--1) .pr-switch-teaser__btn { align-self: center; }
+.pr-billing-empty { color: var(--pp-muted, #a8a8a8); margin: 0; }
+.pr-billing-empty a { color: var(--pp-accent, #56b4e9); }
+
 /* Phones: each size row stacks, with the size and price on top and the rest below */
 @media (max-width: 520px) {
   .hp-pricing-scale__wrap { overflow: visible; }
@@ -1009,6 +1165,13 @@
   .pr-service__head { grid-template-columns: minmax(0, 1fr); }
   .pr-service__summary { grid-column: 1; }
 }
+@media (max-width: 767px) {
+  .pr-billing-bar { margin: -.5rem 0 1.5rem; }
+  .pr-billing { gap: .6rem; padding: .4rem .75rem; }
+  .pr-billing__label { font-size: .88rem; }
+  .pr-billing-note { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .pr-cat-tab, .pr-jump a { transition: none; }
+  .pr-billing__switch, .pr-billing__knob, .pr-billing__label, .pr-switch-teaser__btn { transition: none; }
 }
