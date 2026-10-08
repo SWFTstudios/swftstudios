@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-08: Blurred Lines Entertainment case study and homepage feature
+
+### Changed
+- Homepage **Our Services** → Visual now features Blurred Lines Entertainment instead of Roller Reels (image, name and link in both the desktop panel and the inline phone card).
+- [Blurred Lines Entertainment case study](../case-study/blurred-lines-entertainment.html) rewritten around what was actually delivered: wedding video that captures the energy Yanko brings and helps couples know they want to book him; the website linked to Google Analytics in real time to see traffic and where visitors come from; the videos still running on his social media, with Instagram ads making his account a salesperson that brings customers to his website; and multiple contact points on his homepage for a frictionless booking flow. The earlier Google Ads and venue-booking wording is gone. Copy lives in [`data/portfolio-projects.json`](../data/portfolio-projects.json); the page and hub card were regenerated with `node scripts/update-case-study-copy.mjs`.
+
 ## 2026-10-07: One-time / Monthly pricing switch
 
 ### Added

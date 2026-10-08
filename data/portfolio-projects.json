@@ -328,57 +328,59 @@
     "tag": "Content & Production",
     "image": "images/BLE_SWFT_thumbnail.webp",
     "liveUrl": "https://blurredlinesentertainment.com/",
-    "hubDetails": "How SWFT Studios built a video first website and Google Ads setup that helps a live entertainment brand win bookings and fill venues.",
+    "hubDetails": "How SWFT Studios used wedding video, real-time Google Analytics and Instagram ads to help Blurred Lines Entertainment turn viewers into bookings.",
     "challenge": [
-      "A static brochure site could not show what a night with Blurred Lines feels like.",
-      "Performance video had to look great and load fast on phones.",
-      "Venue owners and planners needed a simple way to ask about availability and pricing.",
-      "The brand needed a steady, targeted source of traffic beyond word of mouth."
+      "Yanko's biggest selling point, the energy he brings to a wedding, is hard to put into words or photos.",
+      "Couples compare a lot of entertainers and need to feel sure before they reach out.",
+      "There was no clear picture of how many people visited the website or where they were coming from.",
+      "Social media got attention, but it wasn't steadily sending people to the website to book."
     ],
     "built": [
-      "Custom website design and development with media-first layout.",
-      "Videography integration showcasing live performance footage.",
-      "Clear booking and contact pathways for venue owners and event planners.",
-      "Google Ads campaign setup to drive targeted traffic.",
-      "Mobile-optimized media playback and fast-loading pages."
+      "Wedding and event videography capturing Yanko's energy, edited for his website and social media.",
+      "A website built around that video, with pages that load fast on phones.",
+      "Multiple ways to get in touch and book, placed throughout the homepage.",
+      "Google Analytics connected to the website for real-time traffic and where visitors are coming from.",
+      "Instagram ads running the wedding footage to send new customers to the website."
     ],
-    "whyMatters": "Entertainment brands live on first impressions. We turn your best moments into your strongest sales tool, so the energy on stage shows up online too.",
+    "whyMatters": "Entertainers get booked on a feeling. We capture what it's like to have you at an event, then put it everywhere your next customer is looking: your website, your social media and your ads.",
     "outcomeType": "website",
     "branding": true,
     "website": true,
     "film": true,
     "public": true,
-    "description": "How SWFT Studios built a video first website and Google Ads setup that helps a live entertainment brand win bookings and fill venues.",
-    "highlight": "Video first website, booking path and Google Ads setup",
-    "snapshot": "Blurred Lines Entertainment is a live entertainment brand. We built a website that shows the energy of their performances, filmed the footage that powers it, and set up Google Ads to bring the right people to it.",
-    "goal": "Get more bookings from venues and event planners, and bring bigger crowds to shows.",
+    "description": "How SWFT Studios used wedding video, real-time Google Analytics and Instagram ads to help Blurred Lines Entertainment turn viewers into bookings.",
+    "highlight": "Wedding video, Instagram ads and a homepage built for booking",
+    "snapshot": "Blurred Lines Entertainment is Yanko Hernando's entertainment company for weddings and events. People book Yanko for the energy he brings, so we captured it on video, built his website around it, connected it to Google Analytics in real time, and put the same footage to work on Instagram.",
+    "goal": "Show couples and event hosts the energy Yanko brings before they ever meet him, and make booking him the easy next step.",
     "approach": [
       {
-        "title": "Let the footage sell",
-        "detail": "We filmed live performances and built the site around that video, so planners can picture the experience before they call."
+        "title": "Capture the energy on video",
+        "detail": "We filmed Yanko at weddings so people see the dance floor fill up and the crowd react. The footage shows couples the night they want for their own wedding, and that is what helps them know they want to book him."
       },
       {
-        "title": "Fast media on mobile",
-        "detail": "Video is compressed and loaded smartly, so pages stay quick on a phone signal."
+        "title": "Real-time Google Analytics",
+        "detail": "We linked his website to Google Analytics, so Yanko can watch his traffic in real time and see which areas his visitors are coming from."
       },
       {
-        "title": "A short path to a booking",
-        "detail": "Booking and contact forms are a tap away from every page, written for venue owners and event planners."
+        "title": "Instagram as a salesperson",
+        "detail": "The videos were, and still are, used on his social media. With the help of Instagram ads, his account now works like a salesperson, bringing customers to his website."
       },
       {
-        "title": "Paid traffic with a target",
-        "detail": "Google Ads campaigns reach people searching for live entertainment and events in their area, and send them to pages built to convert."
+        "title": "A frictionless path to booking",
+        "detail": "His homepage gives visitors multiple places to get in contact, so the moment someone is ready, reaching Yanko and booking him for their event takes no extra steps."
       }
     ],
     "measure": [
-      "Booking inquiries per month, and which page or ad each one came from",
-      "Google Ads cost per inquiry, not only cost per click",
-      "Video plays and how much of each video people watch"
+      "Booking inquiries per month, and whether they came from Instagram, search or a referral",
+      "Website visitors in real time and month over month, and the areas they come from",
+      "Instagram ad cost per website visit and per inquiry",
+      "Video views and how much of each video people watch"
     ],
     "takeaways": [
-      "If you sell an experience, show it. Real footage beats any description.",
-      "Ads only pay off when they land on a page with one clear action. Track inquiries, not clicks.",
-      "Make the booking form easy to find on every page."
+      "If people book you for how you make them feel, show that feeling. Real footage does what a description can't.",
+      "Good video keeps working long after the event: the same clips can run on your website, your social media and your ads.",
+      "Put more than one way to reach you on your homepage, so booking takes one tap whenever someone is ready.",
+      "Connect analytics from day one so you know where your customers come from and where your ad budget pays off."
     ],
     "results": []
   },
