@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-08: Built By Me EZ case study and homepage Digital feature
+
+### Changed
+- Homepage **Our Services**: on phones and tablets, Digital and Visual now each stay open for 7 seconds before the next one opens (was 3). Set by `data-interval="7000"` on the services block in `index.html`.
+- Homepage **Our Services** → Digital now features Built By Me EZ instead of Thyme & Table (image, name and link in the desktop panel and the phone card). Thyme & Table still appears elsewhere on the homepage.
+- [Built By Me EZ case study](../case-study/built-by-me-ez.html) rewritten around the booking funnel: Omar's website takes personal training clients from Instagram to booking him directly, with Stripe secured payments; a custom Cal.com integration lets clients book one or multiple sessions on a calendar; Omar and his clients get timely notifications of dates booked and payments sent; his calendar stays booked on autopilot so he can focus on each client. The site also sells Omar's online training courses, which the case study covers alongside the booking funnel. Copy lives in [`data/portfolio-projects.json`](../data/portfolio-projects.json); page and hub card regenerated with `node scripts/update-case-study-copy.mjs`.
+
 ## 2026-10-08: Blurred Lines Entertainment case study and homepage feature
 
 ### Changed
