@@ -394,11 +394,12 @@
     "tag": "Custom Website Build",
     "image": "images/built_by_me_ez_thumbnail.webp",
     "liveUrl": "https://builtbymeez.com/",
-    "hubDetails": "How SWFT Studios built a website that takes Omar's personal training clients from Instagram to booked, paid sessions with Stripe, a custom Cal.com calendar and automatic notifications.",
+    "hubDetails": "How SWFT Studios built a website that takes Omar's personal training clients from Instagram to booked, paid sessions with Stripe and a custom Cal.com calendar, and sells his online training courses.",
     "challenge": [
       "Interest from Instagram had no direct path to a booked training session.",
       "Regular clients needed to book several sessions at once, not one at a time.",
       "Payments had to be secure and tied to each booking.",
+      "Omar's online training courses needed a checkout people trust.",
       "Every booking had to reach both Omar and the client with the right dates and payment details, without anyone following up by hand."
     ],
     "built": [
@@ -406,6 +407,7 @@
       "Stripe secured payments for training sessions.",
       "A custom Cal.com integration for booking one or multiple sessions on a calendar.",
       "Automatic notifications to Omar and his clients for dates booked and payments sent.",
+      "Online course sales for Omar's training programs.",
       "A mobile-first build for visitors arriving from Instagram."
     ],
     "whyMatters": "If your business runs on Instagram, give your followers a direct way to book and pay. We build the booking system so your calendar fills itself and your time goes to your clients.",
@@ -414,10 +416,10 @@
     "website": true,
     "film": false,
     "public": true,
-    "description": "How SWFT Studios built a website that takes Omar's personal training clients from Instagram to booked, paid sessions with Stripe, a custom Cal.com calendar and automatic notifications.",
-    "highlight": "Instagram to booked and paid sessions, on autopilot",
-    "snapshot": "Built By Me EZ is Omar's personal training business, and his clients find him on Instagram. We built a website that takes them from his profile to a booked and paid session: Stripe secured payments, one or many sessions picked on a calendar through a custom Cal.com integration, and automatic notifications for everyone. His calendar stays booked on autopilot, so he can focus 100% on each client.",
-    "goal": "Turn Instagram followers into booked, paid training clients without Omar managing his schedule by hand.",
+    "description": "How SWFT Studios built a website that takes Omar's personal training clients from Instagram to booked, paid sessions with Stripe and a custom Cal.com calendar, and sells his online training courses.",
+    "highlight": "Instagram to booked sessions on autopilot, plus online course sales",
+    "snapshot": "Built By Me EZ is Omar's personal training business, and his clients find him on Instagram. We built a website that takes them from his profile to a booked and paid session: Stripe secured payments, one or many sessions picked on a calendar through a custom Cal.com integration, and automatic notifications for everyone. The site also sells Omar's online training courses to people who can't train with him in person. His calendar stays booked on autopilot, so he can focus 100% on each client.",
+    "goal": "Turn Instagram followers into booked, paid training clients and course buyers, without Omar managing his schedule by hand.",
     "approach": [
       {
         "title": "From Instagram to booked",
@@ -436,12 +438,17 @@
         "detail": "When a client books, both Omar and the client get timely notifications of the dates booked and the payment sent. Nobody has to chase a confirmation."
       },
       {
+        "title": "Courses for clients anywhere",
+        "detail": "Online course sales let Omar earn from people who can't train with him in person, alongside his booked sessions."
+      },
+      {
         "title": "Time back for training",
         "detail": "With booking and payments running themselves, Omar's calendar stays booked on autopilot and he gets to focus 100% on each client."
       }
     ],
     "measure": [
       "Sessions booked and paid per month",
+      "Online course sales per month",
       "How many bookings include more than one session",
       "Visits from Instagram and how many of them book",
       "Open spots left on the calendar each week"
@@ -449,6 +456,7 @@
     "takeaways": [
       "Instagram builds trust; your website should close the booking. Link straight to a page where people can book and pay.",
       "Let clients book several sessions at once. It's easier for them and fills your calendar further ahead.",
+      "Digital products like courses let you earn beyond the hours you can train in person.",
       "Take payment at booking and send confirmations automatically, so your time goes to clients instead of admin."
     ],
     "results": []
