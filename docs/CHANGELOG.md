@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-09: Grouped site menu; readable case study buttons
+
+### Changed
+- **Site menu** ([`js/swft-nav.js`](../js/swft-nav.js), [`css/swft-nav.css`](../css/swft-nav.css)) is grouped instead of one flat list:
+  - **Home** (shares the top row with the close button)
+  - **Services:** Digital (`/services.html#digital`), Visual (`/services.html#visual`), Pricing
+  - **Work:** Case studies, Films (the Visuals page, renamed in the menu so it isn't confused with the Visual services)
+  - **Company:** Team, Locations, Contact (smaller, secondary rows)
+  - Growth Audit button at the bottom
+- Main items carry a one-line description. The current page is marked with the accent color, a bar and `aria-current="page"` (Digital and Visual both mark on the Services page). Rows animate in order using a `--i` index, and short screens get tighter spacing so the whole menu and the button fit on a small phone without scrolling.
+
+### Fixed
+- Case study call-to-action buttons: **View Website** had accent text on an accent fill (invisible) and both buttons were underlined, because the article's link style overrode the button style. They now use dark text on the blue button and white text on the outline button, with no underline ([`css/case-study.css`](../css/case-study.css)).
+
 ## 2026-10-08: Built By Me EZ case study and homepage Digital feature
 
 ### Changed

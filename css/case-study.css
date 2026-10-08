@@ -423,6 +423,21 @@
   margin: 0;
 }
 
+/* The CTA buttons sit inside the article body, whose link rule
+   (.cs-body .uui-text-rich-text a: accent color, underline) would otherwise
+   turn "View Website" into accent text on an accent fill. */
+.cs-body .uui-text-rich-text .cs-cta-actions a.swft-btn {
+  text-decoration: none;
+}
+.cs-body .uui-text-rich-text .cs-cta-actions a.swft-btn.is-primary,
+.cs-body .uui-text-rich-text .cs-cta-actions a.swft-btn.is-primary:hover {
+  color: #000;
+}
+.cs-body .uui-text-rich-text .cs-cta-actions a.swft-btn.is-outline,
+.cs-body .uui-text-rich-text .cs-cta-actions a.swft-btn.is-outline:hover {
+  color: #fff;
+}
+
 .cs-floating-cta.swft-btn {
   border-radius: 999px;
 }
