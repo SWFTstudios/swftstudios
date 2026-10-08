@@ -3,6 +3,9 @@
    Data shape: categories (Digital, Visual) → services → offers.
    - An offer with a bookUrl (and a stripe config) books online at /book/.
    - Any other offer is quote-first: its CTA opens /contact.html?service=<service id>.
+   With billingToggle: true, each service renders a one-time group and a
+   monthly group (by offer.kind) and a switch shows one of them; the mount
+   element carries data-billing="one-time" | "monthly".
    Optional offer fields: specs (quick-look numbers), scale (size table),
    rhythm (monthly steps), handoff (what you keep at the end) and next
    (a link to the matching care plan or monthly option).
@@ -200,11 +203,76 @@
     );
   }
 
-  function renderService(service, n, data, layout, index) {
+  var BILLING = [
+    { key: "one-time", label: "One-time", also: "Also one-time" },
+    { key: "monthly", label: "Monthly", also: "Also monthly" }
+  ];
+
+  function billingOf(offer) {
+    return offer.kind === "Monthly" ? "monthly" : "one-time";
+  }
+
+  // The other billing mode's offers for the same service, with a button that
+  // flips the switch. Sits beside a lone card, or as a bar under a full row.
+  function renderSwitchTeaser(service, mode, others) {
+    if (!others.length) return "";
+    var other = BILLING[mode.key === "monthly" ? 0 : 1];
+    return (
+      '<aside class="pr-switch-teaser" aria-label="' + escapeHtml(other.also + ": " + service.name) + '">' +
+      '<p class="pr-switch-teaser__label">' + escapeHtml(other.also) + "</p>" +
+      '<ul class="pr-switch-teaser__list" role="list">' +
+      others
+        .map(function (o) {
+          return (
+            "<li><span>" + escapeHtml(o.name) + "</span><b>" +
+            escapeHtml(String(o.priceLabel || "").replace(/^Starting at /, "from ")) + "</b></li>"
+          );
+        })
+        .join("") +
+      "</ul>" +
+      '<button type="button" class="pr-switch-teaser__btn" data-billing-set="' + other.key + '" data-billing-scroll="' + escapeHtml(service.id) + '">' +
+      "See " + escapeHtml(other.label.toLowerCase()) + ' pricing <span aria-hidden="true">&rarr;</span></button>' +
+      "</aside>"
+    );
+  }
+
+  function renderOfferGrid(list, service, data, layout, index, teaser) {
+    var cols = list.length === 1 ? " pr-offer-grid--1" : list.length === 3 ? " pr-offer-grid--3" : "";
+    return (
+      '<div class="hp-pricing-grid pr-offer-grid' + cols + (layout === "compact" ? " hp-pricing-grid--compact" : "") + '">' +
+      list
+        .map(function (offer) {
+          return renderOfferCard(offer, service, data, layout, index);
+        })
+        .join("") +
+      (teaser || "") +
+      "</div>"
+    );
+  }
+
+  function renderService(service, n, data, layout, index, options) {
     var offers = service.offers || [];
     if (!offers.length) return "";
     var headingId = "pr-" + service.id + "-heading";
-    var cols = offers.length === 3 ? " pr-offer-grid--3" : "";
+    var body;
+    if (options && options.billingToggle) {
+      // One group per billing mode; the switch on the mount shows one of them.
+      body = BILLING.map(function (mode) {
+        var list = offers.filter(function (o) {
+          return billingOf(o) === mode.key;
+        });
+        var others = offers.filter(function (o) {
+          return billingOf(o) !== mode.key;
+        });
+        var inner = list.length
+          ? renderOfferGrid(list, service, data, layout, index, renderSwitchTeaser(service, mode, others))
+          : '<p class="pr-billing-empty">No ' + escapeHtml(mode.label.toLowerCase()) + " option for this service yet. " +
+            '<a href="' + escapeHtml(offerHref({}, service, data)) + '">Ask us about one</a>.</p>';
+        return '<div class="pr-billing-group" data-billing-group="' + mode.key + '">' + inner + "</div>";
+      }).join("");
+    } else {
+      body = renderOfferGrid(offers, service, data, layout, index, "");
+    }
     return (
       '<section class="pr-service" id="' + escapeHtml(service.id) + '" aria-labelledby="' + escapeHtml(headingId) + '">' +
       '<header class="pr-service__head">' +
@@ -212,17 +280,28 @@
       '<h3 class="pr-service__name" id="' + escapeHtml(headingId) + '">' + escapeHtml(service.name) + "</h3>" +
       (service.summary ? '<p class="pr-service__summary">' + escapeHtml(service.summary) + "</p>" : "") +
       "</header>" +
-      '<div class="hp-pricing-grid pr-offer-grid' + cols + (layout === "compact" ? " hp-pricing-grid--compact" : "") + '">' +
-      offers
-        .map(function (offer) {
-          return renderOfferCard(offer, service, data, layout, index);
-        })
-        .join("") +
-      "</div></section>"
+      body +
+      "</section>"
     );
   }
 
-  function renderCategoryBody(category, data, layout, index) {
+  // One-time / Monthly switch. The labels are clickable for pointer users;
+  // the switch itself is the keyboard and screen reader control.
+  function renderBillingSwitch(data) {
+    return (
+      '<div class="pr-billing-bar">' +
+      '<div class="pr-billing" data-billing-switch-root>' +
+      '<span class="pr-billing__label is-active" data-billing-set="one-time" aria-hidden="true">One-time</span>' +
+      '<button type="button" class="pr-billing__switch" role="switch" aria-checked="false" data-billing-switch>' +
+      '<span class="visually-hidden">Show monthly pricing</span><span class="pr-billing__knob" aria-hidden="true"></span></button>' +
+      '<span class="pr-billing__label" data-billing-set="monthly" aria-hidden="true">Monthly</span>' +
+      "</div>" +
+      (data.billingNote ? '<p class="pr-billing-note">' + escapeHtml(data.billingNote) + "</p>" : "") +
+      "</div>"
+    );
+  }
+
+  function renderCategoryBody(category, data, layout, index, options) {
     var services = category.services || [];
     var jump = services.length > 1
       ? '<nav class="pr-jump" aria-label="' + escapeHtml(category.label) + ' services">' +
@@ -242,7 +321,7 @@
       "</header>" +
       services
         .map(function (s, i) {
-          return renderService(s, i, data, layout, index);
+          return renderService(s, i, data, layout, index, options);
         })
         .join("")
     );
@@ -256,7 +335,7 @@
       .join(" · ");
   }
 
-  function renderTabs(categories, data, layout, index) {
+  function renderTabs(categories, data, layout, index, options) {
     return (
       '<div class="pr-tabs" data-pricing-tabs>' +
       '<div class="pr-cat-tabs" role="tablist" aria-label="Service category">' +
@@ -275,6 +354,7 @@
         })
         .join("") +
       "</div>" +
+      (options && options.billingToggle ? renderBillingSwitch(data) : "") +
       categories
         .map(function (c, i) {
           var on = i === 0;
@@ -282,7 +362,7 @@
             '<div class="hp-pricing-tab-panel pr-cat' + (on ? " is-active" : "") + '" role="tabpanel"' +
             ' id="' + escapeHtml(c.id) + '" aria-labelledby="pr-tab-' + escapeHtml(c.id) + '"' +
             ' data-pricing-panel="' + escapeHtml(c.id) + '"' + (on ? "" : " hidden") + ">" +
-            renderCategoryBody(c, data, layout, index) +
+            renderCategoryBody(c, data, layout, index, options) +
             "</div>"
           );
         })
@@ -341,13 +421,14 @@
     }
 
     if (options.tabs === true && categories.length > 1) {
-      html += renderTabs(categories, data, layout, index);
+      html += renderTabs(categories, data, layout, index, options);
     } else {
+      if (options.billingToggle) html += renderBillingSwitch(data);
       html += categories
         .map(function (c) {
           return (
             '<section class="pr-cat" id="' + escapeHtml(c.id) + '" aria-label="' + escapeHtml(c.label) + ' services">' +
-            renderCategoryBody(c, data, layout, index) +
+            renderCategoryBody(c, data, layout, index, options) +
             "</section>"
           );
         })
@@ -445,6 +526,63 @@
     };
   }
 
+  // Show one billing mode. The mount carries data-billing; CSS hides the other
+  // mode's groups. keepInView: the element whose position on screen should not
+  // jump when the content above or around it changes height.
+  function setBilling(rootEl, mode, keepInView) {
+    if (!rootEl || (mode !== "one-time" && mode !== "monthly")) return false;
+    var before = keepInView ? keepInView.getBoundingClientRect().top : 0;
+    rootEl.setAttribute("data-billing", mode);
+    var sw = rootEl.querySelector("[data-billing-switch]");
+    if (sw) sw.setAttribute("aria-checked", mode === "monthly" ? "true" : "false");
+    rootEl.querySelectorAll(".pr-billing__label").forEach(function (el) {
+      el.classList.toggle("is-active", el.getAttribute("data-billing-set") === mode);
+    });
+    if (keepInView) {
+      var after = keepInView.getBoundingClientRect().top;
+      if (after !== before) window.scrollBy(0, after - before);
+    }
+    return true;
+  }
+
+  // The service section the visitor is reading: the one crossing a line a
+  // third of the way down the screen (or just under the pinned switch).
+  function serviceInView(rootEl) {
+    var bar = rootEl.querySelector(".pr-billing-bar");
+    var line = Math.max(bar ? bar.getBoundingClientRect().bottom : 0, window.innerHeight * 0.3);
+    var sections = rootEl.querySelectorAll(".pr-service");
+    for (var i = 0; i < sections.length; i++) {
+      var r = sections[i].getBoundingClientRect();
+      if (r.height && r.top <= line && r.bottom > line) return sections[i];
+    }
+    return null;
+  }
+
+  function bindBilling(rootEl, options) {
+    if (!rootEl.querySelector("[data-billing-switch]")) return;
+    function change(mode, how) {
+      if (rootEl.getAttribute("data-billing") === mode) return;
+      var service = how && how.scrollTo ? how.scrollTo : serviceInView(rootEl);
+      // Header still on screen: keep it where it is. Scrolled past it: jump
+      // back to the header so the other mode's cards start in view.
+      var headerVisible = service && service.getBoundingClientRect().top >= 0 && !(how && how.scrollTo);
+      setBilling(rootEl, mode, headerVisible ? service : null);
+      if (service && !headerVisible) service.scrollIntoView({ block: "start" });
+      if (typeof options.onBillingChange === "function") options.onBillingChange(mode);
+    }
+    rootEl.addEventListener("click", function (e) {
+      var sw = e.target.closest("[data-billing-switch]");
+      if (sw && rootEl.contains(sw)) {
+        change(rootEl.getAttribute("data-billing") === "monthly" ? "one-time" : "monthly");
+        return;
+      }
+      var set = e.target.closest("[data-billing-set]");
+      if (!set || !rootEl.contains(set)) return;
+      var scrollId = set.getAttribute("data-billing-scroll");
+      change(set.getAttribute("data-billing-set"), scrollId ? { scrollTo: document.getElementById(scrollId) } : null);
+    });
+  }
+
   function mountPricing(rootEl, data, options) {
     if (!rootEl || !data) return null;
 
@@ -453,14 +591,26 @@
 
     rootEl.innerHTML = buildPricingHtml(data, options);
     var tabApi = bindTabs(rootEl, options);
+    if (options.billingToggle) {
+      setBilling(rootEl, options.billing === "monthly" ? "monthly" : "one-time");
+      bindBilling(rootEl, options);
+    }
 
     return {
       refresh: function () {
+        var mode = rootEl.getAttribute("data-billing");
         rootEl.innerHTML = buildPricingHtml(data, options);
         tabApi = bindTabs(rootEl, options);
+        if (mode) setBilling(rootEl, mode);
       },
       activateTab: function (tabKey) {
         return tabApi ? tabApi.activate(tabKey) : false;
+      },
+      setBilling: function (mode) {
+        return setBilling(rootEl, mode);
+      },
+      billing: function () {
+        return rootEl.getAttribute("data-billing");
       }
     };
   }
@@ -469,6 +619,7 @@
     mountPricing: mountPricing,
     buildPricingHtml: buildPricingHtml,
     activateTab: activateTab,
+    setBilling: setBilling,
     renderFaqList: renderFaqList,
     renderFaqSchema: renderFaqSchema
   };

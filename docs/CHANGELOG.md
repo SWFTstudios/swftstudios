@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-08: Blurred Lines Entertainment case study and homepage feature
+
+### Changed
+- Homepage **Our Services** → Visual now features Blurred Lines Entertainment instead of Roller Reels (image, name and link in both the desktop panel and the inline phone card).
+- [Blurred Lines Entertainment case study](../case-study/blurred-lines-entertainment.html) rewritten around what was actually delivered: wedding video that captures the energy Yanko brings and helps couples know they want to book him; the website linked to Google Analytics in real time to see traffic and where visitors come from; the videos still running on his social media, with Instagram ads making his account a salesperson that brings customers to his website; and multiple contact points on his homepage for a frictionless booking flow. The earlier Google Ads and venue-booking wording is gone. Copy lives in [`data/portfolio-projects.json`](../data/portfolio-projects.json); the page and hub card were regenerated with `node scripts/update-case-study-copy.mjs`.
+
+## 2026-10-07: One-time / Monthly pricing switch
+
+### Added
+- [`website-pricing.html`](../website-pricing.html) has a **One-time / Monthly switch** under the Digital / Visual tabs. It shows each service's one-time offers or its monthly plans, so the same services can be compared both ways. The switch stays pinned under the nav while scrolling, and flipping it keeps the service you are reading in place.
+- Next to each service's cards, an "Also monthly" / "Also one-time" panel lists the other mode's offers with their starting prices and a button that flips the switch.
+- The mode is kept in the URL (`?billing=monthly`) alongside the category hash. Links to a specific card (for example `#website-care` or the "Ongoing care" links on one-time cards) flip the switch to that card's mode automatically. Old `#ongoing` links open on monthly.
+- Code: `billingToggle` option in [`js/pricing-render.js`](../js/pricing-render.js) (offers are grouped by `kind`), URL handling in [`js/pricing-page.js`](../js/pricing-page.js), styles in [`css/pricing-page.css`](../css/pricing-page.css), and `billingNote` in [`data/pricing.json`](../data/pricing.json).
+
 ## 2026-10-07: Detailed deliverables, handoff and monthly options for every service
 
 ### Changed

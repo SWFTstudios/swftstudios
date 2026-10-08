@@ -1,13 +1,14 @@
 {
   "hero": {
     "headline": "Digital and Visual services, priced clearly.",
-    "sub": "Every service lists its offers, its starting price and exactly what you get. Pick a category, compare the offers inside each service, and nothing starts until you approve the scope.",
+    "sub": "Every service comes as a one-time project or a month-to-month plan. Pick a category, flip the switch to compare, and nothing starts until you approve the scope.",
     "trustLine": "Work directly with the people who create it · Itemized deliverables before you pay · Month-to-month plans"
   },
   "calUrl": "/growth-audit",
   "quoteUrl": "/contact.html",
   "bookNote": "Book online. The exact starter scope and optional extras are listed before you pay.",
   "quoteNote": "Quote first. We confirm scope, dates and total with you before any payment.",
+  "billingNote": "Same services, two ways to buy. Monthly plans are month-to-month.",
   "categories": [
     {
       "id": "digital",
