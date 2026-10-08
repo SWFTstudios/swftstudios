@@ -8,22 +8,48 @@
    Footer is injected once at the end of <body> (or into #swft-footer).
    ============================================================ */
 (function () {
-  var LINKS = [
-    { label: "Home",         href: "/index.html",           key: "home" },
-    { label: "Services",     href: "/services.html",        key: "services" },
-    { label: "Work",         href: "/case-studies.html",    key: "case-studies" },
-    { label: "Visuals",      href: "/visuals.html",         key: "visuals" },
-    { label: "Pricing",      href: "/website-pricing.html", key: "pricing" },
-    { label: "Locations",    href: "/locations/",           key: "locations" },
-    { label: "Team",         href: "/team.html",            key: "team" },
-    { label: "Contact",      href: "/contact.html",         key: "contact" }
+  // Menu, grouped. key matches the page's data-active value; an item whose
+  // key matches is marked as the current page.
+  var HOME = { label: "Home", href: "/index.html", key: "home" };
+  var GROUPS = [
+    { label: "Services", items: [
+      { label: "Digital",      sub: "Web, apps, analytics, marketing",     href: "/services.html#digital", key: "services" },
+      { label: "Visual",       sub: "Photo, video, social, live streaming", href: "/services.html#visual",  key: "services" },
+      { label: "Pricing",      sub: "One-time and monthly plans",           href: "/website-pricing.html", key: "pricing" }
+    ] },
+    { label: "Work", items: [
+      { label: "Case studies", sub: "Client projects and results",          href: "/case-studies.html",    key: "case-studies" },
+      { label: "Films",        sub: "Our video work",                       href: "/visuals.html",         key: "visuals" }
+    ] },
+    { label: "Company", compact: true, items: [
+      { label: "Team",         href: "/team.html",            key: "team" },
+      { label: "Locations",    href: "/locations/",           key: "locations" },
+      { label: "Contact",      href: "/contact.html",         key: "contact" }
+    ] }
   ];
   var CTA = { label: "Get Your Free Growth Audit", href: "/growth-audit" };
   var BRAND = 'SWFT <span class="sk">STUD</span><span class="hl">IO</span><span class="sk">S</span>';
 
   function navHTML(active) {
-    var links = LINKS.map(function (l) {
-      return '<a href="' + l.href + '"' + (l.key === active ? ' class="is-active"': "") + ">" + l.label + "</a>";
+    var i = 0; // stagger order for the open animation
+    function link(l, extra) {
+      var on = l.key === active;
+      return (
+        '<a href="' + l.href + '" class="sn-link' + (extra || "") + (on ? " is-active" : "") + '"' +
+        (on ? ' aria-current="page"' : "") + ' style="--i:' + (i++) + '">' +
+        '<span class="sn-link__title">' + l.label + "</span>" +
+        (l.sub ? '<span class="sn-link__sub">' + l.sub + "</span>" : "") +
+        "</a>"
+      );
+    }
+    var menu = link(HOME, " sn-link--home") + GROUPS.map(function (g, n) {
+      var id = "sn-group-" + n;
+      return (
+        '<div class="sn-group' + (g.compact ? " sn-group--compact" : "") + '" role="group" aria-labelledby="' + id + '">' +
+        '<p class="sn-group__label" id="' + id + '" style="--i:' + (i++) + '">' + g.label + "</p>" +
+        g.items.map(function (l) { return link(l); }).join("") +
+        "</div>"
+      );
     }).join("");
     return (
       '<nav class="sn-nav">' +
@@ -36,8 +62,8 @@
       '<div class="sn-scrim" id="sn-scrim"></div>' +
       '<aside class="sn-panel" id="sn-panel" aria-hidden="true" aria-label="Site menu">' +
         '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
-        links +
-        '<a href="' + CTA.href + '" class="sn-panel-cta">' + CTA.label + "</a>" +
+        '<nav class="sn-menu" aria-label="Site">' + menu + "</nav>" +
+        '<a href="' + CTA.href + '" class="sn-panel-cta" style="--i:' + (i++) + '">' + CTA.label + "</a>" +
       "</aside>"
     );
   }
