@@ -29,11 +29,11 @@
     "slug": "built-by-me-ez",
     "href": "case-study/built-by-me-ez.html",
     "image": "images/built_by_me_ez_thumbnail.webp",
-    "details": "How SWFT Studios moved a personal trainer from social only to an owned website that sells online courses and books new clients.",
+    "details": "How SWFT Studios built a website that takes Omar's personal training clients from Instagram to booked, paid sessions with Stripe, a custom Cal.com calendar and automatic notifications.",
     "branding": true,
     "website": true,
     "film": false,
-    "metric": "Owned platform with online course sales and client booking"
+    "metric": "Instagram to booked and paid sessions, on autopilot"
   },
   {
     "type": "case-study",
