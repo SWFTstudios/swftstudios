@@ -20,9 +20,9 @@
   var MIN_SLOTS = 12;      // short filtered lists repeat to keep the ring full
   var AUTOPLAY_MS = 4500;  // idle time before stepping to the next card
   var WHEEL_SETTLE_MS = 160; // trackpad swipe ends this long after the last wheel event
-  var FRICTION = 0.955;    // velocity kept per 16ms frame while coasting after a flick
-  var MAX_SPIN = 1.6;      // fastest coast, degrees per ms
-  var SETTLE_SPEED = 0.03; // below this (degrees per ms) the wheel stops and settles
+  var FRICTION = 0.925;    // velocity kept per 16ms frame while coasting after a flick
+  var MAX_SPIN = 1.0;      // fastest coast, degrees per ms
+  var SETTLE_SPEED = 0.035; // below this (degrees per ms) the wheel stops and settles
 
   function supports3d() {
     return window.CSS && CSS.supports && CSS.supports("transform-style", "preserve-3d") &&
@@ -219,14 +219,14 @@
         spin *= Math.pow(FRICTION, dt / 16);
         lastInteract = t;
         // Stop where the wheel would naturally come to rest
-        if (Math.abs(spin) < SETTLE_SPEED) snap(rot + spin * 120);
+        if (Math.abs(spin) < SETTLE_SPEED) snap(rot + spin * 90);
       } else if (!dragging) {
         if (t - lastInteract > AUTOPLAY_MS && !root.matches(":hover") && !root.contains(document.activeElement)) {
           lastInteract = t;
           snap(target - step);
         }
         var diff = target - rot;
-        rot += diff * Math.min(1, 0.0075 * dt);
+        rot += diff * Math.min(1, 0.006 * dt);
         if (Math.abs(diff) < 0.01) rot = target;
       }
       render();
@@ -312,14 +312,15 @@
 
     /* Trackpad two-finger swipe (horizontal wheel). Handled here so it turns
        the ring instead of triggering the browser's back/forward gesture;
-       vertical scrolling still scrolls the page. */
+       vertical scrolling still scrolls the page. A swipe to the right
+       (positive deltaX) moves the cards to the right. */
     var wheelTimer = 0;
     stage.addEventListener("wheel", function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
       var px = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX;
       coasting = false;
-      rot -= px * degPerPx(); target = rot;
+      rot += px * degPerPx(); target = rot;
       lastInteract = performance.now();
       clearTimeout(wheelTimer);
       wheelTimer = setTimeout(function () { snap(rot); kick(); }, WHEEL_SETTLE_MS);
