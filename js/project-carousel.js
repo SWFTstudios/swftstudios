@@ -4,9 +4,10 @@
    Reads the project tiles already in the page (built from
    data/portfolio-projects.json by scripts/build-mono-sections.mjs) and
    stands them on the inside of a cylinder, so the side cards curve toward
-   you. Drag or swipe to spin (with momentum), scroll the page to nudge it,
-   use the arrow buttons or keys, and pick a category chip to re-form the
-   ring with just those projects. The card in front opens its case study;
+   you. Drag, swipe or two-finger swipe on a trackpad to spin it (it always
+   settles with one card centered), use the arrow buttons or keys, and pick
+   a category chip to re-form the ring with just those projects. When left
+   alone it steps to the next card every few seconds. The card in front opens its case study;
    any other card turns to the front first.
 
    Without JS, without 3D transforms, or with reduced motion, the plain
@@ -16,9 +17,9 @@
   "use strict";
 
   var MIN_SLOTS = 12;      // short filtered lists repeat to keep the ring full
-  var DRIFT = 0.006;       // idle spin, degrees per ms
-  var IDLE_MS = 2600;      // pause after any interaction before drifting again
-  var SCROLL_GAIN = 0.045; // degrees of turn per pixel of page scroll
+  var AUTOPLAY_MS = 4500;  // idle time before stepping to the next card
+  var WHEEL_SETTLE_MS = 160; // trackpad swipe ends this long after the last wheel event
+  var MAX_FLING = 2;       // a fast drag moves at most this many cards past the release point
 
   function supports3d() {
     return window.CSS && CSS.supports && CSS.supports("transform-style", "preserve-3d") &&
@@ -161,7 +162,7 @@
         var fade = abs > limit ? 0 : abs > limit * 0.7 ? 1 - (abs - limit * 0.7) / (limit * 0.3) : 1;
         c.el.style.opacity = fade.toFixed(3);
         c.el.style.visibility = fade <= 0.01 ? "hidden" : "visible";
-        c.el.style.filter = "brightness(" + (1 - Math.min(abs / limit, 1) * 0.45).toFixed(3) + ")";
+        c.el.style.filter = abs < step * 0.5 ? "" : "brightness(" + (1 - Math.min(abs / limit, 1) * 0.3).toFixed(3) + ")";
         if (abs < bestAbs) { bestAbs = abs; best = i; }
       }
       if (best !== frontIndex) {
@@ -206,8 +207,9 @@
       var dt = prevT ? Math.min(64, t - prevT) : 16;
       prevT = t;
       if (!dragging) {
-        if (t - lastInteract > IDLE_MS && !root.matches(":hover") && !root.contains(document.activeElement)) {
-          target -= DRIFT * dt;
+        if (t - lastInteract > AUTOPLAY_MS && !root.matches(":hover") && !root.contains(document.activeElement)) {
+          lastInteract = t;
+          snap(target - step);
         }
         var diff = target - rot;
         rot += diff * Math.min(1, 0.0075 * dt);
@@ -250,7 +252,10 @@
       if (!dragging) return;
       dragging = false;
       stage.classList.remove("is-dragging");
-      if (dragMoved) snap(rot + velocity * 260);
+      if (dragMoved) {
+        var fling = Math.max(-MAX_FLING * step, Math.min(MAX_FLING * step, velocity * 180));
+        snap(rot + fling);
+      }
       lastInteract = performance.now();
       kick();
     }
@@ -283,13 +288,20 @@
     if (prev) prev.addEventListener("click", function () { go(-1); });
     if (next) next.addEventListener("click", function () { go(1); });
 
-    /* Page scroll nudges the ring */
-    var lastScroll = window.scrollY;
-    window.addEventListener("scroll", function () {
-      var y = window.scrollY;
-      if (inView && !dragging) { target -= (y - lastScroll) * SCROLL_GAIN; kick(); }
-      lastScroll = y;
-    }, { passive: true });
+    /* Trackpad two-finger swipe (horizontal wheel). Handled here so it turns
+       the ring instead of triggering the browser's back/forward gesture;
+       vertical scrolling still scrolls the page. */
+    var wheelTimer = 0;
+    stage.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      var px = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX;
+      rot -= px * degPerPx(); target = rot;
+      lastInteract = performance.now();
+      clearTimeout(wheelTimer);
+      wheelTimer = setTimeout(function () { snap(rot); kick(); }, WHEEL_SETTLE_MS);
+      kick();
+    }, { passive: false });
 
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {
