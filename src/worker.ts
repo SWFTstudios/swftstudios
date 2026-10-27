@@ -15,6 +15,8 @@ import { onRequestPost as handleGrowthAudit } from "../functions/api/growth-audi
 import { onRequestPost as handleContact } from "../functions/api/contact.js";
 // @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
 import { onRequestPost as handleBookTier } from "../functions/api/book-tier.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestGet as handleAvailability } from "../functions/api/availability.js";
 
 
 export interface Env extends PortalEnv {
@@ -38,6 +40,11 @@ export interface Env extends PortalEnv {
   AIRTABLE_TABLE_COMPANIES?: string;
   AIRTABLE_TABLE_PIPELINE?: string;
   FORMSUBMIT_EMAIL?: string;
+  /** Cal.com booking page for the availability pill (defaults: swftstudios / swft-meeting) */
+  CAL_USERNAME?: string;
+  CAL_EVENT_SLUG?: string;
+  /** Optional Cal.com API key, only needed if the event type is not public */
+  CAL_API_KEY?: string;
   /** Override From header, e.g. `SWFT Studios <hello@swftstudios.com>` */
   RESEND_FROM?: string;
   /** Team notify inbox (default hello@swftstudios.com) */
@@ -821,6 +828,10 @@ export default {
       const headers = new Headers(response.headers);
       new Headers(corsHeaders(origin)).forEach((value, key) => headers.set(key, value));
       return new Response(response.body, { status: response.status, headers });
+    }
+
+    if ((request.method === "GET" || request.method === "HEAD") && url.pathname === "/api/availability") {
+      return handleAvailability({ request, env, waitUntil: (p: Promise<unknown>) => ctx.waitUntil(p) });
     }
 
     if (request.method === "POST" && url.pathname === "/api/contact") {

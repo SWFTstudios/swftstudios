@@ -184,3 +184,13 @@ html :is(
   letter-spacing: 0;
   text-transform: uppercase;
 }
+
+/* Handwritten accent word (Monoform-style). Nanum Pen Script, OFL,
+   latin subset, self-hosted from @fontsource/nanum-pen-script. */
+@font-face {
+  font-family: "SWFT Script";
+  src: url("../fonts/NanumPenScript-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

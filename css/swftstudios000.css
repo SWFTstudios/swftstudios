@@ -3,18 +3,18 @@
 :root {
   --black: #010101;
   --white: #ffffff;
-  --green: #56b4e9;
+  --green: #ffffff;
   --charcoal: #0c0c0c;
   --glass_edge: #ffffff80;
   --glow: #dcf3ff57;
   --white-2: white;
-  --green-glow: #56b4e91a;
+  --green-glow: #ffffff1a;
   --untitled-ui--gray600: #b1b1b1;
   --untitled-ui--gray200: #eaecf0;
   --untitled-ui--gray500: silver;
-  --untitled-ui--primary700: #56b4e9;
-  --untitled-ui--gray900: #56b4e9;
-  --untitled-ui--primary600: #56b4e9;
+  --untitled-ui--primary700: #ffffff;
+  --untitled-ui--gray900: #ffffff;
+  --untitled-ui--primary600: #ffffff;
   --untitled-ui--gray700: #344054;
   --untitled-ui--primary800: #53389e;
   --untitled-ui--gray400: #98a2b3;

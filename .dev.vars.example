@@ -33,3 +33,8 @@ RESEND_API_KEY=re_xxxxxxxx
 # STRIPE_PRICE_WEBSITE_CONTENT_FULL=price_1U6cAAAF4d9gCyuNeB6qUFx5
 # STRIPE_PRICE_CONTENT_GROWTH_RETAINER=price_1U6cA8AF4d9gCyuN0Ko807my
 # STRIPE_PRICE_FULL_GROWTH_PARTNER=price_1U6cAAAF4d9gCyuN6yvZR5im
+# Booking pill availability (GET /api/availability) reads public slots from
+# cal.com/swftstudios/swft-meeting. Only set a key if the event type is private.
+# CAL_API_KEY=cal_live_xxxxxxxx
+# CAL_USERNAME=swftstudios
+# CAL_EVENT_SLUG=swft-meeting

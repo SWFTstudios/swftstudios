@@ -3,7 +3,7 @@
   <url><loc>https://www.swftstudios.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://www.swftstudios.com/growth-audit</loc><changefreq>weekly</changefreq><priority>0.95</priority></url>
   <url><loc>https://www.swftstudios.com/services.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.swftstudios.com/website-pricing.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.swftstudios.com/pricing.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.swftstudios.com/book/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.swftstudios.com/book/gbp-content-refresh.html</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://www.swftstudios.com/book/website-only.html</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
@@ -11,9 +11,8 @@
   <url><loc>https://www.swftstudios.com/book/website-content-full.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/book/content-growth-retainer.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/book/full-growth-partner.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.swftstudios.com/case-studies.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.swftstudios.com/work.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
   <url><loc>https://www.swftstudios.com/visuals.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.swftstudios.com/video-gallery.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.swftstudios.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/sitemap.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.swftstudios.com/locations/</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
@@ -42,7 +41,7 @@
   <url><loc>https://www.swftstudios.com/locations/queens.html</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://www.swftstudios.com/locations/bronx.html</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://www.swftstudios.com/locations/staten-island.html</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
-  <url><loc>https://www.swftstudios.com/team.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.swftstudios.com/about.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.swftstudios.com/case-study/brooklyn-steel.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.swftstudios.com/case-study/manna-hydration.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.swftstudios.com/case-study/thyme-and-table.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
@@ -57,4 +56,10 @@
   <url><loc>https://www.swftstudios.com/case-study/western-hp.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.swftstudios.com/case-study/snooze-lane.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.swftstudios.com/case-study/hamper.html</loc><changefreq>yearly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.swftstudios.com/blog.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/blog/google-business-profile-local-seo-2026.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.swftstudios.com/blog/social-media-content-2026.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.swftstudios.com/blog/ai-answer-engine-optimization-2026.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.swftstudios.com/blog/reputation-management-2026.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.swftstudios.com/blog/digital-marketing-blind-spots-2026.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

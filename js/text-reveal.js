@@ -33,6 +33,7 @@
     ".hp-audience-track", ".ar-work-stack-item", ".swft-cube", ".swft-about-gallery",
     "form", ".ga-form-card", ".book-flow", "[hidden]", "[aria-hidden='true']",
     ".visually-hidden", ".w-richtext figure", "nav", ".vz",
+    ".mf-hero", ".mf-carousel", ".mf-list", ".mf-faq", ".mf-marquee", "[data-mf-reveal]",
   ].join(", ");
 
   function skip(el) {

@@ -67,11 +67,11 @@
 /* SWFT Dynamic Articles */
 (function(){
   var articlePaths = [
-    "case-study/ai-answer-engine-optimization-2026.html",
-    "case-study/digital-marketing-blind-spots-2026.html",
-    "case-study/google-business-profile-local-seo-2026.html",
-    "case-study/reputation-management-2026.html",
-    "case-study/social-media-content-2026.html",
+    "blog/ai-answer-engine-optimization-2026.html",
+    "blog/digital-marketing-blind-spots-2026.html",
+    "blog/google-business-profile-local-seo-2026.html",
+    "blog/reputation-management-2026.html",
+    "blog/social-media-content-2026.html",
     "case-study/blurred-lines-entertainment.html",
     "case-study/snooze-lane.html",
     "case-study/hamper.html",

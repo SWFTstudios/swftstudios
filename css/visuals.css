@@ -8,7 +8,7 @@
   --vz-fg: #ffffff;
   --vz-muted: rgba(255, 255, 255, 0.55);
   --vz-line: rgba(255, 255, 255, 0.14);
-  --vz-accent: var(--sm-green, #56b4e9);
+  --vz-accent: var(--sm-green, #ffffff);
   --vz-col: clamp(170px, 19vw, 300px);
   --vz-gap: clamp(14px, 1.6vw, 26px);
   --vz-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -100,7 +100,7 @@ body.vz-page #swft-nav { min-height: 0; }
    softly pulsing placeholder instead of an empty hole */
 .vz-tile__media.is-empty {
   background:
-    radial-gradient(circle at 30% 25%, rgba(86, 180, 233, 0.16), transparent 60%),
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.16), transparent 60%),
     linear-gradient(160deg, #11151b, #0a0c10);
   animation: vz-empty 2.4s ease-in-out infinite;
 }

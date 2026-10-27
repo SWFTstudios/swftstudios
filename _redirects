@@ -4,23 +4,38 @@
 
 # 2026-10-01 site restructure: one page per purpose. Retired pages point to
 # the page that now does their job (both .html and clean URLs).
-/websites.html          /case-studies.html          301
-/websites               /case-studies.html          301
-/resources.html         /case-studies.html          301
-/resources              /case-studies.html          301
+/websites.html          /work.html          301
+/websites               /work.html          301
+/resources.html         /work.html          301
+/resources              /work.html          301
 /media.html             /visuals.html               301
 /media                  /visuals.html               301
 /videos.html            /visuals.html               301
 /videos                 /visuals.html               301
 /swft-tv.html           /visuals.html               301
 /swft-tv                /visuals.html               301
-/portfolio-review.html  /case-studies.html          301
-/portfolio-review       /case-studies.html          301
+/portfolio-review.html  /work.html          301
+/portfolio-review       /work.html          301
 /apps.html              /services.html              301
 /apps                   /services.html              301
 /tools.html             /services.html#automate     301
 /tools                  /services.html#automate     301
 /swft-method.html       /growth-audit               301
 /swft-method            /growth-audit               301
-/pricing.html           /website-pricing.html       301
-/pricing                /website-pricing.html       301
+
+# 2026-10-27 Mono redesign: pages renamed to what they are now.
+/team.html              /about.html                 301
+/team                   /about.html                 301
+/case-studies.html      /work.html                  301
+/case-studies           /work.html                  301
+/website-pricing.html   /pricing.html               301
+/website-pricing        /pricing.html               301
+/video-gallery.html     /visuals.html               301
+/video-gallery          /visuals.html               301
+/cube.html              /work.html                  301
+/cube                   /work.html                  301
+/case-study/ai-answer-engine-optimization-2026.html     /blog/ai-answer-engine-optimization-2026.html     301
+/case-study/social-media-content-2026.html              /blog/social-media-content-2026.html              301
+/case-study/google-business-profile-local-seo-2026.html /blog/google-business-profile-local-seo-2026.html 301
+/case-study/reputation-management-2026.html             /blog/reputation-management-2026.html             301
+/case-study/digital-marketing-blind-spots-2026.html     /blog/digital-marketing-blind-spots-2026.html     301

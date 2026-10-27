@@ -58,7 +58,7 @@ await check("Contact form", async (page) => {
   await page.fill("#contact-email", "lead@example.com");
   await page.fill("#contact-business", "Acme Bakery");
   await page.fill("#contact-website", "https://acme.example");
-  await page.selectOption("#contact-service", { index: 1 });
+  await page.locator('#contact-service input[name="service_needed"]').first().check({ force: true });
   await page.fill("#contact-challenge", "No inquiries from the site");
   await page.fill("#contact-outcome", "More bookings");
   await page.click("#contact-submit");
