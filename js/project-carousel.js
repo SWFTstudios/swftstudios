@@ -4,8 +4,9 @@
    Reads the project tiles already in the page (built from
    data/portfolio-projects.json by scripts/build-mono-sections.mjs) and
    stands them on the inside of a cylinder, so the side cards curve toward
-   you. Drag, swipe or two-finger swipe on a trackpad to spin it (it always
-   settles with one card centered), use the arrow buttons or keys, and pick
+   you. Grab it with the mouse, swipe or two-finger swipe on a trackpad and
+   it spins like a physical wheel: the cards follow your hand, a flick keeps
+   it coasting with friction, and it settles with one card centered; use the arrow buttons or keys, and pick
    a category chip to re-form the ring with just those projects. When left
    alone it steps to the next card every few seconds. The card in front opens its case study;
    any other card turns to the front first.
@@ -19,7 +20,9 @@
   var MIN_SLOTS = 12;      // short filtered lists repeat to keep the ring full
   var AUTOPLAY_MS = 4500;  // idle time before stepping to the next card
   var WHEEL_SETTLE_MS = 160; // trackpad swipe ends this long after the last wheel event
-  var MAX_FLING = 2;       // a fast drag moves at most this many cards past the release point
+  var FRICTION = 0.955;    // velocity kept per 16ms frame while coasting after a flick
+  var MAX_SPIN = 1.6;      // fastest coast, degrees per ms
+  var SETTLE_SPEED = 0.03; // below this (degrees per ms) the wheel stops and settles
 
   function supports3d() {
     return window.CSS && CSS.supports && CSS.supports("transform-style", "preserve-3d") &&
@@ -89,6 +92,7 @@
     var rot = 0, target = 0, frontIndex = -1;
     var dragging = false, dragMoved = false, startX = 0, lastX = 0, lastT = 0, velocity = 0;
     var lastInteract = 0, inView = true, raf = 0, prevT = 0;
+    var coasting = false, spin = 0; // free spin after a flick, degrees per ms
 
     function rebuild(animate) {
       var items = visibleProjects();
@@ -151,14 +155,16 @@
     }
 
     function render() {
-      ring.style.transform = "translateZ(" + radius + "px) rotateY(" + rot + "deg)";
+      // Negated so a positive angle sits right of center: the cards then move
+      // the same way as the hand that drags them.
+      ring.style.transform = "translateZ(" + radius + "px) rotateY(" + (-rot) + "deg)";
       var limit = limitDeg();
       var best = -1, bestAbs = 999;
       for (var i = 0; i < cards.length; i++) {
         var c = cards[i];
         var phi = norm(c.theta + rot);
         var abs = Math.abs(phi);
-        c.el.style.transform = "rotateY(" + c.theta + "deg) translateZ(" + (-radius) + "px)";
+        c.el.style.transform = "rotateY(" + (-c.theta) + "deg) translateZ(" + (-radius) + "px)";
         var fade = abs > limit ? 0 : abs > limit * 0.7 ? 1 - (abs - limit * 0.7) / (limit * 0.3) : 1;
         c.el.style.opacity = fade.toFixed(3);
         c.el.style.visibility = fade <= 0.01 ? "hidden" : "visible";
@@ -186,6 +192,7 @@
     }
 
     function snap(base) {
+      coasting = false;
       target = Math.round(base / step) * step;
     }
 
@@ -206,7 +213,14 @@
       raf = 0;
       var dt = prevT ? Math.min(64, t - prevT) : 16;
       prevT = t;
-      if (!dragging) {
+      if (coasting) {
+        rot += spin * dt;
+        target = rot;
+        spin *= Math.pow(FRICTION, dt / 16);
+        lastInteract = t;
+        // Stop where the wheel would naturally come to rest
+        if (Math.abs(spin) < SETTLE_SPEED) snap(rot + spin * 120);
+      } else if (!dragging) {
         if (t - lastInteract > AUTOPLAY_MS && !root.matches(":hover") && !root.contains(document.activeElement)) {
           lastInteract = t;
           snap(target - step);
@@ -228,6 +242,9 @@
     var degPerPx = function () { return step / (cardW * 1.1); };
     stage.addEventListener("pointerdown", function (e) {
       if (e.button !== 0) return;
+      // Mouse: stop text selection and native link/image dragging
+      if (e.pointerType === "mouse") e.preventDefault();
+      coasting = false; target = rot; // grabbing a spinning wheel stops it
       dragging = true; dragMoved = false;
       startX = lastX = e.clientX; lastT = performance.now(); velocity = 0;
       lastInteract = lastT;
@@ -244,7 +261,7 @@
       var nowT = performance.now();
       var d = dx * degPerPx();
       rot += d; target = rot;
-      velocity = d / Math.max(1, nowT - lastT);
+      velocity = 0.75 * (d / Math.max(1, nowT - lastT)) + 0.25 * velocity;
       lastX = e.clientX; lastT = nowT; lastInteract = nowT;
       kick();
     });
@@ -253,14 +270,19 @@
       dragging = false;
       stage.classList.remove("is-dragging");
       if (dragMoved) {
-        var fling = Math.max(-MAX_FLING * step, Math.min(MAX_FLING * step, velocity * 180));
-        snap(rot + fling);
+        // Held still before letting go: no flick
+        if (performance.now() - lastT > 90) velocity = 0;
+        spin = Math.max(-MAX_SPIN, Math.min(MAX_SPIN, velocity));
+        if (Math.abs(spin) > SETTLE_SPEED) coasting = true;
+        else snap(rot);
       }
       lastInteract = performance.now();
       kick();
     }
     window.addEventListener("pointerup", endDrag);
     window.addEventListener("pointercancel", endDrag);
+
+    ring.addEventListener("dragstart", function (e) { e.preventDefault(); });
 
     // A drag never opens a link; a tap on a side card turns it to the front.
     ring.addEventListener("click", function (e) {
@@ -296,6 +318,7 @@
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
       var px = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX;
+      coasting = false;
       rot -= px * degPerPx(); target = rot;
       lastInteract = performance.now();
       clearTimeout(wheelTimer);
