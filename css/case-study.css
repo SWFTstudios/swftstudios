@@ -169,7 +169,7 @@
 }
 
 .cs-body .uui-text-rich-text a {
-  color: var(--green, #56b4e9);
+  color: var(--green, #ffffff);
 }
 
 /* Outcome scorecard blocks */
@@ -208,7 +208,7 @@
 }
 
 .cs-scorecard-bar--after {
-  background: var(--green, #56b4e9);
+  background: var(--green, #ffffff);
 }
 
 .cs-scroll-arrow {
@@ -258,7 +258,7 @@
 }
 
 .cs-sidebar dd a {
-  color: var(--green, #56b4e9);
+  color: var(--green, #ffffff);
   text-decoration: none;
 }
 
@@ -362,7 +362,7 @@
   gap: 0.5rem;
   padding: 0.875rem 1.25rem;
   border-radius: 999px;
-  background: var(--green, #56b4e9);
+  background: var(--green, #ffffff);
   color: #000;
   font-size: 0.875rem;
   font-weight: 500;
@@ -421,7 +421,13 @@
 
 .cs-cta-actions .swft-btn {
   margin: 0;
+  text-decoration: none;
 }
+
+/* Rich-text link colors would otherwise turn the white button's label white */
+.cs-cta-actions .swft-btn.is-primary,
+.cs-cta-actions .swft-btn.is-primary:hover { color: #050505 !important; }
+.cs-cta-actions .swft-btn.is-outline { color: #fff !important; border-color: rgba(255, 255, 255, 0.24); }
 
 .cs-floating-cta.swft-btn {
   border-radius: 999px;
@@ -484,7 +490,7 @@
   font-size: 2rem;
   font-weight: 600;
   line-height: 1.1;
-  color: var(--green, #56b4e9);
+  color: var(--green, #ffffff);
 }
 
 .cs-body .uui-text-rich-text .cs-result__label {

@@ -6,10 +6,10 @@
   /* Brand (also defined in swftstudios000; duplicated so shell-only pages work) */
   --black: #010101;
   --white: #ffffff;
-  /* Accent: Okabe-Ito sky blue. Colorblind-safe (stays blue under protan/deutan,
-     distinct from white by lightness under all types) and 9:1 on black.
-     The name --green is kept so existing rules keep working. */
-  --green: #56b4e9;
+  /* Accent: monochrome (Monoform-style dark theme, 2026-10). White is the
+     only accent; emphasis comes from type size and the handwritten script
+     word, not color. The name --green is kept so existing rules keep working. */
+  --green: #ffffff;
   --charcoal: #0c0c0c;
 
   /* Semantic surfaces & text */
@@ -19,10 +19,10 @@
   --swft-muted: #b5b5b5;
   --swft-lead: #e3e0de;
   --swft-accent: var(--green);
-  --swft-accent-soft: #9dd3f3; /* lighter accent for hovers / text on tinted fills */
+  --swft-accent-soft: #d6d6d6; /* lighter accent for hovers / text on tinted fills */
   /* Status colors never rely on hue alone: pair them with an icon or text (see .is-error / .is-success). */
   --swft-success: var(--swft-accent);
-  --swft-error: #e69f00;       /* Okabe-Ito orange, 9:1 on black; distinct from the blue accent for every CVD type */
+  --swft-error: #e69f00;       /* Okabe-Ito orange, 9:1 on black; the only hue on the site, so errors stand out */
   --swft-border: rgba(255, 255, 255, 0.1);
   --swft-card: #0a0a0a;
 
@@ -30,6 +30,7 @@
   --swft-font: "Inter Tight", Inter, system-ui, sans-serif;
   --swft-font-display: "Inter Tight", Inter, system-ui, sans-serif;
   --swft-font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --swft-font-script: "SWFT Script", "Segoe Print", "Bradley Hand", cursive;
 
   /* Fluid type scale, after the Astrox Studio style guide (desktop max in
      px noted). 16px root baseline. */

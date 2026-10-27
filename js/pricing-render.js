@@ -11,7 +11,7 @@
    (a link to the matching care plan or monthly option).
    With tabs: true each category is a tab panel (id = category id); otherwise
    the categories render stacked. Offer cards keep their id, so old links like
-   website-pricing.html#gbp-refresh still land on the right card.
+   pricing.html#gbp-refresh still land on the right card.
    ============================================================ */
 (function (global) {
   "use strict";
@@ -45,7 +45,7 @@
       "</ul>";
     if (layout === "compact" && items.length > limit) {
       list +=
-        '<p class="hp-pricing-includes-more"><a href="website-pricing.html#pricing" class="highlight">See full pricing</a></p>';
+        '<p class="hp-pricing-includes-more"><a href="pricing.html#pricing" class="highlight">See full pricing</a></p>';
     }
     return list;
   }
@@ -438,7 +438,7 @@
     if (options.showFaqLink === true) {
       html +=
         '<div class="hp-pricing-full-link">' +
-        '<a href="website-pricing.html#pricing" class="button is-course outlined w-inline-block">' +
+        '<a href="pricing.html#pricing" class="button is-course outlined w-inline-block">' +
         '<div class="button_bg"></div>' +
         '<div class="button_text">View full pricing &amp; FAQ</div></a></div>';
     }

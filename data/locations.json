@@ -281,22 +281,22 @@
   "servicesOffered": [
     {
       "name": "GBP Content Refresh",
-      "href": "/website-pricing.html#gbp-refresh",
+      "href": "/pricing.html#gbp-refresh",
       "blurb": "Get seen and look great locally: on-site photo, short-form video and a Google Business Profile that shows up in local search."
     },
     {
       "name": "Website Only",
-      "href": "/website-pricing.html#website-only",
+      "href": "/pricing.html#website-only",
       "blurb": "Convert: a fast Webflow or Shopify site that makes booking or buying the obvious next step, using the photos and copy you already have."
     },
     {
       "name": "Website + Content",
-      "href": "/website-pricing.html#website-content-half",
+      "href": "/pricing.html#website-content-half",
       "blurb": "Capture and convert together: a website plus a half-day or full-day on-location photo and video shoot."
     },
     {
       "name": "Content + Growth Retainer",
-      "href": "/website-pricing.html#ongoing",
+      "href": "/pricing.html#ongoing",
       "blurb": "Nurture and repeat: month-to-month content, posting and review support that keep customers coming back."
     }
   ]

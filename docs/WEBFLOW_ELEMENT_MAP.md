@@ -35,7 +35,7 @@ Source inputs:
 - Heading checkpoints (first 8):
   - none detected
 
-## `website-pricing.html`
+## `pricing.html`
 - Section count: `0`
 - Section classes in order: none detected
 - Heading checkpoints (first 8):

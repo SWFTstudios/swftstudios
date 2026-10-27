@@ -3,6 +3,7 @@
  * Build portfolio marquee, work gallery, and case study pages from data/portfolio-projects.json
  */
 import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { execFileSync } from 'child_process';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { buildRichText, escapeHtml, domain } from './lib/case-study-copy.mjs';
@@ -57,7 +58,7 @@ function buildCaseStudySection(p, prev, next) {
           <div class="container-large">
             <div class="padding-section-large">
               <div class="cs-back-link">
-                <a href="../case-studies.html" class="swft-btn is-text">← Back to Case Studies</a>
+                <a href="../work.html" class="swft-btn is-text">← Back to Case Studies</a>
               </div>
               <header class="cs-hero-head">
                 <h1 class="cs-project-title">${escapeHtml(p.name)}</h1>
@@ -198,47 +199,6 @@ function buildCaseStudyPage(p, prev, next) {
   return html;
 }
 
-function marqueeImageAttrs(p) {
-  const src = p.image;
-  const isJpg = /\.jpe?g$/i.test(src);
-  const isPng = src.endsWith('.png');
-  const hasVariants =
-    !isJpg && !isPng && src.endsWith('.webp') && existsSync(join(ROOT, src.replace('.webp', '-p-500.webp')));
-
-  if (hasVariants) {
-    const base = src.replace('.webp', '');
-    return {
-      sizes: 'sizes="(max-width: 3600px) 100vw, 3600px"',
-      srcset: `srcset="${base}-p-500.webp 500w, ${base}-p-800.webp 800w, ${base}-p-1080.webp 1080w, ${base}-p-1600.webp 1600w, ${base}-p-2000.webp 2000w, ${base}-p-2600.webp 2600w, ${base}-p-3200.webp 3200w, ${src} 3600w"`,
-    };
-  }
-  if (isJpg) {
-    return {
-      sizes: 'sizes="(max-width: 3024px) 100vw, 3024px"',
-      srcset: `srcset="${src} 500w, ${src} 800w, ${src} 1080w, ${src} 1600w, ${src} 2000w, ${src} 2600w, ${src} 3024w"`,
-    };
-  }
-  return {
-    sizes: 'sizes="(max-width: 1440px) 100vw, 1440px"',
-    srcset: `srcset="${src} 500w, ${src} 800w, ${src} 1080w, ${src} 1440w"`,
-  };
-}
-
-function marqueeItemSimple(p) {
-  const src = p.image;
-  const { sizes, srcset } = marqueeImageAttrs(p);
-  return `<a href="case-study/${p.slug}.html" aria-label="${escapeHtml(p.name)} case study" class="projects_marquee-item w-inline-block"><img ${sizes} ${srcset} alt="${escapeHtml(p.name)}" loading="lazy" src="${src}" class="project_marquee-img"></a>`;
-}
-
-function marqueeItemTrack(p) {
-  const src = p.image;
-  const { sizes, srcset } = marqueeImageAttrs(p);
-  return `<a href="case-study/${p.slug}.html" aria-label="${escapeHtml(p.name)} case study" class="marquee-list w-inline-block">
-                        <div class="marquee-item">
-                          <div class="marquee-image"><img ${sizes} ${srcset} alt="${escapeHtml(p.name)}" src="${src}" loading="lazy" class="photo"></div>
-                        </div>
-                      </a>`;
-}
 
 // --- Case study pages ---
 const sortedProjects = [...projects].sort((a, b) => a.order - b.order);
@@ -251,31 +211,11 @@ for (let i = 0; i < sortedProjects.length; i++) {
   console.log('Case study:', out);
 }
 
-// --- Update index.html marquee ---
-let indexHtml = readFileSync(join(ROOT, 'index.html'), 'utf8');
-const marqueeListItems = projects.map(marqueeItemSimple).join('\n                        ');
-const trackItems = projects.concat(projects).map(marqueeItemTrack).join('\n                      ');
+// --- Homepage + Work carousel, Work index ---
+// The Mono pages render their project tiles from data/portfolio-projects.json.
+execFileSync(process.execPath, [join(ROOT, 'scripts/build-mono-sections.mjs')], { stdio: 'inherit' });
 
-indexHtml = indexHtml.replace(
-  /<div class="projects_marquee-list">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>\s*<div class="marquee-wrapper">/,
-  `<div class="projects_marquee-list">\n                        ${marqueeListItems}\n                      </div>\n                    </div>\n                  </div>\n                  <div class="marquee-wrapper">`
-);
-
-indexHtml = indexHtml.replace(
-  /<div class="marquee-track">[\s\S]*?<\/div>\s*<\/div>\s*<div class="explore-button-wrapper">/,
-  `<div class="marquee-track">\n                      ${trackItems}\n                    </div>\n                  </div>\n                  <div class="explore-button-wrapper">`
-);
-
-// Update View All to the work page
-indexHtml = indexHtml.replace(
-  /<a href="contact\.html" target="_blank" class="button is-course w-inline-block">\s*<div class="button_bg"><\/div>\s*<div class="button_text">View All<\/div>\s*<\/a>/,
-  `<a href="case-studies.html" class="button is-course w-inline-block">\n                          <div class="button_bg"></div>\n                          <div class="button_text">View All</div>\n                        </a>`
-);
-
-writeFileSync(join(ROOT, 'index.html'), indexHtml);
-console.log('Updated index.html marquee');
-
-// websites.html was retired (2026-10-01); the work gallery lives on case-studies.html.
+// websites.html was retired (2026-10-01); the work gallery lives on work.html.
 
 // --- Update case-studies-index.json ---
 const indexPath = join(ROOT, 'data/case-studies-index.json');

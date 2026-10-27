@@ -15,7 +15,7 @@ Do **not** rebase, squash, or force-push `main` unless explicitly agreed and coo
 
 **Protected (never overwritten by Webflow)**:
 
-- `case-studies.html` – tab + hash routing logic.
+- `work.html` – tab + hash routing logic.
 - `case-study/` – all case study slug pages and tag links.
 - `case-study.html` – if used as a template/redirect.
 - `detail_project.html`, `detail_video.html` – project/video detail logic.
@@ -31,7 +31,7 @@ Do **not** rebase, squash, or force-push `main` unless explicitly agreed and coo
 These are page shells and marketing pages that can match Webflow designs:
 
 - `index.html`, `404.html`, `401.html`
-- `website-pricing.html`
+- `pricing.html`
 - `style-guide.html`
 
 ### 3. Assets
@@ -66,11 +66,11 @@ Every Webflow export should follow this branch-based workflow:
      - HTML files from the Webflow-replaceable list (for example, exported `index.html` → repo `index.html`).
      - Webflow CSS → `css/webflow-export.css` (and ensure the HTML references it).
      - Any new images referenced by those pages → `images/` or `images/webflow/`.
-   - Do **not** copy anything that would overwrite protected files (`case-studies.html`, `case-study/`, `detail_*.html`, `wrangler.jsonc`, custom JS, etc.).
+   - Do **not** copy anything that would overwrite protected files (`work.html`, `case-study/`, `detail_*.html`, `wrangler.jsonc`, custom JS, etc.).
 
 5. **Fix links and asset paths**
    - Ensure navigation links continue to point to:
-     - `case-studies.html` for the case studies hub.
+     - `work.html` for the case studies hub.
      - `case-study/<slug>.html` for individual case studies.
    - Confirm all `href` and `src` paths match this repo’s structure.
 

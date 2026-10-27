@@ -3,7 +3,7 @@
   --pp-bg: var(--swft-bg, #010101);
   --pp-text: var(--swft-text, #e5e2e1);
   --pp-muted: var(--swft-muted, #a8a8a8);
-  --pp-accent: var(--swft-accent, #56b4e9);
+  --pp-accent: var(--swft-accent, #ffffff);
   --pp-border: var(--swft-border, rgba(255, 255, 255, 0.1));
   --pp-card: var(--swft-card, #0a0a0a);
   background: var(--pp-bg);
@@ -20,7 +20,7 @@
   --pp-bg: var(--swft-bg, #010101);
   --pp-text: var(--swft-text, #e5e2e1);
   --pp-muted: var(--swft-muted, #a8a8a8);
-  --pp-accent: var(--swft-accent, #56b4e9);
+  --pp-accent: var(--swft-accent, #ffffff);
   --pp-border: var(--swft-border, rgba(255, 255, 255, 0.1));
   --pp-card: var(--swft-card, #0a0a0a);
 }
@@ -295,7 +295,7 @@
 
 .hp-pricing-card--featured {
   border-color: var(--pp-accent);
-  box-shadow: 0 0 24px rgba(86, 180, 233, 0.12);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.12);
   padding-top: 2rem;
 }
 
@@ -347,7 +347,7 @@
 .hp-pricing-ghl-badge {
   display: inline-block;
   align-self: flex-start;
-  background: rgba(86, 180, 233, 0.12);
+  background: rgba(255, 255, 255, 0.12);
   border: 1px solid var(--pp-accent);
   color: var(--pp-accent);
   font-size: 0.65rem;
@@ -414,11 +414,11 @@
 
 .hp-pricing-bundle {
   border: 1px solid var(--pp-accent);
-  background: linear-gradient(180deg, rgba(86, 180, 233, 0.06) 0%, var(--pp-card) 40%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, var(--pp-card) 40%);
   padding: 2rem;
   margin-top: 1rem;
   text-align: center;
-  box-shadow: 0 0 32px rgba(86, 180, 233, 0.1);
+  box-shadow: 0 0 32px rgba(255, 255, 255, 0.1);
 }
 
 .hp-pricing-bundle h3 {
@@ -563,7 +563,7 @@
 .pricing-page .pricing-hero-lead { max-width: 55ch; }
 .hp-pricing-best-for {
   font-size: .7rem;
-  color: var(--pp-accent, #56b4e9);
+  color: var(--pp-accent, #ffffff);
   letter-spacing: .1em;
   text-transform: uppercase;
   font-weight: 650;
@@ -576,8 +576,8 @@
 .hp-pricing-price-note { display: inline; font-size: .75rem; margin-left: .4rem; }
 .hp-pricing-suggested {
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(86, 180, 233,.22);
-  background: rgba(86, 180, 233,.06);
+  border: 1px solid rgba(255, 255, 255,.22);
+  background: rgba(255, 255, 255,.06);
   border-radius: 8px;
 }
 .hp-pricing-suggested span {
@@ -640,7 +640,7 @@
 
 /* Single-price cards: the visible number is the genuine checkout-aligned starting rate. */
 .hp-pricing-card .hp-pricing-price {
-  color: var(--pp-accent, #56b4e9);
+  color: var(--pp-accent, #ffffff);
   font-size: clamp(1.55rem, 2.6vw, 2.05rem);
   font-weight: 650;
   line-height: 1.2;
@@ -681,12 +681,12 @@
   cursor: pointer;
   transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
 }
-.pr-cat-tab:hover { border-color: rgba(86, 180, 233, .5); }
-.pr-cat-tab:focus-visible { outline: 2px solid var(--pp-accent, #56b4e9); outline-offset: 2px; }
+.pr-cat-tab:hover { border-color: rgba(255, 255, 255, .5); }
+.pr-cat-tab:focus-visible { outline: 2px solid var(--pp-accent, #ffffff); outline-offset: 2px; }
 .pr-cat-tab.is-active {
-  border-color: var(--pp-accent, #56b4e9);
-  background: linear-gradient(140deg, rgba(86, 180, 233, .12), rgba(86, 180, 233, .02) 70%), var(--pp-card, #0a0a0a);
-  box-shadow: 0 0 24px rgba(86, 180, 233, .12);
+  border-color: var(--pp-accent, #ffffff);
+  background: linear-gradient(140deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .02) 70%), var(--pp-card, #0a0a0a);
+  box-shadow: 0 0 24px rgba(255, 255, 255, .12);
 }
 .pr-cat-tab__label {
   display: flex;
@@ -708,8 +708,8 @@
   border-radius: 999px;
 }
 .pr-cat-tab.is-active .pr-cat-tab__label::after {
-  border-color: var(--pp-accent, #56b4e9);
-  background: var(--pp-accent, #56b4e9);
+  border-color: var(--pp-accent, #ffffff);
+  background: var(--pp-accent, #ffffff);
 }
 .pr-cat-tab__sub { font-size: .82rem; line-height: 1.45; }
 
@@ -719,7 +719,7 @@
 }
 .pr-cat__eyebrow {
   margin: 0 0 .6rem;
-  color: var(--pp-accent, #56b4e9);
+  color: var(--pp-accent, #ffffff);
   font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: var(--swft-text-label, .75rem);
   text-transform: uppercase;
@@ -757,8 +757,8 @@
 }
 .pr-jump a:hover,
 .pr-jump a:focus-visible {
-  border-color: var(--pp-accent, #56b4e9);
-  color: var(--pp-accent, #56b4e9);
+  border-color: var(--pp-accent, #ffffff);
+  color: var(--pp-accent, #ffffff);
   outline: none;
 }
 
@@ -775,7 +775,7 @@
   margin: 0 0 1.75rem;
 }
 .pr-service__num {
-  color: var(--pp-accent, #56b4e9);
+  color: var(--pp-accent, #ffffff);
   font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: var(--swft-text-label, .75rem);
   font-variant-numeric: tabular-nums;
@@ -809,7 +809,7 @@
   font-size: .7rem;
   text-transform: uppercase;
 }
-.hp-pricing-kicker__how.is-bookable { color: var(--pp-accent, #56b4e9); }
+.hp-pricing-kicker__how.is-bookable { color: var(--pp-accent, #ffffff); }
 .hp-pricing-name {
   margin: 0;
   color: var(--swft-text-strong, #fff);
@@ -821,10 +821,10 @@
   align-self: flex-start;
   margin: -.2rem 0 0;
   padding: .25rem .6rem;
-  border: 1px solid rgba(86, 180, 233, .35);
+  border: 1px solid rgba(255, 255, 255, .35);
   border-radius: 999px;
-  background: rgba(86, 180, 233, .08);
-  color: var(--swft-accent-soft, #9dd3f3);
+  background: rgba(255, 255, 255, .08);
+  color: var(--swft-accent-soft, #d6d6d6);
   font-size: .72rem;
   line-height: 1.3;
 }
@@ -852,9 +852,9 @@
 /* One-time vs monthly label */
 .hp-pricing-kicker__kind.is-monthly {
   padding: .1rem .45rem;
-  border: 1px solid rgba(86, 180, 233, .45);
+  border: 1px solid rgba(255, 255, 255, .45);
   border-radius: 999px;
-  color: var(--swft-accent-soft, #9dd3f3);
+  color: var(--swft-accent-soft, #d6d6d6);
 }
 
 /* Quick-look specs */
@@ -924,7 +924,7 @@
   font-weight: 600;
   white-space: nowrap;
 }
-.hp-pricing-scale tr.is-base { background: rgba(86, 180, 233, .07); }
+.hp-pricing-scale tr.is-base { background: rgba(255, 255, 255, .07); }
 .hp-pricing-scale__note {
   margin: .45rem 0 0;
   color: var(--pp-muted, #a8a8a8);
@@ -954,7 +954,7 @@
   gap: .25rem .6rem;
   margin: 0;
   padding: .65rem .8rem;
-  border: 1px dashed rgba(86, 180, 233, .4);
+  border: 1px dashed rgba(255, 255, 255, .4);
   border-radius: 8px;
   font-size: .85rem;
 }
@@ -964,7 +964,7 @@
   font-size: .7rem;
   text-transform: uppercase;
 }
-.hp-pricing-next a { color: var(--pp-accent, #56b4e9); text-decoration: none; }
+.hp-pricing-next a { color: var(--pp-accent, #ffffff); text-decoration: none; }
 .hp-pricing-next a:hover,
 .hp-pricing-next a:focus-visible { text-decoration: underline; }
 
@@ -1022,10 +1022,10 @@
   transition: background-color .2s ease, border-color .2s ease;
 }
 .pr-billing__switch[aria-checked="true"] {
-  background: var(--pp-accent, #56b4e9);
-  border-color: var(--pp-accent, #56b4e9);
+  background: var(--pp-accent, #ffffff);
+  border-color: var(--pp-accent, #ffffff);
 }
-.pr-billing__switch:focus-visible { outline: 2px solid var(--pp-accent, #56b4e9); outline-offset: 3px; }
+.pr-billing__switch:focus-visible { outline: 2px solid var(--pp-accent, #ffffff); outline-offset: 3px; }
 .pr-billing__knob {
   position: absolute;
   top: 50%;
@@ -1059,13 +1059,13 @@
   justify-content: center;
   gap: .85rem;
   padding: 1.6rem;
-  border: 1px dashed rgba(86, 180, 233, .45);
+  border: 1px dashed rgba(255, 255, 255, .45);
   border-radius: 12px;
-  background: rgba(86, 180, 233, .04);
+  background: rgba(255, 255, 255, .04);
 }
 .pr-switch-teaser__label {
   margin: 0;
-  color: var(--pp-accent, #56b4e9);
+  color: var(--pp-accent, #ffffff);
   font-family: var(--swft-font-mono, "Space Mono", monospace);
   font-size: .72rem;
   text-transform: uppercase;
@@ -1089,10 +1089,10 @@
   align-self: flex-start;
   min-height: 44px;
   padding: .55rem 1.1rem;
-  border: 1px solid var(--pp-accent, #56b4e9);
+  border: 1px solid var(--pp-accent, #ffffff);
   border-radius: 999px;
   background: transparent;
-  color: var(--pp-accent, #56b4e9);
+  color: var(--pp-accent, #ffffff);
   font: inherit;
   font-size: .9rem;
   font-weight: 600;
@@ -1101,7 +1101,7 @@
 }
 .pr-switch-teaser__btn:hover,
 .pr-switch-teaser__btn:focus-visible {
-  background: var(--pp-accent, #56b4e9);
+  background: var(--pp-accent, #ffffff);
   color: var(--swft-bg, #010101);
   outline: none;
 }
@@ -1125,7 +1125,7 @@
 .pr-offer-grid:not(.pr-offer-grid--1) .pr-switch-teaser__list li { gap: .45rem; }
 .pr-offer-grid:not(.pr-offer-grid--1) .pr-switch-teaser__btn { align-self: center; }
 .pr-billing-empty { color: var(--pp-muted, #a8a8a8); margin: 0; }
-.pr-billing-empty a { color: var(--pp-accent, #56b4e9); }
+.pr-billing-empty a { color: var(--pp-accent, #ffffff); }
 
 /* Phones: each size row stacks, with the size and price on top and the rest below */
 @media (max-width: 520px) {

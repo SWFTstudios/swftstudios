@@ -49,7 +49,7 @@ function pageShell({ title, description, canonical, active, jsonLd, body, cssExt
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261001-visuals">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono">
   <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
   <link rel="stylesheet" href="/css/locations-page.css?v=20260930b">
   ${cssExtra}
@@ -64,7 +64,7 @@ ${body}
     </div>
   </main>
   <script src="/js/swft-analytics.js?v=20260930b" defer></script>
-  <script src="/js/swft-nav.js?v=20261001-visuals" defer></script>
+  <script src="/js/swft-nav.js?v=20261027-mono" defer></script>
 </body>
 </html>
 `;
@@ -152,7 +152,7 @@ function renderLocationPage(loc, data, locations) {
 
   const body = `
       <nav class="loc-breadcrumb" aria-label="Breadcrumb">
-        <a href="/index.html">Home</a>
+        <a href="/">Home</a>
         <span aria-hidden="true">/</span>
         <a href="/locations/">Locations</a>
         <span aria-hidden="true">/</span>
@@ -245,7 +245,7 @@ function renderHub(data, locations) {
 
   const body = `
       <nav class="loc-breadcrumb" aria-label="Breadcrumb">
-        <a href="/index.html">Home</a>
+        <a href="/">Home</a>
         <span aria-hidden="true">/</span>
         <span>Locations</span>
       </nav>
@@ -297,9 +297,11 @@ function renderHtmlSitemap(data, locations) {
     { href: "/", label: "Home", note: "Main marketing homepage" },
     { href: "/growth-audit", label: "Free Growth Audit", note: "Primary lead capture" },
     { href: "/services.html", label: "Services", note: "Digital (web, apps, analytics, marketing) and Visual (photo, video, social, live streaming)" },
-    { href: "/website-pricing.html", label: "Pricing", note: "Starting prices and deliverables for every offer" },
-    { href: "/case-studies.html", label: "Work", note: "Case studies and marketing guides" },
-    { href: "/team.html", label: "Team", note: "Who builds the work" },
+    { href: "/pricing.html", label: "Pricing", note: "Starting prices and deliverables for every offer" },
+    { href: "/work.html", label: "Work", note: "Every project in a 3D carousel, plus the full index" },
+    { href: "/visuals.html", label: "Films", note: "Brand films, reels and live work" },
+    { href: "/blog.html", label: "Blog", note: "Marketing guides for local businesses" },
+    { href: "/about.html", label: "About", note: "The founders and how we work" },
     { href: "/contact.html", label: "Contact", note: "Project inquiry form" },
     { href: "/locations/", label: "Locations", note: "Jersey City, North Jersey, and NYC service areas" },
   ];
@@ -335,14 +337,15 @@ function renderHtmlSitemap(data, locations) {
     })
     .join("");
 
-  const caseItems = (Array.isArray(caseStudies) ? caseStudies : caseStudies.items || [])
-    .map((c) => {
-      const slug = c.slug || c.id;
-      const name = c.title || c.name || slug;
-      if (!slug) return null;
-      return { href: `/case-study/${slug}.html`, label: name };
-    })
-    .filter(Boolean);
+  const entries = Array.isArray(caseStudies) ? caseStudies : caseStudies.items || [];
+  const toItem = (folder) => (c) => {
+    const slug = c.slug || c.id;
+    const name = c.title || c.name || slug;
+    if (!slug) return null;
+    return { href: `/${folder}/${slug}.html`, label: name };
+  };
+  const caseItems = entries.filter((c) => c.type !== "tips").map(toItem("case-study")).filter(Boolean);
+  const guideItems = entries.filter((c) => c.type === "tips").map(toItem("blog")).filter(Boolean);
 
   const jsonLd = JSON.stringify(
     {
@@ -389,6 +392,15 @@ function renderHtmlSitemap(data, locations) {
             ? `<section aria-labelledby="sm-cases">
           <h2 id="sm-cases">Case studies</h2>
           ${listBlock(caseItems)}
+        </section>`
+            : ""
+        }
+
+        ${
+          guideItems.length
+            ? `<section aria-labelledby="sm-guides">
+          <h2 id="sm-guides">Blog guides</h2>
+          ${listBlock(guideItems)}
         </section>`
             : ""
         }

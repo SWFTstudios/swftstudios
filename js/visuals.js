@@ -619,6 +619,6 @@
     boot();
   }).catch(function () {
     $("vz-count").textContent = "";
-    track.innerHTML = '<p class="vz-noscript">Couldn\'t load the videos. <a href="case-studies.html">See our case studies</a>.</p>';
+    track.innerHTML = '<p class="vz-noscript">Couldn\'t load the videos. <a href="work.html">See our case studies</a>.</p>';
   });
 })();

@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-10-27: Mono redesign (dark, Monoform-style)
+
+### Changed
+- Whole site moved to a dark, monochrome Mono design system ([`css/mono.css`](../css/mono.css)): huge tight Inter Tight headlines, Space Mono `(labels)`, one handwritten accent word per headline (Nanum Pen Script, self-hosted as "SWFT Script"), white pill buttons. The blue accent is gone; white is the only accent.
+- New headline and tagline everywhere: **Get seen. Get chosen. Get booked.** The five SWFT Method stages are renamed to match (Get seen, Get chosen, Get booked, Get them back, Put it on repeat).
+- New shared nav (Home, Work, Services, About, Blog, Contact + "Start a project") and a big footer with a "Let's get you booked" CTA, injected by `js/swft-nav.js`.
+- Homepage rebuilt: hero with a live **Booking now** pill, a 3D project carousel (drag, swipe, scroll, arrow keys; filter chips by category; front card opens its case study), services list with starting prices from `data/pricing.json`, numbers, process, testimonial, Growth Audit band and FAQ.
+- Contact form rebuilt with service and budget chips; same fields and `/api/contact` payload.
+- Services, About, Work, Blog, Pricing, 404 rebuilt or restyled; every other page (case studies, guides, films, Growth Audit, booking, locations, portal, site map) picks up the new chrome and shell styles.
+
+### Added
+- `GET /api/availability` ([`functions/api/availability.js`](../functions/api/availability.js)): next open slot on cal.com/swftstudios/swft-meeting from the Cal.com v2 slots API, cached 15 minutes. Booking pills show "Booking now · Next opening Thu Oct 30". Optional `CAL_API_KEY`, `CAL_USERNAME`, `CAL_EVENT_SLUG`. Tests: `npm run test:availability`.
+- `npm run build:mono` ([`scripts/build-mono-sections.mjs`](../scripts/build-mono-sections.mjs)) writes the project tiles, filters, Work index, services lists and blog cards from JSON.
+- `/blog.html` and `/blog/<guide>.html` for the five 2026 marketing guides.
+
+### Renamed (301s in `_redirects`)
+- `team.html` → `about.html`, `case-studies.html` → `work.html`, `website-pricing.html` → `pricing.html`, `case-study/<guide>.html` → `blog/<guide>.html`, `video-gallery.html` → `visuals.html`, `cube.html` → `work.html`.
+
+### Removed
+- Old homepage experiences and their assets (ocean hero, SWFT cube, city, letter cube, problem tabs, work stack, services slider), the old case-studies hub scripts and the video gallery.
+
 ## 2026-10-08: Built By Me EZ case study and homepage Digital feature
 
 ### Changed
