@@ -10,6 +10,12 @@
     "binding": "AI",
     "remote": true
   },
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "swft-client-files"
+    }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
@@ -22,6 +28,10 @@
   "vars": {
     "POSTHOG_PROJECT_ID": "486061",
     "PORTAL_ORIGIN": "https://www.swftstudios.com",
+    "ADMIN_EMAILS": "hello@swftstudios.com",
+    "PORTAL_NOTIFY_EMAIL": "hello@swftstudios.com",
+    "PORTAL_FROM_EMAIL": "hello@swftstudios.com",
+    "CF_ACCOUNT_ID": "e246ec2918a6cd045fd4bfd00f024f0c",
     "STRIPE_PRICE_GBP_REFRESH": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
     "STRIPE_PRICE_WEBSITE_ONLY": "price_1U6cA5AF4d9gCyuNj65BmDU2",
     "STRIPE_PRICE_WEBSITE_CONTENT_HALF": "price_1U6cA8AF4d9gCyuNt2PH1qew",

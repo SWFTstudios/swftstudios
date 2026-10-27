@@ -2,69 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Client Portal Sign In | SWFT Studios</title>
-  <meta name="robots" content="noindex">
-  <meta name="description" content="Sign in to your SWFT client portal.">
+  <title>Sign In: Client Portal | SWFT Studios</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Sign in to your SWFT Studios client portal.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="canonical" href="https://www.swftstudios.com/portal/login.html">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono">
-  <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
-  <link rel="stylesheet" href="/css/portal.css?v=20260930b">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono2">
+  <link rel="stylesheet" href="/css/portal.css?v=20261027-ws">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
-<body class="ps-page portal-page">
+<body class="mf-page pt-auth">
   <div id="swft-nav" data-active=""></div>
-  <main>
-    <div class="portal-shell">
-      <header class="ps-hero ps-hero--left">
-        <p class="ps-eyebrow">Client portal</p>
-        <h1 class="ps-title">Sign in</h1>
-        <p class="ps-lead">Access project status and site performance for your SWFT engagement.</p>
-      </header>
-
-      <div class="portal-card">
-        <form id="login-form" class="portal-form" novalidate>
-          <label>
-            Email
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </label>
-          <label>
-            Password
-            <input id="password" name="password" type="password" autocomplete="current-password" required>
-          </label>
-          <div class="portal-actions">
-            <button type="submit" class="button is-course w-inline-block">
-              <div class="button_bg"></div>
-              <div class="button_text">Sign in</div>
-            </button>
-            <a class="portal-link" href="/portal/onboard.html">Need an account? Create one</a>
-          </div>
-        </form>
-        <div id="form-msg" class="portal-msg" hidden></div>
+  <main id="main">
+    <section class="mf-hero mf-hero--page" aria-labelledby="pt-title">
+      <div class="mf-wrap mf-split">
+        <div>
+          <div class="mf-hero__top"><p class="mf-label">(Client portal)</p></div>
+          <h1 class="mf-h1" id="pt-title">Welcome <span class="mf-script">back.</span></h1>
+          <p class="mf-lead">Upload files, share links, leave notes and see where your project stands. <span class="is-muted">SWFT team members sign in here too.</span></p>
+        </div>
+        <div class="pt-card">
+          <form id="login-form" class="mf-form" novalidate>
+            <div class="mf-field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+            <div class="mf-field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+            <p id="form-msg" class="pt-msg" hidden></p>
+            <div class="mf-actions"><button type="submit" class="mf-btn">Sign in <span class="mf-arrow" aria-hidden="true">↗</span></button></div>
+          </form>
+          <div class="pt-card__foot"><a href="/portal/forgot.html">Forgot password?</a><span>New client? Use the link in your invite email.</span></div>
+        </div>
       </div>
-    </div>
+    </section>
   </main>
   <script src="/js/swft-nav.js?v=20261027-mono"></script>
-  <script src="/js/swft-analytics.js?v=20260930b"></script>
-  <script src="/js/portal.js?v=20260930b"></script>
+  <script src="/js/portal.js?v=20261027-ws"></script>
   <script>
     (function () {
-      SWFTPortal.qs("#login-form").addEventListener("submit", async function (e) {
+      var P = SWFTPortal;
+      // Already signed in? Go straight to the right dashboard.
+      P.api("/api/portal/session").then(function (r) {
+        if (r.res.ok && r.data.ok) location.replace(r.data.user.admin ? "/portal/admin.html" : "/portal/dashboard.html");
+      });
+      P.qs("#login-form").addEventListener("submit", async function (e) {
         e.preventDefault();
-        var msg = SWFTPortal.qs("#form-msg");
-        SWFTPortal.showMsg(msg, "Signing in…", "info");
-        var result = await SWFTPortal.api("/api/portal/login", {
-          method: "POST",
-          body: JSON.stringify({
-            email: SWFTPortal.qs("#email").value.trim(),
-            password: SWFTPortal.qs("#password").value,
-          }),
-        });
-        if (!result.res.ok || !result.data.ok) {
-          SWFTPortal.showMsg(msg, (result.data && result.data.error) || "Sign in failed.", "error");
-          return;
-        }
-        window.location.href = result.data.redirect || "/portal/dashboard.html";
+        var msg = P.qs("#form-msg");
+        var btn = this.querySelector("button");
+        btn.disabled = true;
+        P.showMsg(msg, "Signing in…");
+        var r = await P.api("/api/portal/login", { method: "POST", body: JSON.stringify({ email: P.qs("#email").value.trim(), password: P.qs("#password").value }) });
+        btn.disabled = false;
+        if (!r.res.ok || !r.data.ok) return P.showMsg(msg, (r.data && r.data.error) || "Sign in failed.", "error");
+        // Only follow ?next= to this site's own dashboards
+        var next = P.params().get("next");
+        var ok = next && /^\/portal\/(dashboard|admin)(\.html)?(#[\w=&-]*)?$/.test(next) && (/admin/.test(next) === !!r.data.admin);
+        location.href = ok ? next : r.data.redirect || "/portal/dashboard.html";
       });
     })();
   </script>

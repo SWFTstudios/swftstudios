@@ -20,9 +20,9 @@ async function sendInviteEmail(env, { email, name, tierName, inviteUrl }) {
   const html = `
     <p>Hi ${greet},</p>
     <p>Thanks for booking <strong>${escapeHtml(tierName)}</strong> with SWFT Studios.</p>
-    <p>Create your client portal password to track your project and site performance:</p>
+    <p>Set your client portal password. That's where you'll upload photos, videos and logos for your project, leave notes and requests, and see where everything stands:</p>
     <p><a href="${escapeHtml(inviteUrl)}">${escapeHtml(inviteUrl)}</a></p>
-    <p>This link expires in 7 days. If it expires, visit <a href="https://www.swftstudios.com/portal/onboard.html">portal onboarding</a> with the same email.</p>
+    <p>This link expires in 7 days. If it expires, use <a href="https://www.swftstudios.com/portal/forgot.html">Forgot password</a> with the same email to get a new one.</p>
     <p>SWFT Studios</p>
   `;
   return sendResendEmail(env, {
