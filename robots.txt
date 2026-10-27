@@ -6,5 +6,7 @@ Disallow: /style-guide.html
 Disallow: /401.html
 Disallow: /growth-audit/thank-you
 Disallow: /component-
+Disallow: /portal/
+Disallow: /api/
 
 Sitemap: https://www.swftstudios.com/sitemap.xml

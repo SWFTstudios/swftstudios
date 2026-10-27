@@ -1,14 +1,66 @@
 # Client Portal
 
-Client-facing account area for SWFT Studios customers: email + password sign-in, project/billing status from Stripe, and PostHog site performance for the client’s live hostname.
+A shared workspace for SWFT Studios and its clients. Clients upload photos, videos, logos and docs (or share links), leave notes, requests, revisions and approvals, tick off their checklist and follow each project through its stages. SWFT runs everything from an admin dashboard: clients, invites, projects, stages, due dates, tasks and replies. Built on Cloudflare: Pages Functions (API), D1 (`swft-portal`), R2 (`swft-client-files`) and Email Service, with Resend for client emails.
 
-## What clients see
+## Pages
 
-| Route | Purpose |
+| Route | Who | Purpose |
+| --- | --- | --- |
+| [`/portal/login.html`](../portal/login.html) | everyone | Sign in. Admins land on the admin dashboard, clients on theirs |
+| [`/portal/forgot.html`](../portal/forgot.html) | everyone | Email a password reset link (2 hours) |
+| [`/portal/reset.html`](../portal/reset.html) | everyone | Choose a new password from that link |
+| [`/portal/onboard.html`](../portal/onboard.html) | invited clients | Set a password from an invite link (7 days). **Invite-only**: without a valid token nobody can create or claim an account |
+| [`/portal/dashboard.html`](../portal/dashboard.html) | clients | Their projects: Overview, Files, Notes & requests, Checklist, Activity, plus site traffic once `siteHost` is set |
+| [`/portal/admin.html`](../portal/admin.html) | admins | Every project and client: create clients (with invite), projects, stages, due dates, tasks (client-visible or internal), replies, downloads |
+
+Front end: [`js/portal.js`](../js/portal.js) (helpers) and [`js/portal-app.js`](../js/portal-app.js) (both dashboards), styled by [`css/portal.css`](../css/portal.css).
+
+## Who is an admin
+
+Anyone whose `users.role` is `admin`, or whose email is listed in the `ADMIN_EMAILS` var (comma-separated, default `hello@swftstudios.com`).
+
+**First admin sign-in:** go to `/portal/forgot.html`, enter an `ADMIN_EMAILS` address, and use the emailed link to set a password. (The forgot flow creates the admin account if it doesn't exist; owning the inbox is the proof.)
+
+## Workspace API
+
+All routes live in [`functions/_lib/portal-api.js`](../functions/_lib/portal-api.js), mounted by `functions/api/portal/[[path]].js` and `functions/api/admin/[[path]].js`. Every route needs a session; `/api/admin/*` needs an admin; clients only ever reach their own projects. Writes from another origin are rejected.
+
+| Method + path | Purpose |
 | --- | --- |
-| [`/portal/onboard.html`](../portal/onboard.html) | Create password (after Stripe or with invite token) |
-| [`/portal/login.html`](../portal/login.html) | Sign in |
-| [`/portal/dashboard.html`](../portal/dashboard.html) | Project status + last-30-day traffic metrics |
+| `POST /api/portal/forgot`, `POST /api/portal/reset` | Password reset (same answer whether or not the email exists) |
+| `GET /api/portal/session` | Signed-in user, stages, upload part size |
+| `GET /api/portal/projects`, `GET /api/portal/projects/:id` | List (with counts and "new since you looked") / full project |
+| `POST /api/portal/projects/:id/uploads` → `PUT /api/portal/uploads/:asset/parts/:n` → `POST /api/portal/uploads/:asset/complete` | Upload a file to R2 in 10 MB parts (up to 5 GB); `DELETE /api/portal/uploads/:asset` aborts |
+| `GET /api/portal/files/:asset` | View or `?download=1` (Range supported, so video scrubs) |
+| `POST /api/portal/projects/:id/links`, `DELETE /api/portal/assets/:id` | Share / remove links and files |
+| `POST /api/portal/projects/:id/messages`, `PATCH /api/portal/messages/:id` | Notes, requests, revisions, approvals, updates (admin); mark requests done |
+| `PATCH /api/portal/tasks/:id` | Clients tick tasks; admins also rename, hide, set due dates |
+| `GET /api/portal/projects/:id/metrics` | PostHog traffic for the project's `siteHost` |
+| `GET/POST /api/admin/clients`, `PATCH /api/admin/clients/:id`, `POST /api/admin/clients/:id/invite` | Clients and invites |
+| `POST /api/admin/workspace/projects`, `PATCH/DELETE /api/admin/projects/:id`, `POST /api/admin/projects/:id/tasks`, `DELETE /api/admin/tasks/:id` | Projects and tasks |
+
+Files are stored in R2 at `projects/<projectId>/<assetId>/<name>` and are only served through the API after a permission check (never public). Uploaded files are served with `Content-Security-Policy: sandbox` and `nosniff`, so an uploaded HTML/SVG can't run as a page on this site.
+
+## Email
+
+| What | Sent with | To |
+| --- | --- | --- |
+| New upload, link, note or request from a client | Cloudflare Email Service REST API (falls back to Resend) | `PORTAL_NOTIFY_EMAIL` (default hello@swftstudios.com) |
+| Invites, password resets, stage changes, SWFT updates/messages | Resend | the client |
+
+Pages Functions can't use the Worker `send_email` binding, so SWFT notifications use the Email Service REST API. Sends to a **verified Email Routing destination address** are free on every plan. Needs `CF_ACCOUNT_ID` (var) and `CF_EMAIL_API_TOKEN` (secret: an API token with **Email Sending: Edit**); `PORTAL_FROM_EMAIL` must be on swftstudios.com (an Email Routing domain).
+
+## Tests
+
+```bash
+npm run db:migrate:local
+npx wrangler dev --port 8790      # remove the "ai" binding from a copy of wrangler.jsonc if offline
+PORTAL_URL=http://127.0.0.1:8790 npm run test:portal
+```
+
+`tests/portal/workspace.e2e.mjs` seeds an admin and invites in the local D1 and checks sign-in, invite-only onboarding, a chunked 12 MB upload, Range downloads, links, messages, hidden tasks, permissions and password reset.
+
+## Older pieces (still in place)
 
 Passwords are never stored in plaintext. Cloudflare D1 stores a per-user salt + PBKDF2-SHA-256 hash. Sessions use an httpOnly `Secure` cookie (`swft_portal_session`).
 
@@ -57,6 +109,20 @@ Install the same US project snippet on the **client** site (project `486061`). P
 Dashboard metrics call the PostHog Query API server-side with `POSTHOG_PERSONAL_API_KEY`, filtered by the staff-assigned `$host`. Never expose that personal API key to the browser.
 
 ## Required secrets / vars
+
+Workspace additions:
+
+| Name | Where | Notes |
+| --- | --- | --- |
+| `FILES` | R2 binding | Bucket `swft-client-files` (production + preview) |
+| `ADMIN_EMAILS` | Plain var | Comma-separated admin emails (default `hello@swftstudios.com`) |
+| `PORTAL_NOTIFY_EMAIL` | Plain var | Where client activity is emailed (must be a verified Email Routing destination) |
+| `PORTAL_FROM_EMAIL` | Plain var | Sender on swftstudios.com (default `hello@swftstudios.com`) |
+| `CF_ACCOUNT_ID` | Plain var | `e246ec2918a6cd045fd4bfd00f024f0c` |
+| `CF_EMAIL_API_TOKEN` | Secret | API token with Email Sending: Edit |
+| `RESEND_API_KEY` | Secret | Client emails (invites, resets, updates) |
+
+Existing:
 
 | Name | Where | Notes |
 | --- | --- | --- |
