@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-03: Spray-paint accent word
+
+### Changed
+- The handwritten accent word in headlines (`.mf-script` on Mono pages, `.ps-accent` on booking pages) is now a solid-color graffiti tag: Sedgwick Ave Display (OFL, latin subset, self-hosted as "SWFT Graffiti", license in `fonts/`), rough grainy edges, speckled overspray and paint drips. One color for the whole site: change `--mf-spray-color` in `css/mono.css`.
+- When it scrolls into view it is sprayed on left to right, the overspray blooms, then the drips run. `js/mono.js` (`initSpray`) wraps the word; the text stays real text, once, in the page.
+- **Click** the word to cycle its color. **Five clicks within ~1.8s** starts a rainbow cycle with a neon glow that settles back to the color it had before the burst.
+- The footer "SWFT studios" wordmark keeps the original grey pen script.
+
+### Notes
+- Reduced-motion users and no-JS visitors get the finished static word (no sweep, no rainbow). Clicking still changes color for reduced-motion users. The click is mouse/touch only, and skipped when the word is inside a link or button.
+
 ## 2026-11-03: Outreach slice 3, Claude drafting + approval page
 
 ### Added

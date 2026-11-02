@@ -91,8 +91,8 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 .mf-body { color: var(--mf-muted); max-width: 60ch; margin: 0; }
 .mf-body strong { color: var(--mf-text); font-weight: 500; }
 
-/* The handwritten word. Sized up because a pen script reads small. */
-.mf-script {
+/* The footer wordmark ("SWFT studios") keeps the original grey pen script. */
+:where(.sf-wordmark) .mf-script {
   font-family: var(--mf-hand);
   font-weight: 400;
   color: var(--mf-script);
@@ -102,6 +102,157 @@ body { background: var(--mf-bg); color: var(--mf-text); }
   display: inline-block;
   transform: rotate(-4deg) translateY(0.04em);
   padding: 0 0.06em;
+}
+
+/* The accent word: solid-color spray-paint graffiti.
+   Real text stays in the page, once. js/mono.js (initSpray) wraps the word in
+   .mf-spray__ink (the paint) plus a few .mf-drip bars, feeds data-spray to the
+   speckled overspray (::before), then plays the "sprayed on" animation when it
+   scrolls into view. Without JS (or with reduced motion) it is the static
+   painted word. Change the color in one place: --mf-spray-color. */
+:root {
+  --mf-spray-color: #ff2e93;
+}
+.mf-script:not(.sf-wordmark .mf-script),
+html body.ps-page .ps-title .ps-accent {
+  position: relative;
+  display: inline-block;
+  font-family: "SWFT Graffiti", var(--mf-hand);
+  font-weight: 400;
+  font-size: 1.04em;
+  letter-spacing: 0.01em;
+  line-height: 0.85;
+  transform: rotate(-4deg) translateY(0.04em);
+  padding: 0 0.1em 0.12em;
+  color: var(--mf-spray-color);
+}
+.mf-script.is-spray,
+html body.ps-page .ps-title .ps-accent.is-spray {
+  filter: url(#mf-spray-rough);
+}
+.mf-script.is-spray,
+html body.ps-page .ps-title .ps-accent.is-spray {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.mf-spray__ink { display: block; color: var(--mf-spray-color); transition: color 0.28s ease; }
+/* Overspray: a blurred, randomly speckled copy of the word behind the paint.
+   Generated content (not a second text node), so the page text stays "booked." once. */
+.is-spray::before {
+  content: attr(data-spray);
+  content: attr(data-spray) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 0 0.1em 0.12em;
+  pointer-events: none;
+  opacity: 0.85;
+  transform: scale(1.06);
+  color: var(--mf-spray-color);
+  transition: color 0.28s ease;
+  filter: blur(0.05em) url(#mf-spray-speckle);
+}
+.mf-drip {
+  position: absolute;
+  top: 74%;
+  left: var(--x, 30%);
+  width: 0.062em;
+  height: var(--len, 0.4em);
+  border-radius: 0 0 0.05em 0.05em;
+  background: var(--mf-spray-color);
+  transition: background-color 0.28s ease;
+  transform-origin: 50% 0;
+  pointer-events: none;
+}
+.mf-drip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.035em;
+  width: 0.105em;
+  height: 0.105em;
+  margin-left: -0.0525em;
+  border-radius: 50%;
+  background: inherit;
+}
+/* Before it scrolls in: nothing painted yet. */
+.is-spray.mf-spray-pre .mf-spray__ink,
+.is-spray.mf-spray-pre::before { visibility: hidden; }
+.mf-spray-pre .mf-drip { transform: scaleY(0); }
+/* The spray pass: a soft edge sweeps left to right, the mist blooms, then the paint runs. */
+.is-spray.is-in .mf-spray__ink {
+  -webkit-mask-image: linear-gradient(100deg, #000 38%, transparent 58%);
+  mask-image: linear-gradient(100deg, #000 38%, transparent 58%);
+  -webkit-mask-size: 320% 100%;
+  mask-size: 320% 100%;
+  animation: mf-spray-pass 1.15s cubic-bezier(0.45, 0.05, 0.3, 1) both;
+}
+.is-spray.is-in::before { animation: mf-spray-mist 1.5s ease-out both; }
+.is-spray.is-in .mf-drip {
+  animation: mf-drip-run var(--dur, 1.6s) cubic-bezier(0.5, 0, 0.9, 0.6) var(--delay, 1.2s) both;
+}
+/* Rapid clicks: rainbow + glow burst that settles back to --mf-spray-color. */
+.is-spray.is-rainbow {
+  animation: mf-rainbow 3.6s linear both, mf-glow 3.6s ease-in-out both;
+}
+.is-spray.is-rainbow .mf-spray__ink {
+  animation:
+    mf-spray-pass 1.15s cubic-bezier(0.45, 0.05, 0.3, 1) both,
+    mf-rainbow 3.6s linear both;
+}
+.is-spray.is-rainbow::before {
+  animation: mf-spray-mist 1.5s ease-out both, mf-rainbow 3.6s linear both;
+}
+.is-spray.is-rainbow .mf-drip {
+  animation:
+    mf-drip-run var(--dur, 1.6s) cubic-bezier(0.5, 0, 0.9, 0.6) var(--delay, 1.2s) both,
+    mf-rainbow-bg 3.6s linear both;
+}
+@keyframes mf-rainbow {
+  0%   { color: #ff2e93; } 8%  { color: #ff7a18; } 16% { color: #ffd400; }
+  24%  { color: #2ee6a6; } 32% { color: #2fa8ff; } 40% { color: #b14aed; }
+  48%  { color: #ff2e93; } 56% { color: #ff7a18; } 64% { color: #ffd400; }
+  72%  { color: #2ee6a6; } 80% { color: #2fa8ff; } 88% { color: #b14aed; }
+  100% { color: var(--mf-spray-color); }
+}
+@keyframes mf-rainbow-bg {
+  0%   { background-color: #ff2e93; } 8%  { background-color: #ff7a18; } 16% { background-color: #ffd400; }
+  24%  { background-color: #2ee6a6; } 32% { background-color: #2fa8ff; } 40% { background-color: #b14aed; }
+  48%  { background-color: #ff2e93; } 56% { background-color: #ff7a18; } 64% { background-color: #ffd400; }
+  72%  { background-color: #2ee6a6; } 80% { background-color: #2fa8ff; } 88% { background-color: #b14aed; }
+  100% { background-color: var(--mf-spray-color); }
+}
+/* Glow is a drop-shadow on the wrapper (not text-shadow on the masked ink, which would be clipped to a box). */
+@keyframes mf-glow {
+  0%   { filter: url(#mf-spray-rough) drop-shadow(0 0 0 transparent) drop-shadow(0 0 0 transparent); }
+  12%  { filter: url(#mf-spray-rough) drop-shadow(0 0 0.1em currentColor) drop-shadow(0 0 0.32em currentColor); }
+  80%  { filter: url(#mf-spray-rough) drop-shadow(0 0 0.1em currentColor) drop-shadow(0 0 0.32em currentColor); }
+  100% { filter: url(#mf-spray-rough) drop-shadow(0 0 0 transparent) drop-shadow(0 0 0 transparent); }
+}
+@keyframes mf-spray-pass {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  to   { -webkit-mask-position: 0 0;    mask-position: 0 0; }
+}
+@keyframes mf-spray-mist {
+  0%   { opacity: 0; transform: scale(0.96); }
+  45%  { opacity: 0.2; }
+  100% { opacity: 0.85; transform: scale(1.06); }
+}
+@keyframes mf-drip-run {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-spray.is-in .mf-spray__ink,
+  .is-spray.is-in::before,
+  .is-spray.is-in .mf-drip,
+  .is-spray.is-rainbow,
+  .is-spray.is-rainbow .mf-spray__ink,
+  .is-spray.is-rainbow::before,
+  .is-spray.is-rainbow .mf-drip { animation: none; -webkit-mask-image: none; mask-image: none; }
+  .mf-spray-pre .mf-drip { transform: none; }
 }
 
 /* ---------- Pills, buttons, chips ---------- */
@@ -539,7 +690,6 @@ html body.ps-page .ps-eyebrow {
 html body.ps-page .ps-eyebrow::before { content: "("; }
 html body.ps-page .ps-eyebrow::after { content: ")"; }
 html body.ps-page .ps-title { font-size: var(--mf-h1); line-height: 0.92; letter-spacing: -0.05em; font-weight: 600; max-width: 16ch; margin-bottom: 1.75rem; }
-html body.ps-page .ps-title .ps-accent { font-family: var(--mf-hand); font-weight: 400; color: var(--mf-script); font-size: 1.12em; letter-spacing: -0.01em; display: inline-block; transform: rotate(-4deg); }
 html body.ps-page .ps-lead { margin: 0; max-width: 46ch; font-size: var(--mf-lead); line-height: 1.3; font-weight: 500; letter-spacing: -0.015em; color: var(--mf-text); }
 html body.ps-page .ps-hero:not(.ps-hero--left) .ps-lead { margin: 0; }
 html body.ps-page .ps-filter { font-family: var(--mf-font); font-weight: 500; padding: 0.55rem 1rem; border-color: var(--mf-line-strong); }
