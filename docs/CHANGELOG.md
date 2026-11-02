@@ -8,6 +8,7 @@
 - Free strategy call pop-up (`js/strategy-call.js`, loaded by the nav): shows after 40s or on desktop exit intent, never on contact/booking/audit/portal/admin pages. "Maybe later" snoozes it 7 days, booking 60 days (localStorage, fails safe). `?strategy=1` forces it open. Sends `strategy_popup_shown` / `strategy_popup_click` to PostHog when it is loaded.
 - `/pricing.html`: "What each service costs" cards (investment level, what's included, Get a quote) above the existing packages.
 - `css/services.css` (`.sv-` components).
+- "How it works for…" walkthrough of the SWFT Method (Strategic Workflows Facilitating Transformation) on the homepage (`#process`) and `/services.html` (`#method`), replacing the static five-step lists. Industry tabs (Home services, Restaurants, Retail & e-commerce, Churches) each follow one customer through five stages: Get seen (ads & content) → Capture (website) → Convert (AI employee) → Nurture (automations) → Repeat (custom software). The line fills node by node, upcoming cards stay blurred until reached, then the next industry plays; auto-advance stops once a visitor picks a tab. Plays only on screen; reduced motion shows every step done. Data: `flow` in `data/services.json`; markup from `build:services`; `js/swft-flow.js`, `css/flow.css`. Every card is in the static HTML for crawlers and no-JS visitors.
 
 ### Changed
 - `/services.html`: new hero and Build / Automate / Grow cards; the priced package list stays below.

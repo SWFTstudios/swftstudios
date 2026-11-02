@@ -7,6 +7,8 @@
  *                                 marketing, content)
  *   services.html  svc:groups   → Build / Automate / Grow cards
  *   pricing.html   svc:pricing  → investment cards (one per service)
+ *   index.html, services.html  svc:flow → "How it works for…" industry
+ *                                 walkthrough (animated by js/swft-flow.js)
  *
  * Published prices come from data/pricing.json (`pricingOffers` ids).
  *
@@ -39,6 +41,7 @@ export const ICONS = {
   bolt: '<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>',
   megaphone: '<path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16.5 9.5a3.5 3.5 0 0 1 0 5M19 7a7 7 0 0 1 0 10"/>',
   video: '<rect x="3" y="7" width="12" height="10" rx="2"/><path d="m15 11 6-3.5v9L15 13"/>',
+  layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 12.5 9 5 9-5M3 16.5l9 5 9-5"/>',
 };
 export const icon = (name, cls = "sv-icon") =>
   `<span class="${cls}" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ""}</svg></span>`;
@@ -303,6 +306,57 @@ ${relatedCards}
 `;
 }
 
+// "How it works for <industry>": five SWFT Method stages, one card per stage.
+// Static HTML is complete (every industry, every card) so crawlers and no-JS
+// visitors get it all; js/swft-flow.js adds the tabs' behaviour and the
+// step-by-step animation.
+function flowBlock(data) {
+  const f = data.flow;
+  const tabs = f.industries
+    .map((ind, i) =>
+      `<button type="button" role="tab" class="sf-flow__tab" id="flow-tab-${ind.id}" aria-controls="flow-panel-${ind.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${esc(ind.label)}</button>`
+    )
+    .join("");
+  const panels = f.industries
+    .map((ind, i) => {
+      const steps = f.stages
+        .map((st, j) => {
+          const c = ind.cards[j];
+          return [
+            `<li class="sf-flow__step">`,
+            `  <a class="sf-flow__node" href="${st.href}" tabindex="-1" aria-hidden="true">${icon(st.icon, "sf-flow__icon")}</a>`,
+            `  <a class="sf-flow__service" href="${st.href}">${esc(st.service)}</a>`,
+            `  <div class="sf-flow__card">`,
+            `    <p class="sf-flow__stage">(0${j + 1}) ${esc(st.stage)}</p>`,
+            `    <h3>${esc(c.title)}</h3>`,
+            `    <p>${esc(c.text)}</p>`,
+            `    ${CHECK.replace('class="sv-check"', 'class="sf-flow__check"')}`,
+            `  </div>`,
+            `</li>`,
+          ].join("\n");
+        })
+        .join("\n");
+      return [
+        `<div class="sf-flow__panel" role="tabpanel" id="flow-panel-${ind.id}" aria-labelledby="flow-tab-${ind.id}"${i === 0 ? "" : " hidden"}>`,
+        `<ol class="sf-flow__steps"><li class="sf-flow__track" aria-hidden="true"><span class="sf-flow__fill"></span></li>`,
+        steps,
+        `</ol>`,
+        `</div>`,
+      ].join("\n");
+    })
+    .join("\n");
+  return [
+    `<div class="sf-flow" data-swft-flow>`,
+    `  <div class="sf-flow__top">`,
+    `    <p class="sf-flow__tag"><span class="mf-dot" aria-hidden="true"></span>How it works for</p>`,
+    `    <div class="sf-flow__tabs" role="tablist" aria-label="Pick an industry">${tabs}</div>`,
+    `  </div>`,
+    panels,
+    `  <p class="sf-flow__foot">${f.footer}</p>`,
+    `</div>`,
+  ].join("\n");
+}
+
 function splice(html, name, content) {
   const start = `<!-- svc:${name}:start -->`;
   const end = `<!-- svc:${name}:end -->`;
@@ -323,6 +377,10 @@ function validate(data, offers) {
     for (const r of s.related || []) if (!slugs.has(r)) errors.push(`${s.slug}: unknown related service "${r}"`);
     for (const k of ["name", "menuLine", "title", "description", "h1", "lead", "priceNote"]) if (!s[k]) errors.push(`${s.slug}: missing ${k}`);
   }
+  for (const st of data.flow?.stages || []) if (!ICONS[st.icon]) errors.push(`flow: unknown icon "${st.icon}"`);
+  for (const ind of data.flow?.industries || []) {
+    if (ind.cards.length !== data.flow.stages.length) errors.push(`flow: ${ind.id} needs ${data.flow.stages.length} cards, has ${ind.cards.length}`);
+  }
   if (errors.length) {
     console.error(errors.join("\n"));
     process.exit(1);
@@ -340,6 +398,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   for (const [file, name, build] of [
     ["services.html", "groups", () => groupsBlock(data)],
     ["pricing.html", "pricing", () => pricingBlock(data)],
+    ["index.html", "flow", () => flowBlock(data)],
+    ["services.html", "flow", () => flowBlock(data)],
   ]) {
     const path = join(ROOT, file);
     if (!existsSync(path)) continue;
