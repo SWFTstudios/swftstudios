@@ -9,7 +9,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-notify">
   <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
-  <link rel="stylesheet" href="/css/portal.css?v=20260930b">
+  <link rel="stylesheet" href="/css/portal.css?v=20261104-empty">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -120,12 +120,19 @@
         SWFTPortal.qs("#welcome").textContent = "Signed in as " + data.user.email;
         if (!data.project) {
           SWFTPortal.qs("#tier-name").textContent = "No project yet";
-          SWFTPortal.qs("#project-meta").textContent =
-            "Complete a booking or Payment Link, then refresh this page.";
+          var meta = SWFTPortal.qs("#project-meta");
+          meta.textContent = "Your project shows up here as soon as you book. Not sure where to start? Book a free strategy call or browse what we do.";
+          var acts = document.createElement("p");
+          acts.className = "portal-actions-inline";
+          acts.innerHTML =
+            '<a class="mf-btn mf-btn--sm" href="https://cal.com/swftstudios/swft-meeting" target="_blank" rel="noopener">Book a free strategy call</a> ' +
+            '<a class="mf-btn mf-btn--sm mf-btn--ghost" href="/services.html">See services</a> ' +
+            '<a class="mf-btn mf-btn--sm mf-btn--ghost" href="/account.html#updates">Email preferences</a>';
+          meta.insertAdjacentElement("afterend", acts);
           statusBadge("none");
           renderMetrics({
             ok: false,
-            message: "No project yet. Complete a booking to see progress here.",
+            message: "Traffic, leads and bookings for your site appear here once your project is live.",
           });
           return;
         }

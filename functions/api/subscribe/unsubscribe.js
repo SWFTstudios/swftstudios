@@ -1,7 +1,7 @@
 /**
- * POST /api/subscribe/unsubscribe  { id, sig }  or  ?id=&sig= (RFC 8058
- * one-click List-Unsubscribe-Post from mail apps, which send no Origin).
- * The signature (HMAC with SESSION_SECRET) is the authorization.
+ * POST /api/subscribe/unsubscribe  { id }  or  ?id= (RFC 8058 one-click
+ * List-Unsubscribe-Post from mail apps, which send no Origin).
+ * The random subscriber id, only ever sent to that subscriber, is the key.
  */
 import { json, str } from "../../_lib/portal-auth.js";
 import { requireDb } from "../../_lib/portal-db.js";
@@ -17,9 +17,8 @@ export async function onRequestPost(context) {
     try { body = await request.json(); } catch { /* empty */ }
   }
   const id = str(body.id || q.get("id"), 40);
-  const sig = str(body.sig || q.get("sig"), 80);
   try {
-    const res = await unsubscribe(db, env, id, sig);
+    const res = await unsubscribe(db, id);
     return res.ok ? json({ ok: true }) : json({ ok: false, error: "That unsubscribe link isn't valid." }, 400);
   } catch (err) {
     console.error("unsubscribe failed", err);

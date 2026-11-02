@@ -14,7 +14,7 @@ export async function onRequestPost(context) {
   const { request, env } = context;
   if (!sameOrigin(request)) return json({ ok: false, error: "Bad origin." }, 403);
   const db = requireDb(env);
-  if (!db || !env.SESSION_SECRET) return json({ ok: false, error: "Sign-up isn't available right now. Try again later." }, 503);
+  if (!db) return json({ ok: false, error: "Sign-up isn't available right now. Try again later." }, 503);
 
   let body;
   try {

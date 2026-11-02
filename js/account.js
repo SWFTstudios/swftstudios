@@ -1,7 +1,7 @@
 /* ============================================================
    /account.html: email-updates sign-up + member log-in.
    - ?confirm=<token>          → POST /api/subscribe/confirm
-   - ?unsubscribe=<id>&sig=<s> → POST /api/subscribe/unsubscribe
+   - ?unsubscribe=<id>         → POST /api/subscribe/unsubscribe
    (Done from the page, not a GET link, so mail scanners that pre-open
    links can't confirm or unsubscribe anyone.) The query is then removed
    from the address bar so the token isn't left in history.
@@ -49,7 +49,7 @@
       }, function () { show(banner, NETWORK, "error"); });
     } else {
       show(banner, "Unsubscribing…", "info");
-      post("/api/subscribe/unsubscribe", { id: unsubId, sig: q.get("sig") || "" }).then(function (d) {
+      post("/api/subscribe/unsubscribe", { id: unsubId }).then(function (d) {
         if (d.ok) show(banner, "You're unsubscribed. You won't get any more update emails. Changed your mind? Sign up again below.", "success");
         else show(banner, d.error || "That unsubscribe link isn't valid.", "error");
       }, function () { show(banner, NETWORK, "error"); });
