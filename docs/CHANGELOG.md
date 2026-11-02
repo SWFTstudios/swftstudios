@@ -8,8 +8,16 @@
 - `GET/POST /u/:token` unsubscribe route that writes the suppression list and cancels pending drafts.
 - Security-impacting: all secrets are Wrangler secrets (names listed in `wrangler.jsonc`); `DRY_RUN=1` by default.
 
+### Added (slice 2: Places pull + email discovery)
+- `places-pull` cron (`0 6 * * *` UTC): one Google Places (New) text search per day, rotating through `TARGET_CITIES` (max 2 pages / 40 results), stored in `leads`. Dedupe by `place_id`, then by normalized phone or website host so branches of one company are not contacted twice. Known leads are refreshed, not duplicated.
+- Email discovery for up to 20 new leads per run: fetches the business's own homepage, `/contact`, `/contact-us` (8s timeout, 500KB cap, identifying User-Agent), takes only a generic mailbox (info@, office@, ...) on the business's own domain, and records the source URL. Social/directory "websites" (Facebook, Yelp, Angi, ...) are never scraped. Leads with no address become `no_email` and are never emailed.
+- Booking-link detection (Calendly, Housecall Pro, Jobber, "book online", ...) feeds the score; suppressed addresses become `suppressed` at discovery time.
+- Places terms: leads that were never drafted are deleted 30 days after their Places data was fetched (`purgeStale`); only `place_id` is kept long-term for contacted leads.
+- Migration `0002_lead_host.sql` adds `website_host`. Tests run the real migrations through a D1 shim over `node:sqlite`.
+- Needs the `GOOGLE_PLACES_KEY` secret; without it the run is recorded as failed in `runs`.
+
 ### Not built yet
-Places pull, Claude drafting, approval page, Resend send, reply handling. Cron jobs currently record "not implemented" in `runs`.
+Claude drafting, approval page, Resend send, reply handling. The other cron jobs still record "not implemented" in `runs`.
 
 ## 2026-10-27: Mono redesign (dark, Monoform-style)
 

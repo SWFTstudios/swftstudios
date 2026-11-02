@@ -215,6 +215,220 @@ export function extractBusinessEmail(html: string, siteHost: string): string | n
   return candidates[0] ?? null;
 }
 
+// ------------------------------------------------- Places pull + discovery
+
+/** Per-run caps keep us inside Worker subrequest limits and the Places budget. */
+export const MAX_PLACES_PAGES = 2; // 20 results per page
+export const MAX_DISCOVER_PER_RUN = 20;
+export const STALE_DAYS = 30; // Places terms: non-place_id fields may be cached ~30 days
+
+const SOCIAL_HOSTS = ["facebook.com", "instagram.com", "yelp.com", "linkedin.com", "x.com", "twitter.com", "youtube.com", "tiktok.com", "nextdoor.com", "angi.com", "homeadvisor.com", "thumbtack.com", "mapquest.com", "yellowpages.com"];
+const BOOKING_RE = /calendly\.com|housecallpro|jobber\.com|servicetitan|acuityscheduling|setmore|squareup\.com\/appointments|(schedule|book)[\s-]*(online|now|service|an?[\s-]*appointment)/i;
+
+export interface PlacesPlace {
+  id: string;
+  displayName?: { text?: string };
+  formattedAddress?: string;
+  nationalPhoneNumber?: string;
+  websiteUri?: string;
+  rating?: number;
+  userRatingCount?: number;
+  regularOpeningHours?: {
+    periods?: { open?: { day: number; hour: number; minute: number }; close?: { day: number; hour: number; minute: number } }[];
+  };
+}
+
+export interface ParsedPlace {
+  placeId: string;
+  name: string;
+  phone: string | null;
+  website: string | null;
+  websiteHost: string | null;
+  rating: number | null;
+  reviewCount: number | null;
+  hours: { day: number; close: string }[];
+  address: string | null;
+}
+
+export function normalizePhone(p?: string | null): string | null {
+  const d = (p ?? "").replace(/\D/g, "");
+  const ten = d.length === 11 && d.startsWith("1") ? d.slice(1) : d;
+  return ten.length === 10 ? ten : null;
+}
+
+export function hostOf(url?: string | null): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+/** Places periods -> latest closing time per open day ("HHMM"). Missing day = closed. 24h/overnight -> "2359". */
+export function hoursFromPeriods(periods: NonNullable<PlacesPlace["regularOpeningHours"]>["periods"]): { day: number; close: string }[] {
+  const byDay = new Map<number, string>();
+  for (const p of periods ?? []) {
+    if (!p.open) continue;
+    const sameDay = p.close && p.close.day === p.open.day;
+    const close = sameDay ? String(p.close!.hour).padStart(2, "0") + String(p.close!.minute).padStart(2, "0") : "2359";
+    const prev = byDay.get(p.open.day);
+    if (!prev || close > prev) byDay.set(p.open.day, close);
+  }
+  return [...byDay.entries()].sort((a, b) => a[0] - b[0]).map(([day, close]) => ({ day, close }));
+}
+
+export function parsePlace(p: PlacesPlace): ParsedPlace | null {
+  if (!p.id || !p.displayName?.text) return null;
+  const host = hostOf(p.websiteUri);
+  return {
+    placeId: p.id,
+    name: p.displayName.text,
+    phone: normalizePhone(p.nationalPhoneNumber),
+    website: p.websiteUri ?? null,
+    websiteHost: host && !SOCIAL_HOSTS.some((s) => host === s || host.endsWith(`.${s}`)) ? host : null,
+    rating: p.rating ?? null,
+    reviewCount: p.userRatingCount ?? null,
+    hours: hoursFromPeriods(p.regularOpeningHours?.periods),
+    address: p.formattedAddress ?? null,
+  };
+}
+
+export function detectBookingLink(html: string): boolean {
+  return BOOKING_RE.test(html);
+}
+
+/** Rotate through TARGET_CITIES one per day so each run is a single, cheap search. */
+export function pickCity(cities: string, now: Date): string {
+  const list = cities.split(";").map((c) => c.trim()).filter(Boolean);
+  if (!list.length) throw new Error("TARGET_CITIES is empty");
+  return list[Math.floor(now.getTime() / 86_400_000) % list.length];
+}
+
+type Fetcher = (input: string, init?: RequestInit) => Promise<Response>;
+
+const PLACES_MASK = [
+  "places.id", "places.displayName", "places.formattedAddress", "places.nationalPhoneNumber",
+  "places.websiteUri", "places.rating", "places.userRatingCount", "places.regularOpeningHours", "nextPageToken",
+].join(",");
+
+export async function searchPlaces(apiKey: string, query: string, doFetch: Fetcher): Promise<PlacesPlace[]> {
+  const out: PlacesPlace[] = [];
+  let pageToken: string | undefined;
+  for (let page = 0; page < MAX_PLACES_PAGES; page++) {
+    const res = await doFetch("https://places.googleapis.com/v1/places:searchText", {
+      method: "POST",
+      headers: { "content-type": "application/json", "X-Goog-Api-Key": apiKey, "X-Goog-FieldMask": PLACES_MASK },
+      body: JSON.stringify({ textQuery: query, pageSize: 20, regionCode: "US", ...(pageToken ? { pageToken } : {}) }),
+    });
+    if (!res.ok) throw new Error(`Places API ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    const data = (await res.json()) as { places?: PlacesPlace[]; nextPageToken?: string };
+    out.push(...(data.places ?? []));
+    pageToken = data.nextPageToken;
+    if (!pageToken) break;
+  }
+  return out;
+}
+
+/** Insert new leads, refresh known ones, skip branches that share a phone or website host. */
+export async function upsertLeads(env: Env, places: ParsedPlace[], city: string, trade: string, now: Date): Promise<{ inserted: number; refreshed: number; duplicates: number }> {
+  let inserted = 0, refreshed = 0, duplicates = 0;
+  const stamp = now.toISOString();
+  for (const p of places) {
+    const known = await env.DB.prepare("SELECT id FROM leads WHERE place_id = ?1").bind(p.placeId).first<{ id: string }>();
+    if (known) {
+      await env.DB.prepare(
+        "UPDATE leads SET name=?2, phone=?3, website=?4, website_host=?5, rating=?6, review_count=?7, hours_json=?8, places_fetched_at=?9 WHERE id=?1",
+      ).bind(known.id, p.name, p.phone, p.website, p.websiteHost, p.rating, p.reviewCount, JSON.stringify(p.hours), stamp).run();
+      refreshed++;
+      continue;
+    }
+    const dupe = await env.DB.prepare(
+      "SELECT id FROM leads WHERE (?1 IS NOT NULL AND phone = ?1) OR (?2 IS NOT NULL AND website_host = ?2) LIMIT 1",
+    ).bind(p.phone, p.websiteHost).first();
+    if (dupe) { duplicates++; continue; }
+    await env.DB.prepare(
+      "INSERT INTO leads(id, place_id, name, trade, phone, website, website_host, rating, review_count, hours_json, city, status, places_fetched_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,'new',?12)",
+    ).bind(crypto.randomUUID(), p.placeId, p.name, trade, p.phone, p.website, p.websiteHost, p.rating, p.reviewCount, JSON.stringify(p.hours), city, stamp).run();
+    inserted++;
+  }
+  return { inserted, refreshed, duplicates };
+}
+
+const UA = "SWFTStudiosBot/1.0 (+https://www.swftstudios.com; looks for a public business contact address)";
+
+async function getPage(url: string, doFetch: Fetcher): Promise<string | null> {
+  try {
+    const res = await doFetch(url, { headers: { "user-agent": UA, accept: "text/html" }, redirect: "follow", signal: AbortSignal.timeout(8000) });
+    if (!res.ok || !(res.headers.get("content-type") ?? "").includes("text/html")) return null;
+    return (await res.text()).slice(0, 500_000);
+  } catch {
+    return null;
+  }
+}
+
+/** Fetch homepage (+ /contact pages if needed). Returns the email, where it was found, and booking-link detection. */
+export async function discoverFromWebsite(host: string, doFetch: Fetcher): Promise<{ email: string | null; sourceUrl: string | null; hasBookingLink: boolean }> {
+  if (!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(host)) return { email: null, sourceUrl: null, hasBookingLink: false }; // no IP literals / odd hosts
+  let hasBookingLink = false, email: string | null = null, sourceUrl: string | null = null;
+  for (const path of ["/", "/contact", "/contact-us"]) {
+    const url = `https://${host}${path}`;
+    const page = await getPage(url, doFetch);
+    if (!page) continue;
+    if (detectBookingLink(page)) hasBookingLink = true;
+    const found = extractBusinessEmail(page, host);
+    if (found) { email = found; sourceUrl = url; break; }
+  }
+  return { email, sourceUrl, hasBookingLink };
+}
+
+export async function isSuppressed(env: Env, email: string): Promise<boolean> {
+  return !!(await env.DB.prepare("SELECT 1 AS x FROM suppressions WHERE email_hash = ?1").bind(await emailHash(email)).first());
+}
+
+/** Find an email for 'new' leads, score them, and set status scored | no_email | suppressed. */
+export async function discoverAndScore(env: Env, doFetch: Fetcher): Promise<{ scored: number; noEmail: number; suppressed: number }> {
+  const rows = await env.DB.prepare(
+    "SELECT id, trade, website, website_host, rating, review_count, hours_json FROM leads WHERE status = 'new' ORDER BY created_at LIMIT ?1",
+  ).bind(MAX_DISCOVER_PER_RUN).all<{ id: string; trade: string | null; website: string | null; website_host: string | null; rating: number | null; review_count: number | null; hours_json: string | null }>();
+  let scored = 0, noEmail = 0, suppressed = 0;
+  for (const r of rows.results) {
+    const found = r.website_host ? await discoverFromWebsite(r.website_host, doFetch) : { email: null, sourceUrl: null, hasBookingLink: false };
+    const { score, reasons } = scoreLead({
+      trade: r.trade, website: r.website, rating: r.rating, reviewCount: r.review_count,
+      hasBookingLink: found.hasBookingLink, hours: r.hours_json ? JSON.parse(r.hours_json) : null,
+    });
+    let status = "scored";
+    if (!found.email) { status = "no_email"; noEmail++; }
+    else if (await isSuppressed(env, found.email)) { status = "suppressed"; suppressed++; }
+    else scored++;
+    await env.DB.prepare(
+      "UPDATE leads SET email=?2, email_source_url=?3, has_booking_link=?4, score=?5, score_reasons=?6, status=?7 WHERE id=?1",
+    ).bind(r.id, found.email, found.sourceUrl, found.hasBookingLink ? 1 : 0, score, JSON.stringify(reasons), status).run();
+  }
+  return { scored, noEmail, suppressed };
+}
+
+/** Drop stale Places-derived rows that never got contacted (30-day cache limit). */
+export async function purgeStale(env: Env, now: Date): Promise<number> {
+  const cutoff = new Date(now.getTime() - STALE_DAYS * 86_400_000).toISOString();
+  const res = await env.DB.prepare(
+    "DELETE FROM leads WHERE status IN ('new','scored','no_email') AND places_fetched_at < ?1 AND id NOT IN (SELECT lead_id FROM drafts)",
+  ).bind(cutoff).run();
+  return res.meta?.changes ?? 0;
+}
+
+export async function runPlacesPull(env: Env, doFetch: Fetcher, now: Date): Promise<Record<string, unknown>> {
+  if (!env.GOOGLE_PLACES_KEY) throw new Error("GOOGLE_PLACES_KEY secret is not set");
+  const city = pickCity(env.TARGET_CITIES, now);
+  const places = await searchPlaces(env.GOOGLE_PLACES_KEY, `${env.TARGET_TRADE} in ${city}`, doFetch);
+  const parsed = places.map(parsePlace).filter((p): p is ParsedPlace => !!p);
+  const up = await upsertLeads(env, parsed, city, env.TARGET_TRADE, now);
+  const disc = await discoverAndScore(env, doFetch);
+  const purged = await purgeStale(env, now);
+  return { city, found: parsed.length, ...up, ...disc, purged };
+}
+
 // ------------------------------------------------------------ handlers
 
 const html = (body: string, status = 200) =>
@@ -271,7 +485,16 @@ export default {
 
   async scheduled(event: ScheduledController, env: Env): Promise<void> {
     const job = CRON_JOBS[event.cron] ?? event.cron;
-    // Pipeline stages land in later slices; record honestly instead of faking work.
+    if (job === "places-pull") {
+      try {
+        const summary = await runPlacesPull(env, fetch, new Date(event.scheduledTime));
+        await logRun(env, job, true, JSON.stringify(summary));
+      } catch (err) {
+        await logRun(env, job, false, String(err instanceof Error ? err.message : err).slice(0, 500));
+      }
+      return;
+    }
+    // Remaining stages land in later slices; record honestly instead of faking work.
     await logRun(env, job, false, `not implemented yet (dry_run=${env.DRY_RUN})`);
   },
 };

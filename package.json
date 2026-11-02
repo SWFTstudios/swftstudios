@@ -10,7 +10,7 @@
     "test:forms:browser": "node tests/forms/browser.mjs",
     "test:forms:live": "node tests/forms/live-smoke.mjs",
     "test:availability": "node --test tests/availability/availability.test.mjs",
-    "test:outreach": "node --test tests/outreach/outreach.test.mjs",
+    "test:outreach": "node --test tests/outreach/*.test.mjs",
     "build:mono": "node scripts/build-mono-sections.mjs"
   },
   "devDependencies": {
