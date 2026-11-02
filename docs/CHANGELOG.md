@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-02: Outreach Worker, slice 1 (`workers/outreach/`)
+
+### Added
+- New Worker `swft-outreach` ([`workers/outreach/`](../workers/outreach/)) with its own D1 (`swft-outreach`) so cold-email data never touches the portal database. Schema in [`migrations/0001_init.sql`](../workers/outreach/migrations/0001_init.sql): leads, drafts, sends, replies, suppressions (hashed), settings, runs.
+- Pure logic with tests (`npm run test:outreach`): lead scoring with stored reasons, warmup cap (20/35/50 per day), America/New_York send-window guard (cron is UTC, DST-safe), auto-pause thresholds, HMAC-signed unsubscribe tokens, CAN-SPAM footer and RFC 8058 `List-Unsubscribe` headers, business-email discovery (generic mailboxes on the business's own domain only).
+- `GET/POST /u/:token` unsubscribe route that writes the suppression list and cancels pending drafts.
+- Security-impacting: all secrets are Wrangler secrets (names listed in `wrangler.jsonc`); `DRY_RUN=1` by default.
+
+### Not built yet
+Places pull, Claude drafting, approval page, Resend send, reply handling. Cron jobs currently record "not implemented" in `runs`.
+
 ## 2026-10-27: Mono redesign (dark, Monoform-style)
 
 ### Changed
