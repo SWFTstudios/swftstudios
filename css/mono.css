@@ -91,8 +91,8 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 .mf-body { color: var(--mf-muted); max-width: 60ch; margin: 0; }
 .mf-body strong { color: var(--mf-text); font-weight: 500; }
 
-/* The handwritten word. Sized up because a pen script reads small. */
-.mf-script {
+/* The footer wordmark ("SWFT studios") keeps the original grey pen script. */
+:where(.sf-wordmark) .mf-script {
   font-family: var(--mf-hand);
   font-weight: 400;
   color: var(--mf-script);
@@ -102,6 +102,133 @@ body { background: var(--mf-bg); color: var(--mf-text); }
   display: inline-block;
   transform: rotate(-4deg) translateY(0.04em);
   padding: 0 0.06em;
+}
+
+/* The accent word: the logo's pen script, made bold and funky.
+   Same font as the "studios" in the logo (Nanum Pen, "SWFT Script"), thickened
+   with a stroke in its own color. js/mono.js (initAccent) splits it into letters
+   that each sit at their own tilt and pop in with a bounce when they scroll into
+   view. Click = next color; five quick clicks = rainbow + glow + hop, then back.
+   Without JS (or with reduced motion) it is the static bold word.
+   Change the color in one place: --mf-accent-color. */
+:root {
+  --mf-accent-color: #ff2e93;
+}
+.mf-script:not(.sf-wordmark .mf-script),
+html body.ps-page .ps-title .ps-accent {
+  display: inline-block;
+  font-family: var(--mf-hand);
+  font-weight: 400;
+  font-size: 1.2em;
+  letter-spacing: 0.02em;
+  line-height: 0.8;
+  transform: rotate(-4deg) translateY(0.04em);
+  padding: 0 0.08em;
+  color: var(--mf-accent-color);
+  -webkit-text-stroke: 0.05em currentColor; /* the font has no bold; the stroke makes it one */
+  paint-order: stroke fill;
+  transition: color 0.28s ease;
+}
+.is-funky {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.mf-l {
+  position: relative;
+  display: inline-block;
+  transform: translateY(var(--y, 0)) rotate(var(--r, 0deg));
+  transform-origin: 50% 70%;
+}
+.mf-funky-pre .mf-l { opacity: 0; }
+/* Paint drips hanging off a few letters. background: currentColor, so they take the
+   letter's color, follow click color changes and roll through the rainbow with it. */
+.mf-drip {
+  position: absolute;
+  top: var(--top, 72%);
+  left: var(--x, 50%);
+  width: 0.075em;
+  height: var(--len, 0.3em);
+  margin-left: -0.0375em;
+  border-radius: 0 0 0.04em 0.04em;
+  background: currentColor;
+  transform-origin: 50% 0;
+  pointer-events: none;
+}
+.mf-drip::after { /* the bead at the bottom of the run */
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.045em;
+  width: 0.12em;
+  height: 0.13em;
+  margin-left: -0.06em;
+  border-radius: 50% 50% 50% 50% / 45% 45% 55% 55%;
+  background: inherit;
+}
+.mf-funky-pre .mf-drip { transform: scaleY(0); }
+.is-funky.is-in .mf-drip {
+  animation: mf-drip-run var(--dur, 1.5s) cubic-bezier(0.5, 0, 0.85, 0.55) var(--delay, 0.9s) both;
+}
+@keyframes mf-drip-run {
+  0%   { transform: scaleY(0); }
+  70%  { transform: scaleY(0.92); }
+  100% { transform: scaleY(1); }
+}
+.is-funky.is-in .mf-l {
+  animation: mf-letter-pop 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i, 0) * 55ms) both;
+}
+/* Hover: a quick wiggle down the word (the pop stays listed so it doesn't replay). */
+@media (hover: hover) {
+  .is-funky.is-in:not(.is-rainbow):hover .mf-l {
+    animation:
+      mf-letter-pop 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i, 0) * 55ms) both,
+      mf-wiggle 0.5s ease-in-out calc(var(--i, 0) * 35ms);
+  }
+}
+/* Rapid clicks: a rainbow that rolls across the letters, a glow, and a hop, then back to --mf-accent-color. */
+.is-funky.is-rainbow .mf-l {
+  animation:
+    mf-letter-pop 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i, 0) * 55ms) both,
+    mf-rainbow 3.6s linear calc(var(--i, 0) * -0.29s) both,
+    mf-glow 3.6s ease-in-out both,
+    mf-hop 0.45s ease-in-out calc(var(--i, 0) * 60ms) 8 alternate;
+}
+@keyframes mf-letter-pop {
+  0%   { opacity: 0; transform: translateY(0.45em) rotate(calc(var(--r, 0deg) * -3)) scale(0.3); }
+  60%  { opacity: 1; transform: translateY(-0.08em) rotate(calc(var(--r, 0deg) * 1.6)) scale(1.12); }
+  100% { opacity: 1; transform: translateY(var(--y, 0)) rotate(var(--r, 0deg)) scale(1); }
+}
+@keyframes mf-wiggle {
+  0%, 100% { rotate: 0deg; }
+  30%      { rotate: -9deg; }
+  65%      { rotate: 7deg; }
+}
+@keyframes mf-hop {
+  from { translate: 0 0; }
+  to   { translate: 0 -0.14em; }
+}
+@keyframes mf-rainbow {
+  0%   { color: #ff2e93; } 8%  { color: #ff7a18; } 16% { color: #ffd400; }
+  24%  { color: #2ee6a6; } 32% { color: #2fa8ff; } 40% { color: #b14aed; }
+  48%  { color: #ff2e93; } 56% { color: #ff7a18; } 64% { color: #ffd400; }
+  72%  { color: #2ee6a6; } 80% { color: #2fa8ff; } 88% { color: #b14aed; }
+  100% { color: var(--mf-accent-color); }
+}
+@keyframes mf-glow {
+  0%   { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+  12%  { text-shadow: 0 0 0.1em currentColor, 0 0 0.34em currentColor; }
+  80%  { text-shadow: 0 0 0.1em currentColor, 0 0 0.34em currentColor; }
+  100% { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mf-funky-pre .mf-l { opacity: 1; }
+  .mf-funky-pre .mf-drip,
+  .is-funky.is-in .mf-drip { transform: none; animation: none; }
+  .is-funky.is-in .mf-l,
+  .is-funky.is-in:hover .mf-l,
+  .is-funky.is-rainbow .mf-l { animation: none; }
 }
 
 /* ---------- Pills, buttons, chips ---------- */
@@ -539,7 +666,6 @@ html body.ps-page .ps-eyebrow {
 html body.ps-page .ps-eyebrow::before { content: "("; }
 html body.ps-page .ps-eyebrow::after { content: ")"; }
 html body.ps-page .ps-title { font-size: var(--mf-h1); line-height: 0.92; letter-spacing: -0.05em; font-weight: 600; max-width: 16ch; margin-bottom: 1.75rem; }
-html body.ps-page .ps-title .ps-accent { font-family: var(--mf-hand); font-weight: 400; color: var(--mf-script); font-size: 1.12em; letter-spacing: -0.01em; display: inline-block; transform: rotate(-4deg); }
 html body.ps-page .ps-lead { margin: 0; max-width: 46ch; font-size: var(--mf-lead); line-height: 1.3; font-weight: 500; letter-spacing: -0.015em; color: var(--mf-text); }
 html body.ps-page .ps-hero:not(.ps-hero--left) .ps-lead { margin: 0; }
 html body.ps-page .ps-filter { font-family: var(--mf-font); font-weight: 500; padding: 0.55rem 1rem; border-color: var(--mf-line-strong); }

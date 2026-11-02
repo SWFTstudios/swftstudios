@@ -4,6 +4,9 @@
      Cal.com calendar, from /api/availability.
    - [data-mf-reveal] blocks fade up as they scroll into view.
    - A ring cursor on fine pointers ([data-mf-cursor="View"] grows it).
+   - The accent word (.mf-script, .ps-accent) is bold, funky pen script: its
+     letters pop in with a bounce, a click changes the color, and five quick
+     clicks set off a rainbow + glow burst.
    ============================================================ */
 (function () {
   "use strict";
@@ -122,8 +125,139 @@
     if (row && row.getAttribute("aria-expanded") === "false") row.click();
   }
 
+  /* ---------- Accent word: bold, funky pen script ---------- */
+  // Click = next color. Five clicks inside ~1.8s = rainbow + glow + hop that settles
+  // back to the color the word had. (Mouse/touch only; the word stays plain text.)
+  var ACCENT_PALETTE = ["#ff2e93", "#ff7a18", "#ffd400", "#2ee6a6", "#2fa8ff", "#b14aed"];
+  var RAPID_CLICKS = 5, RAPID_WINDOW = 1800;
+  // Each letter's resting tilt (deg) and lift (em): fixed patterns, so it looks hand-placed, not random.
+  var TILT = [-7, 5, -3, 8, -6, 3, -8, 6, -2, 7];
+  var LIFT = [0.02, -0.04, 0.03, -0.02, 0.04, -0.03, 0.01, -0.05];
+
+  function popLetters(letters) {
+    if (reduce) return;
+    letters.forEach(function (l, i) {
+      if (l.animate) l.animate([{ scale: 1 }, { scale: 1.3 }, { scale: 1 }], { duration: 320, delay: i * 25, easing: "ease-out" });
+    });
+  }
+
+  function bindAccentClicks(el, letters) {
+    if (el.closest("a, button")) return; // never hijack a link or button
+    var idx = 0, hits = [];
+    el.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      if (el.classList.contains("is-rainbow")) return; // let the burst finish
+      var now = Date.now();
+      hits = hits.filter(function (t) { return now - t < RAPID_WINDOW; });
+      hits.push(now);
+      if (!reduce && hits.length >= RAPID_CLICKS) {
+        hits = [];
+        el.classList.add("is-rainbow");
+        var done = function (e) {
+          if (e.animationName !== "mf-glow") return; // each letter's glow ends together; the first one ends the burst
+          el.classList.remove("is-rainbow");
+          el.removeEventListener("animationend", done);
+        };
+        el.addEventListener("animationend", done);
+        return;
+      }
+      idx = (idx + 1) % ACCENT_PALETTE.length;
+      el.style.setProperty("--mf-accent-color", ACCENT_PALETTE[idx]);
+      popLetters(letters);
+    });
+  }
+
+  // 2-3 drips per word, hanging from the bottom of a letter's stroke (measured baseline),
+  // with varied length and timing so it reads hand-painted rather than stamped.
+  var DRIP_LEN = [0.34, 0.22, 0.42, 0.28];
+  // Where each lowercase letter's stroke meets the baseline in this pen font (% of the
+  // letter's width). Letters with tails (g j p q y) never drip.
+  var DRIP_SPOT = { a: 72, b: 48, c: 52, d: 74, e: 50, f: 34, h: 22, i: 50, k: 24, l: 50, m: 18, n: 22, o: 50, r: 26, s: 50, t: 56, u: 72, v: 50, w: 30, x: 22, z: 55 };
+  var NO_DRIP = /[gjpqy]/;
+
+  function baselineRatio(letter) {
+    var probe = document.createElement("span");
+    probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
+    letter.appendChild(probe);
+    var r = letter.offsetHeight ? probe.offsetTop / letter.offsetHeight : 0.8;
+    letter.removeChild(probe);
+    return r;
+  }
+
+  function addDrips(letters) {
+    var paintable = letters.filter(function (l) {
+      var ch = l.textContent;
+      return /[a-z0-9]/i.test(ch) && !NO_DRIP.test(ch);
+    });
+    if (paintable.length < 2) return;
+    var top = (baselineRatio(paintable[0]) * 100 - 6).toFixed(1) + "%"; // tuck slightly into the stroke
+    var count = paintable.length < 5 ? 2 : 3;
+    var used = [];
+    for (var k = 0; k < count; k++) {
+      var l = paintable[Math.min(paintable.length - 1, Math.round(((k + 0.5) * paintable.length) / count - 0.5))];
+      if (used.indexOf(l) !== -1) continue;
+      used.push(l);
+      var i = Number(l.style.getPropertyValue("--i")) || 0;
+      var spot = DRIP_SPOT[l.textContent.toLowerCase()];
+      var d = document.createElement("i");
+      d.className = "mf-drip";
+      d.setAttribute("aria-hidden", "true");
+      d.style.setProperty("--top", top);
+      d.style.setProperty("--x", (spot == null ? 50 : spot) + "%");
+      d.style.setProperty("--len", DRIP_LEN[(i + k) % DRIP_LEN.length] + "em");
+      d.style.setProperty("--delay", (0.75 + i * 0.055 + k * 0.22).toFixed(2) + "s");
+      d.style.setProperty("--dur", (1.2 + ((i + k) % 3) * 0.3).toFixed(2) + "s");
+      l.appendChild(d);
+    }
+  }
+
+  function initAccent() {
+    var words = document.querySelectorAll(".mf-script, .ps-title .ps-accent");
+    if (!words.length) return;
+    var io = !reduce && "IntersectionObserver" in window
+      ? new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            e.target.classList.remove("mf-funky-pre");
+            e.target.classList.add("is-in");
+            io.unobserve(e.target);
+          });
+        }, { threshold: 0.6 })
+      : null;
+    words.forEach(function (el) {
+      if (el.closest(".sf-wordmark") || el.classList.contains("is-funky")) return; // the logo wordmark stays as is
+      var text = el.textContent;
+      if (!text.trim()) return;
+      // One span per letter so each can tilt and bounce; spaces stay plain text so words still wrap.
+      el.textContent = "";
+      var letters = [], n = 0;
+      Array.from(text).forEach(function (ch) {
+        if (/\s/.test(ch)) { el.appendChild(document.createTextNode(ch)); return; }
+        var l = document.createElement("span");
+        l.className = "mf-l";
+        l.textContent = ch;
+        l.style.setProperty("--i", n);
+        l.style.setProperty("--r", TILT[n % TILT.length] + "deg");
+        l.style.setProperty("--y", LIFT[n % LIFT.length] + "em");
+        el.appendChild(l);
+        letters.push(l);
+        n++;
+      });
+      addDrips(letters);
+      el.classList.add("is-funky");
+      bindAccentClicks(el, letters);
+      if (io) {
+        el.classList.add("mf-funky-pre");
+        io.observe(el);
+      } else {
+        el.classList.add("is-in");
+      }
+    });
+  }
+
   function init() {
     initRows();
+    initAccent();
     loadAvailability();
     initReveal();
     initCursor();

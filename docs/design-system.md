@@ -2,8 +2,8 @@
 
 > **2026-10 Mono redesign.** The site is now a dark, monochrome, Monoform-style
 > system: Inter Tight display type set very large and tight, Space Mono labels
-> in parentheses like `(Services)`, one handwritten accent word per headline
-> (`.mf-script`, Nanum Pen Script as "SWFT Script"), white pill buttons and a
+> in parentheses like `(Services)`, one bold, funky pen-script accent word per headline
+> (`.mf-script` / `.ps-accent`, Nanum Pen Script as "SWFT Script", thickened with a stroke, color `--mf-accent-color`), white pill buttons and a
 > live "Booking now" pill fed by Cal.com. Components live in
 > [`css/mono.css`](../css/mono.css) (prefix `.mf-`), loaded on every page via
 > `css/swft-nav.css`. White is the only accent (`--green`/`--swft-accent` are
