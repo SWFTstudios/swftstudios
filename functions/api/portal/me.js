@@ -4,6 +4,7 @@
 import { json } from "../../_lib/portal-auth.js";
 import { getLatestProjectForUser, getSessionUser, requireDb } from "../../_lib/portal-db.js";
 import { getStripeTier } from "../../_lib/stripe-tiers.js";
+import { isAdminEmail } from "../../_lib/admin-auth.js";
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -28,6 +29,7 @@ export async function onRequestGet(context) {
         email: user.email,
         hasPassword: !!(user.password_hash && user.password_salt),
         stripeCustomerId: user.stripe_customer_id || null,
+        isAdmin: isAdminEmail(env, user.email),
       },
       project: project
         ? {

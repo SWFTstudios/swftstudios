@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admin | SWFT Studios</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono">
+  <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
+  <link rel="stylesheet" href="/css/portal.css?v=20260930b">
+  <link rel="stylesheet" href="/css/admin.css?v=20261102">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="ps-page portal-page admin-page">
+  <div id="swft-nav" data-active=""></div>
+  <main>
+    <div class="portal-shell portal-shell--wide admin-shell">
+      <div class="portal-topbar">
+        <header class="ps-hero ps-hero--left" style="margin-bottom:0;">
+          <p class="ps-eyebrow">Owner dashboard</p>
+          <h1 class="ps-title">Admin</h1>
+          <p class="ps-lead" id="who">Checking your sign-in…</p>
+        </header>
+        <button type="button" class="portal-btn-ghost" id="logout-btn">Sign out</button>
+      </div>
+
+      <div id="gate-msg" class="portal-msg" hidden></div>
+
+      <div id="app" hidden>
+        <nav class="admin-tabs" role="tablist" aria-label="Admin sections">
+          <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+          <button role="tab" data-tab="clients" aria-selected="false">Clients &amp; notes</button>
+          <button role="tab" data-tab="outreach" aria-selected="false">Outreach</button>
+          <button role="tab" data-tab="emails" aria-selected="false">Emails</button>
+          <button role="tab" data-tab="blog" aria-selected="false">Blog</button>
+        </nav>
+        <section id="tab-overview" class="admin-panel"></section>
+        <section id="tab-clients" class="admin-panel" hidden></section>
+        <section id="tab-outreach" class="admin-panel" hidden></section>
+        <section id="tab-emails" class="admin-panel" hidden></section>
+        <section id="tab-blog" class="admin-panel" hidden></section>
+      </div>
+    </div>
+  </main>
+  <script src="/js/swft-nav.js?v=20261027-mono"></script>
+  <script src="/js/portal.js?v=20260930b"></script>
+  <script src="/js/admin.js?v=20261102"></script>
+</body>
+</html>

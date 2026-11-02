@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 
+Disallow: /admin/
+Disallow: /portal/
 Disallow: /stitch/
 Disallow: /style-guide.html
 Disallow: /401.html
