@@ -4,8 +4,6 @@
 
 # 2026-10-01 site restructure: one page per purpose. Retired pages point to
 # the page that now does their job (both .html and clean URLs).
-/websites.html          /work.html          301
-/websites               /work.html          301
 /resources.html         /work.html          301
 /resources              /work.html          301
 /media.html             /visuals.html               301
@@ -16,10 +14,8 @@
 /swft-tv                /visuals.html               301
 /portfolio-review.html  /work.html          301
 /portfolio-review       /work.html          301
-/apps.html              /services.html              301
-/apps                   /services.html              301
-/tools.html             /services.html#automate     301
-/tools                  /services.html#automate     301
+/tools.html             /automations.html           301
+/tools                  /automations.html           301
 /swft-method.html       /growth-audit               301
 /swft-method            /growth-audit               301
 
@@ -39,3 +35,6 @@
 /case-study/google-business-profile-local-seo-2026.html /blog/google-business-profile-local-seo-2026.html 301
 /case-study/reputation-management-2026.html             /blog/reputation-management-2026.html             301
 /case-study/digital-marketing-blind-spots-2026.html     /blog/digital-marketing-blind-spots-2026.html     301
+
+# 2026-11-03 Build / Automate / Grow services: /websites and /apps are service
+# pages again (websites.html, apps.html); their old redirects were removed.

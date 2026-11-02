@@ -50,15 +50,14 @@
             <fieldset class="mf-field">
               <legend>What do you need? <span class="req">*</span></legend>
               <div class="mf-chips" id="contact-service">
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Web Design and Development" data-service="web-design" required><span>Website</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="App Design and Development" data-service="app-development"><span>App</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Analytics" data-service="analytics"><span>Analytics</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Marketing" data-service="marketing"><span>Marketing</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Photography" data-service="photography"><span>Photography</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Videography" data-service="videography"><span>Video</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Social Media Management" data-service="social-media"><span>Social media</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Live Streaming" data-service="live-streaming"><span>Live streaming</span></label>
-                <label class="mf-chip"><input type="radio" name="service_needed" value="Digital + Visual"><span>A bit of everything</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="Custom Software &amp; CRMs" data-service="software" required><span>Custom software / CRM</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="Mobile &amp; Web Apps" data-service="apps app-development"><span>App</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="Websites" data-service="websites web-design"><span>Website</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="AI Employees" data-service="ai-employees"><span>AI employee</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="Automations" data-service="automations analytics"><span>Automations</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="Paid Ads &amp; Marketing" data-service="marketing"><span>Ads &amp; marketing</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="Content &amp; Creative" data-service="content photography videography social-media live-streaming"><span>Photo, video &amp; social</span></label>
+                <label class="mf-chip"><input type="radio" name="service_needed" value="A bit of everything"><span>A bit of everything</span></label>
                 <label class="mf-chip"><input type="radio" name="service_needed" value="Other"><span>Something else</span></label>
               </div>
             </fieldset>
@@ -145,7 +144,7 @@
   </main>
 
   <script src="/js/swft-analytics.js?v=20260930b" defer></script>
-  <script src="/js/swft-nav.js?v=20261027-mono" defer></script>
+  <script src="/js/swft-nav.js?v=20261103-services" defer></script>
   <script>
     (function () {
       const form = document.getElementById("contact-form");
@@ -155,12 +154,13 @@
       const LABEL = "Send project details";
       if (!form) return;
 
-      // Quote links on the pricing page pass ?service=<service id> (data/pricing.json).
+      // Quote links pass ?service=<id>: a service page slug (data/services.json)
+      // or an older pricing service id (data/pricing.json). data-service lists both.
       try {
         const wanted = new URLSearchParams(window.location.search).get("service");
         if (wanted) {
           form.querySelectorAll('input[name="service_needed"]').forEach(function (o) {
-            if (o.getAttribute("data-service") === wanted) o.checked = true;
+            if ((o.getAttribute("data-service") || "").split(" ").indexOf(wanted) !== -1) o.checked = true;
           });
         }
       } catch (e) {

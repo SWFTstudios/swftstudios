@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-11-03: Services restructured as Build / Automate / Grow
+
+### Added
+- Seven service pages generated from [`data/services.json`](../data/services.json) by `npm run build:services` ([`scripts/build-service-pages.mjs`](../scripts/build-service-pages.mjs)): `/software.html` (custom software & CRMs), `/apps.html` (mobile & web apps), `/websites.html`, `/ai-employees.html`, `/automations.html`, `/marketing.html` (paid ads, SEO, AI search), `/content.html` (photo, video, social, live). Each has outcomes, what's included, four steps, an investment level ($ to $$$$) with the published packages from `data/pricing.json`, FAQ, related services and `Service` / `FAQPage` / `BreadcrumbList` JSON-LD.
+- Services mega-menu in the shared nav (`js/swft-nav.js`): Build / Automate / Grow columns with icons and a "Not sure where to start?" footer row. Opens on click or hover, closes on Escape, an outside click or tabbing away. Phones get a Services accordion in the slide-over menu. The nav's right side is now Contact + "Book a call" (Cal.com). The footer has a Services column.
+- Free strategy call pop-up (`js/strategy-call.js`, loaded by the nav): shows after 40s or on desktop exit intent, never on contact/booking/audit/portal/admin pages. "Maybe later" snoozes it 7 days, booking 60 days (localStorage, fails safe). `?strategy=1` forces it open. Sends `strategy_popup_shown` / `strategy_popup_click` to PostHog when it is loaded.
+- `/pricing.html`: "What each service costs" cards (investment level, what's included, Get a quote) above the existing packages.
+- `css/services.css` (`.sv-` components).
+
+### Changed
+- `/services.html`: new hero and Build / Automate / Grow cards; the priced package list stays below.
+- Contact form service chips now match the seven services. `?service=` accepts the new slugs and the old pricing ids.
+- `_redirects`: `/websites` and `/apps` no longer redirect (they are service pages again); `/tools` now goes to `/automations.html`.
+- `sitemap.xml` lists the seven pages.
+
+### Notes
+- Investment levels and the "price notes" for Custom Software and AI Employees are editorial placeholders in `data/services.json`; adjust and rebuild.
+
 ## 2026-11-03: Bold, funky accent word
 
 ### Changed
