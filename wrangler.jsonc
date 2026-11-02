@@ -43,6 +43,8 @@
       "**/node_modules/**",
       "src",
       "**/src/**",
+      "workers",
+      "**/workers/**",
       "package.json",
       "package-lock.json",
       "tsconfig.json"
