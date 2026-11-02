@@ -14,7 +14,8 @@
     "test:admin": "node --test tests/admin/*.test.mjs",
     "test:outreach": "node --test tests/outreach/*.test.mjs",
     "build:mono": "node scripts/build-mono-sections.mjs",
-    "build:services": "node scripts/build-service-pages.mjs"
+    "build:services": "node scripts/build-service-pages.mjs",
+    "test:subscribe": "node --test tests/subscribe/*.test.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",

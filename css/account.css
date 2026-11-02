@@ -1,0 +1,20 @@
+/* /account.html: updates sign-up + member log-in (Mono, dark). */
+.ac-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(1rem, 2vw, 1.5rem); align-items: stretch; }
+@media (max-width: 960px) { .ac-grid { grid-template-columns: 1fr; } }
+.ac-card {
+  position: relative; display: flex; flex-direction: column; gap: 1rem;
+  border: 1px solid var(--mf-line); border-radius: 26px; background: var(--mf-surface);
+  padding: clamp(1.4rem, 3vw, 2.5rem);
+}
+.ac-title { margin: 0; font-size: clamp(1.9rem, 1.1rem + 2.2vw, 3rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
+.ac-sub { margin: 0 0 0.75rem; color: var(--mf-muted); max-width: 44ch; }
+.ac-actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; }
+.ac-fine { margin: 0; color: var(--mf-muted); font-size: 0.88rem; max-width: 30ch; }
+.ac-links { list-style: none; margin: 0.25rem 0 0; padding: 1.25rem 0 0; border-top: 1px solid var(--mf-line); display: grid; gap: 0.6rem; color: var(--mf-muted); font-size: 0.95rem; }
+.ac-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+.ac-banner { margin-top: 2rem; max-width: 46rem; }
+.mf-status.is-info { color: var(--mf-muted); }
+.ac-signed { display: grid; gap: 1.25rem; padding: 1.25rem; border-radius: 16px; background: var(--mf-surface-2); border: 1px solid var(--mf-line); }
+.ac-signed__who { margin: 0; color: var(--mf-muted); }
+.ac-signed__who b { color: var(--mf-text); font-weight: 600; word-break: break-all; }
+#updates .mf-chips { margin-top: 0.25rem; }

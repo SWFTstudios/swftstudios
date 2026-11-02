@@ -4,8 +4,8 @@
    Reads the project tiles already in the page (built from
    data/portfolio-projects.json by scripts/build-mono-sections.mjs) and
    stands them on the inside of a cylinder, so the side cards curve toward
-   you. Drag or swipe to spin (with momentum), scroll the page to nudge it,
-   use the arrow buttons or keys, and pick a category chip to re-form the
+   you. Drag or swipe to spin (the cards follow your finger 1:1, with
+   momentum on release), use the arrow buttons or keys, and pick a category chip to re-form the
    ring with just those projects. The card in front opens its case study;
    any other card turns to the front first.
 
@@ -18,7 +18,6 @@
   var MIN_SLOTS = 12;      // short filtered lists repeat to keep the ring full
   var DRIFT = 0.006;       // idle spin, degrees per ms
   var IDLE_MS = 2600;      // pause after any interaction before drifting again
-  var SCROLL_GAIN = 0.045; // degrees of turn per pixel of page scroll
 
   function supports3d() {
     return window.CSS && CSS.supports && CSS.supports("transform-style", "preserve-3d") &&
@@ -161,7 +160,6 @@
         var fade = abs > limit ? 0 : abs > limit * 0.7 ? 1 - (abs - limit * 0.7) / (limit * 0.3) : 1;
         c.el.style.opacity = fade.toFixed(3);
         c.el.style.visibility = fade <= 0.01 ? "hidden" : "visible";
-        c.el.style.filter = "brightness(" + (1 - Math.min(abs / limit, 1) * 0.45).toFixed(3) + ")";
         if (abs < bestAbs) { bestAbs = abs; best = i; }
       }
       if (best !== frontIndex) {
@@ -188,9 +186,10 @@
       target = Math.round(base / step) * step;
     }
 
+    // dir 1 = next: the card on the right comes to the front.
     function go(dir) {
       lastInteract = performance.now();
-      snap(target - dir * step);
+      snap(target + dir * step);
       kick();
     }
 
@@ -207,7 +206,7 @@
       prevT = t;
       if (!dragging) {
         if (t - lastInteract > IDLE_MS && !root.matches(":hover") && !root.contains(document.activeElement)) {
-          target -= DRIFT * dt;
+          target += DRIFT * dt;
         }
         var diff = target - rot;
         rot += diff * Math.min(1, 0.0075 * dt);
@@ -222,8 +221,11 @@
       if (!raf && inView) { prevT = 0; raf = requestAnimationFrame(tick); }
     }
 
-    /* Drag / swipe */
-    var degPerPx = function () { return step / (cardW * 1.1); };
+    /* Drag / swipe. The front card sits on the ring's far wall, where one
+       degree of turn moves it radius·π/180 px; dividing by that keeps it
+       under the finger. A positive rotateY moves the far wall left, so a
+       drag to the right turns the ring the other way. */
+    var degPerPx = function () { return 180 / (Math.PI * radius); };
     stage.addEventListener("pointerdown", function (e) {
       if (e.button !== 0) return;
       dragging = true; dragMoved = false;
@@ -240,9 +242,10 @@
       }
       if (!dragMoved) return;
       var nowT = performance.now();
-      var d = dx * degPerPx();
+      var d = -dx * degPerPx();
       rot += d; target = rot;
-      velocity = d / Math.max(1, nowT - lastT);
+      // Smoothed so one jittery event doesn't decide the fling
+      velocity = velocity * 0.35 + (d / Math.max(1, nowT - lastT)) * 0.65;
       lastX = e.clientX; lastT = nowT; lastInteract = nowT;
       kick();
     });
@@ -250,7 +253,10 @@
       if (!dragging) return;
       dragging = false;
       stage.classList.remove("is-dragging");
-      if (dragMoved) snap(rot + velocity * 260);
+      // A finger that stopped before lifting shouldn't fling
+      if (performance.now() - lastT > 90) velocity = 0;
+      var fling = Math.max(-2.5 * step, Math.min(2.5 * step, velocity * 220));
+      if (dragMoved) snap(rot + fling);
       lastInteract = performance.now();
       kick();
     }
@@ -282,14 +288,6 @@
     var next = now.querySelector("[data-mf-next-btn]");
     if (prev) prev.addEventListener("click", function () { go(-1); });
     if (next) next.addEventListener("click", function () { go(1); });
-
-    /* Page scroll nudges the ring */
-    var lastScroll = window.scrollY;
-    window.addEventListener("scroll", function () {
-      var y = window.scrollY;
-      if (inView && !dragging) { target -= (y - lastScroll) * SCROLL_GAIN; kick(); }
-      lastScroll = y;
-    }, { passive: true });
 
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {

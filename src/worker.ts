@@ -17,6 +17,12 @@ import { onRequestPost as handleContact } from "../functions/api/contact.js";
 import { onRequestPost as handleBookTier } from "../functions/api/book-tier.js";
 // @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
 import { onRequestGet as handleAvailability } from "../functions/api/availability.js";
+// @ts-expect-error JS module without types
+import { onRequestPost as handleSubscribe } from "../functions/api/subscribe/index.js";
+// @ts-expect-error JS module without types
+import { onRequestPost as handleSubscribeConfirm } from "../functions/api/subscribe/confirm.js";
+// @ts-expect-error JS module without types
+import { onRequestPost as handleUnsubscribe } from "../functions/api/subscribe/unsubscribe.js";
 
 
 export interface Env extends PortalEnv {
@@ -828,6 +834,31 @@ export default {
       const headers = new Headers(response.headers);
       new Headers(corsHeaders(origin)).forEach((value, key) => headers.set(key, value));
       return new Response(response.body, { status: response.status, headers });
+    }
+
+    // Email updates list (functions/api/subscribe/*): same handlers as Pages.
+    if (request.method === "POST" && url.pathname.startsWith("/api/subscribe")) {
+      const route = ({
+        "/api/subscribe": handleSubscribe,
+        "/api/subscribe/confirm": handleSubscribeConfirm,
+        "/api/subscribe/unsubscribe": handleUnsubscribe,
+      } as Record<string, (c: { request: Request; env: unknown }) => Promise<Response>>)[url.pathname];
+      if (route) {
+        if (url.pathname === "/api/subscribe") {
+          pruneRateBuckets();
+          const clientIp =
+            request.headers.get("CF-Connecting-IP") ||
+            request.headers.get("X-Forwarded-For")?.split(",")[0].trim() ||
+            "unknown";
+          if (!checkRateLimit(clientIp)) {
+            return new Response(JSON.stringify({ ok: false, error: "Too many requests. Try again in a minute." }), {
+              status: 429,
+              headers: { "Content-Type": "application/json", "Retry-After": "60" },
+            });
+          }
+        }
+        return route({ request, env });
+      }
     }
 
     if ((request.method === "GET" || request.method === "HEAD") && url.pathname === "/api/availability") {

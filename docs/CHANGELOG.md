@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-11-03: Notification badge, carousel swipe fix, account page
+
+### Changed
+- Accent word: the graffiti paint drips are gone (`addDrips` and `.mf-drip` removed). Click colors and the five-click rainbow stay.
+- Homepage hero: "booked." has a red "1" unread-notification badge (`[data-mf-notify]`, `js/notify-badge.js`, loaded by the nav only where the marker exists). Clicking it opens a pop-up with a phone-style notification ("New customer booked…", "New order · $480", "New lead from your website", in turn) and "Imagine that was a new customer." leading to the free Growth Audit. PostHog: `notify_badge_open`, `notify_badge_audit_click`. The strategy-call pop-up waits while it is open.
+- 3D project carousel (`js/project-carousel.js`): dragging was backwards (cards moved against the finger); it now follows the pointer 1:1 (degrees per px from the ring radius), with a smoothed, capped fling and no fling if the finger stopped before lifting. The arrows and idle drift now turn the same way (next = the card on the right comes forward). Page scroll no longer spins the ring. The dark overlay is gone: no vignette, no per-card dimming, and only a light shade under each card's name.
+- Nav: "Log in" next to Contact (desktop) and "Log in / Sign up" in the phone menu; footer "Client portal" now points to `/account.html`.
+- Cache-busting versions on `swft-nav.css` / `swft-nav.js` bumped site-wide.
+
+### Added
+- [`/account.html`](../account.html): "Get the drops" email sign-up (new films & videos, blog posts & guides, new products & offers) next to the client log-in (`/api/portal/login`; shows "Open my dashboard" when already signed in).
+- Email updates list with double opt-in: `POST /api/subscribe`, `POST /api/subscribe/confirm`, `POST /api/subscribe/unsubscribe` (Pages Functions in `functions/api/subscribe/`, same handlers routed in `src/worker.ts`). Logic in `functions/_lib/subscribers.js`; details in [`EMAIL_UPDATES.md`](EMAIL_UPDATES.md).
+- Migration `0003_subscribers.sql` (apply to `swft-portal`). `npm run test:subscribe` (8 tests over the real migrations).
+
+### Security-impacting
+- Sign-up requires a same-origin `Origin`, has a honeypot, never reveals whether an address is already listed, and sends at most one confirm email per address per 5 minutes. Confirm tokens are random, stored as SHA-256, single-use, 7-day expiry. Unsubscribe links are HMAC-signed with `SESSION_SECRET`. Confirm/unsubscribe run from the page (POST), so mail scanners that pre-open links can't act on them; the token is removed from the address bar afterwards.
+
+### Not built yet
+- Sending the update emails themselves (new film/post/product broadcasts) and a subscriber list in `/admin/`. Every broadcast must include `unsubscribeUrl()` and the `List-Unsubscribe` headers.
+
 ## 2026-11-03: Services restructured as Build / Automate / Grow
 
 ### Added

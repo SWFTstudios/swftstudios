@@ -96,7 +96,7 @@
   function busy() {
     // Don't interrupt the open phone menu, the mega-menu or a typing visitor.
     var root = document.documentElement;
-    if (root.classList.contains("sn-locked")) return true;
+    if (root.classList.contains("sn-locked") || document.querySelector(".sc-overlay")) return true;
     var btn = document.getElementById("sn-menu-btn");
     if (btn && btn.getAttribute("aria-expanded") === "true") return true;
     var a = document.activeElement;

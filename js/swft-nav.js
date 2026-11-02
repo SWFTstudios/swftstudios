@@ -54,6 +54,7 @@
   // Menu panel (phones) also lists the secondary pages.
   var MORE = [
     { label: "Contact",            href: "/contact.html",  key: "contact" },
+    { label: "Log in / Sign up",   href: "/account.html",  key: "account" },
     { label: "Films",              href: "/visuals.html",  key: "visuals" },
     { label: "Free Growth Audit",  href: "/growth-audit",  key: "growth-audit" },
     { label: "Locations",          href: "/locations/",    key: "locations" }
@@ -112,6 +113,7 @@
           megaHTML() +
         "</div>" +
         '<div class="sn-actions">' +
+          '<a href="/account.html" class="sn-contact sn-login' + (active === "account" ? " is-active" : "") + '"' + (active === "account" ? ' aria-current="page"' : "") + ">Log in</a>" +
           '<a href="/contact.html" class="sn-contact' + (active === "contact" ? " is-active" : "") + '"' + (active === "contact" ? ' aria-current="page"' : "") + ">Contact</a>" +
           '<a href="' + CTA.href + '" class="sn-cta" target="_blank" rel="noopener">' + CTA.label + ARROW + "</a>" +
           '<button class="sn-burger" id="sn-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sn-panel"><span></span><span></span></button>' +
@@ -193,7 +195,7 @@
               SERVICES.map(function (g) { return g.items.map(function (i) { return '<a href="' + i.href + '">' + i.label + "</a>"; }).join(""); }).join("") +
             "</div>" +
             '<div><p class="mf-label mf-label--muted">(More)</p>' +
-              '<a href="/visuals.html">Films</a><a href="/growth-audit">Free Growth Audit</a><a href="/locations/">Locations</a><a href="/portal/login.html">Client portal</a><a href="/sitemap.html">Site map</a>' +
+              '<a href="/visuals.html">Films</a><a href="/growth-audit">Free Growth Audit</a><a href="/locations/">Locations</a><a href="/account.html">Log in / Get updates</a><a href="/sitemap.html">Site map</a>' +
             "</div>" +
             '<div><p class="mf-label mf-label--muted">(Say hi)</p>' +
               '<a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>' +
@@ -318,8 +320,9 @@
     // helpers (js/mono.js), loaded once from here because every page
     // already includes this script.
     loadOnce("/js/text-reveal.js?v=20261027-mono", "data-swft-text-reveal");
-    loadOnce("/js/mono.js?v=20261027-mono", "data-swft-mono");
-    loadOnce("/js/strategy-call.js?v=20261103-services", "data-swft-strategy");
+    loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
+    loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
+    if (document.querySelector("[data-mf-notify]")) loadOnce("/js/notify-badge.js?v=20261103-notify", "data-swft-notify");
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

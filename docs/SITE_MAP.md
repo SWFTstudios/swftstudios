@@ -42,6 +42,7 @@ Every public page has one job in the funnel. The site's message is the SWFT Meth
 | `/book/` | Stripe booking for each offer (hot lead / sale) |
 | `/about.html` | About: the founders and how SWFT works |
 | `/locations/` | Local SEO hub |
+| `/account.html` | Sign up for email updates (films, blog, products) and client log-in |
 | `/portal/onboard.html` | Client portal signup |
 | `/portal/login.html` | Client portal sign-in |
 | `/portal/dashboard.html` | Client project + performance dashboard |
