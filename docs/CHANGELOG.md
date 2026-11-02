@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-03: Outreach slice 3, Claude drafting + approval page
+
+### Added
+- `score-and-draft` cron (`30 6 * * *` UTC): Claude (`claude-opus-5-5` by default, `CLAUDE_MODEL` to override) writes a short first-contact email for the best scored leads until the approval queue holds tomorrow's send cap plus 5. Structured output via the official SDK; every draft is machine-checked (no links, no claims of calls or tests, every number must appear in the lead's facts) and retried once before the lead is parked as `draft_failed`.
+- Password-protected approval page at `/approve` on the outreach Worker: review facts, edit, approve or reject. PBKDF2 password hash, signed 12-hour `SameSite=Strict` session, per-IP login rate limit (KV), CSRF token plus same-origin check on every POST, escaped output, strict CSP. Approving re-checks the suppression list.
+- `scripts/hash-approval-password.mjs` makes the `APPROVAL_PASSWORD_HASH` secret value.
+- [`docs/OUTREACH.md`](OUTREACH.md): flow, setup, security notes. `workers/outreach/package.json` holds the SDK and `zod` so the marketing site stays dependency-free.
+- New secrets: `APPROVAL_PASSWORD_HASH`, `SESSION_SECRET`, `ANTHROPIC_API_KEY`.
+
+### Not built yet
+Resend send job, reply handling, daily digest. Approved drafts wait in the queue.
+
 ## 2026-11-02: Owner admin dashboard (`/admin/`)
 
 ### Added

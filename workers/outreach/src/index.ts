@@ -12,6 +12,10 @@
  * Email only. There is deliberately no SMS code path in this Worker.
  */
 
+import Anthropic from "@anthropic-ai/sdk";
+import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { z } from "zod";
+
 export interface Env {
   DB: D1Database;
   OUTREACH_KV: KVNamespace;
@@ -23,6 +27,11 @@ export interface Env {
   TARGET_TRADE: string;
   TARGET_CITIES: string;
   UNSUB_SIGNING_SECRET: string;
+  /** "pbkdf2$100000$<saltHex>$<hashHex>", made by scripts/hash-approval-password.mjs */
+  APPROVAL_PASSWORD_HASH?: string;
+  SESSION_SECRET?: string;
+  /** Optional override; defaults to DEFAULT_MODEL. */
+  CLAUDE_MODEL?: string;
   RESEND_API_KEY?: string;
   GOOGLE_PLACES_KEY?: string;
   ANTHROPIC_API_KEY?: string;
@@ -429,6 +438,385 @@ export async function runPlacesPull(env: Env, doFetch: Fetcher, now: Date): Prom
   return { city, found: parsed.length, ...up, ...disc, purged };
 }
 
+// ------------------------------------------------------- Claude drafting
+
+export const DEFAULT_MODEL = "claude-opus-5-5";
+export const MAX_DRAFTS_PER_RUN = 30;
+export const QUEUE_BUFFER = 5;
+export const DEFAULT_MIN_SCORE = 30;
+
+const DraftSchema = z.object({ subject: z.string(), body: z.string() });
+
+/** The only part of the SDK we use; lets tests inject a fake. */
+export interface DraftClient {
+  messages: {
+    parse(params: Record<string, unknown>): Promise<{ parsed_output: unknown; stop_reason: string | null }>;
+  };
+}
+
+export interface DraftableLead {
+  id: string;
+  name: string;
+  trade: string | null;
+  city: string | null;
+  rating: number | null;
+  review_count: number | null;
+  website: string | null;
+  has_booking_link: number;
+  hours_json: string | null;
+  score: number | null;
+  score_reasons: string | null;
+  email: string;
+  email_source_url: string | null;
+}
+
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+function clock(hhmm: string): string {
+  const h = Number(hhmm.slice(0, 2)), m = hhmm.slice(2);
+  const suffix = h >= 12 ? "pm" : "am";
+  return `${h % 12 === 0 ? 12 : h % 12}${m === "00" ? "" : ":" + m}${suffix}`;
+}
+
+/** Plain-language facts, the ONLY information Claude receives about the business. */
+export function factLines(l: DraftableLead): string[] {
+  const lines = [`Business name: ${l.name}`];
+  if (l.trade) lines.push(`Trade: ${l.trade}`);
+  if (l.city) lines.push(`Location: ${l.city}`);
+  if (l.rating != null) lines.push(`Google rating: ${l.rating} stars`);
+  if (l.review_count != null) lines.push(`Google reviews: ${l.review_count}`);
+  lines.push(l.website ? "Has a website: yes" : "Has a website: no");
+  if (l.website) lines.push(l.has_booking_link ? "Website offers online booking: yes" : "Website offers online booking: no");
+  const hours: { day: number; close: string }[] = l.hours_json ? JSON.parse(l.hours_json) : [];
+  if (hours.length) {
+    const open = new Set(hours.map((h) => h.day));
+    const closedDays = DAY_NAMES.filter((_, d) => !open.has(d));
+    if (closedDays.length) lines.push(`Listed as closed on: ${closedDays.join(", ")}`);
+    const weekday = hours.find((h) => h.day >= 1 && h.day <= 5);
+    if (weekday) lines.push(`Typical weekday closing time: ${clock(weekday.close)}`);
+  }
+  return lines;
+}
+
+const SYSTEM_PROMPT = `You write one short first-contact email for Omar, a filmmaker who builds systems at SWFT Studios, to the owner of a local home-service business in New Jersey or New York.
+
+What Omar offers: a service that automatically texts back customers who call a business and don't get an answer, so after-hours and busy-hour calls aren't lost to the next company on Google.
+
+Rules:
+- 60 to 110 words, plain text, no markdown, no bullet points.
+- Open with ONE specific, true observation taken only from the facts provided. Never state anything the facts don't say. Don't invent numbers.
+- You have not called this business and don't know how many calls they miss. Never claim you tested, called, or measured anything. Frame it as a question or a possibility, not a diagnosis.
+- Warm and plain-spoken, like one local operator writing to another. No hype, no flattery, no buzzwords, no exclamation marks, no emojis.
+- End with a low-pressure question about whether it's worth a quick look.
+- Do not include a greeting name (you don't know it; start with "Hi,"), signature, links, phone numbers, pricing, or unsubscribe text. Those are added separately.
+- The subject line: under 60 characters, specific, lowercase-friendly, no clickbait, no "Re:" or "Fwd:".`;
+
+export function buildUserPrompt(lines: string[]): string {
+  return `Facts about the business (use only these):\n${lines.map((l) => `- ${l}`).join("\n")}\n\nWrite the subject and body.`;
+}
+
+/** Returns a reason string if the draft breaks a rule, otherwise null. */
+export function validateDraft(d: { subject: string; body: string }, lines: string[], businessName: string): string | null {
+  const subject = d.subject.trim(), body = d.body.trim();
+  if (subject.length < 3 || subject.length > 70) return "subject length out of range";
+  if (/^(re|fwd?):/i.test(subject)) return "subject fakes a thread";
+  const words = body.split(/\s+/).length;
+  if (words < 40 || words > 140) return `body has ${words} words`;
+  if (/https?:|www\.|\.com\b/i.test(body)) return "body contains a link";
+  if (/unsubscribe/i.test(body)) return "body contains unsubscribe text";
+  if (/[{}\[\]<>]/.test(body)) return "body contains placeholder or markup characters";
+  if (/!/.test(body)) return "body contains an exclamation mark";
+  if (/\b(I|we|Omar)\s+(called|phoned|tested|tried calling|noticed (that )?(you|your) (missed|didn't answer))/i.test(body)) {
+    return "body claims a call or test that never happened";
+  }
+  const factText = lines.join(" ");
+  for (const num of body.match(/\d[\d,.]*/g) ?? []) {
+    const n = num.replace(/[,.]+$/, "");
+    if (!factText.includes(n)) return `number "${n}" is not in the facts`;
+  }
+  const first = businessName.split(/\s+/)[0].toLowerCase();
+  if (first.length > 2 && !(body + subject).toLowerCase().includes(first)) return "does not mention the business";
+  return null;
+}
+
+export async function draftEmail(
+  client: DraftClient,
+  model: string,
+  lead: DraftableLead,
+): Promise<{ ok: true; subject: string; body: string; lines: string[] } | { ok: false; reason: string }> {
+  const lines = factLines(lead);
+  let feedback = "";
+  for (let attempt = 0; attempt < 2; attempt++) {
+    // Thinking is always on for this model; effort is the control. No sampling params (rejected by the API).
+    const res = await client.messages.parse({
+      model,
+      max_tokens: 8000,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: buildUserPrompt(lines) + feedback }],
+      output_config: { effort: "low", format: zodOutputFormat(DraftSchema) },
+    });
+    if (res.stop_reason === "refusal") return { ok: false, reason: "model declined" };
+    if (res.stop_reason === "max_tokens") return { ok: false, reason: "response was cut off" };
+    const parsed = DraftSchema.safeParse(res.parsed_output);
+    if (!parsed.success) return { ok: false, reason: "no structured output" };
+    const problem = validateDraft(parsed.data, lines, lead.name);
+    if (!problem) return { ok: true, subject: parsed.data.subject.trim(), body: parsed.data.body.trim(), lines };
+    feedback = `\n\nYour previous attempt was rejected: ${problem}. Fix that and keep every other rule.`;
+    if (attempt === 1) return { ok: false, reason: `validation failed twice: ${problem}` };
+  }
+  return { ok: false, reason: "unreachable" };
+}
+
+async function getSetting(env: Env, key: string): Promise<string | null> {
+  const row = await env.DB.prepare("SELECT value FROM settings WHERE key = ?1").bind(key).first<{ value: string }>();
+  return row?.value ?? null;
+}
+
+/** Draft emails for the best scored leads until the approval queue holds tomorrow's cap plus a small buffer. */
+export async function runDrafting(env: Env, client: DraftClient, now: Date): Promise<Record<string, unknown>> {
+  if ((await getSetting(env, "paused")) === "1") return { skipped: "paused" };
+  const start = await getSetting(env, "warmup_start");
+  const cap = start ? warmupCap(new Date(start), new Date(now.getTime() + 86_400_000)) : 20;
+  const minScore = Number((await getSetting(env, "min_score")) ?? DEFAULT_MIN_SCORE);
+  const queued = (await env.DB.prepare("SELECT COUNT(*) AS n FROM drafts WHERE status IN ('pending','approved')").first<{ n: number }>())?.n ?? 0;
+  const want = Math.min(MAX_DRAFTS_PER_RUN, Math.max(0, cap + QUEUE_BUFFER - queued));
+  if (!want) return { drafted: 0, queued, cap, note: "queue already full" };
+
+  const rows = await env.DB.prepare(
+    `SELECT id, name, trade, city, rating, review_count, website, has_booking_link, hours_json, score, score_reasons, email, email_source_url
+     FROM leads WHERE status = 'scored' AND email IS NOT NULL AND score >= ?1 ORDER BY score DESC LIMIT ?2`,
+  ).bind(minScore, want).all<DraftableLead>();
+
+  const model = env.CLAUDE_MODEL || DEFAULT_MODEL;
+  let drafted = 0, failed = 0, suppressedNow = 0;
+  const failures: string[] = [];
+  for (const lead of rows.results) {
+    if (await isSuppressed(env, lead.email)) {
+      await env.DB.prepare("UPDATE leads SET status = 'suppressed' WHERE id = ?1").bind(lead.id).run();
+      suppressedNow++;
+      continue;
+    }
+    let result: Awaited<ReturnType<typeof draftEmail>>;
+    try {
+      result = await draftEmail(client, model, lead);
+    } catch (err) {
+      // Transient API trouble: leave the lead 'scored' so tomorrow retries it.
+      failures.push(`${lead.name}: API error: ${String(err instanceof Error ? err.message : err).slice(0, 120)}`);
+      failed++;
+      continue;
+    }
+    if (!result.ok) {
+      // Model output we can't use: park the lead so it isn't retried (and billed) every night.
+      await env.DB.prepare("UPDATE leads SET status = 'draft_failed' WHERE id = ?1").bind(lead.id).run();
+      failures.push(`${lead.name}: ${result.reason}`);
+      failed++;
+      continue;
+    }
+    const facts = JSON.stringify({ lines: result.lines, score: lead.score, reasons: lead.score_reasons ? JSON.parse(lead.score_reasons) : [] });
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO drafts(id, lead_id, subject, body, facts_json, status) VALUES (?1,?2,?3,?4,?5,'pending')")
+        .bind(crypto.randomUUID(), lead.id, result.subject, result.body, facts),
+      env.DB.prepare("UPDATE leads SET status = 'drafted' WHERE id = ?1").bind(lead.id),
+    ]);
+    drafted++;
+  }
+  return { drafted, failed, suppressedNow, queued, cap, model, failures: failures.slice(0, 5) };
+}
+
+// ---------------------------------------------------------- approval page
+
+const SESSION_COOKIE = "swft_approve";
+const SESSION_TTL_SEC = 12 * 3600;
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_WINDOW_SEC = 900;
+
+function hexToBytes(hex: string): Uint8Array {
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  return out;
+}
+
+/** stored = "pbkdf2$<iterations>$<saltHex>$<hashHex>" (Workers caps PBKDF2 at 100000 iterations). */
+export async function verifyApprovalPassword(password: string, stored: string | undefined): Promise<boolean> {
+  if (!password || !stored) return false;
+  const [scheme, iter, saltHex, hashHex] = stored.split("$");
+  const iterations = Number(iter);
+  if (scheme !== "pbkdf2" || !(iterations >= 1000 && iterations <= 100_000) || !saltHex || !hashHex || hashHex.length % 2) return false;
+  try {
+    const key = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
+    const bits = new Uint8Array(await crypto.subtle.deriveBits(
+      { name: "PBKDF2", salt: hexToBytes(saltHex), iterations, hash: "SHA-256" }, key, (hashHex.length / 2) * 8));
+    const want = hexToBytes(hashHex);
+    let diff = bits.length ^ want.length;
+    for (let i = 0; i < bits.length; i++) diff |= bits[i] ^ (want[i] ?? 0);
+    return diff === 0;
+  } catch {
+    return false;
+  }
+}
+
+export async function makeSession(secret: string, now: Date): Promise<string> {
+  const nonce = b64url(crypto.getRandomValues(new Uint8Array(16)));
+  const payload = `${Math.floor(now.getTime() / 1000) + SESSION_TTL_SEC}.${nonce}`;
+  return `${payload}.${await hmac(secret, payload)}`;
+}
+
+export async function verifySession(secret: string | undefined, token: string | null | undefined, now: Date): Promise<boolean> {
+  if (!secret || !token) return false;
+  const parts = token.split(".");
+  if (parts.length !== 3) return false;
+  const [exp, nonce, sig] = parts;
+  if (Number(exp) * 1000 < now.getTime()) return false;
+  const expected = await hmac(secret, `${exp}.${nonce}`);
+  if (expected.length !== sig.length) return false;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
+  return diff === 0;
+}
+
+export const csrfFor = (secret: string, session: string) => hmac(secret, `csrf.${session}`);
+
+function cookieOf(request: Request, name: string): string | null {
+  for (const part of (request.headers.get("cookie") ?? "").split(";")) {
+    const i = part.indexOf("=");
+    if (i > 0 && part.slice(0, i).trim() === name) return decodeURIComponent(part.slice(i + 1).trim());
+  }
+  return null;
+}
+
+function sameOriginPost(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  try { return new URL(origin).host === new URL(request.url).host; } catch { return false; }
+}
+
+const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+
+const SECURITY_HEADERS = {
+  "content-type": "text/html; charset=utf-8",
+  "cache-control": "no-store",
+  "x-robots-tag": "noindex, nofollow",
+  "x-content-type-options": "nosniff",
+  "referrer-policy": "no-referrer",
+  "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+};
+
+function page(title: string, body: string, status = 200, extra: Record<string, string> = {}): Response {
+  const css = "body{font:16px/1.5 system-ui,sans-serif;max-width:46rem;margin:0 auto;padding:1rem;background:#0b0b0c;color:#eee}"
+    + "input,textarea{width:100%;box-sizing:border-box;background:#161618;color:#eee;border:1px solid #333;border-radius:8px;padding:.6rem;font:inherit}"
+    + "textarea{min-height:11rem}button{font:inherit;border-radius:999px;border:1px solid #444;background:#222;color:#eee;padding:.5rem 1.1rem;cursor:pointer}"
+    + "button.go{background:#fff;color:#000}.card{border:1px solid #2a2a2c;border-radius:14px;padding:1rem;margin:1rem 0}"
+    + "small,.muted{color:#999}.row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.7rem}.warn{color:#f5b942}code{background:#161618;padding:.1rem .3rem;border-radius:4px}";
+  return new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${esc(title)}</title><style>${css}</style><body>${body}</body>`,
+    { status, headers: { ...SECURITY_HEADERS, ...extra } });
+}
+
+const redirect = (to: string, extra: Record<string, string> = {}) => new Response(null, { status: 303, headers: { location: to, "cache-control": "no-store", ...extra } });
+
+function loginPage(message = "", status = 200): Response {
+  return page("Approve", `<h1>Outreach approvals</h1>${message ? `<p class="warn">${esc(message)}</p>` : ""}
+<form method="post" action="/approve/login"><label>Password<input type="password" name="password" autocomplete="current-password" autofocus required></label>
+<div class="row"><button class="go">Sign in</button></div></form>`, status);
+}
+
+interface QueueRow { id: string; subject: string; body: string; facts_json: string; lead_id: string; name: string; city: string | null; email: string | null; email_source_url: string | null; score: number | null }
+
+async function queuePage(env: Env, session: string, notice = ""): Promise<Response> {
+  const csrf = await csrfFor(env.SESSION_SECRET!, session);
+  const rows = (await env.DB.prepare(
+    `SELECT d.id, d.subject, d.body, d.facts_json, d.lead_id, l.name, l.city, l.email, l.email_source_url, l.score
+     FROM drafts d JOIN leads l ON l.id = d.lead_id WHERE d.status = 'pending' ORDER BY l.score DESC, d.created_at LIMIT 25`).all<QueueRow>()).results;
+  const total = (await env.DB.prepare("SELECT COUNT(*) AS n FROM drafts WHERE status = 'pending'").first<{ n: number }>())?.n ?? 0;
+  const cards = rows.map((r) => {
+    let facts: { lines?: string[]; reasons?: string[] } = {};
+    try { facts = JSON.parse(r.facts_json); } catch { /* show without facts */ }
+    return `<div class="card"><h3 style="margin:0">${esc(r.name)} <small>${esc(r.city)} · score ${esc(r.score)}</small></h3>
+<p class="muted">To: <code>${esc(r.email)}</code> · found on ${esc(r.email_source_url)}</p>
+<details><summary>Facts Claude was given</summary><ul>${(facts.lines ?? []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul><p class="muted">Why it scored: ${esc((facts.reasons ?? []).join("; "))}</p></details>
+<form method="post" action="/approve/${esc(r.id)}/approve"><input type="hidden" name="csrf" value="${esc(csrf)}">
+<label>Subject<input name="subject" value="${esc(r.subject)}" maxlength="120"></label>
+<label>Body<textarea name="body" maxlength="2500">${esc(r.body)}</textarea></label>
+<small class="muted">The address and unsubscribe link are added automatically when it sends.</small>
+<div class="row"><button class="go">Approve</button></div></form>
+<form method="post" action="/approve/${esc(r.id)}/reject"><input type="hidden" name="csrf" value="${esc(csrf)}"><div class="row"><button>Reject</button></div></form></div>`;
+  }).join("");
+  return page("Approve", `<h1>${total} to review</h1>${notice ? `<p class="warn">${esc(notice)}</p>` : ""}${cards || '<p class="muted">Nothing waiting. Drafts appear after the 06:30 UTC run.</p>'}
+<form method="post" action="/approve/logout"><input type="hidden" name="csrf" value="${esc(csrf)}"><div class="row"><button>Sign out</button></div></form>`);
+}
+
+export async function handleApprove(request: Request, env: Env, now: Date = new Date()): Promise<Response> {
+  const url = new URL(request.url);
+  if (!env.APPROVAL_PASSWORD_HASH || !env.SESSION_SECRET) {
+    return page("Not configured", "<h1>Not configured</h1><p>Set the APPROVAL_PASSWORD_HASH and SESSION_SECRET secrets.</p>", 503);
+  }
+  const session = cookieOf(request, SESSION_COOKIE);
+  const authed = await verifySession(env.SESSION_SECRET, session, now);
+  const path = url.pathname.replace(/\/+$/, "");
+
+  if (request.method === "GET") {
+    if (path === "/approve") return authed ? redirect("/approve/queue") : loginPage();
+    if (path === "/approve/queue") return authed ? queuePage(env, session!) : redirect("/approve");
+    return new Response("Not found", { status: 404 });
+  }
+  if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
+  if (!sameOriginPost(request)) return page("Blocked", "<h1>Blocked</h1><p>Cross-site request.</p>", 403);
+  const form = await request.formData();
+
+  if (path === "/approve/login") {
+    const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
+    const key = `approve-login:${ip}`;
+    const tries = Number((await env.OUTREACH_KV.get(key)) ?? 0);
+    if (tries >= LOGIN_MAX_ATTEMPTS) return loginPage("Too many attempts. Try again in 15 minutes.", 429);
+    if (!(await verifyApprovalPassword(String(form.get("password") ?? ""), env.APPROVAL_PASSWORD_HASH))) {
+      await env.OUTREACH_KV.put(key, String(tries + 1), { expirationTtl: LOGIN_WINDOW_SEC });
+      return loginPage("Wrong password.", 401);
+    }
+    await env.OUTREACH_KV.delete(key);
+    const token = await makeSession(env.SESSION_SECRET, now);
+    return redirect("/approve/queue", { "set-cookie": `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/approve; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESSION_TTL_SEC}` });
+  }
+
+  if (!authed) return redirect("/approve");
+  if (String(form.get("csrf") ?? "") !== (await csrfFor(env.SESSION_SECRET, session!))) return page("Blocked", "<h1>Blocked</h1><p>Bad form token. Reload and try again.</p>", 403);
+
+  if (path === "/approve/logout") {
+    return redirect("/approve", { "set-cookie": `${SESSION_COOKIE}=; Path=/approve; HttpOnly; Secure; SameSite=Strict; Max-Age=0` });
+  }
+
+  const m = path.match(/^\/approve\/([\w-]+)\/(approve|reject)$/);
+  if (!m) return new Response("Not found", { status: 404 });
+  const [, id, action] = m;
+  const draft = await env.DB.prepare(
+    "SELECT d.id, d.subject, d.body, d.lead_id, l.email FROM drafts d JOIN leads l ON l.id = d.lead_id WHERE d.id = ?1 AND d.status = 'pending'",
+  ).bind(id).first<{ id: string; subject: string; body: string; lead_id: string; email: string | null }>();
+  if (!draft) return queuePage(env, session!, "That draft was already handled.");
+
+  if (action === "reject") {
+    await env.DB.batch([
+      env.DB.prepare("UPDATE drafts SET status = 'rejected' WHERE id = ?1").bind(id),
+      env.DB.prepare("UPDATE leads SET status = 'dead' WHERE id = ?1").bind(draft.lead_id),
+    ]);
+    return queuePage(env, session!, "Rejected.");
+  }
+
+  const subject = String(form.get("subject") ?? "").trim().slice(0, 120);
+  const body = String(form.get("body") ?? "").trim().slice(0, 2500);
+  if (!subject || !body) return queuePage(env, session!, "Subject and body can't be empty.");
+  if (!draft.email || (await isSuppressed(env, draft.email))) {
+    await env.DB.batch([
+      env.DB.prepare("UPDATE drafts SET status = 'rejected' WHERE id = ?1").bind(id),
+      env.DB.prepare("UPDATE leads SET status = 'suppressed' WHERE id = ?1").bind(draft.lead_id),
+    ]);
+    return queuePage(env, session!, "That address is suppressed, so the draft was dropped.");
+  }
+  const edited = subject !== draft.subject || body !== draft.body ? 1 : 0;
+  await env.DB.batch([
+    env.DB.prepare("UPDATE drafts SET status = 'approved', subject = ?2, body = ?3, edited_by_human = ?4, approved_at = datetime('now') WHERE id = ?1").bind(id, subject, body, edited),
+    env.DB.prepare("UPDATE leads SET status = 'queued' WHERE id = ?1").bind(draft.lead_id),
+  ]);
+  return queuePage(env, session!, edited ? "Approved with your edits." : "Approved.");
+}
+
 // ------------------------------------------------------------ handlers
 
 const html = (body: string, status = 200) =>
@@ -478,6 +866,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/healthz") return new Response("ok");
+    if (url.pathname === "/approve" || url.pathname.startsWith("/approve/")) return handleApprove(request, env);
     const m = url.pathname.match(/^\/u\/([\w.-]+)$/);
     if (m) return handleUnsub(request, env, m[1]);
     return new Response("Not found", { status: 404 });
@@ -488,6 +877,16 @@ export default {
     if (job === "places-pull") {
       try {
         const summary = await runPlacesPull(env, fetch, new Date(event.scheduledTime));
+        await logRun(env, job, true, JSON.stringify(summary));
+      } catch (err) {
+        await logRun(env, job, false, String(err instanceof Error ? err.message : err).slice(0, 500));
+      }
+      return;
+    }
+    if (job === "score-and-draft") {
+      try {
+        if (!env.ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY secret is not set");
+        const summary = await runDrafting(env, new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }) as unknown as DraftClient, new Date(event.scheduledTime));
         await logRun(env, job, true, JSON.stringify(summary));
       } catch (err) {
         await logRun(env, job, false, String(err instanceof Error ? err.message : err).slice(0, 500));
