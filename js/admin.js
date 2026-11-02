@@ -134,7 +134,7 @@
     if (!o.configured || o.error) { root.replaceChildren(card("Outreach", [notice(o.error || "Outreach database not connected yet. See docs/ADMIN_DASHBOARD.md.")])); return; }
     root.replaceChildren(
       card("Leads by status", [table(["Status", "Count"], Object.keys(o.leadsByStatus).map(function (k) { return [k, o.leadsByStatus[k]]; }), "No leads yet.")]),
-      card("Drafts awaiting approval", [table(["Lead", "City", "Score", "Subject"], o.pendingDrafts.map(function (d) { return [d.lead, d.city, d.score, d.subject]; }), "No drafts waiting. (Drafting ships in a later slice.)")]),
+      card("Drafts awaiting approval", [table(["Lead", "City", "Score", "Subject"], o.pendingDrafts.map(function (d) { return [d.lead, d.city, d.score, d.subject]; }), "No drafts waiting. Review and approve them at the outreach /approve page.")]),
       card("Recent sends", [table(["When", "Lead", "Subject", "Status"], o.recentSends.map(function (s) { return [date(s.sent_at), s.lead, s.subject, s.status]; }), "Nothing sent yet.")]),
       card("Replies", [table(["When", "Lead", "Class", "Excerpt"], o.replies.map(function (r) { return [date(r.received_at), r.lead || "—", r.class || "unclassified", r.excerpt]; }), "No replies yet.")]),
       card("Job runs", [table(["When", "Job", "OK", "Detail"], o.runs.map(function (r) { return [date(r.started_at), r.job, r.ok ? "yes" : "no", r.detail]; }), "No runs recorded.")])
