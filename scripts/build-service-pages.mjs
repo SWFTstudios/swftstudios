@@ -7,6 +7,7 @@
  *                                 marketing, content)
  *   services.html  svc:groups   → Build / Automate / Grow cards
  *   pricing.html   svc:pricing  → investment cards (one per service)
+ *   index.html     svc:rows     → numbered Build / Automate / Grow rows
  *   index.html, services.html  svc:flow → "How it works for…" industry
  *                                 walkthrough (animated by js/swft-flow.js)
  *
@@ -299,11 +300,38 @@ ${relatedCards}
     </section>
   </main>
 
-  <script src="/js/swft-analytics.js?v=20260930b" defer></script>
+  <script src="/js/swft-analytics.js?v=20261104-ga4" defer></script>
   <script src="/js/swft-nav.js?v=20261103-notify" defer></script>
 </body>
 </html>
 `;
+}
+
+// Homepage services: the Mono numbered rows, one per service, grouped.
+function rowsBlock(data) {
+  let n = 0;
+  return data.groups
+    .map((g) => {
+      const rows = data.services
+        .filter((s) => s.group === g.id)
+        .map((s) => {
+          n += 1;
+          const lvl = Math.max(1, Math.min(4, Number(s.investment) || 1));
+          return [
+            `<li>`,
+            `  <a class="mf-row" href="/${s.slug}.html">`,
+            `    <span class="mf-row__num">(${String(n).padStart(2, "0")})</span>`,
+            `    <span class="mf-row__title">${esc(s.name)}</span>`,
+            `    <span class="mf-row__desc">${esc(strip(s.lead))}</span>`,
+            `    <span class="mf-row__meta"><span class="mf-row__price sv-signs" aria-label="Investment level ${lvl} of 4">${"$".repeat(lvl)}<span aria-hidden="true">${"$".repeat(4 - lvl)}</span></span><span class="mf-row__icon" aria-hidden="true">↗</span></span>`,
+            `  </a>`,
+            `</li>`,
+          ].join("\n");
+        })
+        .join("\n");
+      return `<li class="mf-list__group"><p class="mf-label mf-label--muted">(${esc(g.label)}) ${esc(g.tagline)}</p></li>\n${rows}`;
+    })
+    .join("\n");
 }
 
 // "How it works for <industry>": five SWFT Method stages, one card per stage.
@@ -399,6 +427,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     ["services.html", "groups", () => groupsBlock(data)],
     ["pricing.html", "pricing", () => pricingBlock(data)],
     ["index.html", "flow", () => flowBlock(data)],
+    ["index.html", "rows", () => rowsBlock(data)],
     ["services.html", "flow", () => flowBlock(data)],
   ]) {
     const path = join(ROOT, file);

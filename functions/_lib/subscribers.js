@@ -1,8 +1,11 @@
 /**
  * Email updates list: double opt-in subscribe, confirm, unsubscribe.
  * Storage: D1 `subscribers` (migrations/0003_subscribers.sql).
- * Env: DB, SESSION_SECRET (signs unsubscribe links), RESEND_API_KEY,
- *      optional PORTAL_ORIGIN (link host), RESEND_FROM.
+ * Env: DB, RESEND_API_KEY, optional PORTAL_ORIGIN (link host), RESEND_FROM.
+ *
+ * Unsubscribe links carry the subscriber's id: 96 random bits that only
+ * ever appear in that person's own emails, so holding it is the proof.
+ * (No signing secret to configure; a leaked id can only unsubscribe.)
  *
  * Privacy: responses never reveal whether an address is already on the
  * list. Confirm tokens are random, stored as SHA-256, valid 7 days.
@@ -22,23 +25,6 @@ export function cleanInterests(list) {
   const arr = Array.isArray(list) ? list : String(list || "").split(",");
   const out = [...new Set(arr.map((s) => String(s).trim()).filter((s) => INTERESTS[s]))];
   return out.join(",");
-}
-
-async function hmacHex(secret, value) {
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`unsubscribe:${value}`));
-  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-function safeEqual(a, b) {
-  if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-}
-
-export async function unsubscribeSig(env, id) {
-  return hmacHex(env.SESSION_SECRET, id);
 }
 
 export function siteOrigin(env, request) {
@@ -126,15 +112,13 @@ export async function confirm(db, token) {
   return { ok: true };
 }
 
-/** Unsubscribe with a signed link. Returns { ok }. */
-export async function unsubscribe(db, env, id, sig) {
-  if (!env.SESSION_SECRET || !/^[a-f0-9]{24}$/.test(String(id || ""))) return { ok: false };
-  const expected = await unsubscribeSig(env, id);
-  if (!safeEqual(expected, String(sig || ""))) return { ok: false };
+/** Unsubscribe by id (from the link in their email). Returns { ok }. */
+export async function unsubscribe(db, id) {
+  if (!/^[a-f0-9]{24}$/.test(String(id || ""))) return { ok: false };
   await db
     .prepare(
       `UPDATE subscribers SET status = 'unsubscribed', confirm_token_hash = NULL, confirm_expires_at = NULL,
-         unsubscribed_at = datetime('now'), updated_at = datetime('now')
+         pending_interests = NULL, unsubscribed_at = datetime('now'), updated_at = datetime('now')
        WHERE id = ?`
     )
     .bind(id)
@@ -142,7 +126,12 @@ export async function unsubscribe(db, env, id, sig) {
   return { ok: true }; // same answer for an unknown id: nothing to leak
 }
 
-/** Unsubscribe URL to put in every email sent to a subscriber (and List-Unsubscribe). */
-export async function unsubscribeUrl(env, origin, id) {
-  return `${origin}/account.html?unsubscribe=${id}&sig=${await unsubscribeSig(env, id)}`;
+/** Unsubscribe URL for every email sent to a subscriber (and List-Unsubscribe). */
+export function unsubscribeUrl(origin, id) {
+  return `${origin}/account.html?unsubscribe=${id}`;
+}
+
+/** One-click endpoint for the List-Unsubscribe header (RFC 8058). */
+export function oneClickUnsubscribeUrl(origin, id) {
+  return `${origin}/api/subscribe/unsubscribe?id=${id}`;
 }

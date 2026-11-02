@@ -5,7 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import * as signup from "../../functions/api/subscribe/index.js";
 import * as confirmApi from "../../functions/api/subscribe/confirm.js";
 import * as unsubApi from "../../functions/api/subscribe/unsubscribe.js";
-import { unsubscribeSig, cleanInterests } from "../../functions/_lib/subscribers.js";
+import { cleanInterests, unsubscribeUrl } from "../../functions/_lib/subscribers.js";
 
 /** Minimal D1 look-alike over node:sqlite, running the real migrations. */
 function makeDb() {
@@ -23,7 +23,7 @@ function makeDb() {
 }
 
 const ORIGIN = "https://www.swftstudios.com";
-const ENV = { SESSION_SECRET: "test-secret", RESEND_API_KEY: "re_test", PORTAL_ORIGIN: ORIGIN };
+const ENV = { RESEND_API_KEY: "re_test", PORTAL_ORIGIN: ORIGIN };
 const post = (db, path, body, { origin = ORIGIN, env = ENV } = {}) => ({
   env: { DB: db, ...env },
   request: new Request(`${ORIGIN}${path}`, {
@@ -85,7 +85,9 @@ test("validation, honeypot and cross-origin are rejected", async () => {
   assert.equal(sent.length, 0);
 });
 
-test("no storage or secret → 503", async () => {
+test("no storage → 503; no signing secret needed", async () => {
+  const ok = await signup.onRequestPost(post(makeDb(), "/api/subscribe", { email: "a@b.co", interests: ["blog"] }, { env: { RESEND_API_KEY: "re_test" } }));
+  assert.equal(ok.status, 200);
   const res = await signup.onRequestPost(post(null, "/api/subscribe", { email: "a@b.co", interests: ["blog"] }, { env: {} }));
   assert.equal(res.status, 503);
 });
@@ -121,14 +123,14 @@ test("expired confirm link is refused", async () => {
   assert.equal((await res.json()).reason, "expired");
 });
 
-test("unsubscribe needs a valid signature, works without Origin (one-click)", async () => {
+test("unsubscribe by id, works without Origin (one-click)", async () => {
   const db = makeDb();
   await signup.onRequestPost(post(db, "/api/subscribe", { email: "a@b.co", interests: ["blog"] }));
   const { id } = db.raw.prepare("SELECT id FROM subscribers").get();
-  const bad = await unsubApi.onRequestPost(post(db, "/api/subscribe/unsubscribe", { id, sig: "0".repeat(64) }));
+  assert.match(unsubscribeUrl(ORIGIN, id), /\/account\.html\?unsubscribe=[a-f0-9]{24}$/);
+  const bad = await unsubApi.onRequestPost(post(db, "/api/subscribe/unsubscribe", { id: "not-an-id" }));
   assert.equal(bad.status, 400);
-  const sig = await unsubscribeSig(ENV, id);
-  const ok = await unsubApi.onRequestPost(post(db, `/api/subscribe/unsubscribe?id=${id}&sig=${sig}`, {}, { origin: null }));
+  const ok = await unsubApi.onRequestPost(post(db, `/api/subscribe/unsubscribe?id=${id}`, {}, { origin: null }));
   assert.equal(ok.status, 200);
   assert.equal(db.raw.prepare("SELECT status FROM subscribers").get().status, "unsubscribed");
 });

@@ -186,6 +186,7 @@
               '<a class="mf-btn" href="/contact.html">Start a project <span class="mf-arrow" aria-hidden="true">↗</span></a>' +
               '<a class="mf-btn mf-btn--ghost" href="' + BOOK_URL + '" target="_blank" rel="noopener">Book a 30-min call</a>' +
             "</div>" +
+            '<a href="' + BOOK_URL + '" class="mf-pill sf-pill" target="_blank" rel="noopener" data-mf-booking><span class="mf-dot" aria-hidden="true"></span>Booking now<span data-mf-next></span></a>' +
           "</div>" +
           '<div class="sf-cols">' +
             '<div><p class="mf-label mf-label--muted">(Pages)</p>' +
@@ -201,7 +202,6 @@
               '<a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>' +
               '<a href="https://www.instagram.com/swftstudios/" target="_blank" rel="noopener noreferrer">Instagram</a>' +
               '<a href="https://www.linkedin.com/company/swftstudios/" target="_blank" rel="noopener noreferrer">LinkedIn</a>' +
-              '<a href="' + BOOK_URL + '" class="mf-pill sf-pill" target="_blank" rel="noopener" data-mf-booking><span class="mf-dot" aria-hidden="true"></span>Booking now<span data-mf-next></span></a>' +
             "</div>" +
           "</div>" +
         "</div>" +
@@ -319,6 +319,8 @@
     // Site-wide scroll-in text animation (js/text-reveal.js) and the Mono
     // helpers (js/mono.js), loaded once from here because every page
     // already includes this script.
+    // Analytics on every page, including older templates that never linked it
+    if (!document.querySelector('script[src*="swft-analytics.js"]')) loadOnce("/js/swft-analytics.js?v=20261104-ga4", "data-swft-analytics");
     loadOnce("/js/text-reveal.js?v=20261027-mono", "data-swft-text-reveal");
     loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");

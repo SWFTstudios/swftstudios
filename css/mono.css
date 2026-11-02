@@ -463,6 +463,10 @@ a.mf-row:hover, button.mf-row:hover { padding-left: 0.75rem; }
   .mf-row__panel { padding-left: 0; }
 }
 
+/* Investment level in a services row: lit signs, then dim ones */
+.sv-signs { font-family: var(--mf-font); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; }
+.sv-signs span { color: var(--mf-dim); }
+
 /* ---------- Stats / proof ---------- */
 .mf-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); border-top: 1px solid var(--mf-line); }
 .mf-stat { padding: 2rem 1.5rem 2rem 0; border-bottom: 1px solid var(--mf-line); }
@@ -531,6 +535,16 @@ a.mf-card:hover { border-color: #fff; }
 .mf-field select option { background: #111; color: #fff; }
 .mf-field textarea { min-height: 7rem; resize: vertical; }
 .mf-field input::placeholder, .mf-field textarea::placeholder { color: var(--mf-dim); }
+/* Chrome/Safari autofill paints inputs light blue; keep them on the dark theme */
+.mf-field input:-webkit-autofill,
+.mf-field input:-webkit-autofill:hover,
+.mf-field input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--mf-text);
+  caret-color: var(--mf-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--mf-surface) inset;
+  box-shadow: 0 0 0 1000px var(--mf-surface) inset;
+  transition: background-color 9999s ease-out 0s;
+}
 .mf-field input:focus, .mf-field textarea:focus, .mf-field select:focus { outline: none; border-bottom-color: #fff; }
 .mf-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; }
 @media (max-width: 640px) { .mf-field-row { grid-template-columns: 1fr; } }

@@ -98,7 +98,7 @@ function pageShell({ title, description, canonical, bodyClass, body }) {
 ${body}
     </div>
   </main>
-  <script src="/js/swft-analytics.js?v=20260930b"></script>
+  <script src="/js/swft-analytics.js?v=20261104-ga4"></script>
   <script src="/js/swft-nav.js?v=20261103-notify"></script>
 </body>
 </html>

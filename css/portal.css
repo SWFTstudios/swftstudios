@@ -195,3 +195,6 @@
   border-color: var(--swft-accent);
   color: var(--swft-accent);
 }
+
+/* Empty-state actions on the dashboard (no project yet) */
+.portal-actions-inline { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.25rem 0 0; }

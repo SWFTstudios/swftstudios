@@ -245,7 +245,8 @@ body:has(.sf-footer) footer.footer_component { display: none !important; }
 .sf-cols .mf-label { margin-bottom: 0.6rem; }
 .sf-cols a:not(.mf-pill) { color: rgba(255, 255, 255, 0.78); text-decoration: none; font-size: 1rem; word-break: break-word; }
 .sf-cols a:not(.mf-pill):hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
-.sf-pill { margin-top: 0.75rem; }
+.sf-pill { margin-top: 1.25rem; max-width: 100%; }
+.sf-cta .mf-actions { margin-bottom: 0.25rem; }
 .sf-wordmark {
   max-width: var(--mf-max, 1440px); margin: clamp(3rem, 7vw, 6rem) auto 0;
   font-size: clamp(4rem, 19vw, 21rem); font-weight: 700; letter-spacing: -0.07em; line-height: 0.8;

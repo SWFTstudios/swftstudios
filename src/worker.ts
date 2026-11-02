@@ -17,6 +17,17 @@ import { onRequestPost as handleContact } from "../functions/api/contact.js";
 import { onRequestPost as handleBookTier } from "../functions/api/book-tier.js";
 // @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
 import { onRequestGet as handleAvailability } from "../functions/api/availability.js";
+// Pages Functions reused as-is so the Worker and Pages answer these routes the same way
+// @ts-expect-error JS module without types
+import * as fnPortalMe from "../functions/api/portal/me.js";
+// @ts-expect-error JS module without types
+import * as fnPortalLogin from "../functions/api/portal/login.js";
+// @ts-expect-error JS module without types
+import * as fnAdminOverview from "../functions/api/admin/overview.js";
+// @ts-expect-error JS module without types
+import * as fnAdminEmails from "../functions/api/admin/emails.js";
+// @ts-expect-error JS module without types
+import * as fnAdminNotes from "../functions/api/admin/notes.js";
 // @ts-expect-error JS module without types
 import { onRequestPost as handleSubscribe } from "../functions/api/subscribe/index.js";
 // @ts-expect-error JS module without types
@@ -793,6 +804,28 @@ export default {
         url.pathname === "/api/admin/projects")
     ) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    }
+
+    // Admin flag on /me, admin redirect on login, and the owner dashboard APIs come
+    // from functions/ (the Worker's own copies in portal-handlers.ts predate them).
+    const SHARED_FNS: Record<string, Record<string, unknown>> = {
+      "/api/portal/me": fnPortalMe,
+      "/api/portal/login": fnPortalLogin,
+      "/api/admin/overview": fnAdminOverview,
+      "/api/admin/emails": fnAdminEmails,
+      "/api/admin/notes": fnAdminNotes,
+    };
+    const shared = SHARED_FNS[url.pathname];
+    if (shared) {
+      const method = request.method.charAt(0) + request.method.slice(1).toLowerCase();
+      const handler = shared["onRequest" + method] as
+        | ((c: { request: Request; env: unknown }) => Response | Promise<Response>)
+        | undefined;
+      if (handler) return handler({ request, env });
+      return new Response(JSON.stringify({ ok: false, error: "Method not allowed" }), {
+        status: 405,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const portalResponse = await handlePortalRoutes(request, env, url);
