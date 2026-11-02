@@ -194,13 +194,3 @@ html :is(
   font-style: normal;
   font-display: swap;
 }
-
-/* Spray-paint accent word. Sedgwick Ave Display (graffiti tag style), OFL-1.1,
-   latin subset, self-hosted from @fontsource/sedgwick-ave-display. */
-@font-face {
-  font-family: "SWFT Graffiti";
-  src: url("../fonts/SedgwickAveDisplay-Latin.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}

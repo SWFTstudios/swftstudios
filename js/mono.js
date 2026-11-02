@@ -4,8 +4,9 @@
      Cal.com calendar, from /api/availability.
    - [data-mf-reveal] blocks fade up as they scroll into view.
    - A ring cursor on fine pointers ([data-mf-cursor="View"] grows it).
-   - The accent word (.mf-script, .ps-accent) is sprayed on like colored
-     graffiti with overspray and paint drips when it scrolls into view.
+   - The accent word (.mf-script, .ps-accent) is bold, funky pen script: its
+     letters pop in with a bounce, a click changes the color, and five quick
+     clicks set off a rainbow + glow burst.
    ============================================================ */
 (function () {
   "use strict";
@@ -124,51 +125,23 @@
     if (row && row.getAttribute("aria-expanded") === "false") row.click();
   }
 
-  /* ---------- Spray-paint accent word ---------- */
-  function sprayFilter() {
-    if (document.getElementById("mf-spray-rough")) return;
-    var ns = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(ns, "svg");
-    svg.setAttribute("width", "0");
-    svg.setAttribute("height", "0");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-    svg.style.cssText = "position:absolute;width:0;height:0;overflow:hidden";
-    // Rough, sprayed edges (displacement) plus fine grain (speckle holes).
-    svg.innerHTML =
-      '<filter id="mf-spray-rough" x="-8%" y="-12%" width="116%" height="130%" color-interpolation-filters="sRGB">' +
-      '<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="warp"/>' +
-      '<feDisplacementMap in="SourceGraphic" in2="warp" scale="4" xChannelSelector="R" yChannelSelector="G" result="rough"/>' +
-      '<feTurbulence type="fractalNoise" baseFrequency="1.9" numOctaves="1" seed="3" result="grain"/>' +
-      '<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -9 6.4" result="holes"/>' +
-      '<feComposite in="rough" in2="holes" operator="in"/>' +
-      "</filter>" +
-      // Overspray: random speckle (no regular dot grid) so the blurred halo looks like mist.
-      '<filter id="mf-spray-speckle" x="-10%" y="-20%" width="120%" height="140%" color-interpolation-filters="sRGB">' +
-      '<feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="11" result="dots"/>' +
-      '<feColorMatrix in="dots" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -14 8.2" result="specks"/>' +
-      '<feComposite in="SourceGraphic" in2="specks" operator="in"/>' +
-      "</filter>";
-    document.body.appendChild(svg);
-  }
-
-  // Click = next spray color. Five clicks inside ~1.8s = rainbow + glow burst that settles
-  // back to the color the word had. (Mouse/touch only; the word stays plain text for readers.)
-  var SPRAY_PALETTE = ["#ff2e93", "#ff7a18", "#ffd400", "#2ee6a6", "#2fa8ff", "#b14aed"];
+  /* ---------- Accent word: bold, funky pen script ---------- */
+  // Click = next color. Five clicks inside ~1.8s = rainbow + glow + hop that settles
+  // back to the color the word had. (Mouse/touch only; the word stays plain text.)
+  var ACCENT_PALETTE = ["#ff2e93", "#ff7a18", "#ffd400", "#2ee6a6", "#2fa8ff", "#b14aed"];
   var RAPID_CLICKS = 5, RAPID_WINDOW = 1800;
+  // Each letter's resting tilt (deg) and lift (em): fixed patterns, so it looks hand-placed, not random.
+  var TILT = [-7, 5, -3, 8, -6, 3, -8, 6, -2, 7];
+  var LIFT = [0.02, -0.04, 0.03, -0.02, 0.04, -0.03, 0.01, -0.05];
 
-  function puff(el, ink) {
-    if (reduce || !el.animate) return;
-    try {
-      el.animate(
-        [{ opacity: 0.85, transform: "scale(1.06)" }, { opacity: 1, transform: "scale(1.18)" }, { opacity: 0.85, transform: "scale(1.06)" }],
-        { duration: 450, easing: "ease-out", pseudoElement: "::before" }
-      );
-    } catch (e) { /* older browsers: the color change alone is fine */ }
-    ink.animate([{ filter: "brightness(1)" }, { filter: "brightness(1.35)" }, { filter: "brightness(1)" }], { duration: 300, easing: "ease-out" });
+  function popLetters(letters) {
+    if (reduce) return;
+    letters.forEach(function (l, i) {
+      if (l.animate) l.animate([{ scale: 1 }, { scale: 1.3 }, { scale: 1 }], { duration: 320, delay: i * 25, easing: "ease-out" });
+    });
   }
 
-  function bindSprayClicks(el, ink) {
+  function bindAccentClicks(el, letters) {
     if (el.closest("a, button")) return; // never hijack a link or button
     var idx = 0, hits = [];
     el.addEventListener("click", function (ev) {
@@ -181,72 +154,65 @@
         hits = [];
         el.classList.add("is-rainbow");
         var done = function (e) {
-          if (e && e.animationName !== "mf-rainbow") return;
+          if (e.animationName !== "mf-glow") return; // each letter's glow ends together; the first one ends the burst
           el.classList.remove("is-rainbow");
-          ink.removeEventListener("animationend", done);
+          el.removeEventListener("animationend", done);
         };
-        ink.addEventListener("animationend", done);
+        el.addEventListener("animationend", done);
         return;
       }
-      idx = (idx + 1) % SPRAY_PALETTE.length;
-      el.style.setProperty("--mf-spray-color", SPRAY_PALETTE[idx]);
-      puff(el, ink);
+      idx = (idx + 1) % ACCENT_PALETTE.length;
+      el.style.setProperty("--mf-accent-color", ACCENT_PALETTE[idx]);
+      popLetters(letters);
     });
   }
 
-  function initSpray() {
+  function initAccent() {
     var words = document.querySelectorAll(".mf-script, .ps-title .ps-accent");
     if (!words.length) return;
-    sprayFilter();
     var io = !reduce && "IntersectionObserver" in window
       ? new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
             if (!e.isIntersecting) return;
-            e.target.classList.remove("mf-spray-pre");
+            e.target.classList.remove("mf-funky-pre");
             e.target.classList.add("is-in");
             io.unobserve(e.target);
           });
         }, { threshold: 0.6 })
       : null;
-    var n = 0;
     words.forEach(function (el) {
-      if (el.closest(".sf-wordmark") || el.classList.contains("is-spray")) return; // the logo wordmark stays pen script
+      if (el.closest(".sf-wordmark") || el.classList.contains("is-funky")) return; // the logo wordmark stays as is
       var text = el.textContent;
       if (!text.trim()) return;
-      var ink = document.createElement("span");
-      ink.className = "mf-spray__ink";
-      ink.textContent = text;
-      el.setAttribute("data-spray", text); // feeds the overspray ::before
+      // One span per letter so each can tilt and bounce; spaces stay plain text so words still wrap.
       el.textContent = "";
-      el.appendChild(ink); // the real text stays in the page, once, for readers and search
-      // 2-3 drips, spread along the word, with staggered timing
-      var drips = text.trim().length < 5 ? 2 : 3;
-      for (var i = 0; i < drips; i++) {
-        var d = document.createElement("i");
-        d.className = "mf-drip";
-        d.setAttribute("aria-hidden", "true");
-        var xPct = 14 + (i * 72) / drips + ((n + i * 7) % 5) * 3;
-        d.style.setProperty("--x", xPct.toFixed(0) + "%");
-        d.style.setProperty("--len", (0.26 + (((n + i * 3) % 4) * 0.1)).toFixed(2) + "em");
-        d.style.setProperty("--delay", (1.0 + i * 0.28 + (n % 3) * 0.1).toFixed(2) + "s");
-        d.style.setProperty("--dur", (1.3 + ((i + n) % 3) * 0.35).toFixed(2) + "s");
-        el.appendChild(d);
-      }
-      el.classList.add("is-spray");
-      bindSprayClicks(el, ink);
+      var letters = [], n = 0;
+      Array.from(text).forEach(function (ch) {
+        if (/\s/.test(ch)) { el.appendChild(document.createTextNode(ch)); return; }
+        var l = document.createElement("span");
+        l.className = "mf-l";
+        l.textContent = ch;
+        l.style.setProperty("--i", n);
+        l.style.setProperty("--r", TILT[n % TILT.length] + "deg");
+        l.style.setProperty("--y", LIFT[n % LIFT.length] + "em");
+        el.appendChild(l);
+        letters.push(l);
+        n++;
+      });
+      el.classList.add("is-funky");
+      bindAccentClicks(el, letters);
       if (io) {
-        el.classList.add("mf-spray-pre");
+        el.classList.add("mf-funky-pre");
         io.observe(el);
       } else {
         el.classList.add("is-in");
       }
-      n++;
     });
   }
 
   function init() {
     initRows();
-    initSpray();
+    initAccent();
     loadAvailability();
     initReveal();
     initCursor();

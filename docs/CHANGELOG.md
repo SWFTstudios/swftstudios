@@ -1,15 +1,15 @@
 # Changelog
 
-## 2026-11-03: Spray-paint accent word
+## 2026-11-03: Bold, funky accent word
 
 ### Changed
-- The handwritten accent word in headlines (`.mf-script` on Mono pages, `.ps-accent` on booking pages) is now a solid-color graffiti tag: Sedgwick Ave Display (OFL, latin subset, self-hosted as "SWFT Graffiti", license in `fonts/`), rough grainy edges, speckled overspray and paint drips. One color for the whole site: change `--mf-spray-color` in `css/mono.css`.
-- When it scrolls into view it is sprayed on left to right, the overspray blooms, then the drips run. `js/mono.js` (`initSpray`) wraps the word; the text stays real text, once, in the page.
-- **Click** the word to cycle its color. **Five clicks within ~1.8s** starts a rainbow cycle with a neon glow that settles back to the color it had before the burst.
-- The footer "SWFT studios" wordmark keeps the original grey pen script.
+- The accent word in headlines (`.mf-script` on Mono pages, `.ps-accent` on booking pages) keeps the logo's pen script but is now bold (a stroke in its own color; the font has no bold weight), in one color set by `--mf-accent-color` in `css/mono.css` (hot pink by default).
+- Funky: `js/mono.js` (`initAccent`) gives each letter its own tilt and lift, and the letters pop in with a bounce when the word scrolls into view. Hovering wiggles them.
+- **Click** the word to cycle its color. **Five clicks within ~1.8s** sets off a rainbow that rolls across the letters, each letter glowing in its own color and hopping, then it settles back to the color it had before the burst.
+- The footer "SWFT studios" wordmark is unchanged.
 
 ### Notes
-- Reduced-motion users and no-JS visitors get the finished static word (no sweep, no rainbow). Clicking still changes color for reduced-motion users. The click is mouse/touch only, and skipped when the word is inside a link or button.
+- Reduced-motion users and no-JS visitors get the static bold word. Clicking still changes color with reduced motion (no rainbow). The click is mouse/touch only and skipped when the word is inside a link or button.
 
 ## 2026-11-03: Outreach slice 3, Claude drafting + approval page
 
