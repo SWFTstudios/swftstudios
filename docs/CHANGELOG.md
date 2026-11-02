@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-04: Google Analytics 4 on every page
+
+### Changed
+- `js/swft-analytics.js` now loads the Google tag `G-F2BXR858CL` (GA4 stream "SWFT Studios") by default. Before, GA4 only loaded if a page set `SWFT_GA_ID` or `meta[name="swft-ga-id"]`, and none did. Override per page with either; `window.SWFT_GA_ID = ""` turns it off. Skipped on `/admin/` and `/portal/`, and skipped if another `gtag.js` is already on the page.
+- `js/swft-nav.js` loads `swft-analytics.js` on any page that doesn't link it (case studies, blog posts, Films, 404 and older templates were untagged), so PostHog and GA4 now cover the whole site.
+
 ## 2026-11-03: Notification badge, carousel swipe fix, account page
 
 ### Changed

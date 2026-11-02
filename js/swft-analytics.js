@@ -3,7 +3,11 @@
  * - Loads PostHog (project 486061) for web analytics + custom events
  * - Captures UTM params into sessionStorage (+ PostHog register)
  * - Pushes events to dataLayer
- * - Optionally forwards to GA4 when window.SWFT_GA_ID or meta[name="swft-ga-id"] is set
+ * - Loads Google Analytics 4 (Google tag G-F2BXR858CL, "SWFT Studios" stream).
+ *   Override with window.SWFT_GA_ID or meta[name="swft-ga-id"]; set
+ *   window.SWFT_GA_ID = "" to turn it off on a page. Never on /admin/ or
+ *   /portal/, and never twice if another gtag.js is already on the page.
+ * - js/swft-nav.js loads this file on any page that forgot to include it.
  * Never send names, emails, phones, or free-text messages.
  *
  * Disable PostHog with window.SWFT_POSTHOG_DISABLED = true before this script loads.
@@ -14,6 +18,7 @@
   var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
   var POSTHOG_KEY = "phc_AwfkAWFJ3Xs2vcFLcjhN9CfeSfZ6nYStWvpXMTi3uMkb";
   var POSTHOG_HOST = "https://us.i.posthog.com";
+  var DEFAULT_GA_ID = "G-F2BXR858CL";
 
   function readMetaGaId() {
     var el = document.querySelector('meta[name="swft-ga-id"]');
@@ -114,6 +119,8 @@
 
   function loadGtag(id) {
     if (!id || global.__swftGtagLoaded) return;
+    // Another gtag.js (e.g. Cloudflare Zaraz or a pasted snippet) already measures this page
+    if (document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) return;
     global.__swftGtagLoaded = true;
     global.dataLayer = global.dataLayer || [];
     global.gtag =
@@ -201,8 +208,8 @@
     captureUtms();
     ensureDataLayer();
     loadPostHog();
-    var gaId = global.SWFT_GA_ID || readMetaGaId();
-    if (gaId) loadGtag(gaId);
+    var gaId = typeof global.SWFT_GA_ID === "string" ? global.SWFT_GA_ID : readMetaGaId() || DEFAULT_GA_ID;
+    if (gaId && !/^\/(admin|portal)\//.test(location.pathname)) loadGtag(gaId);
     bindDelegates();
   }
 

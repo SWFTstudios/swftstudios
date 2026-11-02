@@ -319,6 +319,8 @@
     // Site-wide scroll-in text animation (js/text-reveal.js) and the Mono
     // helpers (js/mono.js), loaded once from here because every page
     // already includes this script.
+    // Analytics on every page, including older templates that never linked it
+    if (!document.querySelector('script[src*="swft-analytics.js"]')) loadOnce("/js/swft-analytics.js?v=20261104-ga4", "data-swft-analytics");
     loadOnce("/js/text-reveal.js?v=20261027-mono", "data-swft-text-reveal");
     loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
