@@ -1,0 +1,42 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "swft-outreach",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  // Cron triggers are UTC. ET is UTC-5 (Nov-Mar) / UTC-4 (Mar-Nov), so the send
+  // job fires at both 14:00 and 15:00 UTC and the code checks the real ET hour.
+  "triggers": {
+    "crons": [
+      "0 6 * * *",
+      "30 6 * * *",
+      "0 14,15 * * 1-5",
+      "0 12 * * *"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "swft-outreach",
+      // Replace after `npx wrangler d1 create swft-outreach`
+      "database_id": "REPLACE_WITH_D1_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "kv_namespaces": [
+    // Replace after `npx wrangler kv namespace create OUTREACH_KV`
+    { "binding": "OUTREACH_KV", "id": "REPLACE_WITH_KV_ID" }
+  ],
+  "vars": {
+    "DRY_RUN": "1",
+    "SEND_FROM": "Omar at SWFT Studios <omar@REPLACE_SENDING_DOMAIN>",
+    "PUBLIC_ORIGIN": "https://outreach.REPLACE_SENDING_DOMAIN",
+    "MAILING_ADDRESS": "REPLACE WITH PHYSICAL ADDRESS",
+    "CAL_BOOKING_URL": "https://cal.com/swftstudios/swft-meeting",
+    "TARGET_TRADE": "HVAC",
+    "TARGET_CITIES": "Jersey City NJ;Hoboken NJ;Newark NJ;Hackensack NJ;Paterson NJ"
+  }
+  // Secrets (wrangler secret put): GOOGLE_PLACES_KEY, ANTHROPIC_API_KEY,
+  // RESEND_API_KEY, APPROVAL_PASSWORD_HASH, SESSION_SECRET, UNSUB_SIGNING_SECRET
+}
