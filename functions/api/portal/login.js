@@ -9,6 +9,7 @@ import {
   str,
 } from "../../_lib/portal-auth.js";
 import { authenticateUser, createSession, requireDb } from "../../_lib/portal-db.js";
+import { isAdmin } from "../../_lib/portal-api.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -37,8 +38,10 @@ export async function onRequestPost(context) {
       return json({ ok: false, error: "Invalid email or password." }, 401);
     }
     const sessionId = await createSession(db, user.id);
+    await db.prepare("UPDATE users SET last_login_at = datetime('now') WHERE id = ?").bind(user.id).run();
+    const admin = isAdmin(user, env);
     return json(
-      { ok: true, email: user.email, redirect: "/portal/dashboard.html" },
+      { ok: true, email: user.email, admin, redirect: admin ? "/portal/admin.html" : "/portal/dashboard.html" },
       200,
       { "Set-Cookie": sessionCookieHeader(sessionId) }
     );

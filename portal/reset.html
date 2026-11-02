@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Choose a Password: Client Portal | SWFT Studios</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Choose a new password for your SWFT client portal.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono2">
+  <link rel="stylesheet" href="/css/portal.css?v=20261027-ws">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="mf-page pt-auth">
+  <div id="swft-nav" data-active=""></div>
+  <main id="main">
+    <section class="mf-hero mf-hero--page" aria-labelledby="pt-title">
+      <div class="mf-wrap mf-split">
+        <div>
+          <div class="mf-hero__top"><p class="mf-label">(Client portal)</p></div>
+          <h1 class="mf-h1" id="pt-title">Choose a new <span class="mf-script">password.</span></h1>
+          <p class="mf-lead">At least 10 characters. <span class="is-muted">We only store a secure hash, never the password itself.</span></p>
+        </div>
+        <div class="pt-card">
+          <form id="reset-form" class="mf-form" novalidate>
+            <div class="mf-field"><label for="password">New password</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="10" required></div>
+            <div class="mf-field"><label for="password2">Confirm password</label><input id="password2" name="password2" type="password" autocomplete="new-password" minlength="10" required></div>
+            <p id="form-msg" class="pt-msg" hidden></p>
+            <div class="mf-actions"><button type="submit" class="mf-btn">Save and sign in</button></div>
+          </form>
+          <div class="pt-card__foot"><a href="/portal/forgot.html">Request a new link</a><a href="/portal/login.html">Sign in</a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/swft-nav.js?v=20261027-mono"></script>
+  <script src="/js/portal.js?v=20261027-ws"></script>
+  <script>
+    (function () {
+      var P = SWFTPortal;
+      var token = P.params().get("token") || "";
+      var msg = P.qs("#form-msg");
+      if (!token) P.showMsg(msg, "This link is missing its token. Request a new one from “Forgot password”.", "error");
+      P.qs("#reset-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var a = P.qs("#password").value, b = P.qs("#password2").value;
+        if (a.length < 10) return P.showMsg(msg, "Use at least 10 characters.", "error");
+        if (a !== b) return P.showMsg(msg, "The passwords don't match.", "error");
+        var btn = this.querySelector("button");
+        btn.disabled = true;
+        var r = await P.api("/api/portal/reset", { method: "POST", body: JSON.stringify({ token: token, password: a }) });
+        btn.disabled = false;
+        if (!r.res.ok || !r.data.ok) return P.showMsg(msg, (r.data && r.data.error) || "Couldn't save the password.", "error");
+        location.href = r.data.redirect || "/portal/dashboard.html";
+      });
+    })();
+  </script>
+</body>
+</html>

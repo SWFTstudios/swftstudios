@@ -186,27 +186,26 @@ export async function authenticateUser(db, email, password) {
   return ok ? user : null;
 }
 
+/**
+ * Set a password from an invite link. Accounts are invite-only: without a
+ * valid token nobody can create an account or claim one that exists but has
+ * no password yet (that would let anyone who knows a client's email take it
+ * over). Expired links: "Forgot password" on the sign-in page sends a new one.
+ */
 export async function onboardUser(db, { email, password, inviteToken }) {
   const invitedUserId = inviteToken ? await consumeInviteToken(db, inviteToken) : null;
-  let user = invitedUserId ? await findUserById(db, invitedUserId) : await findUserByEmail(db, email);
-
-  if (user) {
-    if (user.password_hash) {
-      const ok = await verifyPassword(password, user.password_salt, user.password_hash);
-      if (!ok) return { error: "Account already exists. Sign in instead.", code: "exists" };
-      return { user, created: false };
+  if (!invitedUserId) {
+    const existing = await findUserByEmail(db, email);
+    if (existing && existing.password_hash) {
+      return { error: "This account already has a password. Sign in instead.", code: "exists" };
     }
-    await setUserPassword(db, user.id, password);
-    return { user: await findUserById(db, user.id), created: true };
+    return {
+      error: "This setup link is missing or expired. Use “Forgot password” on the sign-in page to get a new one.",
+      code: "invite_required",
+    };
   }
-
-  const id = randomId(16);
-  const { salt, hash } = await hashPassword(password);
-  await db
-    .prepare(
-      `INSERT INTO users (id, email, password_hash, password_salt) VALUES (?, ?, ?, ?)`
-    )
-    .bind(id, email.toLowerCase(), hash, salt)
-    .run();
-  return { user: await findUserById(db, id), created: true };
+  const user = await findUserById(db, invitedUserId);
+  if (!user) return { error: "This setup link is no longer valid.", code: "invite_required" };
+  await setUserPassword(db, user.id, password);
+  return { user: await findUserById(db, user.id), created: !user.password_hash };
 }

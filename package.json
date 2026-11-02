@@ -10,7 +10,9 @@
     "test:forms:browser": "node tests/forms/browser.mjs",
     "test:forms:live": "node tests/forms/live-smoke.mjs",
     "test:availability": "node --test tests/availability/availability.test.mjs",
-    "build:mono": "node scripts/build-mono-sections.mjs"
+    "build:mono": "node scripts/build-mono-sections.mjs",
+    "test:portal": "node tests/portal/workspace.e2e.mjs",
+    "db:migrate:local": "wrangler d1 migrations apply swft-portal --local"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",

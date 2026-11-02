@@ -9,6 +9,7 @@ import {
   str,
 } from "../../_lib/portal-auth.js";
 import { createSession, onboardUser, requireDb } from "../../_lib/portal-db.js";
+import { isAdmin } from "../../_lib/portal-api.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -38,7 +39,7 @@ export async function onRequestPost(context) {
   try {
     const result = await onboardUser(db, { email, password, inviteToken });
     if (result.error) {
-      return json({ ok: false, error: result.error, code: result.code }, 409);
+      return json({ ok: false, error: result.error, code: result.code }, result.code === "exists" ? 409 : 400);
     }
     const sessionId = await createSession(db, result.user.id);
     return json(
@@ -46,7 +47,7 @@ export async function onRequestPost(context) {
         ok: true,
         created: result.created,
         email: result.user.email,
-        redirect: "/portal/dashboard.html",
+        redirect: isAdmin(result.user, env) ? "/portal/admin.html" : "/portal/dashboard.html",
       },
       200,
       { "Set-Cookie": sessionCookieHeader(sessionId) }

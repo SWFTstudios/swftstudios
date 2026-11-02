@@ -17,6 +17,12 @@ import { onRequestPost as handleContact } from "../functions/api/contact.js";
 import { onRequestPost as handleBookTier } from "../functions/api/book-tier.js";
 // @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
 import { onRequestGet as handleAvailability } from "../functions/api/availability.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { handleWorkspaceApi } from "../functions/_lib/portal-api.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestPost as handlePortalOnboard } from "../functions/api/portal/onboard.js";
+// @ts-ignore - Cloudflare Pages Function JavaScript module has no TS declarations
+import { onRequestPost as handlePortalLogin } from "../functions/api/portal/login.js";
 
 
 export interface Env extends PortalEnv {
@@ -45,6 +51,13 @@ export interface Env extends PortalEnv {
   CAL_EVENT_SLUG?: string;
   /** Optional Cal.com API key, only needed if the event type is not public */
   CAL_API_KEY?: string;
+  /** Client workspace: R2 bucket for uploads, admin emails, Cloudflare Email Service */
+  FILES?: R2Bucket;
+  ADMIN_EMAILS?: string;
+  PORTAL_NOTIFY_EMAIL?: string;
+  PORTAL_FROM_EMAIL?: string;
+  CF_ACCOUNT_ID?: string;
+  CF_EMAIL_API_TOKEN?: string;
   /** Override From header, e.g. `SWFT Studios <hello@swftstudios.com>` */
   RESEND_FROM?: string;
   /** Team notify inbox (default hello@swftstudios.com) */
@@ -787,6 +800,20 @@ export default {
         url.pathname === "/api/admin/projects")
     ) {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    }
+
+    // Same handlers as the Pages Functions, so production (Pages) and
+    // `wrangler dev` (this Worker) behave the same: invite-only onboarding,
+    // admin redirect on login, and the client workspace API.
+    if (request.method === "POST" && url.pathname === "/api/portal/onboard") {
+      return handlePortalOnboard({ request, env });
+    }
+    if (request.method === "POST" && url.pathname === "/api/portal/login") {
+      return handlePortalLogin({ request, env });
+    }
+    if (url.pathname.startsWith("/api/portal/") || url.pathname.startsWith("/api/admin/")) {
+      const workspace = await handleWorkspaceApi({ request, env, waitUntil: (p: Promise<unknown>) => ctx.waitUntil(p) });
+      if (workspace) return workspace;
     }
 
     const portalResponse = await handlePortalRoutes(request, env, url);

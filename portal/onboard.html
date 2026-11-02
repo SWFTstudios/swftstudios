@@ -2,94 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Create Portal Account | SWFT Studios</title>
-  <meta name="robots" content="noindex">
-  <meta name="description" content="Create your SWFT client portal account with email and password.">
+  <title>Set Up Your Portal: Client Portal | SWFT Studios</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Set a password for your SWFT Studios client portal.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="canonical" href="https://www.swftstudios.com/portal/onboard.html">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono">
-  <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
-  <link rel="stylesheet" href="/css/portal.css?v=20260930b">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono2">
+  <link rel="stylesheet" href="/css/portal.css?v=20261027-ws">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
-<body class="ps-page portal-page">
+<body class="mf-page pt-auth">
   <div id="swft-nav" data-active=""></div>
-  <main>
-    <div class="portal-shell">
-      <header class="ps-hero ps-hero--left">
-        <p class="ps-eyebrow">Client portal</p>
-        <h1 class="ps-title">Create your account</h1>
-        <p class="ps-lead">Use the email from your booking. Choose a password (at least 10 characters). We store a secure hash only, never your password in plain text.</p>
-      </header>
-
-      <div class="portal-card">
-        <p id="paid-note" class="portal-msg portal-msg--ok" hidden>Payment received. Set your password to open the dashboard.</p>
-        <form id="onboard-form" class="portal-form" novalidate>
-          <input type="hidden" id="invite-token" name="inviteToken" value="">
-          <label>
-            Email
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </label>
-          <label>
-            Password
-            <input id="password" name="password" type="password" autocomplete="new-password" minlength="10" required>
-          </label>
-          <label>
-            Confirm password
-            <input id="password2" name="password2" type="password" autocomplete="new-password" minlength="10" required>
-          </label>
-          <div class="portal-actions">
-            <button type="submit" class="button is-course w-inline-block">
-              <div class="button_bg"></div>
-              <div class="button_text">Create account</div>
-            </button>
-            <a class="portal-link" href="/portal/login.html">Already have an account? Sign in</a>
-          </div>
-        </form>
-        <div id="form-msg" class="portal-msg" hidden></div>
+  <main id="main">
+    <section class="mf-hero mf-hero--page" aria-labelledby="pt-title">
+      <div class="mf-wrap mf-split">
+        <div>
+          <div class="mf-hero__top"><p class="mf-label">(Client portal)</p></div>
+          <h1 class="mf-h1" id="pt-title">Set up your <span class="mf-script">portal.</span></h1>
+          <p class="mf-lead">Choose a password to open your workspace. <span class="is-muted">You&rsquo;ll upload files, share links and leave notes for your project there.</span></p>
+        </div>
+        <div class="pt-card">
+          <p id="paid-note" class="pt-msg pt-msg--ok" hidden>Payment received. Set your password to open your workspace.</p>
+          <form id="onboard-form" class="mf-form" novalidate>
+            <div class="mf-field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required readonly></div>
+            <div class="mf-field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="10" required></div>
+            <div class="mf-field"><label for="password2">Confirm password</label><input id="password2" name="password2" type="password" autocomplete="new-password" minlength="10" required></div>
+            <p id="form-msg" class="pt-msg" hidden></p>
+            <div class="mf-actions"><button type="submit" class="mf-btn">Open my workspace <span class="mf-arrow" aria-hidden="true">↗</span></button></div>
+          </form>
+          <div class="pt-card__foot"><a href="/portal/login.html">Already set up? Sign in</a><a href="/portal/forgot.html">Link expired?</a></div>
+        </div>
       </div>
-    </div>
+    </section>
   </main>
   <script src="/js/swft-nav.js?v=20261027-mono"></script>
-  <script src="/js/swft-analytics.js?v=20260930b"></script>
-  <script src="/js/portal.js?v=20260930b"></script>
+  <script src="/js/portal.js?v=20261027-ws"></script>
   <script>
     (function () {
-      var p = SWFTPortal.params();
-      var emailEl = SWFTPortal.qs("#email");
-      var tokenEl = SWFTPortal.qs("#invite-token");
-      var paidNote = SWFTPortal.qs("#paid-note");
-      if (p.get("email")) emailEl.value = p.get("email");
-      if (p.get("token")) tokenEl.value = p.get("token");
-      if (p.get("paid") === "1") paidNote.hidden = false;
-
-      SWFTPortal.qs("#onboard-form").addEventListener("submit", async function (e) {
+      var P = SWFTPortal;
+      var params = P.params();
+      var token = params.get("token") || "";
+      var msg = P.qs("#form-msg");
+      P.qs("#email").value = params.get("email") || "";
+      if (params.get("paid") === "1") P.qs("#paid-note").hidden = false;
+      if (!token) P.showMsg(msg, "Open this page from the link in your invite email. Lost it? Use “Forgot password” with the same email.", "error");
+      P.qs("#onboard-form").addEventListener("submit", async function (e) {
         e.preventDefault();
-        var msg = SWFTPortal.qs("#form-msg");
-        var password = SWFTPortal.qs("#password").value;
-        var password2 = SWFTPortal.qs("#password2").value;
-        if (password !== password2) {
-          SWFTPortal.showMsg(msg, "Passwords do not match.", "error");
-          return;
-        }
-        if (password.length < 10) {
-          SWFTPortal.showMsg(msg, "Password must be at least 10 characters.", "error");
-          return;
-        }
-        SWFTPortal.showMsg(msg, "Creating account…", "info");
-        var result = await SWFTPortal.api("/api/portal/onboard", {
-          method: "POST",
-          body: JSON.stringify({
-            email: emailEl.value.trim(),
-            password: password,
-            inviteToken: tokenEl.value || undefined,
-          }),
-        });
-        if (!result.res.ok || !result.data.ok) {
-          SWFTPortal.showMsg(msg, (result.data && result.data.error) || "Could not create account.", "error");
-          return;
-        }
-        window.location.href = result.data.redirect || "/portal/dashboard.html";
+        var a = P.qs("#password").value, b = P.qs("#password2").value;
+        if (a.length < 10) return P.showMsg(msg, "Use at least 10 characters.", "error");
+        if (a !== b) return P.showMsg(msg, "The passwords don't match.", "error");
+        var btn = this.querySelector("button");
+        btn.disabled = true;
+        var r = await P.api("/api/portal/onboard", { method: "POST", body: JSON.stringify({ email: P.qs("#email").value.trim(), password: a, token: token }) });
+        btn.disabled = false;
+        if (!r.res.ok || !r.data.ok) return P.showMsg(msg, (r.data && r.data.error) || "Couldn't set up the account.", "error");
+        location.href = r.data.redirect || "/portal/dashboard.html";
       });
     })();
   </script>

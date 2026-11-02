@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reset Password: Client Portal | SWFT Studios</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Get a link to reset your SWFT client portal password.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261027-mono2">
+  <link rel="stylesheet" href="/css/portal.css?v=20261027-ws">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="mf-page pt-auth">
+  <div id="swft-nav" data-active=""></div>
+  <main id="main">
+    <section class="mf-hero mf-hero--page" aria-labelledby="pt-title">
+      <div class="mf-wrap mf-split">
+        <div>
+          <div class="mf-hero__top"><p class="mf-label">(Client portal)</p></div>
+          <h1 class="mf-h1" id="pt-title">Forgot your <span class="mf-script">password?</span></h1>
+          <p class="mf-lead">Enter the email you use for the portal. We&rsquo;ll send a link to choose a new password. <span class="is-muted">The link works for 2 hours.</span></p>
+        </div>
+        <div class="pt-card">
+          <form id="forgot-form" class="mf-form" novalidate>
+            <div class="mf-field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+            <p id="form-msg" class="pt-msg" hidden></p>
+            <div class="mf-actions"><button type="submit" class="mf-btn">Email me a link</button></div>
+          </form>
+          <div class="pt-card__foot"><a href="/portal/login.html">Back to sign in</a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/swft-nav.js?v=20261027-mono"></script>
+  <script src="/js/portal.js?v=20261027-ws"></script>
+  <script>
+    (function () {
+      var P = SWFTPortal;
+      P.qs("#forgot-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var msg = P.qs("#form-msg");
+        var email = P.qs("#email").value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return P.showMsg(msg, "Enter a valid email.", "error");
+        var btn = this.querySelector("button");
+        btn.disabled = true;
+        var r = await P.api("/api/portal/forgot", { method: "POST", body: JSON.stringify({ email: email }) });
+        btn.disabled = false;
+        var ok = r.data && r.data.ok;
+        P.showMsg(msg, ok ? "If that email has a portal account, a reset link is on its way. Check your inbox (and spam)." : (r.data && r.data.error) || "Something went wrong.", ok ? "ok" : "error");
+      });
+    })();
+  </script>
+</body>
+</html>
