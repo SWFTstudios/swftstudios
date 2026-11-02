@@ -113,6 +113,10 @@
       async function init() {
         var data = await SWFTPortal.requireAuth();
         if (!data) return;
+        if (data.user.isAdmin) {
+          window.location.replace("/admin/");
+          return;
+        }
         SWFTPortal.qs("#welcome").textContent = "Signed in as " + data.user.email;
         if (!data.project) {
           SWFTPortal.qs("#tier-name").textContent = "No project yet";

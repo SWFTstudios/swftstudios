@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-02: Owner admin dashboard (`/admin/`)
+
+### Added
+- [`/admin/`](../admin/index.html): private dashboard for the site owner with Overview, Clients & notes, Outreach, Emails and Blog tabs. Details in [`ADMIN_DASHBOARD.md`](ADMIN_DASHBOARD.md).
+- `GET /api/admin/overview`, `GET /api/admin/emails`, and `GET/POST/DELETE /api/admin/notes`, gated by a portal session whose email is on `ADMIN_EMAILS` (default `elombe@swftstudios.com`).
+- Migration `0002_admin_notes.sql` (`admin_notes`, apply to `swft-portal`).
+- `npm run build:blog-index` writes `data/blog-posts.json`; `npm run test:admin`.
+
+### Changed
+- Sign-in redirects admin emails to `/admin/`; `/api/portal/me` returns `isAdmin`; the client dashboard forwards admins to `/admin/`.
+- `robots.txt` disallows `/admin/` and `/portal/`; `_headers` sets `no-store` and `noindex` on admin pages and APIs.
+
+### Security-impacting
+- Admin access is decided server-side per request, writes require a same-origin `Origin`, and rendered text uses `textContent` (no HTML injection from notes or lead data).
+
 ## 2026-10-27: Mono redesign (dark, Monoform-style)
 
 ### Changed

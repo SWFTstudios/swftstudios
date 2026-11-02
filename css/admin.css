@@ -1,0 +1,23 @@
+/* SWFT owner dashboard (extends portal.css) */
+.admin-tabs { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1.5rem 0 0; }
+.admin-tabs button {
+  background: transparent; color: var(--swft-text); border: 1px solid var(--swft-border);
+  border-radius: 999px; padding: .5rem 1rem; font: inherit; cursor: pointer;
+}
+.admin-tabs button[aria-selected="true"] { background: var(--swft-text); color: var(--swft-bg); }
+.admin-panel { margin-top: 1.25rem; }
+.admin-panel[hidden] { display: none; }
+.admin-table-wrap { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.admin-table th, .admin-table td { text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(--swft-border); vertical-align: top; }
+.admin-table th { opacity: .7; font-weight: 500; white-space: nowrap; }
+.admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.admin-note { border-top: 1px solid var(--swft-border); padding: .75rem 0; display: flex; gap: .75rem; justify-content: space-between; }
+.admin-note p { margin: 0; white-space: pre-wrap; }
+.admin-note small { opacity: .6; }
+.admin-note-form textarea {
+  width: 100%; min-height: 5rem; background: transparent; color: inherit;
+  border: 1px solid var(--swft-border); border-radius: 12px; padding: .75rem; font: inherit;
+}
+.admin-row-btn { white-space: nowrap; background: transparent; color: inherit; border: 1px solid var(--swft-border); border-radius: 999px; padding: .25rem .75rem; font: inherit; cursor: pointer; }
+.admin-muted { opacity: .65; }

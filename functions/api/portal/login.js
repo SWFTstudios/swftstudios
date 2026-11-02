@@ -9,6 +9,7 @@ import {
   str,
 } from "../../_lib/portal-auth.js";
 import { authenticateUser, createSession, requireDb } from "../../_lib/portal-db.js";
+import { isAdminEmail } from "../../_lib/admin-auth.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -37,8 +38,10 @@ export async function onRequestPost(context) {
       return json({ ok: false, error: "Invalid email or password." }, 401);
     }
     const sessionId = await createSession(db, user.id);
+    // Owner/admin emails land on the admin dashboard; everyone else on the client portal.
+    const redirect = isAdminEmail(env, user.email) ? "/admin/" : "/portal/dashboard.html";
     return json(
-      { ok: true, email: user.email, redirect: "/portal/dashboard.html" },
+      { ok: true, email: user.email, redirect },
       200,
       { "Set-Cookie": sessionCookieHeader(sessionId) }
     );
