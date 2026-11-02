@@ -142,40 +142,34 @@ html body.ps-page .ps-title .ps-accent {
   transform-origin: 50% 70%;
 }
 .mf-funky-pre .mf-l { opacity: 0; }
-/* Paint drips hanging off a few letters. background: currentColor, so they take the
-   letter's color, follow click color changes and roll through the rainbow with it. */
-.mf-drip {
-  position: absolute;
-  top: var(--top, 72%);
-  left: var(--x, 50%);
-  width: 0.075em;
-  height: var(--len, 0.3em);
-  margin-left: -0.0375em;
-  border-radius: 0 0 0.04em 0.04em;
-  background: currentColor;
-  transform-origin: 50% 0;
-  pointer-events: none;
+/* Unread-notification badge on the hero's "booked." (js/notify-badge.js) */
+.mf-notify { position: relative; display: inline-block; }
+.mf-notif {
+  /* font-size is a share of the headline; every size below is in the badge's own em */
+  position: absolute; z-index: 2; top: -0.3em; right: 0.55em;
+  font: 700 0.17em/1 var(--mf-font); letter-spacing: 0;
+  width: 2em; height: 2em; min-width: 1.9rem; min-height: 1.9rem; padding: 0;
+  display: grid; place-items: center; border-radius: 50%; cursor: pointer;
+  background: #ff3b30; color: #fff; border: 0.18em solid var(--mf-bg);
+  box-shadow: 0 0.2em 0.6em rgba(0, 0, 0, 0.5);
+  transform: scale(0); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.mf-drip::after { /* the bead at the bottom of the run */
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -0.045em;
-  width: 0.12em;
-  height: 0.13em;
-  margin-left: -0.06em;
-  border-radius: 50% 50% 50% 50% / 45% 45% 55% 55%;
-  background: inherit;
+.mf-notif.is-in { transform: scale(1); }
+.mf-notif:hover { transform: scale(1.1); }
+.mf-notif:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.mf-notif span { font-size: max(0.9rem, 1.05em); }
+/* Ping ring until it has been opened once */
+.mf-notif::after {
+  content: ""; position: absolute; inset: -0.2em; border-radius: 50%;
+  border: 2px solid #ff3b30; opacity: 0; pointer-events: none;
 }
-.mf-funky-pre .mf-drip { transform: scaleY(0); }
-.is-funky.is-in .mf-drip {
-  animation: mf-drip-run var(--dur, 1.5s) cubic-bezier(0.5, 0, 0.85, 0.55) var(--delay, 0.9s) both;
+.mf-notif.is-in:not(.is-seen)::after { animation: mf-notif-ping 1.8s var(--mf-ease) 1.2s infinite; }
+@keyframes mf-notif-ping { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .mf-notif { transition: none; }
+  .mf-notif.is-in:not(.is-seen)::after { animation: none; }
 }
-@keyframes mf-drip-run {
-  0%   { transform: scaleY(0); }
-  70%  { transform: scaleY(0.92); }
-  100% { transform: scaleY(1); }
-}
+
 .is-funky.is-in .mf-l {
   animation: mf-letter-pop 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i, 0) * 55ms) both;
 }
@@ -224,8 +218,6 @@ html body.ps-page .ps-title .ps-accent {
 }
 @media (prefers-reduced-motion: reduce) {
   .mf-funky-pre .mf-l { opacity: 1; }
-  .mf-funky-pre .mf-drip,
-  .is-funky.is-in .mf-drip { transform: none; animation: none; }
   .is-funky.is-in .mf-l,
   .is-funky.is-in:hover .mf-l,
   .is-funky.is-rainbow .mf-l { animation: none; }
@@ -354,7 +346,7 @@ button.mf-chip[aria-pressed="true"] .mf-chip-count { color: #555; }
 .mf-carousel {
   position: relative; max-width: 1800px; margin: 0 auto;
   border-radius: clamp(14px, 2vw, 28px); overflow: hidden;
-  background: radial-gradient(120% 90% at 50% 100%, #1a1a1a 0%, #070707 55%, #000 100%);
+  background: radial-gradient(120% 90% at 50% 100%, #1c1c1c 0%, #0b0b0b 60%, #080808 100%);
   border: 1px solid var(--mf-line);
   padding: clamp(1.25rem, 3vw, 2.25rem) clamp(1rem, 3vw, 2.25rem);
 }
@@ -379,13 +371,14 @@ button.mf-chip[aria-pressed="true"] .mf-chip-count { color: #555; }
   text-decoration: none; color: #fff;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
   box-shadow: 0 30px 60px rgba(0,0,0,0.55);
-  transition: opacity 0.5s var(--mf-ease), filter 0.4s;
+  transition: opacity 0.5s var(--mf-ease);
   -webkit-user-drag: none;
 }
 .mf-card3d img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 .mf-card3d::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.85) 100%);
+  /* only enough shade under the name to keep it readable */
+  background: linear-gradient(180deg, rgba(0,0,0,0) 68%, rgba(0,0,0,0.6) 100%);
 }
 .mf-card3d__meta { position: absolute; left: 0.9rem; right: 0.9rem; bottom: 0.85rem; z-index: 1; }
 .mf-card3d__meta .mf-label { font-size: 0.66rem; color: rgba(255,255,255,0.7); }
@@ -396,12 +389,6 @@ button.mf-chip[aria-pressed="true"] .mf-chip-count { color: #555; }
   .mf-carousel__bar .mf-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -0.25rem; padding: 0 0.25rem 0.25rem; width: 100%; }
   .mf-carousel__bar .mf-chips::-webkit-scrollbar { display: none; }
   .mf-carousel__bar .mf-chip { flex: none; }
-}
-.mf-carousel__vignette {
-  position: absolute; inset: 0; pointer-events: none; z-index: 2;
-  background:
-    linear-gradient(90deg, #000 0%, rgba(0,0,0,0) 14%, rgba(0,0,0,0) 86%, #000 100%),
-    radial-gradient(140% 60% at 50% 120%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.65) 100%);
 }
 .mf-carousel__now {
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem 2rem;

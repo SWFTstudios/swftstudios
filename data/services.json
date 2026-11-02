@@ -1,0 +1,751 @@
+{
+  "_readme": "Source for the seven service pages (/software.html, /apps.html, /websites.html, /ai-employees.html, /automations.html, /marketing.html, /content.html), the Build/Automate/Grow cards on /services.html and the investment cards on /pricing.html. `flow` feeds the animated How-it-works section on index.html and services.html. Run `npm run build:services` after editing. `investment` is 1-4 dollar signs. `pricingOffers` are offer ids from data/pricing.json and show their published price. Keep the mega-menu in js/swft-nav.js (SERVICES) in sync with name/menuLine/slug.",
+  "groups": [
+    {
+      "id": "build",
+      "label": "Build",
+      "tagline": "The software, apps and sites your business runs on."
+    },
+    {
+      "id": "automate",
+      "label": "Automate",
+      "tagline": "Hand the repetitive work to systems that never clock out."
+    },
+    {
+      "id": "grow",
+      "label": "Grow",
+      "tagline": "Bring in the customers, then give them a reason to stay."
+    }
+  ],
+  "services": [
+    {
+      "slug": "software",
+      "group": "build",
+      "icon": "code",
+      "name": "Custom Software & CRMs",
+      "menuLine": "Replace the apps you rent",
+      "title": "Custom Software & CRMs for Small Businesses | SWFT Studios",
+      "description": "SWFT Studios builds custom CRMs, dashboards and internal tools that replace the stack of subscriptions your team works around. NYC and North Jersey.",
+      "h1": "One system that fits how you <span class=\"mf-script\">work.</span>",
+      "lead": "Stop paying for five apps that don't talk to each other. We build the CRM, job board or dashboard your team actually needs, <span class=\"is-muted\">and you own it.</span>",
+      "outcomes": [
+        {
+          "title": "Fewer subscriptions",
+          "text": "Fold the tools you rent month after month into one system built around your process."
+        },
+        {
+          "title": "One source of truth",
+          "text": "Customers, jobs, invoices and notes live in one place, so nobody re-types anything."
+        },
+        {
+          "title": "Room to grow",
+          "text": "Add a feature when the business needs it, not when a vendor puts it on their roadmap."
+        }
+      ],
+      "includes": [
+        "Discovery workshop to map how your team works today",
+        "Custom CRM, pipeline or job tracker built around that process",
+        "Role-based logins for owners, staff and contractors",
+        "Data import from spreadsheets and the tools you are leaving",
+        "Integrations with email, calendar, payments and accounting",
+        "Dashboards that show the numbers you check every week",
+        "Training session and written guide for your team",
+        "Hosting, backups and security updates after launch"
+      ],
+      "steps": [
+        {
+          "title": "Map",
+          "text": "We sit with the people doing the work and map every step, tool and spreadsheet."
+        },
+        {
+          "title": "Design",
+          "text": "You click through a working prototype before a line of production code is written."
+        },
+        {
+          "title": "Build",
+          "text": "We ship in weekly releases you can test, so there are no surprises at the end."
+        },
+        {
+          "title": "Launch & support",
+          "text": "We move your data over, train the team and stay on to keep it running."
+        }
+      ],
+      "investment": 4,
+      "priceNote": "Scoped after a free strategy call",
+      "pricingOffers": [
+        "app-design-sprint",
+        "app-care"
+      ],
+      "faq": [
+        {
+          "q": "Why build instead of buying another app?",
+          "a": "Off-the-shelf tools make you change how you work to fit them. When your team is paying for several tools and still keeping spreadsheets on the side, a custom system usually costs less over two to three years and removes the double entry."
+        },
+        {
+          "q": "Do we own the software?",
+          "a": "Yes. You own the code and the data. We host and maintain it if you want us to, and hand it over if you don't."
+        },
+        {
+          "q": "Can you connect it to the tools we keep?",
+          "a": "Usually. Most accounting, payment, email and calendar tools have an API we can connect to. We confirm every integration during discovery, before you commit to a build."
+        },
+        {
+          "q": "How long does a build take?",
+          "a": "Most first versions take 6 to 12 weeks depending on scope. You see working software every week along the way."
+        }
+      ],
+      "related": [
+        "automations",
+        "apps",
+        "ai-employees"
+      ]
+    },
+    {
+      "slug": "apps",
+      "group": "build",
+      "icon": "phone",
+      "name": "Mobile & Web Apps",
+      "menuLine": "iPhone, Android and portals",
+      "title": "Mobile & Web App Development | SWFT Studios",
+      "description": "SWFT Studios designs and builds iPhone, Android and web apps, customer portals and booking apps, from clickable prototype to app store launch.",
+      "h1": "Your business, in their <span class=\"mf-script\">pocket.</span>",
+      "lead": "iPhone, Android and web apps, customer portals and booking apps <span class=\"is-muted\">designed around how people actually use them, from first prototype to launch day.</span>",
+      "outcomes": [
+        {
+          "title": "Repeat customers",
+          "text": "An app on the home screen keeps you one tap away for reorders, bookings and loyalty."
+        },
+        {
+          "title": "Self-serve customers",
+          "text": "Portals let clients check status, pay and upload files without calling your office."
+        },
+        {
+          "title": "A product you can sell",
+          "text": "Turn what you know into an app your customers or your industry will pay for."
+        }
+      ],
+      "includes": [
+        "Product strategy and feature list for version one",
+        "Clickable prototype you can test with real users",
+        "UI design for iPhone, Android and the web",
+        "Development with accounts, payments and notifications",
+        "Admin panel to manage users and content",
+        "App Store and Google Play submission",
+        "Analytics to see how people use the app",
+        "Monitoring, bug fixes and updates after launch"
+      ],
+      "steps": [
+        {
+          "title": "Sprint",
+          "text": "A short design sprint turns the idea into a prototype you can put in front of customers."
+        },
+        {
+          "title": "Build the MVP",
+          "text": "We build the smallest version that does the job well and launch it fast."
+        },
+        {
+          "title": "Launch",
+          "text": "We handle store submission, review and the launch-day checklist."
+        },
+        {
+          "title": "Improve",
+          "text": "Usage data tells us what to build next, release by release."
+        }
+      ],
+      "investment": 3,
+      "priceNote": "From $1,500 for a design sprint",
+      "pricingOffers": [
+        "app-design-sprint",
+        "app-mvp",
+        "app-care"
+      ],
+      "faq": [
+        {
+          "q": "Do I need an iPhone app, an Android app or a web app?",
+          "a": "It depends on who uses it and how often. Many businesses start with a web app that works on every phone, then add store apps once usage proves the need. We recommend a path during the design sprint."
+        },
+        {
+          "q": "What does the design sprint give me?",
+          "a": "A clickable prototype, a feature list for version one and a build estimate. It is yours to keep, whether or not we build it."
+        },
+        {
+          "q": "Who handles the App Store submission?",
+          "a": "We do: listings, screenshots, privacy details and review responses. The developer accounts are in your name."
+        },
+        {
+          "q": "What happens after launch?",
+          "a": "Apps need upkeep as phones and stores change. App Care covers monitoring, security updates, bug fixes and small improvements every month."
+        }
+      ],
+      "related": [
+        "software",
+        "websites",
+        "automations"
+      ]
+    },
+    {
+      "slug": "websites",
+      "group": "build",
+      "icon": "browser",
+      "name": "Websites",
+      "menuLine": "Fast sites built to convert",
+      "title": "Website Design & Development | SWFT Studios",
+      "description": "Fast, mobile-first websites on Webflow or Shopify that turn visitors into calls, bookings and sales. Published prices from SWFT Studios, NYC and North Jersey.",
+      "h1": "A website that books the <span class=\"mf-script\">job.</span>",
+      "lead": "Fast, mobile-first sites that say what you do in seconds <span class=\"is-muted\">and make calling, booking or buying the obvious next step.</span>",
+      "outcomes": [
+        {
+          "title": "More inquiries",
+          "text": "A clear offer on the first screen and a booking path on every page."
+        },
+        {
+          "title": "Found on Google",
+          "text": "Clean structure, fast pages and the basics search engines and AI assistants read."
+        },
+        {
+          "title": "Easy to keep fresh",
+          "text": "Edit text and photos yourself, or let us handle it every month."
+        }
+      ],
+      "includes": [
+        "Custom design that matches your brand",
+        "Mobile-first build on Webflow or Shopify",
+        "Booking, quote or contact forms that reach your inbox",
+        "On-page SEO: titles, descriptions and clean URLs",
+        "Analytics to see where visitors come from",
+        "Optional on-site photo and video shoot",
+        "Domain connection and launch support",
+        "Hosting, updates and care plans after launch"
+      ],
+      "steps": [
+        {
+          "title": "Plan",
+          "text": "We agree on the pages, the offer and the one action every visitor should take."
+        },
+        {
+          "title": "Design",
+          "text": "You review the design on your phone and desktop before we build."
+        },
+        {
+          "title": "Build",
+          "text": "We build, connect your forms and booking, and test on real devices."
+        },
+        {
+          "title": "Launch & care",
+          "text": "We go live, watch the numbers and keep the site fast and current."
+        }
+      ],
+      "investment": 2,
+      "priceNote": "From $800 one-time",
+      "pricingOffers": [
+        "website-only",
+        "website-content-half",
+        "website-content-full",
+        "website-care"
+      ],
+      "faq": [
+        {
+          "q": "Webflow or Shopify?",
+          "a": "Shopify if you sell products online, Webflow for almost everything else. We recommend one on the first call."
+        },
+        {
+          "q": "How long does a website take?",
+          "a": "Most sites launch in 2 to 4 weeks once we have your content. Packages with a shoot add the shoot day to the schedule."
+        },
+        {
+          "q": "Can I edit the site myself?",
+          "a": "Yes. Both platforms have simple editors and we show you how to use them. Website Care covers edits if you would rather not."
+        },
+        {
+          "q": "What is not included?",
+          "a": "Platform and domain fees are paid directly to the platform. Every package lists exactly what is and is not included on the pricing page."
+        }
+      ],
+      "related": [
+        "marketing",
+        "content",
+        "apps"
+      ]
+    },
+    {
+      "slug": "ai-employees",
+      "group": "automate",
+      "icon": "sparkle",
+      "name": "AI Employees",
+      "menuLine": "Answers and books leads 24/7",
+      "title": "AI Employees: Answer and Book Leads 24/7 | SWFT Studios",
+      "description": "SWFT Studios sets up AI assistants that answer calls, texts, chats and DMs, qualify leads and book appointments on your calendar around the clock.",
+      "h1": "Never miss a lead <span class=\"mf-script\">again.</span>",
+      "lead": "An AI assistant that answers your calls, texts, chats and DMs, <span class=\"is-muted\">qualifies the lead and books it on your calendar, day or night.</span>",
+      "outcomes": [
+        {
+          "title": "Instant replies",
+          "text": "Every inquiry gets an answer in seconds, including nights, weekends and busy days on the job."
+        },
+        {
+          "title": "Booked, not just answered",
+          "text": "It asks your qualifying questions and puts the appointment on your real calendar."
+        },
+        {
+          "title": "Handed off when it matters",
+          "text": "Anything it should not handle goes straight to you with the full conversation attached."
+        }
+      ],
+      "includes": [
+        "Assistant trained on your services, prices, area and policies",
+        "Website chat, SMS and social DM coverage",
+        "Phone answering and call-back on request",
+        "Lead qualification with the questions you ask today",
+        "Booking straight into your calendar",
+        "Instant hand-off to a person, with the transcript",
+        "Conversation log and lead summary in your CRM or inbox",
+        "Monthly review and tuning from real conversations"
+      ],
+      "steps": [
+        {
+          "title": "Learn",
+          "text": "We collect your FAQs, prices, service area and the questions you ask every lead."
+        },
+        {
+          "title": "Train & test",
+          "text": "We build the assistant and test it against real past inquiries before it goes live."
+        },
+        {
+          "title": "Go live",
+          "text": "We connect it to your site, phone, inbox and calendar."
+        },
+        {
+          "title": "Tune",
+          "text": "Every month we review conversations and tighten answers and hand-offs."
+        }
+      ],
+      "investment": 2,
+      "priceNote": "Setup plus a monthly plan, quoted on a call",
+      "pricingOffers": [
+        "lead-follow-up"
+      ],
+      "faq": [
+        {
+          "q": "Will customers know it is an AI?",
+          "a": "Yes. We set it up to say so. People mostly care that they got a fast, correct answer and a booked time."
+        },
+        {
+          "q": "What if it does not know the answer?",
+          "a": "It says so and hands the conversation to you or your team with the full transcript, instead of guessing."
+        },
+        {
+          "q": "Does it work with my calendar and phone number?",
+          "a": "It works with the common calendars and booking tools and can use your existing number or a new one. We confirm your setup on the strategy call."
+        },
+        {
+          "q": "Is my customer data safe?",
+          "a": "Conversations are stored in your systems, access is limited to your team, and we never use your data to train public models."
+        }
+      ],
+      "related": [
+        "automations",
+        "software",
+        "marketing"
+      ]
+    },
+    {
+      "slug": "automations",
+      "group": "automate",
+      "icon": "bolt",
+      "name": "Automations",
+      "menuLine": "Connect tools, end busywork",
+      "title": "Business Automations & Integrations | SWFT Studios",
+      "description": "SWFT Studios connects your forms, CRM, calendar, invoices and inbox so follow-ups, reminders, review requests and reports run on their own.",
+      "h1": "Busywork, on <span class=\"mf-script\">autopilot.</span>",
+      "lead": "We connect the tools you already use so follow-ups, reminders, invoices and reports run themselves, <span class=\"is-muted\">and your team gets hours back every week.</span>",
+      "outcomes": [
+        {
+          "title": "Faster follow-up",
+          "text": "New leads get a text and an email within a minute, and reminders until they book."
+        },
+        {
+          "title": "Fewer no-shows",
+          "text": "Confirmations, reminders and text-to-pay go out on time, every time."
+        },
+        {
+          "title": "More reviews",
+          "text": "Every finished job triggers a review request while the customer is still happy."
+        }
+      ],
+      "includes": [
+        "Audit of the manual steps your team repeats each week",
+        "Lead capture from forms, calls and ads into one place",
+        "Instant text and email follow-up sequences",
+        "Appointment confirmations and reminders",
+        "Invoice, payment and text-to-pay workflows",
+        "Review requests after every job",
+        "Weekly report sent to your inbox",
+        "Monitoring and alerts if anything breaks"
+      ],
+      "steps": [
+        {
+          "title": "Audit",
+          "text": "We list every manual step and rank them by hours saved."
+        },
+        {
+          "title": "Connect",
+          "text": "We wire up your forms, CRM, calendar, payments and inbox."
+        },
+        {
+          "title": "Test",
+          "text": "Every flow is tested end to end with real data before it is switched on."
+        },
+        {
+          "title": "Monitor",
+          "text": "We watch the flows, fix what breaks and add the next automation."
+        }
+      ],
+      "investment": 2,
+      "priceNote": "From $750 one-time",
+      "pricingOffers": [
+        "lead-follow-up",
+        "analytics-setup",
+        "analytics-reporting"
+      ],
+      "faq": [
+        {
+          "q": "Which tools can you connect?",
+          "a": "Most popular CRMs, calendars, form builders, payment, accounting and email tools. If a tool has an API or a Zapier/Make integration, we can usually connect it."
+        },
+        {
+          "q": "Do I need new software?",
+          "a": "Usually not. We start with what you already pay for and only suggest a new tool when it clearly saves money or time."
+        },
+        {
+          "q": "What happens if an automation fails?",
+          "a": "Every flow has alerts. If something breaks, we hear about it and fix it, and important messages fall back to a person."
+        },
+        {
+          "q": "How fast will I see results?",
+          "a": "Lead follow-up and reminders usually go live in the first one to two weeks."
+        }
+      ],
+      "related": [
+        "ai-employees",
+        "software",
+        "marketing"
+      ]
+    },
+    {
+      "slug": "marketing",
+      "group": "grow",
+      "icon": "megaphone",
+      "name": "Paid Ads & Marketing",
+      "menuLine": "Meta, Google and SEO",
+      "title": "Paid Ads, SEO & Local Marketing | SWFT Studios",
+      "description": "Meta and Google ads, local SEO, Google Business Profile and AI search visibility for local businesses in NYC and North Jersey, tracked from click to booked job.",
+      "h1": "Ads that pay for <span class=\"mf-script\">themselves.</span>",
+      "lead": "Meta and Google ads, local SEO and your Google Business Profile, <span class=\"is-muted\">tracked from the first click to the booked job so you know what every lead cost.</span>",
+      "outcomes": [
+        {
+          "title": "Show up locally",
+          "text": "Rank in the map pack and in AI answers when people nearby search for what you do."
+        },
+        {
+          "title": "Ads that reach buyers",
+          "text": "Campaigns aimed at the neighborhoods and customers you actually serve."
+        },
+        {
+          "title": "Know your numbers",
+          "text": "Every call, form and sale has a source and a cost, in one monthly report."
+        }
+      ],
+      "includes": [
+        "Meta (Facebook and Instagram) ad campaigns",
+        "Google Search and Local Services ads",
+        "Google Business Profile setup, posts and photos",
+        "Local SEO and location pages",
+        "Visibility in AI search answers (ChatGPT, Gemini, Perplexity)",
+        "Call, form and booking tracking",
+        "Landing pages built for each campaign",
+        "Monthly report with the next three moves"
+      ],
+      "steps": [
+        {
+          "title": "Audit",
+          "text": "We review your profile, site, past ads and competitors and find the biggest leak."
+        },
+        {
+          "title": "Set up tracking",
+          "text": "We make sure every lead is counted and has a source before spending a dollar."
+        },
+        {
+          "title": "Launch",
+          "text": "Campaigns and profile updates go live with creative made for each platform."
+        },
+        {
+          "title": "Optimize",
+          "text": "We cut what does not work, scale what does and report monthly."
+        }
+      ],
+      "investment": 2,
+      "priceNote": "From $400 one-time or $500/mo",
+      "pricingOffers": [
+        "gbp-refresh",
+        "ads-management",
+        "full-growth-partner"
+      ],
+      "faq": [
+        {
+          "q": "Is ad spend included?",
+          "a": "No. Ad spend is paid directly to Meta or Google from your account. Our fee covers strategy, creative, setup and management."
+        },
+        {
+          "q": "How much should I spend on ads?",
+          "a": "Enough to get meaningful data in your area, which for most local businesses starts at a few hundred dollars a month. We recommend a starting budget on the strategy call."
+        },
+        {
+          "q": "What is AI search visibility?",
+          "a": "More people ask ChatGPT, Gemini and Perplexity for recommendations. We structure your site, profile and listings so those assistants can find and recommend you."
+        },
+        {
+          "q": "Do I have to sign a long contract?",
+          "a": "No. Monthly plans are month to month."
+        }
+      ],
+      "related": [
+        "content",
+        "websites",
+        "automations"
+      ]
+    },
+    {
+      "slug": "content",
+      "group": "grow",
+      "icon": "video",
+      "name": "Content & Creative",
+      "menuLine": "Photo, video, social and live",
+      "title": "Photo, Video, Social & Live Streaming | SWFT Studios",
+      "description": "On-site photography, short-form video, brand films, social media management and live streaming from SWFT Studios in NYC and North Jersey.",
+      "h1": "Content that stops the <span class=\"mf-script\">scroll.</span>",
+      "lead": "On-site photo, short-form video, brand films, social media and live streaming, <span class=\"is-muted\">planned around what your audience already responds to.</span>",
+      "outcomes": [
+        {
+          "title": "Real, not stock",
+          "text": "Your space, your team and your work, shot on site and edited for every platform."
+        },
+        {
+          "title": "Weeks of posts from one shoot",
+          "text": "Every shoot is planned to fill your site, profile, ads and feed."
+        },
+        {
+          "title": "Always active",
+          "text": "A monthly plan keeps your feed and Google profile fresh without you thinking about it."
+        }
+      ],
+      "includes": [
+        "On-site brand and product photography",
+        "Short-form vertical video for Reels, TikTok and Shorts",
+        "Brand films with social cutdowns",
+        "Ad creative made for Meta and Google",
+        "Social media management: planning, posting and replies",
+        "Single and multi-camera live streaming",
+        "Edited files sized for web, social and print",
+        "Monthly content plans based on what performed"
+      ],
+      "steps": [
+        {
+          "title": "Learn",
+          "text": "We study your best posts, reviews and competitors to see what your audience stops for."
+        },
+        {
+          "title": "Plan",
+          "text": "Shot lists and scripts built around those winners."
+        },
+        {
+          "title": "Shoot & edit",
+          "text": "One efficient shoot day produces weeks of on-brand content."
+        },
+        {
+          "title": "Post & learn",
+          "text": "Results shape next month's plan, so every round gets sharper."
+        }
+      ],
+      "investment": 2,
+      "priceNote": "From $350 one-time or $400/mo",
+      "pricingOffers": [
+        "photo-session",
+        "short-form-pack",
+        "brand-film",
+        "managed-social",
+        "livestream-single"
+      ],
+      "faq": [
+        {
+          "q": "Where do you shoot?",
+          "a": "On site at your business across New York City and North Jersey. Travel outside that area is quoted separately."
+        },
+        {
+          "q": "Do I own the photos and videos?",
+          "a": "Yes. You get full commercial use of everything we deliver for your business."
+        },
+        {
+          "q": "How fast do we get the files?",
+          "a": "Photos and short videos are usually delivered within 5 to 7 business days. Brand films take longer and are scheduled up front."
+        },
+        {
+          "q": "Can you run our social accounts?",
+          "a": "Yes. Managed Social covers planning, writing, posting and replying to comments every month."
+        }
+      ],
+      "related": [
+        "marketing",
+        "websites",
+        "ai-employees"
+      ]
+    }
+  ],
+  "flow": {
+    "_readme": "The animated 'How it works for…' section on the homepage and /services.html. One stage per step of the SWFT Method; every industry needs exactly one card per stage. Rendered by build:services, animated by js/swft-flow.js.",
+    "title": "Strategic Workflows Facilitating Transformation.",
+    "footer": "<b>From first scroll to repeat customer.</b> One team runs every step.",
+    "stages": [
+      {
+        "key": "seen",
+        "stage": "Get seen",
+        "service": "Ads & content",
+        "icon": "megaphone",
+        "href": "/marketing.html"
+      },
+      {
+        "key": "capture",
+        "stage": "Capture",
+        "service": "Website",
+        "icon": "browser",
+        "href": "/websites.html"
+      },
+      {
+        "key": "convert",
+        "stage": "Convert",
+        "service": "AI employee",
+        "icon": "sparkle",
+        "href": "/ai-employees.html"
+      },
+      {
+        "key": "nurture",
+        "stage": "Nurture",
+        "service": "Automations",
+        "icon": "bolt",
+        "href": "/automations.html"
+      },
+      {
+        "key": "repeat",
+        "stage": "Repeat",
+        "service": "Custom software",
+        "icon": "layers",
+        "href": "/software.html"
+      }
+    ],
+    "industries": [
+      {
+        "id": "home-services",
+        "label": "Home services",
+        "cards": [
+          {
+            "title": "Sees your Reel on Instagram",
+            "text": "Before-and-after install, shot on site"
+          },
+          {
+            "title": "Lands on your website",
+            "text": "Clear offer · book in two taps"
+          },
+          {
+            "title": "Asks for a quote at 10pm",
+            "text": "AI employee answers and books the visit"
+          },
+          {
+            "title": "Gets reminders and a review ask",
+            "text": "No-show avoided · review requested"
+          },
+          {
+            "title": "Becomes a repeat customer",
+            "text": "Job, invoice and next service in one system"
+          }
+        ]
+      },
+      {
+        "id": "restaurants",
+        "label": "Restaurants",
+        "cards": [
+          {
+            "title": "Finds you on Google Maps",
+            "text": "Fresh photos and posts on your profile"
+          },
+          {
+            "title": "Opens your menu site",
+            "text": "Fast menu · order or reserve online"
+          },
+          {
+            "title": "DMs about a party of 12",
+            "text": "AI employee checks the date and books it"
+          },
+          {
+            "title": "Gets a thank-you text",
+            "text": "Review request · offer for their next visit"
+          },
+          {
+            "title": "Comes back for catering",
+            "text": "Guests, orders and events in one place"
+          }
+        ]
+      },
+      {
+        "id": "retail",
+        "label": "Retail & e-commerce",
+        "cards": [
+          {
+            "title": "Clicks a Meta ad",
+            "text": "Short-form product video, made by us"
+          },
+          {
+            "title": "Shops your store",
+            "text": "Shopify store · clean checkout"
+          },
+          {
+            "title": "Asks about sizing",
+            "text": "AI employee answers on the spot"
+          },
+          {
+            "title": "Leaves a full cart",
+            "text": "Reminder email brings them back to pay"
+          },
+          {
+            "title": "Reorders in one tap",
+            "text": "Orders, stock and loyalty kept in sync"
+          }
+        ]
+      },
+      {
+        "id": "churches",
+        "label": "Churches",
+        "cards": [
+          {
+            "title": "Watches your livestream",
+            "text": "Multi-camera Sunday service"
+          },
+          {
+            "title": "Visits your website",
+            "text": "Plan a visit · give online"
+          },
+          {
+            "title": "Asks about kids' programs",
+            "text": "AI assistant answers any time"
+          },
+          {
+            "title": "Gets a welcome series",
+            "text": "Texts and emails after the first visit"
+          },
+          {
+            "title": "Joins a small group",
+            "text": "Members, groups and giving in one system"
+          }
+        ]
+      }
+    ]
+  }
+}

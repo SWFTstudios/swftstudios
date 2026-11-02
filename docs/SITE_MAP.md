@@ -29,7 +29,10 @@ Every public page has one job in the funnel. The site's message is the SWFT Meth
 | Route | Job |
 | --- | --- |
 | `/` | Homepage: "Get seen. Get chosen. Get booked." hero with the live booking pill, the 3D project carousel, services with starting prices, the five stages, proof, FAQ |
-| `/services.html` | Services in two categories, Digital (web design and development, app design and development, analytics, marketing) and Visual (photography, videography, social media management, live streaming), with each offer's starting price; then the SWFT Method stages each service covers |
+| `/services.html` | Build / Automate / Grow service cards linking to the seven service pages, then the priced packages in two categories, Digital (web design and development, app design and development, analytics, marketing) and Visual (photography, videography, social media management, live streaming), with each offer's starting price; then the SWFT Method stages each service covers |
+| `/software.html`, `/apps.html`, `/websites.html` | Build services (generated from `data/services.json`, `npm run build:services`) |
+| `/ai-employees.html`, `/automations.html` | Automate services |
+| `/marketing.html`, `/content.html` | Grow services |
 | `/pricing.html` | Pricing: Digital / Visual tabs → services → offers, each with its price, deliverables and what is not included. A One-time / Monthly switch (pinned under the nav) shows each service's one-time or monthly offers; `?billing=monthly` opens on monthly. Rendered from `data/pricing.json` |
 | `/work.html` | Work: every project in the 3D carousel (filter by category), then the full project index. Built from `data/portfolio-projects.json` by `npm run build:mono` |
 | `/blog.html` | Blog: marketing guides (`/blog/<slug>.html`), listed from the `tips` entries in `data/case-studies-index.json` |
@@ -39,6 +42,7 @@ Every public page has one job in the funnel. The site's message is the SWFT Meth
 | `/book/` | Stripe booking for each offer (hot lead / sale) |
 | `/about.html` | About: the founders and how SWFT works |
 | `/locations/` | Local SEO hub |
+| `/account.html` | Sign up for email updates (films, blog, products) and client log-in |
 | `/portal/onboard.html` | Client portal signup |
 | `/portal/login.html` | Client portal sign-in |
 | `/portal/dashboard.html` | Client project + performance dashboard |

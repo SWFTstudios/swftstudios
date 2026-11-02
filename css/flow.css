@@ -1,0 +1,123 @@
+/* ============================================================
+   "How it works for <industry>": the SWFT Method walkthrough.
+   Markup: scripts/build-service-pages.mjs (svc:flow block).
+   Motion: js/swft-flow.js adds .is-playing to .sf-flow and moves
+   .is-done / .is-active along the steps. Without JS (or with reduced
+   motion) every step shows as done.
+   ============================================================ */
+.sf-flow {
+  --sf-n: 5;
+  --sf-ok: #3ddc84;
+  box-sizing: border-box; position: relative;
+  border: 1px solid var(--mf-line); border-radius: 28px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 60%),
+    var(--mf-surface);
+  padding: clamp(1.25rem, 2.6vw, 2.25rem) clamp(1rem, 2.6vw, 2.25rem) 0;
+  font-family: var(--mf-font); color: var(--mf-text);
+}
+.sf-flow *, .sf-flow *::before, .sf-flow *::after { box-sizing: border-box; }
+
+/* Top row: tag + industry tabs */
+.sf-flow__top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem 1.5rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+.sf-flow__tag { display: inline-flex; align-items: center; gap: 0.7rem; margin: 0; color: var(--mf-muted); font-size: 1.05rem; }
+.sf-flow__tabs {
+  display: flex; gap: 0.25rem; padding: 0.3rem; border-radius: 999px;
+  background: var(--mf-bg); border: 1px solid var(--mf-line);
+  max-width: 100%; overflow-x: auto; scrollbar-width: none;
+}
+.sf-flow__tabs::-webkit-scrollbar { display: none; }
+.sf-flow__tab {
+  flex: none; padding: 0.6rem 1.1rem; border-radius: 999px; border: 0; cursor: pointer;
+  background: transparent; color: var(--mf-muted); font: 500 0.98rem/1.1 var(--mf-font); letter-spacing: -0.01em;
+  transition: background 0.25s, color 0.25s;
+}
+.sf-flow__tab:hover { color: var(--mf-text); }
+.sf-flow__tab[aria-selected="true"] { background: #fff; color: #050505; }
+.sf-flow__tab:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Steps */
+.sf-flow__panel[hidden] { display: none; }
+.sf-flow__steps {
+  position: relative; list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(var(--sf-n), minmax(0, 1fr)); gap: clamp(0.6rem, 1.4vw, 1.25rem);
+}
+/* The line runs between the first and last node centres */
+.sf-flow__track {
+  position: absolute; top: 2rem; height: 2px; pointer-events: none;
+  left: calc(100% / var(--sf-n) / 2); right: calc(100% / var(--sf-n) / 2);
+  background: var(--mf-line);
+}
+.sf-flow__fill {
+  position: absolute; inset: 0 auto 0 0; width: 100%; background: #fff;
+  transition: width 0.9s var(--mf-ease);
+}
+.sf-flow__step { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.sf-flow__node {
+  position: relative; z-index: 1; display: grid; place-items: center;
+  width: 4rem; height: 4rem; border-radius: 50%;
+  background: #fff; color: #050505; border: 1px solid #fff;
+  transition: background 0.4s, color 0.4s, border-color 0.4s, box-shadow 0.4s;
+}
+.sf-flow__icon { display: grid; place-items: center; }
+.sf-flow__service {
+  margin: 1rem 0 1.1rem; font-family: var(--mf-mono); font-size: 0.78rem; letter-spacing: 0.1em;
+  text-transform: uppercase; text-align: center; color: var(--mf-text); text-decoration: none;
+  transition: color 0.4s;
+}
+.sf-flow__service:hover { text-decoration: underline; text-underline-offset: 4px; }
+.sf-flow__service:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.sf-flow__card {
+  position: relative; width: 100%; flex: 1;
+  padding: 1rem 2.6rem 1.1rem 1.05rem; border-radius: 16px;
+  background: var(--mf-surface-2); border: 1px solid var(--mf-line);
+  transition: opacity 0.5s, filter 0.5s, transform 0.5s var(--mf-ease), border-color 0.4s;
+}
+.sf-flow__stage { margin: 0 0 0.45rem; font-family: var(--mf-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mf-muted); }
+.sf-flow__card h3 { margin: 0; font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
+.sf-flow__card p:last-of-type { margin: 0.4rem 0 0; color: var(--mf-muted); font-size: 0.92rem; line-height: 1.4; }
+.sf-flow__check { position: absolute; top: 0.9rem; right: 0.85rem; color: var(--sf-ok); transition: opacity 0.35s, transform 0.35s var(--mf-ease); }
+
+/* Playing: upcoming steps wait, blurred */
+.sf-flow.is-playing .sf-flow__step:not(.is-done):not(.is-active) .sf-flow__node { background: transparent; color: var(--mf-muted); border-color: var(--mf-line-strong); }
+.sf-flow.is-playing .sf-flow__step:not(.is-done):not(.is-active) .sf-flow__service { color: var(--mf-muted); }
+.sf-flow.is-playing .sf-flow__step:not(.is-done):not(.is-active) .sf-flow__card { opacity: 0.45; filter: blur(5px); transform: translateY(6px); }
+.sf-flow.is-playing .sf-flow__step:not(.is-done) .sf-flow__check { opacity: 0; transform: scale(0.5); }
+.sf-flow.is-playing .sf-flow__step.is-active .sf-flow__node { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 0 16px rgba(255, 255, 255, 0.04); animation: sf-pulse 1.6s var(--mf-ease) infinite; }
+.sf-flow.is-playing .sf-flow__step.is-active .sf-flow__card { border-color: var(--mf-line-strong); }
+.sf-flow.is-playing .sf-flow__step.is-done .sf-flow__card { border-color: var(--mf-line); }
+@keyframes sf-pulse { 50% { box-shadow: 0 0 0 11px rgba(255, 255, 255, 0.12), 0 0 0 22px rgba(255, 255, 255, 0.03); } }
+
+.sf-flow__foot {
+  margin: clamp(1.75rem, 3vw, 2.5rem) 0 0; padding: 1.4rem 0 1.6rem; border-top: 1px solid var(--mf-line);
+  text-align: center; color: var(--mf-muted); font-size: 1.05rem;
+}
+.sf-flow__foot b { color: var(--mf-text); font-weight: 600; }
+
+/* Tablets: tighter cards */
+@media (max-width: 1100px) {
+  .sf-flow__node { width: 3.25rem; height: 3.25rem; }
+  .sf-flow__track { top: 1.625rem; }
+  .sf-flow__card { padding-right: 1rem; }
+  .sf-flow__check { display: none; }
+}
+
+/* Phones: vertical timeline, node on the left */
+@media (max-width: 760px) {
+  .sf-flow__top { flex-direction: column; align-items: flex-start; }
+  .sf-flow__steps { grid-template-columns: 1fr; gap: 1rem; }
+  .sf-flow__track { top: 1.6rem; bottom: 1.6rem; left: 1.6rem; right: auto; width: 2px; height: auto; }
+  .sf-flow__fill { inset: 0 0 auto 0; width: 100% !important; height: var(--sf-fill, 100%); transition: height 0.9s var(--mf-ease); }
+  .sf-flow__step {
+    display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); column-gap: 1rem; align-items: start;
+  }
+  .sf-flow__node { width: 3.2rem; height: 3.2rem; grid-row: 1 / span 2; }
+  .sf-flow__service { margin: 0.2rem 0 0.5rem; text-align: left; }
+  .sf-flow__card { grid-column: 2; padding-right: 2.6rem; }
+  .sf-flow__check { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-flow__fill, .sf-flow__card, .sf-flow__node, .sf-flow__check { transition: none; }
+  .sf-flow.is-playing .sf-flow__step.is-active .sf-flow__node { animation: none; }
+}

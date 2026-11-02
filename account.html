@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sign Up or Log In | SWFT Studios</title>
+  <meta name="description" content="Get an email when SWFT Studios releases a new film, publishes a blog post or launches a product. Clients log in here to see their project dashboard.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.swftstudios.com/account.html">
+  <meta property="og:title" content="Sign Up or Log In | SWFT Studios">
+  <meta property="og:description" content="New films, blog posts and products in your inbox. Clients: your project dashboard.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.swftstudios.com/account.html">
+  <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="referrer" content="no-referrer">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-notify">
+  <link rel="stylesheet" href="/css/account.css?v=20261103-account">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="mf-page">
+  <div id="swft-nav" data-active="account"></div>
+
+  <main id="main">
+    <section class="mf-hero mf-hero--page" aria-labelledby="account-title">
+      <div class="mf-wrap">
+        <div class="mf-hero__top">
+          <p class="mf-label">(Your SWFT account)</p>
+        </div>
+        <h1 class="mf-h1" id="account-title">Stay in the <span class="mf-script">loop.</span></h1>
+        <p class="mf-lead">Get an email when we release a film, publish a guide or launch something new. <span class="is-muted">Clients, log in for your project dashboard.</span></p>
+        <p class="mf-status ac-banner" id="ac-banner" role="status" hidden></p>
+      </div>
+    </section>
+
+    <section class="mf-section mf-section--tight" aria-label="Sign up or log in">
+      <div class="mf-wrap">
+        <div class="ac-grid">
+
+          <!-- Updates sign-up (everyone) -->
+          <article class="ac-card" id="updates" aria-labelledby="updates-title">
+            <p class="mf-label mf-label--muted">(For everyone)</p>
+            <h2 class="ac-title" id="updates-title">Get the drops</h2>
+            <p class="ac-sub">No spam, no daily blasts. Just an email when there&rsquo;s something new worth your time.</p>
+            <form id="sub-form" class="mf-form" novalidate>
+              <div class="ac-hp" aria-hidden="true">
+                <label for="sub-company">Company</label>
+                <input type="text" id="sub-company" name="company" tabindex="-1" autocomplete="off">
+              </div>
+              <fieldset class="mf-field">
+                <legend>Email me about <span class="req">*</span></legend>
+                <div class="mf-chips">
+                  <label class="mf-chip"><input type="checkbox" name="interests" value="videos" checked><span>New films &amp; videos</span></label>
+                  <label class="mf-chip"><input type="checkbox" name="interests" value="blog" checked><span>Blog posts &amp; guides</span></label>
+                  <label class="mf-chip"><input type="checkbox" name="interests" value="products" checked><span>New products &amp; offers</span></label>
+                </div>
+              </fieldset>
+              <div class="mf-field-row">
+                <div class="mf-field">
+                  <label for="sub-name">First name</label>
+                  <input type="text" id="sub-name" name="name" autocomplete="given-name" maxlength="80">
+                </div>
+                <div class="mf-field">
+                  <label for="sub-email">Email <span class="req">*</span></label>
+                  <input type="email" id="sub-email" name="email" required autocomplete="email" maxlength="320">
+                </div>
+              </div>
+              <p class="mf-status" id="sub-status" role="status" hidden></p>
+              <div class="ac-actions">
+                <button type="submit" class="mf-btn" id="sub-submit">Sign me up <span class="mf-arrow" aria-hidden="true">↗</span></button>
+                <p class="ac-fine">We&rsquo;ll email you a link to confirm. Every email has a one-click unsubscribe.</p>
+              </div>
+            </form>
+          </article>
+
+          <!-- Member log-in (clients) -->
+          <article class="ac-card" id="login" aria-labelledby="login-title">
+            <p class="mf-label mf-label--muted">(Clients &amp; members)</p>
+            <h2 class="ac-title" id="login-title">Log in to your dashboard</h2>
+            <p class="ac-sub">Project status, billing and how your site is performing, in one place.</p>
+
+            <div class="ac-signed" id="ac-signed" hidden>
+              <p class="ac-signed__who">Signed in as <b id="ac-signed-email"></b></p>
+              <div class="mf-actions">
+                <a class="mf-btn" id="ac-dash" href="/portal/dashboard.html">Open my dashboard <span class="mf-arrow" aria-hidden="true">↗</span></a>
+                <button type="button" class="mf-btn mf-btn--ghost" id="ac-logout">Log out</button>
+              </div>
+            </div>
+
+            <form id="login-form" class="mf-form" novalidate>
+              <div class="mf-field">
+                <label for="login-email">Email <span class="req">*</span></label>
+                <input type="email" id="login-email" name="email" required autocomplete="username" maxlength="320">
+              </div>
+              <div class="mf-field">
+                <label for="login-password">Password <span class="req">*</span></label>
+                <input type="password" id="login-password" name="password" required autocomplete="current-password" minlength="10">
+              </div>
+              <p class="mf-status" id="login-status" role="status" hidden></p>
+              <div class="ac-actions">
+                <button type="submit" class="mf-btn" id="login-submit">Log in <span class="mf-arrow" aria-hidden="true">↗</span></button>
+              </div>
+              <ul class="ac-links">
+                <li><a class="mf-link" href="/portal/onboard.html">First time? Set your password</a></li>
+                <li>Forgot your password? Email <a class="mf-link" href="mailto:hello@swftstudios.com?subject=Portal%20password%20reset">hello@swftstudios.com</a> and we&rsquo;ll send a reset link.</li>
+                <li>Not a client yet? <a class="mf-link" href="/services.html">See what we do</a></li>
+              </ul>
+            </form>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/swft-analytics.js?v=20260930b" defer></script>
+  <script src="/js/swft-nav.js?v=20261103-notify" defer></script>
+  <script src="/js/account.js?v=20261103-account" defer></script>
+</body>
+</html>
