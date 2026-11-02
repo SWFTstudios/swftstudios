@@ -136,11 +136,46 @@ html body.ps-page .ps-title .ps-accent {
   -webkit-tap-highlight-color: transparent;
 }
 .mf-l {
+  position: relative;
   display: inline-block;
   transform: translateY(var(--y, 0)) rotate(var(--r, 0deg));
   transform-origin: 50% 70%;
 }
 .mf-funky-pre .mf-l { opacity: 0; }
+/* Paint drips hanging off a few letters. background: currentColor, so they take the
+   letter's color, follow click color changes and roll through the rainbow with it. */
+.mf-drip {
+  position: absolute;
+  top: var(--top, 72%);
+  left: var(--x, 50%);
+  width: 0.075em;
+  height: var(--len, 0.3em);
+  margin-left: -0.0375em;
+  border-radius: 0 0 0.04em 0.04em;
+  background: currentColor;
+  transform-origin: 50% 0;
+  pointer-events: none;
+}
+.mf-drip::after { /* the bead at the bottom of the run */
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.045em;
+  width: 0.12em;
+  height: 0.13em;
+  margin-left: -0.06em;
+  border-radius: 50% 50% 50% 50% / 45% 45% 55% 55%;
+  background: inherit;
+}
+.mf-funky-pre .mf-drip { transform: scaleY(0); }
+.is-funky.is-in .mf-drip {
+  animation: mf-drip-run var(--dur, 1.5s) cubic-bezier(0.5, 0, 0.85, 0.55) var(--delay, 0.9s) both;
+}
+@keyframes mf-drip-run {
+  0%   { transform: scaleY(0); }
+  70%  { transform: scaleY(0.92); }
+  100% { transform: scaleY(1); }
+}
 .is-funky.is-in .mf-l {
   animation: mf-letter-pop 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i, 0) * 55ms) both;
 }
@@ -189,6 +224,8 @@ html body.ps-page .ps-title .ps-accent {
 }
 @media (prefers-reduced-motion: reduce) {
   .mf-funky-pre .mf-l { opacity: 1; }
+  .mf-funky-pre .mf-drip,
+  .is-funky.is-in .mf-drip { transform: none; animation: none; }
   .is-funky.is-in .mf-l,
   .is-funky.is-in:hover .mf-l,
   .is-funky.is-rainbow .mf-l { animation: none; }

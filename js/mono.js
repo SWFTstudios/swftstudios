@@ -167,6 +167,50 @@
     });
   }
 
+  // 2-3 drips per word, hanging from the bottom of a letter's stroke (measured baseline),
+  // with varied length and timing so it reads hand-painted rather than stamped.
+  var DRIP_LEN = [0.34, 0.22, 0.42, 0.28];
+  // Where each lowercase letter's stroke meets the baseline in this pen font (% of the
+  // letter's width). Letters with tails (g j p q y) never drip.
+  var DRIP_SPOT = { a: 72, b: 48, c: 52, d: 74, e: 50, f: 34, h: 22, i: 50, k: 24, l: 50, m: 18, n: 22, o: 50, r: 26, s: 50, t: 56, u: 72, v: 50, w: 30, x: 22, z: 55 };
+  var NO_DRIP = /[gjpqy]/;
+
+  function baselineRatio(letter) {
+    var probe = document.createElement("span");
+    probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
+    letter.appendChild(probe);
+    var r = letter.offsetHeight ? probe.offsetTop / letter.offsetHeight : 0.8;
+    letter.removeChild(probe);
+    return r;
+  }
+
+  function addDrips(letters) {
+    var paintable = letters.filter(function (l) {
+      var ch = l.textContent;
+      return /[a-z0-9]/i.test(ch) && !NO_DRIP.test(ch);
+    });
+    if (paintable.length < 2) return;
+    var top = (baselineRatio(paintable[0]) * 100 - 6).toFixed(1) + "%"; // tuck slightly into the stroke
+    var count = paintable.length < 5 ? 2 : 3;
+    var used = [];
+    for (var k = 0; k < count; k++) {
+      var l = paintable[Math.min(paintable.length - 1, Math.round(((k + 0.5) * paintable.length) / count - 0.5))];
+      if (used.indexOf(l) !== -1) continue;
+      used.push(l);
+      var i = Number(l.style.getPropertyValue("--i")) || 0;
+      var spot = DRIP_SPOT[l.textContent.toLowerCase()];
+      var d = document.createElement("i");
+      d.className = "mf-drip";
+      d.setAttribute("aria-hidden", "true");
+      d.style.setProperty("--top", top);
+      d.style.setProperty("--x", (spot == null ? 50 : spot) + "%");
+      d.style.setProperty("--len", DRIP_LEN[(i + k) % DRIP_LEN.length] + "em");
+      d.style.setProperty("--delay", (0.75 + i * 0.055 + k * 0.22).toFixed(2) + "s");
+      d.style.setProperty("--dur", (1.2 + ((i + k) % 3) * 0.3).toFixed(2) + "s");
+      l.appendChild(d);
+    }
+  }
+
   function initAccent() {
     var words = document.querySelectorAll(".mf-script, .ps-title .ps-accent");
     if (!words.length) return;
@@ -199,6 +243,7 @@
         letters.push(l);
         n++;
       });
+      addDrips(letters);
       el.classList.add("is-funky");
       bindAccentClicks(el, letters);
       if (io) {

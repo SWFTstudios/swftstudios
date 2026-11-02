@@ -5,6 +5,7 @@
 ### Changed
 - The accent word in headlines (`.mf-script` on Mono pages, `.ps-accent` on booking pages) keeps the logo's pen script but is now bold (a stroke in its own color; the font has no bold weight), in one color set by `--mf-accent-color` in `css/mono.css` (hot pink by default).
 - Funky: `js/mono.js` (`initAccent`) gives each letter its own tilt and lift, and the letters pop in with a bounce when the word scrolls into view. Hovering wiggles them.
+- Graffiti paint drips: 2-3 per word hang from the bottom of a letter's stroke (baseline measured in the browser; letters with tails never drip) and run down after the pop. They take their letter's color, so they follow click colors and the rainbow.
 - **Click** the word to cycle its color. **Five clicks within ~1.8s** sets off a rainbow that rolls across the letters, each letter glowing in its own color and hopping, then it settles back to the color it had before the burst.
 - The footer "SWFT studios" wordmark is unchanged.
 
