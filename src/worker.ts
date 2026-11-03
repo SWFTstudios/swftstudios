@@ -23,6 +23,8 @@ import * as fnPortalMe from "../functions/api/portal/me.js";
 // @ts-expect-error JS module without types
 import * as fnPortalLogin from "../functions/api/portal/login.js";
 // @ts-expect-error JS module without types
+import * as fnPortalOnboard from "../functions/api/portal/onboard.js";
+// @ts-expect-error JS module without types
 import * as fnAdminOverview from "../functions/api/admin/overview.js";
 // @ts-expect-error JS module without types
 import * as fnAdminEmails from "../functions/api/admin/emails.js";
@@ -677,6 +679,7 @@ export default {
     const SHARED_FNS: Record<string, Record<string, unknown>> = {
       "/api/portal/me": fnPortalMe,
       "/api/portal/login": fnPortalLogin,
+      "/api/portal/onboard": fnPortalOnboard,
       "/api/admin/overview": fnAdminOverview,
       "/api/admin/emails": fnAdminEmails,
       "/api/admin/notes": fnAdminNotes,

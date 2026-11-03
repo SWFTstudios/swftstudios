@@ -1,5 +1,9 @@
 /**
  * POST /api/portal/onboard — create password (or complete invite) and start session.
+ *
+ * An existing account without a password can only be claimed with its invite
+ * token. Without one we answer neutrally (202, code "check_email"), start no
+ * session, and re-send the invite to the account's own email (rate-limited).
  */
 import {
   isValidEmail,
@@ -9,6 +13,10 @@ import {
   str,
 } from "../../_lib/portal-auth.js";
 import { createSession, onboardUser, requireDb } from "../../_lib/portal-db.js";
+import { resendInviteIfAllowed } from "../../_lib/portal-invite.js";
+
+export const CHECK_EMAIL_MESSAGE =
+  "Check your email for your invite link. It sets your password and opens your portal.";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -37,6 +45,14 @@ export async function onRequestPost(context) {
 
   try {
     const result = await onboardUser(db, { email, password, inviteToken });
+    if (result.code === "invite_required") {
+      try {
+        await resendInviteIfAllowed(db, env, result.user);
+      } catch (err) {
+        console.error("portal invite re-send failed", err);
+      }
+      return json({ ok: false, code: "check_email", error: CHECK_EMAIL_MESSAGE }, 202);
+    }
     if (result.error) {
       return json({ ok: false, error: result.error, code: result.code }, 409);
     }

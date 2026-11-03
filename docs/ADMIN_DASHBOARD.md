@@ -67,7 +67,7 @@ origin check, notes create/list/delete, outreach degrade, Resend listing, and th
 
 Lists every client project with its progress. **Open** shows milestones (change status inline, add, remove), client-visible updates, and private notes. **View as client ↗** opens `/portal/dashboard.html?preview=<projectId>`: the client dashboard rendered from `GET /api/admin/project?id=…&metrics=1`, the same view the client gets from `GET /api/portal/project`, with a banner. Admin notes are never part of that view.
 
-Writes: `POST /api/admin/project` with `action` = `milestone_status`, `add_milestone`, `delete_milestone`, `add_update`, `delete_update`, `rename` (admin session + same-origin).
+Writes: `POST /api/admin/project` with `action` = `milestone_status`, `add_milestone`, `delete_milestone`, `add_update`, `delete_update`, `rename`, `send_invite` (admin session + same-origin). `send_invite { projectId }` issues a one-time set-password link for a client who has no password yet, emails it when Resend is configured and returns it as `inviteUrl`.
 
 Storage: migration `0004_project_progress.sql` (`project_milestones`, `project_updates`, `projects.name`, `projects.is_demo`). Before it is applied, the dashboard still loads; progress shows as unavailable.
 
@@ -80,4 +80,4 @@ npx wrangler d1 migrations apply swft-portal --remote
 npx wrangler d1 execute swft-portal --remote --file scripts/seed-demo-project.sql
 ```
 
-Then sign in as the demo client once at `/portal/onboard.html` (email + a new password), and as the owner use **Projects → View as client**.
+The demo client has no password, so typing its email at `/portal/onboard.html` only re-sends an invite. To sign in as the demo client the first time: as the owner, open the demo project in **Projects** and click **Send invite**. It emails the one-time link to elombekisala@gmail.com and also shows it to you; open it and choose a password. After that use `/portal/login.html`. To see the client view without signing in as them, use **Projects → View as client**.

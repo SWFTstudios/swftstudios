@@ -19,11 +19,11 @@
       <header class="ps-hero ps-hero--left">
         <p class="ps-eyebrow">Client portal</p>
         <h1 class="ps-title">Create your account</h1>
-        <p class="ps-lead">Use the email from your booking. Choose a password (at least 10 characters). We store a secure hash only, never your password in plain text.</p>
+        <p class="ps-lead">Booked with us? Open the link in your invite email, then choose a password (at least 10 characters). We store a secure hash only, never your password in plain text.</p>
       </header>
 
       <div class="portal-card">
-        <p id="paid-note" class="portal-msg portal-msg--ok" hidden>Payment received. Set your password to open the dashboard.</p>
+        <p id="paid-note" class="portal-msg portal-msg--ok" hidden>Payment received. We emailed you a link to set your password. Open it to finish setting up your portal.</p>
         <form id="onboard-form" class="portal-form" novalidate>
           <input type="hidden" id="invite-token" name="inviteToken" value="">
           <label>
@@ -85,6 +85,10 @@
             inviteToken: tokenEl.value || undefined,
           }),
         });
+        if (result.data && result.data.code === "check_email") {
+          SWFTPortal.showMsg(msg, result.data.error, "info");
+          return;
+        }
         if (!result.res.ok || !result.data.ok) {
           SWFTPortal.showMsg(msg, (result.data && result.data.error) || "Could not create account.", "error");
           return;

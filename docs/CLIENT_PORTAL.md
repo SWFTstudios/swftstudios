@@ -6,7 +6,7 @@ Client-facing account area for SWFT Studios customers: email + password sign-in,
 
 | Route | Purpose |
 | --- | --- |
-| [`/portal/onboard.html`](../portal/onboard.html) | Create password (after Stripe or with invite token) |
+| [`/portal/onboard.html`](../portal/onboard.html) | Set password from the invite link (paid clients), or create a new account |
 | [`/portal/login.html`](../portal/login.html) | Sign in |
 | [`/portal/dashboard.html`](../portal/dashboard.html) | Project status + last-30-day traffic metrics |
 
@@ -26,7 +26,26 @@ Database id: `dfd16777-238c-4679-a8e2-68a5bf9b707b` (binding name **`DB`**).
 1. Client pays via `/book/` Checkout (reusable Price IDs) or a [Payment Link](../data/stripe-catalog.json).
 2. Stripe sends `checkout.session.completed` to `POST /api/stripe-webhook`.
 3. Webhook upserts user + project and emails a set-password link (Resend) when the user has no password yet.
-4. Client completes [`/portal/onboard.html`](../portal/onboard.html) and lands on the dashboard.
+4. Client opens the link (`/portal/onboard.html?token=…&email=…`), sets a password and lands on the dashboard.
+
+## Onboarding rules (`POST /api/portal/onboard`)
+
+An account that exists but has **no password** (created by the Stripe webhook, or seeded by staff) can only be claimed with its invite token. Knowing the email is not enough.
+
+| Situation | Result |
+| --- | --- |
+| Valid invite token | That account's password is set, session starts. All its other invite tokens are deleted. |
+| Account has no password, no / bad / expired / used token | `202 { ok: false, code: "check_email", error: "Check your email for your invite link…" }`. No session, nothing changed. A fresh invite is emailed **to the account's address** if none was issued in the last 10 minutes (`INVITE_RESEND_MINUTES`) and Resend is configured. |
+| Account has a password | Same as sign-in: right password → session, wrong → `409 exists`. |
+| No account for that email | A new account is created from email + password (no project attached). |
+
+Invite tokens: 24 random bytes, stored as SHA-256, valid 7 days, single-use (redeemed with one `DELETE … RETURNING`). Code: `onboardUser` in [`functions/_lib/portal-db.js`](../functions/_lib/portal-db.js), invite email / re-send / staff issue in [`functions/_lib/portal-invite.js`](../functions/_lib/portal-invite.js). The Worker serves this route from the same Pages Function. Tests: `tests/admin/onboard.test.mjs`.
+
+> Open question for the owner: brand-new self-signup by email + password is still allowed. Nothing verifies that the person owns the email, so someone could register `client@example.com` before that client pays, and the webhook would then attach the paid project to that account. If self-signup isn't needed, turn the last row into the same `check_email` answer (or require an email-verification link).
+
+## Staff: re-send or hand over an invite
+
+Admin dashboard → **Projects** → open the project → **Send invite**. It emails a fresh one-time link to the client (when `RESEND_API_KEY` is set) and shows the link so you can pass it on yourself. Only works while the client has no password; after that they use [`/portal/login.html`](../portal/login.html). API: `POST /api/admin/project { "action": "send_invite", "projectId": "…" }` (admin session, same-origin).
 
 Catalog (Products, Prices, Payment Links): [`data/stripe-catalog.json`](../data/stripe-catalog.json).
 
@@ -118,5 +137,6 @@ npx wrangler pages deploy . --project-name=swftstudios-website
 ```bash
 npx wrangler d1 migrations apply swft-portal --local
 npx wrangler dev
-# Open /portal/onboard.html → create account → /portal/dashboard.html
+# Open /portal/onboard.html → create a new account (new email) → /portal/dashboard.html
+# Accounts without a password (webhook / seed) need an invite link: Admin → Projects → Send invite
 ```

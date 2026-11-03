@@ -100,19 +100,20 @@ export async function createInviteToken(db, userId) {
   return raw;
 }
 
+/**
+ * Single-use: the row is deleted in the same statement that reads it, so two
+ * concurrent requests can't both redeem one token. Returns the user id, or null
+ * for a missing, used or expired token.
+ */
 export async function consumeInviteToken(db, rawToken) {
   if (!rawToken) return null;
   const tokenHash = await sha256Hex(rawToken);
   const row = await db
-    .prepare("SELECT * FROM invite_tokens WHERE token_hash = ?")
+    .prepare("DELETE FROM invite_tokens WHERE token_hash = ? RETURNING user_id, expires_at")
     .bind(tokenHash)
     .first();
   if (!row) return null;
-  if (new Date(row.expires_at).getTime() < Date.now()) {
-    await db.prepare("DELETE FROM invite_tokens WHERE token_hash = ?").bind(tokenHash).run();
-    return null;
-  }
-  await db.prepare("DELETE FROM invite_tokens WHERE token_hash = ?").bind(tokenHash).run();
+  if (new Date(row.expires_at).getTime() < Date.now()) return null;
   return row.user_id;
 }
 
@@ -186,9 +187,20 @@ export async function authenticateUser(db, email, password) {
   return ok ? user : null;
 }
 
+/**
+ * Set a password / sign in from /portal/onboard.
+ *
+ * - Valid invite token: the token's account sets its password (or, if it has
+ *   one already, signs in with it).
+ * - Account exists with a password: same as sign-in.
+ * - Account exists WITHOUT a password (paid via Stripe, or seeded by staff):
+ *   only its invite link can claim it. Returns { code: "invite_required", user }
+ *   and changes nothing; the caller re-sends the invite and answers neutrally.
+ * - No account: a new one is created from email + password.
+ */
 export async function onboardUser(db, { email, password, inviteToken }) {
   const invitedUserId = inviteToken ? await consumeInviteToken(db, inviteToken) : null;
-  let user = invitedUserId ? await findUserById(db, invitedUserId) : await findUserByEmail(db, email);
+  const user = invitedUserId ? await findUserById(db, invitedUserId) : await findUserByEmail(db, email);
 
   if (user) {
     if (user.password_hash) {
@@ -196,7 +208,11 @@ export async function onboardUser(db, { email, password, inviteToken }) {
       if (!ok) return { error: "Account already exists. Sign in instead.", code: "exists" };
       return { user, created: false };
     }
-    await setUserPassword(db, user.id, password);
+    if (!invitedUserId) return { code: "invite_required", user };
+    const claimed = await claimPasswordlessUser(db, user.id, password);
+    if (!claimed) return { error: "Account already exists. Sign in instead.", code: "exists" };
+    // Any other outstanding invite links for this account are now pointless.
+    await db.prepare("DELETE FROM invite_tokens WHERE user_id = ?").bind(user.id).run();
     return { user: await findUserById(db, user.id), created: true };
   }
 
@@ -209,4 +225,16 @@ export async function onboardUser(db, { email, password, inviteToken }) {
     .bind(id, email.toLowerCase(), hash, salt)
     .run();
   return { user: await findUserById(db, id), created: true };
+}
+
+/** Set the first password only if the account still has none. Returns true if it did. */
+async function claimPasswordlessUser(db, userId, password) {
+  const { salt, hash } = await hashPassword(password);
+  const res = await db
+    .prepare(
+      "UPDATE users SET password_hash = ?, password_salt = ? WHERE id = ? AND (password_hash IS NULL OR password_hash = '')"
+    )
+    .bind(hash, salt, userId)
+    .run();
+  return Number(res?.meta?.changes ?? 1) > 0;
 }
