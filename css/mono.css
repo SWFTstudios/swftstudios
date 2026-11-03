@@ -759,3 +759,11 @@ html body.ps-page h2 { letter-spacing: -0.035em; }
 .bs-table tbody th { color: var(--mf-text); font-weight: 600; white-space: nowrap; }
 .bs-table td { color: var(--mf-muted); }
 .bs-table tr:last-child th, .bs-table tr:last-child td { border-bottom: 0; }
+
+/* Blog articles: the Webflow layout nests three padding wrappers and caps the
+   text at 48rem, which left a 270px column on phones. Only the outer
+   .padding-global gutter is kept; the column is capped at 65rem. */
+.uui-section_blog01 > .uui-page-padding,
+.uui-section_blogpost01 > .uui-page-padding-2 { padding-left: 0; padding-right: 0; }
+.uui-section_blogpost01 .uui-max-width-large-2 { max-width: 65rem; }
+.uui-section_blogpost01 .uui-blogpost01_image-wrapper { max-width: 65rem; margin-left: auto; margin-right: auto; }
