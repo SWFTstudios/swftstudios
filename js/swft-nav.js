@@ -53,9 +53,10 @@
     { label: "About",    href: "/about.html",    key: "about" },
     { label: "Blog",     href: "/blog.html",     key: "blog" }
   ];
-  // Menu panel (phones) also lists the secondary pages.
+  // Menu panel (phones): Contact joins the main list; the rest sit in a
+  // compact two-column grid so the whole menu fits on one screen.
+  var CONTACT = { label: "Contact", href: "/contact.html", key: "contact" };
   var MORE = [
-    { label: "Contact",            href: "/contact.html",  key: "contact" },
     { label: "Log in / Sign up",   href: "/account.html",  key: "account" },
     { label: "Films",              href: "/visuals.html",  key: "visuals" },
     { label: "Free Growth Audit",  href: "/growth-audit",  key: "growth-audit" },
@@ -96,7 +97,7 @@
           "</summary>" +
           '<div class="sn-panel-group__items">' +
           g.items.map(function (i) {
-            return '<a class="sn-panel-sub" href="' + i.href + '">' + i.label +
+            return '<a class="sn-panel-sub" href="' + i.href + '"><span>' + i.label + "</span>" +
               (i.from ? '<span class="sn-panel-from">From ' + i.from + "</span>" : "") + "</a>";
           }).join("") +
           "</div></details>";
@@ -124,7 +125,8 @@
 
   function navHTML(active) {
     var top = LINKS.map(function (l) { return link(l, active); }).join("");
-    var panel = LINKS.concat(MORE).map(function (l) { return link(l, active); }).join("");
+    var panelMain = LINKS.concat([CONTACT]).map(function (l) { return link(l, active); }).join("");
+    var panelMore = MORE.map(function (l) { return link(l, active, "sn-panel-more__link"); }).join("");
     var svcActive = active === "services";
     return (
       '<a class="sn-skip" href="#main">Skip to content</a>' +
@@ -144,13 +146,17 @@
       "</nav>" +
       '<div class="sn-scrim" id="sn-scrim"></div>' +
       '<aside class="sn-panel" id="sn-panel" aria-hidden="true" aria-label="Site menu">' +
-        '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
-        '<p class="sn-panel-label">(Menu)</p>' +
-        link({ label: "Home", href: "/", key: "home" }, active) +
-        panelServicesHTML() +
-        panel +
+        '<div class="sn-panel-top">' +
+          '<a href="' + BOOK_URL + '" class="mf-pill sn-panel-pill" target="_blank" rel="noopener" data-mf-booking><span class="mf-dot" aria-hidden="true"></span>Booking now<span data-mf-next></span></a>' +
+          '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
+        "</div>" +
+        '<nav class="sn-panel-main" aria-label="Menu">' +
+          link({ label: "Home", href: "/", key: "home" }, active) +
+          panelServicesHTML() +
+          panelMain +
+        "</nav>" +
+        '<div class="sn-panel-more">' + panelMore + "</div>" +
         '<a href="' + CTA.href + '" class="sn-panel-cta" target="_blank" rel="noopener">Book a free strategy call' + ARROW + "</a>" +
-        '<a href="' + BOOK_URL + '" class="mf-pill sn-panel-pill" target="_blank" rel="noopener" data-mf-booking><span class="mf-dot" aria-hidden="true"></span>Booking now<span data-mf-next></span></a>' +
       "</aside>"
     );
   }
@@ -267,7 +273,7 @@
       if (e.key === "Escape") { shut(true); return; }
       // Keep Tab inside the open menu
       if (e.key === "Tab") {
-        var items = panel.querySelectorAll("button, a");
+        var items = panel.querySelectorAll("button, a, summary");
         var first = items[0], last = items[items.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }

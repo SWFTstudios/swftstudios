@@ -94,7 +94,6 @@
   text-transform: uppercase; color: #9a9a9a;
 }
 .sn-mega__motto { color: #fff; margin-left: 0.35em; }
-.sn-panel-from { display: block; margin-top: 0.3rem; font-family: var(--mf-mono, monospace); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; }
 .sn-links .sn-mega__item {
   display: flex; gap: 0.95rem; align-items: center; padding: 0.7rem 0.75rem; margin: 0 -0.75rem 0.25rem;
   border-radius: 14px; color: #fff; background: none; transition: background 0.2s;
@@ -124,56 +123,6 @@
 .sn-contact:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 @media (max-width: 1080px) { .sn-contact { display: none; } }
 
-/* Phone menu: Services accordion */
-.sn-panel-services { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-.sn-panel-services > summary {
-  list-style: none; cursor: pointer; color: #fff; padding: 0.7rem 0;
-  font-size: 1.75rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1.1;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.sn-panel-services summary::-webkit-details-marker { display: none; }
-.sn-panel-services > summary::after { content: "+"; font-weight: 400; transition: transform 0.3s var(--mf-ease, ease); }
-.sn-panel-services[open] > summary::after { transform: rotate(45deg); }
-.sn-panel-services summary:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-/* Sub-dropdowns: Build / Grow / Automate */
-.sn-panel-group { border-top: 1px solid rgba(255, 255, 255, 0.08); margin-left: 0.25rem; }
-.sn-panel-group:first-of-type { border-top: 0; }
-.sn-panel-group > summary {
-  list-style: none; cursor: pointer; color: #fff; padding: 0.8rem 0;
-  display: flex; align-items: baseline; gap: 0.6rem;
-}
-.sn-panel-group__name { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.03em; }
-.sn-panel-group__motto { font-family: var(--mf-mono, monospace); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; }
-.sn-panel-group > summary::after {
-  content: ""; margin-left: auto; align-self: center; width: 0.5rem; height: 0.5rem;
-  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg) translateY(-25%); transition: transform 0.3s var(--mf-ease, ease);
-}
-.sn-panel-group[open] > summary::after { transform: rotate(-135deg) translateY(-25%); }
-.sn-panel-group__items { padding: 0 0 0.6rem 0.9rem; border-left: 1px solid rgba(255, 255, 255, 0.12); margin: 0 0 0.4rem 0.15rem; }
-.sn-panel a.sn-panel-sub { display: block; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; padding: 0.55rem 0; border-bottom: 0; }
-.sn-panel a.sn-panel-all { margin: 0.25rem 0 0.75rem 0.25rem; font-size: 1rem; color: #9a9a9a; }
-
-.sn-actions { justify-self: end; display: flex; align-items: center; gap: 0.6rem; }
-.sn-cta {
-  display: inline-flex; align-items: center; gap: 0.75rem;
-  background: #fff; color: #050505; text-decoration: none; white-space: nowrap;
-  font-weight: 600; font-size: 0.98rem; letter-spacing: -0.01em;
-  padding: 0.85rem 1.35rem; border-radius: 999px;
-  transition: transform 0.25s var(--mf-ease, ease);
-}
-.sn-cta:hover { transform: translateY(-1px); }
-.sn-arrow { display: inline-block; transition: transform 0.25s var(--mf-ease, ease); }
-.sn-cta:hover .sn-arrow { transform: translate(2px, -2px); }
-
-.sn-burger {
-  display: none; flex-direction: column; gap: 6px; width: 46px; height: 46px;
-  justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 50%; cursor: pointer; padding: 0;
-}
-.sn-burger span { display: block; width: 18px; height: 1.5px; background: #fff; }
-.sn-burger:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-
 @media (max-width: 1080px) {
   .sn-nav { grid-template-columns: 1fr auto; }
   .sn-links { display: none; }
@@ -184,38 +133,91 @@
   .sn-cta { display: none; }
 }
 
-/* Slide-over menu */
+/* Slide-over menu (phones/tablets). Built to fit one screen: booking pill +
+   close on one row, a tight main list, secondary links in a two-column grid
+   and the CTA pinned to the bottom. Sizes scale with the screen height. */
 .sn-panel {
-  position: fixed; inset: 0 0 0 auto; width: min(92vw, 420px); z-index: 1100;
-  display: flex; flex-direction: column; padding: 5.5rem 1.75rem calc(2rem + env(safe-area-inset-bottom));
+  position: fixed; inset: 0 0 0 auto; width: min(92vw, 420px); height: 100vh; height: 100dvh; z-index: 1100;
+  display: flex; flex-direction: column;
+  padding: calc(1rem + env(safe-area-inset-top)) 1.5rem calc(1.25rem + env(safe-area-inset-bottom));
   overflow-y: auto; overscroll-behavior: contain;
   background: #0b0b0b; border-left: 1px solid rgba(255, 255, 255, 0.12);
   font-family: var(--mf-font, "Inter Tight", sans-serif);
   transform: translateX(104%); visibility: hidden;
   transition: transform 0.5s var(--mf-ease, ease), visibility 0s linear 0.5s;
+  --sn-row: clamp(1.25rem, 3.4dvh, 1.7rem);
+  --sn-pad: clamp(0.4rem, 1.1dvh, 0.7rem);
 }
+/* While Services is open the other main links step down so the open
+   group still fits on screen with the rest of the menu. */
+.sn-panel:has(.sn-panel-services[open]) { --sn-row: clamp(1.1rem, 2.6dvh, 1.35rem); --sn-pad: clamp(0.3rem, 0.8dvh, 0.5rem); }
+.sn-panel-main { transition: font-size 0.25s ease; }
 .sn-panel.open { transform: translateX(0); visibility: visible; transition: transform 0.5s var(--mf-ease, ease), visibility 0s; }
 .sn-panel-label { font-family: var(--mf-mono, monospace); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; margin: 0 0 1rem; }
+
+.sn-panel-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: clamp(0.75rem, 2.5dvh, 1.5rem); }
+.sn-panel-pill { min-width: 0; font-size: 0.7rem; }
+.sn-panel-main { display: flex; flex-direction: column; }
+
 .sn-panel a:not(.mf-pill) {
-  color: #fff; text-decoration: none; padding: 0.7rem 0;
+  color: #fff; text-decoration: none; padding: var(--sn-pad) 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 1.75rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1.1;
+  font-size: var(--sn-row); font-weight: 600; letter-spacing: -0.04em; line-height: 1.1;
   opacity: 0; transform: translateX(18px);
   transition: opacity 0.35s ease, transform 0.45s var(--mf-ease, ease), color 0.2s;
 }
 .sn-panel.open a { opacity: 1; transform: none; }
-/* Services sub-dropdown links sit under their group heading, so they are smaller. */
-.sn-panel .sn-panel-group__items a.sn-panel-sub:not(.mf-pill) { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; padding: 0.6rem 0; border-bottom: 0; }
-.sn-panel .sn-panel-services a.sn-panel-all:not(.mf-pill) { font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; color: #9a9a9a; border-bottom: 0; padding: 0.7rem 0; }
 .sn-panel a:not(.mf-pill):hover, .sn-panel a:not(.mf-pill):focus-visible { color: #9a9a9a; outline: none; }
 .sn-panel a.is-active::after { content: " •"; color: #9a9a9a; }
+
+/* Services dropdown, then Build / Grow / Automate sub-dropdowns */
+.sn-panel-services { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.sn-panel-services > summary {
+  list-style: none; cursor: pointer; color: #fff; padding: var(--sn-pad) 0;
+  font-size: var(--sn-row); font-weight: 600; letter-spacing: -0.04em; line-height: 1.1;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.sn-panel-services summary::-webkit-details-marker { display: none; }
+.sn-panel-services > summary::after { content: "+"; font-weight: 400; transition: transform 0.3s var(--mf-ease, ease); }
+.sn-panel-services[open] > summary::after { transform: rotate(45deg); }
+.sn-panel-services summary:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.sn-panel-group { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.sn-panel-group:first-of-type { border-top: 0; }
+.sn-panel-group > summary {
+  list-style: none; cursor: pointer; color: #fff; padding: 0.55rem 0 0.55rem 0.75rem;
+  display: flex; align-items: baseline; gap: 0.6rem;
+}
+.sn-panel-group__name { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.03em; }
+.sn-panel-group__motto { font-family: var(--mf-mono, monospace); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; }
+.sn-panel-group > summary::after {
+  content: ""; margin-left: auto; margin-right: 0.2rem; align-self: center; width: 0.45rem; height: 0.45rem;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-25%); transition: transform 0.3s var(--mf-ease, ease);
+}
+.sn-panel-group[open] > summary::after { transform: rotate(-135deg) translateY(-25%); }
+.sn-panel-group__items { margin: 0 0 0.5rem 0.75rem; padding-left: 0.85rem; border-left: 1px solid rgba(255, 255, 255, 0.12); }
+/* One line per service: name left, starting price right. */
+.sn-panel .sn-panel-group__items a.sn-panel-sub:not(.mf-pill) {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem;
+  font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; padding: 0.42rem 0; border-bottom: 0;
+}
+.sn-panel-from { flex: none; font-family: var(--mf-mono, monospace); font-size: 0.68rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: #9a9a9a; }
+.sn-panel .sn-panel-services a.sn-panel-all:not(.mf-pill) { display: block; font-size: 0.9rem; font-weight: 500; letter-spacing: -0.01em; color: #9a9a9a; border-bottom: 0; padding: 0.35rem 0 0.7rem 0.75rem; }
+
+/* Secondary pages: small two-column grid */
+.sn-panel-more { display: grid; grid-template-columns: 1fr 1fr; gap: 0.15rem 1rem; margin: clamp(0.75rem, 2.2dvh, 1.25rem) 0 1rem; }
+.sn-panel a.sn-panel-more__link:not(.mf-pill) {
+  font-size: 0.95rem; font-weight: 500; letter-spacing: -0.01em; color: #b5b5b5;
+  padding: 0.5rem 0; border-bottom: 0;
+}
+.sn-panel a.sn-panel-more__link:not(.mf-pill):hover { color: #fff; }
+
 .sn-panel a.sn-panel-cta {
-  margin-top: 1.75rem; border: none; background: #fff; color: #050505; text-align: center;
+  margin-top: auto; border: none; background: #fff; color: #050505; text-align: center;
   display: flex; justify-content: center; align-items: center; gap: 0.6rem;
-  border-radius: 999px; padding: 1.05rem; font-size: 1.05rem; letter-spacing: -0.01em;
+  border-radius: 999px; padding: clamp(0.8rem, 2dvh, 1.05rem); font-size: 1.05rem; letter-spacing: -0.01em;
 }
 .sn-panel a.sn-panel-cta:hover { color: #050505; }
-.sn-panel-pill { margin-top: 1rem; align-self: flex-start; }
 
 .sn-scrim {
   position: fixed; inset: 0; z-index: 1050; background: rgba(0, 0, 0, 0.6);
@@ -224,7 +226,7 @@
 }
 .sn-scrim.open { opacity: 1; pointer-events: auto; }
 .sn-close {
-  position: absolute; top: 1.15rem; right: 1.25rem; width: 46px; height: 46px;
+  position: relative; flex: none; width: 46px; height: 46px;
   display: grid; place-items: center; border-radius: 50%;
   background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16);
   color: #fff; font-size: 1.6rem; cursor: pointer; line-height: 1;

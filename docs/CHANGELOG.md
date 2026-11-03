@@ -9,6 +9,7 @@
 - `data/pricing.json` categories are now `build` / `grow` / `automate` (were `digital` / `visual`; old `#digital` / `#visual` links still open the right tab). Lead Follow-up moved from Marketing into a new Automations service with a new **Automation Care** plan ($250/mo).
 - New page `/analytics.html` (Tracking & Reporting).
 - Phone menu: Services is a dropdown with Build / Grow / Automate as sub-dropdowns (motto + chevron); each opens to its services with starting prices, and opening one closes the others.
+- Phone menu fits on one screen: booking pill and close button share the top row; Home, Services, Work, Pricing, About, Blog and Contact form a tighter main list (sized to the screen height, and smaller while Services is open); Log in, Films, Free Growth Audit and Locations sit in a two-column grid; each service is one line with its starting price on the right; the strategy-call button is pinned to the bottom.
 
 ### Removed
 - AI Employees: `/ai-employees.html` deleted and 301-redirected to `/automations.html`; removed from menus, contact form, flow section ("Get booked" stage now links to Automations) and sitemap.
