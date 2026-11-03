@@ -3,7 +3,7 @@
  */
 import { json } from "../../_lib/portal-auth.js";
 import { getLatestProjectForUser, getSessionUser, requireDb } from "../../_lib/portal-db.js";
-import { getStripeTier } from "../../_lib/stripe-tiers.js";
+import { getStripeTier, offerName } from "../../_lib/stripe-tiers.js";
 import { isAdminEmail } from "../../_lib/admin-auth.js";
 
 export async function onRequestGet(context) {
@@ -35,7 +35,7 @@ export async function onRequestGet(context) {
         ? {
             id: project.id,
             tierId: project.tier_id,
-            tierName: tier?.name || project.tier_id,
+            tierName: tier?.name || offerName(project.tier_id) || project.tier_id,
             status: project.status,
             siteHost: project.site_host || null,
             hasAnalyticsHost: !!project.site_host,

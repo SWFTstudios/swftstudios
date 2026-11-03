@@ -6,6 +6,7 @@
 import { test, before, after, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { startHarness } from "./harness.mjs";
+import { STRIPE_TIERS } from "../../functions/_lib/stripe-tiers.js";
 
 const INBOX = "hello@swftstudios.com";
 let h;
@@ -69,20 +70,26 @@ test("growth audit emails hello@ including the biggest leak", async () => {
   assert.match(team.html, /visitors don&#39;t reach out or buy/);
 });
 
-// website-only ($400) is quote-first: it has no default Payment Link, so it
-// is tested below rather than in the checkout loop.
-const TIERS = [
-  "gbp-refresh", "website-content-half",
-  "website-content-full", "content-growth-retainer", "full-growth-partner",
-];
+// Every offer with a live payment link (data/pricing.json → stripe, built
+// from data/stripe-catalog.json by npm run build:payments).
+const TIERS = Object.keys(STRIPE_TIERS);
 
-test("booking (website-only) never starts checkout on the retired $800 link", async () => {
+test("online tiers come from the catalog and charge what `pay` says", () => {
+  assert.ok(TIERS.length >= 3);
+  for (const t of Object.values(STRIPE_TIERS)) {
+    assert.match(t.paymentLinkUrl, /^https:\/\/buy\.stripe\.com\//);
+    if (t.kind === "deposit") assert.ok(t.amountCents < t.totalCents, t.id);
+    else assert.equal(t.amountCents, t.totalCents, t.id);
+  }
+});
+
+test("booking an offer without a live link is refused (no stale amounts)", async () => {
   const r = await post("/api/book-tier", {
-    tierId: "website-only", name: "Pat Client", email: visitor.email, businessName: "Client Co",
+    tierId: "app-mvp", name: "Pat Client", email: visitor.email, businessName: "Client Co",
     customization: { goal: "More bookings", addOns: [] },
   });
   assert.equal(r.body.ok, false, JSON.stringify(r.body));
-  assert.ok(!String(r.body.checkoutUrl || "").includes("eVq6oGgykbS4cCJgi4fMA0v"));
+  assert.equal(r.body.checkoutUrl, undefined);
 });
 
 for (const tierId of TIERS) {
@@ -124,7 +131,7 @@ test("if email can't be delivered and nothing was stored, the form reports failu
   for (const [path, body] of [
     ["/api/contact", { name: "Down Test", email: visitor.email }],
     ["/api/growth-audit", { firstName: "Down", email: visitor.email, businessName: "Down Co", website: "https://d.example", desiredService: "not-sure" }],
-    ["/api/book-tier", { tierId: "website-only", quoteOnly: true, name: "Down", email: visitor.email, businessName: "Down Co", customization: {} }],
+    ["/api/book-tier", { tierId: "gbp-refresh", quoteOnly: true, name: "Down", email: visitor.email, businessName: "Down Co", customization: {} }],
   ]) {
     const r = await post(path, body);
     assert.equal(r.status, 503, path);

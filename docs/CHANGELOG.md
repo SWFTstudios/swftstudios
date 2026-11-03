@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-04: Online payments for every package (pay in full, deposit, monthly)
+
+### Added
+- Every offer in `data/pricing.json` now has a `pay` setting. Under $1,000 is **pay in full**, $1,000 to $3,000 is a **50% deposit** with the balance invoiced before delivery, monthly plans are **subscriptions**, and App MVP stays quote-first. See `docs/PAYMENTS.md`.
+- `npm run stripe:sync` (`scripts/stripe-sync.mjs`) creates the Stripe product, price and payment link for each offer and records them in `data/stripe-catalog.json`. It redirects to the thank-you page, collects phone and business name, sends a receipt or invoice and sets `metadata.tierId`. When an amount changes, it deactivates the old link. `--dry-run` shows the plan.
+- `npm run build:payments` turns the catalog into booking pages. A package only shows "Pay" when its link charges exactly the right amount.
+- The thank-you page leads with "Book your kickoff call".
+
+### Changed
+- One server catalog: `functions/_lib/stripe-tiers.js` reads `data/pricing.json`. The hardcoded copies in `src/worker.ts` (unused) and `src/portal-handlers.ts`, and the old `STRIPE_PRICE_*` vars in both wrangler configs, are removed. Env overrides: `STRIPE_PAYMENT_LINK_<OFFER_ID>` and `STRIPE_PRICE_<OFFER_ID>`.
+- Website + Content Capture and Website + Extended Content now take a 50% deposit ($1,000 and $1,500). Their old full-price links ($2,000 and $3,000) no longer show, and they're quote-first until `stripe:sync` creates the deposit links.
+
 ## 2026-11-04: Desktop web app layout
 
 ### Added

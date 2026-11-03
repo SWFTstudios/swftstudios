@@ -14,12 +14,6 @@
   ],
   "vars": {
     "POSTHOG_PROJECT_ID": "486061",
-    "PORTAL_ORIGIN": "https://www.swftstudios.com",
-    "STRIPE_PRICE_GBP_REFRESH": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
-    "STRIPE_PRICE_WEBSITE_ONLY": "price_1U6cA5AF4d9gCyuNj65BmDU2",
-    "STRIPE_PRICE_WEBSITE_CONTENT_HALF": "price_1U6cA8AF4d9gCyuNt2PH1qew",
-    "STRIPE_PRICE_WEBSITE_CONTENT_FULL": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
-    "STRIPE_PRICE_CONTENT_GROWTH_RETAINER": "price_1U6cA8AF4d9gCyuN0Ko807my",
-    "STRIPE_PRICE_FULL_GROWTH_PARTNER": "price_1U6cAAAF4d9gCyuN6yvZR5im"
+    "PORTAL_ORIGIN": "https://www.swftstudios.com"
   }
 }

@@ -35,14 +35,7 @@ Client-site install snippet (for portal host metrics) remains in [`docs/CLIENT_P
 
 Each offer in [`data/pricing.json`](../data/pricing.json) has a dedicated booking page under `/book/`:
 
-| Page | Checkout |
-|---|---|
-| `/book/gbp-content-refresh.html` | $400 one-time (start of $400–$600) |
-| `/book/website-only.html` | $800 one-time (start of $800–$1,500) |
-| `/book/website-content-half.html` | $2,000 one-time (start of $2,000–$2,800) |
-| `/book/website-content-full.html` | $3,000 one-time (start of $3,000–$4,500+) |
-| `/book/content-growth-retainer.html` | $450/mo subscription |
-| `/book/full-growth-partner.html` | $1,200/mo subscription |
+Booking pages and amounts are generated from `data/pricing.json` (`pay`) and `data/stripe-catalog.json`; see [PAYMENTS.md](PAYMENTS.md) for the full list and how to change it.
 
 Flow: form → Airtable + Resend → **Stripe Payment Link** (prefilled email) → after pay, `/portal/onboard.html`.
 
