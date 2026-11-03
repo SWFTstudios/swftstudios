@@ -79,7 +79,11 @@
               "next": {
                 "label": "Ongoing care",
                 "offer": "website-care"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 40000
             },
             {
               "id": "website-content-half",
@@ -104,17 +108,6 @@
               ],
               "notIncluded": "Copywriting, full Google Business Profile optimization, extra pages, filming hours and locations.",
               "cta": "Start Website + Content",
-              "bookUrl": "/book/website-content-half.html",
-              "stripe": {
-                "mode": "payment",
-                "amountCents": 200000,
-                "productName": "SWFT. Website + Content Capture (project start)",
-                "ctaLabel": "Pay $2,000 to start",
-                "priceDisplay": "$2,000",
-                "billingNote": "The $2,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
-                "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
-                "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w"
-              },
               "checkoutNote": "The exact starter scope and optional work are listed before you book.",
               "baseScopeNote": "Your 50 photos and 3 short videos are INCLUDED at $2,000. You supply brand assets and initial site copy; extra photos, extra reels, added pages, filming hours and additional locations are separate. Full GBP optimization is not included.",
               "baseCounts": {
@@ -160,7 +153,12 @@
               "next": {
                 "label": "Ongoing care",
                 "offer": "website-care"
-              }
+              },
+              "pay": {
+                "type": "deposit",
+                "percent": 50
+              },
+              "priceCents": 200000
             },
             {
               "id": "website-content-full",
@@ -183,17 +181,6 @@
               ],
               "notIncluded": "Copywriting, full Google Business Profile optimization, extra pages, products, filming hours and locations.",
               "cta": "Start Extended Project",
-              "bookUrl": "/book/website-content-full.html",
-              "stripe": {
-                "mode": "payment",
-                "amountCents": 300000,
-                "productName": "SWFT. Website + Extended Content (project start)",
-                "ctaLabel": "Pay $3,000 to start",
-                "priceDisplay": "$3,000",
-                "billingNote": "The $3,000 starter price covers the included scope shown above; any extras are quoted separately before payment.",
-                "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
-                "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x"
-              },
               "checkoutNote": "The exact starter scope and optional work are listed before you book.",
               "baseScopeNote": "The 6-hour production window includes local travel between the two approved shoot locations. You supply branding and initial copy. Additional pages, products, filming hours, locations or video edits are extras; full GBP optimization is not included.",
               "baseCounts": {
@@ -239,7 +226,12 @@
               "next": {
                 "label": "Ongoing care",
                 "offer": "website-care"
-              }
+              },
+              "pay": {
+                "type": "deposit",
+                "percent": 50
+              },
+              "priceCents": 300000
             },
             {
               "id": "website-care",
@@ -302,7 +294,11 @@
                 "note": "Care Pro hours can go toward new pages or landing pages. Sites we didn't build start with a one-time review, quoted first."
               },
               "notIncluded": "Platform, domain and app subscriptions, redesigns and new features beyond your monthly hours.",
-              "cta": "Request Website Care"
+              "cta": "Request Website Care",
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 15000
             }
           ]
         },
@@ -381,7 +377,12 @@
               "next": {
                 "label": "Next step",
                 "offer": "app-mvp"
-              }
+              },
+              "pay": {
+                "type": "deposit",
+                "percent": 50
+              },
+              "priceCents": 150000
             },
             {
               "id": "app-mvp",
@@ -429,7 +430,8 @@
               "next": {
                 "label": "Ongoing care",
                 "offer": "app-care"
-              }
+              },
+              "priceCents": 600000
             },
             {
               "id": "app-care",
@@ -488,7 +490,11 @@
                 "note": "Apps we didn't build start with a one-time code review, quoted first."
               },
               "notIncluded": "Hosting and third-party fees, and new features larger than your monthly hours.",
-              "cta": "Request App Care"
+              "cta": "Request App Care",
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 40000
             }
           ]
         }
@@ -529,11 +535,12 @@
               "bookUrl": "/book/gbp-content-refresh.html",
               "stripe": {
                 "mode": "payment",
+                "kind": "full",
                 "amountCents": 40000,
-                "productName": "SWFT. GBP Content Refresh (project start)",
+                "productName": "SWFT. GBP Content Refresh",
                 "ctaLabel": "Pay $400 to start",
                 "priceDisplay": "$400",
-                "billingNote": "The $400 starter price covers the included scope shown above; any extras are quoted separately before payment.",
+                "billingNote": "Paid in full. $400 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
                 "priceId": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
                 "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A"
               },
@@ -578,7 +585,11 @@
               "next": {
                 "label": "Keep it fresh",
                 "offer": "content-growth-retainer"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 40000
             },
             {
               "id": "ads-management",
@@ -641,7 +652,11 @@
                   ]
                 ],
                 "note": "Ad spend is separate and paid by you directly to Meta."
-              }
+              },
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 50000
             },
             {
               "id": "full-growth-partner",
@@ -668,12 +683,13 @@
               "bookUrl": "/book/full-growth-partner.html",
               "stripe": {
                 "mode": "subscription",
+                "kind": "monthly",
                 "amountCents": 120000,
                 "interval": "month",
-                "productName": "SWFT. Full Growth Partner",
+                "productName": "SWFT. Full Growth Partner (monthly)",
                 "ctaLabel": "Start at $1,200/mo",
                 "priceDisplay": "$1,200/mo",
-                "billingNote": "The $1,200/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $1,200/mo plan covers the monthly deliverables above; extras are quoted first.",
                 "priceId": "price_1U6cAAAF4d9gCyuN6yvZR5im",
                 "paymentLinkUrl": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z"
               },
@@ -718,7 +734,11 @@
                   "Week 3: Edited photos and videos delivered; up to 4 new ad variations and 2 Google posts go live",
                   "Week 4: Performance summary with cost per lead, what worked and what changes next month"
                 ]
-              }
+              },
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 120000
             }
           ]
         },
@@ -804,7 +824,11 @@
               "next": {
                 "label": "Monthly",
                 "offer": "photo-plan"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 45000
             },
             {
               "id": "product-photos",
@@ -888,7 +912,11 @@
               "next": {
                 "label": "Monthly",
                 "offer": "photo-plan"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 40000
             },
             {
               "id": "photo-plan",
@@ -945,7 +973,11 @@
                 ]
               },
               "notIncluded": "Video (see Monthly Video Plan or the Content + Growth Retainer), models, props and studio rental.",
-              "cta": "Request a monthly photo quote"
+              "cta": "Request a monthly photo quote",
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 40000
             }
           ]
         },
@@ -1023,7 +1055,11 @@
               "next": {
                 "label": "Monthly",
                 "offer": "video-plan"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 60000
             },
             {
               "id": "brand-film",
@@ -1072,7 +1108,12 @@
               "next": {
                 "label": "Monthly",
                 "offer": "video-plan"
-              }
+              },
+              "pay": {
+                "type": "deposit",
+                "percent": 50
+              },
+              "priceCents": 180000
             },
             {
               "id": "video-plan",
@@ -1133,7 +1174,11 @@
                 ]
               },
               "notIncluded": "Posting (see Managed Social), actors, voiceover and extra locations.",
-              "cta": "Request a monthly video quote"
+              "cta": "Request a monthly video quote",
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 50000
             }
           ]
         },
@@ -1185,7 +1230,11 @@
               "next": {
                 "label": "Monthly",
                 "offer": "managed-social"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 35000
             },
             {
               "id": "content-growth-retainer",
@@ -1211,12 +1260,13 @@
               "bookUrl": "/book/content-growth-retainer.html",
               "stripe": {
                 "mode": "subscription",
+                "kind": "monthly",
                 "amountCents": 45000,
                 "interval": "month",
-                "productName": "SWFT. Content + Growth Retainer",
+                "productName": "SWFT. Content + Growth Retainer (monthly)",
                 "ctaLabel": "Start at $450/mo",
                 "priceDisplay": "$450/mo",
-                "billingNote": "The $450/mo monthly base covers only the included monthly deliverables shown above; extras are quote-first and billed separately if approved.",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $450/mo plan covers the monthly deliverables above; extras are quoted first.",
                 "priceId": "price_1U6cA8AF4d9gCyuN0Ko807my",
                 "paymentLinkUrl": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y"
               },
@@ -1251,7 +1301,11 @@
               "next": {
                 "label": "Add posting",
                 "offer": "managed-social"
-              }
+              },
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 45000
             },
             {
               "id": "managed-social",
@@ -1318,7 +1372,11 @@
               "next": {
                 "label": "Add fresh content",
                 "offer": "content-growth-retainer"
-              }
+              },
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 50000
             }
           ]
         },
@@ -1391,7 +1449,11 @@
               "next": {
                 "label": "Monthly",
                 "offer": "livestream-recurring"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 90000
             },
             {
               "id": "livestream-multi",
@@ -1457,7 +1519,12 @@
                 "Full program recording within 2 business days",
                 "3 edited highlight clips within 5 business days",
                 "Separate recordings from each camera, on request"
-              ]
+              ],
+              "pay": {
+                "type": "deposit",
+                "percent": 50
+              },
+              "priceCents": 250000
             },
             {
               "id": "livestream-recurring",
@@ -1518,7 +1585,11 @@
                 ]
               },
               "notIncluded": "Venue internet requirements apply. Equipment installs and training your own team are quoted separately.",
-              "cta": "Request a recurring stream quote"
+              "cta": "Request a recurring stream quote",
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 180000
             }
           ]
         }
@@ -1579,7 +1650,11 @@
               "next": {
                 "label": "Ongoing",
                 "offer": "automation-care"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 75000
             },
             {
               "id": "automation-care",
@@ -1613,7 +1688,11 @@
               "handoff": [
                 "Everything stays in your own CRM and accounts",
                 "Change log of every edit we make"
-              ]
+              ],
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 25000
             }
           ]
         },
@@ -1691,7 +1770,11 @@
               "next": {
                 "label": "Ongoing",
                 "offer": "analytics-reporting"
-              }
+              },
+              "pay": {
+                "type": "full"
+              },
+              "priceCents": 50000
             },
             {
               "id": "analytics-reporting",
@@ -1723,7 +1806,11 @@
                   "value": "30 min",
                   "label": "Review call"
                 }
-              ]
+              ],
+              "pay": {
+                "type": "monthly"
+              },
+              "priceCents": 25000
             }
           ]
         }
@@ -1793,5 +1880,6 @@
       "q": "How long does a project take?",
       "a": "Timing depends on the assets you supply, page count, features, shoot schedule, feedback and approval turnaround. We confirm a realistic timeline during intake."
     }
-  ]
+  ],
+  "_payments": "`pay` decides how an offer is bought online: full (pay the starting price), deposit (percent of it now, balance invoiced before delivery), monthly (subscription). No `pay` = quote first. `priceCents` is the starting price. The `stripe` and `bookUrl` fields are written by `npm run stripe:sync` / `npm run build:payments` from data/stripe-catalog.json; don't edit them by hand."
 }

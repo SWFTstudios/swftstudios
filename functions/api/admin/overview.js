@@ -7,7 +7,7 @@
  */
 import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json } from "../../_lib/portal-auth.js";
-import { getStripeTier } from "../../_lib/stripe-tiers.js";
+import { getStripeTier, offerName } from "../../_lib/stripe-tiers.js";
 
 async function clients(db) {
   const { results } = await db
@@ -23,7 +23,7 @@ async function clients(db) {
     id: r.id,
     email: r.email,
     tierId: r.tier_id,
-    tierName: getStripeTier(r.tier_id)?.name || r.tier_id,
+    tierName: getStripeTier(r.tier_id)?.name || offerName(r.tier_id) || r.tier_id,
     status: r.status,
     siteHost: r.site_host || null,
     subscribed: !!r.stripe_subscription_id,

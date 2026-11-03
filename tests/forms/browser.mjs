@@ -8,6 +8,7 @@
  * Set CHROMIUM_PATH to use a preinstalled Chromium.
  */
 import { startHarness } from "./harness.mjs";
+import { STRIPE_TIERS } from "../../functions/_lib/stripe-tiers.js";
 
 const INBOX = "hello@swftstudios.com";
 import { createRequire } from "node:module";
@@ -82,10 +83,8 @@ await check("Free Growth Audit", async (page) => {
   await page.waitForSelector('[data-step="5"]:not([hidden])', { timeout: 5000 });
 });
 
-for (const tier of [
-  "gbp-content-refresh.html", "website-content-half.html",
-  "website-content-full.html", "content-growth-retainer.html", "full-growth-partner.html",
-]) {
+// Every booking page backed by a live payment link.
+for (const tier of Object.values(STRIPE_TIERS).map((t) => t.bookUrl.replace(/^\/book\//, ""))) {
   await check(`Book ${tier} (checkout)`, async (page) => {
     await bookFlow(page, tier, { quote: false });
     await page.waitForURL(/buy\.stripe\.com/, { timeout: 5000 });

@@ -1,3 +1,5 @@
+import { offerName, resolvePaymentLinkUrl as catalogPaymentLink, resolveStripePriceId as catalogPriceId } from "../functions/_lib/stripe-tiers.js";
+
 /**
  * Client portal handlers for the Worker (mirrors functions/api/portal/*).
  */
@@ -21,12 +23,6 @@ export interface PortalEnv {
   STRIPE_WEBHOOK_SECRET?: string;
   RESEND_API_KEY?: string;
   RESEND_FROM?: string;
-  STRIPE_PRICE_GBP_REFRESH?: string;
-  STRIPE_PRICE_WEBSITE_ONLY?: string;
-  STRIPE_PRICE_WEBSITE_CONTENT_HALF?: string;
-  STRIPE_PRICE_WEBSITE_CONTENT_FULL?: string;
-  STRIPE_PRICE_CONTENT_GROWTH_RETAINER?: string;
-  STRIPE_PRICE_FULL_GROWTH_PARTNER?: string;
 }
 
 const PBKDF2_ITERATIONS = 100_000;
@@ -35,43 +31,8 @@ const SESSION_DAYS = 14;
 const POSTHOG_HOST = "https://us.posthog.com";
 const DEFAULT_PROJECT_ID = "486061";
 
-// website-only ($400) has no default: its old $800 Price/Payment Link were
-// retired. To book it online again, add a $400 Payment Link URL below (and its
-// Price ID, or set STRIPE_PRICE_WEBSITE_ONLY), plus functions/_lib/stripe-tiers.js.
-const DEFAULT_PRICE_IDS: Record<string, string> = {
-  "gbp-refresh": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
-  "website-content-half": "price_1U6cA8AF4d9gCyuNt2PH1qew",
-  "website-content-full": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
-  "content-growth-retainer": "price_1U6cA8AF4d9gCyuN0Ko807my",
-  "full-growth-partner": "price_1U6cAAAF4d9gCyuN6yvZR5im",
-};
-
-const DEFAULT_PAYMENT_LINK_URLS: Record<string, string> = {
-  "gbp-refresh": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A",
-  "website-content-half": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w",
-  "website-content-full": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x",
-  "content-growth-retainer": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y",
-  "full-growth-partner": "https://buy.stripe.com/fZu00ia9W4pCauBaXKfMA0z",
-};
-
-const PRICE_ENV_KEYS: Record<string, keyof PortalEnv> = {
-  "gbp-refresh": "STRIPE_PRICE_GBP_REFRESH",
-  "website-only": "STRIPE_PRICE_WEBSITE_ONLY",
-  "website-content-half": "STRIPE_PRICE_WEBSITE_CONTENT_HALF",
-  "website-content-full": "STRIPE_PRICE_WEBSITE_CONTENT_FULL",
-  "content-growth-retainer": "STRIPE_PRICE_CONTENT_GROWTH_RETAINER",
-  "full-growth-partner": "STRIPE_PRICE_FULL_GROWTH_PARTNER",
-};
-
-const TIER_NAMES: Record<string, string> = {
-  "gbp-refresh": "GBP Content Refresh",
-  "website-only": "Website Only",
-  "website-content-half": "Website + Content Capture",
-  "website-content-full": "Website + Extended Content",
-  "content-growth-retainer": "Content + Growth Retainer",
-  "full-growth-partner": "Full Growth Partner",
-};
-
+// Offer names, Price IDs and Payment Links come from one place:
+// functions/_lib/stripe-tiers.js (built from data/pricing.json).
 function json(obj: unknown, status = 200, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(obj), {
     status,
@@ -149,22 +110,12 @@ function sessionCookie(sessionId: string, clear = false) {
 }
 
 export function resolveStripePriceId(env: PortalEnv, tierId: string): string | null {
-  const key = PRICE_ENV_KEYS[tierId];
-  if (key && env[key]) return String(env[key]).trim();
-  return DEFAULT_PRICE_IDS[tierId] || null;
+  return catalogPriceId(env, tierId);
 }
 
 /** Payment Link URL for a tier (no STRIPE_SECRET_KEY required). Prefills email when provided. */
 export function resolvePaymentLinkUrl(env: PortalEnv, tierId: string, email?: string): string | null {
-  const base = DEFAULT_PAYMENT_LINK_URLS[tierId] || null;
-  if (!base) return null;
-  try {
-    const url = new URL(base);
-    if (email) url.searchParams.set("prefilled_email", email.trim().toLowerCase());
-    return url.toString();
-  } catch {
-    return base;
-  }
+  return catalogPaymentLink(env, tierId, email);
 }
 
 async function getSessionUser(db: PortalD1, request: Request) {
@@ -342,7 +293,7 @@ export async function handlePortalRoutes(
         ? {
             id: project.id,
             tierId: project.tier_id,
-            tierName: TIER_NAMES[project.tier_id] || project.tier_id,
+            tierName: offerName(project.tier_id) || project.tier_id,
             status: project.status,
             siteHost: project.site_host || null,
             hasAnalyticsHost: !!project.site_host,
@@ -517,7 +468,7 @@ async function processStripeEvent(
       await db.prepare("INSERT INTO invite_tokens (token_hash, user_id, expires_at) VALUES (?, ?, ?)").bind(tokenHash, user.id, expires).run();
       const origin = env.PORTAL_ORIGIN || "https://www.swftstudios.com";
       const inviteUrl = `${origin}/portal/onboard.html?token=${encodeURIComponent(raw)}&email=${encodeURIComponent(email)}`;
-      const tierName = TIER_NAMES[tierId] || tierId;
+      const tierName = offerName(tierId) || tierId;
       await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {

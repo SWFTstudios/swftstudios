@@ -73,7 +73,7 @@ test("growth audit, booking quote and website build each land on their own tab",
     biggestLeak: "Convert", challenge: "Convert", details: "x",
   });
   await post("/api/book-tier", {
-    tierId: "website-only", quoteOnly: true, name: "Pat", email: visitor.email, businessName: "Client Co",
+    tierId: "gbp-refresh", quoteOnly: true, name: "Pat", email: visitor.email, businessName: "Client Co",
     customization: { goal: "More bookings", addOns: [] },
   });
   await post("/api/build-request", {

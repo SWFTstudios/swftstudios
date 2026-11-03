@@ -32,7 +32,7 @@ const checks = [
     details: "Automated delivery check. Safe to delete.", sourcePage: "live-smoke",
   }],
   ["Booking (quote, no charge)", "/api/book-tier", {
-    tierId: "website-only", quoteOnly: true, name: `${tag} Booking`, email: INBOX,
+    tierId: "gbp-refresh", quoteOnly: true, name: `${tag} Booking`, email: INBOX,
     businessName: `${tag} Booking`, customization: { goal: "Automated delivery check", addOns: [] },
     notes: "Automated delivery check. Safe to delete.", sourcePage: "live-smoke",
   }],

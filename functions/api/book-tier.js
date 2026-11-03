@@ -170,7 +170,7 @@ export async function onRequestPost(context) {
         (pricedSubtotalCents ? "; ONE-TIME priced extras estimate " + usd(pricedSubtotalCents) : "") +
         (customCount ? "; " + customCount + " custom-priced " + (customCount === 1 ? "item" : "items") + " excluded" : ""))
     : ("Base " + tier.priceDisplay + "; estimated project investment " +
-        usd(tier.amountCents + pricedSubtotalCents) +
+        usd((tier.totalCents || tier.amountCents) + pricedSubtotalCents) +
         (customCount ? " PLUS " + customCount + " custom-priced " +
           (customCount === 1 ? "item" : "items") + " excluded" : ""));
   const goal = str(rawChoices.goal, 200);
@@ -211,7 +211,9 @@ export async function onRequestPost(context) {
     ? `Custom quote requested (no charge) · ${investmentNote}`
     : tier.mode === "subscription"
       ? `${tier.priceDisplay} (subscription)`
-      : `${tier.priceDisplay} (one-time start)`;
+      : tier.kind === "deposit"
+        ? `${tier.priceDisplay} (balance ${usd(tier.totalCents - tier.amountCents)} invoiced before delivery)`
+        : `${tier.priceDisplay} (paid in full)`;
 
   const saved = await storeLead(env, {
     formGroup: "Paid Booking", // Existing CRM booking intake; quoteOnly is labeled explicitly below.
@@ -245,8 +247,7 @@ export async function onRequestPost(context) {
   // A valid quote must reach the SWFT inbox OR be stored durably.
   // Do not discard a customer request solely because Airtable is unavailable.
 
-  const cancelPath =
-    tier.id === "gbp-refresh" ? "/book/gbp-content-refresh.html" : `/book/${tier.id}.html`;
+  const cancelPath = tier.bookUrl || `/book/${tier.id}.html`;
   const checkoutUrl = quoteOnly ? null : await resolveCheckoutUrl(env, {
     tier,
     email,

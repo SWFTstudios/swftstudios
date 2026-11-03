@@ -116,7 +116,30 @@
     }
   };
 
-  var tier = tiers[tierId] || tiers["website-content-half"];
+  // Packages added with online payments (data/pricing.json → pay).
+  var G = {
+    web: ["Get more inquiries", "Make booking easier", "Sell products online", "Refresh an outdated site"],
+    app: ["Test an app idea", "Show investors or partners", "Replace a manual process", "Launch to customers"],
+    photo: ["Show my space and team", "Fresh photos for my site", "Better product listings", "Content for social"],
+    video: ["Content for Reels and TikTok", "Tell our story", "Promote a launch or offer", "Video for my website"],
+    social: ["Post consistently", "Grow followers who buy", "Look professional on every profile", "Save my team time"],
+    live: ["Stream a service or event", "Reach people who can't attend", "Record and reuse the stream", "Sell tickets or replays"],
+    ads: ["More qualified leads", "Lower cost per lead", "Promote a new offer", "Reach a new local audience"],
+    auto: ["Answer every lead fast", "Cut no-shows", "Get more reviews", "Save hours each week"],
+    data: ["Know which ads work", "Track calls and bookings", "A simple monthly report", "Fix broken tracking"]
+  };
+  [["website-only", G.web, ["website"]], ["website-care", G.web, ["website"]],
+   ["app-design-sprint", G.app, []], ["app-care", G.app, []],
+   ["photo-session", G.photo, ["content"]], ["product-photos", G.photo, ["content"]], ["photo-plan", G.photo, ["content"]],
+   ["short-form-pack", G.video, ["content"]], ["brand-film", G.video, ["content"]], ["video-plan", G.video, ["content"]],
+   ["social-setup", G.social, ["growth"]], ["managed-social", G.social, ["growth"]],
+   ["livestream-single", G.live, []], ["livestream-multi", G.live, []], ["livestream-recurring", G.live, []],
+   ["ads-management", G.ads, ["growth"]],
+   ["lead-follow-up", G.auto, []], ["automation-care", G.auto, []],
+   ["analytics-setup", G.data, []], ["analytics-reporting", G.data, []]
+  ].forEach(function (r) { if (!tiers[r[0]]) tiers[r[0]] = { goals: r[1], groups: r[2] }; });
+
+  var tier = tiers[tierId] || { goals: G.web, groups: [] };
 
   function dollars(cents) {
     return new Intl.NumberFormat("en-US", {
@@ -238,8 +261,7 @@
     mount.innerHTML = '<fieldset class="book-choice-field book-goal-field"><legend>What matters most to you? <span class="req">*</span></legend>' +
       '<p class="book-choice-help">Choose one. We will tailor the project around your priority.</p>' +
       '<div class="book-choice-grid">' + goals + '</div></fieldset>' +
-      '<div class="book-addons-head"><h3>Want to add anything?</h3><p>Choose priced extras or request a custom feature. Displayed rates are for the defined unit of work; we confirm all optional scope before payment.</p></div>' +
-      groups +
+      (groups ? '<div class="book-addons-head"><h3>Want to add anything?</h3><p>Choose priced extras or request a custom feature. Displayed rates are for the defined unit of work; we confirm all optional scope before payment.</p></div>' + groups : "") +
       '<div class="book-live-estimate" aria-live="polite" aria-atomic="true"><p class="book-live-kicker">YOUR ORDER SO FAR</p><div id="book-live-estimate"></div></div>';
   }
 
