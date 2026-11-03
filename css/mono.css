@@ -104,14 +104,13 @@ body { background: var(--mf-bg); color: var(--mf-text); }
   paint-order: stroke fill;
 }
 
-/* The accent word: the logo's pen script, made bold and funky.
-   Skylight Graffiti (fonts/SkylightGraffiti.*), glowing white by default: the glow is built from
-   currentColor, so it follows click colors and the rainbow. js/mono.js (initAccent) splits it into letters
-   that each sit at their own tilt and pop in with a bounce when they scroll into
-   view. Click = next color; five quick clicks = rainbow + glow + hop, then back.
-   Without JS (or with reduced motion) it is the static glowing word.
-   Change the color in one place: --mf-accent-color (the click palette in
-   js/mono.js starts from white to match). */
+/* The accent word: handwritten Listomania One in white, thickened with a stroke
+   in its own color and tucked slightly over the word before it. js/mono.js
+   (initAccent) wraps each word in one span (never single letters, which would
+   break the font's contextual letter shapes); it pops in with a bounce when it
+   scrolls into view. Click = next color (white, signal, ice, sand); five quick
+   clicks = a palette roll + hop, then back. Without JS (or with reduced motion)
+   it is the static word. Change the color in one place: --mf-accent-color. */
 :root {
   /* SWFT accents ("sophisticated chaos"): one warm signal for energy, one cool
      ice for the tech side, one quiet sand. Everything else stays black/white. */
@@ -119,7 +118,9 @@ body { background: var(--mf-bg); color: var(--mf-text); }
   --swft-ice: #c3cdfa;
   --swft-sand: #e9d3a6;
   --mf-accent-color: #ffffff;
-  --mf-graffiti: "Skylight Graffiti", var(--mf-hand);
+  /* Accent word, logo "studios" and notes all use the Listomania hand.
+     (Skylight Graffiti is still registered in css/swft-fonts.css but unused.) */
+  --mf-graffiti: var(--swft-font-listomania-one, "Listomania One"), var(--mf-hand);
 }
 .mf-script:not(.sf-wordmark .mf-script),
 html body.ps-page .ps-title .ps-accent {
@@ -129,18 +130,18 @@ html body.ps-page .ps-title .ps-accent {
   font-family: var(--mf-graffiti);
   font-weight: 400;
   font-style: normal;
-  font-size: 0.76em; /* Skylight is tall: kept below the headline's cap height */
-  letter-spacing: 0.01em;
-  line-height: 0.7;
+  font-size: 1em;
+  letter-spacing: 0;
+  line-height: 0.8;
   /* Sprayed on top: tucked back over the end of the previous word.
      js/mono.js adds .is-line-start when the word wraps to a new line,
      so it never slides out past the left edge. */
-  margin-left: -0.1em;
-  transform: rotate(-5deg) translateY(0.02em);
+  margin-left: -0.06em;
+  transform: rotate(-4deg) translateY(0.02em);
   padding: 0 0.08em;
   color: var(--mf-accent-color);
   /* Thicker: the font has one weight, so a stroke in its own color fattens it */
-  -webkit-text-stroke: 0.02em currentColor;
+  -webkit-text-stroke: 0.025em currentColor;
   paint-order: stroke fill;
   /* No glow: just a dark cut line hugging the letters so the paint reads as
      a separate layer over the word underneath */

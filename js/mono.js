@@ -131,8 +131,6 @@
   var ACCENT_PALETTE = ["#ffffff", "#ff5a36", "#c3cdfa", "#e9d3a6"]; // white first (default), then signal, ice, sand (css/mono.css)
   var RAPID_CLICKS = 5, RAPID_WINDOW = 1800;
   // Each letter's resting tilt (deg) and lift (em): fixed patterns, so it looks hand-placed, not random.
-  var TILT = [-7, 5, -3, 8, -6, 3, -8, 6, -2, 7];
-  var LIFT = [0.02, -0.04, 0.03, -0.02, 0.04, -0.03, 0.01, -0.05];
 
   function popLetters(letters) {
     if (reduce) return;
@@ -216,17 +214,21 @@
       placed.push(el);
       var text = el.textContent;
       if (!text.trim()) return;
-      // One span per letter so each can tilt and bounce; spaces stay plain text so words still wrap.
       el.textContent = "";
       var letters = [], n = 0;
-      Array.from(text).forEach(function (ch) {
-        if (/\s/.test(ch)) { el.appendChild(document.createTextNode(ch)); return; }
+      // One span per word, not per letter: Skylight Graffiti shapes each letter
+      // from its neighbours (contextual alternates), so splitting letters into
+      // separate spans breaks the shaping and makes the word hard to read
+      // ("Repeat." came out as "RepeaT."). Each word pops, tilts and hops as a unit.
+      text.split(/(\s+)/).forEach(function (part) {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { el.appendChild(document.createTextNode(part)); return; }
         var l = document.createElement("span");
         l.className = "mf-l";
-        l.textContent = ch;
+        l.textContent = part;
         l.style.setProperty("--i", n);
-        l.style.setProperty("--r", TILT[n % TILT.length] + "deg");
-        l.style.setProperty("--y", LIFT[n % LIFT.length] + "em");
+        l.style.setProperty("--r", (n % 2 ? 2 : -1) + "deg");
+        l.style.setProperty("--y", "0em");
         el.appendChild(l);
         letters.push(l);
         n++;

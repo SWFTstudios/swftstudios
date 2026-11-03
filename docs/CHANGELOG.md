@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-04: Legible accent words and a new "How it works" walkthrough
+
+### Changed
+- Accent words ("Repeat.", "booked.", ...) now use **Listomania One** like the logo and notes (Skylight Graffiti is still registered but unused). `js/mono.js` wraps each accent word in one span instead of one per letter: per-letter spans broke the fonts' contextual letter shapes, which is what made "Repeat." read as "RepeaT.".
+- "How it works for…" redesigned (`css/flow.css`, `js/swft-flow.js`, markup from `build:services`): a rail of numbered steps on the left, each with a signal-orange progress line, and one large moment card on the right with an outlined ghost number. Industry tabs are underlined text. Phones get a row of numbered steps above the card.
+- Every card has **Why it matters**: tap/click opens an ice note explaining what the step is worth to the business (`why` in `data/services.json`; the build fails if one is missing).
+- Plays itself: each step runs ~5s, then the next industry, until the visitor picks a tab or step. Pauses while hovered, focused, while a note is open, off screen or in a background tab, and has a Pause/Play button. Reduced motion: no autoplay.
+- Industries: Professional services, E-commerce, Restaurants, Community & events (was Home services, Restaurants, Retail, Churches). The Reminders & reviews step has a star icon.
+
 ## 2026-11-04: Listomania logo and a quieter accent palette
 
 ### Changed
