@@ -4,7 +4,7 @@
      Cal.com calendar, from /api/availability.
    - [data-mf-reveal] blocks fade up as they scroll into view.
    - A ring cursor on fine pointers ([data-mf-cursor="View"] grows it).
-   - The accent word (.mf-script, .ps-accent) is bold, funky pen script: its
+   - The accent word (.mf-script, .ps-accent) is glowing white Graflo graffiti: its
      letters pop in with a bounce, a click changes the color, and five quick
      clicks set off a rainbow + glow burst.
    ============================================================ */
@@ -128,7 +128,7 @@
   /* ---------- Accent word: bold, funky pen script ---------- */
   // Click = next color. Five clicks inside ~1.8s = rainbow + glow + hop that settles
   // back to the color the word had. (Mouse/touch only; the word stays plain text.)
-  var ACCENT_PALETTE = ["#ff2e93", "#ff7a18", "#ffd400", "#2ee6a6", "#2fa8ff", "#b14aed"];
+  var ACCENT_PALETTE = ["#ffffff", "#ff2e93", "#ff7a18", "#ffd400", "#2ee6a6", "#2fa8ff", "#b14aed"]; // white first: the default
   var RAPID_CLICKS = 5, RAPID_WINDOW = 1800;
   // Each letter's resting tilt (deg) and lift (em): fixed patterns, so it looks hand-placed, not random.
   var TILT = [-7, 5, -3, 8, -6, 3, -8, 6, -2, 7];

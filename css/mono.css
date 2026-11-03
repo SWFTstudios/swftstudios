@@ -105,28 +105,32 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 }
 
 /* The accent word: the logo's pen script, made bold and funky.
-   Same font as the "studios" in the logo (Nanum Pen, "SWFT Script"), thickened
-   with a stroke in its own color. js/mono.js (initAccent) splits it into letters
+   Graflo (fonts/ITGraflo-*), glowing white by default: the glow is built from
+   currentColor, so it follows click colors and the rainbow. js/mono.js (initAccent) splits it into letters
    that each sit at their own tilt and pop in with a bounce when they scroll into
    view. Click = next color; five quick clicks = rainbow + glow + hop, then back.
-   Without JS (or with reduced motion) it is the static bold word.
-   Change the color in one place: --mf-accent-color. */
+   Without JS (or with reduced motion) it is the static glowing word.
+   Change the color in one place: --mf-accent-color (the click palette in
+   js/mono.js starts from white to match). */
 :root {
-  --mf-accent-color: #ff2e93;
+  --mf-accent-color: #ffffff;
+  --mf-graffiti: "Graflo", var(--mf-hand);
 }
 .mf-script:not(.sf-wordmark .mf-script),
 html body.ps-page .ps-title .ps-accent {
   display: inline-block;
-  font-family: var(--mf-hand);
+  font-family: var(--mf-graffiti);
   font-weight: 400;
-  font-size: 1.2em;
-  letter-spacing: 0.02em;
-  line-height: 0.8;
-  transform: rotate(-4deg) translateY(0.04em);
+  font-style: normal;
+  font-size: 1em;
+  letter-spacing: 0.01em;
+  line-height: 0.9;
+  transform: rotate(-4deg) translateY(0.02em);
   padding: 0 0.08em;
   color: var(--mf-accent-color);
-  -webkit-text-stroke: 0.05em currentColor; /* the font has no bold; the stroke makes it one */
-  paint-order: stroke fill;
+  /* soft neon: tight core, wide halo */
+  --mf-glow: 0 0 0.04em currentColor, 0 0 0.16em color-mix(in srgb, currentColor 70%, transparent), 0 0 0.5em color-mix(in srgb, currentColor 35%, transparent);
+  text-shadow: var(--mf-glow);
   transition: color 0.28s ease;
 }
 .is-funky {
@@ -210,11 +214,12 @@ html body.ps-page .ps-title .ps-accent {
   72%  { color: #2ee6a6; } 80% { color: #2fa8ff; } 88% { color: #b14aed; }
   100% { color: var(--mf-accent-color); }
 }
+/* The burst brightens the resting glow, then hands back to it */
 @keyframes mf-glow {
-  0%   { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
-  12%  { text-shadow: 0 0 0.1em currentColor, 0 0 0.34em currentColor; }
-  80%  { text-shadow: 0 0 0.1em currentColor, 0 0 0.34em currentColor; }
-  100% { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+  0%   { text-shadow: var(--mf-glow); }
+  12%  { text-shadow: 0 0 0.08em currentColor, 0 0 0.3em currentColor, 0 0 0.8em currentColor; }
+  80%  { text-shadow: 0 0 0.08em currentColor, 0 0 0.3em currentColor, 0 0 0.8em currentColor; }
+  100% { text-shadow: var(--mf-glow); }
 }
 @media (prefers-reduced-motion: reduce) {
   .mf-funky-pre .mf-l { opacity: 1; }

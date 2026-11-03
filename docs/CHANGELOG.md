@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-03: Graffiti accent word in Graflo, glowing white
+
+### Changed
+- The accent word (`.mf-script`, `.ps-accent`) now uses **Graflo** by Indotype Foundry (`fonts/ITGraflo-Regular.woff2|.woff`, Italic too; `@font-face` in `css/swft-fonts.css`, `--mf-graffiti` in `css/mono.css`). The pen-script stroke hack is gone (Graflo is already heavy).
+- Default color is white (`--mf-accent-color: #ffffff`) with a soft neon glow (`--mf-glow`, built from `currentColor`, so it follows click colors). The click palette in `js/mono.js` starts at white; the five-click rainbow brightens the glow and settles back to it.
+- The logo's "studios" and the footer wordmark keep the original pen script.
+
+### Notes
+- Only web formats (`.woff2`, `.woff`) are published; the `.ttf`/`.otf` desktop files are not in the repo. Web use must be covered by the Graflo licence.
+
 ## 2026-11-04: Stripe payment links live for all 25 packages
 
 ### Added
