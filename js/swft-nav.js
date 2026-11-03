@@ -85,17 +85,35 @@
     "</div>";
   }
 
+  // Phone menu: Services is a dropdown, and each group (Build / Grow /
+  // Automate) is its own sub-dropdown. Opening one group closes the others.
   function panelServicesHTML() {
     return '<details class="sn-panel-services"><summary>Services</summary>' +
       SERVICES.map(function (g) {
-        return '<p class="sn-panel-label">(' + g.group + ")" + (g.motto ? " " + g.motto : "") + "</p>" +
+        return '<details class="sn-panel-group"><summary>' +
+            '<span class="sn-panel-group__name">' + g.group + "</span>" +
+            (g.motto ? '<span class="sn-panel-group__motto">' + g.motto + "</span>" : "") +
+          "</summary>" +
+          '<div class="sn-panel-group__items">' +
           g.items.map(function (i) {
             return '<a class="sn-panel-sub" href="' + i.href + '">' + i.label +
               (i.from ? '<span class="sn-panel-from">From ' + i.from + "</span>" : "") + "</a>";
-          }).join("");
+          }).join("") +
+          "</div></details>";
       }).join("") +
-      '<a class="sn-panel-sub" href="/services.html">All services →</a>' +
+      '<a class="sn-panel-sub sn-panel-all" href="/services.html">All services →</a>' +
     "</details>";
+  }
+
+  // One sub-dropdown open at a time inside the Services dropdown.
+  function wirePanelGroups(root) {
+    var groups = root.querySelectorAll(".sn-panel-group");
+    Array.prototype.forEach.call(groups, function (d) {
+      d.addEventListener("toggle", function () {
+        if (!d.open) return;
+        Array.prototype.forEach.call(groups, function (o) { if (o !== d) o.open = false; });
+      });
+    });
   }
 
   function link(l, active, cls) {
@@ -294,6 +312,7 @@
     mount.innerHTML = navHTML(ALIAS[active] || active);
     wire();
     wireMega();
+    wirePanelGroups(document);
     wireScroll();
   }
 

@@ -8,6 +8,7 @@
 - **Website Only is now $400 for up to 5 pages with base features** (was $800 for up to 3). It is quote-first: the old $800 Stripe Price/Payment Link were removed from the defaults (`functions/_lib/stripe-tiers.js`, `src/portal-handlers.ts`, `src/worker.ts`) and `/book/website-only.html` redirects to `/pricing.html#website-only`. To sell it online again, create a $400 Price + Payment Link in Stripe and add them back.
 - `data/pricing.json` categories are now `build` / `grow` / `automate` (were `digital` / `visual`; old `#digital` / `#visual` links still open the right tab). Lead Follow-up moved from Marketing into a new Automations service with a new **Automation Care** plan ($250/mo).
 - New page `/analytics.html` (Tracking & Reporting).
+- Phone menu: Services is a dropdown with Build / Grow / Automate as sub-dropdowns (motto + chevron); each opens to its services with starting prices, and opening one closes the others.
 
 ### Removed
 - AI Employees: `/ai-employees.html` deleted and 301-redirected to `/automations.html`; removed from menus, contact form, flow section ("Get booked" stage now links to Automations) and sitemap.
