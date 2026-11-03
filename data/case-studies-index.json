@@ -73,6 +73,28 @@
   },
   {
     "type": "tips",
+    "name": "Your Google Analytics Report, Explained",
+    "slug": "google-analytics-metrics-explained",
+    "href": "blog/google-analytics-metrics-explained.html",
+    "image": "images/swft-thumbnail.webp",
+    "details": "What sessions, users, engagement time, key events and revenue mean in GA4, and which numbers matter for your kind of business.",
+    "branding": false,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "tips",
+    "name": "How to See Your Website Analytics",
+    "slug": "see-your-website-analytics",
+    "href": "blog/see-your-website-analytics.html",
+    "image": "images/swft-thumbnail.webp",
+    "details": "Tag Manager vs. Google Analytics, and four ways to see your numbers without living in GA4.",
+    "branding": false,
+    "website": true,
+    "film": false
+  },
+  {
+    "type": "tips",
     "name": "Google Business Profile and Local SEO in 2026",
     "slug": "google-business-profile-local-seo-2026",
     "href": "blog/google-business-profile-local-seo-2026.html",

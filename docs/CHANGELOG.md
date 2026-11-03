@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-04: Sourced blog data + two analytics guides
+
+### Changed
+- Every number in the five blog snapshots now says what it measures, who measured it and when, with a link (`.bs-snap` in `css/mono.css`). Each post ends with a "Sources and how we use them" section.
+- Claims we could not trace to a credible source were replaced or removed: "40.6% of marketers" (now BrightEdge 68%, June 2025), "1.9x more likely if updated within 60 days" (now Ahrefs' 25.7% fresher, 17M citations), "250+ reviews for top-3 listings" (now BrightLocal: 47 on average), "84% trust reviews like personal recommendations" (now 49%, BrightLocal 2026, with a note that 84–88% is a decade-old figure), "31% conversion lift", "Up to 90% production time reduction", "40–60% of informational searches show AI Overviews" (now Ahrefs: 12.8%+ of all searches by volume). Unsupported lines in the copy ("highest ROI", "outperforms", "drives more actions than the homepage") were rewritten.
+- The "2–5 new reviews a month" line is labelled as SWFT's working benchmark, not an industry statistic; "40 to 60 words" is labelled a rule of thumb.
+
+### Added
+- `/blog/google-analytics-metrics-explained.html`: what sessions, active users, new users, engagement rate and time, key events, revenue and landing pages mean in GA4 (per Google's help pages), where each misleads, a table of which numbers matter by industry, and how SWFT reads a client's report every month.
+- `/blog/see-your-website-analytics.html`: Tag Manager vs. GA4 (there is no "GTM analytics plugin"; data lives in GA4), and four ways for a client to see their numbers: GA4 Viewer access, a Looker Studio dashboard, the SWFT client dashboard, and a monthly three-moves report.
+- Blog articles are wider: the text column went from 48rem (270px on phones) to 65rem, and only the outer page gutter is kept (`css/mono.css`).
+- Both are in `data/case-studies-index.json` (blog listing), `data/blog-posts.json` and `sitemap.xml`.
+
 ## 2026-11-04: Notebook annotations on the blog
 
 ### Added

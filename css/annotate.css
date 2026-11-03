@@ -105,3 +105,7 @@ mark.an-hl, .an-hl {
 @media print {
   .an-hl { color: inherit; background-image: none; background-color: #dde3ff; }
 }
+/* A note placed after a paragraph (not straight after a heading) sits in the flow, not beside the heading */
+@media (min-width: 1100px) {
+  p + .an-note.an-note.an-note { margin-top: 0.4rem; }
+}
