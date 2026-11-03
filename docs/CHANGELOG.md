@@ -7,7 +7,7 @@
 - Default color is white (`--mf-accent-color: #ffffff`) with a soft neon glow (`--mf-glow`, built from `currentColor`, so it follows click colors). The click palette in `js/mono.js` starts at white; the five-click rainbow brightens the glow and settles back to it.
 - Sprayed-on look: the word is 1.3x larger, thicker (a stroke in its own color), and tucked back over the end of the word before it (`margin-left: -0.2em`, painted on top), with a thin dark cut line under the glow so it reads as a separate paint layer. `js/mono.js` (`markLineStarts`) drops the overlap when the word starts a line (e.g. the footer's "booked."), rechecked after fonts load and on resize.
 - Footer wordmark: "studios" is now glowing white Graflo too, overlapping the T of "SWFT", sized (0.64em) to fit from 390px to 1920px wide.
-- The logo's "studios" in the nav keeps the original pen script.
+- Logo (`.sn-brand__script`, nav + phone menu on every page): "studios" is glowing white Graflo too, tucked over the T of "SWFT". The original pen script (`--mf-hand`) is now only a fallback.
 
 ### Notes
 - Only web formats (`.woff2`, `.woff`) are published; the `.ttf`/`.otf` desktop files are not in the repo. Web use must be covered by the Graflo licence.

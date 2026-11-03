@@ -42,13 +42,18 @@
 
 .sn-brand {
   justify-self: start;
-  display: inline-flex; align-items: baseline; gap: 0.2rem;
+  display: inline-flex; align-items: baseline; gap: 0;
   color: #fff; text-decoration: none; white-space: nowrap;
   font-weight: 700; font-size: 1.45rem; letter-spacing: -0.04em; line-height: 1;
 }
+/* Logo "studios": the same glowing Graflo spray as the accent word and the
+   footer wordmark, tucked over the T of "SWFT". */
 .sn-brand__script {
-  font-family: var(--mf-hand, cursive); font-weight: 400; font-size: 1.55em; letter-spacing: 0;
-  color: #fff; display: inline-block; transform: rotate(-5deg) translateY(0.06em); margin-left: 0.1rem;
+  font-family: var(--mf-graffiti, "Graflo", cursive); font-weight: 400; font-size: 1.12em; letter-spacing: 0;
+  color: #fff; display: inline-block; position: relative; z-index: 1;
+  transform: rotate(-6deg) translateY(0.04em); margin-left: -0.3em;
+  -webkit-text-stroke: 0.03em currentColor; paint-order: stroke fill;
+  text-shadow: 0 0 0.02em #050505, 0.03em 0.04em 0 #050505, 0 0 0.12em #fff, 0 0 0.35em rgba(255, 255, 255, 0.5), 0 0 0.8em rgba(255, 255, 255, 0.22);
 }
 
 .sn-links { display: flex; gap: 0.25rem; align-items: center; }
