@@ -48,8 +48,8 @@
   }
   function spark(points) {
     return '<svg class="sc-spark" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">' +
-      '<path d="M0 34 ' + points + ' L120 34Z" fill="#3ddc84" opacity=".12"/>' +
-      '<path d="' + points.replace(/^/, "M") + '" fill="none" stroke="#3ddc84" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>';
+      '<path d="M0 34 ' + points + ' L120 34Z" fill="#c3cdfa" opacity=".12"/>' +
+      '<path d="' + points.replace(/^/, "M") + '" fill="none" stroke="#c3cdfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>';
   }
 
   var shown = false, overlay, lastFocus;

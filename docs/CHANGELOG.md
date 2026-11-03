@@ -1,8 +1,48 @@
 # Changelog
 
+## 2026-11-04: Legible accent words and a new "How it works" walkthrough
+
+### Changed
+- Accent words ("Repeat.", "booked.", ...) now use **Listomania One** like the logo and notes (Skylight Graffiti is still registered but unused). `js/mono.js` wraps each accent word in one span instead of one per letter: per-letter spans broke the fonts' contextual letter shapes, which is what made "Repeat." read as "RepeaT.".
+- "How it works for…" redesigned (`css/flow.css`, `js/swft-flow.js`, markup from `build:services`): a rail of numbered steps on the left, each with a signal-orange progress line, and one large moment card on the right with an outlined ghost number. Industry tabs are underlined text. Phones get a row of numbered steps above the card.
+- Every card has **Why it matters**: tap/click opens an ice note explaining what the step is worth to the business (`why` in `data/services.json`; the build fails if one is missing).
+- Plays itself: each step runs ~5s, then the next industry, until the visitor picks a tab or step. Pauses while hovered, focused, while a note is open, off screen or in a background tab, and has a Pause/Play button. Reduced motion: no autoplay.
+- Industries: Professional services, E-commerce, Restaurants, Community & events (was Home services, Restaurants, Retail, Churches). The Reminders & reviews step has a star icon.
+
+## 2026-11-04: Listomania logo and a quieter accent palette
+
+### Changed
+- Logo and footer wordmark: "studios" is now handwritten **Listomania One** (was Skylight Graffiti), in the signal color. Footer size 0.5em, fits 390–1920px.
+- New accent palette, "sophisticated chaos": tokens in `css/mono.css` `:root`.
+  - `--swft-signal: #ff5a36` (warm energy): logo "studios", pen circles/underlines, handwritten notes, the notification badge, sidebar badges, the strategy pop-up's live dot.
+  - `--swft-ice: #c3cdfa` (cool, techy): the highlighter (dark text on top), "How it works" checks, pop-up highlights.
+  - `--swft-sand: #e9d3a6` (quiet neutral): only in the accent-word click cycle.
+- Replaced the neon pink, lime, red and green everywhere. Accent-word clicks cycle white → signal → ice → sand; the five-click burst rolls the same palette.
+- The pen SVGs in `css/annotate.css` hard-code `%23ff5a36` (data URIs can't read CSS variables); change it there too if the signal color changes.
+
+## 2026-11-04: Notebook annotations (Listomania)
+
+### Added
+- [`css/annotate.css`](../css/annotate.css) + [`js/annotate.js`](../js/annotate.js): marks that look like someone annotated the page. `<mark class="an an-hl">` lime highlighter, `.an-circle` pink pen circle, `.an-ul` pink pen underline, `<p class="an-note" role="note">` handwritten note in **Listomania One All Caps**. Each draws in as it scrolls into view (staggered); no-JS and reduced motion show them drawn. Loaded on every page through `css/swft-nav.css`; the script only loads where marks exist.
+- Case studies: `scripts/lib/case-study-copy.mjs` renders `==highlight==`, `((circle))`, `__underline__` in the copy fields and a per-section `notes` object (`glance`, `challenge`, `approach`, `built`, `takeaways`). All 14 projects in `data/portfolio-projects.json` are annotated (81 marks, 23 notes) on the insights a skimmer would want: the problem, the move that solved it, the lesson. Rebuild with `node scripts/update-case-study-copy.mjs`.
+- Headlines and leads: homepage hero ("strangers into regulars"), SWFT meaning, "Grow." circled; services, about and work page leads; one key promise in each service page intro (`data/services.json` leads).
+
+### Fixed
+- `css/swft-fonts.css` imported `listomania.css` after other rules, which browsers ignore, so Listomania never loaded. The `@import` is now first.
+
 ## 2026-11-04: Add Listomania font files
 - Added Envato **Listomania** web fonts under [`fonts/listomania/`](../fonts/listomania/) (regular + oblique `.woff2`).
 - Registered `@font-face` + CSS variables in [`css/listomania.css`](../css/listomania.css); imported from [`css/swft-fonts.css`](../css/swft-fonts.css). **No site text styles changed.**
+
+## 2026-11-03: Graffiti accent word in Skylight Graffiti
+
+### Changed
+- The accent word (`.mf-script`, `.ps-accent`), the footer wordmark's "studios" and the logo's "studios" use **Skylight Graffiti** (RVQ). Converted from the licensed `.otf` to `fonts/SkylightGraffiti.woff2` (50 KB) and `.woff`; `@font-face` in `css/swft-fonts.css`, `--mf-graffiti` in `css/mono.css`. Graflo (tried first) was removed. The swash & ornament companion font is not used.
+- Accent word: white (`--mf-accent-color: #ffffff`), no glow, 0.76em of the headline (the font is tall), thickened with a stroke in its own color and tucked slightly over the end of the word before it, with a thin dark cut line so it reads as a paint layer. `js/mono.js` (`markLineStarts`) drops the overlap when the word starts a line. Clicks still cycle colors; the five-click rainbow no longer glows.
+- Logo and footer wordmark "studios": cinematic red (`--sn-neon-red: #ff3b30`), no glow, raised a little and tucked over the T of "SWFT". Footer size 0.56em, fits 390–1920px wide.
+
+### Notes
+- Only web formats are published; the desktop `.otf` is not in the repo. The font's embedding flag is "preview & print", so web use must be covered by the Skylight Graffiti licence.
 
 ## 2026-11-04: Stripe payment links live for all 25 packages
 

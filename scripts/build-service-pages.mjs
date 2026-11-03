@@ -46,6 +46,7 @@ export const ICONS = {
   megaphone: '<path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16.5 9.5a3.5 3.5 0 0 1 0 5M19 7a7 7 0 0 1 0 10"/>',
   video: '<rect x="3" y="7" width="12" height="10" rx="2"/><path d="m15 11 6-3.5v9L15 13"/>',
   layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 12.5 9 5 9-5M3 16.5l9 5 9-5"/>',
+  star: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
   chart: '<path d="M4 20V4M4 20h16"/><path d="m8 15 3.5-4 3 2.5L19 8"/>',
 };
 export const icon = (name, cls = "sv-icon") =>
@@ -332,53 +333,73 @@ function rowsBlock(data) {
     .join("\n");
 }
 
-// "How it works for <industry>": five SWFT Method stages, one card per stage.
-// Static HTML is complete (every industry, every card) so crawlers and no-JS
-// visitors get it all; js/swft-flow.js adds the tabs' behaviour and the
-// step-by-step animation.
+// "How it works for <industry>": the SWFT Method as a workflow you can step
+// through. Left: the five stages as a rail (each a button with a progress bar).
+// Right: one "moment" card per stage with what the customer does, what SWFT
+// runs there and a "Why it matters" note revealed on tap. Static HTML has every
+// industry and every card (crawlers, no-JS); js/swft-flow.js plays it.
 function flowBlock(data) {
   const f = data.flow;
+  const n = f.stages.length;
   const tabs = f.industries
     .map((ind, i) =>
-      `<button type="button" role="tab" class="sf-flow__tab" id="flow-tab-${ind.id}" aria-controls="flow-panel-${ind.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${esc(ind.label)}</button>`
+      `<button type="button" role="tab" class="wf__tab" id="wf-tab-${ind.id}" aria-controls="wf-panel-${ind.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${esc(ind.label)}</button>`
     )
     .join("");
   const panels = f.industries
     .map((ind, i) => {
-      const steps = f.stages
+      const rail = f.stages
+        .map((st, j) => {
+          const num = String(j + 1).padStart(2, "0");
+          return [
+            `<li><button type="button" class="wf__step" data-step="${j}" aria-controls="wf-${ind.id}-${j}">`,
+            `  <span class="wf__num">${num}</span>`,
+            `  <span class="wf__step-text"><span class="wf__stage">${esc(st.stage)}</span><span class="wf__service">${esc(st.service)}</span></span>`,
+            `  <span class="wf__bar" aria-hidden="true"><span></span></span>`,
+            `</button></li>`,
+          ].join("");
+        })
+        .join("\n");
+      const moments = f.stages
         .map((st, j) => {
           const c = ind.cards[j];
+          const num = String(j + 1).padStart(2, "0");
+          const whyId = `wf-${ind.id}-${j}-why`;
           return [
-            `<li class="sf-flow__step">`,
-            `  <a class="sf-flow__node" href="${st.href}" tabindex="-1" aria-hidden="true">${icon(st.icon, "sf-flow__icon")}</a>`,
-            `  <a class="sf-flow__service" href="${st.href}">${esc(st.service)}</a>`,
-            `  <div class="sf-flow__card">`,
-            `    <p class="sf-flow__stage">(0${j + 1}) ${esc(st.stage)}</p>`,
-            `    <h3>${esc(c.title)}</h3>`,
-            `    <p>${esc(c.text)}</p>`,
-            `    ${CHECK.replace('class="sv-check"', 'class="sf-flow__check"')}`,
-            `  </div>`,
-            `</li>`,
+            `<article class="wf__moment" id="wf-${ind.id}-${j}" data-step="${j}">`,
+            `  <span class="wf__ghost" aria-hidden="true">${num}</span>`,
+            `  <p class="wf__tag">${icon(st.icon, "wf__icon")}<span>${num} / ${String(n).padStart(2, "0")} &middot; ${esc(st.stage)}</span></p>`,
+            `  <h3 class="wf__title">${esc(c.title)}</h3>`,
+            `  <p class="wf__text"><span class="wf__runs">SWFT runs:</span> ${esc(c.text)} &middot; <a href="${st.href}">${esc(st.service)}</a></p>`,
+            `  <button type="button" class="wf__why-btn" aria-expanded="false" aria-controls="${whyId}"><span class="wf__why-i" aria-hidden="true">i</span>Why it matters</button>`,
+            `  <div class="wf__why" id="${whyId}" role="note"><p>${esc(c.why)}</p></div>`,
+            `</article>`,
           ].join("\n");
         })
         .join("\n");
       return [
-        `<div class="sf-flow__panel" role="tabpanel" id="flow-panel-${ind.id}" aria-labelledby="flow-tab-${ind.id}"${i === 0 ? "" : " hidden"}>`,
-        `<ol class="sf-flow__steps"><li class="sf-flow__track" aria-hidden="true"><span class="sf-flow__fill"></span></li>`,
-        steps,
+        `<div class="wf__panel" role="tabpanel" id="wf-panel-${ind.id}" aria-labelledby="wf-tab-${ind.id}"${i === 0 ? "" : " hidden"}>`,
+        `<ol class="wf__rail" aria-label="Steps">`,
+        rail,
         `</ol>`,
+        `<div class="wf__stage-area">`,
+        moments,
+        `</div>`,
         `</div>`,
       ].join("\n");
     })
     .join("\n");
   return [
-    `<div class="sf-flow" data-swft-flow>`,
-    `  <div class="sf-flow__top">`,
-    `    <p class="sf-flow__tag"><span class="mf-dot" aria-hidden="true"></span>How it works for</p>`,
-    `    <div class="sf-flow__tabs" role="tablist" aria-label="Pick an industry">${tabs}</div>`,
+    `<div class="wf" data-swft-flow>`,
+    `  <div class="wf__top">`,
+    `    <p class="wf__label">How it works for</p>`,
+    `    <div class="wf__tabs" role="tablist" aria-label="Pick an industry">${tabs}</div>`,
     `  </div>`,
     panels,
-    `  <p class="sf-flow__foot">${f.footer}</p>`,
+    `  <div class="wf__foot">`,
+    `    <p>${f.footer}</p>`,
+    `    <button type="button" class="wf__play" aria-pressed="false" hidden><span class="wf__play-icon" aria-hidden="true"></span><span class="wf__play-label">Pause</span></button>`,
+    `  </div>`,
     `</div>`,
   ].join("\n");
 }
@@ -406,6 +427,7 @@ function validate(data, offers) {
   for (const st of data.flow?.stages || []) if (!ICONS[st.icon]) errors.push(`flow: unknown icon "${st.icon}"`);
   for (const ind of data.flow?.industries || []) {
     if (ind.cards.length !== data.flow.stages.length) errors.push(`flow: ${ind.id} needs ${data.flow.stages.length} cards, has ${ind.cards.length}`);
+    ind.cards.forEach((c, j) => { for (const k of ["title", "text", "why"]) if (!c[k]) errors.push(`flow: ${ind.id} card ${j + 1} missing ${k}`); });
   }
   if (errors.length) {
     console.error(errors.join("\n"));

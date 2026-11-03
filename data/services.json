@@ -30,7 +30,7 @@
       "title": "Website Design & Development | SWFT Studios",
       "description": "Fast, mobile-first websites on Webflow or Shopify that turn visitors into calls, bookings and sales. Websites start at $400 for up to 5 pages. SWFT Studios, NYC and North Jersey.",
       "h1": "A website that books the <span class=\"mf-script\">job.</span>",
-      "lead": "Fast, mobile-first sites that say what you do in seconds <span class=\"is-muted\">and make calling, booking or buying the obvious next step.</span>",
+      "lead": "Fast, mobile-first sites that <mark class=\"an an-hl\">say what you do in seconds</mark> <span class=\"is-muted\">and make calling, booking or buying the obvious next step.</span>",
       "outcomes": [
         {
           "title": "More inquiries",
@@ -119,7 +119,7 @@
       "title": "Mobile & Web App Development | SWFT Studios",
       "description": "SWFT Studios designs and builds iPhone, Android and web apps, customer portals and booking apps, from clickable prototype to app store launch.",
       "h1": "Your business, in their <span class=\"mf-script\">pocket.</span>",
-      "lead": "iPhone, Android and web apps, customer portals and booking apps <span class=\"is-muted\">designed around how people actually use them, from first prototype to launch day.</span>",
+      "lead": "iPhone, Android and web apps, customer portals and booking apps <span class=\"is-muted\">designed around <span class=\"an an-ul\">how people actually use them</span>, from first prototype to launch day.</span>",
       "outcomes": [
         {
           "title": "Repeat customers",
@@ -203,7 +203,7 @@
       "title": "Custom Software & CRMs for Small Businesses | SWFT Studios",
       "description": "SWFT Studios builds custom CRMs, dashboards and internal tools that replace the stack of subscriptions your team works around. NYC and North Jersey.",
       "h1": "One system that fits how you <span class=\"mf-script\">work.</span>",
-      "lead": "Stop paying for five apps that don't talk to each other. We build the CRM, job board or dashboard your team actually needs, <span class=\"is-muted\">and you own it.</span>",
+      "lead": "Stop paying for five apps that don't talk to each other. We build the CRM, job board or dashboard your team actually needs, <span class=\"is-muted\">and <mark class=\"an an-hl\">you own it</mark>.</span>",
       "outcomes": [
         {
           "title": "Fewer subscriptions",
@@ -286,7 +286,7 @@
       "title": "Paid Ads, SEO & Local Marketing | SWFT Studios",
       "description": "Meta and Google ads, local SEO, Google Business Profile and AI search visibility for local businesses in NYC and North Jersey, tracked from click to booked job.",
       "h1": "Ads that pay for <span class=\"mf-script\">themselves.</span>",
-      "lead": "Meta and Google ads, local SEO and your Google Business Profile, <span class=\"is-muted\">tracked from the first click to the booked job so you know what every lead cost.</span>",
+      "lead": "Meta and Google ads, local SEO and your Google Business Profile, <span class=\"is-muted\">tracked from the first click to the booked job so you know <mark class=\"an an-hl\">what every lead cost</mark>.</span>",
       "outcomes": [
         {
           "title": "Show up locally",
@@ -370,7 +370,7 @@
       "title": "Photo, Video, Social & Live Streaming | SWFT Studios",
       "description": "On-site photography, short-form video, brand films, social media management and live streaming from SWFT Studios in NYC and North Jersey.",
       "h1": "Content that stops the <span class=\"mf-script\">scroll.</span>",
-      "lead": "On-site photo, short-form video, brand films, social media and live streaming, <span class=\"is-muted\">planned around what your audience already responds to.</span>",
+      "lead": "On-site photo, short-form video, brand films, social media and live streaming, <span class=\"is-muted\">planned around <span class=\"an an-ul\">what your audience already responds to</span>.</span>",
       "outcomes": [
         {
           "title": "Real, not stock",
@@ -456,7 +456,7 @@
       "title": "Business Automations & Integrations | SWFT Studios",
       "description": "SWFT Studios connects your forms, CRM, calendar and inbox so missed-call text-backs, instant replies, reminders and review requests run on their own. From $750.",
       "h1": "Busywork, on <span class=\"mf-script\">autopilot.</span>",
-      "lead": "We connect the tools you already use so follow-ups, reminders, invoices and reports run themselves, <span class=\"is-muted\">and your team gets hours back every week.</span>",
+      "lead": "We connect the tools you already use so follow-ups, reminders, invoices and reports run themselves, <span class=\"is-muted\">and <mark class=\"an an-hl\">your team gets hours back every week</mark>.</span>",
       "outcomes": [
         {
           "title": "Faster follow-up",
@@ -539,7 +539,7 @@
       "title": "Analytics, Tracking & Reporting for Small Businesses | SWFT Studios",
       "description": "SWFT Studios sets up GA4, conversion tracking and an automatic monthly report so you know which ads, posts and pages bring in calls, bookings and sales. From $500.",
       "h1": "Know what <span class=\"mf-script\">works.</span>",
-      "lead": "We track every call, form and booking back to where it came from, <span class=\"is-muted\">and send you a plain-English report so you spend on what works.</span>",
+      "lead": "We track every call, form and booking back to where it came from, <span class=\"is-muted\">and send you a plain-English report so you <mark class=\"an an-hl\">spend on what works</mark>.</span>",
       "outcomes": [
         {
           "title": "Every lead counted",
@@ -613,7 +613,7 @@
     }
   ],
   "flow": {
-    "_readme": "The animated 'How it works for…' section on the homepage and /services.html. One stage per step of the SWFT Method; every industry needs exactly one card per stage. Rendered by build:services, animated by js/swft-flow.js.",
+    "_readme": "The 'How it works for…' walkthrough on the homepage and /services.html. One stage per step of the SWFT Method; every industry needs exactly one card per stage. Each card: title (the customer's moment), text (what SWFT runs there) and why (what that step is worth to the business, shown when the visitor taps 'Why it matters'). Rendered by build:services, played by js/swft-flow.js.",
     "title": "Strategic Workflows Facilitating Transformation.",
     "footer": "<b>From first scroll to repeat customer.</b> One team runs every step.",
     "stages": [
@@ -642,7 +642,7 @@
         "key": "nurture",
         "stage": "Nurture",
         "service": "Reminders & reviews",
-        "icon": "bolt",
+        "icon": "star",
         "href": "/automations.html"
       },
       {
@@ -655,28 +655,64 @@
     ],
     "industries": [
       {
-        "id": "home-services",
-        "label": "Home services",
+        "id": "professional",
+        "label": "Professional services",
         "cards": [
           {
-            "title": "Sees your Reel on Instagram",
-            "text": "Before-and-after install, shot on site"
+            "title": "Finds you on Google",
+            "text": "Search ad and reviews show you're the expert",
+            "why": "Most people choose a professional from the first page of results. Showing up there with real reviews puts you on the shortlist before they've called anyone."
           },
           {
-            "title": "Lands on your website",
-            "text": "Clear offer · book in two taps"
+            "title": "Reads your services page",
+            "text": "Clear packages, credentials up front",
+            "why": "Buyers want three answers fast: what you do, proof you've done it, and how to reach you. A page that answers all three turns a visit into a call."
           },
           {
-            "title": "Asks for a quote at 10pm",
-            "text": "Instant text-back books the visit"
+            "title": "Books a consult at 9pm",
+            "text": "Instant reply sends your calendar link",
+            "why": "The first firm to respond usually wins the client. An instant reply with a booking link catches them while they're still deciding, even after hours."
           },
           {
-            "title": "Gets reminders and a review ask",
-            "text": "No-show avoided · review requested"
+            "title": "Gets a reminder and intake form",
+            "text": "Fewer no-shows, a prepared first meeting",
+            "why": "Automatic reminders cut no-shows, and collecting details before the meeting means your first hour is spent advising, not filling in forms."
           },
           {
-            "title": "Becomes a repeat customer",
-            "text": "Job, invoice and next service in one system"
+            "title": "Signs on for the year",
+            "text": "Clients, files and invoices in one place",
+            "why": "Keeping a client costs far less than finding a new one. When files, invoices and the next appointment live in one system, renewals happen on time instead of from memory."
+          }
+        ]
+      },
+      {
+        "id": "ecommerce",
+        "label": "E-commerce",
+        "cards": [
+          {
+            "title": "Clicks a Meta ad",
+            "text": "Short-form product video, made by us",
+            "why": "Video shows the product in use and answers questions a photo can't. Shoppers who see it working arrive ready to buy."
+          },
+          {
+            "title": "Shops your store",
+            "text": "Fast pages, short checkout",
+            "why": "Every extra second and every extra checkout step loses buyers. A fast store with a short checkout carries the ad's momentum all the way to payment."
+          },
+          {
+            "title": "Asks about sizing",
+            "text": "Instant reply with the size guide",
+            "why": "Unanswered questions become abandoned carts. Answering in seconds removes the last doubt while they're still on the page."
+          },
+          {
+            "title": "Leaves a full cart",
+            "text": "A reminder brings them back to pay",
+            "why": "Plenty of shoppers leave to think it over. A timely reminder with the exact items they chose brings a share of them back to finish the order."
+          },
+          {
+            "title": "Reorders in one tap",
+            "text": "Orders, stock and loyalty in sync",
+            "why": "Repeat buyers are your most profitable customers. Saved details, loyalty rewards and accurate stock make the second order effortless."
           }
         ]
       },
@@ -686,75 +722,59 @@
         "cards": [
           {
             "title": "Finds you on Google Maps",
-            "text": "Fresh photos and posts on your profile"
+            "text": "Fresh photos and posts on your profile",
+            "why": "Hungry people decide from the map. Recent photos, correct hours and fresh posts make you the obvious pick nearby."
           },
           {
-            "title": "Opens your menu site",
-            "text": "Fast menu · order or reserve online"
+            "title": "Opens your menu",
+            "text": "Fast menu, order or reserve online",
+            "why": "If the menu is a slow PDF, people go elsewhere. A fast, readable menu with an order or reserve button turns browsing into a booking."
           },
           {
             "title": "DMs about a party of 12",
-            "text": "Instant reply checks the date and books it"
+            "text": "Instant reply checks the date and books it",
+            "why": "Large parties and events are your biggest tickets. Replying instantly, with availability and a way to confirm, wins the booking before they ask the next place."
           },
           {
             "title": "Gets a thank-you text",
-            "text": "Review request · offer for their next visit"
+            "text": "Review request, offer for next time",
+            "why": "Right after a good meal is when people actually leave reviews. A small offer gives them a reason to come back soon."
           },
           {
             "title": "Comes back for catering",
-            "text": "Guests, orders and events in one place"
+            "text": "Guests, orders and events in one place",
+            "why": "Knowing who your regulars are lets you invite them to events and catering. Your best customers become your easiest sales."
           }
         ]
       },
       {
-        "id": "retail",
-        "label": "Retail & e-commerce",
-        "cards": [
-          {
-            "title": "Clicks a Meta ad",
-            "text": "Short-form product video, made by us"
-          },
-          {
-            "title": "Shops your store",
-            "text": "Shopify store · clean checkout"
-          },
-          {
-            "title": "Asks about sizing",
-            "text": "Instant reply answers with a size guide"
-          },
-          {
-            "title": "Leaves a full cart",
-            "text": "Reminder email brings them back to pay"
-          },
-          {
-            "title": "Reorders in one tap",
-            "text": "Orders, stock and loyalty kept in sync"
-          }
-        ]
-      },
-      {
-        "id": "churches",
-        "label": "Churches",
+        "id": "community",
+        "label": "Community & events",
         "cards": [
           {
             "title": "Watches your livestream",
-            "text": "Multi-camera Sunday service"
+            "text": "Multi-camera stream, shot by us",
+            "why": "A livestream is how many people try you out before they show up. Good video makes a first visit feel familiar instead of risky."
           },
           {
             "title": "Visits your website",
-            "text": "Plan a visit · give online"
+            "text": "Upcoming events, RSVP or give online",
+            "why": "Newcomers look for one thing: what's next and how to join. Events and sign-up on the first screen turn curiosity into an RSVP."
           },
           {
-            "title": "Asks about kids' programs",
-            "text": "Instant reply sends times and a sign-up link"
+            "title": "Asks about the kids' program",
+            "text": "Instant reply sends times and a sign-up link",
+            "why": "A quick answer feels like a warm welcome. An instant reply with the details and a sign-up link keeps a newcomer from drifting away."
           },
           {
             "title": "Gets a welcome series",
-            "text": "Texts and emails after the first visit"
+            "text": "Texts and emails after the first visit",
+            "why": "Most people decide whether to come back within a few weeks. A short welcome series keeps you in touch while that decision is being made."
           },
           {
-            "title": "Joins a small group",
-            "text": "Members, groups and giving in one system"
+            "title": "Joins a group",
+            "text": "Members, groups and giving in one system",
+            "why": "When members, groups and giving live in one place, nobody falls through the cracks, and your team spends its time with people instead of spreadsheets."
           }
         ]
       }

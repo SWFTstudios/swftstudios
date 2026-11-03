@@ -1,3 +1,6 @@
+/* Listomania (Envato) faces + vars. @import must come before every other
+   rule or browsers ignore it. Used by the notebook annotations (css/annotate.css). */
+@import url("listomania.css?v=20261104-annotate");
 /* SWFT global typography (Astrox type system): Inter Tight for display,
    headings and body; Space Mono for labels and eyebrows. Both self-hosted
    from Google Fonts (OFL), latin + latin-ext subsets. */
@@ -53,6 +56,17 @@
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Skylight Graffiti (RVQ, licensed by SWFT): the graffiti accent word
+   (.mf-script / .ps-accent), the footer wordmark and the logo's "studios".
+   Converted from the licensed .otf to .woff2/.woff for the web. */
+@font-face {
+  font-family: "Skylight Graffiti";
+  src: url("../fonts/SkylightGraffiti.woff2") format("woff2"), url("../fonts/SkylightGraffiti.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 html {
@@ -195,5 +209,3 @@ html :is(
   font-display: swap;
 }
 
-/* Listomania (Envato): faces + CSS vars only — not applied to site text. */
-@import url("listomania.css?v=20261103a");
