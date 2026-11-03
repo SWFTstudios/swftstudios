@@ -1,3 +1,6 @@
+/* Listomania (Envato) faces + vars. @import must come before every other
+   rule or browsers ignore it. Used by the notebook annotations (css/annotate.css). */
+@import url("listomania.css?v=20261104-annotate");
 /* SWFT global typography (Astrox type system): Inter Tight for display,
    headings and body; Space Mono for labels and eyebrows. Both self-hosted
    from Google Fonts (OFL), latin + latin-ext subsets. */
@@ -206,5 +209,3 @@ html :is(
   font-display: swap;
 }
 
-/* Listomania (Envato): faces + CSS vars only — not applied to site text. */
-@import url("listomania.css?v=20261103a");

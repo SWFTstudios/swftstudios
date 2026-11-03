@@ -11,7 +11,7 @@
     "liveUrl": "https://brooklynsteelco.com/",
     "hubDetails": "How SWFT Studios built a Shopify store that sells a $499 espresso machine by teaching shoppers what it does, then raises order value with bundles and accessories.",
     "challenge": [
-      "At $499, nobody buys an espresso machine on impulse. Shoppers want to know how it works and whether they can use it before they pay.",
+      "At $499, ==nobody buys an espresso machine on impulse==. Shoppers want to know how it works and whether they can use it before they pay.",
       "Spec sheets alone (bar pressure, grind settings) don't tell a beginner why any of it matters.",
       "The Brooklyn café identity had to show up across the whole store, not only in the photos.",
       "Profit depends on more than the machine, so cups and accessories needed a real place in the buying path."
@@ -31,16 +31,16 @@
     "public": true,
     "description": "How SWFT Studios built a Shopify store that sells a $499 espresso machine by teaching shoppers what it does, then raises order value with bundles and accessories.",
     "highlight": "Shopify launch: product education, bundle builder, Brew Guides",
-    "snapshot": "Brooklyn Steel Co. is a kitchen appliance brand launching the Talos 20, a $499 home espresso machine with a built-in grinder and milk frother. We built their Shopify store and shaped how the product is explained, merchandised and supported after the sale.",
+    "snapshot": "Brooklyn Steel Co. is a kitchen appliance brand launching the Talos 20, ==a $499 home espresso machine== with a built-in grinder and milk frother. We built their Shopify store and shaped how the product is explained, merchandised and supported after the sale.",
     "goal": "Sell a premium appliance online to people who have never used an espresso machine like it, and grow the size of each order.",
     "approach": [
       {
         "title": "Explain the machine in plain benefits",
-        "detail": "We turned each feature (grind settings, pressure gauge, steam wand, dual spout) into a visual card that says what it does for your morning coffee. Shoppers who understand a product are far more likely to buy it."
+        "detail": "We turned each feature (grind settings, pressure gauge, steam wand, dual spout) into a visual card that says what it does for your morning coffee. ==Shoppers who understand a product are far more likely to buy it.=="
       },
       {
         "title": "Make bundles easy to build",
-        "detail": "A mix and match builder for the limited edition cup collections lets shoppers add to their order in a couple of taps instead of hunting through the catalog."
+        "detail": "A mix and match builder for the limited edition cup collections lets shoppers add to their order __in a couple of taps__ instead of hunting through the catalog."
       },
       {
         "title": "Organize the catalog the way people shop",
@@ -48,7 +48,7 @@
       },
       {
         "title": "Support the customer after checkout",
-        "detail": "Brew Guides give new owners recipes and how-tos. Customers who succeed with a product leave better reviews and send fewer returns."
+        "detail": "Brew Guides give new owners recipes and how-tos. Customers who succeed with a product ==leave better reviews and send fewer returns==."
       }
     ],
     "measure": [
@@ -57,11 +57,16 @@
       "Traffic and time on page for Brew Guides, plus returns and support requests per order"
     ],
     "takeaways": [
-      "If your product needs explaining, your product page has to do the explaining. Lead with what it does for the buyer, then show the specs.",
-      "Bundles raise order value when they take one tap, not a second shopping trip.",
+      "If your product needs explaining, ((your product page has to do the explaining)). Lead with what it does for the buyer, then show the specs.",
+      "==Bundles raise order value when they take one tap==, not a second shopping trip.",
       "Content that helps people after they buy (guides, recipes, how-tos) protects your reviews and cuts returns."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "challenge": "Higher price = more explaining",
+      "approach": "Teach first, sell second",
+      "takeaways": "Steal this one"
+    }
   },
   {
     "order": 2,
@@ -77,7 +82,7 @@
     "challenge": [
       "New products and seasonal colors arrive often, and a growing catalog quickly starts to feel cluttered.",
       "Every seasonal launch needed its own spot on the store to get attention.",
-      "Much of the traffic comes from Instagram and influencers, and those visitors need a short path to the exact product they saw.",
+      "Much of the traffic comes from Instagram and influencers, and those visitors need __a short path to the exact product they saw__.",
       "The brand wanted to talk about sustainability and style without slowing anyone down at checkout."
     ],
     "built": [
@@ -95,7 +100,7 @@
     "public": true,
     "description": "How SWFT Studios organized a fast moving drinkware catalog into a Shopify store built for seasonal drops, social traffic and repeat buyers.",
     "highlight": "Shopify store: seasonal drops, shop the look, blog and newsletter",
-    "snapshot": "Manna Hydration sells colorful, affordable and sustainable drinkware, from color changing cups to workout bottles and everyday tumblers. We built their Shopify store around how customers actually shop: by use, by season and straight from Instagram.",
+    "snapshot": "Manna Hydration sells colorful, affordable and sustainable drinkware, from color changing cups to workout bottles and everyday tumblers. We built their Shopify store around how customers actually shop: ==by use, by season and straight from Instagram==.",
     "goal": "Turn a large, fast changing catalog and steady social traffic into repeat online sales.",
     "approach": [
       {
@@ -108,7 +113,7 @@
       },
       {
         "title": "Connect Instagram to the cart",
-        "detail": "An Instagram feed and shop the look sections let social visitors buy what they saw in a post without searching for it."
+        "detail": "An Instagram feed and shop the look sections let social visitors ==buy what they saw in a post without searching for it==."
       },
       {
         "title": "Bring people back",
@@ -121,11 +126,15 @@
       "Repeat purchase rate and newsletter signups per 100 visitors"
     ],
     "takeaways": [
-      "Organize products around the reason people buy them. Use cases beat long lists of SKUs.",
-      "If social media drives your traffic, every post should land on a page where the product in the post can be bought.",
-      "An email list turns one time buyers into repeat customers. Ask for the signup on every visit."
+      "Organize products around the reason people buy them. ==Use cases beat long lists of SKUs==.",
+      "If social media drives your traffic, ((every post)) should land on a page where the product in the post can be bought.",
+      "==An email list turns one time buyers into repeat customers==. Ask for the signup on every visit."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "approach": "Post to cart in one tap",
+      "takeaways": "Ask for the email!"
+    }
   },
   {
     "order": 3,
@@ -140,7 +149,7 @@
     "hubDetails": "How SWFT Studios made a wide kitchen and home catalog easy to shop with clear navigation, recipes and reviews that support bigger purchases.",
     "challenge": [
       "The catalog covers Prep, Cook, Serve, Drinkware, Appliances and Lifestyle, each with many subcategories.",
-      "Some people shop by category (a skillet) and others by moment (hosting dinner), so navigation had to work both ways.",
+      "Some people shop by category (a skillet) and others ((by moment (hosting dinner))), so navigation had to work both ways.",
       "Appliances like espresso machines cost more and need proof before people buy.",
       "Existing owners needed help with manuals, registration and replacement parts without calling support."
     ],
@@ -160,11 +169,11 @@
     "description": "How SWFT Studios made a wide kitchen and home catalog easy to shop with clear navigation, recipes and reviews that support bigger purchases.",
     "highlight": "Shopify store: mega menu, recipes, support hub",
     "snapshot": "Thyme & Table is a kitchen and home brand sold at Walmart, with cookware, bakeware, dinnerware, drinkware, appliances and lifestyle products. We built their direct online store and the structure that keeps a very large range easy to shop.",
-    "goal": "Help shoppers find the right product quickly across hundreds of items, and give them the confidence to buy higher priced appliances online.",
+    "goal": "Help shoppers find the right product quickly ==across hundreds of items==, and give them the confidence to buy higher priced appliances online.",
     "approach": [
       {
         "title": "A menu that mirrors the kitchen",
-        "detail": "A mega menu built around Prep, Cook, Serve, Drinkware, Appliances and Lifestyle gets shoppers to the right collection in one or two clicks."
+        "detail": "A mega menu built around Prep, Cook, Serve, Drinkware, Appliances and Lifestyle gets shoppers to the right collection ==in one or two clicks==."
       },
       {
         "title": "Recipes that sell the tools",
@@ -172,7 +181,7 @@
       },
       {
         "title": "Proof where the price is higher",
-        "detail": "Customer testimonials sit next to the appliances, where hesitation is highest."
+        "detail": "Customer testimonials sit next to the appliances, ==where hesitation is highest==."
       },
       {
         "title": "Self service support",
@@ -185,11 +194,15 @@
       "Visits from recipe pages to product pages, and support hub usage"
     ],
     "takeaways": [
-      "With a big catalog, navigation is your salesperson. Group products the way your customers think, not the way your warehouse does.",
+      "With a big catalog, ==navigation is your salesperson==. Group products __the way your customers think__, not the way your warehouse does.",
       "Show your products in real life. Recipes, room photos and how-tos sell better than a white background.",
-      "Put reviews right next to your most expensive items. That is where buyers hesitate."
+      "==Put reviews right next to your most expensive items==. That is where buyers hesitate."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "challenge": "Two ways to shop",
+      "takeaways": "Proof where the price is"
+    }
   },
   {
     "order": 4,
@@ -204,7 +217,7 @@
     "hubDetails": "How SWFT Studios built a brand store for a Walmart hydration brand that showcases the full range, highlights its 2 in 1 bottle and still sends shoppers to Walmart.",
     "challenge": [
       "Bottles, tumblers, travel mugs and kids' lines each come in many sizes and colors.",
-      "The signature 2 in 1 bottle (sip through the straw or drink from the open top) was easy to miss.",
+      "The signature ((2 in 1 bottle)) (sip through the straw or drink from the open top) was easy to miss.",
       "TAL competes with pricier brands, so shoppers needed proof that the value is real.",
       "Some visitors want to buy online and others want to pick it up at Walmart. The site had to serve both."
     ],
@@ -224,7 +237,7 @@
     "description": "How SWFT Studios built a brand store for a Walmart hydration brand that showcases the full range, highlights its 2 in 1 bottle and still sends shoppers to Walmart.",
     "highlight": "Shopify store: product families, 2 in 1 story, Shop at Walmart links",
     "snapshot": "TAL Hydration is one of the most recognized hydration brands at Walmart, with water bottles, tumblers, travel mugs and kids' drinkware at accessible prices. We built a brand store that shows the full range and works alongside their retail partner instead of competing with it.",
-    "goal": "Give a retail first brand its own online home that builds loyalty and helps shoppers choose, whether they buy online or at Walmart.",
+    "goal": "Give a retail first brand its own online home that builds loyalty and helps shoppers choose, ==whether they buy online or at Walmart==.",
     "approach": [
       {
         "title": "Navigation by product family",
@@ -232,7 +245,7 @@
       },
       {
         "title": "Lead with the differentiator",
-        "detail": "The 2 in 1 straw and chug feature gets hero placement, so a first time visitor understands why TAL is different in a few seconds."
+        "detail": "The 2 in 1 straw and chug feature gets hero placement, so a first time visitor ==understands why TAL is different in a few seconds==."
       },
       {
         "title": "Let customers make the case",
@@ -249,11 +262,15 @@
       "Newsletter signups and returning visitors"
     ],
     "takeaways": [
-      "If you sell through retailers, your website's job is to build preference. Make it easy to buy wherever the customer likes to shop.",
-      "Find the one feature that sets you apart and put it at the top of the page.",
-      "Value brands win on proof. Show real reviews early and often."
+      "If you sell through retailers, ==your website's job is to build preference==. Make it easy to buy wherever the customer likes to shop.",
+      "Find the one feature that sets you apart and __put it at the top of the page__.",
+      "==Value brands win on proof==. Show real reviews early and often."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "approach": "Lead with the one thing",
+      "takeaways": "Don't fight your retailer"
+    }
   },
   {
     "order": 5,
@@ -267,7 +284,7 @@
     "liveUrl": "https://scribbleandscribe.webflow.io/",
     "hubDetails": "How SWFT Studios built a custom Webflow store for a creative stationery brand so the website feels as thoughtful as the products.",
     "challenge": [
-      "A generic template would have undercut a brand whose whole promise is thoughtful design.",
+      "((A generic template)) would have undercut a brand whose whole promise is thoughtful design.",
       "Product pages had to inspire browsing and still make buying quick.",
       "The site had to be both a brand showcase and a working store.",
       "Most of the audience arrives from social media on their phones."
@@ -287,7 +304,7 @@
     "description": "How SWFT Studios built a custom Webflow store for a creative stationery brand so the website feels as thoughtful as the products.",
     "highlight": "Custom Webflow store built for mobile and social traffic",
     "snapshot": "Scribble & Scribe is a creative stationery and lifestyle brand for people who care about good materials and distinctive design. We designed and built a custom Webflow store that carries the brand into every page.",
-    "goal": "Sell online to a design conscious audience that judges the brand by how the website looks and feels.",
+    "goal": "Sell online to a design conscious audience that ==judges the brand by how the website looks and feels==.",
     "approach": [
       {
         "title": "Design from the brand out",
@@ -299,7 +316,7 @@
       },
       {
         "title": "Mobile first",
-        "detail": "Every page was tuned for phones, where social visitors land and decide."
+        "detail": "Every page was tuned for phones, ==where social visitors land and decide==."
       },
       {
         "title": "Clear next steps",
@@ -312,11 +329,15 @@
       "Sales and visits from social referrals"
     ],
     "takeaways": [
-      "If design is what you sell, your website is part of the product. A template tells customers you cut corners.",
-      "Check your store on a phone first. That is where most of your social traffic decides.",
-      "Every page needs one clear next step."
+      "If design is what you sell, your website is part of the product. ==A template tells customers you cut corners==.",
+      "__Check your store on a phone first__. That is where most of your social traffic decides.",
+      "Every page needs ((one clear next step))."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "challenge": "The site IS the product",
+      "takeaways": "Phone first!"
+    }
   },
   {
     "order": 6,
@@ -330,7 +351,7 @@
     "liveUrl": "https://blurredlinesentertainment.com/",
     "hubDetails": "How SWFT Studios used wedding video, real-time Google Analytics and Instagram ads to help Blurred Lines Entertainment turn viewers into bookings.",
     "challenge": [
-      "Yanko's biggest selling point, the energy he brings to a wedding, is hard to put into words or photos.",
+      "Yanko's biggest selling point, ((the energy he brings to a wedding)), is hard to put into words or photos.",
       "Couples compare a lot of entertainers and need to feel sure before they reach out.",
       "There was no clear picture of how many people visited the website or where they were coming from.",
       "Social media got attention, but it wasn't steadily sending people to the website to book."
@@ -350,7 +371,7 @@
     "public": true,
     "description": "How SWFT Studios used wedding video, real-time Google Analytics and Instagram ads to help Blurred Lines Entertainment turn viewers into bookings.",
     "highlight": "Wedding video, Instagram ads and a homepage built for booking",
-    "snapshot": "Blurred Lines Entertainment is Yanko Hernando's entertainment company for weddings and events. People book Yanko for the energy he brings, so we captured it on video, built his website around it, connected it to Google Analytics in real time, and put the same footage to work on Instagram.",
+    "snapshot": "Blurred Lines Entertainment is Yanko Hernando's entertainment company for weddings and events. People book Yanko for the energy he brings, so we captured it on video, built his website around it, ==connected it to Google Analytics in real time==, and put the same footage to work on Instagram.",
     "goal": "Show couples and event hosts the energy Yanko brings before they ever meet him, and make booking him the easy next step.",
     "approach": [
       {
@@ -363,11 +384,11 @@
       },
       {
         "title": "Instagram as a salesperson",
-        "detail": "The videos were, and still are, used on his social media. With the help of Instagram ads, his account now works like a salesperson, bringing customers to his website."
+        "detail": "The videos were, and still are, used on his social media. With the help of Instagram ads, ==his account now works like a salesperson==, bringing customers to his website."
       },
       {
         "title": "A frictionless path to booking",
-        "detail": "His homepage gives visitors multiple places to get in contact, so the moment someone is ready, reaching Yanko and booking him for their event takes no extra steps."
+        "detail": "His homepage gives visitors multiple places to get in contact, so the moment someone is ready, reaching Yanko and booking him for their event __takes no extra steps__."
       }
     ],
     "measure": [
@@ -377,12 +398,16 @@
       "Video views and how much of each video people watch"
     ],
     "takeaways": [
-      "If people book you for how you make them feel, show that feeling. Real footage does what a description can't.",
-      "Good video keeps working long after the event: the same clips can run on your website, your social media and your ads.",
+      "If people book you for how you make them feel, show that feeling. ==Real footage does what a description can't==.",
+      "Good video keeps working long after the event: ==the same clips can run on your website, your social media and your ads==.",
       "Put more than one way to reach you on your homepage, so booking takes one tap whenever someone is ready.",
       "Connect analytics from day one so you know where your customers come from and where your ad budget pays off."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "challenge": "Sell the feeling",
+      "approach": "One shoot: site + IG + ads"
+    }
   },
   {
     "order": 7,
@@ -396,7 +421,7 @@
     "liveUrl": "https://builtbymeez.com/",
     "hubDetails": "How SWFT Studios built a website that takes Omar's personal training clients from Instagram to booked, paid sessions with Stripe and a custom Cal.com calendar, and sells his online training courses.",
     "challenge": [
-      "Interest from Instagram had no direct path to a booked training session.",
+      "Interest from Instagram ((had no direct path)) to a booked training session.",
       "Regular clients needed to book several sessions at once, not one at a time.",
       "Payments had to be secure and tied to each booking.",
       "Omar's online training courses needed a checkout people trust.",
@@ -418,7 +443,7 @@
     "public": true,
     "description": "How SWFT Studios built a website that takes Omar's personal training clients from Instagram to booked, paid sessions with Stripe and a custom Cal.com calendar, and sells his online training courses.",
     "highlight": "Instagram to booked sessions on autopilot, plus online course sales",
-    "snapshot": "Built By Me EZ is Omar's personal training business, and his clients find him on Instagram. We built a website that takes them from his profile to a booked and paid session: Stripe secured payments, one or many sessions picked on a calendar through a custom Cal.com integration, and automatic notifications for everyone. The site also sells Omar's online training courses to people who can't train with him in person. His calendar stays booked on autopilot, so he can focus 100% on each client.",
+    "snapshot": "Built By Me EZ is Omar's personal training business, and his clients find him on Instagram. We built a website that takes them from his profile to a booked and paid session: Stripe secured payments, one or many sessions picked on a calendar through a custom Cal.com integration, and automatic notifications for everyone. The site also sells Omar's online training courses to people who can't train with him in person. ==His calendar stays booked on autopilot==, so he can focus 100% on each client.",
     "goal": "Turn Instagram followers into booked, paid training clients and course buyers, without Omar managing his schedule by hand.",
     "approach": [
       {
@@ -427,11 +452,11 @@
       },
       {
         "title": "Secure payments with Stripe",
-        "detail": "Clients pay through Stripe's secure checkout when they book, so every session on the calendar is confirmed and paid."
+        "detail": "Clients pay through __Stripe's secure checkout__ when they book, so ==every session on the calendar is confirmed and paid==."
       },
       {
         "title": "Book one session or many",
-        "detail": "A custom Cal.com integration lets clients pick a single session or several dates at once on a calendar, so regular clients can lock in their training schedule in one go."
+        "detail": "A custom Cal.com integration lets clients pick a single session or several dates at once on a calendar, so regular clients can ==lock in their training schedule in one go==."
       },
       {
         "title": "Notifications on autopilot",
@@ -454,12 +479,16 @@
       "Open spots left on the calendar each week"
     ],
     "takeaways": [
-      "Instagram builds trust; your website should close the booking. Link straight to a page where people can book and pay.",
+      "==Instagram builds trust; your website should close the booking==. Link straight to a page where people can book and pay.",
       "Let clients book several sessions at once. It's easier for them and fills your calendar further ahead.",
-      "Digital products like courses let you earn beyond the hours you can train in person.",
+      "Digital products like courses let you ((earn beyond the hours)) you can train in person.",
       "Take payment at booking and send confirmations automatically, so your time goes to clients instead of admin."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "challenge": "Followers to paid clients",
+      "approach": "Zero admin"
+    }
   },
   {
     "order": 8,
@@ -473,7 +502,7 @@
     "liveUrl": "https://rollerreels.com/",
     "hubDetails": "How SWFT Studios rebuilt a production company's portfolio site so prospects can judge the work fast and send a project brief with less back and forth.",
     "challenge": [
-      "Great work was presented poorly, which cost inquiries.",
+      "((Great work was presented poorly)), which cost inquiries.",
       "Projects were hard to browse and find.",
       "Video heavy pages had to look sharp without loading slowly.",
       "The site had to work as a portfolio, a pitch and a filter for the right clients all at once."
@@ -492,12 +521,12 @@
     "public": true,
     "description": "How SWFT Studios rebuilt a production company's portfolio site so prospects can judge the work fast and send a project brief with less back and forth.",
     "highlight": "Portfolio site rebuilt to turn viewers into project inquiries",
-    "snapshot": "Roller Reels is a video production company in the New Jersey and New York City area. Their work was strong, but the old site made it hard to see. We rebuilt it so the work sells itself and prospects know how to start a project.",
+    "snapshot": "Roller Reels is a video production company in the New Jersey and New York City area. Their work was strong, but the old site made it hard to see. We rebuilt it ==so the work sells itself== and prospects know how to start a project.",
     "goal": "Get more and better fitting project inquiries from people who are already impressed by the work.",
     "approach": [
       {
         "title": "Portfolio first structure",
-        "detail": "Work is organized so a prospect can find the type of project they need in seconds."
+        "detail": "Work is organized so a prospect can __find the type of project they need in seconds__."
       },
       {
         "title": "Context around every project",
@@ -509,7 +538,7 @@
       },
       {
         "title": "Calls to action that do a job",
-        "detail": "Every page leads to an inquiry, written to bring in the kind of projects Roller Reels wants."
+        "detail": "Every page leads to an inquiry, ==written to bring in the kind of projects Roller Reels wants==."
       }
     ],
     "measure": [
@@ -518,11 +547,14 @@
       "Mobile load time on video pages"
     ],
     "takeaways": [
-      "Prospects decide in seconds. Put your best work first and make it easy to browse.",
+      "==Prospects decide in seconds==. Put your best work first and make it easy to browse.",
       "Explain who each project was for and what it achieved. Context turns a pretty reel into a reason to hire you.",
-      "Your inquiry form is a filter. Ask the questions that tell you whether a lead is a good fit."
+      "==Your inquiry form is a filter==. Ask the questions that tell you whether a lead is a good fit."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "takeaways": "Best work first"
+    }
   },
   {
     "order": 9,
@@ -538,7 +570,7 @@
     "challenge": [
       "Strong stories were getting lost because the old site was hard to follow.",
       "Visitors didn't have clear ways to learn more, stay updated or get involved.",
-      "People only give to organizations that look established and trustworthy.",
+      "People only give to organizations that ((look established and trustworthy)).",
       "The team needed a site they could keep updated with news and events."
     ],
     "built": [
@@ -556,11 +588,11 @@
     "description": "How SWFT Studios gave a global ministry a website that explains the mission quickly and gives supporters clear ways to pray, give and stay informed.",
     "highlight": "Mission first website with clear paths to give and get involved",
     "snapshot": "Hawthorne Global Ministries is a mission driven organization with powerful stories to tell. We built a website that makes the mission clear to newcomers and shows supporters exactly how to help.",
-    "goal": "Build trust with new visitors and turn interest into prayer, giving and long term involvement.",
+    "goal": "Build trust with new visitors and ==turn interest into prayer, giving and long term involvement==.",
     "approach": [
       {
         "title": "Mission first messaging",
-        "detail": "The homepage says who Hawthorne serves and why in the first screen."
+        "detail": "The homepage says who Hawthorne serves and why ==in the first screen==."
       },
       {
         "title": "Design that earns trust",
@@ -581,11 +613,15 @@
       "Visits that go from the homepage to the giving page"
     ],
     "takeaways": [
-      "Say what you do and who you serve in one sentence at the top of your homepage.",
-      "Give people more than one way to help. Not everyone is ready to give money on their first visit.",
+      "Say what you do and who you serve ==in one sentence at the top of your homepage==.",
+      "Give people more than one way to help. ==Not everyone is ready to give money on their first visit==.",
       "Keep your site updated. Recent stories and events signal that the work is active."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "approach": "Mission in one screen",
+      "takeaways": "More ways to help"
+    }
   },
   {
     "order": 10,
@@ -599,7 +635,7 @@
     "liveUrl": "https://www.alphaministriesinternational.org/",
     "hubDetails": "How SWFT Studios organized 30 years of cross cultural ministry across Pakistan and New Jersey into one website with clear paths to events and giving.",
     "challenge": [
-      "Several ministries (South Asian Fellowship, Children's Ministry, Outreach and ESL) needed to feel like one organization.",
+      "Several ministries (South Asian Fellowship, Children's Ministry, Outreach and ESL) needed to ((feel like one organization)).",
       "People had trouble finding events, giving options and leadership contacts.",
       "The ministry needed a dependable way to collect newsletter signups.",
       "Giving requires a site that feels established and is easy to use."
@@ -618,12 +654,12 @@
     "public": true,
     "description": "How SWFT Studios organized 30 years of cross cultural ministry across Pakistan and New Jersey into one website with clear paths to events and giving.",
     "highlight": "One home for four ministries, events and giving",
-    "snapshot": "Alpha Ministries International is a Christ centered ministry founded in 1995, serving communities in Pakistan and the United States through education, outreach and fellowship. We built one website that brings all of their ministries together.",
+    "snapshot": "Alpha Ministries International is a Christ centered ministry __founded in 1995__, serving communities in Pakistan and the United States through education, outreach and fellowship. We built one website that brings all of their ministries together.",
     "goal": "Help visitors understand the full scope of the work, find events and support the ministry with confidence.",
     "approach": [
       {
         "title": "Structure around the mission",
-        "detail": "Each ministry area has its own page under one clear menu, so visitors see the breadth of the work without getting lost."
+        "detail": "Each ministry area has its own page under one clear menu, so visitors ==see the breadth of the work without getting lost==."
       },
       {
         "title": "Stories for each area",
@@ -645,10 +681,13 @@
     ],
     "takeaways": [
       "When you do many things, give each one its own page and connect them with one clear menu.",
-      "Put your events and giving options one click from the homepage.",
-      "Your email list is your most reliable outreach channel. Grow it on purpose."
+      "Put your events and giving options ==one click from the homepage==.",
+      "==Your email list is your most reliable outreach channel==. Grow it on purpose."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "takeaways": "Grow the list!"
+    }
   },
   {
     "order": 11,
@@ -662,7 +701,7 @@
     "liveUrl": "https://corehome.com",
     "hubDetails": "How SWFT Studios built a website for a home and lifestyle brand that shows product quality clearly and guides visitors to buy or get in touch.",
     "challenge": [
-      "The site needed to explain product quality and brand values, not just list items.",
+      "The site needed to explain product quality and brand values, ((not just list items)).",
       "Visitors needed clear navigation and strong product presentation.",
       "It had to support both brand discovery and direct action.",
       "A broad audience meant the mobile experience had to be excellent."
@@ -683,7 +722,7 @@
     "description": "How SWFT Studios built a website for a home and lifestyle brand that shows product quality clearly and guides visitors to buy or get in touch.",
     "highlight": "Custom website built to show quality and drive inquiries",
     "snapshot": "Core Home is a home and lifestyle brand focused on quality products and customer experience. We designed and built a website that makes that quality obvious from the first visit.",
-    "goal": "Show why the products are worth it and guide visitors to buy or reach out.",
+    "goal": "==Show why the products are worth it== and guide visitors to buy or reach out.",
     "approach": [
       {
         "title": "Brand first design",
@@ -708,11 +747,14 @@
       "Mobile conversion rate"
     ],
     "takeaways": [
-      "Quality has to be shown, not claimed. Close up photos and specific details beat adjectives.",
+      "==Quality has to be shown, not claimed==. Close up photos and specific details __beat adjectives__.",
       "Make the next step obvious on every page.",
-      "Most shoppers browse on their phones first. Design for that screen."
+      "==Most shoppers browse on their phones first==. Design for that screen."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "takeaways": "Show, don't say"
+    }
   },
   {
     "order": 12,
@@ -746,7 +788,7 @@
     "description": "How SWFT Studios built a website for a service business that explains its services clearly and makes it easy for prospects to get in touch.",
     "highlight": "Service website built to turn visits into inquiries",
     "snapshot": "Western HP is a service business that needed a professional website to explain its expertise and win new clients. We designed and built a site focused on clear services and easy contact.",
-    "goal": "Look credible right away and turn website visitors into inquiries.",
+    "goal": "==Look credible right away== and turn website visitors into inquiries.",
     "approach": [
       {
         "title": "Professional design",
@@ -758,7 +800,7 @@
       },
       {
         "title": "Easy to reach",
-        "detail": "Contact and inquiry forms are short and visible from every page."
+        "detail": "Contact and inquiry forms are ==short and visible from every page==."
       },
       {
         "title": "Polished on every device",
@@ -771,11 +813,14 @@
       "Inquiry rate on mobile"
     ],
     "takeaways": [
-      "Service buyers want to know three things: what you do, whether you've done it before and how to reach you. Answer all three on your homepage.",
-      "Short forms get more submissions. Ask only what you need for a first conversation.",
-      "Give each service its own page. It helps visitors and it helps Google."
+      "Service buyers want to know three things: ==what you do, whether you've done it before and how to reach you==. Answer all three on your homepage.",
+      "==Short forms get more submissions==. Ask only what you need for a first conversation.",
+      "Give each service its own page. It helps visitors and ((it helps Google))."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "takeaways": "Answer these three"
+    }
   },
   {
     "order": 13,
@@ -789,7 +834,7 @@
     "liveUrl": "https://snoozelane.webflow.io/",
     "hubDetails": "How SWFT Studios built a landing page that explains a new commuter app in seconds and sends visitors to the App Store.",
     "challenge": [
-      "A new kind of app needs explaining before anyone will download it.",
+      "((A new kind of app)) needs explaining before anyone will download it.",
       "People had never heard of the product, so trust had to be built quickly.",
       "App Store downloads depended on a clear and convincing story.",
       "The page had to market the app and teach people how it works."
@@ -808,11 +853,11 @@
     "description": "How SWFT Studios built a landing page that explains a new commuter app in seconds and sends visitors to the App Store.",
     "highlight": "App landing page and brand for an iOS launch",
     "snapshot": "Snooze Lane is an iOS app that helps commuters plan their sleep around their transit schedule. We created the brand and the landing page that explains the idea and sends people to the App Store.",
-    "goal": "Get people to understand and trust a brand new app concept fast enough to download it.",
+    "goal": "Get people to understand and trust a brand new app concept ==fast enough to download it==.",
     "approach": [
       {
         "title": "Explain it in one line",
-        "detail": "A clear headline and use case story show the problem and the solution in seconds."
+        "detail": "A clear headline and use case story show ==the problem and the solution in seconds==."
       },
       {
         "title": "Straight to the App Store",
@@ -833,11 +878,14 @@
       "Traffic from social posts and how much of it clicks through"
     ],
     "takeaways": [
-      "If people can't explain your product to a friend in one sentence, they won't download it. Write that sentence first.",
+      "If people can't explain your product to a friend ==in one sentence, they won't download it==. Write that sentence first.",
       "Put the download button where the reader is convinced, and again at the end.",
-      "Track App Store clicks as a conversion so you can see which channels bring real installs."
+      "__Track App Store clicks as a conversion__ so you can see which channels bring real installs."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "takeaways": "Write the one-liner first"
+    }
   },
   {
     "order": 14,
@@ -851,7 +899,7 @@
     "liveUrl": "https://hamperapp.webflow.io/",
     "hubDetails": "How SWFT Studios simplified an on demand laundry app's story and signup path so it feels like a dependable everyday service.",
     "challenge": [
-      "If the landing page felt confusing or unfinished, people left before trying the service.",
+      "If the landing page felt confusing or unfinished, ((people left before trying the service)).",
       "The brand had to feel like a reliable everyday solution, not an experiment.",
       "Scheduling and signup had to feel simple.",
       "The website and the app had to tell the same story."
@@ -869,7 +917,7 @@
     "film": false,
     "description": "How SWFT Studios simplified an on demand laundry app's story and signup path so it feels like a dependable everyday service.",
     "highlight": "App landing page focused on trust and easy signup",
-    "snapshot": "Hamper is an on demand laundry pickup and delivery app. We simplified how it explains itself and how people sign up, so it feels like a dependable service you can use this week.",
+    "snapshot": "Hamper is an on demand laundry pickup and delivery app. We simplified how it explains itself and how people sign up, so it feels like ==a dependable service you can use this week==.",
     "goal": "Get more people to try the service for the first time, and make that first order feel easy.",
     "approach": [
       {
@@ -882,7 +930,7 @@
       },
       {
         "title": "Calm, trustworthy design",
-        "detail": "Design tuned for reliability over hype, because people are handing over their clothes."
+        "detail": "Design tuned for reliability over hype, ==because people are handing over their clothes==."
       },
       {
         "title": "One story across web and app",
@@ -896,9 +944,12 @@
     ],
     "takeaways": [
       "Describe your service through the customer's problem, not your features.",
-      "Show how easy the first step is. Most people quit at the first moment of confusion.",
-      "When people trust you with their stuff, calm and clear beats loud and clever."
+      "Show how easy the first step is. ==Most people quit at the first moment of confusion==.",
+      "When people trust you with their stuff, __calm and clear beats loud and clever__."
     ],
-    "results": []
+    "results": [],
+    "notes": {
+      "takeaways": "Kill the confusion"
+    }
   }
 ]

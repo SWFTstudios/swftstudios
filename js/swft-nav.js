@@ -408,6 +408,7 @@
     loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
     loadOnce("/js/swft-app.js?v=20261103-app4", "data-swft-app");
+    if (document.querySelector(".an-hl, .an-ul, .an-circle, .an-note")) loadOnce("/js/annotate.js?v=20261104-annotate", "data-swft-annotate");
     if (document.querySelector("[data-mf-notify]")) loadOnce("/js/notify-badge.js?v=20261103-notify", "data-swft-notify");
   }
 

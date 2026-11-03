@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-04: Notebook annotations (Listomania)
+
+### Added
+- [`css/annotate.css`](../css/annotate.css) + [`js/annotate.js`](../js/annotate.js): marks that look like someone annotated the page. `<mark class="an an-hl">` lime highlighter, `.an-circle` pink pen circle, `.an-ul` pink pen underline, `<p class="an-note" role="note">` handwritten note in **Listomania One All Caps**. Each draws in as it scrolls into view (staggered); no-JS and reduced motion show them drawn. Loaded on every page through `css/swft-nav.css`; the script only loads where marks exist.
+- Case studies: `scripts/lib/case-study-copy.mjs` renders `==highlight==`, `((circle))`, `__underline__` in the copy fields and a per-section `notes` object (`glance`, `challenge`, `approach`, `built`, `takeaways`). All 14 projects in `data/portfolio-projects.json` are annotated (81 marks, 23 notes) on the insights a skimmer would want: the problem, the move that solved it, the lesson. Rebuild with `node scripts/update-case-study-copy.mjs`.
+- Headlines and leads: homepage hero ("strangers into regulars"), SWFT meaning, "Grow." circled; services, about and work page leads; one key promise in each service page intro (`data/services.json` leads).
+
+### Fixed
+- `css/swft-fonts.css` imported `listomania.css` after other rules, which browsers ignore, so Listomania never loaded. The `@import` is now first.
+
 ## 2026-11-04: Add Listomania font files
 - Added Envato **Listomania** web fonts under [`fonts/listomania/`](../fonts/listomania/) (regular + oblique `.woff2`).
 - Registered `@font-face` + CSS variables in [`css/listomania.css`](../css/listomania.css); imported from [`css/swft-fonts.css`](../css/swft-fonts.css). **No site text styles changed.**

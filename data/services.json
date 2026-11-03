@@ -30,7 +30,7 @@
       "title": "Website Design & Development | SWFT Studios",
       "description": "Fast, mobile-first websites on Webflow or Shopify that turn visitors into calls, bookings and sales. Websites start at $400 for up to 5 pages. SWFT Studios, NYC and North Jersey.",
       "h1": "A website that books the <span class=\"mf-script\">job.</span>",
-      "lead": "Fast, mobile-first sites that say what you do in seconds <span class=\"is-muted\">and make calling, booking or buying the obvious next step.</span>",
+      "lead": "Fast, mobile-first sites that <mark class=\"an an-hl\">say what you do in seconds</mark> <span class=\"is-muted\">and make calling, booking or buying the obvious next step.</span>",
       "outcomes": [
         {
           "title": "More inquiries",
@@ -119,7 +119,7 @@
       "title": "Mobile & Web App Development | SWFT Studios",
       "description": "SWFT Studios designs and builds iPhone, Android and web apps, customer portals and booking apps, from clickable prototype to app store launch.",
       "h1": "Your business, in their <span class=\"mf-script\">pocket.</span>",
-      "lead": "iPhone, Android and web apps, customer portals and booking apps <span class=\"is-muted\">designed around how people actually use them, from first prototype to launch day.</span>",
+      "lead": "iPhone, Android and web apps, customer portals and booking apps <span class=\"is-muted\">designed around <span class=\"an an-ul\">how people actually use them</span>, from first prototype to launch day.</span>",
       "outcomes": [
         {
           "title": "Repeat customers",
@@ -203,7 +203,7 @@
       "title": "Custom Software & CRMs for Small Businesses | SWFT Studios",
       "description": "SWFT Studios builds custom CRMs, dashboards and internal tools that replace the stack of subscriptions your team works around. NYC and North Jersey.",
       "h1": "One system that fits how you <span class=\"mf-script\">work.</span>",
-      "lead": "Stop paying for five apps that don't talk to each other. We build the CRM, job board or dashboard your team actually needs, <span class=\"is-muted\">and you own it.</span>",
+      "lead": "Stop paying for five apps that don't talk to each other. We build the CRM, job board or dashboard your team actually needs, <span class=\"is-muted\">and <mark class=\"an an-hl\">you own it</mark>.</span>",
       "outcomes": [
         {
           "title": "Fewer subscriptions",
@@ -286,7 +286,7 @@
       "title": "Paid Ads, SEO & Local Marketing | SWFT Studios",
       "description": "Meta and Google ads, local SEO, Google Business Profile and AI search visibility for local businesses in NYC and North Jersey, tracked from click to booked job.",
       "h1": "Ads that pay for <span class=\"mf-script\">themselves.</span>",
-      "lead": "Meta and Google ads, local SEO and your Google Business Profile, <span class=\"is-muted\">tracked from the first click to the booked job so you know what every lead cost.</span>",
+      "lead": "Meta and Google ads, local SEO and your Google Business Profile, <span class=\"is-muted\">tracked from the first click to the booked job so you know <mark class=\"an an-hl\">what every lead cost</mark>.</span>",
       "outcomes": [
         {
           "title": "Show up locally",
@@ -370,7 +370,7 @@
       "title": "Photo, Video, Social & Live Streaming | SWFT Studios",
       "description": "On-site photography, short-form video, brand films, social media management and live streaming from SWFT Studios in NYC and North Jersey.",
       "h1": "Content that stops the <span class=\"mf-script\">scroll.</span>",
-      "lead": "On-site photo, short-form video, brand films, social media and live streaming, <span class=\"is-muted\">planned around what your audience already responds to.</span>",
+      "lead": "On-site photo, short-form video, brand films, social media and live streaming, <span class=\"is-muted\">planned around <span class=\"an an-ul\">what your audience already responds to</span>.</span>",
       "outcomes": [
         {
           "title": "Real, not stock",
@@ -456,7 +456,7 @@
       "title": "Business Automations & Integrations | SWFT Studios",
       "description": "SWFT Studios connects your forms, CRM, calendar and inbox so missed-call text-backs, instant replies, reminders and review requests run on their own. From $750.",
       "h1": "Busywork, on <span class=\"mf-script\">autopilot.</span>",
-      "lead": "We connect the tools you already use so follow-ups, reminders, invoices and reports run themselves, <span class=\"is-muted\">and your team gets hours back every week.</span>",
+      "lead": "We connect the tools you already use so follow-ups, reminders, invoices and reports run themselves, <span class=\"is-muted\">and <mark class=\"an an-hl\">your team gets hours back every week</mark>.</span>",
       "outcomes": [
         {
           "title": "Faster follow-up",
@@ -539,7 +539,7 @@
       "title": "Analytics, Tracking & Reporting for Small Businesses | SWFT Studios",
       "description": "SWFT Studios sets up GA4, conversion tracking and an automatic monthly report so you know which ads, posts and pages bring in calls, bookings and sales. From $500.",
       "h1": "Know what <span class=\"mf-script\">works.</span>",
-      "lead": "We track every call, form and booking back to where it came from, <span class=\"is-muted\">and send you a plain-English report so you spend on what works.</span>",
+      "lead": "We track every call, form and booking back to where it came from, <span class=\"is-muted\">and send you a plain-English report so you <mark class=\"an an-hl\">spend on what works</mark>.</span>",
       "outcomes": [
         {
           "title": "Every lead counted",
