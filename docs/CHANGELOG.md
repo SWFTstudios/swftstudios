@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-04: Mobile web app for guests, members and clients
+
+### Added
+- **Installable app.** `manifest.webmanifest` (name "SWFT Studios", standalone, black theme, shortcuts to Services, Pricing, My dashboard and Book a call), home-screen icons in `images/app/` (`npm run build:icons`), and `sw.js`: public pages, CSS/JS and images work offline after a visit; `/api/`, `/portal/`, `/admin/` and `/account.html` are never cached; `/offline.html` when there's nothing to show. Head tags (manifest, theme colour, Apple web-app tags, `viewport-fit=cover`) are added on every page by `js/swft-app.js`.
+- **Bottom tab bar on phones** (`js/swft-app.js`, styles at the end of `css/swft-nav.css`, ≤760px only). Tabs follow who is signed in (`GET /api/portal/me`, cached in sessionStorage):
+  - Guest: Home · Services · **Book** · Work · Log in
+  - Member (signed in, no project): Home · Services · **Book** · Work · Account
+  - Client (has a project): Home · Project · **Book** · Services · Account
+  - Admin: Home · Admin · **Book** · Project · Account
+- **Account sheet** (slides up from the Account tab, swipe down to close): guests get Log in / Sign up, Free Growth Audit and Pricing; signed-in people see their email, a Member / Client / Admin badge, project name and status, shortcuts (My project, Admin dashboard, Account & email updates, Book a call) and Sign out. "Install the SWFT app" appears when the browser offers it (Android/Chrome) or as Add-to-Home-Screen steps on iPhone.
+- Phone menu's "Log in" button becomes "My project" for clients and admins, "Account" for members.
+
 ## 2026-11-04: Services reorganized into Build / Grow / Automate
 
 ### Changed
@@ -8,7 +20,7 @@
 - **Website Only is now $400 for up to 5 pages with base features** (was $800 for up to 3). It is quote-first: the old $800 Stripe Price/Payment Link were removed from the defaults (`functions/_lib/stripe-tiers.js`, `src/portal-handlers.ts`, `src/worker.ts`) and `/book/website-only.html` redirects to `/pricing.html#website-only`. To sell it online again, create a $400 Price + Payment Link in Stripe and add them back.
 - `data/pricing.json` categories are now `build` / `grow` / `automate` (were `digital` / `visual`; old `#digital` / `#visual` links still open the right tab). Lead Follow-up moved from Marketing into a new Automations service with a new **Automation Care** plan ($250/mo).
 - New page `/analytics.html` (Tracking & Reporting).
-- Phone menu: Services is a dropdown with Build / Grow / Automate as sub-dropdowns (motto + chevron); each opens to its services with starting prices, and opening one closes the others.
+- Phone menu redesigned (full screen on phones): header with logo, "Book a call" and close; **Services** with Build / Grow / Automate tabs (motto under the tabs) showing each service as an icon row with its short line, starting price and chevron; **Company** as a two-column grid of icon tiles (Work, Pricing, About, Blog, Films, Contact); then "Book a free strategy call" plus Free Growth Audit and Log in. Fits one screen from iPhone SE up; the tab for the current service page opens first. Locations stays in the footer.
 
 ### Removed
 - AI Employees: `/ai-employees.html` deleted and 301-redirected to `/automations.html`; removed from menus, contact form, flow section ("Get booked" stage now links to Automations) and sitemap.

@@ -1,0 +1,24 @@
+{
+  "name": "SWFT Studios",
+  "short_name": "SWFT",
+  "description": "Get seen. Get chosen. Get booked. Websites, apps, content and automations for local businesses.",
+  "id": "/",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#010101",
+  "theme_color": "#010101",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "/images/app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/images/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/images/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Services", "url": "/services.html?source=app", "icons": [{ "src": "/images/app/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Pricing", "url": "/pricing.html?source=app", "icons": [{ "src": "/images/app/icon-192.png", "sizes": "192x192" }] },
+    { "name": "My dashboard", "url": "/portal/dashboard.html", "icons": [{ "src": "/images/app/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Book a call", "url": "https://cal.com/swftstudios/swft-meeting", "icons": [{ "src": "/images/app/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

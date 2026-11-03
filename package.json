@@ -15,7 +15,8 @@
     "test:outreach": "node --test tests/outreach/*.test.mjs",
     "build:mono": "node scripts/build-mono-sections.mjs",
     "build:services": "node scripts/build-service-pages.mjs",
-    "test:subscribe": "node --test tests/subscribe/*.test.mjs"
+    "test:subscribe": "node --test tests/subscribe/*.test.mjs",
+    "build:icons": "node scripts/build-app-icons.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",
