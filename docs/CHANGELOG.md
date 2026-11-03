@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-04: Add Listomania font files
+- Added Envato **Listomania** web fonts under [`fonts/listomania/`](../fonts/listomania/) (regular + oblique `.woff2`).
+- Registered `@font-face` + CSS variables in [`css/listomania.css`](../css/listomania.css); imported from [`css/swft-fonts.css`](../css/swft-fonts.css). **No site text styles changed.**
+
 ## 2026-11-04: Stripe payment links live for all 25 packages
 
 ### Added

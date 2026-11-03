@@ -1,0 +1,258 @@
+/* Listomania (Envato) — self-hosted web faces.
+   Registered for use via CSS variables / utility classes later.
+   Not applied to any site text by default. */
+
+@font-face {
+  font-family: "Listomania Five";
+  src: url("../fonts/listomania/regular/ListomaniaFive.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Five All Caps";
+  src: url("../fonts/listomania/regular/ListomaniaFiveAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Four";
+  src: url("../fonts/listomania/regular/ListomaniaFour.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Four All Caps";
+  src: url("../fonts/listomania/regular/ListomaniaFourAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania One";
+  src: url("../fonts/listomania/regular/ListomaniaOne.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania One All Caps";
+  src: url("../fonts/listomania/regular/ListomaniaOneAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Script One";
+  src: url("../fonts/listomania/regular/ListomaniaScriptOne.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Script Two";
+  src: url("../fonts/listomania/regular/ListomaniaScriptTwo.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Spares";
+  src: url("../fonts/listomania/regular/ListomaniaSpares.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Spares All Caps";
+  src: url("../fonts/listomania/regular/ListomaniaSparesAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Three";
+  src: url("../fonts/listomania/regular/ListomaniaThree.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Three All Caps";
+  src: url("../fonts/listomania/regular/ListomaniaThreeAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Two";
+  src: url("../fonts/listomania/regular/ListomaniaTwo.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Two All Caps";
+  src: url("../fonts/listomania/regular/ListomaniaTwoAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Underlines";
+  src: url("../fonts/listomania/regular/ListomaniaUnderlines.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Five";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueFive.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Five All Caps";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueFiveAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Four";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueFour.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Four All Caps";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueFourAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania One";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueOne.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania One All Caps";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueOneAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Script One";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueScriptOne.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Script Two";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueScriptTwo.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Spares";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueSpares.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Spares All Caps";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueSparesAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Three";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueThree.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Three All Caps";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueThreeAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Two";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueTwo.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Listomania Two All Caps";
+  src: url("../fonts/listomania/oblique/ListomaniaObliqueTwoAllCaps.woff2") format("woff2");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: swap;
+}
+
+:root {
+  --swft-font-listomania-five: "Listomania Five", cursive;
+  --swft-font-listomania-five-all-caps: "Listomania Five All Caps", cursive;
+  --swft-font-listomania-four: "Listomania Four", cursive;
+  --swft-font-listomania-four-all-caps: "Listomania Four All Caps", cursive;
+  --swft-font-listomania-one: "Listomania One", cursive;
+  --swft-font-listomania-one-all-caps: "Listomania One All Caps", cursive;
+  --swft-font-listomania-script-one: "Listomania Script One", cursive;
+  --swft-font-listomania-script-two: "Listomania Script Two", cursive;
+  --swft-font-listomania-spares: "Listomania Spares", cursive;
+  --swft-font-listomania-spares-all-caps: "Listomania Spares All Caps", cursive;
+  --swft-font-listomania-three: "Listomania Three", cursive;
+  --swft-font-listomania-three-all-caps: "Listomania Three All Caps", cursive;
+  --swft-font-listomania-two: "Listomania Two", cursive;
+  --swft-font-listomania-two-all-caps: "Listomania Two All Caps", cursive;
+  --swft-font-listomania-underlines: "Listomania Underlines", cursive;
+}
+
+
+/* Available later, unused by default — do not apply to body/headings here.
+   Example: font-family: var(--swft-font-listomania-one);
+*/
