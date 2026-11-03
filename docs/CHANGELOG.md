@@ -1,16 +1,14 @@
 # Changelog
 
-## 2026-11-03: Graffiti accent word in Graflo, glowing white
+## 2026-11-03: Graffiti accent word in Skylight Graffiti
 
 ### Changed
-- The accent word (`.mf-script`, `.ps-accent`) now uses **Graflo** by Indotype Foundry (`fonts/ITGraflo-Regular.woff2|.woff`, Italic too; `@font-face` in `css/swft-fonts.css`, `--mf-graffiti` in `css/mono.css`). The pen-script stroke hack is gone (Graflo is already heavy).
-- Default color is white (`--mf-accent-color: #ffffff`) with a soft neon glow (`--mf-glow`, built from `currentColor`, so it follows click colors). The click palette in `js/mono.js` starts at white; the five-click rainbow brightens the glow and settles back to it.
-- Sprayed-on look: the word is 1.3x larger, thicker (a stroke in its own color), and tucked back over the end of the word before it (`margin-left: -0.2em`, painted on top), with a thin dark cut line under the glow so it reads as a separate paint layer. `js/mono.js` (`markLineStarts`) drops the overlap when the word starts a line (e.g. the footer's "booked."), rechecked after fonts load and on resize.
-- Footer wordmark: "studios" is now glowing white Graflo too, overlapping the T of "SWFT", sized (0.64em) to fit from 390px to 1920px wide.
-- Logo (`.sn-brand__script`, nav + phone menu on every page): "studios" is glowing white Graflo too, tucked over the T of "SWFT". The original pen script (`--mf-hand`) is now only a fallback.
+- The accent word (`.mf-script`, `.ps-accent`), the footer wordmark's "studios" and the logo's "studios" use **Skylight Graffiti** (RVQ). Converted from the licensed `.otf` to `fonts/SkylightGraffiti.woff2` (50 KB) and `.woff`; `@font-face` in `css/swft-fonts.css`, `--mf-graffiti` in `css/mono.css`. Graflo (tried first) was removed. The swash & ornament companion font is not used.
+- Accent word: white (`--mf-accent-color: #ffffff`), no glow, 0.76em of the headline (the font is tall), thickened with a stroke in its own color and tucked slightly over the end of the word before it, with a thin dark cut line so it reads as a paint layer. `js/mono.js` (`markLineStarts`) drops the overlap when the word starts a line. Clicks still cycle colors; the five-click rainbow no longer glows.
+- Logo and footer wordmark "studios": cinematic red (`--sn-neon-red: #ff3b30`), no glow, raised a little and tucked over the T of "SWFT". Footer size 0.56em, fits 390–1920px wide.
 
 ### Notes
-- Only web formats (`.woff2`, `.woff`) are published; the `.ttf`/`.otf` desktop files are not in the repo. Web use must be covered by the Graflo licence.
+- Only web formats are published; the desktop `.otf` is not in the repo. The font's embedding flag is "preview & print", so web use must be covered by the Skylight Graffiti licence.
 
 ## 2026-11-04: Stripe payment links live for all 25 packages
 

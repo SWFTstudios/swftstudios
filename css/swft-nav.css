@@ -46,14 +46,19 @@
   color: #fff; text-decoration: none; white-space: nowrap;
   font-weight: 700; font-size: 1.45rem; letter-spacing: -0.04em; line-height: 1;
 }
-/* Logo "studios": the same glowing Graflo spray as the accent word and the
-   footer wordmark, tucked over the T of "SWFT". */
+/* Logo "studios": Skylight Graffiti in cinematic red (no glow),
+   tucked over the T of "SWFT" and raised a little. The footer wordmark
+   uses the same --sn-neon recipe. */
+:root {
+  --sn-neon-red: #ff3b30;
+  --sn-neon: 0 0 0.02em #050505, 0.03em 0.04em 0 #050505; /* dark cut line only, no glow */
+}
 .sn-brand__script {
-  font-family: var(--mf-graffiti, "Graflo", cursive); font-weight: 400; font-size: 1.12em; letter-spacing: 0;
-  color: #fff; display: inline-block; position: relative; z-index: 1;
-  transform: rotate(-6deg) translateY(0.04em); margin-left: -0.3em;
-  -webkit-text-stroke: 0.03em currentColor; paint-order: stroke fill;
-  text-shadow: 0 0 0.02em #050505, 0.03em 0.04em 0 #050505, 0 0 0.12em #fff, 0 0 0.35em rgba(255, 255, 255, 0.5), 0 0 0.8em rgba(255, 255, 255, 0.22);
+  font-family: var(--mf-graffiti, "Skylight Graffiti", cursive); font-weight: 400; font-size: 1.5em; letter-spacing: 0.02em;
+  color: var(--sn-neon-red); display: inline-block; position: relative; z-index: 1;
+  transform: rotate(-6deg) translateY(-0.16em); margin-left: -0.12em;
+  -webkit-text-stroke: 0.012em currentColor; paint-order: stroke fill;
+  text-shadow: var(--sn-neon);
 }
 
 .sn-links { display: flex; gap: 0.25rem; align-items: center; }
@@ -308,9 +313,9 @@ body:has(.sf-footer) footer.footer_component { display: none !important; }
   white-space: nowrap; color: #fff; user-select: none;
 }
 .sf-wordmark .mf-script {
-  color: #fff; font-size: 0.64em; letter-spacing: 0; margin-left: -0.4em; /* fits 390–1920px wide with room for the glow */
-  transform: rotate(-7deg) translateY(0.02em);
-  text-shadow: 0 0 0.015em #050505, 0.02em 0.03em 0 #050505, 0 0 0.06em #fff, 0 0 0.2em rgba(255, 255, 255, 0.55), 0 0 0.5em rgba(255, 255, 255, 0.25);
+  color: var(--sn-neon-red); font-size: 0.56em; letter-spacing: 0; margin-left: -0.4em; /* fits 390–1920px wide */
+  transform: rotate(-7deg) translateY(-0.1em);
+  text-shadow: var(--sn-neon);
 }
 .sf-bottom {
   max-width: var(--mf-max, 1440px); margin: 2rem auto 0; padding-top: 1.25rem;

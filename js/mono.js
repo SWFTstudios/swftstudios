@@ -4,7 +4,7 @@
      Cal.com calendar, from /api/availability.
    - [data-mf-reveal] blocks fade up as they scroll into view.
    - A ring cursor on fine pointers ([data-mf-cursor="View"] grows it).
-   - The accent word (.mf-script, .ps-accent) is glowing white Graflo graffiti: its
+   - The accent word (.mf-script, .ps-accent) is white Skylight Graffiti: its
      letters pop in with a bounce, a click changes the color, and five quick
      clicks set off a rainbow + glow burst.
    ============================================================ */

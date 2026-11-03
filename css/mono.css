@@ -93,7 +93,7 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 
 /* The footer wordmark ("SWFT studios") keeps the original grey pen script. */
 :where(.sf-wordmark) .mf-script {
-  /* Footer "studios": the same Graflo spray, sized and placed in css/swft-nav.css */
+  /* Footer "studios": the same graffiti spray, sized and placed in css/swft-nav.css */
   font-family: var(--mf-graffiti);
   font-weight: 400;
   line-height: 0.8;
@@ -105,7 +105,7 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 }
 
 /* The accent word: the logo's pen script, made bold and funky.
-   Graflo (fonts/ITGraflo-*), glowing white by default: the glow is built from
+   Skylight Graffiti (fonts/SkylightGraffiti.*), glowing white by default: the glow is built from
    currentColor, so it follows click colors and the rainbow. js/mono.js (initAccent) splits it into letters
    that each sit at their own tilt and pop in with a bounce when they scroll into
    view. Click = next color; five quick clicks = rainbow + glow + hop, then back.
@@ -114,7 +114,7 @@ body { background: var(--mf-bg); color: var(--mf-text); }
    js/mono.js starts from white to match). */
 :root {
   --mf-accent-color: #ffffff;
-  --mf-graffiti: "Graflo", var(--mf-hand);
+  --mf-graffiti: "Skylight Graffiti", var(--mf-hand);
 }
 .mf-script:not(.sf-wordmark .mf-script),
 html body.ps-page .ps-title .ps-accent {
@@ -124,26 +124,22 @@ html body.ps-page .ps-title .ps-accent {
   font-family: var(--mf-graffiti);
   font-weight: 400;
   font-style: normal;
-  font-size: 1.3em;
+  font-size: 0.76em; /* Skylight is tall: kept below the headline's cap height */
   letter-spacing: 0.01em;
-  line-height: 0.75;
+  line-height: 0.7;
   /* Sprayed on top: tucked back over the end of the previous word.
      js/mono.js adds .is-line-start when the word wraps to a new line,
      so it never slides out past the left edge. */
-  margin-left: -0.2em;
-  transform: rotate(-5deg) translateY(0.04em);
+  margin-left: -0.1em;
+  transform: rotate(-5deg) translateY(0.02em);
   padding: 0 0.08em;
   color: var(--mf-accent-color);
-  /* Thicker: Graflo has one weight, so a stroke in its own color fattens it */
-  -webkit-text-stroke: 0.035em currentColor;
+  /* Thicker: the font has one weight, so a stroke in its own color fattens it */
+  -webkit-text-stroke: 0.02em currentColor;
   paint-order: stroke fill;
-  /* A dark cut line hugging the letters separates the paint from the word
-     underneath; then the neon: tight core, wide halo, all from currentColor */
-  --mf-glow:
-    0 0 0.02em var(--mf-bg), 0.025em 0.035em 0 var(--mf-bg),
-    0 0 0.1em currentColor,
-    0 0 0.28em color-mix(in srgb, currentColor 60%, transparent),
-    0 0 0.7em color-mix(in srgb, currentColor 30%, transparent);
+  /* No glow: just a dark cut line hugging the letters so the paint reads as
+     a separate layer over the word underneath */
+  --mf-glow: 0 0 0.02em var(--mf-bg), 0.025em 0.035em 0 var(--mf-bg);
   text-shadow: var(--mf-glow);
   transition: color 0.28s ease;
 }
@@ -233,8 +229,8 @@ html body.ps-page .ps-title .ps-accent {
 /* The burst brightens the resting glow, then hands back to it */
 @keyframes mf-glow {
   0%   { text-shadow: var(--mf-glow); }
-  12%  { text-shadow: 0 0 0.02em var(--mf-bg), 0.025em 0.035em 0 var(--mf-bg), 0 0 0.12em currentColor, 0 0 0.4em currentColor, 0 0 0.9em currentColor; }
-  80%  { text-shadow: 0 0 0.02em var(--mf-bg), 0.025em 0.035em 0 var(--mf-bg), 0 0 0.12em currentColor, 0 0 0.4em currentColor, 0 0 0.9em currentColor; }
+  12%  { text-shadow: var(--mf-glow); }
+  80%  { text-shadow: var(--mf-glow); }
   100% { text-shadow: var(--mf-glow); }
 }
 @media (prefers-reduced-motion: reduce) {
