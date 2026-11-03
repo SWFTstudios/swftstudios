@@ -1,7 +1,7 @@
 {
  "account": "acct_1FKOZ3AF4d9gCyuN",
  "livemode": true,
- "updatedAt": "2026-08-20",
+ "updatedAt": "2026-11-03",
  "tiers": {
   "gbp-refresh": {
    "productId": "prod_V6pp175lesl4bW",
@@ -10,35 +10,35 @@
    "paymentLinkUrl": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A",
    "mode": "payment",
    "amountCents": 40000,
-   "envPriceKey": "STRIPE_PRICE_GBP_REFRESH",
-   "bookUrl": "/book/gbp-content-refresh.html"
+   "bookUrl": "/book/gbp-content-refresh.html",
+   "kind": "full"
   },
   "website-only": {
-   "productId": "prod_V6ppC4BSom0d3y",
-   "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
-   "paymentLinkId": "plink_1U6cAWAF4d9gCyuNKHEBOht1",
-   "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v",
+   "productId": "prod_VYgARaBYQ8mVR8",
+   "priceId": "price_1UXYoKAF4d9gCyuNb4U2lhPw",
+   "paymentLinkId": "plink_1UXYoKAF4d9gCyuN0kNNuRgg",
+   "paymentLinkUrl": "https://buy.stripe.com/cNibJ03LybS446d0j6fMA0B",
    "mode": "payment",
-   "amountCents": 80000,
-   "envPriceKey": "STRIPE_PRICE_WEBSITE_ONLY"
+   "kind": "full",
+   "amountCents": 40000
   },
   "website-content-half": {
-   "productId": "prod_V6ppDg4l64XXZv",
-   "priceId": "price_1U6cA8AF4d9gCyuNt2PH1qew",
-   "paymentLinkId": "plink_1U6cAYAF4d9gCyuNxPyC1xLD",
-   "paymentLinkUrl": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w",
+   "productId": "prod_VYgAU6HPVBGJ96",
+   "priceId": "price_1UXYoaAF4d9gCyuN73xBElMa",
+   "paymentLinkId": "plink_1UXYoaAF4d9gCyuNGbSsx7CS",
+   "paymentLinkUrl": "https://buy.stripe.com/9B6fZgdm86xKfOV2refMA0C",
    "mode": "payment",
-   "amountCents": 200000,
-   "envPriceKey": "STRIPE_PRICE_WEBSITE_CONTENT_HALF"
+   "kind": "deposit",
+   "amountCents": 100000
   },
   "website-content-full": {
-   "productId": "prod_V6pp0Xyq2W6KUk",
-   "priceId": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
-   "paymentLinkId": "plink_1U6cAdAF4d9gCyuNI0LDP7pm",
-   "paymentLinkUrl": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x",
+   "productId": "prod_VYgATGO2CGeMZq",
+   "priceId": "price_1UXYodAF4d9gCyuNDHFdLPxh",
+   "paymentLinkId": "plink_1UXYodAF4d9gCyuN4DqS41my",
+   "paymentLinkUrl": "https://buy.stripe.com/6oU9AS5TGg8k8mtaXKfMA0D",
    "mode": "payment",
-   "amountCents": 300000,
-   "envPriceKey": "STRIPE_PRICE_WEBSITE_CONTENT_FULL"
+   "kind": "deposit",
+   "amountCents": 150000
   },
   "content-growth-retainer": {
    "productId": "prod_V6pp3VerM5Q8w6",
@@ -48,7 +48,7 @@
    "mode": "subscription",
    "amountCents": 45000,
    "interval": "month",
-   "envPriceKey": "STRIPE_PRICE_CONTENT_GROWTH_RETAINER"
+   "kind": "monthly"
   },
   "full-growth-partner": {
    "productId": "prod_V6ppplJcLxdJHj",
@@ -58,8 +58,193 @@
    "mode": "subscription",
    "amountCents": 120000,
    "interval": "month",
-   "envPriceKey": "STRIPE_PRICE_FULL_GROWTH_PARTNER"
+   "kind": "monthly"
+  },
+  "website-care": {
+   "productId": "prod_VYgBBIi7XaYVjo",
+   "priceId": "price_1UXYoiAF4d9gCyuN5zZdMZ9h",
+   "paymentLinkId": "plink_1UXYoiAF4d9gCyuN0DHZBMSi",
+   "paymentLinkUrl": "https://buy.stripe.com/14A4gy5TG2hu329aXKfMA0E",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 15000,
+   "interval": "month"
+  },
+  "app-design-sprint": {
+   "productId": "prod_VYgBpcjk2HVSAe",
+   "priceId": "price_1UXYoxAF4d9gCyuNv0OOW1Fl",
+   "paymentLinkId": "plink_1UXYoxAF4d9gCyuNt9KXx1FB",
+   "paymentLinkUrl": "https://buy.stripe.com/dRmaEW6XKe0c1Y58PCfMA0F",
+   "mode": "payment",
+   "kind": "deposit",
+   "amountCents": 75000
+  },
+  "app-care": {
+   "productId": "prod_VYgBCuc8cQfirg",
+   "priceId": "price_1UXYp0AF4d9gCyuNT8QuA20t",
+   "paymentLinkId": "plink_1UXYp0AF4d9gCyuNcsTYNBqW",
+   "paymentLinkUrl": "https://buy.stripe.com/9B67sK5TG1dq0U1aXKfMA0G",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 40000,
+   "interval": "month"
+  },
+  "ads-management": {
+   "productId": "prod_VYgBoMDDI9feXB",
+   "priceId": "price_1UXYp3AF4d9gCyuN1ipynaK9",
+   "paymentLinkId": "plink_1UXYp3AF4d9gCyuNhiR3sPsA",
+   "paymentLinkUrl": "https://buy.stripe.com/bJe3cu6XK09m8mtaXKfMA0H",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 50000,
+   "interval": "month"
+  },
+  "photo-session": {
+   "productId": "prod_VYgBtyOrCaLVOB",
+   "priceId": "price_1UXYp5AF4d9gCyuNJqHTD4Iz",
+   "paymentLinkId": "plink_1UXYp5AF4d9gCyuNMvdwIX9b",
+   "paymentLinkUrl": "https://buy.stripe.com/14A28q0zm3ly5ahfe0fMA0I",
+   "mode": "payment",
+   "kind": "full",
+   "amountCents": 45000
+  },
+  "product-photos": {
+   "productId": "prod_VYgBgJvwZtX9Rc",
+   "priceId": "price_1UXYp9AF4d9gCyuNTBdbGFHQ",
+   "paymentLinkId": "plink_1UXYp9AF4d9gCyuNCF5vuOdM",
+   "paymentLinkUrl": "https://buy.stripe.com/9B6bJ0eqc5tG0U18PCfMA0J",
+   "mode": "payment",
+   "kind": "full",
+   "amountCents": 40000
+  },
+  "photo-plan": {
+   "productId": "prod_VYgBPvm8XQ4z6m",
+   "priceId": "price_1UXYpQAF4d9gCyuNT1s0jpG0",
+   "paymentLinkId": "plink_1UXYpQAF4d9gCyuNu79bPfCl",
+   "paymentLinkUrl": "https://buy.stripe.com/bJe14mbe03ly8mtc1OfMA0K",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 40000,
+   "interval": "month"
+  },
+  "short-form-pack": {
+   "productId": "prod_VYgBBXhGFCk2LY",
+   "priceId": "price_1UXYpUAF4d9gCyuNntgqYFTq",
+   "paymentLinkId": "plink_1UXYpUAF4d9gCyuNqQTTwkbf",
+   "paymentLinkUrl": "https://buy.stripe.com/7sY3cu95Sg8kfOVaXKfMA0L",
+   "mode": "payment",
+   "kind": "full",
+   "amountCents": 60000
+  },
+  "brand-film": {
+   "productId": "prod_VYgCjocDiwhw89",
+   "priceId": "price_1UXYpcAF4d9gCyuNNZdx2ms6",
+   "paymentLinkId": "plink_1UXYpcAF4d9gCyuNRkwrsCHy",
+   "paymentLinkUrl": "https://buy.stripe.com/9B6cN4gyk9JW46dgi4fMA0M",
+   "mode": "payment",
+   "kind": "deposit",
+   "amountCents": 90000
+  },
+  "video-plan": {
+   "productId": "prod_VYgCzqK2O6mdC9",
+   "priceId": "price_1UXYpfAF4d9gCyuNZM2rXEp1",
+   "paymentLinkId": "plink_1UXYpfAF4d9gCyuNAL06dxrR",
+   "paymentLinkUrl": "https://buy.stripe.com/4gMbJ0ci49JW0U1c1OfMA0N",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 50000,
+   "interval": "month"
+  },
+  "social-setup": {
+   "productId": "prod_VYgCbkf93F4bu6",
+   "priceId": "price_1UXYplAF4d9gCyuNSvDczSo0",
+   "paymentLinkId": "plink_1UXYplAF4d9gCyuN4QblXPFF",
+   "paymentLinkUrl": "https://buy.stripe.com/3cI9AS3Ly3ly7ip5DqfMA0O",
+   "mode": "payment",
+   "kind": "full",
+   "amountCents": 35000
+  },
+  "managed-social": {
+   "productId": "prod_VYgCKUZvqxhO5s",
+   "priceId": "price_1UXYpoAF4d9gCyuN1QE7QviI",
+   "paymentLinkId": "plink_1UXYpoAF4d9gCyuNGYc4vIml",
+   "paymentLinkUrl": "https://buy.stripe.com/7sY28q1Dq5tG5ah9TGfMA0P",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 50000,
+   "interval": "month"
+  },
+  "livestream-single": {
+   "productId": "prod_VYgCNfKohGGZsR",
+   "priceId": "price_1UXYq4AF4d9gCyuNfSLTHyJl",
+   "paymentLinkId": "plink_1UXYq4AF4d9gCyuN2OfDxo2X",
+   "paymentLinkUrl": "https://buy.stripe.com/dRmbJ081O5tG46d4zmfMA0Q",
+   "mode": "payment",
+   "kind": "full",
+   "amountCents": 90000
+  },
+  "livestream-multi": {
+   "productId": "prod_VYgCKR5tGzeuan",
+   "priceId": "price_1UXYq9AF4d9gCyuNrqVHEQhQ",
+   "paymentLinkId": "plink_1UXYq9AF4d9gCyuNv17v3Swb",
+   "paymentLinkUrl": "https://buy.stripe.com/14A4gya9We0c9qxd5SfMA0R",
+   "mode": "payment",
+   "kind": "deposit",
+   "amountCents": 125000
+  },
+  "livestream-recurring": {
+   "productId": "prod_VYgCq9uWAjxqYM",
+   "priceId": "price_1UXYqDAF4d9gCyuNWsRuz1Ci",
+   "paymentLinkId": "plink_1UXYqDAF4d9gCyuNZuzAumT1",
+   "paymentLinkUrl": "https://buy.stripe.com/5kQcN41Dqf4gauB7LyfMA0S",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 180000,
+   "interval": "month"
+  },
+  "lead-follow-up": {
+   "productId": "prod_VYgCoMyElrfF0Y",
+   "priceId": "price_1UXYqGAF4d9gCyuNJHurrPM9",
+   "paymentLinkId": "plink_1UXYqGAF4d9gCyuN2INQZuC0",
+   "paymentLinkUrl": "https://buy.stripe.com/5kQbJ095Se0cgSZ2refMA0T",
+   "mode": "payment",
+   "kind": "full",
+   "amountCents": 75000
+  },
+  "automation-care": {
+   "productId": "prod_VYgCt0GQWbUv13",
+   "priceId": "price_1UXYqLAF4d9gCyuNANV4l3ja",
+   "paymentLinkId": "plink_1UXYqLAF4d9gCyuNx6YX3aLf",
+   "paymentLinkUrl": "https://buy.stripe.com/aFa8wOci4aO07ipaXKfMA0U",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 25000,
+   "interval": "month"
+  },
+  "analytics-setup": {
+   "productId": "prod_VYgCRo3auqnvxU",
+   "priceId": "price_1UXYqOAF4d9gCyuNs6wiGxQm",
+   "paymentLinkId": "plink_1UXYqOAF4d9gCyuNaAHYv2qz",
+   "paymentLinkUrl": "https://buy.stripe.com/3cIbJ05TGaO07ipc1OfMA0V",
+   "mode": "payment",
+   "kind": "full",
+   "amountCents": 50000
+  },
+  "analytics-reporting": {
+   "productId": "prod_VYgCUGsVSo2hdL",
+   "priceId": "price_1UXYqRAF4d9gCyuNnODME01X",
+   "paymentLinkId": "plink_1UXYqRAF4d9gCyuNJOKj7Vn4",
+   "paymentLinkUrl": "https://buy.stripe.com/14A6oGci45tGeKR2refMA0W",
+   "mode": "subscription",
+   "kind": "monthly",
+   "amountCents": 25000,
+   "interval": "month"
   }
  },
- "_readme": "Live Stripe objects per offer id (data/pricing.json). Written by `npm run stripe:sync`; `npm run build:payments` copies them onto the offers. An entry only goes live when its amountCents and mode match the offer's `pay` setting."
+ "_readme": "Live Stripe objects per offer id (data/pricing.json). Written by `npm run stripe:sync`; `npm run build:payments` copies them onto the offers. An entry only goes live when its amountCents and mode match the offer's `pay` setting.",
+ "retired": {
+  "website-only": "plink_1U6cAWAF4d9gCyuNKHEBOht1 ($800, deactivated 2026-11-03)",
+  "website-content-half": "plink_1U6cAYAF4d9gCyuNxPyC1xLD ($2,000 full price, deactivated 2026-11-03)",
+  "website-content-full": "plink_1U6cAdAF4d9gCyuNI0LDP7pm ($3,000 full price, deactivated 2026-11-03)"
+ }
 }

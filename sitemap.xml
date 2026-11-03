@@ -13,11 +13,31 @@
   <url><loc>https://www.swftstudios.com/content.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/pricing.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.swftstudios.com/book/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.swftstudios.com/book/gbp-content-refresh.html</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.swftstudios.com/book/website-content-half.html</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.swftstudios.com/book/website-only.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/website-content-half.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/book/website-content-full.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.swftstudios.com/book/content-growth-retainer.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/website-care.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/app-design-sprint.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/app-care.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/gbp-content-refresh.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/ads-management.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/book/full-growth-partner.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/photo-session.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/product-photos.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/photo-plan.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/short-form-pack.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/brand-film.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/video-plan.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/social-setup.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/content-growth-retainer.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/managed-social.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/livestream-single.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/livestream-multi.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/livestream-recurring.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/lead-follow-up.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/automation-care.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/analytics-setup.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.swftstudios.com/book/analytics-reporting.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/work.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
   <url><loc>https://www.swftstudios.com/visuals.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.swftstudios.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>

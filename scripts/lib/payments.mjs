@@ -44,7 +44,7 @@ export function chargeFor(offer) {
 
 export function productName(offer, charge) {
   if (charge.kind === "deposit") return `SWFT. ${offer.name} (${charge.percent}% deposit)`;
-  if (charge.kind === "monthly") return `SWFT. ${offer.name} (monthly)`;
+  if (charge.kind === "monthly") return /monthly/i.test(offer.name) ? `SWFT. ${offer.name}` : `SWFT. ${offer.name} (monthly)`;
   return `SWFT. ${offer.name}`;
 }
 
