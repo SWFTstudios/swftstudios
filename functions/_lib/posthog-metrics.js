@@ -172,10 +172,20 @@ export async function fetchHostMetrics(env, siteHost) {
       };
     }
 
+    // Daily series for charts (PostHog trends return days/labels next to data)
+    const daily = [];
+    const days = pageviewsSeries?.days || pageviewsSeries?.labels || [];
+    if (Array.isArray(days) && Array.isArray(pageviewsSeries?.data)) {
+      days.forEach((d, i) => {
+        daily.push({ date: String(d).slice(0, 10), pageviews: Number(pageviewsSeries.data[i]) || 0, visitors: Number(visitorsSeries?.data?.[i]) || 0 });
+      });
+    }
+
     return {
       ok: true,
       host,
       empty: false,
+      daily,
       visitors,
       pageviews,
       bounceRate: null,

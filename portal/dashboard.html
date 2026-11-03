@@ -9,7 +9,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-app4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
-  <link rel="stylesheet" href="/css/portal.css?v=20261104-empty">
+  <link rel="stylesheet" href="/css/portal.css?v=20261104-progress">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -25,6 +25,8 @@
         <button type="button" class="portal-btn-ghost" id="logout-btn">Sign out</button>
       </div>
 
+      <p class="portal-preview" id="preview-banner" role="status" hidden></p>
+
       <div class="portal-grid">
         <section class="portal-card" id="project-card">
           <p class="portal-stat-label">Project</p>
@@ -38,6 +40,16 @@
           <p class="portal-muted" id="billing-note">Stripe status for your engagement.</p>
         </section>
       </div>
+
+      <section class="portal-card" id="progress-card" style="margin-top:1.25rem;" hidden aria-labelledby="progress-title">
+        <p class="portal-stat-label" id="progress-title">Project progress</p>
+        <div class="portal-progress" id="progress-bar"></div>
+        <ol class="portal-timeline" id="timeline"></ol>
+        <div id="updates-wrap" hidden>
+          <p class="portal-stat-label" style="margin-top:1.5rem;">Latest updates from SWFT</p>
+          <div id="updates"></div>
+        </div>
+      </section>
 
       <section class="portal-card" id="metrics-card" style="margin-top:1.25rem;">
         <p class="portal-stat-label">Site performance (last 30 days)</p>
@@ -110,10 +122,80 @@
             : "");
       }
 
+      function h(tag, cls, text) {
+        var n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (text != null) n.textContent = text;
+        return n;
+      }
+      function day(s) {
+        if (!s) return "";
+        var d = new Date(/T|Z/.test(s) ? s : String(s).replace(" ", "T") + (s.length > 10 ? "Z" : ""));
+        return isNaN(d) ? s : d.toLocaleDateString([], { month: "short", day: "numeric" });
+      }
+      var LABEL = { done: "Done", in_progress: "In progress", upcoming: "Up next" };
+
+      // Milestones + updates (from /api/portal/project, or the owner's preview).
+      function renderProgress(view) {
+        if (!view || !view.milestones || !view.milestones.length) return;
+        SWFTPortal.qs("#tier-name").textContent = view.project.name;
+        SWFTPortal.qs("#progress-card").hidden = false;
+        var p = view.progress;
+        var bar = SWFTPortal.qs("#progress-bar");
+        var track = h("span", "portal-progress__track"); var fill = h("span"); fill.style.width = p.percent + "%"; track.appendChild(fill);
+        bar.replaceChildren(
+          h("p", "portal-progress__pct", p.percent + "%"),
+          track,
+          h("p", "portal-muted", p.done + " of " + p.total + " steps done" + (p.current ? " · Now: " + p.current : ""))
+        );
+        bar.setAttribute("role", "progressbar"); bar.setAttribute("aria-valuenow", String(p.percent)); bar.setAttribute("aria-valuemin", "0"); bar.setAttribute("aria-valuemax", "100");
+        SWFTPortal.qs("#timeline").replaceChildren.apply(SWFTPortal.qs("#timeline"), view.milestones.map(function (m) {
+          var li = h("li", "portal-timeline__item is-" + m.status);
+          var top = h("div", "portal-timeline__top");
+          top.append(h("strong", null, m.title), h("span", "portal-timeline__status", LABEL[m.status] || m.status));
+          li.append(top);
+          if (m.detail) li.append(h("p", "portal-muted", m.detail));
+          var when = m.status === "done" && m.completedAt ? "Completed " + day(m.completedAt) : m.dueDate ? "Target " + day(m.dueDate) : "";
+          if (when) li.append(h("small", "portal-muted", when));
+          return li;
+        }));
+        var ups = view.updates || [];
+        SWFTPortal.qs("#updates-wrap").hidden = !ups.length;
+        SWFTPortal.qs("#updates").replaceChildren.apply(SWFTPortal.qs("#updates"), ups.map(function (u) {
+          var d = h("div", "portal-update");
+          d.append(h("small", "portal-muted", day(u.createdAt)), h("p", null, u.body));
+          return d;
+        }));
+      }
+
+      // Owner preview: /portal/dashboard.html?preview=<projectId>
+      async function preview(id) {
+        var r = await SWFTPortal.api("/api/admin/project?id=" + encodeURIComponent(id) + "&metrics=1");
+        if (!r.res.ok || !r.data.ok) {
+          SWFTPortal.qs("#welcome").textContent = (r.data && r.data.error) || "Could not load that project.";
+          return;
+        }
+        var v = r.data.view;
+        var banner = SWFTPortal.qs("#preview-banner");
+        banner.hidden = false;
+        banner.replaceChildren(
+          document.createTextNode("Preview: this is what " + v.client.email + " sees. "),
+          Object.assign(h("a", null, "Back to Projects"), { href: "/admin/#clients" })
+        );
+        SWFTPortal.qs("#welcome").textContent = "Signed in as " + v.client.email;
+        SWFTPortal.qs("#tier-name").textContent = v.project.name;
+        SWFTPortal.qs("#project-meta").textContent = v.project.tierName + (v.project.siteHost ? " · Tracking host assigned." : " · Analytics pending.");
+        statusBadge(v.project.status);
+        renderProgress(v);
+        renderMetrics(r.data.metrics || { ok: false, message: "Analytics unavailable." });
+      }
+
       async function init() {
         var data = await SWFTPortal.requireAuth();
         if (!data) return;
+        var previewId = SWFTPortal.params().get("preview");
         if (data.user.isAdmin) {
+          if (previewId) { preview(previewId); return; }
           window.location.replace("/admin/");
           return;
         }
@@ -141,6 +223,10 @@
           ? "Tracking host assigned."
           : "Analytics pending. We install tracking when your site is live.";
         statusBadge(data.project.status);
+
+        SWFTPortal.api("/api/portal/project").then(function (r) {
+          if (r.res.ok && r.data && r.data.view) renderProgress(r.data.view);
+        });
 
         var metrics = await SWFTPortal.api("/api/portal/metrics");
         if (metrics.data && metrics.data.metrics) {

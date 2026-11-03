@@ -9,27 +9,47 @@ import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json } from "../../_lib/portal-auth.js";
 import { getStripeTier, offerName } from "../../_lib/stripe-tiers.js";
 
-async function clients(db) {
-  const { results } = await db
-    .prepare(
-      `SELECT p.id, p.tier_id, p.status, p.site_host, p.stripe_subscription_id, p.created_at,
-              u.email,
-              (SELECT COUNT(*) FROM admin_notes n WHERE n.project_id = p.id) AS note_count
+const PROGRESS_SQL = `SELECT p.id, p.name, p.is_demo, p.tier_id, p.status, p.site_host, p.stripe_subscription_id, p.created_at,
+         u.email,
+         (SELECT COUNT(*) FROM admin_notes n WHERE n.project_id = p.id) AS note_count,
+         (SELECT COUNT(*) FROM project_milestones m WHERE m.project_id = p.id) AS ms_total,
+         (SELECT COUNT(*) FROM project_milestones m WHERE m.project_id = p.id AND m.status = 'done') AS ms_done,
+         (SELECT title FROM project_milestones m WHERE m.project_id = p.id AND m.status != 'done' ORDER BY (m.status = 'in_progress') DESC, sort_order LIMIT 1) AS ms_current
        FROM projects p JOIN users u ON u.id = p.user_id
-       ORDER BY datetime(p.created_at) DESC LIMIT 200`
-    )
-    .all();
-  return results.map((r) => ({
-    id: r.id,
-    email: r.email,
-    tierId: r.tier_id,
-    tierName: getStripeTier(r.tier_id)?.name || offerName(r.tier_id) || r.tier_id,
-    status: r.status,
-    siteHost: r.site_host || null,
-    subscribed: !!r.stripe_subscription_id,
-    noteCount: r.note_count,
-    createdAt: r.created_at,
-  }));
+       ORDER BY datetime(p.created_at) DESC LIMIT 200`;
+// Before migration 0004 there are no progress columns/tables: same list, no progress.
+const BASIC_SQL = `SELECT p.id, p.tier_id, p.status, p.site_host, p.stripe_subscription_id, p.created_at,
+         u.email,
+         (SELECT COUNT(*) FROM admin_notes n WHERE n.project_id = p.id) AS note_count
+       FROM projects p JOIN users u ON u.id = p.user_id
+       ORDER BY datetime(p.created_at) DESC LIMIT 200`;
+
+async function clients(db) {
+  let results, progressReady = true;
+  try {
+    ({ results } = await db.prepare(PROGRESS_SQL).all());
+  } catch {
+    progressReady = false;
+    ({ results } = await db.prepare(BASIC_SQL).all());
+  }
+  return results.map((r) => {
+    const tierName = getStripeTier(r.tier_id)?.name || offerName(r.tier_id) || r.tier_id;
+    const total = r.ms_total || 0;
+    return {
+      id: r.id,
+      email: r.email,
+      name: r.name || tierName,
+      isDemo: !!r.is_demo,
+      tierId: r.tier_id,
+      tierName,
+      status: r.status,
+      siteHost: r.site_host || null,
+      subscribed: !!r.stripe_subscription_id,
+      noteCount: r.note_count,
+      createdAt: r.created_at,
+      progress: progressReady ? { done: r.ms_done || 0, total, percent: total ? Math.round(((r.ms_done || 0) / total) * 100) : 0, current: r.ms_current || null } : null,
+    };
+  });
 }
 
 async function outreach(odb) {
@@ -77,7 +97,12 @@ export async function onRequestGet(context) {
     return json({
       ok: true,
       admin: { email: gate.user.email },
-      summary: { clients: clientList.length, activeClients: active, pastDue: clientList.filter((c) => c.status === "past_due").length },
+      summary: {
+        clients: clientList.length,
+        activeClients: active,
+        pastDue: clientList.filter((c) => c.status === "past_due").length,
+        inProgress: clientList.filter((c) => c.progress && c.progress.total && c.progress.done < c.progress.total).length,
+      },
       clients: clientList,
       outreach: outreachData,
       blog,

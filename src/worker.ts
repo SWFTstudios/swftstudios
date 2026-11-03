@@ -29,6 +29,12 @@ import * as fnAdminEmails from "../functions/api/admin/emails.js";
 // @ts-expect-error JS module without types
 import * as fnAdminNotes from "../functions/api/admin/notes.js";
 // @ts-expect-error JS module without types
+import * as fnAdminProject from "../functions/api/admin/project.js";
+// @ts-expect-error JS module without types
+import * as fnAdminAnalytics from "../functions/api/admin/analytics.js";
+// @ts-expect-error JS module without types
+import * as fnPortalProject from "../functions/api/portal/project.js";
+// @ts-expect-error JS module without types
 import { onRequestPost as handleSubscribe } from "../functions/api/subscribe/index.js";
 // @ts-expect-error JS module without types
 import { onRequestPost as handleSubscribeConfirm } from "../functions/api/subscribe/confirm.js";
@@ -674,6 +680,9 @@ export default {
       "/api/admin/overview": fnAdminOverview,
       "/api/admin/emails": fnAdminEmails,
       "/api/admin/notes": fnAdminNotes,
+      "/api/admin/project": fnAdminProject,
+      "/api/admin/analytics": fnAdminAnalytics,
+      "/api/portal/project": fnPortalProject,
     };
     const shared = SHARED_FNS[url.pathname];
     if (shared) {

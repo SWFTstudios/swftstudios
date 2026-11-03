@@ -52,3 +52,32 @@ Notes are stored only in D1 and never returned to clients; client-facing endpoin
 
 `npm run test:admin` runs the real portal migrations through a D1 shim and covers: allowlist, 401/403/200 gating,
 origin check, notes create/list/delete, outreach degrade, Resend listing, and the login redirect.
+
+## Analytics tab (the SWFT site itself)
+
+`GET /api/admin/analytics` (admin only) shows the last 30 days for swftstudios.com from two sources, each degrading on its own:
+
+| Card | Source | Setup | What it counts |
+| --- | --- | --- | --- |
+| Traffic | Cloudflare GraphQL Analytics API (`httpRequests1dGroups`), `functions/_lib/cloudflare-analytics.js` | Secret `CF_ANALYTICS_TOKEN` (API token with **Zone → Analytics → Read** for swftstudios.com) and variable `CF_ZONE_ID` (zone Overview page, right column) | Every request Cloudflare served, bots and files included; unique visitors = unique IPs per day. Matches the zone Overview in the Cloudflare dashboard. |
+| Visitors | PostHog, `functions/_lib/posthog-metrics.js` | `POSTHOG_PERSONAL_API_KEY` (already used by the client portal); host from `SITE_ANALYTICS_HOST` (default `swftstudios.com`) | People who loaded pages with the snippet; top pages |
+| Google Analytics | Link only | — | GA4 needs a service account to read from a Worker; not wired yet |
+
+## Projects tab
+
+Lists every client project with its progress. **Open** shows milestones (change status inline, add, remove), client-visible updates, and private notes. **View as client ↗** opens `/portal/dashboard.html?preview=<projectId>`: the client dashboard rendered from `GET /api/admin/project?id=…&metrics=1`, the same view the client gets from `GET /api/portal/project`, with a banner. Admin notes are never part of that view.
+
+Writes: `POST /api/admin/project` with `action` = `milestone_status`, `add_milestone`, `delete_milestone`, `add_update`, `delete_update`, `rename` (admin session + same-origin).
+
+Storage: migration `0004_project_progress.sql` (`project_milestones`, `project_updates`, `projects.name`, `projects.is_demo`). Before it is applied, the dashboard still loads; progress shows as unavailable.
+
+## Demo client project
+
+`scripts/seed-demo-project.sql` creates client **elombekisala@gmail.com** with project "SWFT Studios website + content (demo)" (Website + Content Capture, active, analytics host swftstudios.com), six milestones (three done, one in progress) and three updates, dated relative to the day you run it. Re-running resets the demo only.
+
+```bash
+npx wrangler d1 migrations apply swft-portal --remote
+npx wrangler d1 execute swft-portal --remote --file scripts/seed-demo-project.sql
+```
+
+Then sign in as the demo client once at `/portal/onboard.html` (email + a new password), and as the owner use **Projects → View as client**.
