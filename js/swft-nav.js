@@ -38,12 +38,21 @@
     phone: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>',
     browser: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M6.5 7h.01M9 7h.01"/>',
     chart: '<path d="M4 20V4M4 20h16"/><path d="m8 15 3.5-4 3 2.5L19 8"/>',
+    grid: '<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>',
+    tag: '<path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1.5 1.5 0 0 1 0 2.1l-6.2 6.2a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8" cy="8" r="1.3"/>',
+    info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/>',
+    doc: '<path d="M6 3.5h8l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20z"/><path d="M14 3.5V8h4M9 12.5h6M9 16h6"/>',
+    film: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="m10 9.5 4.5 2.5-4.5 2.5z"/>',
+    mail: '<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>',
+    search: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
+    user: '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.5 3.6-5.5 7-5.5s6.2 2 7 5.5"/>',
+    chevron: '<path d="m9.5 6 6 6-6 6"/>',
     bolt: '<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>',
     megaphone: '<path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16.5 9.5a3.5 3.5 0 0 1 0 5M19 7a7 7 0 0 1 0 10"/>',
     video: '<rect x="3" y="7" width="12" height="10" rx="2"/><path d="m15 11 6-3.5v9L15 13"/>'
   };
-  function svg(name) {
-    return '<span class="sn-mega__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[name] || "") + "</svg></span>";
+  function svg(name, cls) {
+    return '<span class="' + (cls || "sn-mega__icon") + '" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[name] || "") + "</svg></span>";
   }
 
   // Top bar (desktop), after the Services menu. Keys match each page's data-active.
@@ -53,14 +62,19 @@
     { label: "About",    href: "/about.html",    key: "about" },
     { label: "Blog",     href: "/blog.html",     key: "blog" }
   ];
-  // Menu panel (phones): Contact joins the main list; the rest sit in a
-  // compact two-column grid so the whole menu fits on one screen.
-  var CONTACT = { label: "Contact", href: "/contact.html", key: "contact" };
-  var MORE = [
-    { label: "Log in / Sign up",   href: "/account.html",  key: "account" },
-    { label: "Films",              href: "/visuals.html",  key: "visuals" },
-    { label: "Free Growth Audit",  href: "/growth-audit",  key: "growth-audit" },
-    { label: "Locations",          href: "/locations/",    key: "locations" }
+  // Phone menu "Company" grid (two columns of icon tiles), then two small
+  // buttons under the strategy-call CTA.
+  var COMPANY = [
+    { label: "Work",      href: "/work.html",     key: "work",      icon: "grid" },
+    { label: "Pricing",   href: "/pricing.html",  key: "pricing",   icon: "tag" },
+    { label: "About",     href: "/about.html",    key: "about",     icon: "info" },
+    { label: "Blog",      href: "/blog.html",     key: "blog",      icon: "doc" },
+    { label: "Films",     href: "/visuals.html",  key: "visuals",   icon: "film" },
+    { label: "Contact",   href: "/contact.html",  key: "contact",   icon: "mail" }
+  ];
+  var PANEL_FOOT = [
+    { label: "Free Growth Audit", href: "/growth-audit", key: "growth-audit", icon: "search" },
+    { label: "Log in",            href: "/account.html", key: "account",      icon: "user" }
   ];
   // Older pages still say data-active="team" etc.
   var ALIAS = { "case-studies": "work", team: "about", visuals: "work" };
@@ -86,33 +100,69 @@
     "</div>";
   }
 
-  // Phone menu: Services is a dropdown, and each group (Build / Grow /
-  // Automate) is its own sub-dropdown. Opening one group closes the others.
-  function panelServicesHTML() {
-    return '<details class="sn-panel-services"><summary>Services</summary>' +
-      SERVICES.map(function (g) {
-        return '<details class="sn-panel-group"><summary>' +
-            '<span class="sn-panel-group__name">' + g.group + "</span>" +
-            (g.motto ? '<span class="sn-panel-group__motto">' + g.motto + "</span>" : "") +
-          "</summary>" +
-          '<div class="sn-panel-group__items">' +
-          g.items.map(function (i) {
-            return '<a class="sn-panel-sub" href="' + i.href + '"><span>' + i.label + "</span>" +
-              (i.from ? '<span class="sn-panel-from">From ' + i.from + "</span>" : "") + "</a>";
-          }).join("") +
-          "</div></details>";
-      }).join("") +
-      '<a class="sn-panel-sub sn-panel-all" href="/services.html">All services →</a>' +
-    "</details>";
+  // Phone menu services: Build / Grow / Automate tabs (the sub-menus). Each
+  // tab shows its services as icon rows with the starting price. The tab
+  // holding the current page opens first; otherwise Build.
+  function panelServicesHTML(active) {
+    var current = 0;
+    SERVICES.forEach(function (g, gi) {
+      g.items.forEach(function (i) { if (location.pathname === i.href) current = gi; });
+    });
+    var tabs = SERVICES.map(function (g, gi) {
+      var on = gi === current;
+      return '<button type="button" role="tab" class="sn-ptab" id="sn-ptab-' + gi + '" aria-controls="sn-ppanel-' + gi + '" aria-selected="' + on + '"' + (on ? "" : ' tabindex="-1"') + ">" + g.group + "</button>";
+    }).join("");
+    var panels = SERVICES.map(function (g, gi) {
+      return '<div class="sn-ppanel" role="tabpanel" id="sn-ppanel-' + gi + '" aria-labelledby="sn-ptab-' + gi + '"' + (gi === current ? "" : " hidden") + ">" +
+        (g.motto ? '<p class="sn-ppanel__motto">' + g.motto + "</p>" : "") +
+        g.items.map(function (i) {
+          return '<a class="sn-prow' + (location.pathname === i.href ? " is-active" : "") + '" href="' + i.href + '">' + svg(i.icon, "sn-prow__icon") +
+            '<span class="sn-prow__text"><span class="sn-prow__name">' + i.label + '</span><span class="sn-prow__line">' + i.line + "</span></span>" +
+            (i.from ? '<span class="sn-prow__from"><span>From</span><b>' + i.from + "</b></span>" : "") +
+            svg("chevron", "sn-prow__chev") + "</a>";
+        }).join("") +
+      "</div>";
+    }).join("");
+    return '<section class="sn-psec" aria-labelledby="sn-psec-services">' +
+      '<div class="sn-psec__head"><p class="sn-psec__label" id="sn-psec-services">Services</p>' +
+        '<a class="sn-psec__all" href="/services.html">All services <span aria-hidden="true">→</span></a></div>' +
+      '<div class="sn-ptabs" role="tablist" aria-label="Service groups">' + tabs + "</div>" +
+      panels +
+    "</section>";
   }
 
-  // One sub-dropdown open at a time inside the Services dropdown.
-  function wirePanelGroups(root) {
-    var groups = root.querySelectorAll(".sn-panel-group");
-    Array.prototype.forEach.call(groups, function (d) {
-      d.addEventListener("toggle", function () {
-        if (!d.open) return;
-        Array.prototype.forEach.call(groups, function (o) { if (o !== d) o.open = false; });
+  function panelCompanyHTML(active) {
+    return '<section class="sn-psec" aria-labelledby="sn-psec-company">' +
+      '<p class="sn-psec__label" id="sn-psec-company">Company</p>' +
+      '<div class="sn-ptiles">' +
+        COMPANY.map(function (l) {
+          var on = l.key === active;
+          return '<a class="sn-ptile' + (on ? " is-active" : "") + '" href="' + l.href + '"' + (on ? ' aria-current="page"' : "") + ">" + svg(l.icon, "sn-ptile__icon") + "<span>" + l.label + "</span></a>";
+        }).join("") +
+      "</div>" +
+    "</section>";
+  }
+
+  // Tabs: click or arrow keys switch the group.
+  function wirePanelTabs(root) {
+    var tabs = Array.prototype.slice.call(root.querySelectorAll(".sn-ptab"));
+    function select(t, focus) {
+      tabs.forEach(function (o) {
+        var on = o === t;
+        o.setAttribute("aria-selected", on ? "true" : "false");
+        if (on) o.removeAttribute("tabindex"); else o.setAttribute("tabindex", "-1");
+        var panel = document.getElementById(o.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      });
+      if (focus) t.focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { select(t, false); });
+      t.addEventListener("keydown", function (e) {
+        var n = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!n) return;
+        e.preventDefault();
+        select(tabs[(i + n + tabs.length) % tabs.length], true);
       });
     });
   }
@@ -125,8 +175,6 @@
 
   function navHTML(active) {
     var top = LINKS.map(function (l) { return link(l, active); }).join("");
-    var panelMain = LINKS.concat([CONTACT]).map(function (l) { return link(l, active); }).join("");
-    var panelMore = MORE.map(function (l) { return link(l, active, "sn-panel-more__link"); }).join("");
     var svcActive = active === "services";
     return (
       '<a class="sn-skip" href="#main">Skip to content</a>' +
@@ -147,16 +195,20 @@
       '<div class="sn-scrim" id="sn-scrim"></div>' +
       '<aside class="sn-panel" id="sn-panel" aria-hidden="true" aria-label="Site menu">' +
         '<div class="sn-panel-top">' +
-          '<a href="' + BOOK_URL + '" class="mf-pill sn-panel-pill" target="_blank" rel="noopener" data-mf-booking><span class="mf-dot" aria-hidden="true"></span>Booking now<span data-mf-next></span></a>' +
+          '<a href="/" class="sn-brand sn-panel-brand" aria-label="SWFT Studios home">' + BRAND + "</a>" +
+          '<a href="' + CTA.href + '" class="sn-panel-book" target="_blank" rel="noopener">' + CTA.label + "</a>" +
           '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
         "</div>" +
-        '<nav class="sn-panel-main" aria-label="Menu">' +
-          link({ label: "Home", href: "/", key: "home" }, active) +
-          panelServicesHTML() +
-          panelMain +
-        "</nav>" +
-        '<div class="sn-panel-more">' + panelMore + "</div>" +
-        '<a href="' + CTA.href + '" class="sn-panel-cta" target="_blank" rel="noopener">Book a free strategy call' + ARROW + "</a>" +
+        '<div class="sn-panel-body">' +
+          panelServicesHTML(active) +
+          panelCompanyHTML(active) +
+          '<div class="sn-panel-actions">' +
+            '<a href="' + BOOK_URL + '" class="sn-panel-cta" target="_blank" rel="noopener">Book a free strategy call' + ARROW + "</a>" +
+            '<div class="sn-panel-duo">' +
+              PANEL_FOOT.map(function (l) { return '<a class="sn-panel-ghost" href="' + l.href + '">' + svg(l.icon, "sn-panel-ghost__icon") + "<span>" + l.label + "</span></a>"; }).join("") +
+            "</div>" +
+          "</div>" +
+        "</div>" +
       "</aside>"
     );
   }
@@ -273,7 +325,7 @@
       if (e.key === "Escape") { shut(true); return; }
       // Keep Tab inside the open menu
       if (e.key === "Tab") {
-        var items = panel.querySelectorAll("button, a, summary");
+        var items = panel.querySelectorAll("button:not([tabindex='-1']), a");
         var first = items[0], last = items[items.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
@@ -318,7 +370,7 @@
     mount.innerHTML = navHTML(ALIAS[active] || active);
     wire();
     wireMega();
-    wirePanelGroups(document);
+    wirePanelTabs(document);
     wireScroll();
   }
 
