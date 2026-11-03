@@ -9,8 +9,9 @@ A normal portal account (same email + password, same session cookie) whose email
 The check runs **on the server for every admin API call** ([`functions/_lib/admin-auth.js`](../functions/_lib/admin-auth.js));
 the page itself only renders what the API returns.
 
-- Default allowlist: `elombe@swftstudios.com`.
-- Override with the `ADMIN_EMAILS` env var (comma-separated), e.g. to add a teammate.
+- The owner, `elombe@swftstudios.com`, is **always** an admin.
+- `ADMIN_EMAILS` (comma-separated) **adds** admins, e.g. a teammate. It can't remove the owner.
+- Admins land on `/admin/` after logging in, and `/portal/dashboard.html` forwards them there. On phones the tab bar shows **Admin**, and on desktop the sidebar shows a **Workspace → Admin** link.
 - Signed out -> redirected to the login page. Signed in as a client -> 403 and a short message; no data is returned.
 - Writes (`POST`/`DELETE`) also require a same-origin `Origin` header, so another site cannot use your cookie.
 - Your account must exist first (create it via `/portal/onboard.html` if needed).
@@ -34,7 +35,7 @@ the page itself only renders what the API returns.
 3. **Emails tab:** Resend keys scoped to "sending access" cannot list emails. Either use a full-access key
    or accept the tab's notice. Never paste the key anywhere but `wrangler pages secret put RESEND_API_KEY`.
 4. **Blog tab:** run `npm run build:blog-index` after adding or editing a blog page, and commit `data/blog-posts.json`.
-5. Optional: `wrangler pages secret put ADMIN_EMAILS` to change who has access.
+5. Optional: `wrangler pages secret put ADMIN_EMAILS` to add more admins.
 
 ## Notes on privacy and crawling
 

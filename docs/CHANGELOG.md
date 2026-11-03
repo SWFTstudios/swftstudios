@@ -7,7 +7,10 @@
 - The account card opens the same account sheet as on phones, shown as a popover next to the sidebar.
 - The sidebar collapses to icons (76px); the choice is remembered in this browser.
 - Phones: the menu button moved from the top-right corner to the bottom-right of the tab bar (thumb reach). It opens the menu and turns into Close; the tab bar stays above the open menu. Tabs are now Home · Services/Project/Admin · Book · Log in/Account · Menu (Work is in the menu).
-- Page heroes start higher with no top bar to clear. Tablets (761–1099px) keep the top bar and slide-over menu; phones keep the bottom tab bar.
+- Page heroes start higher with no top bar to clear.
+
+### Fixed
+- The owner email (`elombe@swftstudios.com`) is always an admin. `ADMIN_EMAILS` now only adds admins. Before, setting it replaced the owner, so the owner logged in as a plain member and landed on the client dashboard instead of `/admin/`. Tablets (761–1099px) keep the top bar and slide-over menu; phones keep the bottom tab bar.
 
 ## 2026-11-04: Mobile web app for guests, members and clients
 
