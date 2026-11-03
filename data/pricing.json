@@ -1,7 +1,7 @@
 {
   "hero": {
     "headline": "Every service, priced in the open.",
-    "sub": "See what each service costs, from websites to custom software, then book a fixed package or get a quote. Nothing starts until you approve the scope.",
+    "sub": "Build, grow and automate: see what every service starts at, from $400 websites to custom software, then book a package or get a quote. Nothing starts until you approve the scope.",
     "trustLine": "Work directly with the people who create it · Itemized deliverables before you pay · Month-to-month plans"
   },
   "calUrl": "/growth-audit",
@@ -11,10 +11,10 @@
   "billingNote": "Same services, two ways to buy. Monthly plans are month-to-month.",
   "categories": [
     {
-      "id": "digital",
-      "label": "Digital",
-      "tagline": "Build, measure and grow online.",
-      "intro": "Websites, apps, tracking and marketing that turn attention into inquiries, bookings and sales.",
+      "id": "build",
+      "label": "Build",
+      "tagline": "Get seen.",
+      "intro": "Websites, apps and custom software that put you in front of customers and make the next step obvious.",
       "services": [
         {
           "id": "web-design",
@@ -25,13 +25,13 @@
               "id": "website-only",
               "name": "Website Only",
               "kind": "One-time",
-              "priceLabel": "Starting at $800",
-              "priceNote": "one-time · you supply content",
+              "priceLabel": "Starting at $400",
+              "priceNote": "one-time · up to 5 pages · base features",
               "featured": false,
-              "description": "A responsive site of up to 3 pages using your content, with one contact or booking path and launch support.",
+              "description": "A responsive site of up to 5 pages using your content, with base features: one contact or booking path, basic SEO and launch support.",
               "scopeDriver": "Exactly what's included in the starter scope is shown before you select optional extras.",
               "includes": [
-                "Up to 3 responsive site pages (for example: Home, Services/Shop and Contact)",
+                "Up to 5 responsive site pages (for example: Home, About, Services/Shop, Gallery and Contact)",
                 "Design and development in Webflow or Shopify using your supplied branding, copy and photos",
                 "1 standard contact/lead form or link to an existing booking system",
                 "Shopify option: entry of up to 5 client-supplied products and standard existing Shopify checkout",
@@ -39,25 +39,14 @@
                 "Mobile testing and 1 consolidated revision round",
                 "Domain connection and launch assistance; platform and domain fees separate"
               ],
-              "notIncluded": "Photo/video shoot, copywriting, extra pages ($175 each), complex booking and integrations.",
+              "notIncluded": "Photo/video shoot, copywriting, extra pages ($175 each), custom features, complex booking and integrations.",
               "cta": "Start Website Only",
-              "bookUrl": "/book/website-only.html",
-              "stripe": {
-                "mode": "payment",
-                "amountCents": 80000,
-                "productName": "SWFT. Website Only (project start)",
-                "ctaLabel": "Pay $800 to start",
-                "priceDisplay": "$800",
-                "billingNote": "The $800 starter price covers the included scope shown above; any extras are quoted separately before payment.",
-                "priceId": "price_1U6cA5AF4d9gCyuNj65BmDU2",
-                "paymentLinkUrl": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v"
-              },
-              "checkoutNote": "The exact starter scope and optional work are listed before you book.",
+              "checkoutNote": "Quote first. We confirm your pages, features and launch date before any payment.",
               "baseScopeNote": "You provide your logo, copy, photos and any product details. No photo/video session is included. Extra pages, additional products, complex bookings, copywriting and integrations are quoted separately.",
               "baseCounts": {
                 "photos": 0,
                 "videos": 0,
-                "pages": 3,
+                "pages": 5,
                 "shootMinutes": 0,
                 "locations": 0,
                 "profiles": 0,
@@ -65,7 +54,7 @@
               },
               "specs": [
                 {
-                  "value": "Up to 3",
+                  "value": "Up to 5",
                   "label": "Pages"
                 },
                 {
@@ -502,121 +491,19 @@
               "cta": "Request App Care"
             }
           ]
-        },
-        {
-          "id": "analytics",
-          "name": "Analytics",
-          "summary": "Tracking and reporting that show where every lead came from, what it cost and what to do next.",
-          "offers": [
-            {
-              "id": "analytics-setup",
-              "name": "Tracking Setup",
-              "kind": "One-time",
-              "priceLabel": "Starting at $500",
-              "priceNote": "one-time",
-              "description": "Connect your website, Google profile and ads so every call, form and sale is counted and has a source.",
-              "includes": [
-                "Google Analytics 4 and Google Tag Manager set up on 1 website",
-                "Up to 5 conversion events tracked (for example calls, forms, bookings and purchases)",
-                "Meta Pixel installed, plus Conversions API where your platform supports it",
-                "Google Search Console connected and sitemap submitted",
-                "UTM link guide so social, email and ad traffic is labeled correctly",
-                "1 live Looker Studio dashboard with your key numbers",
-                "30-minute walkthrough call"
-              ],
-              "notIncluded": "Custom app tracking, server-side tagging and data warehouse work. Admin access to your site and accounts is required.",
-              "cta": "Request a tracking quote",
-              "specs": [
-                {
-                  "value": "1",
-                  "label": "Website"
-                },
-                {
-                  "value": "Up to 5",
-                  "label": "Conversion events"
-                },
-                {
-                  "value": "1",
-                  "label": "Dashboard"
-                },
-                {
-                  "value": "1 to 2 weeks",
-                  "label": "Typical timeline"
-                }
-              ],
-              "scale": {
-                "title": "Setup sizes",
-                "columns": [
-                  "Scope",
-                  "Events",
-                  "Price"
-                ],
-                "rows": [
-                  [
-                    "1 website",
-                    "Up to 5",
-                    "$500"
-                  ],
-                  [
-                    "Website + online store",
-                    "Up to 10",
-                    "$850"
-                  ],
-                  [
-                    "2+ sites or an app",
-                    "Custom",
-                    "Quote"
-                  ]
-                ]
-              },
-              "handoff": [
-                "Every account (GA4, Tag Manager, Search Console, Looker Studio) owned by you, with admin access",
-                "Tracking plan listing each event and where it fires",
-                "Recorded walkthrough of your dashboard"
-              ],
-              "next": {
-                "label": "Ongoing",
-                "offer": "analytics-reporting"
-              }
-            },
-            {
-              "id": "analytics-reporting",
-              "name": "Monthly Insights",
-              "kind": "Monthly",
-              "priceLabel": "Starting at $250/mo",
-              "priceNote": "per month",
-              "description": "A monthly read on what is working, what slipped and the three moves that matter next.",
-              "includes": [
-                "Dashboard kept current across your website, Google Business Profile, social and ads",
-                "Monthly written report: traffic, leads by source, conversion rate and top content",
-                "3 prioritized recommendations each month",
-                "Alerts when leads, bookings or response times drop below an agreed level",
-                "One 30-minute review call each month",
-                "Month-to-month service"
-              ],
-              "notIncluded": "Carrying out the recommendations. Tracking must already be in place (Tracking Setup or equivalent).",
-              "cta": "Request a reporting quote",
-              "specs": [
-                {
-                  "value": "1",
-                  "label": "Report / mo"
-                },
-                {
-                  "value": "3",
-                  "label": "Recommendations"
-                },
-                {
-                  "value": "30 min",
-                  "label": "Review call"
-                }
-              ]
-            }
-          ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "grow",
+      "label": "Grow",
+      "tagline": "Get chosen.",
+      "intro": "Local SEO, ads, photo, video, social and live streaming that make you the obvious pick.",
+      "services": [
         {
           "id": "marketing",
-          "name": "Marketing",
-          "summary": "Get found in local search, run ads that reach the right neighborhoods and follow up with every lead automatically.",
+          "name": "Marketing & Local SEO",
+          "summary": "Get found in local search and run ads that reach the right neighborhoods, so you are the first name people see.",
           "offers": [
             {
               "id": "gbp-refresh",
@@ -691,52 +578,6 @@
               "next": {
                 "label": "Keep it fresh",
                 "offer": "content-growth-retainer"
-              }
-            },
-            {
-              "id": "lead-follow-up",
-              "name": "Lead Follow-up Automation",
-              "kind": "One-time",
-              "priceLabel": "Starting at $750",
-              "priceNote": "one-time setup",
-              "description": "Stop losing leads to missed calls and slow replies. We set up the texts, emails and reminders that follow up for you.",
-              "includes": [
-                "Missed-call text-back for 1 business phone number",
-                "Instant text and email reply to new form and booking leads",
-                "1 follow-up sequence (up to 3 emails and 2 texts) for leads who have not booked",
-                "Automatic review request after each completed job or order",
-                "Booking confirmations and reminders to cut no-shows",
-                "Simple lead pipeline so you can see every lead and its status",
-                "Setup on GoHighLevel or your existing CRM, plus a recorded walkthrough"
-              ],
-              "notIncluded": "CRM subscription, phone numbers and message fees, billed by those platforms (for example GoHighLevel and Twilio).",
-              "cta": "Request an automation quote",
-              "specs": [
-                {
-                  "value": "1",
-                  "label": "Phone number"
-                },
-                {
-                  "value": "1",
-                  "label": "Follow-up sequence"
-                },
-                {
-                  "value": "5",
-                  "label": "Emails + texts"
-                },
-                {
-                  "value": "2 to 3 weeks",
-                  "label": "Typical timeline"
-                }
-              ],
-              "handoff": [
-                "Every automation built in your own CRM account",
-                "One-page map of each automation and what triggers it",
-                "Recorded walkthrough plus 14 days of tweaks after launch"
-              ],
-              "next": {
-                "label": "Ongoing",
-                "offer": "analytics-reporting"
               }
             },
             {
@@ -880,15 +721,7 @@
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "id": "visual",
-      "label": "Visual",
-      "tagline": "Get seen and remembered.",
-      "intro": "Photo, video, social and live streaming that show customers what you do, captured on-site by the people who plan it.",
-      "services": [
+        },
         {
           "id": "photography",
           "name": "Photography",
@@ -1690,34 +1523,239 @@
           ]
         }
       ]
+    },
+    {
+      "id": "automate",
+      "label": "Automate",
+      "tagline": "Get booked.",
+      "intro": "Follow-up, booking and reporting systems that turn attention into appointments, even after hours.",
+      "services": [
+        {
+          "id": "automations",
+          "name": "Automations",
+          "summary": "Missed-call text-back, instant replies, reminders and review requests that turn interest into booked appointments while you work.",
+          "offers": [
+            {
+              "id": "lead-follow-up",
+              "name": "Lead Follow-up Automation",
+              "kind": "One-time",
+              "priceLabel": "Starting at $750",
+              "priceNote": "one-time setup",
+              "description": "Stop losing leads to missed calls and slow replies. We set up the texts, emails and reminders that follow up for you.",
+              "includes": [
+                "Missed-call text-back for 1 business phone number",
+                "Instant text and email reply to new form and booking leads",
+                "1 follow-up sequence (up to 3 emails and 2 texts) for leads who have not booked",
+                "Automatic review request after each completed job or order",
+                "Booking confirmations and reminders to cut no-shows",
+                "Simple lead pipeline so you can see every lead and its status",
+                "Setup on GoHighLevel or your existing CRM, plus a recorded walkthrough"
+              ],
+              "notIncluded": "CRM subscription, phone numbers and message fees, billed by those platforms (for example GoHighLevel and Twilio).",
+              "cta": "Request an automation quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Phone number"
+                },
+                {
+                  "value": "1",
+                  "label": "Follow-up sequence"
+                },
+                {
+                  "value": "5",
+                  "label": "Emails + texts"
+                },
+                {
+                  "value": "2 to 3 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "handoff": [
+                "Every automation built in your own CRM account",
+                "One-page map of each automation and what triggers it",
+                "Recorded walkthrough plus 14 days of tweaks after launch"
+              ],
+              "next": {
+                "label": "Ongoing",
+                "offer": "automation-care"
+              }
+            },
+            {
+              "id": "automation-care",
+              "name": "Automation Care",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $250/mo",
+              "priceNote": "per month · platform fees separate",
+              "description": "We watch your follow-up, booking and review automations, fix what breaks and tune messages from what is converting.",
+              "includes": [
+                "Monthly check of every automation, form and booking path",
+                "Fixes when a connected tool or integration changes",
+                "Up to 2 hours a month of message, sequence or pipeline edits",
+                "Short monthly note: leads in, replies, bookings and reviews"
+              ],
+              "notIncluded": "New automations or new integrations (quoted separately); CRM, phone number and message fees.",
+              "cta": "Request a care plan",
+              "specs": [
+                {
+                  "value": "2 hrs",
+                  "label": "Edits per month"
+                },
+                {
+                  "value": "Monthly",
+                  "label": "Health check"
+                },
+                {
+                  "value": "Month-to-month",
+                  "label": "Term"
+                }
+              ],
+              "handoff": [
+                "Everything stays in your own CRM and accounts",
+                "Change log of every edit we make"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "analytics",
+          "name": "Tracking & Reporting",
+          "summary": "Tracking and reporting that show where every lead came from, what it cost and what to do next.",
+          "offers": [
+            {
+              "id": "analytics-setup",
+              "name": "Tracking Setup",
+              "kind": "One-time",
+              "priceLabel": "Starting at $500",
+              "priceNote": "one-time",
+              "description": "Connect your website, Google profile and ads so every call, form and sale is counted and has a source.",
+              "includes": [
+                "Google Analytics 4 and Google Tag Manager set up on 1 website",
+                "Up to 5 conversion events tracked (for example calls, forms, bookings and purchases)",
+                "Meta Pixel installed, plus Conversions API where your platform supports it",
+                "Google Search Console connected and sitemap submitted",
+                "UTM link guide so social, email and ad traffic is labeled correctly",
+                "1 live Looker Studio dashboard with your key numbers",
+                "30-minute walkthrough call"
+              ],
+              "notIncluded": "Custom app tracking, server-side tagging and data warehouse work. Admin access to your site and accounts is required.",
+              "cta": "Request a tracking quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Website"
+                },
+                {
+                  "value": "Up to 5",
+                  "label": "Conversion events"
+                },
+                {
+                  "value": "1",
+                  "label": "Dashboard"
+                },
+                {
+                  "value": "1 to 2 weeks",
+                  "label": "Typical timeline"
+                }
+              ],
+              "scale": {
+                "title": "Setup sizes",
+                "columns": [
+                  "Scope",
+                  "Events",
+                  "Price"
+                ],
+                "rows": [
+                  [
+                    "1 website",
+                    "Up to 5",
+                    "$500"
+                  ],
+                  [
+                    "Website + online store",
+                    "Up to 10",
+                    "$850"
+                  ],
+                  [
+                    "2+ sites or an app",
+                    "Custom",
+                    "Quote"
+                  ]
+                ]
+              },
+              "handoff": [
+                "Every account (GA4, Tag Manager, Search Console, Looker Studio) owned by you, with admin access",
+                "Tracking plan listing each event and where it fires",
+                "Recorded walkthrough of your dashboard"
+              ],
+              "next": {
+                "label": "Ongoing",
+                "offer": "analytics-reporting"
+              }
+            },
+            {
+              "id": "analytics-reporting",
+              "name": "Monthly Insights",
+              "kind": "Monthly",
+              "priceLabel": "Starting at $250/mo",
+              "priceNote": "per month",
+              "description": "A monthly read on what is working, what slipped and the three moves that matter next.",
+              "includes": [
+                "Dashboard kept current across your website, Google Business Profile, social and ads",
+                "Monthly written report: traffic, leads by source, conversion rate and top content",
+                "3 prioritized recommendations each month",
+                "Alerts when leads, bookings or response times drop below an agreed level",
+                "One 30-minute review call each month",
+                "Month-to-month service"
+              ],
+              "notIncluded": "Carrying out the recommendations. Tracking must already be in place (Tracking Setup or equivalent).",
+              "cta": "Request a reporting quote",
+              "specs": [
+                {
+                  "value": "1",
+                  "label": "Report / mo"
+                },
+                {
+                  "value": "3",
+                  "label": "Recommendations"
+                },
+                {
+                  "value": "30 min",
+                  "label": "Review call"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "bookCta": {
     "headline": "Not sure which service you need?",
-    "quote": "Send us your website or social profile. We’ll review your Digital and Visual presence and email you the three fixes that will move the needle most.",
+    "quote": "Send us your website or social profile. We’ll review how you get seen, chosen and booked, and email you the three fixes that will move the needle most.",
     "sub": "Free and personal. No call, no pressure to buy a bigger package.",
     "button": "Get My Free Growth Audit"
   },
   "faq": [
     {
-      "q": "What’s the difference between Digital and Visual?",
-      "a": "Digital is what we build and run online: websites, apps, analytics and marketing. Visual is what your customers see: photography, videography, social media management and live streaming. Most clients use both, and packages like Website + Content Capture already include a shoot."
+      "q": "How are your services organized?",
+      "a": "Three ways we help, matched to our motto. Build gets you seen: websites, apps and custom software. Grow gets you chosen: local SEO, ads, photo, video, social and live streaming. Automate gets you booked: follow-up, reminders, review requests and reporting. Most clients mix all three, and packages like Website + Content Capture already include a shoot."
     },
     {
       "q": "Which service should I start with?",
-      "a": "Start where you lose the most customers. If people can’t find you, start with Marketing and the GBP Content Refresh. If they find you but don’t reach out, start with Web Design & Development. If your photos and feed feel stale, start with Photography, Videography or a monthly content plan. Not sure? The free Growth Audit will tell you."
+      "a": "Start where you lose the most customers. If people can’t find you, start with Grow: Marketing & Local SEO or the GBP Content Refresh. If they find you but don’t reach out, start with Build and a website. If they reach out but don’t book, start with Automate and Lead Follow-up. Not sure? The free Growth Audit will tell you."
     },
     {
       "q": "How much does it cost to get started?",
-      "a": "Digital: Google Business Profile work starts at $400, tracking setup at $500 and a Webflow or Shopify website at $800. Visual: social profile setup starts at $350, product photography at $400, a brand photo session at $450, a short-form video pack at $600 and live streaming at $900 per event."
+      "a": "Build: websites start at $400 for up to 5 pages with base features, app design sprints at $1,500. Grow: social profile setup starts at $350, Google Business Profile work and product photography at $400, a brand photo session at $450, a short-form video pack at $600 and live streaming at $900 per event. Automate: tracking setup starts at $500 and lead follow-up automation at $750."
     },
     {
       "q": "What monthly plans do you offer?",
-      "a": "Every service has a monthly option. Digital: Website Care from $150/mo, Monthly Insights from $250/mo, App Care from $400/mo, Ads Management from $500/mo and Full Growth Partner from $1,200/mo. Visual: Monthly Photo Plan from $400/mo, Content + Growth Retainer from $450/mo, Monthly Video Plan and Managed Social from $500/mo each, and Recurring Streams from $1,800/mo. All are month-to-month under the agreed scope."
+      "a": "Build: Website Care from $150/mo and App Care from $400/mo. Grow: Monthly Photo Plan from $400/mo, Content + Growth Retainer from $450/mo, Ads Management, Monthly Video Plan and Managed Social from $500/mo each, Full Growth Partner from $1,200/mo and Recurring Streams from $1,800/mo. Automate: Monthly Insights and Automation Care from $250/mo. All are month-to-month under the agreed scope."
     },
     {
       "q": "Which offers can I book online?",
-      "a": "Six packages have online checkout: GBP Content Refresh, Website Only, Website + Content Capture, Website + Extended Content, Content + Growth Retainer and Full Growth Partner. Every other offer starts with a quick quote so we can confirm scope, dates and total first."
+      "a": "Five packages have online checkout: GBP Content Refresh, Website + Content Capture, Website + Extended Content, Content + Growth Retainer and Full Growth Partner. Every other offer, including the $400 Website Only, starts with a quick quote so we can confirm scope, dates and total first."
     },
     {
       "q": "What do I get at handoff?",

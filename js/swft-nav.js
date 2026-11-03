@@ -15,19 +15,21 @@
 
   // Services mega-menu. Keep in sync with data/services.json
   // (name, menuLine, slug, icon); the pages themselves are generated from it.
+  // Grouped by the SWFT motto: Build = get seen, Grow = get chosen,
+  // Automate = get booked. `from` is the lowest published price.
   var SERVICES = [
-    { group: "Build", items: [
-      { label: "Custom software & CRMs", line: "Replace the apps you rent",    href: "/software.html",     icon: "code" },
-      { label: "Mobile & web apps",      line: "iPhone, Android and portals",  href: "/apps.html",         icon: "phone" },
-      { label: "Websites",               line: "Fast sites built to convert",  href: "/websites.html",     icon: "browser" }
+    { group: "Build", motto: "Get seen.", items: [
+      { label: "Websites",               line: "Up to 5 pages, base features",  from: "$400",   href: "/websites.html",    icon: "browser" },
+      { label: "Mobile & web apps",      line: "iPhone, Android and portals",   from: "$1,500", href: "/apps.html",        icon: "phone" },
+      { label: "Custom software & CRMs", line: "Replace the apps you rent",     from: "$1,500", href: "/software.html",    icon: "code" }
     ] },
-    { group: "Automate", items: [
-      { label: "AI employees",           line: "Answers and books leads 24/7", href: "/ai-employees.html", icon: "sparkle" },
-      { label: "Automations",            line: "Connect tools, end busywork",  href: "/automations.html",  icon: "bolt" }
+    { group: "Grow", motto: "Get chosen.", items: [
+      { label: "Paid ads & marketing",   line: "Meta, Google and local SEO",    from: "$400",   href: "/marketing.html",   icon: "megaphone" },
+      { label: "Content & creative",     line: "Photo, video, social and live", from: "$350",   href: "/content.html",     icon: "video" }
     ] },
-    { group: "Grow", items: [
-      { label: "Paid ads & marketing",   line: "Meta, Google and SEO",         href: "/marketing.html",    icon: "megaphone" },
-      { label: "Content & creative",     line: "Photo, video, social and live", href: "/content.html",     icon: "video" }
+    { group: "Automate", motto: "Get booked.", items: [
+      { label: "Automations",            line: "Follow-up, reminders, reviews", from: "$750",   href: "/automations.html", icon: "bolt" },
+      { label: "Tracking & reporting",   line: "Know what brings in customers", from: "$500",   href: "/analytics.html",   icon: "chart" }
     ] }
   ];
   // Same stroke icons as scripts/build-service-pages.mjs.
@@ -35,7 +37,7 @@
     code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
     phone: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>',
     browser: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M6.5 7h.01M9 7h.01"/>',
-    sparkle: '<path d="M10 3.5 11.6 8 16 9.5l-4.4 1.6L10 15.5l-1.6-4.4L4 9.5 8.4 8z"/><path d="M17.5 14l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>',
+    chart: '<path d="M4 20V4M4 20h16"/><path d="m8 15 3.5-4 3 2.5L19 8"/>',
     bolt: '<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>',
     megaphone: '<path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16.5 9.5a3.5 3.5 0 0 1 0 5M19 7a7 7 0 0 1 0 10"/>',
     video: '<rect x="3" y="7" width="12" height="10" rx="2"/><path d="m15 11 6-3.5v9L15 13"/>'
@@ -67,10 +69,10 @@
 
   function megaHTML() {
     var cols = SERVICES.map(function (g) {
-      return '<div class="sn-mega__col"><p class="sn-mega__label">' + g.group + "</p>" +
+      return '<div class="sn-mega__col"><p class="sn-mega__label">' + g.group + (g.motto ? ' <span class="sn-mega__motto">' + g.motto + "</span>" : "") + "</p>" +
         g.items.map(function (i) {
           return '<a class="sn-mega__item" href="' + i.href + '">' + svg(i.icon) +
-            '<span><span class="sn-mega__name">' + i.label + '</span><span class="sn-mega__line">' + i.line + "</span></span></a>";
+            '<span><span class="sn-mega__name">' + i.label + '</span><span class="sn-mega__line">' + i.line + (i.from ? " \u00b7 from " + i.from : "") + "</span></span></a>";
         }).join("") + "</div>";
     }).join("");
     return '<div class="sn-mega" id="sn-mega" hidden>' +
@@ -83,14 +85,35 @@
     "</div>";
   }
 
+  // Phone menu: Services is a dropdown, and each group (Build / Grow /
+  // Automate) is its own sub-dropdown. Opening one group closes the others.
   function panelServicesHTML() {
     return '<details class="sn-panel-services"><summary>Services</summary>' +
       SERVICES.map(function (g) {
-        return '<p class="sn-panel-label">(' + g.group + ")</p>" +
-          g.items.map(function (i) { return '<a class="sn-panel-sub" href="' + i.href + '">' + i.label + "</a>"; }).join("");
+        return '<details class="sn-panel-group"><summary>' +
+            '<span class="sn-panel-group__name">' + g.group + "</span>" +
+            (g.motto ? '<span class="sn-panel-group__motto">' + g.motto + "</span>" : "") +
+          "</summary>" +
+          '<div class="sn-panel-group__items">' +
+          g.items.map(function (i) {
+            return '<a class="sn-panel-sub" href="' + i.href + '">' + i.label +
+              (i.from ? '<span class="sn-panel-from">From ' + i.from + "</span>" : "") + "</a>";
+          }).join("") +
+          "</div></details>";
       }).join("") +
-      '<a class="sn-panel-sub" href="/services.html">All services →</a>' +
+      '<a class="sn-panel-sub sn-panel-all" href="/services.html">All services →</a>' +
     "</details>";
+  }
+
+  // One sub-dropdown open at a time inside the Services dropdown.
+  function wirePanelGroups(root) {
+    var groups = root.querySelectorAll(".sn-panel-group");
+    Array.prototype.forEach.call(groups, function (d) {
+      d.addEventListener("toggle", function () {
+        if (!d.open) return;
+        Array.prototype.forEach.call(groups, function (o) { if (o !== d) o.open = false; });
+      });
+    });
   }
 
   function link(l, active, cls) {
@@ -289,6 +312,7 @@
     mount.innerHTML = navHTML(ALIAS[active] || active);
     wire();
     wireMega();
+    wirePanelGroups(document);
     wireScroll();
   }
 

@@ -657,12 +657,12 @@
 }
 
 /* ============================================================
-   Digital / Visual categories (2026-10): category tabs → services → offers.
+   Build / Grow / Automate categories (2026-11): category tabs → services → offers.
    Markup from js/pricing-render.js.
    ============================================================ */
 .pr-cat-tabs {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .75rem;
   margin: 0 0 2.5rem;
 }
@@ -1156,7 +1156,7 @@
 }
 
 @media (max-width: 767px) {
-  .pr-cat-tabs { gap: .5rem; margin-bottom: 2rem; }
+  .pr-cat-tabs { grid-template-columns: 1fr; gap: .5rem; margin-bottom: 2rem; }
   .pr-cat-tab { padding: .9rem 1rem; }
   .pr-cat-tab__sub { font-size: .74rem; }
   .pr-cat__head { text-align: left; }

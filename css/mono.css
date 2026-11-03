@@ -460,6 +460,8 @@ a.mf-row:hover, button.mf-row:hover { padding-left: 0.75rem; }
   .mf-carousel__stage { height: 26rem; }
   .mf-row__desc { grid-column: 2 / -1; grid-row: 2; }
   .mf-row__meta .mf-row__price { display: none; }
+  /* Starting prices on the Build / Grow / Automate rows stay visible on phones. */
+  .mf-row__meta .mf-row__price--keep { display: inline; }
   .mf-row__panel { padding-left: 0; }
 }
 

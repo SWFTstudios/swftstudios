@@ -69,10 +69,21 @@ test("growth audit emails hello@ including the biggest leak", async () => {
   assert.match(team.html, /visitors don&#39;t reach out or buy/);
 });
 
+// website-only ($400) is quote-first: it has no default Payment Link, so it
+// is tested below rather than in the checkout loop.
 const TIERS = [
-  "gbp-refresh", "website-only", "website-content-half",
+  "gbp-refresh", "website-content-half",
   "website-content-full", "content-growth-retainer", "full-growth-partner",
 ];
+
+test("booking (website-only) never starts checkout on the retired $800 link", async () => {
+  const r = await post("/api/book-tier", {
+    tierId: "website-only", name: "Pat Client", email: visitor.email, businessName: "Client Co",
+    customization: { goal: "More bookings", addOns: [] },
+  });
+  assert.equal(r.body.ok, false, JSON.stringify(r.body));
+  assert.ok(!String(r.body.checkoutUrl || "").includes("eVq6oGgykbS4cCJgi4fMA0v"));
+});
 
 for (const tierId of TIERS) {
   test(`booking (${tierId}) checkout: emails hello@ and returns a Stripe link`, async () => {

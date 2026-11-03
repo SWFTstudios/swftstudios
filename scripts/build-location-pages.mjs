@@ -49,7 +49,7 @@ function pageShell({ title, description, canonical, active, jsonLd, body, cssExt
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-notify">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-subnav">
   <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
   <link rel="stylesheet" href="/css/locations-page.css?v=20260930b">
   ${cssExtra}
@@ -64,7 +64,7 @@ ${body}
     </div>
   </main>
   <script src="/js/swft-analytics.js?v=20261104-ga4" defer></script>
-  <script src="/js/swft-nav.js?v=20261103-notify" defer></script>
+  <script src="/js/swft-nav.js?v=20261103-subnav" defer></script>
 </body>
 </html>
 `;
@@ -296,7 +296,7 @@ function renderHtmlSitemap(data, locations) {
   const primary = [
     { href: "/", label: "Home", note: "Main marketing homepage" },
     { href: "/growth-audit", label: "Free Growth Audit", note: "Primary lead capture" },
-    { href: "/services.html", label: "Services", note: "Digital (web, apps, analytics, marketing) and Visual (photo, video, social, live streaming)" },
+    { href: "/services.html", label: "Services", note: "Build (websites, apps, software), Grow (ads, SEO, content) and Automate (follow-up, reporting)" },
     { href: "/pricing.html", label: "Pricing", note: "Starting prices and deliverables for every offer" },
     { href: "/work.html", label: "Work", note: "Every project in a 3D carousel, plus the full index" },
     { href: "/visuals.html", label: "Films", note: "Brand films, reels and live work" },
@@ -309,7 +309,6 @@ function renderHtmlSitemap(data, locations) {
   const book = [
     { href: "/book/", label: "Book a tier", note: "Stripe checkout hub" },
     { href: "/book/gbp-content-refresh.html", label: "Book GBP Content Refresh" },
-    { href: "/book/website-only.html", label: "Book Website Only" },
     { href: "/book/website-content-half.html", label: "Book Website + Content" },
     { href: "/book/website-content-full.html", label: "Book Website + Extended Content" },
     { href: "/book/content-growth-retainer.html", label: "Book Content + Growth Retainer" },

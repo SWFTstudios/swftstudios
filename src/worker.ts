@@ -468,10 +468,10 @@ const STRIPE_TIERS: Record<string, StripeTierDef> = {
     id: "website-only",
     name: "Website Only",
     mode: "payment",
-    amountCents: 80000,
+    amountCents: 40000,
     productName: "SWFT. Website Only (project start)",
-    priceLabel: "$800 to $1,500",
-    priceDisplay: "$800",
+    priceLabel: "From $400",
+    priceDisplay: "$400",
   },
   "website-content-half": {
     id: "website-content-half",

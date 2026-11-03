@@ -57,6 +57,11 @@
 .sv-invest__signs { font-weight: 700; font-size: 1.15rem; letter-spacing: 0.02em; color: var(--mf-dim); }
 .sv-invest__signs .is-on { color: #fff; }
 
+/* Starting price (cards, service-page investment box). */
+.sv-price__from { display: flex; align-items: baseline; gap: 0.5rem; margin: 0.25rem 0 0.5rem; }
+.sv-price__from span { color: var(--mf-muted); font-size: 0.92rem; }
+.sv-price__from b { color: #fff; font-weight: 700; font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); letter-spacing: -0.02em; }
+
 /* Investment box on service pages */
 .sv-investbox {
   border: 1px solid var(--mf-line); border-radius: var(--mf-radius); background: var(--mf-surface);

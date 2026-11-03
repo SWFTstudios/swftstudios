@@ -1,5 +1,5 @@
 @import url("swft-fonts.css?v=20261027-mono");
-@import url("mono.css?v=20261103-notify");
+@import url("mono.css?v=20261103-bga");
 
 /* ============================================================
    SWFT Studios — shared navigation + footer (Mono, dark)
@@ -93,6 +93,8 @@
   margin: 0 0 0.9rem; font-family: var(--mf-mono, monospace); font-size: 0.72rem; letter-spacing: 0.1em;
   text-transform: uppercase; color: #9a9a9a;
 }
+.sn-mega__motto { color: #fff; margin-left: 0.35em; }
+.sn-panel-from { display: block; margin-top: 0.3rem; font-family: var(--mf-mono, monospace); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; }
 .sn-links .sn-mega__item {
   display: flex; gap: 0.95rem; align-items: center; padding: 0.7rem 0.75rem; margin: 0 -0.75rem 0.25rem;
   border-radius: 14px; color: #fff; background: none; transition: background 0.2s;
@@ -124,18 +126,33 @@
 
 /* Phone menu: Services accordion */
 .sn-panel-services { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-.sn-panel-services summary {
+.sn-panel-services > summary {
   list-style: none; cursor: pointer; color: #fff; padding: 0.7rem 0;
   font-size: 1.75rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1.1;
   display: flex; justify-content: space-between; align-items: center;
 }
 .sn-panel-services summary::-webkit-details-marker { display: none; }
-.sn-panel-services summary::after { content: "+"; font-weight: 400; transition: transform 0.3s var(--mf-ease, ease); }
-.sn-panel-services[open] summary::after { transform: rotate(45deg); }
+.sn-panel-services > summary::after { content: "+"; font-weight: 400; transition: transform 0.3s var(--mf-ease, ease); }
+.sn-panel-services[open] > summary::after { transform: rotate(45deg); }
 .sn-panel-services summary:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-.sn-panel-services .sn-panel-label { margin: 0.75rem 0 0.25rem; }
+/* Sub-dropdowns: Build / Grow / Automate */
+.sn-panel-group { border-top: 1px solid rgba(255, 255, 255, 0.08); margin-left: 0.25rem; }
+.sn-panel-group:first-of-type { border-top: 0; }
+.sn-panel-group > summary {
+  list-style: none; cursor: pointer; color: #fff; padding: 0.8rem 0;
+  display: flex; align-items: baseline; gap: 0.6rem;
+}
+.sn-panel-group__name { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.03em; }
+.sn-panel-group__motto { font-family: var(--mf-mono, monospace); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; }
+.sn-panel-group > summary::after {
+  content: ""; margin-left: auto; align-self: center; width: 0.5rem; height: 0.5rem;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-25%); transition: transform 0.3s var(--mf-ease, ease);
+}
+.sn-panel-group[open] > summary::after { transform: rotate(-135deg) translateY(-25%); }
+.sn-panel-group__items { padding: 0 0 0.6rem 0.9rem; border-left: 1px solid rgba(255, 255, 255, 0.12); margin: 0 0 0.4rem 0.15rem; }
 .sn-panel a.sn-panel-sub { display: block; font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; padding: 0.55rem 0; border-bottom: 0; }
-.sn-panel-services > a.sn-panel-sub:last-child { margin-bottom: 0.75rem; }
+.sn-panel a.sn-panel-all { margin: 0.25rem 0 0.75rem 0.25rem; font-size: 1rem; color: #9a9a9a; }
 
 .sn-actions { justify-self: end; display: flex; align-items: center; gap: 0.6rem; }
 .sn-cta {
@@ -187,6 +204,9 @@
   transition: opacity 0.35s ease, transform 0.45s var(--mf-ease, ease), color 0.2s;
 }
 .sn-panel.open a { opacity: 1; transform: none; }
+/* Services sub-dropdown links sit under their group heading, so they are smaller. */
+.sn-panel .sn-panel-group__items a.sn-panel-sub:not(.mf-pill) { font-size: 1.15rem; font-weight: 500; letter-spacing: -0.02em; padding: 0.6rem 0; border-bottom: 0; }
+.sn-panel .sn-panel-services a.sn-panel-all:not(.mf-pill) { font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; color: #9a9a9a; border-bottom: 0; padding: 0.7rem 0; }
 .sn-panel a:not(.mf-pill):hover, .sn-panel a:not(.mf-pill):focus-visible { color: #9a9a9a; outline: none; }
 .sn-panel a.is-active::after { content: " •"; color: #9a9a9a; }
 .sn-panel a.sn-panel-cta {

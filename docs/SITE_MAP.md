@@ -29,11 +29,11 @@ Every public page has one job in the funnel. The site's message is the SWFT Meth
 | Route | Job |
 | --- | --- |
 | `/` | Homepage: "Get seen. Get chosen. Get booked." hero with the live booking pill, the 3D project carousel, services with starting prices, the five stages, proof, FAQ |
-| `/services.html` | Build / Automate / Grow service cards linking to the seven service pages, then the priced packages in two categories, Digital (web design and development, app design and development, analytics, marketing) and Visual (photography, videography, social media management, live streaming), with each offer's starting price; then the SWFT Method stages each service covers |
-| `/software.html`, `/apps.html`, `/websites.html` | Build services (generated from `data/services.json`, `npm run build:services`) |
-| `/ai-employees.html`, `/automations.html` | Automate services |
-| `/marketing.html`, `/content.html` | Grow services |
-| `/pricing.html` | Pricing: Digital / Visual tabs → services → offers, each with its price, deliverables and what is not included. A One-time / Monthly switch (pinned under the nav) shows each service's one-time or monthly offers; `?billing=monthly` opens on monthly. Rendered from `data/pricing.json` |
+| `/services.html` | Build (Get seen) / Grow (Get chosen) / Automate (Get booked) service cards with starting prices, linking to the seven service pages, then the priced packages in the same three categories: Build (web design and development, app design and development), Grow (marketing and local SEO, photography, videography, social media, live streaming) and Automate (automations, analytics); then the SWFT Method stages each service covers |
+| `/websites.html`, `/apps.html`, `/software.html` | Build services (Get seen; generated from `data/services.json`, `npm run build:services`) |
+| `/marketing.html`, `/content.html` | Grow services (Get chosen) |
+| `/automations.html`, `/analytics.html` | Automate services (Get booked) |
+| `/pricing.html` | Pricing: Build / Grow / Automate tabs → services → offers, each with its price, deliverables and what is not included. A One-time / Monthly switch (pinned under the nav) shows each service's one-time or monthly offers; `?billing=monthly` opens on monthly. Rendered from `data/pricing.json` |
 | `/work.html` | Work: every project in the 3D carousel (filter by category), then the full project index. Built from `data/portfolio-projects.json` by `npm run build:mono` |
 | `/blog.html` | Blog: marketing guides (`/blog/<slug>.html`), listed from the `tips` entries in `data/case-studies-index.json` |
 | `/visuals.html` | Visuals: the Vimeo films in a draggable grid; each opens full screen (`?p=<vimeo id>`) with the Vimeo player. Films are listed in `data/visuals.json`; titles and thumbnails load from Vimeo |

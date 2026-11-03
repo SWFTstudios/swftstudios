@@ -2,12 +2,15 @@
 /**
  * Builds the service pages and service cards from data/services.json:
  *
- *   /<slug>.html                → one page per service (software, apps,
- *                                 websites, ai-employees, automations,
- *                                 marketing, content)
- *   services.html  svc:groups   → Build / Automate / Grow cards
- *   pricing.html   svc:pricing  → investment cards (one per service)
- *   index.html     svc:rows     → numbered Build / Automate / Grow rows
+ *   /<slug>.html                → one page per service (websites, apps,
+ *                                 software, marketing, content,
+ *                                 automations, analytics)
+ *   services.html  svc:groups   → Build / Grow / Automate cards
+ *   pricing.html   svc:pricing  → starting-price cards (one per service)
+ *   index.html     svc:rows     → numbered Build / Grow / Automate rows
+ *
+ * Groups follow the SWFT motto: Build = Get seen, Grow = Get chosen,
+ * Automate = Get booked. Every service shows its `startingAt` price.
  *   index.html, services.html  svc:flow → "How it works for…" industry
  *                                 walkthrough (animated by js/swft-flow.js)
  *
@@ -43,18 +46,13 @@ export const ICONS = {
   megaphone: '<path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16.5 9.5a3.5 3.5 0 0 1 0 5M19 7a7 7 0 0 1 0 10"/>',
   video: '<rect x="3" y="7" width="12" height="10" rx="2"/><path d="m15 11 6-3.5v9L15 13"/>',
   layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 12.5 9 5 9-5M3 16.5l9 5 9-5"/>',
+  chart: '<path d="M4 20V4M4 20h16"/><path d="m8 15 3.5-4 3 2.5L19 8"/>',
 };
 export const icon = (name, cls = "sv-icon") =>
   `<span class="${cls}" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ""}</svg></span>`;
 
 const CHECK =
   '<svg class="sv-check" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity=".14"/><path d="m7.5 12.3 3 3 6-6.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-function investment(level) {
-  const n = Math.max(1, Math.min(4, Number(level) || 1));
-  const signs = Array.from({ length: 4 }, (_, i) => `<span${i < n ? ' class="is-on"' : ""}>$</span>`).join("");
-  return `<span class="sv-invest" aria-label="Investment level ${n} of 4"><span class="sv-invest__label">Investment</span><span class="sv-invest__signs" aria-hidden="true">${signs}</span></span>`;
-}
 
 function offerIndex(pricing) {
   const map = {};
@@ -82,7 +80,7 @@ function groupsBlock(data) {
       const cards = data.services.filter((s) => s.group === g.id).map((s) => serviceCard(s)).join("\n");
       return [
         `<div class="sv-group" id="${g.id}">`,
-        `  <div class="sv-group__head"><p class="mf-label">(${esc(g.label)})</p><p class="sv-group__tag">${esc(g.tagline)}</p></div>`,
+        `  <div class="sv-group__head"><p class="mf-label">(${esc(g.label)}) ${esc(g.motto)}</p><p class="sv-group__tag">${esc(g.tagline)}</p></div>`,
         `  <div class="sv-cards">`,
         cards,
         `  </div>`,
@@ -99,11 +97,12 @@ function includesList(items, limit) {
     .join("")}</ul>`;
 }
 
-function pricingCard(s) {
+function pricingCard(s, data) {
   return [
     `<article class="sv-price" id="svc-${s.slug}">`,
-    `  <div class="sv-price__top">${icon(s.icon)}${investment(s.investment)}</div>`,
+    `  <div class="sv-price__top">${icon(s.icon)}<span class="mf-label mf-label--muted">(${esc(data.groups.find((g) => g.id === s.group).label)}) ${esc(data.groups.find((g) => g.id === s.group).motto)}</span></div>`,
     `  <h3 class="sv-price__title">${esc(s.name)}</h3>`,
+    `  <p class="sv-price__from"><span>Starting at</span> <b>${esc(s.startingAt)}</b></p>`,
     `  <p class="sv-price__lead">${esc(strip(s.lead))}</p>`,
     `  <p class="mf-label mf-label--muted sv-price__label">What&rsquo;s included</p>`,
     `  ${includesList(s.includes, 4)}`,
@@ -116,7 +115,7 @@ function pricingCard(s) {
 }
 
 function pricingBlock(data) {
-  return `<div class="sv-prices">\n${data.services.map(pricingCard).join("\n")}\n</div>`;
+  return `<div class="sv-prices">\n${data.services.map((s) => pricingCard(s, data)).join("\n")}\n</div>`;
 }
 
 function page(s, data, offers) {
@@ -181,8 +180,8 @@ function page(s, data, offers) {
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${SITE}/images/swft-thumbnail.webp">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-notify">
-  <link rel="stylesheet" href="/css/services.css?v=20261103-services">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-subnav">
+  <link rel="stylesheet" href="/css/services.css?v=20261103-bga">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <script type="application/ld+json">${JSON.stringify(ld)}</script>
 </head>
@@ -193,7 +192,7 @@ function page(s, data, offers) {
     <section class="mf-hero mf-hero--page" aria-labelledby="svc-title">
       <div class="mf-wrap">
         <div class="mf-hero__top">
-          <p class="mf-label sv-crumb"><a href="/services.html">Services</a> <span aria-hidden="true">/</span> ${esc(group.label)} <span aria-hidden="true">/</span> ${esc(s.name)}</p>
+          <p class="mf-label sv-crumb"><a href="/services.html">Services</a> <span aria-hidden="true">/</span> <a href="/services.html#${group.id}">${esc(group.label)}</a> <span aria-hidden="true">/</span> ${esc(s.name)}</p>
           <a class="mf-pill" href="${BOOK_URL}" target="_blank" rel="noopener" data-mf-booking><span class="mf-dot" aria-hidden="true"></span>Booking now<span data-mf-next></span></a>
         </div>
         <div class="sv-hero">
@@ -250,7 +249,7 @@ function page(s, data, offers) {
               <p class="mf-label">(Investment)</p>
               <h2 class="mf-h3" id="invest-title">${esc(s.priceNote)}</h2>
             </div>
-            ${investment(s.investment)}
+            <p class="sv-price__from"><span>Starting at</span> <b>${esc(s.startingAt)}</b></p>
           </div>
           ${offerCards}
           <div class="mf-actions">
@@ -301,7 +300,7 @@ ${relatedCards}
   </main>
 
   <script src="/js/swft-analytics.js?v=20261104-ga4" defer></script>
-  <script src="/js/swft-nav.js?v=20261103-notify" defer></script>
+  <script src="/js/swft-nav.js?v=20261103-subnav" defer></script>
 </body>
 </html>
 `;
@@ -316,20 +315,19 @@ function rowsBlock(data) {
         .filter((s) => s.group === g.id)
         .map((s) => {
           n += 1;
-          const lvl = Math.max(1, Math.min(4, Number(s.investment) || 1));
           return [
             `<li>`,
             `  <a class="mf-row" href="/${s.slug}.html">`,
             `    <span class="mf-row__num">(${String(n).padStart(2, "0")})</span>`,
             `    <span class="mf-row__title">${esc(s.name)}</span>`,
             `    <span class="mf-row__desc">${esc(strip(s.lead))}</span>`,
-            `    <span class="mf-row__meta"><span class="mf-row__price sv-signs" aria-label="Investment level ${lvl} of 4">${"$".repeat(lvl)}<span aria-hidden="true">${"$".repeat(4 - lvl)}</span></span><span class="mf-row__icon" aria-hidden="true">↗</span></span>`,
+            `    <span class="mf-row__meta"><span class="mf-row__price mf-row__price--keep">From ${esc(s.startingAt)}</span><span class="mf-row__icon" aria-hidden="true">↗</span></span>`,
             `  </a>`,
             `</li>`,
           ].join("\n");
         })
         .join("\n");
-      return `<li class="mf-list__group"><p class="mf-label mf-label--muted">(${esc(g.label)}) ${esc(g.tagline)}</p></li>\n${rows}`;
+      return `<li class="mf-list__group"><p class="mf-label mf-label--muted">(${esc(g.label)}) ${esc(g.motto)} ${esc(g.tagline)}</p></li>\n${rows}`;
     })
     .join("\n");
 }
@@ -403,7 +401,7 @@ function validate(data, offers) {
     if (!ICONS[s.icon]) errors.push(`${s.slug}: unknown icon "${s.icon}"`);
     for (const id of s.pricingOffers || []) if (!offers[id]) errors.push(`${s.slug}: unknown pricing offer "${id}"`);
     for (const r of s.related || []) if (!slugs.has(r)) errors.push(`${s.slug}: unknown related service "${r}"`);
-    for (const k of ["name", "menuLine", "title", "description", "h1", "lead", "priceNote"]) if (!s[k]) errors.push(`${s.slug}: missing ${k}`);
+    for (const k of ["name", "menuLine", "title", "description", "h1", "lead", "priceNote", "startingAt"]) if (!s[k]) errors.push(`${s.slug}: missing ${k}`);
   }
   for (const st of data.flow?.stages || []) if (!ICONS[st.icon]) errors.push(`flow: unknown icon "${st.icon}"`);
   for (const ind of data.flow?.industries || []) {

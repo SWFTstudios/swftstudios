@@ -4,13 +4,17 @@
  * Keep in sync with data/pricing.json → tier.stripe and data/stripe-catalog.json.
  *
  * Booking currently uses Payment Links (no STRIPE_SECRET_KEY required).
+ *
+ * website-only is $400 and quote-first: the old $800 Price/Payment Link were
+ * removed from the defaults so it can never charge $800. To book it online
+ * again, create a $400 Price + Payment Link in Stripe and set
+ * STRIPE_PRICE_WEBSITE_ONLY / STRIPE_PAYMENT_LINK_WEBSITE_ONLY.
  * Price IDs remain for Checkout Session fallback when a secret key is available.
  */
 
 /** Default Price IDs from live Stripe catalog (data/stripe-catalog.json). Override via env. */
 export const DEFAULT_STRIPE_PRICE_IDS = {
   "gbp-refresh": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
-  "website-only": "price_1U6cA5AF4d9gCyuNj65BmDU2",
   "website-content-half": "price_1U6cA8AF4d9gCyuNt2PH1qew",
   "website-content-full": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
   "content-growth-retainer": "price_1U6cA8AF4d9gCyuN0Ko807my",
@@ -20,7 +24,6 @@ export const DEFAULT_STRIPE_PRICE_IDS = {
 /** Live Payment Link URLs (data/stripe-catalog.json). Override via env STRIPE_PAYMENT_LINK_*. */
 export const DEFAULT_PAYMENT_LINK_URLS = {
   "gbp-refresh": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A",
-  "website-only": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v",
   "website-content-half": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w",
   "website-content-full": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x",
   "content-growth-retainer": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y",
@@ -59,10 +62,10 @@ export const STRIPE_TIERS = {
     id: "website-only",
     name: "Website Only",
     mode: "payment",
-    amountCents: 80000,
+    amountCents: 40000,
     productName: "SWFT. Website Only (project start)",
-    priceLabel: "$800 to $1,500",
-    priceDisplay: "$800",
+    priceLabel: "From $400",
+    priceDisplay: "$400",
   },
   "website-content-half": {
     id: "website-content-half",

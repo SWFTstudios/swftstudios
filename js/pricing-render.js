@@ -1,6 +1,6 @@
 /* ============================================================
    Pricing renderer (data/pricing.json → HTML).
-   Data shape: categories (Digital, Visual) → services → offers.
+   Data shape: categories (Build, Grow, Automate) → services → offers.
    - An offer with a bookUrl (and a stripe config) books online at /book/.
    - Any other offer is quote-first: its CTA opens /contact.html?service=<service id>.
    With billingToggle: true, each service renders a one-time group and a
