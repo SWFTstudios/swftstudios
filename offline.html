@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>You're offline | SWFT Studios</title>
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#010101">
+  <link rel="stylesheet" href="/css/swft-fonts.css?v=20261027-mono">
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #010101; color: #f0eeec; }
+    body { min-height: 100dvh; display: grid; place-items: center; padding: 2rem 1.5rem; box-sizing: border-box;
+      font-family: "Inter Tight", system-ui, sans-serif; text-align: center; }
+    img { width: 88px; height: 88px; border-radius: 22px; }
+    p.l { font-family: "Space Mono", monospace; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: #9a9a9a; margin: 1.5rem 0 .5rem; }
+    h1 { font-size: 2.2rem; letter-spacing: -.04em; line-height: 1; margin: 0 0 1rem; }
+    p { color: #b5b5b5; max-width: 30ch; margin: 0 auto 1.75rem; line-height: 1.45; }
+    button { font: 600 1rem/1 "Inter Tight", sans-serif; background: #fff; color: #050505; border: 0; border-radius: 999px; padding: 1rem 1.6rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="/images/app/icon-192.png" alt="SWFT Studios">
+    <p class="l">(Offline)</p>
+    <h1>No connection.</h1>
+    <p>Pages you have already opened still work. Reconnect to load the rest, or email hello@swftstudios.com.</p>
+    <button type="button" onclick="location.reload()">Try again</button>
+  </main>
+</body>
+</html>

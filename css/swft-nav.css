@@ -394,3 +394,106 @@ body:not(.mf-page):not(.ps-page) .sn-nav,
   .sn-mega { animation: none; }
   .sc-overlay, .sc-dialog { transition: none; }
 }
+
+/* ============================================================
+   App shell on phones (js/swft-app.js): bottom tab bar + account
+   sheet. Only below 760px; desktop and tablets are unchanged.
+   ============================================================ */
+.sa-tabs, .sa-sheet, .sa-scrim { display: none; }
+@media (max-width: 760px) {
+  :root { --sa-tabs: 64px; }
+  html.sa-has-tabs body { padding-bottom: calc(var(--sa-tabs) + env(safe-area-inset-bottom)); }
+  .sa-tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 1040;
+    display: grid; grid-template-columns: repeat(5, 1fr); align-items: end;
+    height: calc(var(--sa-tabs) + env(safe-area-inset-bottom));
+    padding: 0 max(0.25rem, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(0.25rem, env(safe-area-inset-left));
+    background: rgba(8, 8, 8, 0.86);
+    -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    font-family: var(--mf-font, "Inter Tight", sans-serif);
+    box-sizing: border-box;
+  }
+  .sa-tab {
+    appearance: none; background: none; border: 0; cursor: pointer; padding: 0 0 0.55rem;
+    height: var(--sa-tabs); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 0.28rem;
+    color: #8a8a8a; text-decoration: none; font: 500 0.68rem/1 var(--mf-font, "Inter Tight", sans-serif); letter-spacing: 0.01em;
+    -webkit-tap-highlight-color: transparent; transition: color 0.2s;
+  }
+  .sa-tab svg { display: block; }
+  .sa-tab.is-active, .sa-tab:hover { color: #fff; }
+  .sa-tab.is-active .sa-tab__label { font-weight: 600; }
+  .sa-tab:focus-visible { outline: 2px solid #fff; outline-offset: -4px; border-radius: 12px; }
+  .sa-tab:active svg, .sa-tab:active .sa-avatar { transform: scale(0.9); }
+  .sa-tab--fab { color: #fff; }
+  .sa-tab__fab {
+    display: grid; place-items: center; width: 46px; height: 46px; margin-top: -14px; border-radius: 50%;
+    background: #fff; color: #050505; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(8, 8, 8, 0.86);
+    transition: transform 0.2s;
+  }
+  .sa-tab--fab:active .sa-tab__fab { transform: scale(0.92); }
+  .sa-avatar {
+    display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+    background: #ff2e93; color: #fff; font: 700 0.72rem/1 var(--mf-font, "Inter Tight", sans-serif);
+  }
+  .sa-tab.is-active .sa-avatar { box-shadow: 0 0 0 2px #fff; }
+
+  /* Account sheet */
+  .sa-scrim {
+    display: block; position: fixed; inset: 0; z-index: 1150; background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+  .sa-scrim.open { opacity: 1; pointer-events: auto; }
+  .sa-sheet {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1160;
+    max-height: 88dvh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box;
+    padding: 0.6rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+    background: #111; color: #fff; border-radius: 24px 24px 0 0; border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-family: var(--mf-font, "Inter Tight", sans-serif);
+    transform: translateY(100%); transition: transform 0.35s var(--mf-ease, cubic-bezier(.2,.8,.2,1));
+  }
+  .sa-sheet[hidden] { display: none; }
+  .sa-sheet.open { transform: translateY(0); }
+  .sa-sheet__grab { width: 40px; height: 5px; border-radius: 99px; background: rgba(255, 255, 255, 0.25); margin: 0 auto 0.75rem; }
+  .sa-sheet__close {
+    position: absolute; top: 0.85rem; right: 1rem; width: 34px; height: 34px; border-radius: 50%;
+    border: 0; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer;
+  }
+  .sa-who { display: flex; align-items: center; gap: 0.9rem; padding: 0.5rem 2.5rem 1rem 0; }
+  .sa-avatar--lg { width: 52px; height: 52px; font-size: 1.3rem; flex: none; }
+  .sa-who .sa-avatar--lg:not(:empty) svg { color: #fff; }
+  .sa-who__name { margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.02em; word-break: break-all; }
+  .sa-who__sub { margin: 0.25rem 0 0; color: #a3a3a3; font-size: 0.88rem; line-height: 1.35; }
+  .sa-badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 99px; font: 400 0.66rem/1 var(--mf-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; background: rgba(255, 255, 255, 0.12); color: #fff; vertical-align: 1px; }
+  .sa-badge--client { background: #fff; color: #050505; }
+  .sa-badge--admin { background: #ff2e93; color: #fff; }
+  .sa-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .sa-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.85rem; border-radius: 999px;
+    background: #fff; color: #050505 !important; text-decoration: none; font-weight: 600; font-size: 0.98rem;
+  }
+  .sa-btn--ghost { background: none; color: #fff !important; border: 1px solid rgba(255, 255, 255, 0.2); }
+  .sa-list { display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; overflow: hidden; }
+  .sa-row {
+    appearance: none; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; padding: 0.8rem 0.9rem;
+    color: #fff; text-decoration: none; font: inherit; cursor: pointer;
+  }
+  .sa-row:last-child { border-bottom: 0; }
+  .sa-row:active { background: rgba(255, 255, 255, 0.06); }
+  .sa-row__icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); }
+  .sa-row__text { display: flex; flex-direction: column; min-width: 0; }
+  .sa-row__text b { font-weight: 600; font-size: 0.98rem; letter-spacing: -0.01em; }
+  .sa-row__text span { color: #9a9a9a; font-size: 0.82rem; margin-top: 0.1rem; }
+  .sa-row__chev { color: #6f6f6f; display: grid; }
+  .sa-row--note { cursor: default; grid-template-columns: auto 1fr; }
+  .sa-row--danger { color: #ff6b6b; grid-template-columns: auto 1fr; }
+  .sa-row--danger .sa-row__icon { background: rgba(255, 107, 107, 0.12); }
+}
+
+/* Installed (home-screen) app: no text selection on chrome, no rubber-band
+   on the bars, and the top bar never hides. */
+html.sa-standalone .sn-nav, html.sa-standalone .sa-tabs { -webkit-user-select: none; user-select: none; }
+html.sa-standalone .sn-nav.is-hidden { transform: none; }
+@media (prefers-reduced-motion: reduce) { .sa-sheet, .sa-scrim, .sa-tab__fab { transition: none !important; } }

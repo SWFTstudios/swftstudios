@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-04: Mobile web app for guests, members and clients
+
+### Added
+- **Installable app.** `manifest.webmanifest` (name "SWFT Studios", standalone, black theme, shortcuts to Services, Pricing, My dashboard and Book a call), home-screen icons in `images/app/` (`npm run build:icons`), and `sw.js`: public pages, CSS/JS and images work offline after a visit; `/api/`, `/portal/`, `/admin/` and `/account.html` are never cached; `/offline.html` when there's nothing to show. Head tags (manifest, theme colour, Apple web-app tags, `viewport-fit=cover`) are added on every page by `js/swft-app.js`.
+- **Bottom tab bar on phones** (`js/swft-app.js`, styles at the end of `css/swft-nav.css`, ≤760px only). Tabs follow who is signed in (`GET /api/portal/me`, cached in sessionStorage):
+  - Guest: Home · Services · **Book** · Work · Log in
+  - Member (signed in, no project): Home · Services · **Book** · Work · Account
+  - Client (has a project): Home · Project · **Book** · Services · Account
+  - Admin: Home · Admin · **Book** · Project · Account
+- **Account sheet** (slides up from the Account tab, swipe down to close): guests get Log in / Sign up, Free Growth Audit and Pricing; signed-in people see their email, a Member / Client / Admin badge, project name and status, shortcuts (My project, Admin dashboard, Account & email updates, Book a call) and Sign out. "Install the SWFT app" appears when the browser offers it (Android/Chrome) or as Add-to-Home-Screen steps on iPhone.
+- Phone menu's "Log in" button becomes "My project" for clients and admins, "Account" for members.
+
 ## 2026-11-04: Services reorganized into Build / Grow / Automate
 
 ### Changed

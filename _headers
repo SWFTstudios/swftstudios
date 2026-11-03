@@ -12,3 +12,11 @@
   X-Robots-Tag: noindex, nofollow
 /api/admin/*
   Cache-Control: no-store
+
+# Installable web app: the service worker and manifest must never be stale.
+/sw.js
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=0, must-revalidate
