@@ -399,7 +399,7 @@ body:not(.mf-page):not(.ps-page) .sn-nav,
    App shell on phones (js/swft-app.js): bottom tab bar + account
    sheet. Only below 760px; desktop and tablets are unchanged.
    ============================================================ */
-.sa-tabs, .sa-sheet, .sa-scrim { display: none; }
+.sa-tabs, .sd { display: none; }
 @media (max-width: 760px) {
   :root { --sa-tabs: 64px; }
   html.sa-has-tabs body { padding-bottom: calc(var(--sa-tabs) + env(safe-area-inset-bottom)); }
@@ -437,8 +437,14 @@ body:not(.mf-page):not(.ps-page) .sn-nav,
     background: #ff2e93; color: #fff; font: 700 0.72rem/1 var(--mf-font, "Inter Tight", sans-serif);
   }
   .sa-tab.is-active .sa-avatar { box-shadow: 0 0 0 2px #fff; }
+}
 
-  /* Account sheet */
+/* Account sheet: slides up on phones, a popover by the sidebar on desktop. */
+.sa-avatar {
+  display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+  background: #ff2e93; color: #fff; font: 700 0.72rem/1 var(--mf-font, "Inter Tight", sans-serif);
+}
+@media all {
   .sa-scrim {
     display: block; position: fixed; inset: 0; z-index: 1150; background: rgba(0, 0, 0, 0.6);
     -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
@@ -497,3 +503,106 @@ body:not(.mf-page):not(.ps-page) .sn-nav,
 html.sa-standalone .sn-nav, html.sa-standalone .sa-tabs { -webkit-user-select: none; user-select: none; }
 html.sa-standalone .sn-nav.is-hidden { transform: none; }
 @media (prefers-reduced-motion: reduce) { .sa-sheet, .sa-scrim, .sa-tab__fab { transition: none !important; } }
+
+/* ============================================================
+   Desktop app shell (1100px+): left sidebar replaces the top bar.
+   Markup from js/swft-app.js (.sd). Collapses to icons (76px).
+   ============================================================ */
+@media (min-width: 1100px) {
+  :root { --sa-side: 260px; }
+  html.sa-side-collapsed { --sa-side: 76px; }
+  html.sa-has-side { overflow-x: clip; }
+  html.sa-has-side body { padding-left: var(--sa-side); transition: padding-left 0.3s var(--mf-ease, ease); }
+  html.sa-has-side .sn-nav, html.sa-has-side .sn-skip ~ .sn-scrim { display: none; }
+  html.sa-has-side { --sn-height: 0px; }
+  html.sa-has-side .vz-hud { left: var(--sa-side); }
+  /* No top bar to clear, so heroes start higher. */
+  html.sa-has-side .mf-hero { padding-top: clamp(3rem, 5vw, 4.5rem); }
+  html.sa-has-side body.ps-page main { padding-top: clamp(3rem, 5vw, 4.5rem); }
+
+  .sd {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 1000; width: var(--sa-side);
+    display: flex; flex-direction: column; box-sizing: border-box;
+    padding: 1.1rem 0.85rem 1rem; background: #070707; border-right: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--mf-font, "Inter Tight", sans-serif); color: #fff;
+    transition: width 0.3s var(--mf-ease, ease);
+    -webkit-user-select: none; user-select: none;
+  }
+  .sd *, .sd *::before, .sd *::after { box-sizing: border-box; }
+  .sd a { color: inherit; text-decoration: none; }
+  .sd-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0 0.35rem 1.1rem; min-height: 44px; }
+  .sd-brand { font-size: 1.15rem; white-space: nowrap; overflow: hidden; }
+  .sd-collapse {
+    flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; cursor: pointer;
+    background: none; border: 1px solid transparent; color: #8a8a8a; transition: color 0.2s, background 0.2s;
+  }
+  .sd-collapse:hover, .sd-collapse:focus-visible { color: #fff; background: rgba(255, 255, 255, 0.07); outline: none; }
+
+  .sd-nav { flex: 1; overflow-y: auto; overflow-x: hidden; margin: 0 -0.35rem; padding: 0 0.35rem; scrollbar-width: thin; }
+  .sd-label { margin: 0.9rem 0.55rem 0.4rem; font-family: var(--mf-mono, monospace); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: #6f6f6f; white-space: nowrap; }
+  .sd-label:first-child { margin-top: 0; }
+  .sd-link {
+    display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.55rem 0.6rem; margin-bottom: 2px;
+    border-radius: 10px; color: #b5b5b5; font-size: 0.95rem; font-weight: 500; letter-spacing: -0.01em;
+    cursor: pointer; list-style: none; white-space: nowrap; transition: background 0.15s, color 0.15s;
+  }
+  .sd-link::-webkit-details-marker { display: none; }
+  .sd-link:hover, .sd-link:focus-visible { background: rgba(255, 255, 255, 0.06); color: #fff; outline: none; }
+  .sd-link.is-active { background: rgba(255, 255, 255, 0.1); color: #fff; font-weight: 600; }
+  .sd-ico { display: grid; place-items: center; flex: none; width: 22px; }
+  .sd-txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sd-caret { margin-left: auto; display: grid; color: #6f6f6f; transition: transform 0.2s; }
+  .sd-group[open] > summary .sd-caret { transform: rotate(180deg); }
+  .sd-subs { margin: 0.1rem 0 0.4rem 1.45rem; padding-left: 0.75rem; border-left: 1px solid rgba(255, 255, 255, 0.1); }
+  .sd-sub { margin: 0.55rem 0 0.2rem; font-family: var(--mf-mono, monospace); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6f6f6f; white-space: nowrap; }
+  .sd-sub b { color: #b5b5b5; font-weight: 400; }
+  .sd-sublink {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; padding: 0.32rem 0.5rem; border-radius: 8px;
+    font-size: 0.86rem; color: #a3a3a3; white-space: nowrap;
+  }
+  .sd-sublink span { overflow: hidden; text-overflow: ellipsis; }
+  .sd-sublink em { font-style: normal; font-family: var(--mf-mono, monospace); font-size: 0.68rem; color: #6f6f6f; }
+  .sd-sublink:hover, .sd-sublink:focus-visible { background: rgba(255, 255, 255, 0.06); color: #fff; outline: none; }
+  .sd-sublink.is-active { color: #fff; background: rgba(255, 255, 255, 0.08); }
+  .sd-sublink--all { margin-top: 0.3rem; color: #fff; }
+
+  .sd-bottom { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 0.85rem; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+  .sd-book {
+    display: flex; align-items: center; justify-content: center; gap: 0.55rem; padding: 0.7rem; border-radius: 999px;
+    background: #fff; color: #050505 !important; font-weight: 600; font-size: 0.95rem; white-space: nowrap;
+    transition: transform 0.2s;
+  }
+  .sd-book:hover { transform: translateY(-1px); }
+  .sd-account {
+    appearance: none; display: flex; align-items: center; gap: 0.7rem; width: 100%; padding: 0.5rem; border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #fff; cursor: pointer; text-align: left; font: inherit;
+  }
+  .sd-account:hover, .sd-account:focus-visible { background: rgba(255, 255, 255, 0.08); outline: none; }
+  .sd-avatar { width: 34px; height: 34px; flex: none; font-size: 0.9rem; }
+  .sd-who { display: flex; flex-direction: column; }
+  .sd-who b { font-size: 0.88rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sd-who span { font-size: 0.75rem; color: #8a8a8a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Collapsed: icons only */
+  html.sa-side-collapsed .sd { padding-left: 0.6rem; padding-right: 0.6rem; }
+  html.sa-side-collapsed .sd-top { flex-direction: column; padding: 0 0 0.9rem; }
+  html.sa-side-collapsed .sd-brand { font-size: 0; width: 34px; height: 34px; border-radius: 10px; background: url("/images/app/icon-192.png") center / cover; }
+  html.sa-side-collapsed .sd-txt, html.sa-side-collapsed .sd-caret, html.sa-side-collapsed .sd-label,
+  html.sa-side-collapsed .sd-subs { display: none; }
+  html.sa-side-collapsed .sd-link, html.sa-side-collapsed .sd-book { justify-content: center; padding-left: 0; padding-right: 0; }
+  html.sa-side-collapsed .sd-account { justify-content: center; padding: 0.35rem; background: none; border-color: transparent; }
+  html.sa-side-collapsed .sd-collapse svg { transform: scaleX(-1); }
+  html.sa-side-collapsed .sd-nav > .sd-link:first-of-type { margin-top: 0.25rem; }
+
+  /* Account sheet as a popover beside the account card */
+  .sa-scrim { background: rgba(0, 0, 0, 0.35); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .sa-sheet {
+    left: calc(var(--sa-side) + 0.75rem); right: auto; bottom: 1rem; width: 360px; max-height: calc(100vh - 2rem);
+    border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12); padding: 1rem 1.1rem 1.1rem;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    transform: translateY(8px) scale(0.98); opacity: 0; transform-origin: bottom left;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .sa-sheet.open { transform: none; opacity: 1; }
+  .sa-sheet__grab { display: none; }
+}
