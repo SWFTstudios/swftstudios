@@ -437,6 +437,25 @@ body:not(.mf-page):not(.ps-page) .sn-nav,
     background: #ff2e93; color: #fff; font: 700 0.72rem/1 var(--mf-font, "Inter Tight", sans-serif);
   }
   .sa-tab.is-active .sa-avatar { box-shadow: 0 0 0 2px #fff; }
+
+  /* Menu lives bottom-right in the tab bar (thumb reach), not top-right. */
+  html.sa-has-tabs .sn-burger { display: none; }
+  .sa-menu-ico { position: relative; display: block; width: 22px; height: 23px; }
+  .sa-menu-ico i {
+    position: absolute; left: 2px; right: 2px; height: 1.7px; border-radius: 2px; background: currentColor;
+    transition: transform 0.3s var(--mf-ease, ease), opacity 0.2s, top 0.3s var(--mf-ease, ease);
+  }
+  .sa-menu-ico i:nth-child(1) { top: 6px; }
+  .sa-menu-ico i:nth-child(2) { top: 11px; }
+  .sa-menu-ico i:nth-child(3) { top: 16px; }
+  .sa-tab--menu.is-open { color: #fff; }
+  .sa-tab--menu.is-open .sa-menu-ico i:nth-child(1) { top: 11px; transform: rotate(45deg); }
+  .sa-tab--menu.is-open .sa-menu-ico i:nth-child(2) { opacity: 0; }
+  .sa-tab--menu.is-open .sa-menu-ico i:nth-child(3) { top: 11px; transform: rotate(-45deg); }
+
+  /* While the menu is open the tab bar stays on top, and the menu ends above it. */
+  html.sa-menu-open .sa-tabs { z-index: 1120; }
+  html.sa-has-tabs .sn-panel { inset: 0 0 auto auto; height: calc(100vh - var(--sa-tabs) - env(safe-area-inset-bottom)); height: calc(100dvh - var(--sa-tabs) - env(safe-area-inset-bottom)); }
 }
 
 /* Account sheet: slides up on phones, a popover by the sidebar on desktop. */

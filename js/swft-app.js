@@ -6,10 +6,11 @@
    - Installable: manifest, theme colour, home-screen icons, service worker
      (sw.js) for offline pages. "Install app" lives in the Account sheet.
    - Bottom tab bar that changes with who is visiting:
-       guest   Home · Services · Book · Work · Account (log in / sign up)
-       member  Home · Services · Book · Work · Account   (signed in, no project)
-       client  Home · Project · Book · Services · Account (has a project)
-       admin   Home · Admin · Book · Project · Account
+       guest   Home · Services · Book · Log in · Menu
+       member  Home · Services · Book · Account · Menu  (signed in, no project)
+       client  Home · Project · Book · Account · Menu   (has a project)
+       admin   Home · Admin · Book · Account · Menu
+     Menu is bottom-right for the thumb and replaces the top-right burger.
      Role comes from GET /api/portal/me; the last answer is kept in
      sessionStorage so the right tabs paint instantly on the next page.
    - Account sheet (slides up): who you are, your shortcuts, install, sign out.
@@ -151,9 +152,12 @@
     var project = { key: "project", label: "Project", href: "/portal/dashboard.html", icon: "project", match: /^\/portal\// };
     var admin = { key: "admin", label: "Admin", href: "/admin/", icon: "admin", match: /^\/admin\// };
     var account = { key: "account", label: role === "guest" ? "Log in" : "Account", icon: "user", sheet: true, match: /^\/account\.html$/ };
-    if (role === "admin") return [home, admin, book, project, account];
-    if (role === "client") return [home, project, book, services, account];
-    return [home, services, book, work, account];
+    // Menu sits bottom-right, under the thumb; it opens the full menu
+    // (Work, Pricing, About, Blog, Films, Contact live there).
+    var menu = { key: "menu", label: "Menu", icon: "menu", menu: true };
+    if (role === "admin") return [home, admin, book, account, menu];
+    if (role === "client") return [home, project, book, account, menu];
+    return [home, services, book, account, menu];
   }
 
   var bar, sheet, scrim;
@@ -176,11 +180,41 @@
         : t.key === "account" && state.role !== "guest" ? avatar() : icon(t.icon, 23)) +
         '<span class="sa-tab__label">' + t.label + "</span>";
       var cls = "sa-tab" + (t.fab ? " sa-tab--fab" : "") + (on ? " is-active" : "");
+      if (t.menu) return '<button type="button" class="' + cls + ' sa-tab--menu" data-sa-menu aria-controls="sn-panel" aria-expanded="false">' +
+        '<span class="sa-menu-ico" aria-hidden="true"><i></i><i></i><i></i></span><span class="sa-tab__label">Menu</span></button>';
       if (t.sheet) return '<button type="button" class="' + cls + '" data-sa-account aria-haspopup="dialog" aria-controls="sa-sheet">' + inner + "</button>";
       return '<a class="' + cls + '" href="' + t.href + '"' + (on ? ' aria-current="page"' : "") +
         (/^https?:/.test(t.href) ? ' target="_blank" rel="noopener"' : "") + ">" + inner + "</a>";
     }).join("");
     bar.querySelector("[data-sa-account]").addEventListener("click", openSheet);
+    wireMenuTab();
+  }
+
+  // The Menu tab drives the existing slide-over menu (js/swft-nav.js): it
+  // opens it through the burger, closes it through its close button, and
+  // turns into "Close" while the menu is open. The bar stays above the menu.
+  var menuObserver;
+  function wireMenuTab() {
+    var btn = bar.querySelector("[data-sa-menu]");
+    var panel = document.getElementById("sn-panel");
+    if (!btn || !panel) return;
+    function sync() {
+      var open = panel.classList.contains("open");
+      btn.setAttribute("aria-expanded", String(open));
+      btn.classList.toggle("is-open", open);
+      btn.querySelector(".sa-tab__label").textContent = open ? "Close" : "Menu";
+      btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      document.documentElement.classList.toggle("sa-menu-open", open);
+    }
+    btn.addEventListener("click", function () {
+      var open = panel.classList.contains("open");
+      var target = document.getElementById(open ? "sn-close" : "sn-burger");
+      if (target) target.click();
+    });
+    if (menuObserver) menuObserver.disconnect();
+    menuObserver = new MutationObserver(sync);
+    menuObserver.observe(panel, { attributes: true, attributeFilter: ["class"] });
+    sync();
   }
 
   /* ---------- Account sheet ---------- */

@@ -6,6 +6,7 @@
 - **Desktop sidebar (1100px and up)** replaces the top bar, app style (`js/swft-app.js`, `.sd` styles in `css/swft-nav.css`): logo and a collapse button; Home, Services (expands to Build / Grow / Automate with every service and its starting price, open on service pages), Work, Pricing, About, Blog, Films and Contact with icons; a **Workspace** section for clients (My project) and admins (My project, Admin); then **Book a call** and an account card (avatar, email, role and project, or "Log in / or sign up" for guests).
 - The account card opens the same account sheet as on phones, shown as a popover next to the sidebar.
 - The sidebar collapses to icons (76px); the choice is remembered in this browser.
+- Phones: the menu button moved from the top-right corner to the bottom-right of the tab bar (thumb reach). It opens the menu and turns into Close; the tab bar stays above the open menu. Tabs are now Home · Services/Project/Admin · Book · Log in/Account · Menu (Work is in the menu).
 - Page heroes start higher with no top bar to clear. Tablets (761–1099px) keep the top bar and slide-over menu; phones keep the bottom tab bar.
 
 ## 2026-11-04: Mobile web app for guests, members and clients
