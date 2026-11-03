@@ -63,6 +63,7 @@ Still present in `swftstudios000.css` for Webflow components. Prefer `--swft-mut
 - Labels and eyebrows: `--swft-font-mono` → `"Space Mono"` 400, uppercase, 12–14px, no extra tracking (`.swft-text-label`, section labels, step numbers, small label headings).
 - All self-hosted in `fonts/` (OFL, Google Fonts latin + latin-ext subsets). Matches the [Astrox Studio](https://astrox-studio.webflow.io/utility-pages/style-guide) style guide.
 - `swft-fonts.css` also pins each heading role (page hero, section title, card title, label heading, closing CTA) to the scale below, so one-off page sizes don't drift.
+- **Listomania** (Envato): web `.woff2` files in [`fonts/listomania/`](../fonts/listomania/); faces registered in [`css/listomania.css`](../css/listomania.css) via CSS variables (`--swft-font-listomania-one`, etc.). Not applied to body/headings yet.
 
 ### Fluid type scale
 

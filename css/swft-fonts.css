@@ -205,3 +205,6 @@ html :is(
   font-style: normal;
   font-display: swap;
 }
+
+/* Listomania (Envato): faces + CSS vars only — not applied to site text. */
+@import url("listomania.css?v=20261103a");
