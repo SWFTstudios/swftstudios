@@ -8,8 +8,8 @@
  *
  * Notebook annotations (css/annotate.css) can be written into the copy fields
  * (snapshot, goal, challenge, approach[].detail, built, takeaways, whyMatters):
- *   ==phrase==   lime highlighter      ((word))   pink pen circle
- *   __phrase__   pink pen underline
+ *   ==phrase==   ice highlighter       ((word))   signal pen circle
+ *   __phrase__   signal pen underline
  * and p.notes = { glance, challenge, approach, built, takeaways } adds one short
  * handwritten note (Listomania) under that section's heading. Mark the insight a
  * skimmer would want, two or three per section at most.

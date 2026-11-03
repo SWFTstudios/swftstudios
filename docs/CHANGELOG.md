@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-04: Listomania logo and a quieter accent palette
+
+### Changed
+- Logo and footer wordmark: "studios" is now handwritten **Listomania One** (was Skylight Graffiti), in the signal color. Footer size 0.5em, fits 390–1920px.
+- New accent palette, "sophisticated chaos": tokens in `css/mono.css` `:root`.
+  - `--swft-signal: #ff5a36` (warm energy): logo "studios", pen circles/underlines, handwritten notes, the notification badge, sidebar badges, the strategy pop-up's live dot.
+  - `--swft-ice: #c3cdfa` (cool, techy): the highlighter (dark text on top), "How it works" checks, pop-up highlights.
+  - `--swft-sand: #e9d3a6` (quiet neutral): only in the accent-word click cycle.
+- Replaced the neon pink, lime, red and green everywhere. Accent-word clicks cycle white → signal → ice → sand; the five-click burst rolls the same palette.
+- The pen SVGs in `css/annotate.css` hard-code `%23ff5a36` (data URIs can't read CSS variables); change it there too if the signal color changes.
+
 ## 2026-11-04: Notebook annotations (Listomania)
 
 ### Added

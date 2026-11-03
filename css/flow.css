@@ -7,7 +7,7 @@
    ============================================================ */
 .sf-flow {
   --sf-n: 5;
-  --sf-ok: #3ddc84;
+  --sf-ok: var(--swft-ice, #c3cdfa);
   box-sizing: border-box; position: relative;
   border: 1px solid var(--mf-line); border-radius: 28px;
   background:

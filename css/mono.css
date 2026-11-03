@@ -113,6 +113,11 @@ body { background: var(--mf-bg); color: var(--mf-text); }
    Change the color in one place: --mf-accent-color (the click palette in
    js/mono.js starts from white to match). */
 :root {
+  /* SWFT accents ("sophisticated chaos"): one warm signal for energy, one cool
+     ice for the tech side, one quiet sand. Everything else stays black/white. */
+  --swft-signal: #ff5a36;
+  --swft-ice: #c3cdfa;
+  --swft-sand: #e9d3a6;
   --mf-accent-color: #ffffff;
   --mf-graffiti: "Skylight Graffiti", var(--mf-hand);
 }
@@ -166,7 +171,7 @@ html body.ps-page .ps-title .ps-accent {
   font: 700 0.17em/1 var(--mf-font); letter-spacing: 0;
   width: 2em; height: 2em; min-width: 1.9rem; min-height: 1.9rem; padding: 0;
   display: grid; place-items: center; border-radius: 50%; cursor: pointer;
-  background: #ff3b30; color: #fff; border: 0.18em solid var(--mf-bg);
+  background: var(--swft-signal); color: #fff; border: 0.18em solid var(--mf-bg);
   box-shadow: 0 0.2em 0.6em rgba(0, 0, 0, 0.5);
   transform: scale(0); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -177,7 +182,7 @@ html body.ps-page .ps-title .ps-accent {
 /* Ping ring until it has been opened once */
 .mf-notif::after {
   content: ""; position: absolute; inset: -0.2em; border-radius: 50%;
-  border: 2px solid #ff3b30; opacity: 0; pointer-events: none;
+  border: 2px solid var(--swft-signal); opacity: 0; pointer-events: none;
 }
 .mf-notif.is-in:not(.is-seen)::after { animation: mf-notif-ping 1.8s var(--mf-ease) 1.2s infinite; }
 @keyframes mf-notif-ping { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
@@ -220,10 +225,9 @@ html body.ps-page .ps-title .ps-accent {
   to   { translate: 0 -0.14em; }
 }
 @keyframes mf-rainbow {
-  0%   { color: #ff2e93; } 8%  { color: #ff7a18; } 16% { color: #ffd400; }
-  24%  { color: #2ee6a6; } 32% { color: #2fa8ff; } 40% { color: #b14aed; }
-  48%  { color: #ff2e93; } 56% { color: #ff7a18; } 64% { color: #ffd400; }
-  72%  { color: #2ee6a6; } 80% { color: #2fa8ff; } 88% { color: #b14aed; }
+  /* the brand palette, rolled twice: signal, ice, sand, white */
+  0%   { color: #ff5a36; } 12% { color: #c3cdfa; } 25% { color: #e9d3a6; } 37% { color: #ffffff; }
+  50%  { color: #ff5a36; } 62% { color: #c3cdfa; } 75% { color: #e9d3a6; } 88% { color: #ffffff; }
   100% { color: var(--mf-accent-color); }
 }
 /* The burst brightens the resting glow, then hands back to it */
