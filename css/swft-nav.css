@@ -1,5 +1,5 @@
 @import url("swft-fonts.css?v=20261027-mono");
-@import url("mono.css?v=20261103-notify");
+@import url("mono.css?v=20261103-bga");
 
 /* ============================================================
    SWFT Studios — shared navigation + footer (Mono, dark)
@@ -93,6 +93,8 @@
   margin: 0 0 0.9rem; font-family: var(--mf-mono, monospace); font-size: 0.72rem; letter-spacing: 0.1em;
   text-transform: uppercase; color: #9a9a9a;
 }
+.sn-mega__motto { color: #fff; margin-left: 0.35em; }
+.sn-panel-from { display: block; margin-top: 0.3rem; font-family: var(--mf-mono, monospace); font-size: 0.75rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; }
 .sn-links .sn-mega__item {
   display: flex; gap: 0.95rem; align-items: center; padding: 0.7rem 0.75rem; margin: 0 -0.75rem 0.25rem;
   border-radius: 14px; color: #fff; background: none; transition: background 0.2s;

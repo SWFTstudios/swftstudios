@@ -83,7 +83,7 @@ await check("Free Growth Audit", async (page) => {
 });
 
 for (const tier of [
-  "gbp-content-refresh.html", "website-only.html", "website-content-half.html",
+  "gbp-content-refresh.html", "website-content-half.html",
   "website-content-full.html", "content-growth-retainer.html", "full-growth-partner.html",
 ]) {
   await check(`Book ${tier} (checkout)`, async (page) => {

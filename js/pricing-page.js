@@ -5,9 +5,12 @@
   // Offer ids (gbp-refresh, website-only, ...) still exist as card ids.
   var HASH_ALIASES = {
     ongoing: "content-growth-retainer",
-    "project-tiers": "digital",
+    "project-tiers": "build",
     "website-development": "web-design",
-    "content-creation": "visual"
+    "content-creation": "grow",
+    // Categories before the Build / Grow / Automate reorganization.
+    digital: "build",
+    visual: "grow"
   };
 
   async function init() {
@@ -24,7 +27,7 @@
       if (heroTitle) heroTitle.textContent = data.hero.headline;
       if (heroLead) heroLead.textContent = data.hero.sub;
 
-      // The category (#digital / #visual) and billing (?billing=monthly) stay
+      // The category (#build / #grow / #automate) and billing (?billing=monthly) stay
       // in the URL so a shared link opens the same view.
       function writeUrl(hash, billing) {
         if (!window.history || !history.replaceState) return;
@@ -80,7 +83,7 @@
         if (bookBtn && data.bookCta.button) bookBtn.textContent = data.bookCta.button;
       }
 
-      // #digital / #visual open a category; a service or offer id opens the
+      // #build / #grow / #automate open a category; a service or offer id opens the
       // category that holds it and scrolls to it.
       function showHashTarget(smooth) {
         var hash = "";

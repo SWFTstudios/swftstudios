@@ -38,3 +38,10 @@
 
 # 2026-11-03 Build / Automate / Grow services: /websites and /apps are service
 # pages again (websites.html, apps.html); their old redirects were removed.
+
+# 2026-11-03 services reorganized into Build / Grow / Automate. AI Employees
+# retired; Website Only ($400) is quote-first, so its booking page goes to pricing.
+/ai-employees.html      /automations.html           301
+/ai-employees           /automations.html           301
+/book/website-only.html /pricing.html#website-only  301
+/book/website-only      /pricing.html#website-only  301

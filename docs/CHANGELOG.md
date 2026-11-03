@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-04: Services reorganized into Build / Grow / Automate
+
+### Changed
+- Services follow the SWFT motto: **Build = Get seen** (Websites, Mobile & Web Apps, Custom Software & CRMs), **Grow = Get chosen** (Paid Ads & Marketing, Content & Creative), **Automate = Get booked** (Automations, Tracking & Reporting). Same order on the homepage rows, `/services.html`, the pricing page tabs, service pages, the desktop mega-menu and the phone menu (`js/swft-nav.js`).
+- Every service shows a starting price (`startingAt` in `data/services.json`) instead of dollar-sign investment levels: Websites $400, Apps $1,500, Software $1,500, Marketing $400, Content $350, Automations $750, Tracking & Reporting $500.
+- **Website Only is now $400 for up to 5 pages with base features** (was $800 for up to 3). It is quote-first: the old $800 Stripe Price/Payment Link were removed from the defaults (`functions/_lib/stripe-tiers.js`, `src/portal-handlers.ts`, `src/worker.ts`) and `/book/website-only.html` redirects to `/pricing.html#website-only`. To sell it online again, create a $400 Price + Payment Link in Stripe and add them back.
+- `data/pricing.json` categories are now `build` / `grow` / `automate` (were `digital` / `visual`; old `#digital` / `#visual` links still open the right tab). Lead Follow-up moved from Marketing into a new Automations service with a new **Automation Care** plan ($250/mo).
+- New page `/analytics.html` (Tracking & Reporting).
+
+### Removed
+- AI Employees: `/ai-employees.html` deleted and 301-redirected to `/automations.html`; removed from menus, contact form, flow section ("Get booked" stage now links to Automations) and sitemap.
+
 ## 2026-11-04: Live-site fixes (sign-up, admin on the Worker, homepage services)
 
 ### Fixed

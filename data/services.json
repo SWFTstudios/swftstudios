@@ -1,104 +1,114 @@
 {
-  "_readme": "Source for the seven service pages (/software.html, /apps.html, /websites.html, /ai-employees.html, /automations.html, /marketing.html, /content.html), the Build/Automate/Grow cards on /services.html and the investment cards on /pricing.html. `flow` feeds the animated How-it-works section on index.html and services.html. Run `npm run build:services` after editing. `investment` is 1-4 dollar signs. `pricingOffers` are offer ids from data/pricing.json and show their published price. Keep the mega-menu in js/swft-nav.js (SERVICES) in sync with name/menuLine/slug.",
+  "_readme": "Source for the service pages (/websites.html, /apps.html, /software.html, /marketing.html, /content.html, /automations.html, /analytics.html), the Build/Grow/Automate cards on /services.html and the investment cards on /pricing.html. `flow` feeds the animated How-it-works section on index.html and services.html. Run `npm run build:services` after editing. `startingAt` is the lowest published price, shown on menus, cards and rows. `investment` is 1-4 dollar signs. `pricingOffers` are offer ids from data/pricing.json and show their published price. Keep the mega-menu in js/swft-nav.js (SERVICES) in sync with name/menuLine/slug.",
   "groups": [
     {
       "id": "build",
       "label": "Build",
-      "tagline": "The software, apps and sites your business runs on."
-    },
-    {
-      "id": "automate",
-      "label": "Automate",
-      "tagline": "Hand the repetitive work to systems that never clock out."
+      "motto": "Get seen.",
+      "tagline": "Websites, apps and software that put you in front of the right customers."
     },
     {
       "id": "grow",
       "label": "Grow",
-      "tagline": "Bring in the customers, then give them a reason to stay."
+      "motto": "Get chosen.",
+      "tagline": "Local SEO, ads and content that make you the obvious pick."
+    },
+    {
+      "id": "automate",
+      "label": "Automate",
+      "motto": "Get booked.",
+      "tagline": "Follow-up, booking and reporting that turn interest into appointments."
     }
   ],
   "services": [
     {
-      "slug": "software",
+      "slug": "websites",
       "group": "build",
-      "icon": "code",
-      "name": "Custom Software & CRMs",
-      "menuLine": "Replace the apps you rent",
-      "title": "Custom Software & CRMs for Small Businesses | SWFT Studios",
-      "description": "SWFT Studios builds custom CRMs, dashboards and internal tools that replace the stack of subscriptions your team works around. NYC and North Jersey.",
-      "h1": "One system that fits how you <span class=\"mf-script\">work.</span>",
-      "lead": "Stop paying for five apps that don't talk to each other. We build the CRM, job board or dashboard your team actually needs, <span class=\"is-muted\">and you own it.</span>",
+      "icon": "browser",
+      "name": "Websites",
+      "menuLine": "Up to 5 pages, from $400",
+      "title": "Website Design & Development | SWFT Studios",
+      "description": "Fast, mobile-first websites on Webflow or Shopify that turn visitors into calls, bookings and sales. Websites start at $400 for up to 5 pages. SWFT Studios, NYC and North Jersey.",
+      "h1": "A website that books the <span class=\"mf-script\">job.</span>",
+      "lead": "Fast, mobile-first sites that say what you do in seconds <span class=\"is-muted\">and make calling, booking or buying the obvious next step.</span>",
       "outcomes": [
         {
-          "title": "Fewer subscriptions",
-          "text": "Fold the tools you rent month after month into one system built around your process."
+          "title": "More inquiries",
+          "text": "A clear offer on the first screen and a booking path on every page."
         },
         {
-          "title": "One source of truth",
-          "text": "Customers, jobs, invoices and notes live in one place, so nobody re-types anything."
+          "title": "Found on Google",
+          "text": "Clean structure, fast pages and the basics search engines and AI assistants read."
         },
         {
-          "title": "Room to grow",
-          "text": "Add a feature when the business needs it, not when a vendor puts it on their roadmap."
+          "title": "Easy to keep fresh",
+          "text": "Edit text and photos yourself, or let us handle it every month."
         }
       ],
       "includes": [
-        "Discovery workshop to map how your team works today",
-        "Custom CRM, pipeline or job tracker built around that process",
-        "Role-based logins for owners, staff and contractors",
-        "Data import from spreadsheets and the tools you are leaving",
-        "Integrations with email, calendar, payments and accounting",
-        "Dashboards that show the numbers you check every week",
-        "Training session and written guide for your team",
-        "Hosting, backups and security updates after launch"
+        "Custom design that matches your brand",
+        "Mobile-first build on Webflow or Shopify",
+        "Booking, quote or contact forms that reach your inbox",
+        "On-page SEO: titles, descriptions and clean URLs",
+        "Analytics to see where visitors come from",
+        "Optional on-site photo and video shoot",
+        "Domain connection and launch support",
+        "Hosting, updates and care plans after launch"
       ],
       "steps": [
         {
-          "title": "Map",
-          "text": "We sit with the people doing the work and map every step, tool and spreadsheet."
+          "title": "Plan",
+          "text": "We agree on the pages, the offer and the one action every visitor should take."
         },
         {
           "title": "Design",
-          "text": "You click through a working prototype before a line of production code is written."
+          "text": "You review the design on your phone and desktop before we build."
         },
         {
           "title": "Build",
-          "text": "We ship in weekly releases you can test, so there are no surprises at the end."
+          "text": "We build, connect your forms and booking, and test on real devices."
         },
         {
-          "title": "Launch & support",
-          "text": "We move your data over, train the team and stay on to keep it running."
+          "title": "Launch & care",
+          "text": "We go live, watch the numbers and keep the site fast and current."
         }
       ],
-      "investment": 4,
-      "priceNote": "Scoped after a free strategy call",
+      "investment": 1,
+      "priceNote": "From $400 one-time · up to 5 pages",
       "pricingOffers": [
-        "app-design-sprint",
-        "app-care"
+        "website-only",
+        "website-content-half",
+        "website-content-full",
+        "website-care"
       ],
       "faq": [
         {
-          "q": "Why build instead of buying another app?",
-          "a": "Off-the-shelf tools make you change how you work to fit them. When your team is paying for several tools and still keeping spreadsheets on the side, a custom system usually costs less over two to three years and removes the double entry."
+          "q": "What do I get for $400?",
+          "a": "Up to 5 responsive pages on Webflow or Shopify using your logo, copy and photos, with base features: one contact or booking form, basic SEO titles and descriptions, mobile testing, one revision round and launch support. Extra pages, copywriting, shoots and custom features are quoted before you pay."
         },
         {
-          "q": "Do we own the software?",
-          "a": "Yes. You own the code and the data. We host and maintain it if you want us to, and hand it over if you don't."
+          "q": "Webflow or Shopify?",
+          "a": "Shopify if you sell products online, Webflow for almost everything else. We recommend one on the first call."
         },
         {
-          "q": "Can you connect it to the tools we keep?",
-          "a": "Usually. Most accounting, payment, email and calendar tools have an API we can connect to. We confirm every integration during discovery, before you commit to a build."
+          "q": "How long does a website take?",
+          "a": "Most sites launch in 2 to 4 weeks once we have your content. Packages with a shoot add the shoot day to the schedule."
         },
         {
-          "q": "How long does a build take?",
-          "a": "Most first versions take 6 to 12 weeks depending on scope. You see working software every week along the way."
+          "q": "Can I edit the site myself?",
+          "a": "Yes. Both platforms have simple editors and we show you how to use them. Website Care covers edits if you would rather not."
+        },
+        {
+          "q": "What is not included?",
+          "a": "Platform and domain fees are paid directly to the platform. Every package lists exactly what is and is not included on the pricing page."
         }
       ],
       "related": [
-        "automations",
-        "apps",
-        "ai-employees"
-      ]
+        "marketing",
+        "content",
+        "apps"
+      ],
+      "startingAt": "$400"
     },
     {
       "slug": "apps",
@@ -181,255 +191,91 @@
         "software",
         "websites",
         "automations"
-      ]
+      ],
+      "startingAt": "$1,500"
     },
     {
-      "slug": "websites",
+      "slug": "software",
       "group": "build",
-      "icon": "browser",
-      "name": "Websites",
-      "menuLine": "Fast sites built to convert",
-      "title": "Website Design & Development | SWFT Studios",
-      "description": "Fast, mobile-first websites on Webflow or Shopify that turn visitors into calls, bookings and sales. Published prices from SWFT Studios, NYC and North Jersey.",
-      "h1": "A website that books the <span class=\"mf-script\">job.</span>",
-      "lead": "Fast, mobile-first sites that say what you do in seconds <span class=\"is-muted\">and make calling, booking or buying the obvious next step.</span>",
+      "icon": "code",
+      "name": "Custom Software & CRMs",
+      "menuLine": "Replace the apps you rent",
+      "title": "Custom Software & CRMs for Small Businesses | SWFT Studios",
+      "description": "SWFT Studios builds custom CRMs, dashboards and internal tools that replace the stack of subscriptions your team works around. NYC and North Jersey.",
+      "h1": "One system that fits how you <span class=\"mf-script\">work.</span>",
+      "lead": "Stop paying for five apps that don't talk to each other. We build the CRM, job board or dashboard your team actually needs, <span class=\"is-muted\">and you own it.</span>",
       "outcomes": [
         {
-          "title": "More inquiries",
-          "text": "A clear offer on the first screen and a booking path on every page."
+          "title": "Fewer subscriptions",
+          "text": "Fold the tools you rent month after month into one system built around your process."
         },
         {
-          "title": "Found on Google",
-          "text": "Clean structure, fast pages and the basics search engines and AI assistants read."
+          "title": "One source of truth",
+          "text": "Customers, jobs, invoices and notes live in one place, so nobody re-types anything."
         },
         {
-          "title": "Easy to keep fresh",
-          "text": "Edit text and photos yourself, or let us handle it every month."
+          "title": "Room to grow",
+          "text": "Add a feature when the business needs it, not when a vendor puts it on their roadmap."
         }
       ],
       "includes": [
-        "Custom design that matches your brand",
-        "Mobile-first build on Webflow or Shopify",
-        "Booking, quote or contact forms that reach your inbox",
-        "On-page SEO: titles, descriptions and clean URLs",
-        "Analytics to see where visitors come from",
-        "Optional on-site photo and video shoot",
-        "Domain connection and launch support",
-        "Hosting, updates and care plans after launch"
+        "Discovery workshop to map how your team works today",
+        "Custom CRM, pipeline or job tracker built around that process",
+        "Role-based logins for owners, staff and contractors",
+        "Data import from spreadsheets and the tools you are leaving",
+        "Integrations with email, calendar, payments and accounting",
+        "Dashboards that show the numbers you check every week",
+        "Training session and written guide for your team",
+        "Hosting, backups and security updates after launch"
       ],
       "steps": [
         {
-          "title": "Plan",
-          "text": "We agree on the pages, the offer and the one action every visitor should take."
+          "title": "Map",
+          "text": "We sit with the people doing the work and map every step, tool and spreadsheet."
         },
         {
           "title": "Design",
-          "text": "You review the design on your phone and desktop before we build."
+          "text": "You click through a working prototype before a line of production code is written."
         },
         {
           "title": "Build",
-          "text": "We build, connect your forms and booking, and test on real devices."
+          "text": "We ship in weekly releases you can test, so there are no surprises at the end."
         },
         {
-          "title": "Launch & care",
-          "text": "We go live, watch the numbers and keep the site fast and current."
+          "title": "Launch & support",
+          "text": "We move your data over, train the team and stay on to keep it running."
         }
       ],
-      "investment": 2,
-      "priceNote": "From $800 one-time",
+      "investment": 4,
+      "priceNote": "From $1,500 for a design sprint",
       "pricingOffers": [
-        "website-only",
-        "website-content-half",
-        "website-content-full",
-        "website-care"
+        "app-design-sprint",
+        "app-care"
       ],
       "faq": [
         {
-          "q": "Webflow or Shopify?",
-          "a": "Shopify if you sell products online, Webflow for almost everything else. We recommend one on the first call."
+          "q": "Why build instead of buying another app?",
+          "a": "Off-the-shelf tools make you change how you work to fit them. When your team is paying for several tools and still keeping spreadsheets on the side, a custom system usually costs less over two to three years and removes the double entry."
         },
         {
-          "q": "How long does a website take?",
-          "a": "Most sites launch in 2 to 4 weeks once we have your content. Packages with a shoot add the shoot day to the schedule."
+          "q": "Do we own the software?",
+          "a": "Yes. You own the code and the data. We host and maintain it if you want us to, and hand it over if you don't."
         },
         {
-          "q": "Can I edit the site myself?",
-          "a": "Yes. Both platforms have simple editors and we show you how to use them. Website Care covers edits if you would rather not."
+          "q": "Can you connect it to the tools we keep?",
+          "a": "Usually. Most accounting, payment, email and calendar tools have an API we can connect to. We confirm every integration during discovery, before you commit to a build."
         },
         {
-          "q": "What is not included?",
-          "a": "Platform and domain fees are paid directly to the platform. Every package lists exactly what is and is not included on the pricing page."
+          "q": "How long does a build take?",
+          "a": "Most first versions take 6 to 12 weeks depending on scope. You see working software every week along the way."
         }
       ],
       "related": [
-        "marketing",
-        "content",
-        "apps"
-      ]
-    },
-    {
-      "slug": "ai-employees",
-      "group": "automate",
-      "icon": "sparkle",
-      "name": "AI Employees",
-      "menuLine": "Answers and books leads 24/7",
-      "title": "AI Employees: Answer and Book Leads 24/7 | SWFT Studios",
-      "description": "SWFT Studios sets up AI assistants that answer calls, texts, chats and DMs, qualify leads and book appointments on your calendar around the clock.",
-      "h1": "Never miss a lead <span class=\"mf-script\">again.</span>",
-      "lead": "An AI assistant that answers your calls, texts, chats and DMs, <span class=\"is-muted\">qualifies the lead and books it on your calendar, day or night.</span>",
-      "outcomes": [
-        {
-          "title": "Instant replies",
-          "text": "Every inquiry gets an answer in seconds, including nights, weekends and busy days on the job."
-        },
-        {
-          "title": "Booked, not just answered",
-          "text": "It asks your qualifying questions and puts the appointment on your real calendar."
-        },
-        {
-          "title": "Handed off when it matters",
-          "text": "Anything it should not handle goes straight to you with the full conversation attached."
-        }
-      ],
-      "includes": [
-        "Assistant trained on your services, prices, area and policies",
-        "Website chat, SMS and social DM coverage",
-        "Phone answering and call-back on request",
-        "Lead qualification with the questions you ask today",
-        "Booking straight into your calendar",
-        "Instant hand-off to a person, with the transcript",
-        "Conversation log and lead summary in your CRM or inbox",
-        "Monthly review and tuning from real conversations"
-      ],
-      "steps": [
-        {
-          "title": "Learn",
-          "text": "We collect your FAQs, prices, service area and the questions you ask every lead."
-        },
-        {
-          "title": "Train & test",
-          "text": "We build the assistant and test it against real past inquiries before it goes live."
-        },
-        {
-          "title": "Go live",
-          "text": "We connect it to your site, phone, inbox and calendar."
-        },
-        {
-          "title": "Tune",
-          "text": "Every month we review conversations and tighten answers and hand-offs."
-        }
-      ],
-      "investment": 2,
-      "priceNote": "Setup plus a monthly plan, quoted on a call",
-      "pricingOffers": [
-        "lead-follow-up"
-      ],
-      "faq": [
-        {
-          "q": "Will customers know it is an AI?",
-          "a": "Yes. We set it up to say so. People mostly care that they got a fast, correct answer and a booked time."
-        },
-        {
-          "q": "What if it does not know the answer?",
-          "a": "It says so and hands the conversation to you or your team with the full transcript, instead of guessing."
-        },
-        {
-          "q": "Does it work with my calendar and phone number?",
-          "a": "It works with the common calendars and booking tools and can use your existing number or a new one. We confirm your setup on the strategy call."
-        },
-        {
-          "q": "Is my customer data safe?",
-          "a": "Conversations are stored in your systems, access is limited to your team, and we never use your data to train public models."
-        }
-      ],
-      "related": [
+        "apps",
         "automations",
-        "software",
-        "marketing"
-      ]
-    },
-    {
-      "slug": "automations",
-      "group": "automate",
-      "icon": "bolt",
-      "name": "Automations",
-      "menuLine": "Connect tools, end busywork",
-      "title": "Business Automations & Integrations | SWFT Studios",
-      "description": "SWFT Studios connects your forms, CRM, calendar, invoices and inbox so follow-ups, reminders, review requests and reports run on their own.",
-      "h1": "Busywork, on <span class=\"mf-script\">autopilot.</span>",
-      "lead": "We connect the tools you already use so follow-ups, reminders, invoices and reports run themselves, <span class=\"is-muted\">and your team gets hours back every week.</span>",
-      "outcomes": [
-        {
-          "title": "Faster follow-up",
-          "text": "New leads get a text and an email within a minute, and reminders until they book."
-        },
-        {
-          "title": "Fewer no-shows",
-          "text": "Confirmations, reminders and text-to-pay go out on time, every time."
-        },
-        {
-          "title": "More reviews",
-          "text": "Every finished job triggers a review request while the customer is still happy."
-        }
+        "analytics"
       ],
-      "includes": [
-        "Audit of the manual steps your team repeats each week",
-        "Lead capture from forms, calls and ads into one place",
-        "Instant text and email follow-up sequences",
-        "Appointment confirmations and reminders",
-        "Invoice, payment and text-to-pay workflows",
-        "Review requests after every job",
-        "Weekly report sent to your inbox",
-        "Monitoring and alerts if anything breaks"
-      ],
-      "steps": [
-        {
-          "title": "Audit",
-          "text": "We list every manual step and rank them by hours saved."
-        },
-        {
-          "title": "Connect",
-          "text": "We wire up your forms, CRM, calendar, payments and inbox."
-        },
-        {
-          "title": "Test",
-          "text": "Every flow is tested end to end with real data before it is switched on."
-        },
-        {
-          "title": "Monitor",
-          "text": "We watch the flows, fix what breaks and add the next automation."
-        }
-      ],
-      "investment": 2,
-      "priceNote": "From $750 one-time",
-      "pricingOffers": [
-        "lead-follow-up",
-        "analytics-setup",
-        "analytics-reporting"
-      ],
-      "faq": [
-        {
-          "q": "Which tools can you connect?",
-          "a": "Most popular CRMs, calendars, form builders, payment, accounting and email tools. If a tool has an API or a Zapier/Make integration, we can usually connect it."
-        },
-        {
-          "q": "Do I need new software?",
-          "a": "Usually not. We start with what you already pay for and only suggest a new tool when it clearly saves money or time."
-        },
-        {
-          "q": "What happens if an automation fails?",
-          "a": "Every flow has alerts. If something breaks, we hear about it and fix it, and important messages fall back to a person."
-        },
-        {
-          "q": "How fast will I see results?",
-          "a": "Lead follow-up and reminders usually go live in the first one to two weeks."
-        }
-      ],
-      "related": [
-        "ai-employees",
-        "software",
-        "marketing"
-      ]
+      "startingAt": "$1,500"
     },
     {
       "slug": "marketing",
@@ -512,7 +358,8 @@
         "content",
         "websites",
         "automations"
-      ]
+      ],
+      "startingAt": "$400"
     },
     {
       "slug": "content",
@@ -596,8 +443,173 @@
       "related": [
         "marketing",
         "websites",
-        "ai-employees"
-      ]
+        "automations"
+      ],
+      "startingAt": "$350"
+    },
+    {
+      "slug": "automations",
+      "group": "automate",
+      "icon": "bolt",
+      "name": "Automations",
+      "menuLine": "Follow-up, reminders, reviews",
+      "title": "Business Automations & Integrations | SWFT Studios",
+      "description": "SWFT Studios connects your forms, CRM, calendar and inbox so missed-call text-backs, instant replies, reminders and review requests run on their own. From $750.",
+      "h1": "Busywork, on <span class=\"mf-script\">autopilot.</span>",
+      "lead": "We connect the tools you already use so follow-ups, reminders, invoices and reports run themselves, <span class=\"is-muted\">and your team gets hours back every week.</span>",
+      "outcomes": [
+        {
+          "title": "Faster follow-up",
+          "text": "New leads get a text and an email within a minute, and reminders until they book."
+        },
+        {
+          "title": "Fewer no-shows",
+          "text": "Confirmations, reminders and text-to-pay go out on time, every time."
+        },
+        {
+          "title": "More reviews",
+          "text": "Every finished job triggers a review request while the customer is still happy."
+        }
+      ],
+      "includes": [
+        "Audit of the manual steps your team repeats each week",
+        "Lead capture from forms, calls and ads into one place",
+        "Instant text and email follow-up sequences",
+        "Appointment confirmations and reminders",
+        "Invoice, payment and text-to-pay workflows",
+        "Review requests after every job",
+        "Weekly report sent to your inbox",
+        "Monitoring and alerts if anything breaks"
+      ],
+      "steps": [
+        {
+          "title": "Audit",
+          "text": "We list every manual step and rank them by hours saved."
+        },
+        {
+          "title": "Connect",
+          "text": "We wire up your forms, CRM, calendar, payments and inbox."
+        },
+        {
+          "title": "Test",
+          "text": "Every flow is tested end to end with real data before it is switched on."
+        },
+        {
+          "title": "Monitor",
+          "text": "We watch the flows, fix what breaks and add the next automation."
+        }
+      ],
+      "investment": 2,
+      "priceNote": "From $750 one-time or $250/mo",
+      "pricingOffers": [
+        "lead-follow-up",
+        "automation-care"
+      ],
+      "faq": [
+        {
+          "q": "Which tools can you connect?",
+          "a": "Most popular CRMs, calendars, form builders, payment, accounting and email tools. If a tool has an API or a Zapier/Make integration, we can usually connect it."
+        },
+        {
+          "q": "Do I need new software?",
+          "a": "Usually not. We start with what you already pay for and only suggest a new tool when it clearly saves money or time."
+        },
+        {
+          "q": "What happens if an automation fails?",
+          "a": "Every flow has alerts. If something breaks, we hear about it and fix it, and important messages fall back to a person."
+        },
+        {
+          "q": "How fast will I see results?",
+          "a": "Lead follow-up and reminders usually go live in the first one to two weeks."
+        }
+      ],
+      "related": [
+        "analytics",
+        "websites",
+        "software"
+      ],
+      "startingAt": "$750"
+    },
+    {
+      "slug": "analytics",
+      "group": "automate",
+      "icon": "chart",
+      "name": "Tracking & Reporting",
+      "menuLine": "Know what brings in customers",
+      "title": "Analytics, Tracking & Reporting for Small Businesses | SWFT Studios",
+      "description": "SWFT Studios sets up GA4, conversion tracking and an automatic monthly report so you know which ads, posts and pages bring in calls, bookings and sales. From $500.",
+      "h1": "Know what <span class=\"mf-script\">works.</span>",
+      "lead": "We track every call, form and booking back to where it came from, <span class=\"is-muted\">and send you a plain-English report so you spend on what works.</span>",
+      "outcomes": [
+        {
+          "title": "Every lead counted",
+          "text": "Calls, forms, bookings and purchases tracked as conversions, not guesses."
+        },
+        {
+          "title": "Spend with confidence",
+          "text": "See which ads, posts and pages bring in customers, and cut the ones that don't."
+        },
+        {
+          "title": "Reports on autopilot",
+          "text": "A monthly report lands in your inbox with the numbers and what to do next."
+        }
+      ],
+      "includes": [
+        "Google Analytics 4 and Google Tag Manager setup",
+        "Conversion tracking for calls, forms, bookings and purchases",
+        "Meta and Google Ads conversion tracking",
+        "Google Search Console and Business Profile insights connected",
+        "A live dashboard with the numbers that matter",
+        "Automatic monthly report with clear next steps"
+      ],
+      "steps": [
+        {
+          "title": "Audit",
+          "text": "We check what is tracked today and what is missing or double-counted."
+        },
+        {
+          "title": "Set up",
+          "text": "We install tags, define conversions and connect your ad and search accounts."
+        },
+        {
+          "title": "Verify",
+          "text": "We test every form, call and checkout so the numbers are right."
+        },
+        {
+          "title": "Report",
+          "text": "Your dashboard goes live and a monthly report shows what to keep, cut or try."
+        }
+      ],
+      "investment": 1,
+      "priceNote": "From $500 one-time or $250/mo",
+      "pricingOffers": [
+        "analytics-setup",
+        "analytics-reporting"
+      ],
+      "faq": [
+        {
+          "q": "I already have Google Analytics. Do I need this?",
+          "a": "Most installs we audit count page views but miss calls, form fills and bookings. We fix what is there before adding anything new."
+        },
+        {
+          "q": "Which tools do you use?",
+          "a": "Google Analytics 4, Google Tag Manager, Search Console and the ad platforms you already run, plus a simple dashboard you can open on your phone."
+        },
+        {
+          "q": "Do I own the data?",
+          "a": "Yes. Everything is set up in your own accounts, and we keep admin access only while we work together."
+        },
+        {
+          "q": "How fast is it set up?",
+          "a": "Tracking setup usually takes one to two weeks, depending on how many sites, forms and ad accounts we connect."
+        }
+      ],
+      "related": [
+        "marketing",
+        "automations",
+        "websites"
+      ],
+      "startingAt": "$500"
     }
   ],
   "flow": {
@@ -614,22 +626,22 @@
       },
       {
         "key": "capture",
-        "stage": "Capture",
+        "stage": "Get chosen",
         "service": "Website",
         "icon": "browser",
         "href": "/websites.html"
       },
       {
-        "key": "convert",
-        "stage": "Convert",
-        "service": "AI employee",
-        "icon": "sparkle",
-        "href": "/ai-employees.html"
+        "key": "booked",
+        "stage": "Get booked",
+        "service": "Instant follow-up",
+        "icon": "bolt",
+        "href": "/automations.html"
       },
       {
         "key": "nurture",
         "stage": "Nurture",
-        "service": "Automations",
+        "service": "Reminders & reviews",
         "icon": "bolt",
         "href": "/automations.html"
       },
@@ -656,7 +668,7 @@
           },
           {
             "title": "Asks for a quote at 10pm",
-            "text": "AI employee answers and books the visit"
+            "text": "Instant text-back books the visit"
           },
           {
             "title": "Gets reminders and a review ask",
@@ -682,7 +694,7 @@
           },
           {
             "title": "DMs about a party of 12",
-            "text": "AI employee checks the date and books it"
+            "text": "Instant reply checks the date and books it"
           },
           {
             "title": "Gets a thank-you text",
@@ -708,7 +720,7 @@
           },
           {
             "title": "Asks about sizing",
-            "text": "AI employee answers on the spot"
+            "text": "Instant reply answers with a size guide"
           },
           {
             "title": "Leaves a full cart",
@@ -734,7 +746,7 @@
           },
           {
             "title": "Asks about kids' programs",
-            "text": "AI assistant answers any time"
+            "text": "Instant reply sends times and a sign-up link"
           },
           {
             "title": "Gets a welcome series",

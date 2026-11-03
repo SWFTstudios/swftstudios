@@ -35,9 +35,11 @@ const SESSION_DAYS = 14;
 const POSTHOG_HOST = "https://us.posthog.com";
 const DEFAULT_PROJECT_ID = "486061";
 
+// website-only ($400) has no default: its old $800 Price/Payment Link were
+// retired. To book it online again, add a $400 Payment Link URL below (and its
+// Price ID, or set STRIPE_PRICE_WEBSITE_ONLY), plus functions/_lib/stripe-tiers.js.
 const DEFAULT_PRICE_IDS: Record<string, string> = {
   "gbp-refresh": "price_1U6c9zAF4d9gCyuNIaEa8MhT",
-  "website-only": "price_1U6cA5AF4d9gCyuNj65BmDU2",
   "website-content-half": "price_1U6cA8AF4d9gCyuNt2PH1qew",
   "website-content-full": "price_1U6cAAAF4d9gCyuNeB6qUFx5",
   "content-growth-retainer": "price_1U6cA8AF4d9gCyuN0Ko807my",
@@ -46,7 +48,6 @@ const DEFAULT_PRICE_IDS: Record<string, string> = {
 
 const DEFAULT_PAYMENT_LINK_URLS: Record<string, string> = {
   "gbp-refresh": "https://buy.stripe.com/bJe9AS0zmf4gdGN2refMA0A",
-  "website-only": "https://buy.stripe.com/eVq6oGgykbS4cCJgi4fMA0v",
   "website-content-half": "https://buy.stripe.com/aFa6oGbe0e0cauB2refMA0w",
   "website-content-full": "https://buy.stripe.com/28E4gy1DqbS4byF4zmfMA0x",
   "content-growth-retainer": "https://buy.stripe.com/3cI3cube01dq9qxc1OfMA0y",
