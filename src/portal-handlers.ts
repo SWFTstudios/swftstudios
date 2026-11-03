@@ -56,19 +56,6 @@ function randomId(bytes = 16) {
   return bytesToHex(arr);
 }
 
-async function hashPassword(password: string) {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const keyMaterial = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, [
-    "deriveBits",
-  ]);
-  const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", salt, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
-    keyMaterial,
-    256
-  );
-  return { salt: bytesToHex(salt), hash: bytesToHex(bits) };
-}
-
 async function verifyPassword(password: string, saltHex: string, hashHex: string) {
   try {
     const salt = hexToBytes(saltHex);
@@ -167,73 +154,8 @@ export async function handlePortalRoutes(
     return new Response(null, { status: 204 });
   }
 
-  if (path === "/api/portal/onboard" && request.method === "POST") {
-    if (!db) return json({ ok: false, error: "Portal storage is not configured." }, 503);
-    let body: { email?: string; password?: string; inviteToken?: string; token?: string };
-    try {
-      body = JSON.parse(await request.text());
-    } catch {
-      return json({ ok: false, error: "Invalid JSON" }, 400);
-    }
-    const email = String(body.email || "")
-      .trim()
-      .toLowerCase()
-      .slice(0, 320);
-    const password = String(body.password || "");
-    const inviteToken = String(body.inviteToken || body.token || "").trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ ok: false, error: "Valid email is required." }, 400);
-    if (password.length < 10 || password.length > 200) {
-      return json({ ok: false, error: "Password must be at least 10 characters." }, 400);
-    }
-
-    let userId: string | null = null;
-    if (inviteToken) {
-      const tokenHash = await sha256Hex(inviteToken);
-      const inv = await db
-        .prepare("SELECT * FROM invite_tokens WHERE token_hash = ?")
-        .bind(tokenHash)
-        .first<{ user_id: string; expires_at: string }>();
-      if (inv && new Date(inv.expires_at).getTime() >= Date.now()) {
-        userId = inv.user_id;
-        await db.prepare("DELETE FROM invite_tokens WHERE token_hash = ?").bind(tokenHash).run();
-      }
-    }
-
-    let user = userId
-      ? await db.prepare("SELECT * FROM users WHERE id = ?").bind(userId).first<{
-          id: string;
-          email: string;
-          password_hash: string | null;
-          password_salt: string | null;
-        }>()
-      : await db
-          .prepare("SELECT * FROM users WHERE email = ? COLLATE NOCASE")
-          .bind(email)
-          .first<{ id: string; email: string; password_hash: string | null; password_salt: string | null }>();
-
-    if (user?.password_hash && user.password_salt) {
-      const ok = await verifyPassword(password, user.password_salt, user.password_hash);
-      if (!ok) return json({ ok: false, error: "Account already exists. Sign in instead.", code: "exists" }, 409);
-    } else if (user) {
-      const { salt, hash } = await hashPassword(password);
-      await db.prepare("UPDATE users SET password_hash = ?, password_salt = ? WHERE id = ?").bind(hash, salt, user.id).run();
-    } else {
-      const id = randomId(16);
-      const { salt, hash } = await hashPassword(password);
-      await db
-        .prepare("INSERT INTO users (id, email, password_hash, password_salt) VALUES (?, ?, ?, ?)")
-        .bind(id, email, hash, salt)
-        .run();
-      user = { id, email, password_hash: hash, password_salt: salt };
-    }
-
-    const sessionId = await createSession(db, user!.id);
-    return json(
-      { ok: true, created: true, email: user!.email, redirect: "/portal/dashboard.html" },
-      200,
-      { "Set-Cookie": sessionCookie(sessionId) }
-    );
-  }
+  // /api/portal/onboard is served by functions/api/portal/onboard.js via SHARED_FNS
+  // in worker.ts (passwordless accounts need their invite token there).
 
   if (path === "/api/portal/login" && request.method === "POST") {
     if (!db) return json({ ok: false, error: "Portal storage is not configured." }, 503);

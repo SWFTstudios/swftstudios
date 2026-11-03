@@ -8,10 +8,16 @@
  *      milestone_status { id, status }        add_milestone { projectId, title, detail?, dueDate? }
  *      delete_milestone { id }                add_update    { projectId, body }
  *      delete_update    { id }                rename        { projectId, name }
+ *      send_invite      { projectId }
+ *        Fresh one-time set-password link for the project's client (only while
+ *        the account has no password). Emailed when Resend is configured, and
+ *        returned as inviteUrl so the owner can pass it on.
  */
 import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
 import { fetchHostMetrics } from "../../_lib/posthog-metrics.js";
+import { findUserById } from "../../_lib/portal-db.js";
+import { issueInvite } from "../../_lib/portal-invite.js";
 import {
   addMilestone, addUpdate, deleteMilestone, deleteUpdate, getProjectView,
   MILESTONE_STATUSES, renameProject, setMilestoneStatus,
@@ -64,6 +70,14 @@ export async function onRequestPost(context) {
       ok = true;
     } else if (action === "delete_update") {
       ok = await deleteUpdate(db, str(b.id, 64));
+    } else if (action === "send_invite") {
+      const project = await db.prepare("SELECT user_id FROM projects WHERE id = ?").bind(str(b.projectId, 64)).first();
+      const r = await issueInvite(db, context.env, project && (await findUserById(db, project.user_id)));
+      if (r.error === "not_found") return json({ ok: false, error: "Not found." }, 404);
+      if (r.error === "has_password") {
+        return json({ ok: false, error: "This client already set a password. They can sign in at /portal/login.html." }, 409);
+      }
+      return json({ ok: true, inviteUrl: r.inviteUrl, emailed: r.emailed });
     } else if (action === "rename") {
       ok = await renameProject(db, str(b.projectId, 64), str(b.name, 120));
     } else {

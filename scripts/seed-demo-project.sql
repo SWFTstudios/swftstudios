@@ -1,6 +1,9 @@
 -- Demo client project for the owner dashboard and the client portal.
--- Client: elombekisala@gmail.com (sign in at /portal/onboard.html the first
--- time to set a password; after that /portal/login.html).
+-- Client: elombekisala@gmail.com, created without a password. Typing that email
+-- at /portal/onboard.html does NOT claim it (it only re-sends an invite). To sign
+-- in the first time, as the owner open the demo project in Admin -> Projects and
+-- click "Send invite": it emails a one-time link (and shows it to you). Open the
+-- link, choose a password; after that use /portal/login.html.
 -- Site analytics point at swftstudios.com so the demo shows live numbers.
 --
 -- Needs migrations 0001-0004. Safe to run again: it resets the demo's

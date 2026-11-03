@@ -176,6 +176,13 @@
         ]),
         el("div", { class: "admin-project-actions" }, [
           el("a", { class: "admin-row-btn", href: "/portal/dashboard.html?preview=" + encodeURIComponent(v.project.id), target: "_blank", rel: "noopener", text: "View as client ↗" }),
+          el("button", { class: "admin-row-btn", type: "button", text: "Send invite", title: "Email the client a one-time link to set their portal password", onclick: function () {
+            if (!confirm("Send " + v.client.email + " a new set-password link?")) return;
+            P.api("/api/admin/project", { method: "POST", body: JSON.stringify({ action: "send_invite", projectId: v.project.id }) }).then(function (x) {
+              if (!x.res.ok || !x.data.ok) { alert((x.data && x.data.error) || "Could not create the invite."); return; }
+              prompt((x.data.emailed ? "Emailed to " + v.client.email + "." : "Email not sent (Resend not configured).") + " One-time link, valid 7 days:", x.data.inviteUrl);
+            });
+          } }),
           el("button", { class: "admin-row-btn", type: "button", text: "Rename", onclick: function () {
             var name = prompt("Project name (shown to the client)", v.project.name);
             if (name != null) post({ action: "rename", projectId: v.project.id, name: name }).then(function (ok) { if (ok) reload(); });

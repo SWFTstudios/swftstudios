@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-04: Portal onboarding needs the invite link for paid accounts
+
+### Security
+- `/portal/onboard.html` no longer lets anyone claim an account that has no password yet (paying clients created by the Stripe webhook, the seeded demo client) by typing its email and a new password. Such an account can now only be claimed with its one-time invite token. Without one, the API answers `202 { code: "check_email" }` ("Check your email for your invite link"), starts no session, sets no password, and emails a fresh invite to the account's own address, at most once per 10 minutes per account.
+- Invite tokens are redeemed atomically (`DELETE … RETURNING`), and every outstanding token for the account is deleted once a password is set. The first password is only written while the account still has none.
+- The Worker now serves `/api/portal/onboard` from `functions/api/portal/onboard.js` (via `SHARED_FNS`); its own copy in `src/portal-handlers.ts`, which had the same hole, is gone.
+
+### Added
+- Admin **Projects → Send invite**: `POST /api/admin/project { action: "send_invite", projectId }` issues a one-time set-password link for a client without a password, emails it (when Resend is configured) and shows it to the owner. `functions/_lib/portal-invite.js` holds the invite email used by the webhook too.
+- Tests: `tests/admin/onboard.test.mjs`.
+
 ## 2026-11-04: Owner analytics, project progress, demo client
 
 ### Added
