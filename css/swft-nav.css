@@ -186,7 +186,7 @@
 
 /* Service rows: icon tile, name + line, price, chevron */
 .sn-prow {
-  display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 0.7rem;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 0.8rem;
   padding: clamp(0.5rem, 1.3dvh, 0.75rem) 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .sn-prow:last-child { border-bottom: 0; }
@@ -197,9 +197,6 @@
 .sn-prow__text { display: flex; flex-direction: column; min-width: 0; }
 .sn-prow__name { font-size: 1.02rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sn-prow__line { font-size: 0.85rem; color: #9a9a9a; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sn-prow__from { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; white-space: nowrap; }
-.sn-prow__from span { font-family: var(--mf-mono, monospace); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; }
-.sn-prow__from b { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; color: #fff; }
 .sn-prow__chev { color: #6f6f6f; display: grid; }
 .sn-prow__chev svg { width: 16px; height: 16px; }
 .sn-prow.is-active .sn-prow__name::after { content: " •"; color: #9a9a9a; }
@@ -455,6 +452,8 @@ body:not(.mf-page):not(.ps-page) .sn-nav,
 
   /* While the menu is open the tab bar stays on top, and the menu ends above it. */
   html.sa-menu-open .sa-tabs { z-index: 1120; }
+  /* Book is already in the tab bar and the menu header, so the big CTA goes. */
+  html.sa-has-tabs .sn-panel a.sn-panel-cta { display: none; }
   html.sa-has-tabs .sn-panel { inset: 0 0 auto auto; height: calc(100vh - var(--sa-tabs) - env(safe-area-inset-bottom)); height: calc(100dvh - var(--sa-tabs) - env(safe-area-inset-bottom)); }
 }
 

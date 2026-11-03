@@ -341,7 +341,7 @@
           return '<p class="sd-sub"><b>' + g.group + "</b> " + (g.motto || "") + "</p>" +
             g.items.map(function (i) {
               var on = path === i.href;
-              return '<a class="sd-sublink' + (on ? " is-active" : "") + '" href="' + i.href + '"' + (on ? ' aria-current="page"' : "") + "><span>" + i.label + "</span>" + (i.from ? "<em>" + i.from + "</em>" : "") + "</a>";
+              return '<a class="sd-sublink' + (on ? " is-active" : "") + '" href="' + i.href + '"' + (on ? ' aria-current="page"' : "") + "><span>" + i.label + "</span></a>";
             }).join("");
         }).join("") +
         '<a class="sd-sublink sd-sublink--all" href="/services.html"><span>All services</span><em>→</em></a>' +

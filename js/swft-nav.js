@@ -16,20 +16,20 @@
   // Services mega-menu. Keep in sync with data/services.json
   // (name, menuLine, slug, icon); the pages themselves are generated from it.
   // Grouped by the SWFT motto: Build = get seen, Grow = get chosen,
-  // Automate = get booked. `from` is the lowest published price.
+  // Automate = get booked. Menus show no prices; pages and /pricing.html do.
   var SERVICES = [
     { group: "Build", motto: "Get seen.", items: [
-      { label: "Websites",               line: "Up to 5 pages, base features",  from: "$400",   href: "/websites.html",    icon: "browser" },
-      { label: "Mobile & web apps",      line: "iPhone, Android and portals",   from: "$1,500", href: "/apps.html",        icon: "phone" },
-      { label: "Custom software & CRMs", line: "Replace the apps you rent",     from: "$1,500", href: "/software.html",    icon: "code" }
+      { label: "Websites",               line: "Up to 5 pages, base features",  href: "/websites.html",    icon: "browser" },
+      { label: "Mobile & web apps",      line: "iPhone, Android and portals",   href: "/apps.html",        icon: "phone" },
+      { label: "Custom software & CRMs", line: "Replace the apps you rent",     href: "/software.html",    icon: "code" }
     ] },
     { group: "Grow", motto: "Get chosen.", items: [
-      { label: "Paid ads & marketing",   line: "Meta, Google and local SEO",    from: "$400",   href: "/marketing.html",   icon: "megaphone" },
-      { label: "Content & creative",     line: "Photo, video, social and live", from: "$350",   href: "/content.html",     icon: "video" }
+      { label: "Paid ads & marketing",   line: "Meta, Google and local SEO",    href: "/marketing.html",   icon: "megaphone" },
+      { label: "Content & creative",     line: "Photo, video, social and live", href: "/content.html",     icon: "video" }
     ] },
     { group: "Automate", motto: "Get booked.", items: [
-      { label: "Automations",            line: "Follow-up, reminders, reviews", from: "$750",   href: "/automations.html", icon: "bolt" },
-      { label: "Tracking & reporting",   line: "Know what brings in customers", from: "$500",   href: "/analytics.html",   icon: "chart" }
+      { label: "Automations",            line: "Follow-up, reminders, reviews", href: "/automations.html", icon: "bolt" },
+      { label: "Tracking & reporting",   line: "Know what brings in customers", href: "/analytics.html",   icon: "chart" }
     ] }
   ];
   // Shared with js/swft-app.js (desktop sidebar).
@@ -89,7 +89,7 @@
       return '<div class="sn-mega__col"><p class="sn-mega__label">' + g.group + (g.motto ? ' <span class="sn-mega__motto">' + g.motto + "</span>" : "") + "</p>" +
         g.items.map(function (i) {
           return '<a class="sn-mega__item" href="' + i.href + '">' + svg(i.icon) +
-            '<span><span class="sn-mega__name">' + i.label + '</span><span class="sn-mega__line">' + i.line + (i.from ? " \u00b7 from " + i.from : "") + "</span></span></a>";
+            '<span><span class="sn-mega__name">' + i.label + '</span><span class="sn-mega__line">' + i.line + "</span></span></a>";
         }).join("") + "</div>";
     }).join("");
     return '<div class="sn-mega" id="sn-mega" hidden>' +
@@ -120,7 +120,6 @@
         g.items.map(function (i) {
           return '<a class="sn-prow' + (location.pathname === i.href ? " is-active" : "") + '" href="' + i.href + '">' + svg(i.icon, "sn-prow__icon") +
             '<span class="sn-prow__text"><span class="sn-prow__name">' + i.label + '</span><span class="sn-prow__line">' + i.line + "</span></span>" +
-            (i.from ? '<span class="sn-prow__from"><span>From</span><b>' + i.from + "</b></span>" : "") +
             svg("chevron", "sn-prow__chev") + "</a>";
         }).join("") +
       "</div>";
@@ -408,7 +407,7 @@
     loadOnce("/js/text-reveal.js?v=20261027-mono", "data-swft-text-reveal");
     loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
-    loadOnce("/js/swft-app.js?v=20261103-app3", "data-swft-app");
+    loadOnce("/js/swft-app.js?v=20261103-app4", "data-swft-app");
     if (document.querySelector("[data-mf-notify]")) loadOnce("/js/notify-badge.js?v=20261103-notify", "data-swft-notify");
   }
 

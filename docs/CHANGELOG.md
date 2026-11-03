@@ -9,6 +9,8 @@
 - Phones: the menu button moved from the top-right corner to the bottom-right of the tab bar (thumb reach). It opens the menu and turns into Close; the tab bar stays above the open menu. Tabs are now Home · Services/Project/Admin · Book · Log in/Account · Menu (Work is in the menu).
 - Page heroes start higher with no top bar to clear.
 
+- Menus no longer show prices (phone menu, desktop mega-menu and sidebar). Starting prices stay on the service pages, `/services.html` and `/pricing.html`. On phones the menu drops its big "Book a free strategy call" button, since Book is already in the tab bar and the menu header, so the menu fits above the tab bar.
+
 ### Fixed
 - The owner email (`elombe@swftstudios.com`) is always an admin. `ADMIN_EMAILS` now only adds admins. Before, setting it replaced the owner, so the owner logged in as a plain member and landed on the client dashboard instead of `/admin/`. Tablets (761–1099px) keep the top bar and slide-over menu; phones keep the bottom tab bar.
 
