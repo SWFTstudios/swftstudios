@@ -83,7 +83,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 40000
+              "priceCents": 40000,
+              "bookUrl": "/book/website-only.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 40000,
+                "productName": "SWFT. Website Only",
+                "ctaLabel": "Pay $400 to start",
+                "priceDisplay": "$400",
+                "billingNote": "Paid in full. $400 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYoKAF4d9gCyuNb4U2lhPw",
+                "paymentLinkUrl": "https://buy.stripe.com/cNibJ03LybS446d0j6fMA0B"
+              }
             },
             {
               "id": "website-content-half",
@@ -158,7 +170,20 @@
                 "type": "deposit",
                 "percent": 50
               },
-              "priceCents": 200000
+              "priceCents": 200000,
+              "bookUrl": "/book/website-content-half.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "deposit",
+                "percent": 50,
+                "amountCents": 100000,
+                "productName": "SWFT. Website + Content Capture (50% deposit)",
+                "ctaLabel": "Pay $1,000 deposit to start",
+                "priceDisplay": "$1,000 deposit",
+                "billingNote": "50% deposit on the $2,000 starting price. The balance is invoiced before delivery. Your deposit is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYoaAF4d9gCyuN73xBElMa",
+                "paymentLinkUrl": "https://buy.stripe.com/9B6fZgdm86xKfOV2refMA0C"
+              }
             },
             {
               "id": "website-content-full",
@@ -231,7 +256,20 @@
                 "type": "deposit",
                 "percent": 50
               },
-              "priceCents": 300000
+              "priceCents": 300000,
+              "bookUrl": "/book/website-content-full.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "deposit",
+                "percent": 50,
+                "amountCents": 150000,
+                "productName": "SWFT. Website + Extended Content (50% deposit)",
+                "ctaLabel": "Pay $1,500 deposit to start",
+                "priceDisplay": "$1,500 deposit",
+                "billingNote": "50% deposit on the $3,000 starting price. The balance is invoiced before delivery. Your deposit is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYodAF4d9gCyuNDHFdLPxh",
+                "paymentLinkUrl": "https://buy.stripe.com/6oU9AS5TGg8k8mtaXKfMA0D"
+              }
             },
             {
               "id": "website-care",
@@ -298,7 +336,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 15000
+              "priceCents": 15000,
+              "bookUrl": "/book/website-care.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 15000,
+                "interval": "month",
+                "productName": "SWFT. Website Care (monthly)",
+                "ctaLabel": "Start at $150/mo",
+                "priceDisplay": "$150/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $150/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYoiAF4d9gCyuN5zZdMZ9h",
+                "paymentLinkUrl": "https://buy.stripe.com/14A4gy5TG2hu329aXKfMA0E"
+              }
             }
           ]
         },
@@ -382,7 +433,20 @@
                 "type": "deposit",
                 "percent": 50
               },
-              "priceCents": 150000
+              "priceCents": 150000,
+              "bookUrl": "/book/app-design-sprint.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "deposit",
+                "percent": 50,
+                "amountCents": 75000,
+                "productName": "SWFT. App Design Sprint (50% deposit)",
+                "ctaLabel": "Pay $750 deposit to start",
+                "priceDisplay": "$750 deposit",
+                "billingNote": "50% deposit on the $1,500 starting price. The balance is invoiced before delivery. Your deposit is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYoxAF4d9gCyuNv0OOW1Fl",
+                "paymentLinkUrl": "https://buy.stripe.com/dRmaEW6XKe0c1Y58PCfMA0F"
+              }
             },
             {
               "id": "app-mvp",
@@ -494,7 +558,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 40000
+              "priceCents": 40000,
+              "bookUrl": "/book/app-care.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 40000,
+                "interval": "month",
+                "productName": "SWFT. App Care & Support (monthly)",
+                "ctaLabel": "Start at $400/mo",
+                "priceDisplay": "$400/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $400/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYp0AF4d9gCyuNT8QuA20t",
+                "paymentLinkUrl": "https://buy.stripe.com/9B67sK5TG1dq0U1aXKfMA0G"
+              }
             }
           ]
         }
@@ -656,7 +733,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 50000
+              "priceCents": 50000,
+              "bookUrl": "/book/ads-management.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 50000,
+                "interval": "month",
+                "productName": "SWFT. Ads Management (monthly)",
+                "ctaLabel": "Start at $500/mo",
+                "priceDisplay": "$500/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $500/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYp3AF4d9gCyuN1ipynaK9",
+                "paymentLinkUrl": "https://buy.stripe.com/bJe3cu6XK09m8mtaXKfMA0H"
+              }
             },
             {
               "id": "full-growth-partner",
@@ -828,7 +918,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 45000
+              "priceCents": 45000,
+              "bookUrl": "/book/photo-session.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 45000,
+                "productName": "SWFT. Brand Photo Session",
+                "ctaLabel": "Pay $450 to start",
+                "priceDisplay": "$450",
+                "billingNote": "Paid in full. $450 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYp5AF4d9gCyuNJqHTD4Iz",
+                "paymentLinkUrl": "https://buy.stripe.com/14A28q0zm3ly5ahfe0fMA0I"
+              }
             },
             {
               "id": "product-photos",
@@ -916,7 +1018,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 40000
+              "priceCents": 40000,
+              "bookUrl": "/book/product-photos.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 40000,
+                "productName": "SWFT. Product Photography",
+                "ctaLabel": "Pay $400 to start",
+                "priceDisplay": "$400",
+                "billingNote": "Paid in full. $400 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYp9AF4d9gCyuNTBdbGFHQ",
+                "paymentLinkUrl": "https://buy.stripe.com/9B6bJ0eqc5tG0U18PCfMA0J"
+              }
             },
             {
               "id": "photo-plan",
@@ -977,7 +1091,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 40000
+              "priceCents": 40000,
+              "bookUrl": "/book/photo-plan.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 40000,
+                "interval": "month",
+                "productName": "SWFT. Monthly Photo Plan",
+                "ctaLabel": "Start at $400/mo",
+                "priceDisplay": "$400/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $400/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYpQAF4d9gCyuNT1s0jpG0",
+                "paymentLinkUrl": "https://buy.stripe.com/bJe14mbe03ly8mtc1OfMA0K"
+              }
             }
           ]
         },
@@ -1059,7 +1186,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 60000
+              "priceCents": 60000,
+              "bookUrl": "/book/short-form-pack.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 60000,
+                "productName": "SWFT. Short-Form Video Pack",
+                "ctaLabel": "Pay $600 to start",
+                "priceDisplay": "$600",
+                "billingNote": "Paid in full. $600 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYpUAF4d9gCyuNntgqYFTq",
+                "paymentLinkUrl": "https://buy.stripe.com/7sY3cu95Sg8kfOVaXKfMA0L"
+              }
             },
             {
               "id": "brand-film",
@@ -1113,7 +1252,20 @@
                 "type": "deposit",
                 "percent": 50
               },
-              "priceCents": 180000
+              "priceCents": 180000,
+              "bookUrl": "/book/brand-film.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "deposit",
+                "percent": 50,
+                "amountCents": 90000,
+                "productName": "SWFT. Brand Film (50% deposit)",
+                "ctaLabel": "Pay $900 deposit to start",
+                "priceDisplay": "$900 deposit",
+                "billingNote": "50% deposit on the $1,800 starting price. The balance is invoiced before delivery. Your deposit is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYpcAF4d9gCyuNNZdx2ms6",
+                "paymentLinkUrl": "https://buy.stripe.com/9B6cN4gyk9JW46dgi4fMA0M"
+              }
             },
             {
               "id": "video-plan",
@@ -1178,7 +1330,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 50000
+              "priceCents": 50000,
+              "bookUrl": "/book/video-plan.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 50000,
+                "interval": "month",
+                "productName": "SWFT. Monthly Video Plan",
+                "ctaLabel": "Start at $500/mo",
+                "priceDisplay": "$500/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $500/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYpfAF4d9gCyuNZM2rXEp1",
+                "paymentLinkUrl": "https://buy.stripe.com/4gMbJ0ci49JW0U1c1OfMA0N"
+              }
             }
           ]
         },
@@ -1234,7 +1399,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 35000
+              "priceCents": 35000,
+              "bookUrl": "/book/social-setup.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 35000,
+                "productName": "SWFT. Social Profile Setup",
+                "ctaLabel": "Pay $350 to start",
+                "priceDisplay": "$350",
+                "billingNote": "Paid in full. $350 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYplAF4d9gCyuNSvDczSo0",
+                "paymentLinkUrl": "https://buy.stripe.com/3cI9AS3Ly3ly7ip5DqfMA0O"
+              }
             },
             {
               "id": "content-growth-retainer",
@@ -1376,7 +1553,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 50000
+              "priceCents": 50000,
+              "bookUrl": "/book/managed-social.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 50000,
+                "interval": "month",
+                "productName": "SWFT. Managed Social (monthly)",
+                "ctaLabel": "Start at $500/mo",
+                "priceDisplay": "$500/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $500/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYpoAF4d9gCyuN1QE7QviI",
+                "paymentLinkUrl": "https://buy.stripe.com/7sY28q1Dq5tG5ah9TGfMA0P"
+              }
             }
           ]
         },
@@ -1453,7 +1643,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 90000
+              "priceCents": 90000,
+              "bookUrl": "/book/livestream-single.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 90000,
+                "productName": "SWFT. Single-Camera Stream",
+                "ctaLabel": "Pay $900 to start",
+                "priceDisplay": "$900",
+                "billingNote": "Paid in full. $900 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYq4AF4d9gCyuNfSLTHyJl",
+                "paymentLinkUrl": "https://buy.stripe.com/dRmbJ081O5tG46d4zmfMA0Q"
+              }
             },
             {
               "id": "livestream-multi",
@@ -1524,7 +1726,20 @@
                 "type": "deposit",
                 "percent": 50
               },
-              "priceCents": 250000
+              "priceCents": 250000,
+              "bookUrl": "/book/livestream-multi.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "deposit",
+                "percent": 50,
+                "amountCents": 125000,
+                "productName": "SWFT. Multi-Camera Production (50% deposit)",
+                "ctaLabel": "Pay $1,250 deposit to start",
+                "priceDisplay": "$1,250 deposit",
+                "billingNote": "50% deposit on the $2,500 starting price. The balance is invoiced before delivery. Your deposit is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYq9AF4d9gCyuNrqVHEQhQ",
+                "paymentLinkUrl": "https://buy.stripe.com/14A4gya9We0c9qxd5SfMA0R"
+              }
             },
             {
               "id": "livestream-recurring",
@@ -1589,7 +1804,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 180000
+              "priceCents": 180000,
+              "bookUrl": "/book/livestream-recurring.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 180000,
+                "interval": "month",
+                "productName": "SWFT. Recurring Streams (monthly)",
+                "ctaLabel": "Start at $1,800/mo",
+                "priceDisplay": "$1,800/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $1,800/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYqDAF4d9gCyuNWsRuz1Ci",
+                "paymentLinkUrl": "https://buy.stripe.com/5kQcN41Dqf4gauB7LyfMA0S"
+              }
             }
           ]
         }
@@ -1654,7 +1882,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 75000
+              "priceCents": 75000,
+              "bookUrl": "/book/lead-follow-up.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 75000,
+                "productName": "SWFT. Lead Follow-up Automation",
+                "ctaLabel": "Pay $750 to start",
+                "priceDisplay": "$750",
+                "billingNote": "Paid in full. $750 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYqGAF4d9gCyuNJHurrPM9",
+                "paymentLinkUrl": "https://buy.stripe.com/5kQbJ095Se0cgSZ2refMA0T"
+              }
             },
             {
               "id": "automation-care",
@@ -1692,7 +1932,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 25000
+              "priceCents": 25000,
+              "bookUrl": "/book/automation-care.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 25000,
+                "interval": "month",
+                "productName": "SWFT. Automation Care (monthly)",
+                "ctaLabel": "Start at $250/mo",
+                "priceDisplay": "$250/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $250/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYqLAF4d9gCyuNANV4l3ja",
+                "paymentLinkUrl": "https://buy.stripe.com/aFa8wOci4aO07ipaXKfMA0U"
+              }
             }
           ]
         },
@@ -1774,7 +2027,19 @@
               "pay": {
                 "type": "full"
               },
-              "priceCents": 50000
+              "priceCents": 50000,
+              "bookUrl": "/book/analytics-setup.html",
+              "stripe": {
+                "mode": "payment",
+                "kind": "full",
+                "amountCents": 50000,
+                "productName": "SWFT. Tracking Setup",
+                "ctaLabel": "Pay $500 to start",
+                "priceDisplay": "$500",
+                "billingNote": "Paid in full. $500 covers the included scope above and is fully refundable until work starts; extras are quoted before you pay for them.",
+                "priceId": "price_1UXYqOAF4d9gCyuNs6wiGxQm",
+                "paymentLinkUrl": "https://buy.stripe.com/3cIbJ05TGaO07ipc1OfMA0V"
+              }
             },
             {
               "id": "analytics-reporting",
@@ -1810,7 +2075,20 @@
               "pay": {
                 "type": "monthly"
               },
-              "priceCents": 25000
+              "priceCents": 25000,
+              "bookUrl": "/book/analytics-reporting.html",
+              "stripe": {
+                "mode": "subscription",
+                "kind": "monthly",
+                "amountCents": 25000,
+                "interval": "month",
+                "productName": "SWFT. Monthly Insights",
+                "ctaLabel": "Start at $250/mo",
+                "priceDisplay": "$250/mo",
+                "billingNote": "Billed monthly, month-to-month. Cancel anytime. The $250/mo plan covers the monthly deliverables above; extras are quoted first.",
+                "priceId": "price_1UXYqRAF4d9gCyuNnODME01X",
+                "paymentLinkUrl": "https://buy.stripe.com/14A6oGci45tGeKR2refMA0W"
+              }
             }
           ]
         }

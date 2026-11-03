@@ -308,11 +308,11 @@ function renderHtmlSitemap(data, locations) {
 
   const book = [
     { href: "/book/", label: "Book a tier", note: "Stripe checkout hub" },
-    { href: "/book/gbp-content-refresh.html", label: "Book GBP Content Refresh" },
-    { href: "/book/website-content-half.html", label: "Book Website + Content" },
-    { href: "/book/website-content-full.html", label: "Book Website + Extended Content" },
-    { href: "/book/content-growth-retainer.html", label: "Book Content + Growth Retainer" },
-    { href: "/book/full-growth-partner.html", label: "Book Full Growth Partner" },
+    // Every package with online checkout (data/pricing.json → bookUrl).
+    ...JSON.parse(readFileSync(join(ROOT, "data/pricing.json"), "utf8")).categories
+      .flatMap((c) => c.services).flatMap((sv) => sv.offers)
+      .filter((o) => o.bookUrl)
+      .map((o) => ({ href: o.bookUrl, label: `Book ${o.name}` })),
   ];
 
   function listBlock(items) {

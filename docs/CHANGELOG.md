@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-04: Stripe payment links live for all 25 packages
+
+### Added
+- 22 live Stripe payment links on the EK Web Development account (`acct_1FKOZ3AF4d9gCyuN`), recorded in `data/stripe-catalog.json`. Every package except App MVP can now be booked online: pay in full, a 50% deposit, or monthly. Each link collects phone and business name, emails a receipt or invoice (deposit invoices note the balance and the refund policy), tags `metadata.tierId` and redirects to `/book/thank-you.html`.
+- Booking pages for all 25 packages, listed in both sitemaps.
+
+### Changed
+- The 3 links that were already correct (GBP Content Refresh, Content + Growth Retainer, Full Growth Partner) now redirect to the thank-you page instead of `/portal/onboard.html`. Portal access still comes from the welcome email.
+
+### Removed
+- Deactivated the old $800 Website Only, $2,000 Website + Content Capture and $3,000 Website + Extended Content links. Anyone opening them is pointed to the pricing page.
+
 ## 2026-11-04: Online payments for every package (pay in full, deposit, monthly)
 
 ### Added
