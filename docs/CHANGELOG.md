@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-04: Owner analytics, project progress, demo client
+
+### Added
+- Admin **Analytics** tab: 30-day traffic for swftstudios.com from Cloudflare (unique visitors, requests, page views, % cached, daily chart) and PostHog (visitors, page views, daily chart, top pages), with a plain note on what each source counts. New `GET /api/admin/analytics`, `functions/_lib/cloudflare-analytics.js`; PostHog metrics now include a daily series. Needs `CF_ANALYTICS_TOKEN` (secret) + `CF_ZONE_ID`.
+- Admin **Projects** tab (replaces Clients & notes): progress per project; per project, milestones with inline status, client-visible updates and private notes; **View as client** opens the client dashboard in preview mode (`?preview=<id>`).
+- Client dashboard: project name, progress bar, milestone timeline and "Latest updates from SWFT" (`GET /api/portal/project`).
+- Migration `0004_project_progress.sql`; `functions/_lib/projects.js`; `POST/GET /api/admin/project`. Worker routes the new endpoints to the same handlers.
+- `scripts/seed-demo-project.sql`: demo client elombekisala@gmail.com with an in-progress project. Docs in `docs/ADMIN_DASHBOARD.md`.
+- Tests: `tests/admin/projects.test.mjs` (seed idempotent, client never sees admin notes, preview == client view, admin-only writes with same-origin, overview works before 0004, Cloudflare parsing/errors).
+
 ## 2026-11-04: Sourced blog data + two analytics guides
 
 ### Changed
