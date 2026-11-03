@@ -93,15 +93,15 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 
 /* The footer wordmark ("SWFT studios") keeps the original grey pen script. */
 :where(.sf-wordmark) .mf-script {
-  font-family: var(--mf-hand);
+  /* Footer "studios": the same Graflo spray, sized and placed in css/swft-nav.css */
+  font-family: var(--mf-graffiti);
   font-weight: 400;
-  color: var(--mf-script);
-  font-size: 1.12em;
-  letter-spacing: -0.01em;
   line-height: 0.8;
   display: inline-block;
-  transform: rotate(-4deg) translateY(0.04em);
-  padding: 0 0.06em;
+  position: relative;
+  z-index: 1;
+  -webkit-text-stroke: 0.03em currentColor;
+  paint-order: stroke fill;
 }
 
 /* The accent word: the logo's pen script, made bold and funky.
@@ -119,20 +119,36 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 .mf-script:not(.sf-wordmark .mf-script),
 html body.ps-page .ps-title .ps-accent {
   display: inline-block;
+  position: relative;
+  z-index: 1; /* painted over the word before it */
   font-family: var(--mf-graffiti);
   font-weight: 400;
   font-style: normal;
-  font-size: 1em;
+  font-size: 1.3em;
   letter-spacing: 0.01em;
-  line-height: 0.9;
-  transform: rotate(-4deg) translateY(0.02em);
+  line-height: 0.75;
+  /* Sprayed on top: tucked back over the end of the previous word.
+     js/mono.js adds .is-line-start when the word wraps to a new line,
+     so it never slides out past the left edge. */
+  margin-left: -0.2em;
+  transform: rotate(-5deg) translateY(0.04em);
   padding: 0 0.08em;
   color: var(--mf-accent-color);
-  /* soft neon: tight core, wide halo */
-  --mf-glow: 0 0 0.04em currentColor, 0 0 0.16em color-mix(in srgb, currentColor 70%, transparent), 0 0 0.5em color-mix(in srgb, currentColor 35%, transparent);
+  /* Thicker: Graflo has one weight, so a stroke in its own color fattens it */
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
+  /* A dark cut line hugging the letters separates the paint from the word
+     underneath; then the neon: tight core, wide halo, all from currentColor */
+  --mf-glow:
+    0 0 0.02em var(--mf-bg), 0.025em 0.035em 0 var(--mf-bg),
+    0 0 0.1em currentColor,
+    0 0 0.28em color-mix(in srgb, currentColor 60%, transparent),
+    0 0 0.7em color-mix(in srgb, currentColor 30%, transparent);
   text-shadow: var(--mf-glow);
   transition: color 0.28s ease;
 }
+.mf-script.is-line-start:not(.sf-wordmark .mf-script),
+.ps-accent.is-line-start { margin-left: 0; }
 .is-funky {
   cursor: pointer;
   -webkit-user-select: none;
@@ -217,8 +233,8 @@ html body.ps-page .ps-title .ps-accent {
 /* The burst brightens the resting glow, then hands back to it */
 @keyframes mf-glow {
   0%   { text-shadow: var(--mf-glow); }
-  12%  { text-shadow: 0 0 0.08em currentColor, 0 0 0.3em currentColor, 0 0 0.8em currentColor; }
-  80%  { text-shadow: 0 0 0.08em currentColor, 0 0 0.3em currentColor, 0 0 0.8em currentColor; }
+  12%  { text-shadow: 0 0 0.02em var(--mf-bg), 0.025em 0.035em 0 var(--mf-bg), 0 0 0.12em currentColor, 0 0 0.4em currentColor, 0 0 0.9em currentColor; }
+  80%  { text-shadow: 0 0 0.02em var(--mf-bg), 0.025em 0.035em 0 var(--mf-bg), 0 0 0.12em currentColor, 0 0 0.4em currentColor, 0 0 0.9em currentColor; }
   100% { text-shadow: var(--mf-glow); }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -167,6 +167,36 @@
     });
   }
 
+  // The accent word overlaps the word before it (negative margin). When it wraps
+  // to the start of a line there's nothing to overlap, so drop the overlap.
+  function lastCharRect(node) {
+    while (node) {
+      if (node.nodeType === 3 && node.textContent.trim()) {
+        var t = node.textContent.replace(/\s+$/, "");
+        var r = document.createRange();
+        r.setStart(node, t.length - 1);
+        r.setEnd(node, t.length);
+        return r.getBoundingClientRect();
+      }
+      if (node.nodeType === 1 && node.textContent.trim()) {
+        var last = node.lastChild;
+        var inner = last ? lastCharRect(last) : null;
+        if (inner) return inner;
+      }
+      node = node.previousSibling;
+    }
+    return null;
+  }
+  function markLineStarts(words) {
+    words.forEach(function (el) {
+      var host = el.parentNode && el.parentNode.matches && el.parentNode.matches("[data-mf-notify]") ? el.parentNode : el;
+      el.classList.remove("is-line-start");
+      var prev = lastCharRect(host.previousSibling);
+      var me = el.getBoundingClientRect();
+      if (!prev || prev.bottom <= me.top + me.height * 0.25) el.classList.add("is-line-start");
+    });
+  }
+
   function initAccent() {
     var words = document.querySelectorAll(".mf-script, .ps-title .ps-accent");
     if (!words.length) return;
@@ -180,8 +210,10 @@
           });
         }, { threshold: 0.6 })
       : null;
+    var placed = [];
     words.forEach(function (el) {
       if (el.closest(".sf-wordmark") || el.classList.contains("is-funky")) return; // the logo wordmark stays as is
+      placed.push(el);
       var text = el.textContent;
       if (!text.trim()) return;
       // One span per letter so each can tilt and bounce; spaces stay plain text so words still wrap.
@@ -208,6 +240,12 @@
         el.classList.add("is-in");
       }
     });
+    if (!placed.length) return;
+    var mark = function () { markLineStarts(placed); };
+    mark();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(mark);
+    var rt;
+    window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(mark, 120); });
   }
 
   function init() {

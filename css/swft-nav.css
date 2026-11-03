@@ -302,7 +302,11 @@ body:has(.sf-footer) footer.footer_component { display: none !important; }
   font-size: clamp(4rem, 19vw, 21rem); font-weight: 700; letter-spacing: -0.07em; line-height: 0.8;
   white-space: nowrap; color: #fff; user-select: none;
 }
-.sf-wordmark .mf-script { color: #6e6e6e; font-size: 1em; transform: rotate(-6deg) translateY(0.05em); margin-left: 0.04em; }
+.sf-wordmark .mf-script {
+  color: #fff; font-size: 0.64em; letter-spacing: 0; margin-left: -0.4em; /* fits 390–1920px wide with room for the glow */
+  transform: rotate(-7deg) translateY(0.02em);
+  text-shadow: 0 0 0.015em #050505, 0.02em 0.03em 0 #050505, 0 0 0.06em #fff, 0 0 0.2em rgba(255, 255, 255, 0.55), 0 0 0.5em rgba(255, 255, 255, 0.25);
+}
 .sf-bottom {
   max-width: var(--mf-max, 1440px); margin: 2rem auto 0; padding-top: 1.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
