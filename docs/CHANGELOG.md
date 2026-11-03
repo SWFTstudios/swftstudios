@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-04: Notebook annotations on the blog
+
+### Added
+- All five blog posts (`blog/*.html`) carry the same annotations as the case studies (`css/annotate.css`, drawn in by `js/annotate.js`): ice highlights on the takeaways, signal underlines, a pen circle on the snapshot stat that matters most, and two handwritten Listomania notes per post beside section headings (35 marks, 10 notes). The posts are hand-written HTML, so the marks live in the article markup itself; add more with `<mark class="an an-hl">`, `<span class="an an-ul">`, `<span class="an an-circle">` and `<p class="an-note" role="note">` after an `<h2>`.
+
 ## 2026-11-04: Legible accent words and a new "How it works" walkthrough
 
 ### Changed
