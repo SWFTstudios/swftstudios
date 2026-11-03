@@ -721,3 +721,41 @@ html body.ps-page h2 { letter-spacing: -0.035em; }
 
 /* Services page */
 .mf-step__by { margin-top: 1.25rem !important; color: var(--mf-text) !important; font-size: 0.7rem !important; }
+
+/* ---------- Blog: data snapshot + sources (blog/*.html) ----------
+   Every number says what it is a share of, who measured it and when.
+   Built into the posts by hand; see docs/CHANGELOG.md 2026-11-04. */
+.bs-snap {
+  margin: 2.25rem 0; padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--mf-line); border-radius: 4px 20px 20px 20px; background: var(--mf-surface);
+}
+.bs-snap__kicker { margin: 0 0 0.5rem; font-family: var(--mf-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mf-muted); }
+.bs-snap h3 { margin: 0 0 0.4rem !important; }
+.bs-snap__how { margin: 0 0 1.5rem !important; color: var(--mf-muted); font-size: 0.95rem; }
+.bs-snap__rows { margin: 0; display: grid; gap: 1.35rem; }
+.bs-snap__row { display: grid; grid-template-columns: minmax(6.5rem, auto) minmax(0, 1fr); gap: 0.35rem 1.25rem; align-items: baseline; }
+.bs-snap__value { font-family: var(--mf-font); font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: var(--mf-text); white-space: nowrap; }
+.bs-snap__row dd { margin: 0; }
+.bs-snap__what { display: block; color: var(--mf-text); font-size: 1rem; line-height: 1.45; }
+.bs-snap__bar { display: block; height: 4px; margin: 0.6rem 0 0.5rem; max-width: 24rem; border-radius: 4px; background: linear-gradient(90deg, var(--swft-ice, #c3cdfa) var(--v, 0%), var(--mf-line) var(--v, 0%)); }
+.bs-snap__src { display: block; margin-top: 0.35rem; font-family: var(--mf-mono); font-size: 0.72rem; letter-spacing: 0.03em; line-height: 1.5; color: var(--mf-muted); }
+.bs-snap__src a { color: var(--mf-text); text-decoration: underline; text-decoration-color: var(--swft-signal, #ff5a36); text-underline-offset: 3px; }
+@media (max-width: 560px) { .bs-snap__row { grid-template-columns: 1fr; } }
+
+.bs-sources { margin: 2.5rem 0 0; padding-top: 1.5rem; border-top: 1px solid var(--mf-line); }
+.bs-sources h2 { font-size: 1.35rem !important; margin: 0 0 0.75rem !important; }
+.bs-sources p { color: var(--mf-muted); font-size: 0.95rem; }
+.bs-sources ol { margin: 0.75rem 0 0; padding-left: 1.25rem; font-size: 0.92rem; color: var(--mf-muted); }
+.bs-sources li { margin-bottom: 0.45rem; }
+.bs-sources a { color: var(--mf-text); }
+
+/* Comparison table in guides (e.g. which metrics matter by industry) */
+.bs-table-wrap { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; margin: 1.5rem 0 2rem; border: 1px solid var(--mf-line); border-radius: 14px; }
+.bs-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 34rem; }
+.bs-table td { white-space: normal; }
+@media (max-width: 560px) { .bs-table { font-size: 0.88rem; } .bs-table th, .bs-table td { padding: 0.7rem 0.75rem; } }
+.bs-table th, .bs-table td { text-align: left; vertical-align: top; padding: 0.85rem 1rem; border-bottom: 1px solid var(--mf-line); }
+.bs-table thead th { font-family: var(--mf-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mf-muted); font-weight: 400; }
+.bs-table tbody th { color: var(--mf-text); font-weight: 600; white-space: nowrap; }
+.bs-table td { color: var(--mf-muted); }
+.bs-table tr:last-child th, .bs-table tr:last-child td { border-bottom: 0; }
