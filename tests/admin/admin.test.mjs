@@ -51,13 +51,16 @@ const ctx = (db, path, { sid, method = "GET", body, origin = ORIGIN, env = {} } 
   }),
 });
 
-test("allowlist: defaults to the owner, case-insensitive, env override", () => {
+test("allowlist: owner always, case-insensitive, ADMIN_EMAILS adds people", () => {
   assert.deepEqual(adminEmails({}), ["elombe@swftstudios.com"]);
   assert.equal(isAdminEmail({}, " Elombe@SWFTstudios.com "), true);
   assert.equal(isAdminEmail({}, "someone@else.com"), false);
   assert.equal(isAdminEmail({}, ""), false);
   assert.equal(isAdminEmail({ ADMIN_EMAILS: "a@x.com, b@x.com" }, "b@x.com"), true);
-  assert.equal(isAdminEmail({ ADMIN_EMAILS: "a@x.com" }, "elombe@swftstudios.com"), false);
+  // ADMIN_EMAILS can add admins but never removes the owner.
+  assert.equal(isAdminEmail({ ADMIN_EMAILS: "a@x.com" }, "elombe@swftstudios.com"), true);
+  assert.equal(isAdminEmail({ ADMIN_EMAILS: "a@x.com" }, "a@x.com"), true);
+  assert.deepEqual(adminEmails({ ADMIN_EMAILS: "Elombe@swftstudios.com, a@x.com" }), ["elombe@swftstudios.com", "a@x.com"]);
 });
 
 test("sameOrigin requires a matching Origin header", () => {

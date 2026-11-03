@@ -32,6 +32,8 @@
       { label: "Tracking & reporting",   line: "Know what brings in customers", from: "$500",   href: "/analytics.html",   icon: "chart" }
     ] }
   ];
+  // Shared with js/swft-app.js (desktop sidebar).
+  window.__swftServices = SERVICES;
   // Same stroke icons as scripts/build-service-pages.mjs.
   var ICONS = {
     code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
@@ -406,7 +408,7 @@
     loadOnce("/js/text-reveal.js?v=20261027-mono", "data-swft-text-reveal");
     loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
-    loadOnce("/js/swft-app.js?v=20261103-app1", "data-swft-app");
+    loadOnce("/js/swft-app.js?v=20261103-app3", "data-swft-app");
     if (document.querySelector("[data-mf-notify]")) loadOnce("/js/notify-badge.js?v=20261103-notify", "data-swft-notify");
   }
 

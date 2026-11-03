@@ -6,14 +6,20 @@
    - Installable: manifest, theme colour, home-screen icons, service worker
      (sw.js) for offline pages. "Install app" lives in the Account sheet.
    - Bottom tab bar that changes with who is visiting:
-       guest   Home · Services · Book · Work · Account (log in / sign up)
-       member  Home · Services · Book · Work · Account   (signed in, no project)
-       client  Home · Project · Book · Services · Account (has a project)
-       admin   Home · Admin · Book · Project · Account
+       guest   Home · Services · Book · Log in · Menu
+       member  Home · Services · Book · Account · Menu  (signed in, no project)
+       client  Home · Project · Book · Account · Menu   (has a project)
+       admin   Home · Admin · Book · Account · Menu
+     Menu is bottom-right for the thumb and replaces the top-right burger.
      Role comes from GET /api/portal/me; the last answer is kept in
      sessionStorage so the right tabs paint instantly on the next page.
    - Account sheet (slides up): who you are, your shortcuts, install, sign out.
-   Desktop and tablets above 760px are unchanged.
+   - Desktop (1100px+): a left sidebar replaces the top bar, app style:
+     logo + collapse, icon nav (Services expands to Build / Grow / Automate),
+     a Workspace section for clients and admins, then Book a call and an
+     account card that opens the same sheet as a popover. Collapsed state
+     is remembered per browser.
+   Tablets (761–1099px) keep the top bar and slide-over menu.
    ============================================================ */
 (function () {
   "use strict";
@@ -102,7 +108,7 @@
         writeCache(next);
         var changed = next.role !== state.role || next.email !== state.email;
         state = next;
-        if (changed) { renderTabs(); renderSheet(); updateMenu(); }
+        if (changed) { renderTabs(); renderSide(); renderSheet(); updateMenu(); }
       })
       .catch(function () { /* offline or no API (static preview): keep what we have */ });
   }
@@ -123,6 +129,12 @@
     star: '<path d="m12 4 2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 16.4l-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/>',
     search: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
     chev: '<path d="m9.5 6 6 6-6 6"/>',
+    tag: '<path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1.5 1.5 0 0 1 0 2.1l-6.2 6.2a1.5 1.5 0 0 1-2.1 0z"/><circle cx="8" cy="8" r="1.3"/>',
+    info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.01"/>',
+    doc: '<path d="M6 3.5h8l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20z"/><path d="M14 3.5V8h4M9 12.5h6M9 16h6"/>',
+    film: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="m10 9.5 4.5 2.5-4.5 2.5z"/>',
+    side: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M9.5 4.5v15"/>',
+    down: '<path d="m6 9.5 6 6 6-6"/>',
     share: '<path d="M12 15V4M8 7.5 12 4l4 3.5M6.5 11H5.5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1"/>'
   };
   function icon(n, size) {
@@ -140,9 +152,12 @@
     var project = { key: "project", label: "Project", href: "/portal/dashboard.html", icon: "project", match: /^\/portal\// };
     var admin = { key: "admin", label: "Admin", href: "/admin/", icon: "admin", match: /^\/admin\// };
     var account = { key: "account", label: role === "guest" ? "Log in" : "Account", icon: "user", sheet: true, match: /^\/account\.html$/ };
-    if (role === "admin") return [home, admin, book, project, account];
-    if (role === "client") return [home, project, book, services, account];
-    return [home, services, book, work, account];
+    // Menu sits bottom-right, under the thumb; it opens the full menu
+    // (Work, Pricing, About, Blog, Films, Contact live there).
+    var menu = { key: "menu", label: "Menu", icon: "menu", menu: true };
+    if (role === "admin") return [home, admin, book, account, menu];
+    if (role === "client") return [home, project, book, account, menu];
+    return [home, services, book, account, menu];
   }
 
   var bar, sheet, scrim;
@@ -165,11 +180,41 @@
         : t.key === "account" && state.role !== "guest" ? avatar() : icon(t.icon, 23)) +
         '<span class="sa-tab__label">' + t.label + "</span>";
       var cls = "sa-tab" + (t.fab ? " sa-tab--fab" : "") + (on ? " is-active" : "");
+      if (t.menu) return '<button type="button" class="' + cls + ' sa-tab--menu" data-sa-menu aria-controls="sn-panel" aria-expanded="false">' +
+        '<span class="sa-menu-ico" aria-hidden="true"><i></i><i></i><i></i></span><span class="sa-tab__label">Menu</span></button>';
       if (t.sheet) return '<button type="button" class="' + cls + '" data-sa-account aria-haspopup="dialog" aria-controls="sa-sheet">' + inner + "</button>";
       return '<a class="' + cls + '" href="' + t.href + '"' + (on ? ' aria-current="page"' : "") +
         (/^https?:/.test(t.href) ? ' target="_blank" rel="noopener"' : "") + ">" + inner + "</a>";
     }).join("");
     bar.querySelector("[data-sa-account]").addEventListener("click", openSheet);
+    wireMenuTab();
+  }
+
+  // The Menu tab drives the existing slide-over menu (js/swft-nav.js): it
+  // opens it through the burger, closes it through its close button, and
+  // turns into "Close" while the menu is open. The bar stays above the menu.
+  var menuObserver;
+  function wireMenuTab() {
+    var btn = bar.querySelector("[data-sa-menu]");
+    var panel = document.getElementById("sn-panel");
+    if (!btn || !panel) return;
+    function sync() {
+      var open = panel.classList.contains("open");
+      btn.setAttribute("aria-expanded", String(open));
+      btn.classList.toggle("is-open", open);
+      btn.querySelector(".sa-tab__label").textContent = open ? "Close" : "Menu";
+      btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      document.documentElement.classList.toggle("sa-menu-open", open);
+    }
+    btn.addEventListener("click", function () {
+      var open = panel.classList.contains("open");
+      var target = document.getElementById(open ? "sn-close" : "sn-burger");
+      if (target) target.click();
+    });
+    if (menuObserver) menuObserver.disconnect();
+    menuObserver = new MutationObserver(sync);
+    menuObserver.observe(panel, { attributes: true, attributeFilter: ["class"] });
+    sync();
   }
 
   /* ---------- Account sheet ---------- */
@@ -277,6 +322,84 @@
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
 
+  /* ---------- Desktop sidebar ---------- */
+  var SIDE_KEY = "swft-side";
+  var side;
+  function sideCollapsed() { try { return localStorage.getItem(SIDE_KEY) === "collapsed"; } catch (e) { return false; } }
+  function sideLink(href, ico, label, match, extra) {
+    var on = match && match.test(path);
+    return '<a class="sd-link' + (on ? " is-active" : "") + '" href="' + href + '" title="' + label + '"' + (on ? ' aria-current="page"' : "") + (extra || "") + ">" +
+      '<span class="sd-ico">' + icon(ico, 20) + '</span><span class="sd-txt">' + label + "</span></a>";
+  }
+  function sideHTML() {
+    var groups = window.__swftServices || [];
+    var svcOpen = SERVICE_PATHS.test(path);
+    var services = '<details class="sd-group"' + (svcOpen ? " open" : "") + ">" +
+      '<summary class="sd-link' + (svcOpen ? " is-active" : "") + '" title="Services"><span class="sd-ico">' + icon("services", 20) + '</span><span class="sd-txt">Services</span><span class="sd-caret">' + icon("down", 16) + "</span></summary>" +
+      '<div class="sd-subs">' +
+        groups.map(function (g) {
+          return '<p class="sd-sub"><b>' + g.group + "</b> " + (g.motto || "") + "</p>" +
+            g.items.map(function (i) {
+              var on = path === i.href;
+              return '<a class="sd-sublink' + (on ? " is-active" : "") + '" href="' + i.href + '"' + (on ? ' aria-current="page"' : "") + "><span>" + i.label + "</span>" + (i.from ? "<em>" + i.from + "</em>" : "") + "</a>";
+            }).join("");
+        }).join("") +
+        '<a class="sd-sublink sd-sublink--all" href="/services.html"><span>All services</span><em>→</em></a>' +
+      "</div></details>";
+    var r = state.role;
+    var workspace = (r === "client" || r === "admin")
+      ? '<p class="sd-label">Workspace</p>' +
+        sideLink("/portal/dashboard.html", "project", "My project", /^\/portal\//) +
+        (r === "admin" ? sideLink("/admin/", "admin", "Admin", /^\/admin\//) : "")
+      : "";
+    var who = r === "guest"
+      ? '<span class="sa-avatar sd-avatar" aria-hidden="true">' + icon("user", 16) + '</span><span class="sd-txt sd-who"><b>Log in</b><span>or sign up</span></span>'
+      : '<span class="sa-avatar sd-avatar" aria-hidden="true">' + esc((state.email || "?").charAt(0).toUpperCase()) + '</span><span class="sd-txt sd-who"><b>' + esc(state.email) + "</b><span>" + ROLE_LABEL[r] + (state.project ? " · " + esc(state.project.name) : "") + "</span></span>";
+    return '<div class="sd-top">' +
+        '<a href="/" class="sn-brand sd-brand" aria-label="SWFT Studios home">SWFT<span class="sn-brand__script">studios</span></a>' +
+        '<button type="button" class="sd-collapse" aria-label="Collapse sidebar" aria-pressed="' + sideCollapsed() + '" title="Collapse sidebar">' + icon("side", 18) + "</button>" +
+      "</div>" +
+      '<nav class="sd-nav" aria-label="Main">' +
+        '<p class="sd-label">Menu</p>' +
+        sideLink("/", "home", "Home", /^\/$/) +
+        services +
+        sideLink("/work.html", "work", "Work", /^\/work\.html$|^\/case-study\//) +
+        sideLink("/pricing.html", "tag", "Pricing", /^\/pricing\.html$/) +
+        sideLink("/about.html", "info", "About", /^\/about\.html$/) +
+        sideLink("/blog.html", "doc", "Blog", /^\/blog(\.html|\/)/) +
+        sideLink("/visuals.html", "film", "Films", /^\/visuals\.html$/) +
+        sideLink("/contact.html", "mail", "Contact", /^\/contact\.html$/) +
+        workspace +
+      "</nav>" +
+      '<div class="sd-bottom">' +
+        '<a class="sd-book" href="' + BOOK_URL + '" target="_blank" rel="noopener" title="Book a free strategy call"><span class="sd-ico">' + icon("book", 20) + '</span><span class="sd-txt">Book a call</span></a>' +
+        '<button type="button" class="sd-account" data-sa-account aria-haspopup="dialog" aria-controls="sa-sheet" title="Account">' + who + "</button>" +
+      "</div>";
+  }
+  function renderSide() {
+    if (!side) {
+      side = document.createElement("aside");
+      side.className = "sd";
+      side.setAttribute("aria-label", "Sidebar");
+      document.body.insertBefore(side, document.body.firstChild);
+      document.documentElement.classList.add("sa-has-side");
+      if (sideCollapsed()) document.documentElement.classList.add("sa-side-collapsed");
+    }
+    side.innerHTML = sideHTML();
+    side.querySelector("[data-sa-account]").addEventListener("click", openSheet);
+    side.querySelector(".sd-collapse").addEventListener("click", function () {
+      var c = !document.documentElement.classList.contains("sa-side-collapsed");
+      document.documentElement.classList.toggle("sa-side-collapsed", c);
+      this.setAttribute("aria-pressed", String(c));
+      this.setAttribute("aria-label", c ? "Expand sidebar" : "Collapse sidebar");
+      try { localStorage.setItem(SIDE_KEY, c ? "collapsed" : "open"); } catch (e) { /* ignore */ }
+    });
+    // Collapsed: Services opens the services page instead of the sub-list.
+    side.querySelector(".sd-group > summary").addEventListener("click", function (e) {
+      if (document.documentElement.classList.contains("sa-side-collapsed")) { e.preventDefault(); location.href = "/services.html"; }
+    });
+  }
+
   /* ---------- Phone menu: show the right account button ---------- */
   function updateMenu() {
     var a = document.querySelector('.sn-panel-ghost[href="/account.html"]');
@@ -290,6 +413,7 @@
   head();
   registerWorker();
   function start() {
+    renderSide();
     renderTabs();
     updateMenu();
     loadMe();

@@ -3,18 +3,21 @@
  *
  * Admin = a normal portal session whose email is on the allowlist. The check is
  * always done here on the server; the browser never decides who is an admin.
- * Env: ADMIN_EMAILS (comma-separated, optional). Defaults to the site owner.
+ * The site owner (OWNER_EMAILS) is always an admin. ADMIN_EMAILS (comma-separated,
+ * optional) only ADDS people, so a misconfigured env var can never lock the
+ * owner out of the admin view.
  */
 import { json } from "./portal-auth.js";
 import { getSessionUser, requireDb } from "./portal-db.js";
 
-export const DEFAULT_ADMIN_EMAILS = "elombe@swftstudios.com";
+export const OWNER_EMAILS = ["elombe@swftstudios.com"];
 
 export function adminEmails(env) {
-  return String(env?.ADMIN_EMAILS || DEFAULT_ADMIN_EMAILS)
+  const extra = String(env?.ADMIN_EMAILS || "")
     .split(",")
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
+  return [...new Set([...OWNER_EMAILS, ...extra])];
 }
 
 export function isAdminEmail(env, email) {
