@@ -288,12 +288,46 @@
         table(["Top pages", "Views"], (ph.topPages || []).map(function (p) { return [p.path, num(p.pageviews)]; }), "No page data yet."),
         el("p", { class: "admin-muted admin-src", text: "People who loaded pages with the tracking snippet (ad blockers and bots mostly excluded). Visitors are summed daily uniques." }),
       ];
+      var sitesBox = el("div");
+      renderClientSites(sitesBox);
       root.replaceChildren(
         cfCard,
+        sitesBox,
         card("Visitors · PostHog · last 30 days", phBody),
         card("Google Analytics", [el("p", { class: "admin-muted", text: "GA4 (G-F2BXR858CL) has the full picture, including key events and revenue. Open it in Google Analytics; the guide on the blog explains every column." }),
           el("p", {}, [el("a", { class: "portal-link", href: "https://analytics.google.com/", target: "_blank", rel: "noopener", text: "Open Google Analytics ↗" }), " · ", el("a", { class: "portal-link", href: "/blog/google-analytics-metrics-explained.html", text: "What the numbers mean" })])])
       );
+    });
+  }
+
+  /* Client sites (every Cloudflare zone): last 30 days vs the 30 before.
+     "Feature" puts a site on the home page Results cards while it's up. */
+  function pctText(v) { return v == null ? "—" : (v > 0 ? "+" : "") + v + "%"; }
+  function renderClientSites(box) {
+    box.replaceChildren(card("Client sites · Cloudflare", [el("p", { class: "admin-muted", text: "Loading every site in your Cloudflare account…" })]));
+    P.api("/api/admin/results").then(function (r) {
+      var d = r.data || {};
+      if (!r.res.ok || !d.ok) { box.replaceChildren(card("Client sites · Cloudflare", [notice((d && d.error) || "Could not load sites.")])); return; }
+      if (!d.configured) { box.replaceChildren(card("Client sites · Cloudflare", [notice(d.message)])); return; }
+      box.replaceChildren(card("Client sites · last 30 days vs the 30 before", [
+        table(["Site", "Page views", "Change", "Visitors", "Change", "Home page"], d.sites.map(function (s) {
+          if (!s.ok) return [s.domain, "—", "—", "—", "—", "No data"];
+          var up = s.change.pageViews > 0;
+          var btn = el("button", { class: "admin-row-btn", type: "button", text: s.featured ? "Featured · remove" : up ? "Feature" : "Not up yet", onclick: function () {
+            var body = { zoneId: s.zoneId, domain: s.domain, featured: !s.featured };
+            if (!s.featured) {
+              var label = prompt("Client name to show on the home page", s.label || s.domain);
+              if (label == null) return;
+              var link = prompt("Case study link (optional), e.g. /case-study/brooklyn-steel.html", s.link || "");
+              body.label = label; body.link = link || "";
+            }
+            P.api("/api/admin/results", { method: "POST", body: JSON.stringify(body) }).then(function (x) { if (x.res.ok && x.data.ok) renderClientSites(box); else alert((x.data && x.data.error) || "Could not save."); });
+          } });
+          if (!up && !s.featured) btn.disabled = true;
+          return [s.domain, num(s.now.pageViews), pctText(s.change.pageViews), num(s.now.visitors), pctText(s.change.visitors), btn];
+        }), "No sites found."),
+        el("p", { class: "admin-muted admin-src", text: "Cloudflare counts every request, bots included. Featured sites show on the home page only while page views are up and above 100 a month; the home page checks every 6 hours." })
+      ]));
     });
   }
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script id="swft-mode">(function(){var m;try{m=localStorage.getItem("swft-mode")}catch(e){}document.documentElement.setAttribute("data-mode",m==="light"||m==="system"?m:"dark")})();</script>
+  <meta charset="utf-8">
+  <title>Your Cart | SWFT Studios</title>
+  <meta name="description" content="Review your SWFT Studios services and start with a 50% deposit.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://www.swftstudios.com/cart.html">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261104-mode">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="mf-page">
+  <div id="swft-nav" data-active="pricing"></div>
+
+  <main id="main">
+    <section class="mf-hero mf-hero--page" aria-labelledby="cart-title">
+      <div class="mf-wrap">
+        <div class="mf-hero__top"><p class="mf-label">(Your cart)</p></div>
+        <h1 class="mf-h1" id="cart-title">Ready to <span class="mf-script">start.</span></h1>
+        <p class="mf-lead">Every project starts with a 50% deposit. <span class="is-muted">After you pay, you&rsquo;ll pick a time for your kickoff call to go through the details.</span></p>
+      </div>
+    </section>
+
+    <section class="mf-section mf-section--tight" aria-label="Cart" id="cart-root">
+      <div class="mf-wrap">
+        <div class="cart-empty" data-cart-empty hidden>
+          <h2 class="mf-h3">Your cart is empty.</h2>
+          <p class="mf-body">Pick a service or a package, or start with the free guide if you&rsquo;re not sure.</p>
+          <div class="mf-actions">
+            <a class="mf-btn" href="/pricing.html">See services &amp; pricing <span class="mf-arrow" aria-hidden="true">↗</span></a>
+            <a class="mf-btn mf-btn--ghost" href="/growth-guide.html">Get the free guide</a>
+          </div>
+        </div>
+
+        <div class="cart-grid" data-cart-full hidden>
+          <div class="cart-main">
+            <ul class="cart-lines" data-cart-lines></ul>
+            <div class="cart-more">
+              <p class="mf-label">(Often added)</p>
+              <ul class="cart-suggs" data-cart-suggs></ul>
+            </div>
+          </div>
+
+          <aside class="cart-side" aria-label="Order summary and details">
+            <div class="cart-sum" data-cart-summary></div>
+            <form id="cart-form" class="mf-form cart-form" novalidate>
+              <div class="mf-field">
+                <label for="cart-email">Email <span class="req">*</span></label>
+                <input type="email" id="cart-email" name="email" required autocomplete="email" maxlength="320">
+              </div>
+              <div class="mf-field-row">
+                <div class="mf-field">
+                  <label for="cart-name">Your name</label>
+                  <input type="text" id="cart-name" name="name" autocomplete="name" maxlength="120">
+                </div>
+                <div class="mf-field">
+                  <label for="cart-business">Business</label>
+                  <input type="text" id="cart-business" name="business" autocomplete="organization" maxlength="200">
+                </div>
+              </div>
+              <div class="mf-field">
+                <label for="cart-notes">Anything we should know</label>
+                <textarea id="cart-notes" name="notes" maxlength="1500" rows="3"></textarea>
+              </div>
+              <p class="mf-status" id="cart-status" role="status" hidden></p>
+              <button type="submit" class="mf-btn cart-pay" id="cart-pay">Pay deposit &amp; continue <span class="mf-arrow" aria-hidden="true">↗</span></button>
+              <button type="button" class="mf-btn mf-btn--ghost" id="cart-comp" hidden>Create free order (admin)</button>
+              <p class="cart-fine">Secure payment by Stripe. Questions first? <a class="mf-link" href="https://cal.com/swftstudios/swft-meeting" target="_blank" rel="noopener">Book a free call</a>.</p>
+            </form>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/swft-analytics.js?v=20261104-ga4" defer></script>
+  <script src="/js/swft-nav.js?v=20261104-mode" defer></script>
+</body>
+</html>

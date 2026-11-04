@@ -160,7 +160,7 @@ function page(s, data, offers) {
     .join("\n          ");
   const offerCards = priced.length
     ? `<ul class="mf-offers sv-offers">${priced
-        .map((o) => `<li><a class="mf-offer" href="${offerHref(o)}"><b>${esc(o.name)}</b><span>${esc(o.priceLabel)}</span>${o.description ? `<p>${esc(o.description)}</p>` : ""}</a></li>`)
+        .map((o) => `<li class="sv-offer"><a class="mf-offer" href="${offerHref(o)}"><b>${esc(o.name)}</b><span>${esc(o.priceLabel)}</span>${o.description ? `<p>${esc(o.description)}</p>` : ""}</a>${o.pay && o.priceCents ? `<button type="button" class="mf-btn mf-btn--sm cart-add" data-cart-add="${esc(o.id)}"><span data-cart-label>Add to cart</span></button>` : ""}</li>`)
         .join("")}</ul>`
     : "";
   const faq = s.faq.map((f) => `<details><summary>${esc(f.q)}</summary><div><p>${esc(f.a)}</p></div></details>`).join("\n          ");

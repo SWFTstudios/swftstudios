@@ -1009,3 +1009,6 @@ html body.ps-page h2 { letter-spacing: -0.035em; }
 .uui-section_blogpost01 > .uui-page-padding-2 { padding-left: 0; padding-right: 0; }
 .uui-section_blogpost01 .uui-max-width-large-2 { max-width: 65rem; }
 .uui-section_blogpost01 .uui-blogpost01_image-wrapper { max-width: 65rem; margin-left: auto; margin-right: auto; }
+/* Home: live client results (js/results.js) under the numbers */
+.mf-results { margin-top: clamp(2rem, 4vw, 3rem); display: grid; gap: 1rem; }
+.mf-results[hidden] { display: none; }
