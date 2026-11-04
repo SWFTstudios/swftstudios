@@ -626,35 +626,35 @@
     "stages": [
       {
         "key": "seen",
-        "stage": "Get seen",
+        "stage": "Discover",
         "service": "Ads & content",
         "icon": "megaphone",
         "href": "/marketing.html"
       },
       {
         "key": "capture",
-        "stage": "Get chosen",
+        "stage": "Decide",
         "service": "Website",
         "icon": "browser",
         "href": "/websites.html"
       },
       {
         "key": "booked",
-        "stage": "Get booked",
+        "stage": "Reach out",
         "service": "Instant follow-up",
         "icon": "bolt",
         "href": "/automations.html"
       },
       {
         "key": "nurture",
-        "stage": "Nurture",
+        "stage": "Stay in touch",
         "service": "Reminders & reviews",
         "icon": "star",
         "href": "/automations.html"
       },
       {
         "key": "repeat",
-        "stage": "Repeat",
+        "stage": "Come back",
         "service": "Custom software",
         "icon": "layers",
         "href": "/software.html"

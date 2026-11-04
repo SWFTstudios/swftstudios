@@ -12,8 +12,8 @@
  *       The visitor finished the worksheet online: both sides get a copy of
  *       the answers, the visitor gets the cal.com link.
  *
- * Every kind is saved to the CRM (Growth Audits table, form type says which)
- * and the Sheets lead log via storeLead, like the old audit.
+ * Every kind is saved to the CRM (Growth Audits table, form type says which),
+ * the Sheets lead log via storeLead, and D1 growth_guides (admin Guides tab).
  * Env: RESEND_API_KEY, AIRTABLE_TOKEN (+ the optional ones in growth-audit.js)
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
@@ -101,7 +101,7 @@ export async function onRequestPost(context) {
   const sourcePage = str(body.sourcePage, 300);
   const base = `growth-guide/${kind}/${email.toLowerCase()}/${Date.now()}`;
 
-  let lead, mail;
+  let lead, mail, details = {};
   if (kind === "diy") {
     lead = { formType: "Growth Guide · Do it myself", notes: "Sent the worksheet link." };
     mail = {
@@ -124,6 +124,7 @@ export async function onRequestPost(context) {
     if (!businessName || !links || !sells || !goal) {
       return json({ ok: false, error: "Fill in your business name, links, what you sell and what you want." }, 400);
     }
+    details = { businessName, links, sells, customers, goal, notes };
     lead = {
       formType: "Growth Guide · Do it for me",
       company: { name: businessName, website: /^https?:\/\//i.test(links.split(/\s|,/)[0]) ? links.split(/\s|,/)[0] : undefined },
@@ -144,6 +145,7 @@ export async function onRequestPost(context) {
   } else {
     const answers = cleanAnswers(body.answers);
     if (!Object.keys(answers).length) return json({ ok: false, error: "Fill in at least one answer first." }, 400);
+    details = { answers };
     lead = { formType: "Growth Guide · Answers", notes: QUESTIONS.filter(([, k]) => answers[k]).map(([, k, q]) => `${q.replace("___", "…")} ${answers[k]}`).join("\n") };
     mail = {
       teamSubject: `Growth Guide answers: ${firstName || email}`,
@@ -156,6 +158,17 @@ export async function onRequestPost(context) {
         <p><a href="${CAL_URL}" style="display:inline-block;padding:12px 20px;border-radius:999px;background:#0b0b0b;color:#fff;text-decoration:none;font-weight:600;">Pick a time</a></p>
         ${sign}`,
     };
+  }
+
+  // Keep a copy for the admin Guides tab (migration 0006). Never blocks the visitor.
+  if (env.DB) {
+    try {
+      await env.DB.prepare(
+        "INSERT INTO growth_guides (id, kind, email, first_name, business_name, details) VALUES (?, ?, ?, ?, ?, ?)"
+      ).bind(crypto.randomUUID(), kind, email, firstName || null, details.businessName || null, JSON.stringify(details)).run();
+    } catch (err) {
+      console.error("growth_guides insert failed", err);
+    }
   }
 
   const saved = await storeLead(env, {

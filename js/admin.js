@@ -309,6 +309,85 @@
     );
   }
 
+  /* ---------- Guides: Free SWFT Growth Guide requests ----------
+     "Do it for me" requests and worksheet answers get a Write results button:
+     a template to fill in, then Send results emails it with the 1-on-1 link. */
+  var GUIDE_KIND = { dfy: "Do it for me", answers: "Worksheet answers", diy: "Started on their own" };
+  var GUIDE_TEMPLATE = [
+    "Here's what stood out:",
+    "",
+    "Build the foundation",
+    "- ",
+    "",
+    "Grow your reach",
+    "- ",
+    "",
+    "Automate the rest",
+    "- ",
+    "",
+    "Do this first",
+    "- "
+  ].join("\n");
+
+  function guideDetails(g, questions) {
+    var d = g.details || {};
+    if (g.kind === "dfy") {
+      return table(["", ""], [
+        ["Business", d.businessName], ["Links", d.links], ["Sells", d.sells],
+        ["Customers", d.customers || "—"], ["90-day goal", d.goal], ["Anything else", d.notes || "—"]
+      ].filter(function (r) { return r[1]; }));
+    }
+    var a = d.answers || {};
+    return table(["Question", "Answer"], questions.filter(function (q) { return a[q.key]; }).map(function (q) {
+      return [q.q.replace("___", "…"), a[q.key]];
+    }), "No answers.");
+  }
+
+  function openGuide(box, g, questions, reload) {
+    var ta = el("textarea", { "aria-label": "Results for " + (g.firstName || g.email), rows: "14" });
+    ta.value = g.results || GUIDE_TEMPLATE;
+    var msg = el("p", { class: "admin-muted", text: g.status === "sent" ? "Sent " + date(g.resultsSentAt) + ". Sending again emails the new text." : "" });
+    var btn = el("button", { class: "mf-btn mf-btn--sm", type: "button", text: g.status === "sent" ? "Send again" : "Send results", onclick: function () {
+      if (!confirm("Email these results to " + g.email + "?")) return;
+      btn.disabled = true; msg.textContent = "Sending…";
+      P.api("/api/admin/guides", { method: "POST", body: JSON.stringify({ id: g.id, results: ta.value }) }).then(function (r) {
+        btn.disabled = false;
+        if (r.res.ok && r.data.ok) { msg.textContent = "Sent to " + g.email + "."; reload(); }
+        else msg.textContent = (r.data && r.data.error) || "Could not send.";
+      });
+    } });
+    box.replaceChildren(card((g.businessName || g.firstName || g.email) + " · " + GUIDE_KIND[g.kind], [
+      el("p", {}, [el("a", { class: "portal-link", href: "mailto:" + g.email, text: g.email }), " · " + date(g.createdAt)]),
+      guideDetails(g, questions),
+      el("p", { class: "portal-stat-label", text: "Results email" }),
+      el("p", { class: "admin-muted", text: "Plain text. A line followed by \"- \" lines becomes a heading with a list. The email adds a greeting and a Book my 1-on-1 button." }),
+      el("div", { class: "admin-note-form" }, [ta]),
+      el("div", { class: "admin-inline-form" }, [btn, msg])
+    ]));
+    box.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function renderGuides(root) {
+    var list = el("div"), detail = el("div", { class: "admin-guide-detail" });
+    root.replaceChildren(list, detail);
+    list.replaceChildren(card("Growth Guide requests", [el("p", { class: "admin-muted", text: "Loading…" })]));
+    var load = function () {
+      P.api("/api/admin/guides").then(function (r) {
+        var d = r.data || {};
+        if (!r.res.ok || !d.ok) { list.replaceChildren(card("Growth Guide requests", [notice((d && d.error) || "Could not load guides.")])); return; }
+        var waiting = d.guides.filter(function (g) { return g.kind !== "diy" && g.status !== "sent"; }).length;
+        list.replaceChildren(card("Growth Guide requests", [
+          el("p", { class: "admin-muted", text: waiting ? waiting + " waiting for results." : "Nothing waiting." }),
+          table(["When", "Who", "Business", "Type", "Status", ""], d.guides.map(function (g) {
+            var action = g.kind === "diy" ? "" : el("button", { class: "admin-row-btn", type: "button", text: g.status === "sent" ? "View" : "Write results", onclick: function () { openGuide(detail, g, d.questions, load); } });
+            return [date(g.createdAt), (g.firstName ? g.firstName + " · " : "") + g.email, g.businessName || "—", GUIDE_KIND[g.kind], g.kind === "diy" ? "—" : g.status === "sent" ? "Sent" : "New", action];
+          }), "No guide requests yet.")
+        ]));
+      });
+    };
+    load();
+  }
+
   function renderEmails(root) {
     root.replaceChildren(card("Sent emails (Resend)", [el("p", { class: "admin-muted", text: "Loading…" })]));
     P.api("/api/admin/emails").then(function (r) {
@@ -329,7 +408,7 @@
     }))]));
   }
 
-  var RENDER = { overview: renderOverview, analytics: renderAnalytics, clients: renderClients, outreach: renderOutreach, emails: renderEmails, blog: renderBlog };
+  var RENDER = { overview: renderOverview, analytics: renderAnalytics, clients: renderClients, outreach: renderOutreach, guides: renderGuides, emails: renderEmails, blog: renderBlog };
   var drawn = {};
 
   function show(tab) {
