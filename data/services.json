@@ -620,7 +620,7 @@
     }
   ],
   "flow": {
-    "_readme": "The 'How it works for…' walkthrough on the homepage and /services.html. One stage per step of the SWFT Method; every industry needs exactly one card per stage. Each card: title (the customer's moment), text (what SWFT runs there) and why (what that step is worth to the business, shown when the visitor taps 'Why it matters'). Rendered by build:services, played by js/swft-flow.js.",
+    "_readme": "The 'How it works for…' walkthrough on the homepage and /services.html. One stage per step of the SWFT Method; every industry needs exactly one card per stage. Each card: title (the customer's moment), text (what SWFT runs there) and why (what that step is worth to the business, shown when the visitor taps 'Why it matters'). Rendered by build:services, played by js/swft-flow.js. Each stage has `links` (blogs and service pages) and each industry `caseStudies`; both show in the step's pop-up.",
     "title": "Strategic Workflows Facilitating Transformation.",
     "footer": "<b>From first scroll to repeat customer.</b> One team runs every step.",
     "stages": [
@@ -629,35 +629,105 @@
         "stage": "Discover",
         "service": "Ads & content",
         "icon": "megaphone",
-        "href": "/marketing.html"
+        "href": "/marketing.html",
+        "links": [
+          {
+            "kind": "Blog",
+            "label": "Google Business Profile and local SEO in 2026",
+            "href": "/blog/google-business-profile-local-seo-2026.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Showing up in AI answers",
+            "href": "/blog/ai-answer-engine-optimization-2026.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Social media content that works",
+            "href": "/blog/social-media-content-2026.html"
+          }
+        ]
       },
       {
         "key": "capture",
         "stage": "Decide",
         "service": "Website",
         "icon": "browser",
-        "href": "/websites.html"
+        "href": "/websites.html",
+        "links": [
+          {
+            "kind": "Blog",
+            "label": "What most websites still miss",
+            "href": "/blog/digital-marketing-blind-spots-2026.html"
+          },
+          {
+            "kind": "Service",
+            "label": "Websites",
+            "href": "/websites.html"
+          }
+        ]
       },
       {
         "key": "booked",
         "stage": "Reach out",
         "service": "Instant follow-up",
         "icon": "bolt",
-        "href": "/automations.html"
+        "href": "/automations.html",
+        "links": [
+          {
+            "kind": "Service",
+            "label": "Lead follow-up automation",
+            "href": "/automations.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Where leads slip away",
+            "href": "/blog/digital-marketing-blind-spots-2026.html"
+          }
+        ]
       },
       {
         "key": "nurture",
         "stage": "Stay in touch",
         "service": "Reminders & reviews",
         "icon": "star",
-        "href": "/automations.html"
+        "href": "/automations.html",
+        "links": [
+          {
+            "kind": "Blog",
+            "label": "Reputation management in 2026",
+            "href": "/blog/reputation-management-2026.html"
+          },
+          {
+            "kind": "Service",
+            "label": "Reminders and review requests",
+            "href": "/automations.html"
+          }
+        ]
       },
       {
         "key": "repeat",
         "stage": "Come back",
         "service": "Custom software",
         "icon": "layers",
-        "href": "/software.html"
+        "href": "/software.html",
+        "links": [
+          {
+            "kind": "Blog",
+            "label": "How to see your website analytics",
+            "href": "/blog/see-your-website-analytics.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Your Google Analytics report, explained",
+            "href": "/blog/google-analytics-metrics-explained.html"
+          },
+          {
+            "kind": "Service",
+            "label": "Custom software & CRMs",
+            "href": "/software.html"
+          }
+        ]
       }
     ],
     "industries": [
@@ -690,6 +760,18 @@
             "text": "Clients, files and invoices in one place",
             "why": "Keeping a client costs far less than finding a new one. When files, invoices and the next appointment live in one system, renewals happen on time instead of from memory."
           }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Built By Me EZ",
+            "href": "/case-study/built-by-me-ez.html"
+          },
+          {
+            "kind": "Case study",
+            "label": "Western HP",
+            "href": "/case-study/western-hp.html"
+          }
         ]
       },
       {
@@ -720,6 +802,18 @@
             "title": "Reorders in one tap",
             "text": "Orders, stock and loyalty in sync",
             "why": "Repeat buyers are your most profitable customers. Saved details, loyalty rewards and accurate stock make the second order effortless."
+          }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Brooklyn Steel Co.",
+            "href": "/case-study/brooklyn-steel.html"
+          },
+          {
+            "kind": "Case study",
+            "label": "Manna Hydration",
+            "href": "/case-study/manna-hydration.html"
           }
         ]
       },
@@ -752,6 +846,18 @@
             "text": "Guests, orders and events in one place",
             "why": "Knowing who your regulars are lets you invite them to events and catering. Your best customers become your easiest sales."
           }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Thyme & Table",
+            "href": "/case-study/thyme-and-table.html"
+          },
+          {
+            "kind": "Case study",
+            "label": "Blurred Lines Entertainment",
+            "href": "/case-study/blurred-lines-entertainment.html"
+          }
         ]
       },
       {
@@ -782,6 +888,18 @@
             "title": "Joins a group",
             "text": "Members, groups and giving in one system",
             "why": "When members, groups and giving live in one place, nobody falls through the cracks, and your team spends its time with people instead of spreadsheets."
+          }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Alpha Ministries International",
+            "href": "/case-study/alpha-ministries-international.html"
+          },
+          {
+            "kind": "Case study",
+            "label": "Hawthorne Global Ministries",
+            "href": "/case-study/hawthorne-global-ministries.html"
           }
         ]
       }

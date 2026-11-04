@@ -345,16 +345,42 @@ function flowBlock(data) {
     .join("");
   const panels = f.industries
     .map((ind, i) => {
+      // Vertical rail: icon nodes on a track; the fill and runner travel down
+      // to the next node while a step plays. The (i) opens the step's pop-up.
       const rail = f.stages
         .map((st, j) => {
           const num = String(j + 1).padStart(2, "0");
+          const teaser = ind.cards[j].why.split(/(?<=\.)\s/)[0];
           return [
-            `<li><button type="button" class="wf__step" data-step="${j}" aria-controls="wf-${ind.id}-${j}">`,
-            `  <span class="wf__num">${num}</span>`,
-            `  <span class="wf__step-text"><span class="wf__stage">${esc(st.stage)}</span><span class="wf__service">${esc(st.service)}</span></span>`,
+            `<li class="wf__node">`,
+            `<button type="button" class="wf__step" data-step="${j}" aria-controls="wf-${ind.id}-${j}">`,
+            `  <span class="wf__dot" aria-hidden="true">${icon(st.icon, "wf__dot-icon")}</span>`,
+            `  <span class="wf__step-text"><span class="wf__num">${num}</span><span class="wf__stage">${esc(st.stage)}</span><span class="wf__service">${esc(st.service)}</span></span>`,
             `  <span class="wf__bar" aria-hidden="true"><span></span></span>`,
-            `</button></li>`,
+            `</button>`,
+            `<button type="button" class="wf__tip" data-pop="${ind.id}-${j}" aria-haspopup="dialog" aria-label="Why ${esc(st.stage)} matters">`,
+            `  <span aria-hidden="true">i</span>`,
+            `  <span class="wf__tip-bubble" role="tooltip">${esc(teaser)} <b>Open for more</b></span>`,
+            `</button>`,
+            `</li>`,
           ].join("");
+        })
+        .join("\n");
+      // Pop-up content per step: why it matters, what happens, related reading
+      const pops = f.stages
+        .map((st, j) => {
+          const c = ind.cards[j];
+          const linkItem = (l) => `<li><a href="${l.href}"><span>${esc(l.kind)}</span>${esc(l.label)}</a></li>`;
+          return [
+            `<template class="wf__pop-tpl" data-pop="${ind.id}-${j}">`,
+            `  <p class="wf-pop__tag">${icon(st.icon, "wf__icon")}<span>${String(j + 1).padStart(2, "0")} &middot; ${esc(st.stage)} &middot; ${esc(ind.label)}</span></p>`,
+            `  <h2 class="wf-pop__title" id="wf-pop-title">Why this step matters</h2>`,
+            `  <p class="wf-pop__why">${esc(c.why)}</p>`,
+            `  <div class="wf-pop__moment"><p class="wf-pop__label">What your customer sees</p><p><b>${esc(c.title)}.</b> ${esc(c.text)}.</p></div>`,
+            `  <p class="wf-pop__label">Read more</p>`,
+            `  <ul class="wf-pop__links">${(st.links || []).map(linkItem).join("")}${(ind.caseStudies || []).map(linkItem).join("")}</ul>`,
+            `</template>`,
+          ].join("\n");
         })
         .join("\n");
       const moments = f.stages
@@ -368,7 +394,7 @@ function flowBlock(data) {
             `  <p class="wf__tag">${icon(st.icon, "wf__icon")}<span>${num} / ${String(n).padStart(2, "0")} &middot; ${esc(st.stage)}</span></p>`,
             `  <h3 class="wf__title">${esc(c.title)}</h3>`,
             `  <p class="wf__text"><span class="wf__runs">SWFT runs:</span> ${esc(c.text)} &middot; <a href="${st.href}">${esc(st.service)}</a></p>`,
-            `  <button type="button" class="wf__why-btn" aria-expanded="false" aria-controls="${whyId}"><span class="wf__why-i" aria-hidden="true">i</span>Why it matters</button>`,
+            `  <button type="button" class="wf__why-btn" data-pop="${ind.id}-${j}" aria-haspopup="dialog" aria-expanded="false" aria-controls="${whyId}"><span class="wf__why-i" aria-hidden="true">i</span>Why it matters</button>`,
             `  <div class="wf__why" id="${whyId}" role="note"><p>${esc(c.why)}</p></div>`,
             `</article>`,
           ].join("\n");
@@ -376,12 +402,16 @@ function flowBlock(data) {
         .join("\n");
       return [
         `<div class="wf__panel" role="tabpanel" id="wf-panel-${ind.id}" aria-labelledby="wf-tab-${ind.id}"${i === 0 ? "" : " hidden"}>`,
+        `<div class="wf__rail-wrap">`,
+        `<span class="wf__track" aria-hidden="true"><span class="wf__fill"><span class="wf__runner"></span></span></span>`,
         `<ol class="wf__rail" aria-label="Steps">`,
         rail,
         `</ol>`,
+        `</div>`,
         `<div class="wf__stage-area">`,
         moments,
         `</div>`,
+        pops,
         `</div>`,
       ].join("\n");
     })
