@@ -4,7 +4,7 @@
     "sub": "Build, grow and automate: see what every service starts at, from $400 websites to custom software, then book a package or get a quote. Nothing starts until you approve the scope.",
     "trustLine": "Work directly with the people who create it · Itemized deliverables before you pay · Month-to-month plans"
   },
-  "calUrl": "/growth-audit",
+  "calUrl": "/growth-guide.html",
   "quoteUrl": "/contact.html",
   "bookNote": "Book online. The exact starter scope and optional extras are listed before you pay.",
   "quoteNote": "Quote first. We confirm scope, dates and total with you before any payment.",
@@ -2097,9 +2097,9 @@
   ],
   "bookCta": {
     "headline": "Not sure which service you need?",
-    "quote": "Send us your website or social profile. We’ll review how you get seen, chosen and booked, and email you the three fixes that will move the needle most.",
+    "quote": "A short fill-in-the-blank check of your website, content and follow-up. Do it yourself, or send us a few details and we’ll do it for you.",
     "sub": "Free and personal. No call, no pressure to buy a bigger package.",
-    "button": "Get My Free Growth Audit"
+    "button": "Get the free guide"
   },
   "faq": [
     {
@@ -2108,7 +2108,7 @@
     },
     {
       "q": "Which service should I start with?",
-      "a": "Start where you lose the most customers. If people can’t find you, start with Grow: Marketing & Local SEO or the GBP Content Refresh. If they find you but don’t reach out, start with Build and a website. If they reach out but don’t book, start with Automate and Lead Follow-up. Not sure? The free Growth Audit will tell you."
+      "a": "Start where you lose the most customers. If people can’t find you, start with Grow: Marketing & Local SEO or the GBP Content Refresh. If they find you but don’t reach out, start with Build and a website. If they reach out but don’t book, start with Automate and Lead Follow-up. Not sure? The Free SWFT Growth Guide will tell you."
     },
     {
       "q": "How much does it cost to get started?",

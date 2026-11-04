@@ -670,3 +670,27 @@ html.sa-side-collapsed .mode-switch--side .mode-switch__btn[aria-checked="false"
 .sn-panel-mode { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; }
 .sn-panel-mode .sn-psec__label { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .mode-switch__btn { transition: none; } }
+
+/* Footer: dark in both modes (tokens in css/mono.css). The page color
+   fades into the NYC skyline still, like the hero in reverse. */
+.sf-footer {
+  border-top: 0;
+  background:
+    linear-gradient(180deg, var(--mf-page) 0, rgba(5, 5, 5, 0.86) clamp(10rem, 22vw, 18rem), rgba(5, 5, 5, 0.93) 100%),
+    url("/images/hero-nyc-view-still.jpg") center 30% / cover no-repeat,
+    #050505;
+  padding-top: clamp(6rem, 12vw, 10rem);
+}
+.sf-news { margin-top: 2rem; max-width: 30rem; display: grid; gap: 0.6rem; }
+.sf-news__row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.sf-news__row input[type="email"] {
+  flex: 1 1 14rem; min-width: 0; height: 3rem; padding: 0 1.1rem; border-radius: 999px;
+  border: 1px solid var(--mf-line-strong); background: rgba(var(--mf-ink-rgb), 0.06); color: var(--mf-text);
+  font: inherit; font-size: 1rem;
+}
+.sf-news__row input[type="email"]::placeholder { color: var(--mf-muted); }
+.sf-news__row input[type="email"]:focus-visible { outline: 2px solid var(--mf-ink); outline-offset: 2px; }
+.sf-news__row .mf-btn { height: 3rem; background: var(--swft-signal); border-color: var(--swft-signal); color: #fff; }
+.sf-news__hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }
+.sf-news__status { margin: 0; font-size: 0.92rem; color: var(--mf-soft); }
+.sf-news__status.is-error { color: var(--swft-error, #e69f00); }

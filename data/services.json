@@ -4,25 +4,26 @@
     {
       "id": "build",
       "label": "Build",
-      "motto": "Get seen.",
-      "tagline": "Websites, apps and software that put you in front of the right customers."
+      "motto": "Build the foundation.",
+      "tagline": "The website, app or CRM everything else plugs into."
     },
     {
       "id": "grow",
       "label": "Grow",
-      "motto": "Get chosen.",
-      "tagline": "Local SEO, ads and content that make you the obvious pick."
+      "motto": "Grow your reach.",
+      "tagline": "Ads, local SEO, photo, video and reviews that put you in front of the right people."
     },
     {
       "id": "automate",
       "label": "Automate",
-      "motto": "Get booked.",
-      "tagline": "Follow-up, booking and reporting that turn interest into appointments."
+      "motto": "Automate the rest.",
+      "tagline": "Follow-up, reminders, invoices and reports that run without you."
     }
   ],
   "services": [
     {
       "slug": "websites",
+      "image": "/images/brooklyn-steel-thumbnail.webp",
       "group": "build",
       "icon": "browser",
       "name": "Websites",
@@ -112,6 +113,7 @@
     },
     {
       "slug": "apps",
+      "image": "/images/hamper_app_website_thumbnail.webp",
       "group": "build",
       "icon": "phone",
       "name": "Mobile & Web Apps",
@@ -196,6 +198,7 @@
     },
     {
       "slug": "software",
+      "image": "/images/whp_desktop_screenshot.webp",
       "group": "build",
       "icon": "code",
       "name": "Custom Software & CRMs",
@@ -279,6 +282,7 @@
     },
     {
       "slug": "marketing",
+      "image": "/images/IG-FB-Messenger-Lifestlye-p-800.webp",
       "group": "grow",
       "icon": "megaphone",
       "name": "Paid Ads & Marketing",
@@ -363,6 +367,7 @@
     },
     {
       "slug": "content",
+      "image": "/images/BLE_SWFT_thumbnail-p-800.webp",
       "group": "grow",
       "icon": "video",
       "name": "Content & Creative",
@@ -449,6 +454,7 @@
     },
     {
       "slug": "automations",
+      "image": "/images/Whatsapp-Lifestyle-Photo-p-800.webp",
       "group": "automate",
       "icon": "bolt",
       "name": "Automations",
@@ -532,6 +538,7 @@
     },
     {
       "slug": "analytics",
+      "image": "/images/core_home_desktop_thumbnail.jpg",
       "group": "automate",
       "icon": "chart",
       "name": "Tracking & Reporting",
