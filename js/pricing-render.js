@@ -415,7 +415,9 @@
     if (options.showHero !== false && data.hero) {
       html +=
         '<header class="hp-pricing-hero">' +
-        "<h2>" + escapeHtml(data.hero.headline) + "</h2>" +
+        "<h2>" + (data.hero.circle && data.hero.headline.indexOf(data.hero.circle) !== -1
+          ? escapeHtml(data.hero.headline).replace(escapeHtml(data.hero.circle), '<span class="an an-circle">' + escapeHtml(data.hero.circle) + "</span>")
+          : escapeHtml(data.hero.headline)) + "</h2>" +
         "<p>" + escapeHtml(data.hero.sub) + "</p></header>";
     }
 

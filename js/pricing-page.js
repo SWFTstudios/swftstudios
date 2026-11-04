@@ -24,7 +24,8 @@
 
       var heroTitle = document.getElementById("hero-title");
       var heroLead = document.getElementById("hero-lead");
-      if (heroTitle) heroTitle.textContent = data.hero.headline;
+      // Keep hand-written markup (script word, pen marks); only fill an empty title
+      if (heroTitle && !heroTitle.children.length) heroTitle.textContent = data.hero.headline;
       if (heroLead) heroLead.textContent = data.hero.sub;
 
       // The category (#build / #grow / #automate) and billing (?billing=monthly) stay

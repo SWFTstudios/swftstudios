@@ -109,3 +109,33 @@ mark.an-hl, .an-hl {
 @media (min-width: 1100px) {
   p + .an-note.an-note.an-note { margin-top: 0.4rem; }
 }
+
+/* ---------- Drawn-in-place (js/annotate.js) ----------
+   html.an-js is set by the script, so without JS every mark shows drawn.
+   Pen marks on one line get an SVG stroke that draws itself (.an-svg);
+   the CSS background version is switched off for those. */
+.an-svg.an-ul { background-image: none; z-index: 0; }
+.an-svg.an-circle::before { content: none; }
+.an-ink { position: absolute; pointer-events: none; overflow: visible; z-index: -1; }
+.an-ul > .an-ink { left: -0.1em; right: -0.1em; bottom: -0.2em; width: calc(100% + 0.2em); height: 0.55em; }
+.an-circle > .an-ink { inset: -0.32em -0.42em -0.28em -0.38em; width: calc(100% + 0.8em); height: calc(100% + 0.6em); transform: rotate(-2deg); }
+.an-stroke {
+  fill: none; stroke: var(--an-ink); stroke-width: 2.8px; stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1; stroke-dashoffset: 0;
+}
+.an-stroke--2 { opacity: 0.75; }
+
+html.an-js .an-hl:not(.is-drawn) { background-size: 0% 78%; color: inherit; }
+html.an-js :is(h1, h2, .mf-h1, .mf-h2, .mf-display) .an-hl:not(.is-drawn) { background-size: 0% 46%; }
+html.an-js .an-ul:not(.an-svg):not(.is-drawn) { background-size: 0% 0.42em; }
+html.an-js .an-circle:not(.an-svg):not(.is-drawn)::before { clip-path: inset(0 100% 0 0); }
+html.an-js .an-note:not(.is-drawn) { opacity: 0; transform: rotate(-3deg) translateY(-0.4em); }
+html.an-js .an-stroke { stroke-dashoffset: 1; transition: stroke-dashoffset 0.75s cubic-bezier(0.55, 0.05, 0.35, 1); }
+html.an-js .an-ul .an-stroke { transition-duration: 0.55s; }
+html.an-js .an-stroke--2 { transition-duration: 0.45s; transition-delay: 0.65s; }
+html.an-js .an-circle .an-stroke--2 { transition-duration: 0.6s; transition-delay: 0.7s; }
+html.an-js .is-drawn .an-stroke { stroke-dashoffset: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .an-stroke { transition: none !important; stroke-dashoffset: 0 !important; }
+}
