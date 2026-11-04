@@ -8,7 +8,7 @@
  * - Offline with nothing cached: /offline.html.
  * Bump VERSION to drop every old cache.
  */
-const VERSION = "swft-2026-11-03";
+const VERSION = "swft-20261105-r2";
 const OFFLINE_URL = "/offline.html";
 const PRECACHE = [OFFLINE_URL, "/images/app/icon-192.png", "/css/swft-fonts.css?v=20261027-mono"];
 const PRIVATE = /^\/(api|admin|portal)\/|^\/account\.html/;
