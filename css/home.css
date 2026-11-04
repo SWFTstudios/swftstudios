@@ -91,3 +91,11 @@
   .sv-tabs.is-live .sv-tabs__view { transition: none; }
   .sv-tabs__hint::after { animation: none; }
 }
+
+/* Service rows in the tabs: no index numbers, so the title and the
+   description get that space back. */
+.sv-tabs .mf-row { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.5fr) 11rem; }
+@media (max-width: 860px) {
+  .sv-tabs .mf-row { grid-template-columns: minmax(0, 1fr) auto; gap: 0.85rem 1rem; }
+  .sv-tabs .mf-row__desc { grid-column: 1 / -1; grid-row: 2; }
+}

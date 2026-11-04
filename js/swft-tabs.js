@@ -107,6 +107,11 @@
       paint();
     });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(paint);
+    // Re-measure when a panel's content changes height (fonts, images, wraps)
+    if ("ResizeObserver" in window) {
+      var ro = new ResizeObserver(function () { if (!ticking) { ticking = true; requestAnimationFrame(paint); } });
+      panels.forEach(function (el) { ro.observe(el); });
+    }
 
     select(cur, false);
     paint();

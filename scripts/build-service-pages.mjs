@@ -319,7 +319,6 @@ const mottoHtml = (m) => {
   return `${esc(w.join(" "))} <span class="mf-script">${esc(last)}</span>`;
 };
 function rowsBlock(data) {
-  let n = 0;
   const tabs = data.groups
     .map((g, i) =>
       `<button type="button" role="tab" class="sv-tabs__tab" id="svt-${g.id}" aria-controls="svp-${g.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${esc(g.label)}</button>`
@@ -330,11 +329,9 @@ function rowsBlock(data) {
       const items = data.services.filter((s) => s.group === g.id);
       const rows = items
         .map((s) => {
-          n += 1;
           return [
             `<li>`,
             `  <a class="mf-row" href="/${s.slug}.html">`,
-            `    <span class="mf-row__num">(${String(n).padStart(2, "0")})</span>`,
             `    <span class="mf-row__title">${esc(s.name)}</span>`,
             `    <span class="mf-row__desc">${esc(strip(s.lead))}</span>`,
             `    <span class="mf-row__meta"><span class="mf-row__price mf-row__price--keep">From ${esc(s.startingAt)}</span><span class="mf-row__icon" aria-hidden="true">↗</span></span>`,
