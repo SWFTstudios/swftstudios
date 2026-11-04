@@ -1,0 +1,19 @@
+{
+  "_readme": "Brands in the homepage logo marquee (mono:brands block, built by npm run build:mono). Order is the order they scroll. Give a brand a `logo` (a white-on-transparent file in /images/brands/, ideally SVG or a 160px-tall WebP) and it shows as an image; without one it shows as a wordmark in the given `style` (sans, serif, mono, script, wide). `href` is optional and should point to the case study.",
+  "brands": [
+    { "name": "Brooklyn Steel Co.", "style": "wide", "href": "/case-study/brooklyn-steel.html" },
+    { "name": "Blurred Lines Entertainment", "logo": "/images/brands/blurred-lines-entertainment.webp", "href": "/case-study/blurred-lines-entertainment.html" },
+    { "name": "Manna Hydration", "style": "serif", "href": "/case-study/manna-hydration.html" },
+    { "name": "Hawthorne Global Ministries", "logo": "/images/brands/hawthorne-global-ministries.webp", "href": "/case-study/hawthorne-global-ministries.html" },
+    { "name": "Thyme & Table", "style": "script", "href": "/case-study/thyme-and-table.html" },
+    { "name": "Roller Reels", "logo": "/images/brands/roller-reels.webp", "href": "/case-study/roller-reels.html" },
+    { "name": "TAL Hydration", "style": "sans", "href": "/case-study/tal-hydration.html" },
+    { "name": "Flare Entertainment", "logo": "/images/brands/flare-entertainment.webp" },
+    { "name": "Scribble & Scribe", "style": "script", "href": "/case-study/scribble-and-scribe.html" },
+    { "name": "Built By Me EZ", "logo": "/images/brands/built-by-me-ez.webp", "href": "/case-study/built-by-me-ez.html" },
+    { "name": "Alpha Ministries International", "style": "serif", "href": "/case-study/alpha-ministries-international.html" },
+    { "name": "Western HP", "style": "wide", "href": "/case-study/western-hp.html" },
+    { "name": "Snooze Lane", "style": "sans", "href": "/case-study/snooze-lane.html" },
+    { "name": "Hamper", "style": "mono", "href": "/case-study/hamper.html" }
+  ]
+}

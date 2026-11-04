@@ -181,7 +181,7 @@ function page(s, data, offers) {
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${SITE}/images/swft-thumbnail.webp">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-app4">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261104-aaa">
   <link rel="stylesheet" href="/css/services.css?v=20261103-bga">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <script type="application/ld+json">${JSON.stringify(ld)}</script>
@@ -307,19 +307,31 @@ ${relatedCards}
 `;
 }
 
-// Homepage services: the Mono numbered rows, one per service, grouped.
+// Homepage services: a Build / Grow / Automate tab view. A pill tab menu sits
+// over a horizontal scroll-snap track, so on phones you swipe between groups
+// natively and on desktop the tabs glide the track. js/swft-tabs.js keeps the
+// pill indicator, the selected tab and the track height in sync with the
+// scroll position. Without JS the three groups simply stack.
+// "Get seen." → "Get <script>seen.</script>", the hero's handwritten accent.
+const mottoHtml = (m) => {
+  const w = String(m).trim().split(" ");
+  const last = w.pop();
+  return `${esc(w.join(" "))} <span class="mf-script">${esc(last)}</span>`;
+};
 function rowsBlock(data) {
-  let n = 0;
-  return data.groups
+  const tabs = data.groups
+    .map((g, i) =>
+      `<button type="button" role="tab" class="sv-tabs__tab" id="svt-${g.id}" aria-controls="svp-${g.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${esc(g.label)}</button>`
+    )
+    .join("");
+  const panels = data.groups
     .map((g) => {
-      const rows = data.services
-        .filter((s) => s.group === g.id)
+      const items = data.services.filter((s) => s.group === g.id);
+      const rows = items
         .map((s) => {
-          n += 1;
           return [
             `<li>`,
             `  <a class="mf-row" href="/${s.slug}.html">`,
-            `    <span class="mf-row__num">(${String(n).padStart(2, "0")})</span>`,
             `    <span class="mf-row__title">${esc(s.name)}</span>`,
             `    <span class="mf-row__desc">${esc(strip(s.lead))}</span>`,
             `    <span class="mf-row__meta"><span class="mf-row__price mf-row__price--keep">From ${esc(s.startingAt)}</span><span class="mf-row__icon" aria-hidden="true">↗</span></span>`,
@@ -328,19 +340,50 @@ function rowsBlock(data) {
           ].join("\n");
         })
         .join("\n");
-      return `<li class="mf-list__group"><p class="mf-label mf-label--muted">(${esc(g.label)}) ${esc(g.motto)} ${esc(g.tagline)}</p></li>\n${rows}`;
+      return [
+        `<div class="sv-tabs__panel" role="tabpanel" id="svp-${g.id}" aria-labelledby="svt-${g.id}" tabindex="-1">`,
+        `<div class="sv-tabs__intro"><p class="sv-tabs__motto">${mottoHtml(g.motto)}</p><p class="sv-tabs__tagline">${esc(g.tagline)} <span class="sv-tabs__count">${items.length} services</span></p></div>`,
+        `<ul class="mf-list mf-services">`,
+        rows,
+        `</ul>`,
+        `</div>`,
+      ].join("\n");
     })
     .join("\n");
+  return [
+    `<div class="sv-tabs" data-swft-tabs>`,
+    `<div class="sv-tabs__bar"><div class="sv-tabs__menu" role="tablist" aria-label="Services by goal"><span class="sv-tabs__ind" aria-hidden="true"></span>${tabs}</div><p class="sv-tabs__hint" aria-hidden="true">Swipe to switch</p></div>`,
+    `<div class="sv-tabs__view"><div class="sv-tabs__track">`,
+    panels,
+    `</div></div>`,
+    `</div>`,
+  ].join("\n");
 }
 
-// "How it works for <industry>": the SWFT Method as a workflow you can step
-// through. Left: the five stages as a rail (each a button with a progress bar).
-// Right: one "moment" card per stage with what the customer does, what SWFT
-// runs there and a "Why it matters" note revealed on tap. Static HTML has every
-// industry and every card (crawlers, no-JS); js/swft-flow.js plays it.
+// "How it works for <industry>": the SWFT Method as a live workflow map.
+//
+//   Top lane    what the customer sees: five nodes on a journey line, each with
+//               the customer's moment as a card.
+//   Bottom lane what SWFT runs behind the scenes at each step, hanging off the
+//               cards on dashed drops into a darker "engine" strip.
+//   SWFT band   Strategic · Workflows · Facilitating · Transformation. The four
+//               letters fill as the walkthrough plays, so the name itself is the
+//               progress bar and "T" lands when the customer comes back.
+//
+// Static HTML has every industry and every card (crawlers, no-JS);
+// js/swft-flow.js plays it. Styles: css/flow.css.
+const CHECK_SVG =
+  '<svg class="wf__tick" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="m7.5 12.3 3 3 6-6.3" fill="none" stroke="#050505" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const SWFT_WORDS = [
+  ["S", "trategic", "The plan"],
+  ["W", "orkflows", "Run behind the scenes"],
+  ["F", "acilitating", "Every customer step"],
+  ["T", "ransformation", "A customer for life"],
+];
 function flowBlock(data) {
   const f = data.flow;
   const n = f.stages.length;
+  const pad = (x) => String(x).padStart(2, "0");
   const tabs = f.industries
     .map((ind, i) =>
       `<button type="button" role="tab" class="wf__tab" id="wf-tab-${ind.id}" aria-controls="wf-panel-${ind.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${esc(ind.label)}</button>`
@@ -348,54 +391,53 @@ function flowBlock(data) {
     .join("");
   const panels = f.industries
     .map((ind, i) => {
-      const rail = f.stages
-        .map((st, j) => {
-          const num = String(j + 1).padStart(2, "0");
-          return [
-            `<li><button type="button" class="wf__step" data-step="${j}" aria-controls="wf-${ind.id}-${j}">`,
-            `  <span class="wf__num">${num}</span>`,
-            `  <span class="wf__step-text"><span class="wf__stage">${esc(st.stage)}</span><span class="wf__service">${esc(st.service)}</span></span>`,
-            `  <span class="wf__bar" aria-hidden="true"><span></span></span>`,
-            `</button></li>`,
-          ].join("");
-        })
-        .join("\n");
-      const moments = f.stages
+      const nodes = f.stages
         .map((st, j) => {
           const c = ind.cards[j];
-          const num = String(j + 1).padStart(2, "0");
-          const whyId = `wf-${ind.id}-${j}-why`;
           return [
-            `<article class="wf__moment" id="wf-${ind.id}-${j}" data-step="${j}">`,
-            `  <span class="wf__ghost" aria-hidden="true">${num}</span>`,
-            `  <p class="wf__tag">${icon(st.icon, "wf__icon")}<span>${num} / ${String(n).padStart(2, "0")} &middot; ${esc(st.stage)}</span></p>`,
-            `  <h3 class="wf__title">${esc(c.title)}</h3>`,
-            `  <p class="wf__text"><span class="wf__runs">SWFT runs:</span> ${esc(c.text)} &middot; <a href="${st.href}">${esc(st.service)}</a></p>`,
-            `  <button type="button" class="wf__why-btn" aria-expanded="false" aria-controls="${whyId}"><span class="wf__why-i" aria-hidden="true">i</span>Why it matters</button>`,
-            `  <div class="wf__why" id="${whyId}" role="note"><p>${esc(c.why)}</p></div>`,
-            `</article>`,
+            `<li class="wf__node" data-step="${j}">`,
+            `  <button type="button" class="wf__dot" data-step="${j}" aria-label="Step ${j + 1} of ${n}: ${esc(st.stage)}">${icon(st.icon, "wf__icon")}${CHECK_SVG}</button>`,
+            `  <p class="wf__stage"><span class="wf__num">${pad(j + 1)}</span>${esc(st.stage)}</p>`,
+            `  <div class="wf__card"><p class="wf__card-k">${pad(j + 1)} / ${pad(n)} &middot; ${esc(st.stage)}</p><h3 class="wf__title">${esc(c.title)}</h3></div>`,
+            `  <span class="wf__drop" aria-hidden="true"></span>`,
+            `  <p class="wf__runs"><span class="wf__runs-k">SWFT runs</span><span class="wf__runs-t">${esc(c.text)}</span><a href="${st.href}">${esc(st.service)} <span aria-hidden="true">→</span></a></p>`,
+            `</li>`,
           ].join("\n");
         })
         .join("\n");
+      const notes = f.stages
+        .map((st, j) =>
+          `<p class="wf__note" data-step="${j}"><span class="wf__why-i" aria-hidden="true">i</span><span><b>Why step ${j + 1} matters.</b> ${esc(ind.cards[j].why)}</span></p>`
+        )
+        .join("\n");
       return [
         `<div class="wf__panel" role="tabpanel" id="wf-panel-${ind.id}" aria-labelledby="wf-tab-${ind.id}"${i === 0 ? "" : " hidden"}>`,
-        `<ol class="wf__rail" aria-label="Steps">`,
-        rail,
+        `<p class="wf__lane wf__lane--front"><span class="wf__lane-dot" aria-hidden="true"></span>What your customer sees</p>`,
+        `<div class="wf__track">`,
+        `<div class="wf__rail" aria-hidden="true"><span class="wf__rail-fill"></span><span class="wf__spark"></span></div>`,
+        `<ol class="wf__steps" aria-label="${esc(ind.label)}: ${n} steps">`,
+        nodes,
         `</ol>`,
-        `<div class="wf__stage-area">`,
-        moments,
+        `</div>`,
+        `<div class="wf__notes">`,
+        notes,
         `</div>`,
         `</div>`,
       ].join("\n");
     })
     .join("\n");
+  const swft = SWFT_WORDS.map(
+    ([l, rest, cap], i) =>
+      `<span class="wf__l" style="--i:${i}"><span class="wf__l-word"><b aria-hidden="true">${l}</b><span class="wf__l-rest">${l}${rest}</span></span><span class="wf__l-cap">${cap}</span></span>`
+  ).join("");
   return [
-    `<div class="wf" data-swft-flow>`,
+    `<div class="wf" data-swft-flow style="--wf-n:${n}">`,
     `  <div class="wf__top">`,
-    `    <p class="wf__label">How it works for</p>`,
-    `    <div class="wf__tabs" role="tablist" aria-label="Pick an industry">${tabs}</div>`,
+    `    <p class="wf__label"><span class="wf__live" aria-hidden="true"></span>How it works for</p>`,
+    `    <div class="wf__tabs" role="tablist" aria-label="Pick an industry"><span class="wf__tabs-ind" aria-hidden="true"></span>${tabs}</div>`,
     `  </div>`,
     panels,
+    `  <p class="wf__swft">${swft}</p>`,
     `  <div class="wf__foot">`,
     `    <p>${f.footer}</p>`,
     `    <button type="button" class="wf__play" aria-pressed="false" hidden><span class="wf__play-icon" aria-hidden="true"></span><span class="wf__play-label">Pause</span></button>`,

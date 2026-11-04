@@ -6,7 +6,7 @@
 :root {
   --vz-bg: #010101;
   --vz-fg: #ffffff;
-  --vz-muted: rgba(255, 255, 255, 0.55);
+  --vz-muted: rgba(255, 255, 255, 0.72); /* AAA on the dark viewer */
   --vz-line: rgba(255, 255, 255, 0.14);
   --vz-accent: var(--sm-green, #ffffff);
   --vz-col: clamp(170px, 19vw, 300px);
@@ -263,7 +263,7 @@ body.vz-page #swft-nav { min-height: 0; }
   color: rgba(255, 255, 255, 0.72);
 }
 
-.vz-detail__meta span + span::before { content: " / "; color: rgba(255, 255, 255, 0.4); }
+.vz-detail__meta span + span::before { content: " / "; color: rgba(255, 255, 255, 0.72); }
 
 .vz-detail__title {
   margin: 0;
@@ -371,7 +371,7 @@ body.vz-page #swft-nav { min-height: 0; }
 }
 
 .vz-detail__step:hover, .vz-detail__step:focus-visible { color: var(--vz-fg); outline: none; text-decoration: underline; }
-.vz-detail__index { color: rgba(255, 255, 255, 0.5); }
+.vz-detail__index { color: rgba(255, 255, 255, 0.72); }
 
 .vz-icon-btn {
   display: grid;
