@@ -393,7 +393,7 @@ function flowBlock(data) {
             `  <span class="wf__ghost" aria-hidden="true">${num}</span>`,
             `  <p class="wf__tag">${icon(st.icon, "wf__icon")}<span>${num} / ${String(n).padStart(2, "0")} &middot; ${esc(st.stage)}</span></p>`,
             `  <h3 class="wf__title">${esc(c.title)}</h3>`,
-            `  <p class="wf__text"><span class="wf__runs">SWFT runs:</span> ${esc(c.text)} &middot; <a href="${st.href}">${esc(st.service)}</a></p>`,
+            `  <p class="wf__text"><span class="wf__runs">How:</span> ${esc(c.text)} &middot; <a href="${st.href}">${esc(st.service)}</a></p>`,
             `  <button type="button" class="wf__why-btn" data-pop="${ind.id}-${j}" aria-haspopup="dialog" aria-expanded="false" aria-controls="${whyId}"><span class="wf__why-i" aria-hidden="true">i</span>Why it matters</button>`,
             `  <div class="wf__why" id="${whyId}" role="note"><p>${esc(c.why)}</p></div>`,
             `</article>`,
