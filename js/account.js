@@ -88,6 +88,7 @@
 
   /* ---------- Log-in ---------- */
   function signedIn(user) {
+    if ($("ac-mode-sub")) $("ac-mode-sub").textContent = "Choose how SWFT looks. Saved to your account, so your other devices and your dashboard match.";
     $("ac-signed-email").textContent = user.email;
     if (user.isAdmin) $("ac-dash").href = "/admin/";
     $("ac-signed").hidden = false;
@@ -123,7 +124,15 @@
       .catch(function () { /* not signed in or offline: keep the form */ });
   }
 
-  function init() { handleLinks(); wireSignup(); wireLogin(); }
+  // Appearance: the shared System / Light / Dark switch (js/swft-nav.js)
+  function wireMode() {
+    var mount = $("ac-mode");
+    if (!mount || !window.SWFTMode) return;
+    mount.innerHTML = window.SWFTMode.switchHTML("mode-switch--wide");
+    window.SWFTMode.sync();
+  }
+
+  function init() { handleLinks(); wireSignup(); wireLogin(); wireMode(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();

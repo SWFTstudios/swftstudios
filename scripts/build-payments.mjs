@@ -38,6 +38,7 @@ for (const file of readdirSync(join(ROOT, "book"))) {
   writeFileSync(join(ROOT, "book", file), `<!DOCTYPE html>
 <html lang="en">
 <head>
+  <script id="swft-mode">(function(){var m;try{m=localStorage.getItem("swft-mode")}catch(e){}document.documentElement.setAttribute("data-mode",m==="light"||m==="system"?m:"dark")})();</script>
   <meta charset="utf-8">
   <title>Get a quote | SWFT Studios</title>
   <meta name="robots" content="noindex">

@@ -41,7 +41,7 @@
   font-size: var(--swft-text-tiny);
   font-weight: 600;
   margin-bottom: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(var(--mf-ink-rgb), 0.35);
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
 }
@@ -128,7 +128,7 @@
 }
 
 .ps-filter:hover {
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(var(--mf-ink-rgb), 0.5);
 }
 
 .ps-filter.is-active {
@@ -142,7 +142,7 @@
   margin-top: 3rem;
   padding: 2.5rem 2rem;
   border: 1px solid var(--ps-border);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, var(--ps-card) 50%);
+  background: linear-gradient(180deg, rgba(var(--mf-ink-rgb), 0.06) 0%, var(--ps-card) 50%);
   border-radius: 12px;
   text-align: center;
 }
@@ -178,8 +178,8 @@
 }
 
 .ps-page .button {
-  background-color: #fff;
-  color: #010101;
+  background-color: var(--mf-ink);
+  color: var(--mf-on-ink);
   text-align: center;
   padding: 1rem 1.5rem;
   font-weight: 600;
@@ -204,13 +204,13 @@
 }
 
 .ps-page .button.is-course.outlined {
-  border: 0.5px solid #fff;
-  color: #fff;
+  border: 0.5px solid var(--mf-ink);
+  color: var(--mf-ink);
   background-color: transparent;
 }
 
 .ps-page .button.is-course.outlined:hover {
-  color: #010101;
+  color: var(--mf-on-ink);
 }
 
 .ps-page .button_bg {
@@ -246,7 +246,7 @@
 }
 
 .ps-footer a {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(var(--mf-ink-rgb), 0.72);
   text-decoration: none;
   margin-left: 1rem;
 }

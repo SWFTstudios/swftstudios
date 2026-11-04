@@ -71,6 +71,7 @@ function pageShell({ title, description, canonical, bodyClass, body }) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
+  <script id="swft-mode">(function(){var m;try{m=localStorage.getItem("swft-mode")}catch(e){}document.documentElement.setAttribute("data-mode",m==="light"||m==="system"?m:"dark")})();</script>
   <meta charset="utf-8">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
@@ -84,7 +85,7 @@ function pageShell({ title, description, canonical, bodyClass, body }) {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-app4">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261104-mode">
   <link rel="stylesheet" href="/css/page-shell.css?v=20260930b">
   <link rel="stylesheet" href="/css/contact-page.css?v=20260930b">
   <link rel="stylesheet" href="/css/growth-audit.css?v=20260930b">
@@ -99,7 +100,7 @@ ${body}
     </div>
   </main>
   <script src="/js/swft-analytics.js?v=20261104-ga4"></script>
-  <script src="/js/swft-nav.js?v=20261103-app4"></script>
+  <script src="/js/swft-nav.js?v=20261104-mode"></script>
 </body>
 </html>
 `;
@@ -243,8 +244,8 @@ function renderTierPage(tier) {
     bodyClass: "ps-page book-page",
     body,
   }).replace(
-    '<script src="/js/swft-nav.js?v=20261103-app4"></script>\n</body>',
-    '<script src="/js/swft-nav.js?v=20261103-app4"></script>\n  <script src="/js/book-tier-form.js?v=20261104-pay"></script>\n</body>'
+    '<script src="/js/swft-nav.js?v=20261104-mode"></script>\n</body>',
+    '<script src="/js/swft-nav.js?v=20261104-mode"></script>\n  <script src="/js/book-tier-form.js?v=20261104-pay"></script>\n</body>'
   );
 }
 

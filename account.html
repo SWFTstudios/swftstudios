@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script id="swft-mode">(function(){var m;try{m=localStorage.getItem("swft-mode")}catch(e){}document.documentElement.setAttribute("data-mode",m==="light"||m==="system"?m:"dark")})();</script>
   <meta charset="utf-8">
   <title>Sign Up or Log In | SWFT Studios</title>
   <meta name="description" content="Get an email when SWFT Studios releases a new film, publishes a blog post or launches a product. Clients log in here to see their project dashboard.">
@@ -13,8 +14,8 @@
   <meta property="og:image" content="https://www.swftstudios.com/images/swft-thumbnail.webp">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="referrer" content="no-referrer">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261103-app4">
-  <link rel="stylesheet" href="/css/account.css?v=20261103-account">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261104-mode">
+  <link rel="stylesheet" href="/css/account.css?v=20261104-mode">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="mf-page">
@@ -108,12 +109,20 @@
           </article>
 
         </div>
+
+        <article class="ac-card ac-mode" id="appearance" aria-labelledby="appearance-title">
+          <div>
+            <h2 class="ac-title ac-title--sm" id="appearance-title">Appearance</h2>
+            <p class="ac-sub" id="ac-mode-sub">Choose how SWFT looks. System follows your phone or computer.</p>
+          </div>
+          <div id="ac-mode"></div>
+        </article>
       </div>
     </section>
   </main>
 
   <script src="/js/swft-analytics.js?v=20261104-ga4" defer></script>
-  <script src="/js/swft-nav.js?v=20261103-app4" defer></script>
-  <script src="/js/account.js?v=20261103-account" defer></script>
+  <script src="/js/swft-nav.js?v=20261104-mode" defer></script>
+  <script src="/js/account.js?v=20261104-mode" defer></script>
 </body>
 </html>

@@ -30,6 +30,8 @@ export async function onRequestGet(context) {
         hasPassword: !!(user.password_hash && user.password_salt),
         stripeCustomerId: user.stripe_customer_id || null,
         isAdmin: isAdminEmail(env, user.email),
+        // Appearance (migration 0005); undefined before the column exists
+        mode: ["system", "light", "dark"].includes(user.ui_mode) ? user.ui_mode : null,
       },
       project: project
         ? {

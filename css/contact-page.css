@@ -19,7 +19,7 @@
 
 .contact-info h2 {
   font-size: 1.25rem;
-  color: #fff;
+  color: var(--mf-ink);
   margin: 0 0 1.25rem;
   font-weight: 600;
 }
@@ -48,12 +48,12 @@
 }
 
 .contact-value {
-  color: #f2f2f2;
+  color: var(--mf-text);
   font-size: 0.95rem;
 }
 
 .contact-value a {
-  color: #fff;
+  color: var(--mf-ink);
   text-decoration: none;
 }
 
@@ -71,9 +71,9 @@
 .contact-social a {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--mf-ink);
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(var(--mf-ink-rgb), 0.2);
   border-radius: 999px;
   padding: 0.45rem 0.85rem;
   transition: border-color 0.2s, color 0.2s;
@@ -94,15 +94,15 @@
 }
 
 .contact-form-card {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #0a0a0a;
+  border: 1px solid rgba(var(--mf-ink-rgb), 0.1);
+  background: var(--mf-surface);
   border-radius: 12px;
   padding: 1.75rem;
 }
 
 .contact-form-card h2 {
   font-size: 1.15rem;
-  color: #fff;
+  color: var(--mf-ink);
   margin: 0 0 1.25rem;
   font-weight: 600;
 }
@@ -124,10 +124,10 @@
 .contact-field textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--mf-ink-rgb), 0.12);
   border-radius: 8px;
-  background: #010101;
-  color: #fff;
+  background: var(--mf-bg);
+  color: var(--mf-ink);
   font-family: inherit;
   font-size: 0.9rem;
 }
@@ -141,7 +141,7 @@
 .contact-field select:focus,
 .contact-field textarea:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(var(--mf-ink-rgb), 0.5);
 }
 
 .ps-page .button.contact-submit {
@@ -186,7 +186,7 @@
 
 .contact-steps h2 {
   font-size: 1.35rem;
-  color: #fff;
+  color: var(--mf-ink);
   margin: 0 0 1.25rem;
   font-weight: 600;
   text-align: center;
@@ -205,8 +205,8 @@
 }
 
 .contact-step {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(var(--mf-ink-rgb), 0.08);
+  background: rgba(var(--mf-ink-rgb), 0.02);
   border-radius: 10px;
   padding: 1.25rem;
 }
@@ -221,7 +221,7 @@
 
 .contact-step h3 {
   font-size: 1rem;
-  color: #fff;
+  color: var(--mf-ink);
   margin: 0 0 0.4rem;
   font-weight: 600;
 }
@@ -254,6 +254,6 @@
 .contact-mood-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(1, 1, 1, 0.7) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(var(--mf-bg-rgb), 0.7) 100%);
   pointer-events: none;
 }
