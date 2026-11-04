@@ -13,9 +13,9 @@
   --mf-line: rgba(255, 255, 255, 0.12);
   --mf-line-strong: rgba(255, 255, 255, 0.24);
   --mf-text: #f4f4f2;
-  --mf-muted: #9a9a9a;   /* 7.4:1 on --mf-bg */
-  --mf-dim: #6e6e6e;     /* decorative only, never body copy */
-  --mf-script: #8d8d8d;  /* the handwritten accent word */
+  --mf-muted: #b8b8b8;   /* body copy: 10.3:1 on --mf-bg, 9.1:1 on --mf-surface-2 (WCAG AAA) */
+  --mf-dim: #a6a6a6;     /* small labels: 8.4:1 on --mf-bg, 7.4:1 on --mf-surface-2 (WCAG AAA) */
+  --mf-script: #b8b8b8;  /* legacy pen-script grey (AAA) */
   --mf-invert: #050505;
 
   --mf-font: var(--swft-font, "Inter Tight", system-ui, sans-serif);
@@ -91,11 +91,12 @@ body { background: var(--mf-bg); color: var(--mf-text); }
 .mf-body { color: var(--mf-muted); max-width: 60ch; margin: 0; }
 .mf-body strong { color: var(--mf-text); font-weight: 500; }
 
-/* The footer wordmark ("SWFT studios") keeps the original grey pen script. */
+/* The footer wordmark ("SWFT studios"): same signal color as the nav logo. */
 :where(.sf-wordmark) .mf-script {
   /* Footer "studios": the same graffiti spray, sized and placed in css/swft-nav.css */
   font-family: var(--mf-graffiti);
   font-weight: 400;
+  color: var(--sn-script-color, var(--swft-signal, #ff5a36));
   line-height: 0.8;
   display: inline-block;
   position: relative;

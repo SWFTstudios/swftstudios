@@ -146,7 +146,8 @@
 }
 .wf__card-k { display: none; margin: 0 0 0.5rem; font-family: var(--mf-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wf-signal); }
 .wf__title { margin: 0; font-size: clamp(1rem, 0.85rem + 0.45vw, 1.25rem); font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; }
-@media (min-width: 901px) { .wf.is-live .wf__node:not(.is-active):not(.is-done) .wf__card { opacity: 0.45; } }
+/* Upcoming steps: dimmed with the AAA label grey, not opacity, so they stay readable */
+@media (min-width: 901px) { .wf.is-live .wf__node:not(.is-active):not(.is-done) .wf__card { border-color: rgba(255, 255, 255, 0.07); } .wf.is-live .wf__node:not(.is-active):not(.is-done) .wf__title { color: var(--mf-dim); } }
 .wf__node.is-active .wf__card { border-color: rgba(255, 90, 54, 0.6); background: #111; transform: translateY(-4px); box-shadow: 0 18px 40px -22px rgba(255, 90, 54, 0.55); }
 
 /* Dashed drop from the card into the engine strip, with a packet falling */
@@ -160,7 +161,7 @@
 .wf__runs-k { font-family: var(--mf-mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mf-dim); }
 .wf__runs a { font-size: 0.8rem; color: var(--mf-muted); text-decoration: underline; text-decoration-color: rgba(255, 90, 54, 0.6); text-underline-offset: 3px; }
 .wf__runs a:hover { color: var(--mf-text); }
-@media (min-width: 901px) { .wf.is-live .wf__node:not(.is-active):not(.is-done) .wf__runs { opacity: 0.45; } }
+@media (min-width: 901px) { .wf.is-live .wf__node:not(.is-active):not(.is-done) .wf__runs, .wf.is-live .wf__node:not(.is-active):not(.is-done) .wf__runs a { color: var(--mf-dim); } }
 .wf__node.is-active .wf__runs { color: var(--mf-text); }
 .wf__node.is-active .wf__runs-k { color: var(--wf-signal); }
 
