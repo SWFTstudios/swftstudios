@@ -240,7 +240,7 @@
       out += '<div class="sa-actions"><a class="sa-btn" href="/account.html#login">' + icon("login", 18) + "Log in</a>" +
         '<a class="sa-btn sa-btn--ghost" href="/account.html#updates">Sign up</a></div>';
       out += '<div class="sa-list">' +
-        row("/growth-audit", "search", "Free Growth Audit", "Three fixes for your business, by email") +
+        row("/growth-guide.html", "search", "Free SWFT Growth Guide", "Check your business, stage by stage") +
         row("/pricing.html", "star", "Pricing", "Every service&rsquo;s starting price") +
         installRow() + "</div>";
     } else {
@@ -249,7 +249,7 @@
       out += '<div class="sa-list">' +
         (r === "admin" ? row("/admin/", "admin", "Admin dashboard", "Leads, projects and emails") : "") +
         (r === "client" || r === "admin" ? row("/portal/dashboard.html", "project", "My project", "Status, site stats and billing") : "") +
-        (r === "member" ? row("/growth-audit", "search", "Start with a free Growth Audit", "We&rsquo;ll email three fixes") : "") +
+        (r === "member" ? row("/growth-guide.html", "search", "Start with the Free SWFT Growth Guide", "Do it yourself or we do it for you") : "") +
         row("/account.html", "mail", "Account &amp; email updates", "Your sign-in and preferences") +
         row(BOOK_URL, "book", "Book a strategy call", "Free, 30 minutes", ' target="_blank" rel="noopener"') +
         installRow() +

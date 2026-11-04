@@ -670,3 +670,77 @@ html.sa-side-collapsed .mode-switch--side .mode-switch__btn[aria-checked="false"
 .sn-panel-mode { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; }
 .sn-panel-mode .sn-psec__label { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .mode-switch__btn { transition: none; } }
+
+/* Footer: dark in both modes (tokens in css/mono.css). The page color
+   fades into the NYC skyline still, like the hero in reverse. */
+.sf-footer {
+  border-top: 0;
+  background:
+    linear-gradient(180deg, var(--mf-page) 0, rgba(5, 5, 5, 0.86) clamp(10rem, 22vw, 18rem), rgba(5, 5, 5, 0.93) 100%),
+    url("/images/hero-nyc-view-still.jpg") center 30% / cover no-repeat,
+    #050505;
+  padding-top: clamp(6rem, 12vw, 10rem);
+}
+.sf-news { margin-top: 2rem; max-width: 30rem; display: grid; gap: 0.6rem; }
+.sf-news__row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.sf-news__row input[type="email"] {
+  flex: 1 1 14rem; min-width: 0; height: 3rem; padding: 0 1.1rem; border-radius: 999px;
+  border: 1px solid var(--mf-line-strong); background: rgba(var(--mf-ink-rgb), 0.06); color: var(--mf-text);
+  font: inherit; font-size: 1rem;
+}
+.sf-news__row input[type="email"]::placeholder { color: var(--mf-muted); }
+.sf-news__row input[type="email"]:focus-visible { outline: 2px solid var(--mf-ink); outline-offset: 2px; }
+.sf-news__row .mf-btn { height: 3rem; background: var(--swft-signal); border-color: var(--swft-signal); color: #fff; }
+.sf-news__hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }
+.sf-news__status { margin: 0; font-size: 0.92rem; color: var(--mf-soft); }
+.sf-news__status.is-error { color: var(--swft-error, #e69f00); }
+
+/* ---------- Shop: cart pill, add-ons pop-up, /cart.html, /order-confirmed.html (js/cart.js) ---------- */
+.cart-pill {
+  position: fixed; z-index: 1040; right: calc(1.25rem + env(safe-area-inset-right, 0px)); bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1rem; border-radius: 999px;
+  background: var(--mf-ink); color: var(--mf-on-ink); text-decoration: none; font: 600 0.95rem/1 var(--mf-font, "Inter Tight", sans-serif);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+.cart-pill[hidden] { display: none; }
+.cart-pill b { display: grid; place-items: center; min-width: 1.4rem; height: 1.4rem; padding: 0 0.35rem; border-radius: 999px; background: var(--swft-signal); color: #fff; font-size: 0.78rem; }
+.cart-pill:focus-visible { outline: 2px solid var(--swft-signal); outline-offset: 3px; }
+@media (max-width: 1023px) { .cart-pill { bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); } }
+.cart-pop .sc-body { margin-bottom: 1rem; }
+.cart-pop__label { margin: 0 0 0.5rem; font: 400 0.72rem/1 var(--mf-mono, monospace); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mf-muted); }
+.cart-suggs { list-style: none; margin: 0 0 1.25rem; padding: 0; display: grid; gap: 0.5rem; }
+.cart-sugg { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0.9rem; border-radius: 14px; border: 1px solid var(--mf-line); background: rgba(var(--mf-ink-rgb), 0.03); text-align: left; }
+.cart-sugg b { display: block; font-weight: 600; }
+.cart-sugg span { display: block; color: var(--mf-muted); font-size: 0.88rem; }
+.cart-sugg .mf-btn { flex: none; }
+
+.cart-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+@media (max-width: 960px) { .cart-grid { grid-template-columns: 1fr; } }
+.cart-lines { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--mf-line); }
+.cart-line { display: flex; justify-content: space-between; gap: 1.5rem; padding: 1.4rem 0; border-bottom: 1px solid var(--mf-line); }
+.cart-line h3 { margin: 0.35rem 0 0.2rem; font-size: clamp(1.25rem, 1rem + 0.8vw, 1.7rem); font-weight: 600; letter-spacing: -0.03em; }
+.cart-line h3 a { color: inherit; text-decoration: none; }
+.cart-line p { margin: 0; color: var(--mf-muted); }
+.cart-line__money { display: grid; justify-items: end; align-content: start; gap: 0.2rem; text-align: right; flex: none; }
+.cart-line__money b { font-size: 1.3rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.cart-line__money span { color: var(--mf-muted); font-size: 0.85rem; }
+.cart-line__remove { margin-top: 0.4rem; appearance: none; background: none; border: 0; padding: 0; color: var(--mf-muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; font-size: 0.85rem; }
+.cart-line__remove:hover { color: var(--mf-text); }
+.cart-more { margin-top: 2.5rem; }
+.cart-more[hidden] { display: none; }
+.cart-side { position: sticky; top: 1.5rem; display: grid; gap: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: 22px; border: 1px solid var(--mf-line); background: var(--mf-surface); }
+.cart-sum { display: grid; gap: 0.6rem; }
+.cart-sum__row { display: flex; justify-content: space-between; gap: 1rem; color: var(--mf-muted); font-variant-numeric: tabular-nums; }
+.cart-sum__row b { color: var(--mf-text); font-weight: 600; }
+.cart-sum__row--due { padding: 0.8rem 0; margin: 0.25rem 0; border-top: 1px solid var(--mf-line); border-bottom: 1px solid var(--mf-line); color: var(--mf-text); font-size: 1.15rem; }
+.cart-sum__row--due b { font-size: 1.6rem; letter-spacing: -0.03em; }
+.cart-sum__note, .cart-fine { margin: 0; color: var(--mf-muted); font-size: 0.88rem; line-height: 1.5; }
+.cart-form { gap: 1.25rem; }
+.cart-pay { justify-content: center; background: var(--swft-signal); border-color: var(--swft-signal); }
+.mf-page .cart-pay, .cart-pay:link { color: #fff; }
+.cart-empty { max-width: 40rem; }
+.oc-cal { border-radius: 22px; overflow: hidden; border: 1px solid var(--mf-line); background: #fff; }
+.oc-cal iframe { display: block; width: 100%; height: 720px; border: 0; }
+.oc-actions { margin-top: 1.25rem; }
+/* Add to cart buttons on pricing cards and service pages */
+.cart-add.is-added { opacity: 0.75; }

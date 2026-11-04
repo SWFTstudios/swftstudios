@@ -72,3 +72,64 @@ export async function fetchZoneTraffic(env, { days = 30, fetchImpl = fetch } = {
     return { ok: false, reason: err?.name === "AbortError" ? "timeout" : "network", message: "Could not reach Cloudflare analytics. Try again shortly." };
   }
 }
+
+/* ---------- Client results: every zone in the account ----------
+   For the admin "Client sites" table and the home page Results cards.
+   Same token (CF_ANALYTICS_TOKEN); it needs Zone > Zone > Read (to list
+   zones) and Zone > Analytics > Read, for All zones. */
+const ZONE_QUERY = `query ZoneCompare($zone: String!, $since: Date!) {
+  viewer {
+    zones(filter: { zoneTag: $zone }) {
+      httpRequests1dGroups(limit: 70, filter: { date_geq: $since }, orderBy: [date_ASC]) {
+        dimensions { date }
+        sum { requests pageViews }
+        uniq { uniques }
+      }
+    }
+  }
+}`;
+
+export async function listZones(env, { fetchImpl = fetch } = {}) {
+  const token = env.CF_ANALYTICS_TOKEN;
+  if (!token) return { ok: false, message: "Add the CF_ANALYTICS_TOKEN secret first." };
+  const res = await fetchImpl("https://api.cloudflare.com/client/v4/zones?per_page=50&status=active", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const body = await res.json().catch(() => null);
+  if (!res.ok || !body?.success) {
+    return { ok: false, message: "Couldn't list your sites. Give CF_ANALYTICS_TOKEN Zone: Read for All zones." };
+  }
+  return { ok: true, zones: body.result.map((z) => ({ id: z.id, domain: z.name })) };
+}
+
+const pct = (now, before) => (before > 0 ? Math.round(((now - before) / before) * 1000) / 10 : null);
+
+/** Last `days` days vs the `days` before them, for one zone. */
+export async function compareZone(env, zoneId, { days = 30, fetchImpl = fetch } = {}) {
+  // Two equal windows of whole days, today (partial) left out:
+  // now = [days ago … yesterday], before = [2×days ago … days+1 ago]
+  const day = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+  const since = day(days * 2);
+  const cut = day(days + 1);
+  const yesterday = day(1);
+  const res = await fetchImpl(ENDPOINT, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.CF_ANALYTICS_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ query: ZONE_QUERY, variables: { zone: zoneId, since } }),
+  });
+  const body = await res.json().catch(() => null);
+  if (!res.ok || !body || body.errors?.length) return { ok: false };
+  const groups = body.data?.viewer?.zones?.[0]?.httpRequests1dGroups || [];
+  const sum = (after, key) => groups
+    .filter((g) => (after ? g.dimensions.date > cut && g.dimensions.date <= yesterday : g.dimensions.date <= cut))
+    .reduce((n, g) => n + (key === "visitors" ? g.uniq.uniques || 0 : g.sum[key] || 0), 0);
+  const now = { pageViews: sum(true, "pageViews"), visitors: sum(true, "visitors"), requests: sum(true, "requests") };
+  const before = { pageViews: sum(false, "pageViews"), visitors: sum(false, "visitors"), requests: sum(false, "requests") };
+  return {
+    ok: true,
+    days,
+    now,
+    before,
+    change: { pageViews: pct(now.pageViews, before.pageViews), visitors: pct(now.visitors, before.visitors) },
+  };
+}

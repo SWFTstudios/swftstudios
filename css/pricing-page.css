@@ -1175,3 +1175,6 @@
   .pr-cat-tab, .pr-jump a { transition: none; }
   .pr-billing__switch, .pr-billing__knob, .pr-billing__label, .pr-switch-teaser__btn { transition: none; }
 }
+/* Add to cart (js/cart.js) sits above the details/book link */
+.hp-pricing-card__foot .hp-cart-add { width: 100%; justify-content: center; background: var(--swft-signal); border-color: var(--swft-signal); }
+.mf-page .hp-pricing-card__foot .hp-cart-add { color: #fff; }

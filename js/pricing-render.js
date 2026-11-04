@@ -193,6 +193,9 @@
       '<div class="hp-pricing-card__foot">' +
       notIncluded +
       checkoutNote +
+      (offer.pay && offer.priceCents
+        ? '<button type="button" class="mf-btn cart-add hp-cart-add" data-cart-add="' + escapeHtml(offer.id) + '"><span data-cart-label>Add to cart</span></button>'
+        : "") +
       '<a href="' + escapeHtml(offerHref(offer, service, data)) + '" class="' + btnClass + '"' +
       ' data-plan="' + escapeHtml(offer.id) + '"' +
       (bookable ? ' data-stripe-tier="' + escapeHtml(service.id + ":" + offer.id) + '"' : "") +

@@ -132,7 +132,7 @@
       console.error(err);
       if (mount) {
         mount.innerHTML =
-          '<p class="hp-pricing-desc">Pricing is temporarily unavailable. <a href="/growth-audit" class="highlight">Request a Growth Audit</a> for a scoped quote.</p>';
+          '<p class="hp-pricing-desc">Pricing is temporarily unavailable. <a href="/growth-guide.html" class="highlight">Get the Free SWFT Growth Guide</a> for a scoped quote.</p>';
       }
     }
   }

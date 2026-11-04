@@ -93,3 +93,7 @@
 .sv-pricing-section__head { margin: 0 0 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; }
 .sv-pricing-section__head h2 { margin: 0.5rem 0 0; font-family: var(--mf-font); font-size: clamp(1.9rem, 1rem + 2.6vw, 3.25rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; color: var(--mf-text); }
 .sv-pricing-section__head p { margin: 0; max-width: 40ch; color: var(--mf-muted); }
+/* Service page offers: card link + Add to cart (js/cart.js) */
+.sv-offer { display: flex; flex-direction: column; gap: 0.5rem; }
+.sv-offer .mf-offer { flex: 1; }
+.sv-offer .cart-add { align-self: flex-start; }

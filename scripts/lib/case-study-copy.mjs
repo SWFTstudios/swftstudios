@@ -85,10 +85,10 @@ ${note(p, 'takeaways')}${list(p.takeaways)}
 <p>${annotate(p.whyMatters)}</p>
 <div class="cs-cta-block">
   <h3>Want to see what we would improve for your business?</h3>
-  <p>Request a free Growth Audit and get three prioritized recommendations for your website and customer journey.</p>
+  <p>Get the Free SWFT Growth Guide: a short fill-in-the-blank check of your website, content and follow-up. Do it yourself, or send us a few details and we'll do it for you.</p>
   <div class="cs-cta-actions">
     <a href="${p.liveUrl}" target="_blank" rel="noopener" class="swft-btn is-primary">View Website</a>
-    <a href="/growth-audit" class="swft-btn is-outline">Get Your Free Growth Audit</a>
+    <a href="/growth-guide.html" class="swft-btn is-outline">Get the Free SWFT Growth Guide</a>
   </div>
 </div>`;
 }

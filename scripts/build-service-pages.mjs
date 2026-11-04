@@ -7,10 +7,10 @@
  *                                 automations, analytics)
  *   services.html  svc:groups   → Build / Grow / Automate cards
  *   pricing.html   svc:pricing  → starting-price cards (one per service)
- *   index.html     svc:rows     → numbered Build / Grow / Automate rows
+ *   index.html     svc:rows     → services bento grid (Build / Grow / Automate)
  *
- * Groups follow the SWFT motto: Build = Get seen, Grow = Get chosen,
- * Automate = Get booked. Every service shows its `startingAt` price.
+ * Groups run as one workflow: Build the foundation, Grow your reach,
+ * Automate the rest. Every service shows its `startingAt` price.
  *   index.html, services.html  svc:flow → "How it works for…" industry
  *                                 walkthrough (animated by js/swft-flow.js)
  *
@@ -160,7 +160,7 @@ function page(s, data, offers) {
     .join("\n          ");
   const offerCards = priced.length
     ? `<ul class="mf-offers sv-offers">${priced
-        .map((o) => `<li><a class="mf-offer" href="${offerHref(o)}"><b>${esc(o.name)}</b><span>${esc(o.priceLabel)}</span>${o.description ? `<p>${esc(o.description)}</p>` : ""}</a></li>`)
+        .map((o) => `<li class="sv-offer"><a class="mf-offer" href="${offerHref(o)}"><b>${esc(o.name)}</b><span>${esc(o.priceLabel)}</span>${o.description ? `<p>${esc(o.description)}</p>` : ""}</a>${o.pay && o.priceCents ? `<button type="button" class="mf-btn mf-btn--sm cart-add" data-cart-add="${esc(o.id)}"><span data-cart-label>Add to cart</span></button>` : ""}</li>`)
         .join("")}</ul>`
     : "";
   const faq = s.faq.map((f) => `<details><summary>${esc(f.q)}</summary><div><p>${esc(f.a)}</p></div></details>`).join("\n          ");
@@ -308,29 +308,25 @@ ${relatedCards}
 `;
 }
 
-// Homepage services: the Mono numbered rows, one per service, grouped.
+// Homepage services: a bento grid in workflow order. Build cards sit three
+// across, Grow and Automate two across; each card links to the service's own
+// page ("Learn more") where it can be bought. Media bleeds off the corner.
 function rowsBlock(data) {
-  let n = 0;
   return data.groups
-    .map((g) => {
-      const rows = data.services
+    .map((g) =>
+      data.services
         .filter((s) => s.group === g.id)
-        .map((s) => {
-          n += 1;
-          return [
-            `<li>`,
-            `  <a class="mf-row" href="/${s.slug}.html">`,
-            `    <span class="mf-row__num">(${String(n).padStart(2, "0")})</span>`,
-            `    <span class="mf-row__title">${esc(s.name)}</span>`,
-            `    <span class="mf-row__desc">${esc(strip(s.lead))}</span>`,
-            `    <span class="mf-row__meta"><span class="mf-row__price mf-row__price--keep">From ${esc(s.startingAt)}</span><span class="mf-row__icon" aria-hidden="true">↗</span></span>`,
-            `  </a>`,
-            `</li>`,
-          ].join("\n");
-        })
-        .join("\n");
-      return `<li class="mf-list__group"><p class="mf-label mf-label--muted">(${esc(g.label)}) ${esc(g.motto)} ${esc(g.tagline)}</p></li>\n${rows}`;
-    })
+        .map((s) => [
+          `<a class="mf-bento__card mf-bento__card--${g.id}" href="/${s.slug}.html">`,
+          `  <span class="mf-bento__top"><span class="mf-bento__stage">${esc(g.label)}</span><span class="mf-bento__price">From ${esc(s.startingAt)}</span></span>`,
+          `  <h3 class="mf-bento__title">${esc(s.name)}</h3>`,
+          `  <p class="mf-bento__desc">${esc(strip(s.lead))}</p>`,
+          `  <span class="mf-bento__more">Learn more <span class="mf-arrow" aria-hidden="true">↗</span></span>`,
+          s.image ? `  <span class="mf-bento__media" aria-hidden="true"><img src="${esc(s.image)}" alt="" loading="lazy" decoding="async"></span>` : "",
+          `</a>`,
+        ].filter(Boolean).join("\n"))
+        .join("\n")
+    )
     .join("\n");
 }
 

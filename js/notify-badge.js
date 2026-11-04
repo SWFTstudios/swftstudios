@@ -4,13 +4,13 @@
 
    A red "1" badge sits on the corner of the word like an unread
    notification. Clicking it opens a pop-up: a phone-style notification
-   ("New customer booked…") and the pitch for the free Growth Audit,
+   ("New customer booked…") and the pitch for the Free SWFT Growth Guide,
    "Imagine that was a new customer." Uses the strategy pop-up's
    dialog styles (.sc-* in css/swft-nav.css).
    ============================================================ */
 (function () {
   "use strict";
-  var AUDIT_URL = "/growth-audit";
+  var AUDIT_URL = "/growth-guide.html";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // What the imaginary notification says. One is picked per open, in turn.
@@ -50,8 +50,8 @@
           '<span class="nb-ping__text">' + esc(p.text) + "</span></span>" +
         "</div>" +
         '<h2 class="sc-title" id="nb-title">' + esc(head) + "</h2>" +
-        '<p class="sc-body" id="nb-body">That ping should be your phone, every day. Our free Growth Audit finds where customers slip away between seeing you and booking you, then emails you the three fixes that matter most.</p>' +
-        '<a class="mf-btn sc-go" href="' + AUDIT_URL + '">Get my free Growth Audit <span class="mf-arrow" aria-hidden="true">→</span></a>' +
+        '<p class="sc-body" id="nb-body">That ping should be your phone, every day. The Free SWFT Growth Guide walks you through your website, content and follow-up in a few minutes, so you know what to fix first.</p>' +
+        '<a class="mf-btn sc-go" href="' + AUDIT_URL + '">Get the free guide <span class="mf-arrow" aria-hidden="true">→</span></a>' +
         '<button type="button" class="sc-later">Maybe later</button>' +
       "</div>";
     document.body.appendChild(overlay);

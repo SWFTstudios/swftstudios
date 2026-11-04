@@ -92,11 +92,11 @@ function ctaBand(placeName) {
   return `
         <section class="ps-cta-band" aria-labelledby="loc-cta-heading">
           <h2 id="loc-cta-heading">Serving ${escapeHtml(placeName)} and nearby towns</h2>
-          <p>Request a free Growth Audit and we will review your website, content, and Google Business Profile with three prioritized recommendations.</p>
+          <p>Get the Free SWFT Growth Guide: a short fill-in-the-blank check of your website, content and follow-up. Do it yourself, or send us a few details and we'll do it for you.</p>
           <div class="ps-cta-row">
-            <a href="/growth-audit" class="button is-course w-inline-block">
+            <a href="/growth-guide.html" class="button is-course w-inline-block">
               <div class="button_bg"></div>
-              <div class="button_text">Get Your Free Growth Audit</div>
+              <div class="button_text">Get the Free SWFT Growth Guide</div>
             </a>
             <a href="/contact.html" class="button is-course outlined w-inline-block">
               <div class="button_bg"></div>
@@ -296,7 +296,7 @@ function renderHtmlSitemap(data, locations) {
 
   const primary = [
     { href: "/", label: "Home", note: "Main marketing homepage" },
-    { href: "/growth-audit", label: "Free Growth Audit", note: "Primary lead capture" },
+    { href: "/growth-guide.html", label: "Free SWFT Growth Guide", note: "Primary lead capture" },
     { href: "/services.html", label: "Services", note: "Build (websites, apps, software), Grow (ads, SEO, content) and Automate (follow-up, reporting)" },
     { href: "/pricing.html", label: "Pricing", note: "Starting prices and deliverables for every offer" },
     { href: "/work.html", label: "Work", note: "Every project in a 3D carousel, plus the full index" },

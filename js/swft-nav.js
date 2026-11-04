@@ -15,19 +15,19 @@
 
   // Services mega-menu. Keep in sync with data/services.json
   // (name, menuLine, slug, icon); the pages themselves are generated from it.
-  // Grouped by the SWFT motto: Build = get seen, Grow = get chosen,
-  // Automate = get booked. Menus show no prices; pages and /pricing.html do.
+  // Grouped as one workflow: Build the foundation, Grow your reach,
+  // Automate the rest. Menus show no prices; pages and /pricing.html do.
   var SERVICES = [
-    { group: "Build", motto: "Get seen.", items: [
+    { group: "Build", motto: "Build the foundation.", items: [
       { label: "Websites",               line: "Up to 5 pages, base features",  href: "/websites.html",    icon: "browser" },
       { label: "Mobile & web apps",      line: "iPhone, Android and portals",   href: "/apps.html",        icon: "phone" },
       { label: "Custom software & CRMs", line: "Replace the apps you rent",     href: "/software.html",    icon: "code" }
     ] },
-    { group: "Grow", motto: "Get chosen.", items: [
+    { group: "Grow", motto: "Grow your reach.", items: [
       { label: "Paid ads & marketing",   line: "Meta, Google and local SEO",    href: "/marketing.html",   icon: "megaphone" },
       { label: "Content & creative",     line: "Photo, video, social and live", href: "/content.html",     icon: "video" }
     ] },
-    { group: "Automate", motto: "Get booked.", items: [
+    { group: "Automate", motto: "Automate the rest.", items: [
       { label: "Automations",            line: "Follow-up, reminders, reviews", href: "/automations.html", icon: "bolt" },
       { label: "Tracking & reporting",   line: "Know what brings in customers", href: "/analytics.html",   icon: "chart" }
     ] }
@@ -166,7 +166,7 @@
     { label: "Contact",   href: "/contact.html",  key: "contact",   icon: "mail" }
   ];
   var PANEL_FOOT = [
-    { label: "Free Growth Audit", href: "/growth-audit", key: "growth-audit", icon: "search" },
+    { label: "Free SWFT Growth Guide", href: "/growth-guide.html", key: "growth-guide", icon: "search" },
     { label: "Log in",            href: "/account.html", key: "account",      icon: "user" }
   ];
   // Older pages still say data-active="team" etc.
@@ -355,12 +355,21 @@
         '<div class="sf-top">' +
           '<div class="sf-cta">' +
             '<p class="mf-label">(Got a project?)</p>' +
-            '<p class="sf-cta__title">Let&rsquo;s get you <span class="mf-script">booked.</span></p>' +
+            '<p class="sf-cta__title">Let&rsquo;s grow <span class="mf-script">together.</span></p>' +
             '<div class="mf-actions">' +
               '<a class="mf-btn" href="/contact.html">Start a project <span class="mf-arrow" aria-hidden="true">↗</span></a>' +
               '<a class="mf-btn mf-btn--ghost" href="' + BOOK_URL + '" target="_blank" rel="noopener">Book a 30-min call</a>' +
             "</div>" +
             '<a href="' + BOOK_URL + '" class="mf-pill sf-pill" target="_blank" rel="noopener" data-mf-booking><span class="mf-dot" aria-hidden="true"></span>Booking now<span data-mf-next></span></a>' +
+            '<form class="sf-news" novalidate data-sf-news>' +
+              '<label class="mf-label mf-label--muted" for="sf-news-email">(Newsletter) New guides and offers, about once a month</label>' +
+              '<div class="sf-news__row">' +
+                '<input type="email" id="sf-news-email" name="email" required autocomplete="email" maxlength="320" placeholder="you@business.com">' +
+                '<input type="text" name="honeypot" tabindex="-1" autocomplete="off" class="sf-news__hp" aria-hidden="true">' +
+                '<button type="submit" class="mf-btn">Subscribe</button>' +
+              "</div>" +
+              '<p class="sf-news__status" role="status" hidden></p>' +
+            "</form>" +
           "</div>" +
           '<div class="sf-cols">' +
             '<div><p class="mf-label mf-label--muted">(Pages)</p>' +
@@ -370,7 +379,7 @@
               SERVICES.map(function (g) { return g.items.map(function (i) { return '<a href="' + i.href + '">' + i.label + "</a>"; }).join(""); }).join("") +
             "</div>" +
             '<div><p class="mf-label mf-label--muted">(More)</p>' +
-              '<a href="/visuals.html">Films</a><a href="/growth-audit">Free Growth Audit</a><a href="/locations/">Locations</a><a href="/account.html">Log in / Get updates</a><a href="/sitemap.html">Site map</a>' +
+              '<a href="/visuals.html">Films</a><a href="/growth-guide.html">Free SWFT Growth Guide</a><a href="/locations/">Locations</a><a href="/account.html">Log in / Get updates</a><a href="/sitemap.html">Site map</a>' +
             "</div>" +
             '<div><p class="mf-label mf-label--muted">(Say hi)</p>' +
               '<a href="mailto:hello@swftstudios.com">hello@swftstudios.com</a>' +
@@ -467,15 +476,38 @@
     wireScroll();
   }
 
+  // Footer newsletter: POST /api/subscribe (double opt-in, confirmation email)
+  function wireNews(root) {
+    var form = root.querySelector("[data-sf-news]");
+    if (!form) return;
+    var status = form.querySelector(".sf-news__status");
+    var btn = form.querySelector("button");
+    function say(msg, bad) { status.hidden = false; status.textContent = msg; status.classList.toggle("is-error", !!bad); }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = form.email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say("Enter a valid email address.", true); form.email.focus(); return; }
+      btn.disabled = true; say("Sending…");
+      fetch("/api/subscribe", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ email: email, interests: ["blog", "products"], honeypot: form.honeypot.value, sourcePage: location.pathname })
+      }).then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (d) {
+          btn.disabled = false;
+          if (d.ok) { form.reset(); say(d.message || "Check your inbox and tap the link to confirm."); }
+          else say(d.error || "That didn't go through. Try again.", true);
+        }, function () { btn.disabled = false; say("You look offline. Try again in a moment.", true); });
+    });
+  }
+
   function initFooter() {
     if (document.querySelector(".sf-footer")) return;
     var html = footerHTML();
     var mount = document.getElementById("swft-footer");
-    if (mount) {
-      mount.innerHTML = html;
-      return;
-    }
-    document.body.insertAdjacentHTML("beforeend", html);
+    if (mount) mount.innerHTML = html;
+    else document.body.insertAdjacentHTML("beforeend", html);
+    wireNews(document.querySelector(".sf-footer") || document);
   }
 
   function loadOnce(src, flag) {
@@ -502,6 +534,7 @@
     loadOnce("/js/mono.js?v=20261104-mode", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
     loadOnce("/js/swft-app.js?v=20261104-mode", "data-swft-app");
+    loadOnce("/js/cart.js?v=20261104-shop", "data-swft-cart");
     if (document.querySelector(".an-hl, .an-ul, .an-circle, .an-note")) loadOnce("/js/annotate.js?v=20261104-annotate", "data-swft-annotate");
     if (document.querySelector("[data-mf-notify]")) loadOnce("/js/notify-badge.js?v=20261103-notify", "data-swft-notify");
   }

@@ -250,7 +250,36 @@
     window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(mark, 120); });
   }
 
+  // "One system. Three stages." ([data-mf-stages]): the active stage shows its
+  // picture on the left. Steps through on its own while on screen, until the
+  // visitor picks one. Without JS every stage is listed and the first picture shows.
+  function initStages() {
+    document.querySelectorAll("[data-mf-stages]").forEach(function (root) {
+      var btns = Array.prototype.slice.call(root.querySelectorAll(".mf-stage"));
+      var shots = root.querySelectorAll(".mf-stages__shot");
+      if (!btns.length) return;
+      var i = 0, timer = null, visible = false, touched = false;
+      function show(n) {
+        i = (n + btns.length) % btns.length;
+        var id = btns[i].getAttribute("data-stage");
+        btns.forEach(function (b, k) { b.classList.toggle("is-active", k === i); b.setAttribute("aria-pressed", k === i ? "true" : "false"); });
+        shots.forEach(function (s) { s.classList.toggle("is-active", s.getAttribute("data-stage") === id); });
+      }
+      function tick() {
+        clearInterval(timer);
+        if (!reduce && visible && !touched) timer = setInterval(function () { show(i + 1); }, 4500);
+      }
+      btns.forEach(function (b, k) {
+        b.addEventListener("click", function () { touched = true; clearInterval(timer); show(k); });
+      });
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; tick(); }, { threshold: 0.35 }).observe(root);
+      }
+    });
+  }
+
   function init() {
+    initStages();
     initRows();
     initAccent();
     loadAvailability();

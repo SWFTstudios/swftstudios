@@ -139,7 +139,7 @@ function renderTierPage(tier) {
               : ""
           }
           <p class="book-note">${escapeHtml(stripe.billingNote || "")}</p>
-          <p class="book-alt">Not sure this is the right fit? <a href="/growth-audit?plan=${encodeURIComponent(tier.id)}">Get a Free Growth Audit</a> or <a href="/pricing.html#${escapeHtml(tier.id)}">compare all pricing</a>.</p>
+          <p class="book-alt">Not sure this is the right fit? <a href="/growth-guide.html">Get the Free SWFT Growth Guide</a> or <a href="/pricing.html#${escapeHtml(tier.id)}">compare all pricing</a>.</p>
         </aside>
 
         <div class="ga-form-card book-order-panel">
@@ -233,7 +233,7 @@ function renderTierPage(tier) {
             </button></div>
             </section>
           </form>
-          <noscript><p class="book-note">JavaScript is needed to customize your order. <a href="/growth-audit">Tell us about your project here instead.</a></p></noscript>
+          <noscript><p class="book-note">JavaScript is needed to customize your order. <a href="/growth-guide.html">Tell us about your project here instead.</a></p></noscript>
         </div>
       </div>`;
 
@@ -273,7 +273,7 @@ function renderIndex(tiers) {
       <div class="book-hub-grid">
 ${cards}
       </div>
-      <p class="book-alt">Prefer a recommendation first? <a href="/growth-audit">Get a Free Growth Audit</a>.</p>
+      <p class="book-alt">Prefer a recommendation first? <a href="/growth-guide.html">Get the Free SWFT Growth Guide</a>.</p>
 `;
 
   return pageShell({
