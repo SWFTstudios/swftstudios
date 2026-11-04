@@ -50,7 +50,7 @@ function pageShell({ title, description, canonical, active, jsonLd, body, cssExt
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r2">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
   <link rel="stylesheet" href="/css/locations-page.css?v=20261105-r2">
   ${cssExtra}
@@ -65,7 +65,7 @@ ${body}
     </div>
   </main>
   <script src="/js/swft-analytics.js?v=20261104-ga4" defer></script>
-  <script src="/js/swft-nav.js?v=20261105-r2" defer></script>
+  <script src="/js/swft-nav.js?v=20261105-r4" defer></script>
 </body>
 </html>
 `;
@@ -162,7 +162,7 @@ function renderLocationPage(loc, data, locations) {
 
       <header class="ps-hero ps-hero--left loc-hero">
         <p class="ps-eyebrow">${escapeHtml(loc.region)} · ${escapeHtml(loc.state)}</p>
-        <h1 class="ps-title">${escapeHtml(loc.headline)}</h1>
+        <h1 class="ps-title">${escapeHtml(loc.headline).replace(escapeHtml(loc.name), `<span class="an an-circle">${escapeHtml(loc.name)}</span>`)}</h1>
         <p class="ps-lead">${escapeHtml(loc.lead)}</p>
       </header>
 

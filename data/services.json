@@ -620,44 +620,100 @@
     }
   ],
   "flow": {
-    "_readme": "The 'How it works for…' walkthrough on the homepage and /services.html. One stage per step of the SWFT Method; every industry needs exactly one card per stage. Each card: title (the customer's moment), text (what SWFT runs there) and why (what that step is worth to the business, shown when the visitor taps 'Why it matters'). Rendered by build:services, played by js/swft-flow.js.",
+    "_readme": "The 'How it works for…' walkthrough on the homepage and /services.html. One stage per step of the SWFT Method; every industry needs exactly one card per stage. Each card: title (the customer's moment), text (what SWFT runs there) and why (what that step is worth to the business, shown when the visitor taps 'Why it matters'). Rendered by build:services, played by js/swft-flow.js. Each stage has `links` (blogs and service pages) and each industry `caseStudies`; both show in the step's pop-up.",
     "title": "Strategic Workflows Facilitating Transformation.",
     "footer": "<b>From first scroll to repeat customer.</b> One team runs every step.",
     "stages": [
       {
         "key": "seen",
-        "stage": "Discover",
+        "stage": "They find you",
         "service": "Ads & content",
         "icon": "megaphone",
-        "href": "/marketing.html"
+        "href": "/marketing.html",
+        "links": [
+          {
+            "kind": "Blog",
+            "label": "Google Business Profile and local SEO in 2026",
+            "href": "/blog/google-business-profile-local-seo-2026.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Showing up in AI answers",
+            "href": "/blog/ai-answer-engine-optimization-2026.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Social media content that works",
+            "href": "/blog/social-media-content-2026.html"
+          }
+        ]
       },
       {
         "key": "capture",
-        "stage": "Decide",
+        "stage": "They like what they see",
         "service": "Website",
         "icon": "browser",
-        "href": "/websites.html"
+        "href": "/websites.html",
+        "links": [
+          {
+            "kind": "Blog",
+            "label": "What most websites still miss",
+            "href": "/blog/digital-marketing-blind-spots-2026.html"
+          },
+          {
+            "kind": "Service",
+            "label": "Websites",
+            "href": "/websites.html"
+          }
+        ]
       },
       {
         "key": "booked",
-        "stage": "Reach out",
-        "service": "Instant follow-up",
+        "stage": "You reply first",
+        "service": "Follow-up automation",
         "icon": "bolt",
-        "href": "/automations.html"
-      },
-      {
-        "key": "nurture",
-        "stage": "Stay in touch",
-        "service": "Reminders & reviews",
-        "icon": "star",
-        "href": "/automations.html"
+        "href": "/automations.html",
+        "links": [
+          {
+            "kind": "Service",
+            "label": "Lead follow-up automation",
+            "href": "/automations.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Where leads slip away",
+            "href": "/blog/digital-marketing-blind-spots-2026.html"
+          }
+        ]
       },
       {
         "key": "repeat",
-        "stage": "Come back",
-        "service": "Custom software",
+        "stage": "They come back",
+        "service": "Custom software & CRM",
         "icon": "layers",
-        "href": "/software.html"
+        "href": "/software.html",
+        "links": [
+          {
+            "kind": "Blog",
+            "label": "Reputation management in 2026",
+            "href": "/blog/reputation-management-2026.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "How to see your website analytics",
+            "href": "/blog/see-your-website-analytics.html"
+          },
+          {
+            "kind": "Blog",
+            "label": "Your Google Analytics report, explained",
+            "href": "/blog/google-analytics-metrics-explained.html"
+          },
+          {
+            "kind": "Service",
+            "label": "Custom software & CRMs",
+            "href": "/software.html"
+          }
+        ]
       }
     ],
     "industries": [
@@ -666,29 +722,36 @@
         "label": "Professional services",
         "cards": [
           {
-            "title": "Finds you on Google",
-            "text": "Search ad and reviews show you're the expert",
+            "title": "New client inquiry",
+            "text": "Found you on Google · reviews up front",
             "why": "Most people choose a professional from the first page of results. Showing up there with real reviews puts you on the shortlist before they've called anyone."
           },
           {
-            "title": "Reads your services page",
-            "text": "Clear packages, credentials up front",
+            "title": "Consult page viewed",
+            "text": "Packages and bio · booked a 30-min call",
             "why": "Buyers want three answers fast: what you do, proof you've done it, and how to reach you. A page that answers all three turns a visit into a call."
           },
           {
-            "title": "Books a consult at 9pm",
-            "text": "Instant reply sends your calendar link",
-            "why": "The first firm to respond usually wins the client. An instant reply with a booking link catches them while they're still deciding, even after hours."
+            "title": "After-hours form answered",
+            "text": "Calendar link sent in 2 minutes",
+            "why": "The first firm to respond usually wins the client. An instant reply with a booking link catches them while they're still deciding, even at 9pm."
           },
           {
-            "title": "Gets a reminder and intake form",
-            "text": "Fewer no-shows, a prepared first meeting",
-            "why": "Automatic reminders cut no-shows, and collecting details before the meeting means your first hour is spent advising, not filling in forms."
+            "title": "Client signed & invoiced",
+            "text": "Review requested · renewal on the calendar",
+            "why": "Keeping a client costs far less than finding a new one. When files, invoices, reviews and the next appointment live in one system, renewals happen on time instead of from memory."
+          }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Built By Me EZ",
+            "href": "/case-study/built-by-me-ez.html"
           },
           {
-            "title": "Signs on for the year",
-            "text": "Clients, files and invoices in one place",
-            "why": "Keeping a client costs far less than finding a new one. When files, invoices and the next appointment live in one system, renewals happen on time instead of from memory."
+            "kind": "Case study",
+            "label": "Western HP",
+            "href": "/case-study/western-hp.html"
           }
         ]
       },
@@ -697,29 +760,36 @@
         "label": "E-commerce",
         "cards": [
           {
-            "title": "Clicks a Meta ad",
-            "text": "Short-form product video, made by us",
-            "why": "Video shows the product in use and answers questions a photo can't. Shoppers who see it working arrive ready to buy."
+            "title": "Shopper taps your Reel",
+            "text": "Short-form video · Instagram ad",
+            "why": "People buy from brands they've seen in action. A short video in the feed does the showing before they ever reach your store."
           },
           {
-            "title": "Shops your store",
-            "text": "Fast pages, short checkout",
-            "why": "Every extra second and every extra checkout step loses buyers. A fast store with a short checkout carries the ad's momentum all the way to payment."
+            "title": "Product page did the selling",
+            "text": "Reviews and a bundle · added to cart",
+            "why": "Shoppers decide on the product page. Clear photos, real reviews and an easy bundle answer their doubts before they leave to compare."
           },
           {
-            "title": "Asks about sizing",
-            "text": "Instant reply with the size guide",
-            "why": "Unanswered questions become abandoned carts. Answering in seconds removes the last doubt while they're still on the page."
+            "title": "Abandoned cart saved",
+            "text": "Reminder email · back to checkout",
+            "why": "Most carts are abandoned, not rejected. A well-timed reminder brings a share of those shoppers back without spending another ad dollar."
           },
           {
-            "title": "Leaves a full cart",
-            "text": "A reminder brings them back to pay",
-            "why": "Plenty of shoppers leave to think it over. A timely reminder with the exact items they chose brings a share of them back to finish the order."
+            "title": "Order shipped & reviewed",
+            "text": "Repeat-purchase email in 30 days",
+            "why": "Your second sale is the cheapest one you'll make. A review request and a timely reorder email turn one order into a habit."
+          }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Brooklyn Steel Co.",
+            "href": "/case-study/brooklyn-steel.html"
           },
           {
-            "title": "Reorders in one tap",
-            "text": "Orders, stock and loyalty in sync",
-            "why": "Repeat buyers are your most profitable customers. Saved details, loyalty rewards and accurate stock make the second order effortless."
+            "kind": "Case study",
+            "label": "Manna Hydration",
+            "href": "/case-study/manna-hydration.html"
           }
         ]
       },
@@ -728,29 +798,36 @@
         "label": "Restaurants",
         "cards": [
           {
-            "title": "Finds you on Google Maps",
-            "text": "Fresh photos and posts on your profile",
-            "why": "Hungry people decide from the map. Recent photos, correct hours and fresh posts make you the obvious pick nearby."
+            "title": "Saturday table search",
+            "text": "Google Maps · fresh food photos",
+            "why": "Most diners pick from Maps on their phone. Fresh photos and a complete profile are what make them tap your name instead of the next one."
           },
           {
-            "title": "Opens your menu",
-            "text": "Fast menu, order or reserve online",
-            "why": "If the menu is a slow PDF, people go elsewhere. A fast, readable menu with an order or reserve button turns browsing into a booking."
+            "title": "Menu checked on a phone",
+            "text": "Fast menu · table for 4 reserved",
+            "why": "If the menu is a slow PDF, they move on. A quick mobile menu with booking built in turns a look into a reservation."
           },
           {
-            "title": "DMs about a party of 12",
-            "text": "Instant reply checks the date and books it",
-            "why": "Large parties and events are your biggest tickets. Replying instantly, with availability and a way to confirm, wins the booking before they ask the next place."
+            "title": "Reminder sent",
+            "text": "2 hours before · no-show avoided",
+            "why": "Empty tables you'd counted on hurt. Automatic reminders with an easy reschedule link keep the night full."
           },
           {
-            "title": "Gets a thank-you text",
-            "text": "Review request, offer for next time",
-            "why": "Right after a good meal is when people actually leave reviews. A small offer gives them a reason to come back soon."
+            "title": "Guest came back",
+            "text": "Birthday offer · 5-star review",
+            "why": "Regulars fill a restaurant. A thank-you, a review request and a well-timed offer bring good guests back and bring their friends."
+          }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Thyme & Table",
+            "href": "/case-study/thyme-and-table.html"
           },
           {
-            "title": "Comes back for catering",
-            "text": "Guests, orders and events in one place",
-            "why": "Knowing who your regulars are lets you invite them to events and catering. Your best customers become your easiest sales."
+            "kind": "Case study",
+            "label": "Blurred Lines Entertainment",
+            "href": "/case-study/blurred-lines-entertainment.html"
           }
         ]
       },
@@ -759,29 +836,36 @@
         "label": "Community & events",
         "cards": [
           {
-            "title": "Watches your livestream",
-            "text": "Multi-camera stream, shot by us",
-            "why": "A livestream is how many people try you out before they show up. Good video makes a first visit feel familiar instead of risky."
+            "title": "Event post shared",
+            "text": "Livestream clip · local ads",
+            "why": "People show up for what they've already seen. Clips from the last event and a few local ads put the next one in front of the right neighbors."
           },
           {
-            "title": "Visits your website",
-            "text": "Upcoming events, RSVP or give online",
-            "why": "Newcomers look for one thing: what's next and how to join. Events and sign-up on the first screen turn curiosity into an RSVP."
+            "title": "Event page visited",
+            "text": "Details at a glance · RSVP in a minute",
+            "why": "Interest fades fast. A page with the what, when and where, plus a one-tap RSVP, turns a maybe into a yes."
           },
           {
-            "title": "Asks about the kids' program",
-            "text": "Instant reply sends times and a sign-up link",
-            "why": "A quick answer feels like a warm welcome. An instant reply with the details and a sign-up link keeps a newcomer from drifting away."
+            "title": "Reminder & directions sent",
+            "text": "Day-before text · map link",
+            "why": "Attendance drops without reminders. A day-before message with directions keeps your count close to your RSVPs."
           },
           {
-            "title": "Gets a welcome series",
-            "text": "Texts and emails after the first visit",
-            "why": "Most people decide whether to come back within a few weeks. A short welcome series keeps you in touch while that decision is being made."
+            "title": "Member signed up",
+            "text": "Recap video · next event saved",
+            "why": "Every event is a chance to grow the community. A recap and an easy way to join keep people coming back for the next one."
+          }
+        ],
+        "caseStudies": [
+          {
+            "kind": "Case study",
+            "label": "Alpha Ministries International",
+            "href": "/case-study/alpha-ministries-international.html"
           },
           {
-            "title": "Joins a group",
-            "text": "Members, groups and giving in one system",
-            "why": "When members, groups and giving live in one place, nobody falls through the cracks, and your team spends its time with people instead of spreadsheets."
+            "kind": "Case study",
+            "label": "Hawthorne Global Ministries",
+            "href": "/case-study/hawthorne-global-ministries.html"
           }
         ]
       }

@@ -11,6 +11,10 @@
      and when the visitor presses Pause. Resumes where it stopped.
    - "Why it matters": tap/click toggles the note (aria-expanded).
    - Reduced motion: no autoplay; steps change only when chosen.
+   - Vertical rail: the track runs from the first icon to the last; while a
+     step plays, the fill and its runner travel down to the next icon.
+   - (i) and "Why it matters" open a pop-up (template .wf__pop-tpl) with why
+     the step matters and links to related blogs, services and case studies.
    ============================================================ */
 (function () {
   "use strict";
@@ -52,6 +56,39 @@
       if (bar) { bar.style.animation = "none"; void bar.offsetWidth; bar.style.animation = ""; }
     }
 
+    // Track: from the first icon's centre to the last one's, in the visible panel
+    function layoutTrack() {
+      var wrap = panels[cur].querySelector(".wf__rail-wrap");
+      var track = wrap && wrap.querySelector(".wf__track");
+      var dots = wrap ? wrap.querySelectorAll(".wf__dot") : [];
+      if (!track || dots.length < 2) return;
+      var base = wrap.getBoundingClientRect();
+      var a = dots[0].getBoundingClientRect(), b = dots[dots.length - 1].getBoundingClientRect();
+      track.style.top = (a.top + a.height / 2 - base.top) + "px";
+      track.style.height = Math.max(0, b.top + b.height / 2 - (a.top + a.height / 2)) + "px";
+      track.style.left = (a.left + a.width / 2 - base.left - 1) + "px";
+    }
+    function fillEl() { return panels[cur].querySelector(".wf__fill"); }
+    function span() {
+      var n = steps(cur).length, last = n - 1;
+      var from = last ? (step / last) * 100 : 100;
+      return { from: from, to: step >= last ? 100 : ((step + 1) / last) * 100 };
+    }
+    // Paused: freeze where it is. Playing: glide to the next icon over the time left.
+    function setFill(reset) {
+      var f = fillEl();
+      if (!f) return;
+      var r = span(), total = f.parentNode.getBoundingClientRect().height;
+      var now = reset || !total ? r.from : (f.getBoundingClientRect().height / total) * 100;
+      if (now < r.from - 0.5 || now > r.to + 0.5) now = r.from;
+      f.style.transition = "none";
+      f.style.height = now + "%";
+      if (isPaused() || reduce) return;
+      void f.offsetHeight;
+      f.style.transition = "height " + remaining + "ms linear";
+      f.style.height = r.to + "%";
+    }
+
     function closeWhy() {
       panels.forEach(function (p) {
         p.querySelectorAll(".wf__why-btn").forEach(function (b) {
@@ -69,6 +106,7 @@
     function schedule() {
       clearTimeout(timer); timer = null;
       root.classList.toggle("is-paused", isPaused());
+      setFill(false);
       if (isPaused()) return;
       startedAt = Date.now();
       timer = setTimeout(advance, remaining);
@@ -99,8 +137,10 @@
           panels[k].hidden = !on;
         });
         cur = i;
+        layoutTrack();
       }
       paint();
+      setFill(true);
       if (!keepTimer) schedule();
     }
 
@@ -142,16 +182,44 @@
           setPlay();
         });
       });
-      p.querySelectorAll(".wf__why-btn").forEach(function (b) {
-        b.addEventListener("click", function () {
-          var note = document.getElementById(b.getAttribute("aria-controls"));
-          var open = b.getAttribute("aria-expanded") !== "true";
-          b.setAttribute("aria-expanded", open ? "true" : "false");
-          if (note) note.classList.toggle("is-open", open);
-          if (open) pause("why"); else resume("why");
-          try { if (open && window.posthog) window.posthog.capture("flow_why_open", { industry: tabs[cur].textContent, step: step + 1 }); } catch (err) { /* ignore */ }
-        });
-      });
+    });
+
+    // Pop-up: (i) on a step or "Why it matters" on the card
+    var overlay = null, lastFocus = null;
+    function closePop() {
+      if (!overlay) return;
+      var o = overlay; overlay = null;
+      o.classList.remove("is-open");
+      document.documentElement.classList.remove("sn-locked");
+      setTimeout(function () { o.remove(); }, 250);
+      resume("pop");
+      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+    }
+    function openPop(id) {
+      var tpl = root.querySelector('.wf__pop-tpl[data-pop="' + id + '"]');
+      if (!tpl) return;
+      closePop();
+      lastFocus = document.activeElement;
+      pause("pop");
+      overlay = document.createElement("div");
+      overlay.className = "sc-overlay";
+      var dialog = document.createElement("div");
+      dialog.className = "sc-dialog wf-pop";
+      dialog.setAttribute("role", "dialog");
+      dialog.setAttribute("aria-modal", "true");
+      dialog.setAttribute("aria-labelledby", "wf-pop-title");
+      dialog.innerHTML = '<button type="button" class="sc-close" aria-label="Close">\u00d7</button>' + tpl.innerHTML;
+      overlay.appendChild(dialog);
+      document.body.appendChild(overlay);
+      document.documentElement.classList.add("sn-locked");
+      requestAnimationFrame(function () { if (overlay) overlay.classList.add("is-open"); });
+      overlay.addEventListener("click", function (e) { if (e.target === overlay || e.target.closest(".sc-close")) closePop(); });
+      var close = dialog.querySelector(".sc-close"); if (close) close.focus({ preventScroll: true });
+      try { if (window.SWFTAnalytics) window.SWFTAnalytics.track("method_popup_open", { step: id }); } catch (err) { /* ignore */ }
+    }
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && overlay) closePop(); });
+    root.querySelectorAll("button[data-pop]").forEach(function (b) {
+      b.addEventListener("click", function (e) { e.preventDefault(); openPop(b.getAttribute("data-pop")); });
     });
 
     // Play / pause
@@ -178,10 +246,14 @@
       reasons.offscreen = true;
       new IntersectionObserver(function (entries) {
         if (entries[0].isIntersecting) resume("offscreen"); else pause("offscreen");
-      }, { threshold: 0.35 }).observe(root);
+      }, { threshold: 0.12 }).observe(root);
     }
     document.addEventListener("visibilitychange", function () { if (document.hidden) pause("hidden"); else resume("hidden"); });
 
+    var rt;
+    window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(layoutTrack, 120); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutTrack);
+    layoutTrack();
     go(cur, 0);
     setPlay();
   }
