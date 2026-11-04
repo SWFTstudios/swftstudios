@@ -171,7 +171,27 @@ function projectIndex(projects) {
     .join("\n");
 }
 
+// Logo marquee: the list is written twice so the CSS loop (translateX -50%)
+// is seamless. The second copy is aria-hidden; the first is a real list so
+// screen readers hear the brand names once.
+function brandItem(b) {
+  const inner = b.logo
+    ? `<img src="${esc(b.logo)}" alt="${esc(b.name)}" height="40" loading="lazy" decoding="async">`
+    : `<span class="mf-brand__word mf-brand__word--${esc(b.style || "sans")}">${esc(b.name)}</span>`;
+  return b.href
+    ? `<a class="mf-brand" href="${esc(b.href)}" tabindex="-1">${inner}</a>`
+    : `<span class="mf-brand">${inner}</span>`;
+}
+function brandsMarquee(data) {
+  const items = data.brands.map((b) => `<li>${brandItem(b)}</li>`).join("");
+  return [
+    `<ul class="mf-brands__track" aria-label="Brands we've worked with">${items}</ul>`,
+    `<ul class="mf-brands__track" aria-hidden="true">${items}</ul>`,
+  ].join("\n");
+}
+
 const BLOCKS = {
+  brands: () => brandsMarquee(json("data/brands.json")),
   "project-tiles": () => projectTiles(json("data/portfolio-projects.json")),
   "project-filters": () => projectFilters(json("data/portfolio-projects.json")),
   "project-index": () => projectIndex(json("data/portfolio-projects.json")),
