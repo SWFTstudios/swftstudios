@@ -34,6 +34,97 @@
   ];
   // Shared with js/swft-app.js (desktop sidebar).
   window.__swftServices = SERVICES;
+
+  /* ---------- Modes: System / Light / Dark ----------
+     The inline <script id="swft-mode"> in each page's <head> sets
+     html[data-mode] before paint. This is the switch: window.SWFTMode is
+     shared with js/swft-app.js (sidebar) and js/account.js (Appearance).
+     Saved in the browser; when signed in (swft-app.js sets SWFTMode.signedIn)
+     also saved to the account so every device and the portal match. */
+  var MODE_KEY = "swft-mode";
+  var MODES = [
+    { id: "system", label: "System", icon: '<rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8.5 20h7M12 16.5V20"/>' },
+    { id: "light",  label: "Light",  icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>' },
+    { id: "dark",   label: "Dark",   icon: '<path d="M19.5 14.5A7.5 7.5 0 1 1 9.5 4.5a6 6 0 0 0 10 10z"/>' }
+  ];
+  function modeOk(m) { return m === "system" || m === "light" || m === "dark"; }
+  function getMode() { var m = document.documentElement.getAttribute("data-mode"); return modeOk(m) ? m : "dark"; }
+  function isLight() {
+    var m = getMode();
+    return m === "light" || (m === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches);
+  }
+  function paintThemeColor() {
+    // Browser chrome (address bar, installed-app title bar) follows the page
+    var c = isLight() ? "#f6f6f3" : "#050505";
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (el) { el.setAttribute("content", c); });
+  }
+  function syncSwitches() {
+    var m = getMode();
+    document.querySelectorAll("[data-mode-switch] [data-mode-set]").forEach(function (b) {
+      var on = b.getAttribute("data-mode-set") === m;
+      b.setAttribute("aria-checked", on ? "true" : "false");
+      b.tabIndex = on ? 0 : -1;
+    });
+  }
+  function setMode(m, opts) {
+    if (!modeOk(m)) return;
+    opts = opts || {};
+    var changed = m !== getMode();
+    document.documentElement.setAttribute("data-mode", m);
+    try { localStorage.setItem(MODE_KEY, m); } catch (e) { /* private mode: this page only */ }
+    syncSwitches();
+    paintThemeColor();
+    if (changed) document.dispatchEvent(new CustomEvent("swft:mode", { detail: { mode: m } }));
+    if (!opts.fromServer && window.SWFTMode.signedIn) {
+      fetch("/api/portal/prefs", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ mode: m })
+      }).catch(function () { /* offline: the browser copy still holds */ });
+    }
+  }
+  function modeSwitchHTML(extraClass) {
+    return '<div class="mode-switch' + (extraClass ? " " + extraClass : "") + '" role="radiogroup" aria-label="Appearance" data-mode-switch>' +
+      MODES.map(function (o) {
+        return '<button type="button" role="radio" class="mode-switch__btn" data-mode-set="' + o.id + '" aria-checked="false" title="' + o.label + '">' +
+          '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + o.icon + "</svg>" +
+          '<span class="mode-switch__label">' + o.label + "</span></button>";
+      }).join("") + "</div>";
+  }
+  // One delegated listener serves every switch on the page, however late it renders.
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-mode-switch] [data-mode-set]");
+    if (!b) return;
+    var group = b.closest("[data-mode-switch]");
+    var m = b.getAttribute("data-mode-set");
+    // Collapsed sidebar shows only the current icon: clicking it steps to the next mode.
+    if (group.classList.contains("mode-switch--side") && document.documentElement.classList.contains("sa-side-collapsed") && m === getMode()) {
+      var i = MODES.map(function (o) { return o.id; }).indexOf(m);
+      m = MODES[(i + 1) % MODES.length].id;
+    }
+    setMode(m);
+  });
+  document.addEventListener("keydown", function (e) {
+    var b = e.target.closest && e.target.closest("[data-mode-switch] [data-mode-set]");
+    if (!b || ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
+    e.preventDefault();
+    var btns = Array.prototype.slice.call(b.closest("[data-mode-switch]").querySelectorAll("[data-mode-set]"));
+    var i = btns.indexOf(b) + (e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 1);
+    var next = btns[(i + btns.length) % btns.length];
+    setMode(next.getAttribute("data-mode-set"));
+    next.focus();
+  });
+  // System mode follows the OS live (only the address-bar color needs a nudge; CSS does the rest).
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: light)");
+    var onOs = function () { if (getMode() === "system") paintThemeColor(); };
+    if (mq.addEventListener) mq.addEventListener("change", onOs); else if (mq.addListener) mq.addListener(onOs);
+  }
+  // Another tab changed it
+  window.addEventListener("storage", function (e) {
+    if (e.key === MODE_KEY && modeOk(e.newValue)) setMode(e.newValue, { fromServer: true });
+  });
+  window.SWFTMode = { get: getMode, set: setMode, switchHTML: modeSwitchHTML, sync: syncSwitches, paint: paintThemeColor, signedIn: false };
   // Same stroke icons as scripts/build-service-pages.mjs.
   var ICONS = {
     code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
@@ -208,6 +299,7 @@
             '<div class="sn-panel-duo">' +
               PANEL_FOOT.map(function (l) { return '<a class="sn-panel-ghost" href="' + l.href + '">' + svg(l.icon, "sn-panel-ghost__icon") + "<span>" + l.label + "</span></a>"; }).join("") +
             "</div>" +
+            '<div class="sn-panel-mode"><span class="sn-psec__label">Appearance</span>' + modeSwitchHTML("mode-switch--panel") + "</div>" +
           "</div>" +
         "</div>" +
       "</aside>"
@@ -399,15 +491,17 @@
     ensureMainId();
     initNav();
     initFooter();
+    syncSwitches();
+    paintThemeColor();
     // Site-wide scroll-in text animation (js/text-reveal.js) and the Mono
     // helpers (js/mono.js), loaded once from here because every page
     // already includes this script.
     // Analytics on every page, including older templates that never linked it
     if (!document.querySelector('script[src*="swft-analytics.js"]')) loadOnce("/js/swft-analytics.js?v=20261104-ga4", "data-swft-analytics");
     loadOnce("/js/text-reveal.js?v=20261027-mono", "data-swft-text-reveal");
-    loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
+    loadOnce("/js/mono.js?v=20261104-mode", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
-    loadOnce("/js/swft-app.js?v=20261103-app4", "data-swft-app");
+    loadOnce("/js/swft-app.js?v=20261104-mode", "data-swft-app");
     if (document.querySelector(".an-hl, .an-ul, .an-circle, .an-note")) loadOnce("/js/annotate.js?v=20261104-annotate", "data-swft-annotate");
     if (document.querySelector("[data-mf-notify]")) loadOnce("/js/notify-badge.js?v=20261103-notify", "data-swft-notify");
   }

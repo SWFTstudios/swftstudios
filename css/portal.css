@@ -54,7 +54,7 @@
 }
 
 .portal-form input:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline: 2px solid rgba(var(--mf-ink-rgb), 0.45);
   outline-offset: 1px;
 }
 
@@ -80,13 +80,13 @@
 }
 
 .portal-msg--ok {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(var(--mf-ink-rgb), 0.08);
+  border: 1px solid rgba(var(--mf-ink-rgb), 0.3);
   color: var(--swft-accent);
 }
 
 .portal-msg--info {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--mf-ink-rgb), 0.04);
   border: 1px solid var(--swft-border);
   color: var(--swft-muted);
 }
@@ -127,13 +127,13 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(var(--mf-ink-rgb), 0.35);
   color: var(--swft-accent);
 }
 
 .portal-badge--warn {
   border-color: rgba(189, 189, 189, 0.45);
-  color: #cecece;
+  color: var(--mf-soft);
 }
 
 .portal-badge--muted {

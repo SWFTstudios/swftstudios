@@ -128,7 +128,7 @@
   /* ---------- Accent word: bold, funky pen script ---------- */
   // Click = next color. Five clicks inside ~1.8s = rainbow + glow + hop that settles
   // back to the color the word had. (Mouse/touch only; the word stays plain text.)
-  var ACCENT_PALETTE = ["#ffffff", "#ff5a36", "#c3cdfa", "#e9d3a6"]; // white first (default), then signal, ice, sand (css/mono.css)
+  var ACCENT_PALETTE = ["var(--mf-ink)", "var(--swft-signal)", "var(--swft-ice)", "var(--swft-sand)"]; // white first (default), then signal, ice, sand (css/mono.css)
   var RAPID_CLICKS = 5, RAPID_WINDOW = 1800;
   // Each letter's resting tilt (deg) and lift (em): fixed patterns, so it looks hand-placed, not random.
 

@@ -105,6 +105,11 @@
       })
       .then(function (d) {
         var next = toState(d);
+        if (window.SWFTMode) {
+          window.SWFTMode.signedIn = next.role !== "guest";
+          // The account's saved mode wins, so a new device matches the others
+          if (d && d.user && d.user.mode && d.user.mode !== window.SWFTMode.get()) window.SWFTMode.set(d.user.mode, { fromServer: true });
+        }
         writeCache(next);
         var changed = next.role !== state.role || next.email !== state.email;
         state = next;
@@ -372,6 +377,7 @@
         workspace +
       "</nav>" +
       '<div class="sd-bottom">' +
+        (window.SWFTMode ? window.SWFTMode.switchHTML("mode-switch--side") : "") +
         '<a class="sd-book" href="' + BOOK_URL + '" target="_blank" rel="noopener" title="Book a free strategy call"><span class="sd-ico">' + icon("book", 20) + '</span><span class="sd-txt">Book a call</span></a>' +
         '<button type="button" class="sd-account" data-sa-account aria-haspopup="dialog" aria-controls="sa-sheet" title="Account">' + who + "</button>" +
       "</div>";
@@ -386,6 +392,7 @@
       if (sideCollapsed()) document.documentElement.classList.add("sa-side-collapsed");
     }
     side.innerHTML = sideHTML();
+    if (window.SWFTMode) window.SWFTMode.sync();
     side.querySelector("[data-sa-account]").addEventListener("click", openSheet);
     side.querySelector(".sd-collapse").addEventListener("click", function () {
       var c = !document.documentElement.classList.contains("sa-side-collapsed");
@@ -413,6 +420,7 @@
   head();
   registerWorker();
   function start() {
+    if (window.SWFTMode) { window.SWFTMode.signedIn = state.role !== "guest"; window.SWFTMode.paint(); }
     renderSide();
     renderTabs();
     updateMenu();

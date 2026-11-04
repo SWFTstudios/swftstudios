@@ -54,7 +54,7 @@
 .admin-milestone select, .admin-inline-form input {
   background: transparent; color: inherit; border: 1px solid var(--swft-border); border-radius: 999px; padding: 0.3rem 0.75rem; font: inherit;
 }
-.admin-milestone select option { background: #111; }
+.admin-milestone select option { background: var(--mf-surface); }
 .admin-inline-form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .admin-inline-form input[type="text"] { flex: 1 1 14rem; }
 @media (max-width: 640px) { .admin-milestone { flex-direction: column; } }
