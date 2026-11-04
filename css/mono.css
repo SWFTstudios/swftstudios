@@ -442,7 +442,7 @@ button.mf-chip[aria-pressed="true"] .mf-chip-count { color: var(--mf-dim); }
 .mf-hero--video .mf-lead .is-muted { color: var(--mf-soft); } /* muted grey is too faint over video */
 @media (max-width: 640px) { .mf-hero--video .mf-hero__title { font-size: 12.5vw; } }
 
-/* ---------- Home: project window rising out of the hero ---------- */
+/* ---------- Home: How it works window rising out of the hero ---------- */
 .mf-window-wrap { position: relative; z-index: 2; margin-top: clamp(-7rem, -8vw, -3.5rem); margin-bottom: clamp(3.5rem, 7vw, 6rem); }
 .mf-window {
   margin: 0 auto; max-width: 68rem; border-radius: 20px; overflow: hidden;
@@ -452,25 +452,12 @@ button.mf-chip[aria-pressed="true"] .mf-chip-count { color: var(--mf-dim); }
 .mf-window__bar { display: flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1rem; border-bottom: 1px solid var(--mf-line); background: var(--mf-surface-2); }
 .mf-window__bar span { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--mf-line-strong); }
 .mf-window__bar p { margin: 0 0 0 0.75rem; font: 400 0.72rem/1 var(--mf-mono); color: var(--mf-muted); letter-spacing: 0.04em; }
-.mf-window__body { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(1rem, 2.5vw, 2rem); padding: clamp(1.1rem, 2.5vw, 2rem); }
-.mf-window__title { margin: 0.4rem 0 1rem; font-size: clamp(1.4rem, 1rem + 1.2vw, 2rem); font-weight: 600; letter-spacing: -0.035em; }
-.mf-window__progress { height: 6px; border-radius: 6px; background: var(--mf-line); overflow: hidden; }
-.mf-window__progress span { display: block; height: 100%; border-radius: 6px; background: var(--swft-signal); }
-.mf-window__steps { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.5rem; }
-.mf-window__steps li { position: relative; padding-top: 1.1rem; font-size: 0.82rem; color: var(--mf-muted); line-height: 1.3; }
-.mf-window__steps li::before { content: ""; position: absolute; top: 0; left: 0; width: 0.7rem; height: 0.7rem; border-radius: 50%; border: 2px solid var(--mf-line-strong); }
-.mf-window__steps li.is-done { color: var(--mf-text); }
-.mf-window__steps li.is-done::before { background: var(--swft-ice); border-color: var(--swft-ice); }
-.mf-window__steps li.is-now { color: var(--mf-text); font-weight: 600; }
-.mf-window__steps li.is-now::before { background: var(--swft-signal); border-color: var(--swft-signal); box-shadow: 0 0 0 4px rgba(255, 90, 54, 0.2); }
-.mf-window__side { display: grid; gap: 0.75rem; align-content: start; }
-.mf-window__card { padding: 0.9rem 1rem; border-radius: 14px; background: var(--mf-surface-2); border: 1px solid var(--mf-line); }
-.mf-window__card p:last-child { margin: 0.35rem 0 0; font-size: 0.92rem; line-height: 1.4; }
-.mf-window__cap { margin: 0; padding: 0.85rem 1.25rem; border-top: 1px solid var(--mf-line); color: var(--mf-muted); font-size: 0.9rem; text-align: center; }
-@media (max-width: 720px) {
-  .mf-window__body { grid-template-columns: 1fr; }
-  .mf-window__steps { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 0.9rem; }
-}
+/* How it works sits inside the window (markup: svc:flow from scripts/build-service-pages.mjs) */
+.mf-window__flow { padding: clamp(1.1rem, 2.5vw, 2rem) clamp(1.1rem, 2.5vw, 2rem) clamp(1.25rem, 2.5vw, 2rem); }
+.mf-window__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 0.75rem 2rem; margin-bottom: clamp(1rem, 2.5vw, 1.75rem); }
+.mf-window__h { margin: 0 0 0.25em; font-size: clamp(1.75rem, 1.1rem + 2vw, 2.9rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
+.mf-window__h .mf-script:not(.is-line-start) { margin-left: 0.18em; }
+.mf-window__head p { margin: 0; color: var(--mf-muted); max-width: 42ch; font-size: 0.98rem; }
 
 /* ---------- Home: services bento (markup from scripts/build-service-pages.mjs) ---------- */
 .mf-bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(0.75rem, 1.5vw, 1.25rem); }

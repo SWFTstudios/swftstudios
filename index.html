@@ -20,7 +20,7 @@
   <link rel="preload" href="/fonts/NanumPenScript-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preconnect" href="https://media.swftstudios.com" crossorigin>
   <link rel="preload" href="https://media.swftstudios.com/swft/site/hero/nyc_view_poster.jpg" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r2">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r3">
   <link rel="stylesheet" href="/css/flow.css?v=20261105-r2">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <link href="/images/webclip.webp" rel="apple-touch-icon">
@@ -105,48 +105,16 @@
       </div>
     </section>
 
-    <!-- Project window: rises out of the hero (example of the client dashboard) -->
+    <!-- How it works, in a window that rises out of the hero. The walkthrough
+         (industry tabs, five steps, progress bars) plays via js/swft-flow.js. -->
     <div class="mf-wrap mf-window-wrap">
-      <figure class="mf-window" aria-labelledby="window-cap">
-        <div class="mf-window__bar" aria-hidden="true"><span></span><span></span><span></span><p>swftstudios.com/portal</p></div>
-        <div class="mf-window__body">
-          <div class="mf-window__main">
-            <p class="mf-label mf-label--muted">Your project &middot; example</p>
-            <p class="mf-window__title">Website build</p>
-            <div class="mf-window__progress" role="img" aria-label="Example progress: 3 of 5 milestones done"><span style="width:60%"></span></div>
-            <ol class="mf-window__steps">
-              <li class="is-done">Kickoff call</li>
-              <li class="is-done">Design</li>
-              <li class="is-done">Content &amp; photos</li>
-              <li class="is-now">Build</li>
-              <li>Launch</li>
-            </ol>
+      <section class="mf-window mf-window--flow" id="process" aria-labelledby="process-title">
+        <div class="mf-window__bar" aria-hidden="true"><span></span><span></span><span></span><p>How it works</p></div>
+        <div class="mf-window__flow">
+          <div class="mf-window__head">
+            <h2 class="mf-window__h" id="process-title">From stranger to <span class="mf-script">regular.</span></h2>
+            <p>Pick your industry and watch one customer go from discovering you to coming back, with the system doing the work at every step.</p>
           </div>
-          <div class="mf-window__side">
-            <div class="mf-window__card">
-              <p class="mf-label mf-label--muted">Latest update</p>
-              <p>Homepage draft is ready for your review. Leave notes right on the page.</p>
-            </div>
-            <div class="mf-window__card">
-              <p class="mf-label mf-label--muted">Next</p>
-              <p>Launch review call</p>
-            </div>
-          </div>
-        </div>
-        <figcaption id="window-cap" class="mf-window__cap">Every project gets a live dashboard: milestones, updates and site stats in one place.</figcaption>
-      </figure>
-    </div>
-
-    <!-- Process -->
-    <section class="mf-section mf-section--tight" id="process" aria-labelledby="process-title">
-      <div class="mf-wrap">
-        <div class="mf-head">
-          <p class="mf-label">(How it works)</p>
-          <div>
-            <h2 class="mf-h2" id="process-title">From stranger to <span class="mf-script">regular.</span></h2>
-            <p class="mf-body mf-head__sub">Here&rsquo;s the system at work: what you build, grow and automate, seen through one customer&rsquo;s eyes, from discovering you to coming back. Pick your industry and follow along.</p>
-          </div>
-        </div>
 <!-- svc:flow:start -->
 <div class="wf" data-swft-flow>
   <div class="wf__top">
@@ -363,8 +331,9 @@
   </div>
 </div>
 <!-- svc:flow:end -->
-      </div>
-    </section>
+        </div>
+      </section>
+    </div>
 
     <!-- 3D project carousel -->
     <section class="mf-showcase" id="work" aria-labelledby="work-title">
@@ -677,7 +646,7 @@
   <script src="/js/swft-analytics.js?v=20261104-ga4" defer></script>
   <script src="/js/swft-nav.js?v=20261105-r2" defer></script>
   <script src="/js/project-carousel.js?v=20261103-swipe" defer></script>
-  <script src="/js/swft-flow.js?v=20261104-wf" defer></script>
+  <script src="/js/swft-flow.js?v=20261105-r3" defer></script>
   <script src="/js/results.js?v=20261105-r2" defer></script>
 </body>
 </html>

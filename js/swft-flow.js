@@ -178,7 +178,7 @@
       reasons.offscreen = true;
       new IntersectionObserver(function (entries) {
         if (entries[0].isIntersecting) resume("offscreen"); else pause("offscreen");
-      }, { threshold: 0.35 }).observe(root);
+      }, { threshold: 0.12 }).observe(root);
     }
     document.addEventListener("visibilitychange", function () { if (document.hidden) pause("hidden"); else resume("hidden"); });
 

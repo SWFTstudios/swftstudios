@@ -182,7 +182,7 @@ function page(s, data, offers) {
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${SITE}/images/swft-thumbnail.webp">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r2">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r3">
   <link rel="stylesheet" href="/css/services.css?v=20261105-r2">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <script type="application/ld+json">${JSON.stringify(ld)}</script>

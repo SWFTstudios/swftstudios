@@ -85,7 +85,7 @@ function pageShell({ title, description, canonical, bodyClass, body }) {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r2">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r3">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
   <link rel="stylesheet" href="/css/contact-page.css?v=20261105-r2">
   <link rel="stylesheet" href="/css/growth-audit.css?v=20261105-r2">
