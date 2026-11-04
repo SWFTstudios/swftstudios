@@ -626,7 +626,7 @@
     "stages": [
       {
         "key": "seen",
-        "stage": "Discover",
+        "stage": "They find you",
         "service": "Ads & content",
         "icon": "megaphone",
         "href": "/marketing.html",
@@ -650,7 +650,7 @@
       },
       {
         "key": "capture",
-        "stage": "Decide",
+        "stage": "They like what they see",
         "service": "Website",
         "icon": "browser",
         "href": "/websites.html",
@@ -669,7 +669,7 @@
       },
       {
         "key": "booked",
-        "stage": "Reach out",
+        "stage": "They reach out",
         "service": "Instant follow-up",
         "icon": "bolt",
         "href": "/automations.html",
@@ -688,7 +688,7 @@
       },
       {
         "key": "nurture",
-        "stage": "Stay in touch",
+        "stage": "You stay in touch",
         "service": "Reminders & reviews",
         "icon": "star",
         "href": "/automations.html",
@@ -707,7 +707,7 @@
       },
       {
         "key": "repeat",
-        "stage": "Come back",
+        "stage": "They come back",
         "service": "Custom software",
         "icon": "layers",
         "href": "/software.html",
