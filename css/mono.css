@@ -338,6 +338,26 @@ button.mf-chip[aria-pressed="true"] .mf-chip-count { color: #555; }
   .mf-hero__foot > :first-child { order: 2; }
 }
 
+/* Video hero (home): NYC skyline loop behind a dark overlay.
+   Overlay is lighter at the top so the skyline reads, darker at the bottom
+   for the lead copy, then fades into the page background. */
+.mf-hero--video { position: relative; isolation: isolate; overflow: hidden; }
+.mf-hero--video > .mf-wrap { position: relative; z-index: 1; }
+.mf-hero__media { position: absolute; inset: 0; z-index: 0; background: var(--mf-bg); pointer-events: none; }
+.mf-hero__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mf-hero__media::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(5, 5, 5, 0.35) 0%,
+    rgba(5, 5, 5, 0.45) 40%,
+    rgba(5, 5, 5, 0.62) 78%,
+    var(--mf-bg) 100%);
+}
+/* Longer headline than the old three-word lines: smaller display size */
+.mf-hero--video .mf-hero__title { font-size: clamp(2.75rem, 0.75rem + 6.2vw, 8.5rem); max-width: 16ch; }
+.mf-hero--video .mf-lead .is-muted { color: #c4c4c4; } /* muted grey is too faint over video */
+@media (max-width: 640px) { .mf-hero--video .mf-hero__title { font-size: 12.5vw; } }
+
 /* Proof: client avatars + line */
 .mf-proof { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .mf-avatars { display: flex; }
