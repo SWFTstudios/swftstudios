@@ -43,7 +43,7 @@
 
 .swft-btn.is-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 32px rgba(var(--mf-ink-rgb), 0.35);
   color: #000;
 }
 
@@ -67,13 +67,13 @@
 }
 
 .swft-btn.is-primary:hover .button_text {
-  color: #fff;
+  color: var(--mf-ink);
 }
 
 /* Secondary fill */
 .swft-btn.is-secondary {
   background: var(--charcoal, #1a1a1a);
-  color: #fff;
+  color: var(--mf-ink);
   border-color: var(--charcoal, #1a1a1a);
 }
 
@@ -81,19 +81,19 @@
   background: #2a2a2a;
   border-color: #2a2a2a;
   transform: translateY(-2px);
-  color: #fff;
+  color: var(--mf-ink);
 }
 
 /* Outline */
 .swft-btn.is-outline {
   background: transparent;
   color: inherit;
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: rgba(var(--mf-ink-rgb), 0.35);
 }
 
 .swft-btn.is-outline:hover {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--mf-ink);
+  background: rgba(var(--mf-ink-rgb), 0.06);
   color: inherit;
 }
 

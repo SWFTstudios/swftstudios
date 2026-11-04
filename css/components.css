@@ -48,7 +48,7 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-  background-color: #fff;
+  background-color: var(--mf-ink);
   font-family: Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
@@ -173,7 +173,7 @@ pre.w-code-block code > span {
   bottom: 12px !important;
   left: auto !important;
   color: #aaadb0 !important;
-  background-color: #fff !important;
+  background-color: var(--mf-ink) !important;
   border-radius: 3px !important;
   padding: 6px !important;
   font-size: 12px !important;
@@ -333,7 +333,7 @@ label {
   line-height: 1.42857143;
   color: #333333;
   vertical-align: middle;
-  background-color: #ffffff;
+  background-color: var(--mf-ink);
   border: 1px solid #cccccc;
 }
 .w-input::placeholder,
@@ -839,7 +839,7 @@ textarea.w-select {
   margin-top: -5px;
 }
 .w-widget-twitter-count-shim:not(.w--vertical):after {
-  border-color: rgba(255, 255, 255, 0);
+  border-color: rgba(var(--mf-ink-rgb), 0);
   border-right-color: white;
   border-width: 4px;
   margin-left: -8px;
@@ -873,7 +873,7 @@ textarea.w-select {
   margin-left: -5px;
 }
 .w-widget-twitter-count-shim.w--vertical:after {
-  border-color: rgba(255, 255, 255, 0);
+  border-color: rgba(var(--mf-ink-rgb), 0);
   border-top-color: white;
   border-width: 4px;
   margin-left: -4px;
@@ -975,7 +975,7 @@ textarea.w-select {
   box-shadow: 0 0 3px rgba(51, 51, 51, 0.4);
 }
 .w-slider-nav-invert {
-  color: #fff;
+  color: var(--mf-ink);
 }
 .w-slider-nav-invert > div {
   background-color: rgba(34, 34, 34, 0.4);
@@ -988,17 +988,17 @@ textarea.w-select {
   display: inline-block;
   width: 1em;
   height: 1em;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(var(--mf-ink-rgb), 0.4);
   cursor: pointer;
   margin: 0 3px 0.5em;
   transition: background-color 100ms, color 100ms;
 }
 .w-slider-dot.w-active {
-  background-color: #fff;
+  background-color: var(--mf-ink);
 }
 .w-slider-dot:focus {
   outline: none;
-  box-shadow: 0px 0px 0px 2px #fff;
+  box-shadow: 0px 0px 0px 2px var(--mf-ink);
 }
 .w-slider-dot:focus.w-active {
   box-shadow: none;
@@ -1158,7 +1158,7 @@ textarea.w-select {
   right: 0;
   bottom: 0;
   left: 0;
-  color: #fff;
+  color: var(--mf-ink);
   font-family: "Helvetica Neue", Helvetica, Ubuntu, "Segoe UI", Verdana, sans-serif;
   font-size: 17px;
   line-height: 1.2;
@@ -1280,14 +1280,14 @@ textarea.w-select {
   display: none;
   bottom: 0;
   left: 0;
-  /* <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 0 24 40" width="24" height="40"><g transform="rotate(45)"><path d="m0 0h5v23h23v5h-28z" opacity=".4"/><path d="m1 1h3v23h23v3h-26z" fill="#fff"/></g></svg> */
+  /* <svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 0 24 40" width="24" height="40"><g transform="rotate(45)"><path d="m0 0h5v23h23v5h-28z" opacity=".4"/><path d="m1 1h3v23h23v3h-26z" fill="var(--mf-ink)"/></g></svg> */
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0yMCAwIDI0IDQwIiB3aWR0aD0iMjQiIGhlaWdodD0iNDAiPjxnIHRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHBhdGggZD0ibTAgMGg1djIzaDIzdjVoLTI4eiIgb3BhY2l0eT0iLjQiLz48cGF0aCBkPSJtMSAxaDN2MjNoMjN2M2gtMjZ6IiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg==");
 }
 .w-lightbox-right {
   display: none;
   right: 0;
   bottom: 0;
-  /* <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 24 40" width="24" height="40"><g transform="rotate(45)"><path d="m0-0h28v28h-5v-23h-23z" opacity=".4"/><path d="m1 1h26v26h-3v-23h-23z" fill="#fff"/></g></svg> */
+  /* <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 24 40" width="24" height="40"><g transform="rotate(45)"><path d="m0-0h28v28h-5v-23h-23z" opacity=".4"/><path d="m1 1h26v26h-3v-23h-23z" fill="var(--mf-ink)"/></g></svg> */
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii00IDAgMjQgNDAiIHdpZHRoPSIyNCIgaGVpZ2h0PSI0MCI+PGcgdHJhbnNmb3JtPSJyb3RhdGUoNDUpIj48cGF0aCBkPSJtMC0waDI4djI4aC01di0yM2gtMjN6IiBvcGFjaXR5PSIuNCIvPjxwYXRoIGQ9Im0xIDFoMjZ2MjZoLTN2LTIzaC0yM3oiIGZpbGw9IiNmZmYiLz48L2c+PC9zdmc+");
 }
 /*
@@ -1298,7 +1298,7 @@ textarea.w-select {
 .w-lightbox-close {
   right: 0;
   height: 2.6em;
-  /* <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 18 17" width="18" height="17"><g transform="rotate(45)"><path d="m0 0h7v-7h5v7h7v5h-7v7h-5v-7h-7z" opacity=".4"/><path d="m1 1h7v-7h3v7h7v3h-7v7h-3v-7h-7z" fill="#fff"/></g></svg> */
+  /* <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 18 17" width="18" height="17"><g transform="rotate(45)"><path d="m0 0h7v-7h5v7h7v5h-7v7h-5v-7h-7z" opacity=".4"/><path d="m1 1h7v-7h3v7h7v3h-7v7h-3v-7h-7z" fill="var(--mf-ink)"/></g></svg> */
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii00IDAgMTggMTciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxNyI+PGcgdHJhbnNmb3JtPSJyb3RhdGUoNDUpIj48cGF0aCBkPSJtMCAwaDd2LTdoNXY3aDd2NWgtN3Y3aC01di03aC03eiIgb3BhY2l0eT0iLjQiLz48cGF0aCBkPSJtMSAxaDd2LTdoM3Y3aDd2M2gtN3Y3aC0zdi03aC03eiIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=");
   background-size: 18px;
 }
@@ -1388,7 +1388,7 @@ textarea.w-select {
   bottom: -4px;
   left: -4px;
   border: 3px solid transparent;
-  border-bottom-color: #fff;
+  border-bottom-color: var(--mf-ink);
   border-radius: 50%;
 }
 /*

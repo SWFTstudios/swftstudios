@@ -33,9 +33,9 @@
   background: var(--mf-surface); color: var(--mf-text); text-decoration: none;
   transition: border-color 0.2s, transform 0.35s var(--mf-ease);
 }
-.sv-card:hover { border-color: #fff; transform: translateY(-3px); }
-.sv-card:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-.sv-card:hover .mf-row__icon { background: #fff; color: #050505; }
+.sv-card:hover { border-color: var(--mf-ink); transform: translateY(-3px); }
+.sv-card:focus-visible { outline: 2px solid var(--mf-ink); outline-offset: 3px; }
+.sv-card:hover .mf-row__icon { background: var(--mf-ink); color: var(--mf-on-ink); }
 .sv-card__title { display: block; font-size: clamp(1.4rem, 1.1rem + 0.9vw, 1.9rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1.05; }
 .sv-card__line { display: block; margin-top: 0.5rem; color: var(--mf-muted); }
 .sv-card__foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
@@ -46,7 +46,7 @@
   display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); gap: 1rem 2.5rem;
 }
 .sv-includes li { display: flex; gap: 0.8rem; align-items: flex-start; font-size: 1.05rem; line-height: 1.45; }
-.sv-check { flex: none; margin-top: 0.15rem; color: #fff; }
+.sv-check { flex: none; margin-top: 0.15rem; color: var(--mf-ink); }
 
 /* Investment meter: $$$$ with the level lit */
 .sv-invest {
@@ -55,12 +55,12 @@
 }
 .sv-invest__label { color: var(--mf-muted); font-size: 0.92rem; }
 .sv-invest__signs { font-weight: 700; font-size: 1.15rem; letter-spacing: 0.02em; color: var(--mf-dim); }
-.sv-invest__signs .is-on { color: #fff; }
+.sv-invest__signs .is-on { color: var(--mf-ink); }
 
 /* Starting price (cards, service-page investment box). */
 .sv-price__from { display: flex; align-items: baseline; gap: 0.5rem; margin: 0.25rem 0 0.5rem; }
 .sv-price__from span { color: var(--mf-muted); font-size: 0.92rem; }
-.sv-price__from b { color: #fff; font-weight: 700; font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); letter-spacing: -0.02em; }
+.sv-price__from b { color: var(--mf-ink); font-weight: 700; font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); letter-spacing: -0.02em; }
 
 /* Investment box on service pages */
 .sv-investbox {
@@ -78,7 +78,7 @@
   padding: clamp(1.4rem, 2.6vw, 2.25rem); border: 1px solid var(--mf-line); border-radius: 26px;
   background: var(--mf-surface); color: var(--mf-text); font-family: var(--mf-font);
 }
-.sv-price:target { border-color: #fff; }
+.sv-price:target { border-color: var(--mf-ink); }
 .sv-price__top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
 .sv-price__title { margin: 0; font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1.05; color: var(--mf-text); }
 .sv-price__lead { margin: 0; color: var(--mf-muted); line-height: 1.5; padding-bottom: 1.25rem; border-bottom: 1px solid var(--mf-line); }
