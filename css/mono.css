@@ -104,11 +104,11 @@ body { background: var(--mf-bg); color: var(--mf-text); }
   paint-order: stroke fill;
 }
 
-/* The accent word: handwritten Listomania One in white, thickened with a stroke
+/* The accent word: handwritten Listomania One in signal orange-red, thickened with a stroke
    in its own color and tucked slightly over the word before it. js/mono.js
    (initAccent) wraps each word in one span (never single letters, which would
    break the font's contextual letter shapes); it pops in with a bounce when it
-   scrolls into view. Click = next color (white, signal, ice, sand); five quick
+   scrolls into view. Click = next color (signal, white, ice, sand); five quick
    clicks = a palette roll + hop, then back. Without JS (or with reduced motion)
    it is the static word. Change the color in one place: --mf-accent-color. */
 :root {
@@ -117,7 +117,7 @@ body { background: var(--mf-bg); color: var(--mf-text); }
   --swft-signal: #ff5a36;
   --swft-ice: #c3cdfa;
   --swft-sand: #e9d3a6;
-  --mf-accent-color: #ffffff;
+  --mf-accent-color: var(--swft-signal); /* default accent word color: SWFT signal orange-red */
   /* Accent word, logo "studios" and notes all use the Listomania hand.
      (Skylight Graffiti is still registered in css/swft-fonts.css but unused.) */
   --mf-graffiti: var(--swft-font-listomania-one, "Listomania One"), var(--mf-hand);

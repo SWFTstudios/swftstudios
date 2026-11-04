@@ -405,7 +405,7 @@
     // Analytics on every page, including older templates that never linked it
     if (!document.querySelector('script[src*="swft-analytics.js"]')) loadOnce("/js/swft-analytics.js?v=20261104-ga4", "data-swft-analytics");
     loadOnce("/js/text-reveal.js?v=20261027-mono", "data-swft-text-reveal");
-    loadOnce("/js/mono.js?v=20261103-notify", "data-swft-mono");
+    loadOnce("/js/mono.js?v=20261104-signal", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
     loadOnce("/js/swft-app.js?v=20261103-app4", "data-swft-app");
     if (document.querySelector(".an-hl, .an-ul, .an-circle, .an-note")) loadOnce("/js/annotate.js?v=20261104-annotate", "data-swft-annotate");
