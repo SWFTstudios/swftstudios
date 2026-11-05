@@ -16,8 +16,8 @@
 /portfolio-review       /work.html          301
 /tools.html             /automations.html           301
 /tools                  /automations.html           301
-/swft-method.html       /growth-guide.html          301
-/swft-method            /growth-guide.html          301
+/swft-method.html       /growth-guide              301
+/swft-method            /growth-guide              301
 
 # 2026-10-27 Mono redesign: pages renamed to what they are now.
 /team.html              /about.html                 301
@@ -45,10 +45,8 @@
 /ai-employees           /automations.html           301
 
 # 2026-11-04 The Free Growth Audit became the Free SWFT Growth Guide.
-/growth-audit                   /growth-guide.html   301
-/growth-audit.html              /growth-guide.html   301
-/growth-audit/                  /growth-guide.html   301
-/growth-audit/thank-you         /growth-guide.html   301
-/growth-audit/thank-you.html    /growth-guide.html   301
-/growth-guide                   /growth-guide.html   301
-/guide-worksheet                /guide-worksheet.html 301
+/growth-audit                   /growth-guide       301
+/growth-audit.html              /growth-guide       301
+/growth-audit/                  /growth-guide       301
+/growth-audit/thank-you         /growth-guide       301
+/growth-audit/thank-you.html    /growth-guide       301

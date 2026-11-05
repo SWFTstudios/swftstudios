@@ -142,6 +142,28 @@ export async function onRequestPost(context) {
         <p>Want to add something in the meantime? Just reply to this email.</p>
         ${sign}`,
     };
+  } else if (body.check && Array.isArray(body.check.lines)) {
+    // Customer Journey Check results (js/journey-check.js): label/value lines
+    const lines = body.check.lines
+      .filter((r) => Array.isArray(r) && r.length === 2)
+      .slice(0, 40)
+      .map(([k, v]) => [str(k, 80), str(v, 600)])
+      .filter(([k, v]) => k && v);
+    if (!lines.length) return json({ ok: false, error: "Finish the check first." }, 400);
+    const rows = table(lines.map(([k, v]) => row(k, v)).join(""));
+    const biz = (lines.find(([k]) => k === "Business") || [])[1] || "";
+    details = { check: { industry: str(body.check.industry, 40), priority: str(body.check.priority, 20), lines }, businessName: biz.split(" · ")[1] || null };
+    lead = { formType: "Growth Guide · Customer Journey Check", notes: lines.map(([k, v]) => `${k}: ${v}`).join("\n") };
+    mail = {
+      teamSubject: `Customer Journey Check: ${biz || email}`,
+      teamHtml: `<p><strong>Customer Journey Check results</strong> from &lt;${escapeHtml(email)}&gt;. They asked for a copy; you can follow up from Admin → Guides.</p>${rows}`,
+      confirmSubject: "Your Customer Journey Check and 30-day plan",
+      confirmHtml: `${hi}
+        <p>Here's a copy of your Customer Journey Check: your first priority, what to do this week, and your action card. It's based on your answers, not an independent audit.</p>
+        ${rows}
+        <p style="margin-top:20px;">Want a second set of eyes, or help putting the plan into practice? Reply to this email, or send us a few details at <a href="https://www.swftstudios.com/growth-guide#help">swftstudios.com/growth-guide</a>. No call required.</p>
+        ${sign}`,
+    };
   } else {
     const answers = cleanAnswers(body.answers);
     if (!Object.keys(answers).length) return json({ ok: false, error: "Fill in at least one answer first." }, 400);

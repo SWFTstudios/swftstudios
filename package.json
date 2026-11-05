@@ -18,7 +18,8 @@
     "test:subscribe": "node --test tests/subscribe/*.test.mjs",
     "build:icons": "node scripts/build-app-icons.mjs",
     "build:payments": "node scripts/build-payments.mjs && node scripts/build-book-pages.mjs",
-    "stripe:sync": "node scripts/stripe-sync.mjs && npm run build:payments"
+    "stripe:sync": "node scripts/stripe-sync.mjs && npm run build:payments",
+    "build:guide-pdf": "node scripts/build-growth-guide-pdf.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",

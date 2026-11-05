@@ -346,7 +346,7 @@
   /* ---------- Guides: Free SWFT Growth Guide requests ----------
      "Do it for me" requests and worksheet answers get a Write results button:
      a template to fill in, then Send results emails it with the 1-on-1 link. */
-  var GUIDE_KIND = { dfy: "Do it for me", answers: "Worksheet answers", diy: "Started on their own" };
+  var GUIDE_KIND = { dfy: "Do it for me", answers: "Journey check / worksheet", diy: "Started on their own" };
   var GUIDE_TEMPLATE = [
     "Here's what stood out:",
     "",
@@ -371,6 +371,7 @@
         ["Customers", d.customers || "—"], ["90-day goal", d.goal], ["Anything else", d.notes || "—"]
       ].filter(function (r) { return r[1]; }));
     }
+    if (d.check && d.check.lines) return table(["", ""], d.check.lines, "No answers.");
     var a = d.answers || {};
     return table(["Question", "Answer"], questions.filter(function (q) { return a[q.key]; }).map(function (q) {
       return [q.q.replace("___", "…"), a[q.key]];
