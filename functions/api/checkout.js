@@ -111,7 +111,8 @@ export async function onRequestPost(context) {
   try {
     const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/x-www-form-urlencoded" },
+      // Pinned API version: $0 orders (100% off promotion codes) need 2023-08-16 or later
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/x-www-form-urlencoded", "Stripe-Version": "2024-06-20" },
       body: p.toString(),
     });
     const s = await res.json().catch(() => ({}));
