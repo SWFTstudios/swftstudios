@@ -725,21 +725,21 @@
             "title": "New client inquiry",
             "text": "Found you on Google · reviews up front",
             "why": "Most people choose a professional from the first page of results. Showing up there with real reviews puts you on the shortlist before they've called anyone.",
-            "stage": "Clients find me first",
+            "stage": "Clients find you first",
             "service": "Google profile & reviews"
           },
           {
             "title": "Consult page viewed",
             "text": "Packages and bio · booked a 30-min call",
             "why": "Buyers want three answers fast: what you do, proof you've done it, and how to reach you. A page that answers all three turns a visit into a call.",
-            "stage": "My site earns their trust",
+            "stage": "Your site earns their trust",
             "service": "Website"
           },
           {
             "title": "After-hours form answered",
             "text": "Calendar link sent in 2 minutes",
             "why": "The first firm to respond usually wins the client. An instant reply with a booking link catches them while they're still deciding, even at 9pm.",
-            "stage": "I reply first",
+            "stage": "You reply first",
             "service": "Instant follow-up"
           },
           {
@@ -771,14 +771,14 @@
             "title": "Shopper taps your Reel",
             "text": "Short-form video · Instagram ad",
             "why": "People buy from brands they've seen in action. A short video in the feed does the showing before they ever reach your store.",
-            "stage": "Shoppers discover my brand",
+            "stage": "Shoppers discover your brand",
             "service": "Short-form video & ads"
           },
           {
             "title": "Product page did the selling",
             "text": "Reviews and a bundle · added to cart",
             "why": "Shoppers decide on the product page. Clear photos, real reviews and an easy bundle answer their doubts before they leave to compare.",
-            "stage": "My store sells for me",
+            "stage": "Your store sells for you",
             "service": "Online store"
           },
           {
@@ -817,7 +817,7 @@
             "title": "Saturday table search",
             "text": "Google Maps · fresh food photos",
             "why": "Most diners pick from Maps on their phone. Fresh photos and a complete profile are what make them tap your name instead of the next one.",
-            "stage": "Hungry locals find us",
+            "stage": "Hungry locals find you",
             "service": "Google Maps & food photos"
           },
           {
