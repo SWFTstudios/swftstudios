@@ -30,11 +30,11 @@
     var form = $("gg-form");
     if (!form) return;
     var dfy = $("gg-dfy"), status = $("gg-status"), btn = $("gg-submit"), label = form.querySelector("[data-gg-label]");
-    function kind() { var c = form.querySelector('input[name="kind"]:checked'); return c ? c.value : "diy"; }
+    function kind() { var c = form.querySelector('input[name="kind"]:checked') || form.querySelector('input[type="hidden"][name="kind"]'); return c ? c.value : "diy"; }
     function sync() {
       var k = kind();
-      dfy.hidden = k !== "dfy";
-      label.textContent = k === "dfy" ? "Send my details" : "Email me the guide";
+      if (dfy) dfy.hidden = k !== "dfy";
+      if (label) label.textContent = k === "dfy" ? "Send my details" : "Email me the guide";
     }
     form.addEventListener("change", function (e) { if (e.target.name === "kind") sync(); });
     sync();

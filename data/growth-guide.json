@@ -1,0 +1,175 @@
+{
+  "_readme": "The Free SWFT Growth Guide (Customer Journey Check). One source for the web check (guide-worksheet.html via js/journey-check.js) and the PDF (npm run build:guide-pdf). Question text may use {action}, {actionNoun}, {proof}, {relationship} from the chosen industry. No research figures here on purpose: only add a statistic after checking the original source, date, population and scope.",
+  "title": "The SWFT Growth Guide",
+  "checkName": "Customer Journey Check",
+  "promise": "Find where customers get stuck. Know what to fix next.",
+  "disclaimer": "Based on your answers; not an independent audit.",
+  "answers": [
+    { "id": "yes", "label": "Yes, consistently", "points": 2 },
+    { "id": "partly", "label": "Partly", "points": 1 },
+    { "id": "no", "label": "No", "points": 0 },
+    { "id": "unknown", "label": "I don't know", "points": null }
+  ],
+  "industries": [
+    {
+      "id": "professional",
+      "label": "Professional services",
+      "action": "send a qualified inquiry or book a consultation",
+      "actionNoun": "inquiry",
+      "proof": "relevant work, fit, process and expectations",
+      "relationship": "referrals, continued engagement or renewal",
+      "outcomeHint": "Long sales cycle? Track qualified conversations now and review revenue later."
+    },
+    {
+      "id": "ecommerce",
+      "label": "E-commerce",
+      "action": "complete a purchase",
+      "actionNoun": "order",
+      "proof": "product detail, authentic imagery, and delivery and returns clarity",
+      "relationship": "repeat purchases and customer satisfaction",
+      "outcomeHint": "Count completed orders, not just sessions or add-to-carts."
+    },
+    {
+      "id": "restaurants",
+      "label": "Restaurants",
+      "action": "reserve, order or plan a visit",
+      "actionNoun": "reservation or order",
+      "proof": "a current menu, atmosphere, location and hours",
+      "relationship": "return visits and the right occasions to reconnect",
+      "outcomeHint": "Compare the same days of the week; seasons and events move covers."
+    },
+    {
+      "id": "community",
+      "label": "Community & events",
+      "action": "register",
+      "actionNoun": "registration",
+      "proof": "the purpose, the hosts, practical details and what to expect",
+      "relationship": "continued participation or recommendations",
+      "outcomeHint": "A registration is not attendance: track who actually shows up."
+    }
+  ],
+  "outcomes": [
+    { "id": "inquiries", "label": "More qualified inquiries", "stage": "trust" },
+    { "id": "purchases", "label": "More completed purchases", "stage": "action" },
+    { "id": "reservations", "label": "More reservations", "stage": "action" },
+    { "id": "registrations", "label": "More attended registrations", "stage": "action" },
+    { "id": "repeat", "label": "More repeat business or referrals", "stage": "back" },
+    { "id": "time", "label": "Less time on a manual task", "stage": "action" }
+  ],
+  "stages": [
+    {
+      "id": "found",
+      "num": "01",
+      "title": "Found",
+      "question": "Can I find you when I need what you offer?",
+      "intro": "Choose one audience, one offer and the places people use to discover it. Start with the paths your customers actually use.",
+      "questions": [
+        "Do you know where recent customers first discovered your business?",
+        "Do your main discovery profiles clearly explain who you help, what you offer and where you serve?",
+        "Are the important details and links on those profiles accurate?",
+        "Are you publishing or maintaining useful material that answers your audience's real questions?",
+        "Can someone move from discovering you to the relevant offer in one clear step?"
+      ],
+      "firstAction": "Follow your most important discovery path on a phone. Correct one missing detail, unclear description or broken next step.",
+      "evidence": "Relevant visits or inquiries by source. Where tracking is limited, start asking new customers how they found you.",
+      "obstacle": "people who need what you offer may not be finding you, or may not reach the right offer",
+      "help": "Discovery strategy, local visibility, photography, video and content connected to the offer.",
+      "links": [
+        { "label": "Paid ads & local SEO", "href": "/marketing.html" },
+        { "label": "Content & creative", "href": "/content.html" }
+      ]
+    },
+    {
+      "id": "trust",
+      "num": "02",
+      "title": "Trust",
+      "question": "Is this right for me, and why should I choose you?",
+      "intro": "Explain the outcome, show credible proof and help the right person understand the fit. Your difference should be specific enough to demonstrate.",
+      "questions": [
+        "Can a new visitor quickly explain what you offer, who it is for and why it matters?",
+        "Do you explain a meaningful reason to choose you and show evidence for it?",
+        "Can people see authentic work, experiences, reviews or other relevant proof, such as {proof}?",
+        "Can they understand the buying process, key expectations, and the price or how to get a quote?",
+        "Does the experience on a phone make that information easy to read and use?"
+      ],
+      "firstAction": "Rewrite the main offer statement and place a relevant piece of proof beside it. Ask someone unfamiliar with the business to explain the offer back to you.",
+      "evidence": "What test visitors understand, recurring pre-sale questions, and movement from the offer page to the intended next step.",
+      "obstacle": "visitors may not understand the offer quickly or see enough proof to choose you",
+      "help": "Positioning, offer messaging, visual storytelling, case studies and website experience.",
+      "links": [
+        { "label": "Websites", "href": "/websites.html" },
+        { "label": "Content & creative", "href": "/content.html" }
+      ]
+    },
+    {
+      "id": "action",
+      "num": "03",
+      "title": "Take action",
+      "question": "Can I take the next step easily, and do I know what happens afterward?",
+      "intro": "Make one main action clear. Check the entire path, including the confirmation, response and handoff.",
+      "questions": [
+        "Is there one clear way to {action} on the page or profile for this offer?",
+        "Can a customer complete it on a phone without a broken link, unnecessary field or confusing instruction?",
+        "Do they receive confirmation and know what happens next?",
+        "Is someone responsible for each {actionNoun}, with a response expectation the business can meet?",
+        "Do you record completed actions and follow through to the next business outcome, such as a qualified conversation or fulfilled order?"
+      ],
+      "critical": [1, 2, 3],
+      "firstAction": "Run a clearly marked test {actionNoun}. Check receipt, confirmation, routing and follow-through. Use a test mode for paid transactions where available.",
+      "evidence": "Completed actions divided by relevant visits or starts, response time where relevant, and qualified inquiries or fulfilled orders. Show counts alongside rates.",
+      "obstacle": "interested people may not be able to {action} easily, or the handoff after it may break",
+      "help": "Booking and checkout journeys, forms, integrations, routing and useful automation.",
+      "links": [
+        { "label": "Automations", "href": "/automations.html" },
+        { "label": "Websites", "href": "/websites.html" }
+      ]
+    },
+    {
+      "id": "back",
+      "num": "04",
+      "title": "Come back",
+      "question": "Was it worth it, and why would I return or recommend you?",
+      "intro": "Retention starts with delivering what was promised. Follow-up should support that experience and offer a useful reason to reconnect.",
+      "questions": [
+        "Do customers receive the delivery, onboarding or experience you promised?",
+        "Is there a consistent way to check satisfaction and resolve problems?",
+        "Do you ask for a review or referral at an appropriate moment?",
+        "Is there a relevant next offer, reminder or invitation for people who want it?",
+        "Can you identify {relationship} over a period that fits your business?"
+      ],
+      "critical": [0, 1],
+      "firstAction": "Map the first follow-up after the customer receives value. Give it an owner, a trigger and a useful purpose.",
+      "evidence": "Rebookings, repeat purchases, referrals or repeat participation over an appropriate period; unresolved issues; owner time spent on the workflow.",
+      "obstacle": "customers may not get a reason, or a reliable experience, to come back or recommend you",
+      "help": "Onboarding, customer communications, review workflows, reactivation and reporting.",
+      "links": [
+        { "label": "Automations", "href": "/automations.html" },
+        { "label": "Tracking & reporting", "href": "/analytics.html" }
+      ]
+    }
+  ],
+  "plan": [
+    { "week": "Week 1", "title": "Understand", "text": "Walk the journey as a customer. Confirm the obstacle, record the baseline and choose one priority. If there is too little activity to judge, start collecting evidence and extend the review period." },
+    { "week": "Week 2", "title": "Improve", "text": "Make the smallest useful change. Assign a person responsible for it and test the complete path." },
+    { "week": "Week 3", "title": "Connect", "text": "Make the handoff dependable: define the trigger, the next action, the owner, and what happens if something fails. Automate stable, repetitive steps where useful." },
+    { "week": "Week 4", "title": "Review", "text": "Compare the same measures across comparable periods. Note changes in traffic, seasonality, promotions or capacity that may also explain the result. Keep, revise or stop the change, then select the next priority." }
+  ],
+  "card": [
+    "The customer I want to help",
+    "The outcome I want to improve",
+    "The obstacle I observed",
+    "My current baseline and source",
+    "The change I will test",
+    "Who owns it",
+    "How I will test that it works",
+    "The measure and review date",
+    "What happened and what I learned",
+    "My next decision"
+  ],
+  "example": "Illustrative only: a service business receives inquiries, but some never reach the person responsible for booking. First verify receipt and response history. Then connect the inquiry to a named owner, send a confirmation and set an overdue reminder. Check that every test inquiry reaches the right place. Review qualified bookings, missed inquiries, response times and administrative time. The workflow is complete when the handoff works; evidence of transformation comes from the customer and business experience over time.",
+  "progress": [
+    { "label": "Built", "text": "The page, content or automation exists." },
+    { "label": "Working", "text": "Customers can use it and the workflow completes reliably." },
+    { "label": "Improving the business", "text": "The customer or operating outcome changes in a useful way." }
+  ]
+}
