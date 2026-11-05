@@ -355,10 +355,10 @@ function flowBlock(data) {
             `<li class="wf__node">`,
             `<button type="button" class="wf__step" data-step="${j}" aria-controls="wf-${ind.id}-${j}">`,
             `  <span class="wf__dot" aria-hidden="true">${icon(st.icon, "wf__dot-icon")}</span>`,
-            `  <span class="wf__step-text"><span class="wf__num">${num}</span><span class="wf__stage">${esc(st.stage)}</span><span class="wf__service">${esc(st.service)}</span></span>`,
+            `  <span class="wf__step-text"><span class="wf__num">${num}</span><span class="wf__stage">${esc(ind.cards[j].stage || st.stage)}</span><span class="wf__service">${esc(ind.cards[j].service || st.service)}</span></span>`,
             `  <span class="wf__bar" aria-hidden="true"><span></span></span>`,
             `</button>`,
-            `<button type="button" class="wf__tip" data-pop="${ind.id}-${j}" aria-haspopup="dialog" aria-label="Why ${esc(st.stage)} matters">`,
+            `<button type="button" class="wf__tip" data-pop="${ind.id}-${j}" aria-haspopup="dialog" aria-label="Why \u201c${esc(ind.cards[j].stage || st.stage)}\u201d matters">`,
             `  <span aria-hidden="true">i</span>`,
             `  <span class="wf__tip-bubble" role="tooltip">${esc(teaser)} <b>Open for more</b></span>`,
             `</button>`,
@@ -373,7 +373,7 @@ function flowBlock(data) {
           const linkItem = (l) => `<li><a href="${l.href}"><span>${esc(l.kind)}</span>${esc(l.label)}</a></li>`;
           return [
             `<template class="wf__pop-tpl" data-pop="${ind.id}-${j}">`,
-            `  <p class="wf-pop__tag">${icon(st.icon, "wf__icon")}<span>${String(j + 1).padStart(2, "0")} &middot; ${esc(st.stage)} &middot; ${esc(ind.label)}</span></p>`,
+            `  <p class="wf-pop__tag">${icon(st.icon, "wf__icon")}<span>${String(j + 1).padStart(2, "0")} &middot; ${esc(c.stage || st.stage)} &middot; ${esc(ind.label)}</span></p>`,
             `  <h2 class="wf-pop__title" id="wf-pop-title">Why this step matters</h2>`,
             `  <p class="wf-pop__why">${esc(c.why)}</p>`,
             `  <div class="wf-pop__moment"><p class="wf-pop__label">What your customer sees</p><p><b>${esc(c.title)}.</b> ${esc(c.text)}.</p></div>`,
@@ -391,9 +391,9 @@ function flowBlock(data) {
           return [
             `<article class="wf__moment" id="wf-${ind.id}-${j}" data-step="${j}">`,
             `  <span class="wf__ghost" aria-hidden="true">${num}</span>`,
-            `  <p class="wf__tag">${icon(st.icon, "wf__icon")}<span>${num} / ${String(n).padStart(2, "0")} &middot; ${esc(st.stage)}</span></p>`,
+            `  <p class="wf__tag">${icon(st.icon, "wf__icon")}<span>${num} / ${String(n).padStart(2, "0")} &middot; ${esc(c.stage || st.stage)}</span></p>`,
             `  <h3 class="wf__title">${esc(c.title)}</h3>`,
-            `  <p class="wf__text"><span class="wf__runs">How:</span> ${esc(c.text)} &middot; <a href="${st.href}">${esc(st.service)}</a></p>`,
+            `  <p class="wf__text"><span class="wf__runs">How:</span> ${esc(c.text)} &middot; <a href="${st.href}">${esc(c.service || st.service)}</a></p>`,
             `  <button type="button" class="wf__why-btn" data-pop="${ind.id}-${j}" aria-haspopup="dialog" aria-expanded="false" aria-controls="${whyId}"><span class="wf__why-i" aria-hidden="true">i</span>Why it matters</button>`,
             `  <div class="wf__why" id="${whyId}" role="note"><p>${esc(c.why)}</p></div>`,
             `</article>`,
