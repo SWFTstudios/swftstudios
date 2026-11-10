@@ -780,8 +780,8 @@
           el("div", { class: "admin-stats" }, [stat("Active subscribers", d.counts.active), stat("Want blog posts", d.counts.blog), stat("Want videos", d.counts.videos)]),
           el("p", { class: "admin-muted", text: "Sending from " + d.from + ". Replies go to hello@swftstudios.com. Each subscriber only gets each post or video once." }),
           el("p", { class: "admin-muted", text: d.autoOn
-            ? "New blog posts email blog subscribers automatically about " + d.autoHoldMinutes + " minutes after they go live. Click \u201cDon't auto-send\u201d before then to stop one. Videos are sent by hand."
-            : "Automatic sending is off: deploy workers/newsletter (see docs/EMAIL_UPDATES.md) to email new blog posts on their own." }),
+            ? "New blog posts and videos email the matching subscribers automatically about " + d.autoHoldMinutes + " minutes after they go live. Click \u201cDon't auto-send\u201d before then to stop one."
+            : "Automatic sending is off: deploy workers/newsletter (see docs/EMAIL_UPDATES.md) to email new blog posts and videos on their own." }),
           table(["Type", "Title", "Status", ""], rows, "No blog posts or videos found."),
         ]));
       });

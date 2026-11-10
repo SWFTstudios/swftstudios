@@ -48,7 +48,7 @@ export async function loadItems(getJson) {
     .filter((v) => v && v.vimeo)
     .map((v) => {
       const key = String(v.slug || v.vimeo);
-      return { kind: "videos", key, vimeo: String(v.vimeo), hash: v.hash || "", title: v.title || "", summary: v.description || "", path: `/visuals.html?p=${encodeURIComponent(key)}`, date: v.year || null };
+      return { kind: "videos", key, vimeo: String(v.vimeo), hash: v.hash || "", client: v.client || "", thumb: v.thumb || "", title: v.title || "", summary: v.description || "", path: `/visuals.html?p=${encodeURIComponent(key)}`, date: v.year || null };
     });
   return [...blog, ...videos];
 }
@@ -93,6 +93,7 @@ export function buildEmail(env, item, { subject, summary }, subscriber) {
   const origin = siteOrigin(env);
   const link = origin + item.path;
   const what = item.kind === "blog" ? "Read the post" : "Watch the video";
+  const thumb = /^https:\/\//.test(item.thumb || "") ? item.thumb : item.thumb ? `${origin}/${String(item.thumb).replace(/^\/+/, "")}` : "";
   const topic = INTERESTS[item.kind].toLowerCase();
   const hello = subscriber?.name ? `Hi ${escapeHtml(subscriber.name)},` : "Hi,";
   const unsub = subscriber ? unsubscribeUrl(origin, subscriber.id) : `${origin}/account.html`;
@@ -100,6 +101,7 @@ export function buildEmail(env, item, { subject, summary }, subscriber) {
 <p>${hello}</p>
 <p style="margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#777">New from SWFT Studios · ${escapeHtml(KINDS[item.kind])}</p>
 <h1 style="margin:0 0 12px;font-size:22px;line-height:1.25">${escapeHtml(subject)}</h1>
+${thumb ? `<p><a href="${link}"><img src="${escapeHtml(thumb)}" alt="" width="560" style="display:block;width:100%;max-width:560px;height:auto;border-radius:12px;border:0"></a></p>` : ""}
 ${summary ? `<p>${escapeHtml(summary)}</p>` : ""}
 <p><a href="${link}" style="display:inline-block;background:#111;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold">${what}</a></p>
 <hr style="border:none;border-top:1px solid #e5e5e5;margin:28px 0 12px">
@@ -171,9 +173,32 @@ export async function sendItem(db, env, item, { subject, summary }) {
   return { sent, remaining, failed };
 }
 
-/* ---------- Automatic sending of new blog posts (cron) ---------- */
+/* ---------- Automatic sending of new blog posts and videos (cron) ---------- */
 
-export const AUTO_KINDS = ["blog"];
+export const AUTO_KINDS = ["blog", "videos"];
+
+/**
+ * A video's title, summary and thumbnail for the email. Values set in data/visuals.json win;
+ * the rest come from Vimeo's oEmbed (works for unlisted videos with their hash). If Vimeo
+ * can't be reached the email still goes out with a plain subject.
+ */
+export async function videoDetails(item) {
+  let meta = null;
+  if (!item.title || !item.summary || !item.thumb) {
+    try {
+      const page = `https://vimeo.com/${item.vimeo}${item.hash ? "/" + item.hash : ""}`;
+      const res = await fetch(`https://vimeo.com/api/oembed.json?width=1280&url=${encodeURIComponent(page)}`);
+      if (res.ok) meta = await res.json();
+    } catch { /* fall back below */ }
+  }
+  const clip = (t) => { t = String(t || "").replace(/\s+/g, " ").trim(); return t.length > 300 ? t.slice(0, 297).replace(/\s+\S*$/, "") + "…" : t; };
+  return {
+    ...item,
+    title: item.title || meta?.title || (item.client ? `New video: ${item.client}` : "New video from SWFT Studios"),
+    summary: clip(item.summary || meta?.description || ""),
+    thumb: item.thumb || meta?.thumbnail_url || "",
+  };
+}
 export const AUTO_HOLD_MINUTES = 30;
 const AUTO_MAX_ROUNDS = 8; // 8 × 500 = 4,000 emails per run; the rest go on the next run.
 
@@ -224,9 +249,10 @@ export async function runAutoSend(db, env, getJson, now = new Date()) {
   for (const row of due) {
     const item = items.find((i) => i.kind === row.kind && i.key === row.item_key);
     if (!item || row.first_seen_at > cutoff) { summary.waiting++; continue; }
+    const mail = item.kind === "videos" ? await videoDetails(item) : item;
     let count = 0, done = false;
     for (let round = 0; round < AUTO_MAX_ROUNDS; round++) {
-      const r = await sendItem(db, env, item, { subject: item.title, summary: item.summary });
+      const r = await sendItem(db, env, mail, { subject: mail.title, summary: mail.summary });
       count += r.sent;
       if (r.failed) break;
       if (!r.remaining) { done = true; break; }

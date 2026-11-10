@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
-  // Emails subscribers automatically when a new blog post goes live on www.swftstudios.com.
+  // Emails subscribers automatically when a new blog post or video goes live on www.swftstudios.com.
   // Production is the Pages project, which can't run on a schedule, so this small Worker
   // does. Logic: functions/_lib/newsletter.js (runAutoSend). Deploy: npx wrangler deploy
   "name": "swft-newsletter",

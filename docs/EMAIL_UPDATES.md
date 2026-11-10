@@ -37,11 +37,11 @@ Code: [`functions/_lib/newsletter.js`](../functions/_lib/newsletter.js). Recipie
 
 **By hand:** Admin → Newsletter. Pick a post or video, edit the subject and summary, send yourself a test, then send to subscribers.
 
-**Automatically (new blog posts):** the cron Worker [`workers/newsletter`](../workers/newsletter) runs every 15 minutes. It reads the live `https://www.swftstudios.com/data/blog-posts.json`, so a post counts as published once it is deployed. **After adding a post, run `npm run build:blog-index` and commit the updated `data/blog-posts.json`,** otherwise the Worker can't see the post.
+**Automatically (new blog posts and videos):** the cron Worker [`workers/newsletter`](../workers/newsletter) runs every 15 minutes. It reads the live `https://www.swftstudios.com/data/blog-posts.json` and `data/visuals.json`, so a post or video counts as published once it is deployed. **After adding a post, run `npm run build:blog-index` and commit the updated `data/blog-posts.json`,** otherwise the Worker can't see the post. A video only needs its entry in `data/visuals.json`.
 
-- First run: every post already on the site is recorded as `baseline` and never emailed automatically.
-- A post seen later waits 30 minutes, then goes to blog subscribers with its title as the subject and its meta description as the summary. To stop one, click "Don't auto-send" in Admin → Newsletter before then, or take the post down.
-- Videos are sent by hand only.
+- First run: every post and video already on the site is recorded as `baseline` and never emailed automatically.
+- A post or video seen later waits 30 minutes, then goes to subscribers who picked that topic. To stop one, click "Don't auto-send" in Admin → Newsletter before then, or take it down.
+- Blog emails use the post title and meta description. Video emails use `title`, `description` and `thumb` from `data/visuals.json` when set, otherwise Vimeo's title, description and thumbnail (oEmbed, including unlisted videos with a hash). If Vimeo can't be reached the email still goes out, with the subject "New video: <client>" or "New video from SWFT Studios".
 
 Setup (once, after migration 0010 is applied):
 

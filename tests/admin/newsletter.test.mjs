@@ -51,11 +51,15 @@ const ctx = (db, { sid, method = "GET", body, origin = ORIGIN, env = {} } = {}) 
   }),
 });
 
-let batches, singles, failOn, realFetch;
+let batches, singles, failOn, realFetch, vimeo, vimeoCalls;
 beforeEach(() => {
-  batches = []; singles = []; failOn = new Set();
+  batches = []; singles = []; failOn = new Set(); vimeo = null; vimeoCalls = [];
   realFetch = globalThis.fetch;
   globalThis.fetch = async (url, init) => {
+    if (String(url).startsWith("https://vimeo.com/api/oembed.json")) {
+      vimeoCalls.push(decodeURIComponent(String(url).split("url=")[1]));
+      return vimeo ? Response.json(vimeo) : new Response("", { status: 404 });
+    }
     if (url === "https://api.resend.com/emails/batch") {
       batches.push({ emails: JSON.parse(init.body), key: init.headers["Idempotency-Key"] });
       if (failOn.has(batches.length)) return new Response("{}", { status: 422 });
@@ -201,8 +205,8 @@ import { runAutoSend } from "../../functions/_lib/newsletter.js";
 import worker from "../../workers/newsletter/src/index.js";
 
 // A site whose blog list we control, served the way the cron Worker reads it.
-function site(posts) {
-  return async (path) => (path === "/data/blog-posts.json" ? posts : { videos: [] });
+function site(posts, videos = []) {
+  return async (path) => (path === "/data/blog-posts.json" ? posts : { videos });
 }
 const post = (slug, title = `Post ${slug}`) => ({ slug, title, description: `About ${slug}.`, url: `/blog/${slug}.html`, published: null, updated: "2026-11-10" });
 const ENV = { RESEND_API_KEY: "re_test", PORTAL_ORIGIN: ORIGIN };
@@ -312,4 +316,47 @@ test("cron Worker reads the live blog list and does nothing before migration 001
   } finally {
     globalThis.fetch = prev;
   }
+});
+
+test("auto-send: a new video goes to video subscribers, with title, summary and thumbnail from Vimeo", async () => {
+  const db = makeDb();
+  addSub(db, "videos@example.com", { interests: "videos", name: "Kai" });
+  addSub(db, "blog@example.com", { interests: "blog" });
+  const old = { vimeo: "111" };
+  await runAutoSend(db, ENV, site([post("p")], [old]), at(0));
+  assert.equal(db.raw.prepare("SELECT status FROM newsletter_auto WHERE kind = 'videos' AND item_key = '111'").get().status, "baseline");
+
+  const live = site([post("p")], [{ vimeo: "222", hash: "abc123" }, old]);
+  await runAutoSend(db, ENV, live, at(15));
+  assert.equal(batches.length, 0);
+  vimeo = { title: "Brooklyn Steel Launch Film", description: "Behind the scenes of the launch.", thumbnail_url: "https://i.vimeocdn.com/video/222.jpg" };
+  const r = await runAutoSend(db, ENV, live, at(45));
+  assert.deepEqual(r.sent, [{ key: "222", count: 1 }]);
+  assert.deepEqual(vimeoCalls, ["https://vimeo.com/222/abc123"]);
+  assert.deepEqual(recipients(), ["videos@example.com"]);
+  const mail = batches[0].emails[0];
+  assert.equal(mail.subject, "Brooklyn Steel Launch Film");
+  assert.ok(mail.html.includes("Behind the scenes of the launch."));
+  assert.ok(mail.html.includes('src="https://i.vimeocdn.com/video/222.jpg"'));
+  assert.ok(mail.html.includes(`${ORIGIN}/visuals.html?p=222`));
+  assert.match(mail.html, /Watch the video/);
+  assert.equal(db.raw.prepare("SELECT status FROM newsletter_auto WHERE item_key = '222'").get().status, "sent");
+});
+
+test("auto-send: titles set in visuals.json win, and a video still goes out if Vimeo is unreachable", async () => {
+  const db = makeDb();
+  addSub(db, "v@example.com", { interests: "videos" });
+  await runAutoSend(db, ENV, site([post("p")], [{ vimeo: "1" }]), at(0));
+  const live = site([post("p")], [
+    { vimeo: "2", title: "Our Title", description: "Ours.", thumb: "images/reel.webp" },
+    { vimeo: "3", client: "Manna Hydration" },
+    { vimeo: "4" },
+    { vimeo: "1" },
+  ]);
+  await runAutoSend(db, ENV, live, at(15));
+  await runAutoSend(db, ENV, live, at(60)); // vimeo is null: oEmbed answers 404
+  const bySubject = Object.fromEntries(batches.map((b) => [b.emails[0].subject, b.emails[0]]));
+  assert.deepEqual(Object.keys(bySubject).sort(), ["New video from SWFT Studios", "New video: Manna Hydration", "Our Title"]);
+  assert.ok(bySubject["Our Title"].html.includes(`src="${ORIGIN}/images/reel.webp"`));
+  assert.ok(!vimeoCalls.includes("https://vimeo.com/2"), "no lookup when visuals.json has everything");
 });
