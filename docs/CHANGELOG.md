@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-10: Pick the completion date with a calendar
+
+### Added
+- Admin step cards have a calendar field in the details dropdown: **Completed on** for a done step, **Target date** for any other. Marking a step Done stamps today; change the day with the calendar (no future dates; a done step must keep a date). The client sees that day ("Completed Nov 5"). New action `set_milestone_date { id, date }`, and `milestone_status` accepts an optional `completedOn`. A picked day is stored as noon UTC so it shows as the same day in every US and European time zone.
+- Tests: picked date stored and shown to the client, date changed later, re-selecting Done keeps the date, future/impossible/malformed dates and clearing a done step's date rejected, undone clears the date, target date set and cleared, client and unknown-step handling.
+
+### Changed
+- **Edit** now asks for title and description only; dates are set with the calendar field.
+
+### Fixed
+- Client dashboard: a target date like 2026-12-01 showed as the day before in US time zones (a bare date was read as midnight UTC). Target dates now show the day that was picked.
+- The admin card used to show a completion date only when the step also had a target date.
+
 ## 2026-11-10: Default project steps, step editing, billing label
 
 ### Added

@@ -132,7 +132,10 @@
       }
       function day(s) {
         if (!s) return "";
-        var d = new Date(/T|Z/.test(s) ? s : String(s).replace(" ", "T") + (s.length > 10 ? "Z" : ""));
+        // A bare YYYY-MM-DD is a calendar day (target dates): build it in local time, because
+        // new Date("2026-12-01") means midnight UTC and shows as Nov 30 in the US.
+        var ymd = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+        var d = ymd ? new Date(+ymd[1], +ymd[2] - 1, +ymd[3]) : new Date(/T|Z/.test(s) ? s : String(s).replace(" ", "T") + (s.length > 10 ? "Z" : ""));
         return isNaN(d) ? s : d.toLocaleDateString([], { month: "short", day: "numeric" });
       }
       var LABEL = { done: "Done", in_progress: "In progress", upcoming: "Up next" };
