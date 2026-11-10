@@ -11,7 +11,8 @@
  *      delete_update    { id }                rename        { projectId, name }
  *      edit_milestone { id, title, detail?, dueDate? }   move_milestone { id, direction: "up"|"down" }
  *      reorder_milestones { projectId, ids: [every step id, in the new order] }
- *      schedule_milestones { projectId, start, end }  (spread target dates over the steps not done yet)
+ *      schedule_milestones { projectId, start, end? }  (target dates for the steps not done yet, sized by
+ *                                             their default lengths; no end = the default lengths decide)
  */
 import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
@@ -87,13 +88,13 @@ export async function onRequestPost(context) {
       if (!ok) return json({ ok: false, error: "The steps changed since this page loaded. Refresh and try again." }, 409);
     } else if (action === "schedule_milestones") {
       const start = str(b.start, 10), end = str(b.end, 10);
-      if (!isValidDate(start) || !isValidDate(end)) return json({ ok: false, error: "Pick a start and an end date." }, 400);
-      if (end <= start) return json({ ok: false, error: "The end date has to be after the start date." }, 400);
-      if (Date.parse(end) - Date.parse(start) > 366 * 24 * 60 * 60 * 1000) return json({ ok: false, error: "Keep the schedule within a year." }, 400);
+      if (!isValidDate(start) || (end && !isValidDate(end))) return json({ ok: false, error: "Pick a start date (and an optional launch date)." }, 400);
+      if (end && end <= start) return json({ ok: false, error: "The end date has to be after the start date." }, 400);
+      if (end && Date.parse(end) - Date.parse(start) > 366 * 24 * 60 * 60 * 1000) return json({ ok: false, error: "Keep the schedule within a year." }, 400);
       const projectId = str(b.projectId, 64);
       if (!(await db.prepare("SELECT id FROM projects WHERE id = ?").bind(projectId).first())) return json({ ok: false, error: "Project not found." }, 404);
-      const scheduled = await scheduleMilestones(db, projectId, start, end);
-      return json({ ok: true, scheduled });
+      const r = await scheduleMilestones(db, projectId, start, end);
+      return json({ ok: true, ...r });
     } else if (action === "delete_milestone") {
       ok = await deleteMilestone(db, str(b.id, 64));
     } else if (action === "add_update") {

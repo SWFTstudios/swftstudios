@@ -175,6 +175,8 @@
   }
 
   var refocusId = null, openIds = {}, openFor = null;
+  // The admin calendar survives reloads of the project view, so it stays on the week/month you were looking at.
+  var calFor = null, calBox = null, calApi = null;
 
   /**
    * Drag-and-drop ordering with pointer events (mouse, touch and pen). The list
@@ -319,25 +321,55 @@
         post({ action: "add_milestone", projectId: v.project.id, title: mt.value, detail: mdt.value, dueDate: md.value }).then(function (ok) { if (ok) reload(); });
       } }, [mt, mdt, md, el("button", { class: "admin-row-btn", type: "submit", text: "Add" })]);
 
-      // Spread target dates over a window; the client's calendar shows the result.
+      // Plan target dates over a window, sized by each step's default length; the client's calendar shows the result.
       var plusDays = function (iso, n) { var p = iso.split("-"); return isoLocal(new Date(+p[0], +p[1] - 1, +p[2] + n)); };
       var schStart = el("input", { type: "date", value: isoLocal(new Date()), "aria-label": "Schedule start" });
       var schEnd = el("input", { type: "date", value: plusDays(isoLocal(new Date()), 21), "aria-label": "Schedule end (launch)" });
       var weeksBtn = function (w) {
         return el("button", { class: "admin-row-btn", type: "button", text: w + " weeks", onclick: function () { schEnd.value = plusDays(schStart.value || isoLocal(new Date()), w * 7); } });
       };
-      var schedule = el("form", { class: "admin-inline-form admin-schedule", onsubmit: function (e) {
-        e.preventDefault();
+      var runSchedule = function (end) {
         var left = v.milestones.filter(function (m) { return m.status !== "done"; }).length;
         if (!left) { alert("Every step is done, so there is nothing to schedule."); return; }
-        if (!confirm("Set target dates for the " + left + " steps that aren't done, from " + schStart.value + " to " + schEnd.value + "? This replaces their current target dates.")) return;
-        post({ action: "schedule_milestones", projectId: v.project.id, start: schStart.value, end: schEnd.value }).then(function (ok) { if (ok) reload(); });
-      } }, [
+        if (!schStart.value) { schStart.focus(); return; }
+        var span = end ? "from " + schStart.value + " to " + end : "from " + schStart.value + " using the default length of each step";
+        if (!confirm("Set target dates for the " + left + " steps that aren't done, " + span + "? This replaces their current target dates.")) return;
+        post({ action: "schedule_milestones", projectId: v.project.id, start: schStart.value, end: end || "" }).then(function (ok) { if (ok) reload(); });
+      };
+      var schedule = el("form", { class: "admin-inline-form admin-schedule", onsubmit: function (e) { e.preventDefault(); runSchedule(schEnd.value); } }, [
         el("label", { class: "admin-milestone__date" }, [el("span", { text: "Start" }), schStart]),
         el("label", { class: "admin-milestone__date" }, [el("span", { text: "Launch by" }), schEnd]),
-        weeksBtn(2), weeksBtn(3),
+        weeksBtn(2), weeksBtn(3), weeksBtn(4),
         el("button", { class: "admin-row-btn", type: "submit", text: "Set target dates" }),
+        el("button", { class: "admin-row-btn", type: "button", text: "Use default lengths", onclick: function () { runSchedule(""); } }),
       ]);
+
+      // Calendar: same one the client sees, but tap/drag a step to change it.
+      if (calFor !== v.project.id) { calFor = v.project.id; calBox = el("div", { class: "admin-cal" }); calApi = null; }
+      var calSummary = SWFTCalendar.summary(v.milestones);
+      var calHead = el("div", { class: "admin-cal__head" }, [
+        el("p", { class: "portal-cal__eta", text: calSummary.eta }),
+        el("p", { class: "admin-muted portal-cal__sub", text: calSummary.sub }),
+      ]);
+      var saveFromCal = function (m, ch) {
+        var wasDate = m.status === "done" ? isoFromStored(m.completedAt) : (m.dueDate || "");
+        var step = Promise.resolve(true);
+        if (ch.status !== m.status) {
+          var body = { action: "milestone_status", id: m.id, status: ch.status };
+          if (ch.status === "done") body.completedOn = ch.date || isoLocal(new Date());
+          step = post(body);
+          if (ch.status === "done") wasDate = ch.date; // the status call already set the day
+          else if (m.status === "done") wasDate = m.dueDate || "";
+        }
+        return step.then(function (ok) {
+          if (ok && ch.date !== wasDate && (ch.date || ch.status !== "done")) return post({ action: "set_milestone_date", id: m.id, date: ch.date });
+          return ok;
+        }).then(function () { reload(); });
+      };
+      if (v.progressReady) {
+        if (calApi) calApi.update(v.milestones);
+        else calApi = SWFTCalendar.mount(calBox, { milestones: v.milestones, editable: true, onSave: saveFromCal });
+      }
 
       var ut = el("textarea", { placeholder: "Write an update for " + v.client.email + "…", "aria-label": "New client update", maxlength: "2000" });
       var notify = el("input", { type: "checkbox", id: "notify-client", checked: "checked", class: "portal-switch" });
@@ -391,8 +423,10 @@
           el("p", { class: "portal-stat-label", text: "Milestones (client sees these)" }),
           v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the grip on the left of a card to reorder. Tap a card to see its details and set dates. The client's dashboard updates right away." }) : null,
           ms, v.progressReady ? addMs : null,
-          v.progressReady ? el("p", { class: "portal-stat-label", text: "Schedule (fills the client's calendar)" }) : null,
-          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Spreads target dates evenly across the steps that aren't done, in order. The last step lands on the launch date; weekend dates move to Friday. You can still adjust any single date above." }) : null,
+          v.progressReady ? el("p", { class: "portal-stat-label", text: "Schedule (the client sees this calendar)" }) : null,
+          v.progressReady ? calHead : null,
+          v.progressReady ? calBox : null,
+          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Plan dates for every step that isn't done, in order. Each step gets its default length (Design 4 days, Build 5, Review 3, Approval/Payment/Launch 1 each, other steps 2), stretched or squeezed to fit the window. Launch lands on the launch date, the 30-day check-in 30 days after it, and weekend dates move to Friday. Use default lengths to let the plan pick the launch date. You can still change any single date on the calendar or in the steps above." }) : null,
           v.progressReady ? schedule : null,
           el("p", { class: "portal-stat-label", text: "Files (shared with the client, mirrored to Google Drive)" }), filesBox, el("div", {}, [syncBtn]),
           el("p", { class: "portal-stat-label", text: "Private notes (only you)" }), notesBox,

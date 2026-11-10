@@ -7,7 +7,7 @@
  */
 import { randomId } from "./portal-auth.js";
 import { getStripeTier, offerName } from "./stripe-tiers.js";
-import { DEFAULT_STEPS } from "./default-steps.js";
+import { DEFAULT_STEPS, stepDuration } from "./default-steps.js";
 
 export const MILESTONE_STATUSES = ["upcoming", "in_progress", "done"];
 
@@ -151,17 +151,72 @@ export function spreadDates(start, end, n) {
   return out;
 }
 
-/** Give every step that isn't done a target date, in step order, between start and end. */
+const DAY_MS = 24 * 60 * 60 * 1000;
+const isoDay = (t) => new Date(t).toISOString().slice(0, 10);
+const dayMs = (d) => Date.parse(`${d}T00:00:00Z`);
+const isWeekend = (t) => [0, 6].includes(new Date(t).getUTCDay());
+/** A weekend day moves back to Friday. */
+const weekdayOnOrBefore = (t) => { while (isWeekend(t)) t -= DAY_MS; return t; };
+
+/** `start` plus n working days (Mon-Fri), as YYYY-MM-DD. */
+export function addWorkdays(start, n) {
+  let t = dayMs(start);
+  for (let left = Math.max(0, n); left > 0; ) { t += DAY_MS; if (!isWeekend(t)) left--; }
+  return isoDay(t);
+}
+
+/**
+ * Target dates for steps (in order) using each step's default length
+ * (default-steps.js): longer steps get more of the window. With no `end` the
+ * window is the sum of the default lengths, in working days from `start`.
+ * The last step in the window lands on `end` (or the Friday before it); steps
+ * like the 30-day check-in land that many days after it.
+ * Returns { dates, end } with one YYYY-MM-DD per step.
+ */
+export function planDates(start, end, titles) {
+  const durs = titles.map(stepDuration);
+  const inWindow = durs.filter((d) => !d.afterLaunch);
+  const sum = inWindow.reduce((a, d) => a + d.days, 0);
+  if (!end) end = addWorkdays(start, Math.max(1, sum));
+  const t0 = dayMs(start);
+  const last = Math.max(t0, weekdayOnOrBefore(dayMs(end)));
+  const workdays = [];
+  for (let t = t0 + DAY_MS; t <= last; t += DAY_MS) if (!isWeekend(t)) workdays.push(t);
+  if (!workdays.length) workdays.push(last);
+  // A window of zero-length steps still spreads them out one share each.
+  const weight = (d) => (sum ? d.days : 1);
+  const total = sum || inWindow.length || 1;
+  let cum = 0, launch = last;
+  const dates = durs.map((d) => {
+    if (d.afterLaunch) return null;
+    cum += weight(d);
+    if (!cum) return isoDay(t0);
+    const i = Math.min(workdays.length - 1, Math.max(0, Math.ceil((cum / total) * workdays.length) - 1));
+    launch = workdays[i];
+    return isoDay(workdays[i]);
+  });
+  // Post-launch steps count from the last in-window step (normally Launch).
+  return {
+    end: isoDay(last),
+    dates: dates.map((x, i) => x || isoDay(weekdayOnOrBefore(launch + durs[i].afterLaunch * DAY_MS))),
+  };
+}
+
+/**
+ * Give every step that isn't done a target date, in step order, between start
+ * and end (YYYY-MM-DD), sized by each step's default length. No end: the
+ * default lengths decide it. Returns { scheduled, end }.
+ */
 export async function scheduleMilestones(db, projectId, start, end) {
   const rows = (await db
-    .prepare("SELECT id FROM project_milestones WHERE project_id = ? AND status != 'done' ORDER BY sort_order, id")
+    .prepare("SELECT id, title FROM project_milestones WHERE project_id = ? AND status != 'done' ORDER BY sort_order, id")
     .bind(projectId)
     .all()).results;
-  const dates = spreadDates(start, end, rows.length);
+  const plan = planDates(start, end || null, rows.map((r) => r.title));
   for (let i = 0; i < rows.length; i++) {
-    await db.prepare("UPDATE project_milestones SET due_date = ? WHERE id = ?").bind(dates[i], rows[i].id).run();
+    await db.prepare("UPDATE project_milestones SET due_date = ? WHERE id = ?").bind(plan.dates[i], rows[i].id).run();
   }
-  return rows.length;
+  return { scheduled: rows.length, end: plan.end };
 }
 
 export async function addMilestone(db, projectId, { title, detail, dueDate }) {
@@ -180,7 +235,8 @@ export async function addMilestone(db, projectId, { title, detail, dueDate }) {
 }
 
 /**
- * Give a new project the default steps (functions/_lib/default-steps.js).
+ * Give a new project the default steps (functions/_lib/default-steps.js),
+ * with target dates from today using their default lengths.
  * Does nothing if the project already has steps, so it is safe to call twice,
  * and never throws: before migration 0004 there is no steps table, and a
  * missing checklist must not fail a paid client's account creation.
@@ -192,14 +248,18 @@ export async function seedDefaultSteps(db, projectId) {
       .bind(projectId)
       .first();
     if (have?.n > 0) return 0;
+    // Open steps get default target dates from today, so the calendar is never blank.
+    const open = DEFAULT_STEPS.filter((s) => s.status !== "done");
+    const { dates } = planDates(new Date().toISOString().slice(0, 10), null, open.map((s) => s.title));
+    const due = new Map(open.map((s, i) => [s, dates[i]]));
     let order = 1;
     for (const step of DEFAULT_STEPS) {
       await db
         .prepare(
-          `INSERT INTO project_milestones (id, project_id, title, detail, status, sort_order, completed_at)
-           VALUES (?, ?, ?, ?, ?, ?, CASE WHEN ? = 'done' THEN datetime('now') ELSE NULL END)`
+          `INSERT INTO project_milestones (id, project_id, title, detail, status, sort_order, due_date, completed_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, CASE WHEN ? = 'done' THEN datetime('now') ELSE NULL END)`
         )
-        .bind(randomId(12), projectId, step.title, step.detail || null, step.status, order++, step.status)
+        .bind(randomId(12), projectId, step.title, step.detail || null, step.status, order++, due.get(step) || null, step.status)
         .run();
     }
     return DEFAULT_STEPS.length;
