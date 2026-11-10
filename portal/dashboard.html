@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
-  <link rel="stylesheet" href="/css/portal.css?v=20261110-notify">
+  <link rel="stylesheet" href="/css/portal.css?v=20261110-cal">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -45,6 +45,23 @@
         <p class="portal-muted portal-overview__meta" id="project-meta"></p>
         <p class="portal-overview__bill"><span class="portal-stat-label">Billing</span><strong id="billing-status">Loading…</strong></p>
         <button type="button" class="portal-overview__notice" id="new-updates" hidden></button>
+      </section>
+
+      <section class="portal-card portal-cal" id="schedule-card" style="margin-top:1.25rem;" hidden aria-labelledby="schedule-title">
+        <div class="portal-cal__head">
+          <div>
+            <p class="portal-stat-label" id="schedule-title">Schedule</p>
+            <p class="portal-cal__eta" id="schedule-eta"></p>
+            <p class="portal-muted portal-cal__sub" id="schedule-sub"></p>
+          </div>
+          <ul class="portal-cal__legend" aria-label="Legend">
+            <li class="is-done">Done</li>
+            <li class="is-in_progress">In progress</li>
+            <li class="is-upcoming">Up next</li>
+            <li class="is-today">Today</li>
+          </ul>
+        </div>
+        <div class="portal-cal__grid" id="schedule-grid"></div>
       </section>
 
       <section class="portal-card" id="progress-card" style="margin-top:1.25rem;" hidden aria-labelledby="progress-title">
@@ -165,11 +182,98 @@
       }
       var LABEL = { done: "Done", in_progress: "In progress", upcoming: "Up next" };
 
+      // ---------- Schedule calendar ----------
+      function localDay(s) {
+        if (!s) return null;
+        var ymd = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+        var d = ymd ? new Date(+ymd[1], +ymd[2] - 1, +ymd[3]) : new Date(String(s).replace(" ", "T") + (/T|Z/.test(s) ? "" : "Z"));
+        if (isNaN(d)) return null;
+        d.setHours(0, 0, 0, 0);
+        return d;
+      }
+      function keyOf(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+      function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+      function longDay(d) { return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }); }
+
+      function renderSchedule(milestones) {
+        var items = milestones.map(function (m) {
+          return { m: m, d: localDay(m.status === "done" ? m.completedAt : m.dueDate) };
+        }).filter(function (x) { return x.d; });
+        var card = SWFTPortal.qs("#schedule-card");
+        if (!items.length) { card.hidden = true; return; }
+        card.hidden = false;
+
+        var today = new Date(); today.setHours(0, 0, 0, 0);
+        var first = items.reduce(function (a, x) { return x.d < a ? x.d : a; }, today);
+        var open = milestones.filter(function (m) { return m.status !== "done"; });
+        var last = items.reduce(function (a, x) { return x.d > a ? x.d : a; }, first);
+        var finish = open.length
+          ? items.filter(function (x) { return x.m.status !== "done"; }).reduce(function (a, x) { return !a || x.d > a ? x.d : a; }, null)
+          : null;
+
+        var eta = SWFTPortal.qs("#schedule-eta"), sub = SWFTPortal.qs("#schedule-sub");
+        if (!open.length) {
+          eta.textContent = "All steps complete";
+          sub.textContent = "Finished " + longDay(last) + ".";
+        } else if (finish) {
+          var days = Math.round((finish - today) / 864e5);
+          eta.textContent = "Estimated completion: " + finish.toLocaleDateString([], { month: "long", day: "numeric" });
+          sub.textContent = days > 1 ? days + " days to go" : days === 1 ? "1 day to go" : days === 0 ? "Due today" : "Wrapping up";
+          if (open.length > items.filter(function (x) { return x.m.status !== "done"; }).length) sub.textContent += " · some steps don't have a date yet";
+        } else {
+          eta.textContent = "Dates coming soon";
+          sub.textContent = "We'll add target dates to your steps shortly.";
+        }
+
+        var byDay = {};
+        items.forEach(function (x) { (byDay[keyOf(x.d)] = byDay[keyOf(x.d)] || []).push(x.m); });
+        var end = finish && finish > last ? finish : last;
+        if (today > end) end = today;
+        var gridStart = addDays(first, -first.getDay());
+        var gridEnd = addDays(end, 6 - end.getDay());
+
+        var grid = SWFTPortal.qs("#schedule-grid");
+        var nodes = [];
+        var base = new Date(2026, 0, 4); // a Sunday
+        for (var w = 0; w < 7; w++) {
+          nodes.push(h("div", "portal-cal__dow", addDays(base, w).toLocaleDateString([], { weekday: "short" })));
+        }
+        for (var d = gridStart, i = 0; d <= gridEnd; d = addDays(d, 1), i++) {
+          var steps = byDay[keyOf(d)] || [];
+          var cls = "portal-cal__day";
+          if (d < first || d > end) cls += " is-outside";
+          if (d < today) cls += " is-past";
+          if (+d === +today) cls += " is-today";
+          if (finish && d >= today && d <= finish) cls += " is-window";
+          if (finish && +d === +finish) cls += " is-finish";
+          if (steps.length) cls += " has-steps";
+          var cell = h("div", cls);
+          var num = d.getDate() === 1 || i === 0 ? d.toLocaleDateString([], { month: "short", day: "numeric" }) : String(d.getDate());
+          cell.append(h("span", "portal-cal__num", num));
+          if (+d === +today) cell.append(h("span", "portal-cal__tag", "Today"));
+          if (steps.length) {
+            cell.setAttribute("aria-label", longDay(d) + ": " + steps.map(function (m) { return m.title + " (" + (LABEL[m.status] || m.status) + ")"; }).join(", "));
+            var ul = h("ul", "portal-cal__steps");
+            steps.forEach(function (m) {
+              var li = h("li", "portal-cal__step is-" + m.status);
+              li.append(h("span", "portal-cal__step-name", m.title));
+              ul.append(li);
+            });
+            cell.append(ul);
+          } else {
+            cell.setAttribute("aria-hidden", "true");
+          }
+          nodes.push(cell);
+        }
+        grid.replaceChildren.apply(grid, nodes);
+      }
+
       // Milestones + updates (from /api/portal/project, or the owner's preview).
       function renderProgress(view) {
         if (!view || !view.milestones || !view.milestones.length) return;
         SWFTPortal.qs("#tier-name").textContent = view.project.name;
         SWFTPortal.qs("#progress-card").hidden = false;
+        renderSchedule(view.milestones);
         var p = view.progress;
         var bar = SWFTPortal.qs("#progress-bar");
         var track = h("span", "portal-progress__track"); var fill = h("span"); fill.style.width = p.percent + "%"; track.appendChild(fill);

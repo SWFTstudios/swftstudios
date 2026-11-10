@@ -319,6 +319,26 @@
         post({ action: "add_milestone", projectId: v.project.id, title: mt.value, detail: mdt.value, dueDate: md.value }).then(function (ok) { if (ok) reload(); });
       } }, [mt, mdt, md, el("button", { class: "admin-row-btn", type: "submit", text: "Add" })]);
 
+      // Spread target dates over a window; the client's calendar shows the result.
+      var plusDays = function (iso, n) { var p = iso.split("-"); return isoLocal(new Date(+p[0], +p[1] - 1, +p[2] + n)); };
+      var schStart = el("input", { type: "date", value: isoLocal(new Date()), "aria-label": "Schedule start" });
+      var schEnd = el("input", { type: "date", value: plusDays(isoLocal(new Date()), 21), "aria-label": "Schedule end (launch)" });
+      var weeksBtn = function (w) {
+        return el("button", { class: "admin-row-btn", type: "button", text: w + " weeks", onclick: function () { schEnd.value = plusDays(schStart.value || isoLocal(new Date()), w * 7); } });
+      };
+      var schedule = el("form", { class: "admin-inline-form admin-schedule", onsubmit: function (e) {
+        e.preventDefault();
+        var left = v.milestones.filter(function (m) { return m.status !== "done"; }).length;
+        if (!left) { alert("Every step is done, so there is nothing to schedule."); return; }
+        if (!confirm("Set target dates for the " + left + " steps that aren't done, from " + schStart.value + " to " + schEnd.value + "? This replaces their current target dates.")) return;
+        post({ action: "schedule_milestones", projectId: v.project.id, start: schStart.value, end: schEnd.value }).then(function (ok) { if (ok) reload(); });
+      } }, [
+        el("label", { class: "admin-milestone__date" }, [el("span", { text: "Start" }), schStart]),
+        el("label", { class: "admin-milestone__date" }, [el("span", { text: "Launch by" }), schEnd]),
+        weeksBtn(2), weeksBtn(3),
+        el("button", { class: "admin-row-btn", type: "submit", text: "Set target dates" }),
+      ]);
+
       var ut = el("textarea", { placeholder: "Write an update for " + v.client.email + "…", "aria-label": "New client update", maxlength: "2000" });
       var notify = el("input", { type: "checkbox", id: "notify-client", checked: "checked", class: "portal-switch" });
       var upMsg = el("p", { class: "admin-muted admin-update-msg", role: "status" });
@@ -371,6 +391,9 @@
           el("p", { class: "portal-stat-label", text: "Milestones (client sees these)" }),
           v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the grip on the left of a card to reorder. Tap a card to see its details and set dates. The client's dashboard updates right away." }) : null,
           ms, v.progressReady ? addMs : null,
+          v.progressReady ? el("p", { class: "portal-stat-label", text: "Schedule (fills the client's calendar)" }) : null,
+          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Spreads target dates evenly across the steps that aren't done, in order. The last step lands on the launch date; weekend dates move to Friday. You can still adjust any single date above." }) : null,
+          v.progressReady ? schedule : null,
           el("p", { class: "portal-stat-label", text: "Files (shared with the client, mirrored to Google Drive)" }), filesBox, el("div", {}, [syncBtn]),
           el("p", { class: "portal-stat-label", text: "Private notes (only you)" }), notesBox,
         ])
