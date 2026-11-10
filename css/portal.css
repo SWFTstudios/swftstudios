@@ -290,3 +290,39 @@
 }
 .portal-update { border-top: 1px solid var(--swft-border); padding: 0.75rem 0; }
 .portal-update p { margin: 0.25rem 0 0; white-space: pre-wrap; }
+
+/* Shared files */
+.portal-files__drop { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; padding: 1rem; margin: 0.5rem 0 0.75rem; border: 1.5px dashed var(--swft-border); border-radius: 14px; transition: border-color 0.2s, background 0.2s; }
+.portal-files__drop.is-over { border-color: var(--swft-accent, currentColor); background: rgba(255, 255, 255, 0.06); }
+.portal-files__msg { min-height: 1.2em; margin: 0 0 0.5rem; }
+.portal-files__list { list-style: none; margin: 0; padding: 0; }
+.portal-file { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 0; border-top: 1px solid var(--swft-border); }
+.portal-file__info { min-width: 0; display: grid; gap: 0.15rem; }
+.portal-file__name { overflow-wrap: anywhere; font-weight: 600; }
+.portal-file__del { flex: none; background: none; border: 1px solid var(--swft-border); border-radius: 999px; padding: 0.3rem 0.75rem; color: inherit; font: inherit; font-size: 0.85rem; cursor: pointer; }
+.portal-file__del:hover { border-color: currentColor; }
+.portal-files__empty { padding: 0.5rem 0; }
+
+/* Overview card: everything that matters sits at the top of the dashboard. */
+.portal-overview { margin-top: 1rem; }
+.portal-overview__top { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.portal-overview__top .portal-stat-label { margin: 0; }
+.portal-overview__name { margin: 0.35rem 0 0.25rem; font-size: 1.35rem; line-height: 1.25; overflow-wrap: break-word; }
+.portal-overview .portal-progress { margin: 0.5rem 0 0.75rem; }
+.portal-progress__row { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.portal-progress__count { margin: 0; }
+.portal-progress__now { margin: 0; font-weight: 600; overflow-wrap: break-word; }
+.portal-overview__meta { margin: 0 0 0.5rem; }
+.portal-overview__bill { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; margin: 0; padding-top: 0.6rem; border-top: 1px solid var(--swft-border); }
+.portal-overview__bill .portal-stat-label { margin: 0; }
+.portal-overview__bill strong { font-weight: 600; text-align: right; }
+.portal-page .portal-topbar { flex-wrap: nowrap; align-items: flex-start; }
+@media (max-width: 640px) {
+  .portal-page .portal-topbar { margin-bottom: 0; gap: 0.75rem; }
+  .portal-page .portal-topbar .ps-eyebrow { display: none; }
+  .portal-page .portal-topbar .ps-title { font-size: 1.9rem; line-height: 1.1; margin: 0; }
+  .portal-page .portal-topbar .ps-lead { font-size: 0.85rem; margin: 0.25rem 0 0; overflow-wrap: anywhere; }
+  .portal-page .portal-topbar .portal-btn-ghost { flex: none; padding: 0.4rem 0.85rem; font-size: 0.85rem; }
+  .portal-overview { padding: 1rem; margin-top: 0.75rem; }
+  .portal-page main { padding-top: 3.75rem; }
+}

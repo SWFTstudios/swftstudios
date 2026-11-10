@@ -19,6 +19,12 @@
       "preview_database_id": "DB"
     }
   ],
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "swft-portal-files"
+    }
+  ],
   "vars": {
     "POSTHOG_PROJECT_ID": "486061",
     "PORTAL_ORIGIN": "https://www.swftstudios.com"
