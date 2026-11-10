@@ -80,17 +80,55 @@ export async function getProjectView(db, projectId) {
 
 /* ---------- owner-only writes ---------- */
 
-export async function setMilestoneStatus(db, id, status) {
+/** True for a real calendar date written YYYY-MM-DD (rejects 2026-02-31 and the like). */
+export function isValidDate(d) {
+  if (typeof d !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return false;
+  const t = new Date(`${d}T00:00:00Z`);
+  return !Number.isNaN(t.getTime()) && t.toISOString().slice(0, 10) === d;
+}
+
+/** A completion date can't be in the future (one day of slack for time zones ahead of UTC). */
+export function isFutureDate(d, now = new Date()) {
+  return d > new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+/**
+ * A picked calendar day is stored as noon UTC, so it shows as the same day in
+ * every US and European time zone (midnight would slip to the day before).
+ */
+const completedAtFromDate = (d) => `${d} 12:00:00`;
+
+/** completedOn (YYYY-MM-DD, optional): when the step was finished. Defaults to now. */
+export async function setMilestoneStatus(db, id, status, completedOn) {
   if (!MILESTONE_STATUSES.includes(status)) return false;
+  const doneAt = status === "done" && completedOn ? completedAtFromDate(completedOn) : null;
   const r = await db
     .prepare(
       `UPDATE project_milestones SET status = ?,
-         completed_at = CASE WHEN ? = 'done' THEN COALESCE(completed_at, datetime('now')) ELSE NULL END
+         completed_at = CASE WHEN ? = 'done' THEN COALESCE(?, completed_at, datetime('now')) ELSE NULL END
        WHERE id = ?`
     )
-    .bind(status, status, id)
+    .bind(status, status, doneAt, id)
     .run();
   return (r?.meta?.changes || 0) > 0;
+}
+
+/**
+ * Change a step's calendar date. A done step's date is when it was completed
+ * (required, not in the future); any other step's date is its target (empty clears it).
+ * Returns true, false (no such step), "date_required" or "future".
+ */
+export async function setMilestoneDate(db, id, date) {
+  const m = await db.prepare("SELECT id, status FROM project_milestones WHERE id = ?").bind(id).first();
+  if (!m) return false;
+  if (m.status === "done") {
+    if (!date) return "date_required";
+    if (isFutureDate(date)) return "future";
+    await db.prepare("UPDATE project_milestones SET completed_at = ? WHERE id = ?").bind(completedAtFromDate(date), id).run();
+  } else {
+    await db.prepare("UPDATE project_milestones SET due_date = ? WHERE id = ?").bind(date || null, id).run();
+  }
+  return true;
 }
 
 export async function addMilestone(db, projectId, { title, detail, dueDate }) {

@@ -5,7 +5,8 @@
  *      The same view the client sees (for "View as client"), plus site metrics
  *      when metrics=1.
  * POST /api/admin/project  { action, ... }
- *      milestone_status { id, status }        add_milestone { projectId, title, detail?, dueDate? }
+ *      milestone_status { id, status, completedOn? }     set_milestone_date { id, date }
+ *                                             add_milestone { projectId, title, detail?, dueDate? }
  *      delete_milestone { id }                add_update    { projectId, body }
  *      delete_update    { id }                rename        { projectId, name }
  *      edit_milestone { id, title, detail?, dueDate? }   move_milestone { id, direction: "up"|"down" }
@@ -15,8 +16,8 @@ import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
 import { fetchHostMetrics } from "../../_lib/posthog-metrics.js";
 import {
-  addMilestone, addUpdate, deleteMilestone, deleteUpdate, editMilestone, getProjectView,
-  MILESTONE_STATUSES, moveMilestone, renameProject, reorderMilestones, setMilestoneStatus,
+  addMilestone, addUpdate, deleteMilestone, deleteUpdate, editMilestone, getProjectView, isFutureDate, isValidDate,
+  MILESTONE_STATUSES, moveMilestone, renameProject, reorderMilestones, setMilestoneDate, setMilestoneStatus,
 } from "../../_lib/projects.js";
 
 export async function onRequestGet(context) {
@@ -49,7 +50,18 @@ export async function onRequestPost(context) {
     let ok = false, id;
     if (action === "milestone_status") {
       if (!MILESTONE_STATUSES.includes(b.status)) return json({ ok: false, error: "Unknown status." }, 400);
-      ok = await setMilestoneStatus(db, str(b.id, 64), b.status);
+      const completedOn = str(b.completedOn, 10);
+      if (completedOn && (!isValidDate(completedOn) || isFutureDate(completedOn))) {
+        return json({ ok: false, error: "Pick a real date that is not in the future." }, 400);
+      }
+      ok = await setMilestoneStatus(db, str(b.id, 64), b.status, completedOn);
+    } else if (action === "set_milestone_date") {
+      const d = str(b.date, 10);
+      if (d && !isValidDate(d)) return json({ ok: false, error: "Use a real date (YYYY-MM-DD)." }, 400);
+      const r = await setMilestoneDate(db, str(b.id, 64), d);
+      if (r === "date_required") return json({ ok: false, error: "A completed step needs a completion date." }, 400);
+      if (r === "future") return json({ ok: false, error: "A completion date can't be in the future." }, 400);
+      ok = r === true;
     } else if (action === "add_milestone") {
       const title = str(b.title, 120);
       const dueDate = str(b.dueDate, 10);

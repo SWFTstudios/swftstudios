@@ -271,3 +271,55 @@ test("drag reorder saves the whole order, shows on the client's side, and reject
   const xo = await adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid: s.admin, method: "POST", origin: "https://evil.example", body: { action: "reorder_milestones", projectId: project.id, ids } }));
   assert.equal(xo.status, 403);
 });
+
+/* ---------- completion dates ---------- */
+import { isFutureDate, isValidDate } from "../../functions/_lib/projects.js";
+
+test("date helpers: real calendar days only; future means beyond tomorrow UTC", () => {
+  assert.equal(isValidDate("2026-11-10"), true);
+  for (const bad of ["2026-02-31", "2026-13-01", "11/10/2026", "2026-1-5", "", null, "2026-11-10T00:00:00Z"]) assert.equal(isValidDate(bad), false, String(bad));
+  const now = new Date("2026-11-10T15:00:00Z");
+  assert.equal(isFutureDate("2026-11-10", now), false);
+  assert.equal(isFutureDate("2026-11-11", now), false); // slack for time zones ahead of UTC
+  assert.equal(isFutureDate("2026-11-12", now), true);
+});
+
+test("marking a step done takes the picked date; the client sees that day; undone clears it", async () => {
+  const db = makeDb();
+  const s = await setup(db);
+  const { project } = await upsertPaidUser(db, { email: "d@example.com", tierId: "custom", checkoutId: "cs_d", status: "paid" });
+  const call = db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? AND title = 'Initial call'").get(project.id).id;
+  const post = (body, sid = s.admin) => adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid, method: "POST", body }));
+  const completed = () => db.raw.prepare("SELECT status, completed_at FROM project_milestones WHERE id = ?").get(call);
+
+  // Done with a past date: stored as noon UTC so every US/EU time zone shows the same calendar day.
+  assert.equal((await post({ action: "milestone_status", id: call, status: "done", completedOn: "2026-11-05" })).status, 200);
+  assert.deepEqual({ ...completed() }, { status: "done", completed_at: "2026-11-05 12:00:00" });
+  assert.equal((await getProjectView(db, project.id)).milestones.find((m) => m.id === call).completedAt, "2026-11-05 12:00:00");
+
+  // Change the date later with the calendar.
+  assert.equal((await post({ action: "set_milestone_date", id: call, date: "2026-11-03" })).status, 200);
+  assert.equal(completed().completed_at, "2026-11-03 12:00:00");
+
+  // Re-selecting Done without a date keeps the existing completion date.
+  assert.equal((await post({ action: "milestone_status", id: call, status: "done" })).status, 200);
+  assert.equal(completed().completed_at, "2026-11-03 12:00:00");
+
+  // Rejected: future, impossible, malformed, and clearing a done step's date. Nothing changes.
+  for (const date of ["2099-01-01", "2026-02-31", "yesterday"]) assert.equal((await post({ action: "set_milestone_date", id: call, date })).status, 400);
+  assert.equal((await post({ action: "set_milestone_date", id: call, date: "" })).status, 400);
+  assert.equal((await post({ action: "milestone_status", id: call, status: "done", completedOn: "2099-01-01" })).status, 400);
+  assert.equal(completed().completed_at, "2026-11-03 12:00:00");
+
+  // Back to in progress clears the completion date; the same field now sets the target date.
+  assert.equal((await post({ action: "milestone_status", id: call, status: "in_progress" })).status, 200);
+  assert.equal(completed().completed_at, null);
+  assert.equal((await post({ action: "set_milestone_date", id: call, date: "2026-12-01" })).status, 200);
+  assert.equal(db.raw.prepare("SELECT due_date FROM project_milestones WHERE id = ?").get(call).due_date, "2026-12-01");
+  assert.equal((await post({ action: "set_milestone_date", id: call, date: "" })).status, 200); // clears the target
+  assert.equal(db.raw.prepare("SELECT due_date FROM project_milestones WHERE id = ?").get(call).due_date, null);
+
+  // Unknown step, clients and cross-origin writes.
+  assert.equal((await post({ action: "set_milestone_date", id: "nope", date: "2026-11-01" })).status, 404);
+  assert.equal((await post({ action: "set_milestone_date", id: call, date: "2026-11-01" }, s.other)).status, 403);
+});

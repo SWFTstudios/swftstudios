@@ -26,6 +26,18 @@
     return isNaN(d) ? String(s) : d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
   }
 
+  /** Local calendar day as YYYY-MM-DD, for <input type="date">. */
+  function isoLocal(d) {
+    function p2(n) { return (n < 10 ? "0" : "") + n; }
+    return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate());
+  }
+  /** Stored completion time (UTC "YYYY-MM-DD HH:MM:SS") as the local calendar day. */
+  function isoFromStored(s) {
+    if (!s) return "";
+    var d = new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(s) ? s : String(s).replace(" ", "T") + "Z");
+    return isNaN(d) ? "" : isoLocal(d);
+  }
+
   function card(label, children) {
     return el("div", { class: "portal-card" }, [el("p", { class: "portal-stat-label", text: label })].concat(children));
   }
@@ -240,8 +252,12 @@
         ? el("ol", { class: "admin-milestones" }, v.milestones.map(function (m) {
             var panelId = "ms-panel-" + m.id;
             var isOpen = !!openIds[m.id];
+            var today = isoLocal(new Date());
             var sel = el("select", { "aria-label": "Status of " + m.title, onchange: function () {
-              post({ action: "milestone_status", id: m.id, status: sel.value }).then(function (ok) { if (ok) reload(); });
+              // Marking a step done stamps today; the calendar field next to it changes the day.
+              var body = { action: "milestone_status", id: m.id, status: sel.value };
+              if (sel.value === "done") body.completedOn = today;
+              post(body).then(function (ok) { if (ok) reload(); });
             } }, ["upcoming", "in_progress", "done"].map(function (k) {
               var o = el("option", { value: k, text: STATUS_LABEL[k] }); if (k === m.status) o.selected = true; return o;
             }));
@@ -264,21 +280,24 @@
               el("span", { class: "admin-pill", text: STATUS_LABEL[m.status] }),
               el("span", { class: "admin-milestone__chev", "aria-hidden": "true" }),
             ]);
-            var when = m.dueDate ? (m.status === "done" ? "Done " : "Due ") + (m.completedAt ? date(m.completedAt) : m.dueDate) : "";
+            // One calendar field: the completion day on a done step, the target day on any other.
+            var isDone = m.status === "done";
+            var dateIn = el("input", { type: "date", value: isDone ? isoFromStored(m.completedAt) : (m.dueDate || ""), "aria-label": (isDone ? "Completed on, " : "Target date, ") + m.title, onchange: function () {
+              post({ action: "set_milestone_date", id: m.id, date: dateIn.value }).then(function () { reload(); });
+            } });
+            if (isDone) { dateIn.max = today; dateIn.required = true; }
+            var dateField = el("label", { class: "admin-milestone__date" }, [el("span", { text: isDone ? "Completed on" : "Target date" }), dateIn]);
             li.append(
               el("div", { class: "admin-milestone__row" }, [grip, toggle]),
               el("div", { class: "admin-milestone__panel", id: panelId }, [el("div", { class: "admin-milestone__panel-inner" }, [
                 m.detail ? el("p", { class: "admin-milestone__detail", text: m.detail }) : el("p", { class: "admin-milestone__detail admin-muted", text: "No description." }),
-                when ? el("small", { class: "admin-milestone__when", text: when }) : null,
-                el("div", { class: "admin-milestone__ctl" }, [sel,
+                el("div", { class: "admin-milestone__ctl" }, [sel, dateField,
                   el("button", { class: "admin-row-btn", type: "button", text: "Edit", onclick: function () {
                     var title = prompt("Step title (client sees this)", m.title);
                     if (title == null || !title.trim()) return;
                     var detail = prompt("Short description (optional, client sees this)", m.detail || "");
                     if (detail == null) return;
-                    var due = prompt("Target date as YYYY-MM-DD (optional, leave empty for none)", m.dueDate || "");
-                    if (due == null) return;
-                    post({ action: "edit_milestone", id: m.id, title: title, detail: detail, dueDate: due.trim() }).then(function (ok) { if (ok) reload(); });
+                    post({ action: "edit_milestone", id: m.id, title: title, detail: detail, dueDate: m.dueDate || "" }).then(function (ok) { if (ok) reload(); });
                   } }),
                   el("button", { class: "admin-row-btn", type: "button", text: "Remove", onclick: function () {
                     if (confirm("Remove milestone \u201c" + m.title + "\u201d?")) post({ action: "delete_milestone", id: m.id }).then(function (ok) { if (ok) reload(); });
@@ -319,7 +338,7 @@
           head,
           el("div", { class: "admin-project-progress" }, [progressBar(v.progress)]),
           el("p", { class: "portal-stat-label", text: "Milestones (client sees these)" }),
-          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the grip on the left of a card to reorder. Tap a card to see its details. The client's dashboard updates right away." }) : null,
+          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the grip on the left of a card to reorder. Tap a card to see its details and set dates. The client's dashboard updates right away." }) : null,
           ms, v.progressReady ? addMs : null,
           el("p", { class: "portal-stat-label", text: "Updates (client sees these)" }), v.progressReady ? addUp : null,
           el("div", {}, ups),
