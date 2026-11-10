@@ -758,14 +758,30 @@
             if (m && m.title) { it.title = m.title; if (!it.summary && m.description) it.summary = m.description.slice(0, 300); titleCell.textContent = m.title; }
           });
           var sent = it.sent ? "Sent to " + it.sent.count + " · " + date(it.sent.at) : "Not sent";
+          var a = it.auto, autoBtn = null;
+          var setAuto = function (action) {
+            P.api("/api/admin/newsletter", { method: "POST", body: JSON.stringify({ action: action, kind: it.kind, key: it.key }) }).then(function (x) {
+              if (!x.res.ok || !x.data.ok) alert((x.data && x.data.error) || "Could not save."); load();
+            });
+          };
+          if (a && a.status === "waiting") {
+            sent = "Sends automatically after " + date(a.sendAfter);
+            autoBtn = el("button", { class: "admin-row-btn", type: "button", text: "Don't auto-send", onclick: function () { setAuto("skip"); } });
+          } else if (a && a.status === "skipped") {
+            sent = it.sent ? sent : "Won't send automatically";
+            autoBtn = el("button", { class: "admin-row-btn", type: "button", text: "Auto-send", onclick: function () { setAuto("unskip"); } });
+          }
           var btn = el("button", { class: "admin-row-btn", type: "button", text: it.sent ? "Send to new subscribers" : "Email subscribers", onclick: function () { compose(detail, it, d, load); } });
-          return [NL_KIND[it.kind], titleCell, sent, btn];
+          return [NL_KIND[it.kind], titleCell, sent, el("div", { class: "admin-row-actions" }, [btn, autoBtn])];
         });
         list.replaceChildren(card("Newsletter", [
           !d.configured ? notice("RESEND_API_KEY is not set on this project, so nothing can be sent yet.") : null,
           !d.ready ? notice("Apply migration 0010 (npx wrangler d1 migrations apply swft-portal --remote) to send to subscribers.") : null,
           el("div", { class: "admin-stats" }, [stat("Active subscribers", d.counts.active), stat("Want blog posts", d.counts.blog), stat("Want videos", d.counts.videos)]),
           el("p", { class: "admin-muted", text: "Sending from " + d.from + ". Replies go to hello@swftstudios.com. Each subscriber only gets each post or video once." }),
+          el("p", { class: "admin-muted", text: d.autoOn
+            ? "New blog posts email blog subscribers automatically about " + d.autoHoldMinutes + " minutes after they go live. Click \u201cDon't auto-send\u201d before then to stop one. Videos are sent by hand."
+            : "Automatic sending is off: deploy workers/newsletter (see docs/EMAIL_UPDATES.md) to email new blog posts on their own." }),
           table(["Type", "Title", "Status", ""], rows, "No blog posts or videos found."),
         ]));
       });

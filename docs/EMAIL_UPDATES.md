@@ -31,9 +31,27 @@ npx wrangler d1 execute swft-portal --remote --command "SELECT email, name, inte
 | `RESEND_API_KEY` | Sends the confirm email. If sending fails the visitor sees an error and can retry after 5 minutes. |
 | `PORTAL_ORIGIN` | Host used in links (default request origin) |
 
-## Sending updates (not built yet)
+## Sending updates
 
-When a broadcast job is added, every email must include `unsubscribeUrl(origin, row.id)` from `functions/_lib/subscribers.js`, plus `List-Unsubscribe: <oneClickUnsubscribeUrl(origin, row.id)>` and `List-Unsubscribe-Post: List-Unsubscribe=One-Click`. Only send to `status = 'active'` rows whose `interests` include the topic.
+Code: [`functions/_lib/newsletter.js`](../functions/_lib/newsletter.js). Recipients are `status = 'active'` subscribers whose `interests` include the topic, minus anyone who turned off all email on the preferences page. Every email has that subscriber's unsubscribe link plus `List-Unsubscribe` / `List-Unsubscribe-Post` one-click headers. `newsletter_deliveries` records who got what, so nobody gets the same post or video twice.
+
+**By hand:** Admin → Newsletter. Pick a post or video, edit the subject and summary, send yourself a test, then send to subscribers.
+
+**Automatically (new blog posts):** the cron Worker [`workers/newsletter`](../workers/newsletter) runs every 15 minutes. It reads the live `https://www.swftstudios.com/data/blog-posts.json`, so a post counts as published once it is deployed. **After adding a post, run `npm run build:blog-index` and commit the updated `data/blog-posts.json`,** otherwise the Worker can't see the post.
+
+- First run: every post already on the site is recorded as `baseline` and never emailed automatically.
+- A post seen later waits 30 minutes, then goes to blog subscribers with its title as the subject and its meta description as the summary. To stop one, click "Don't auto-send" in Admin → Newsletter before then, or take the post down.
+- Videos are sent by hand only.
+
+Setup (once, after migration 0010 is applied):
+
+```bash
+cd workers/newsletter
+npx wrangler secret put RESEND_API_KEY
+npx wrangler deploy
+```
+
+Optional: set `NEWSLETTER_FROM` (e.g. `SWFT Studios <updates@news.swftstudios.com>`) on both the Worker and the Pages project to send from a verified Resend subdomain, not the main address.
 
 ## Failure cases
 

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  // Emails subscribers automatically when a new blog post goes live on www.swftstudios.com.
+  // Production is the Pages project, which can't run on a schedule, so this small Worker
+  // does. Logic: functions/_lib/newsletter.js (runAutoSend). Deploy: npx wrangler deploy
+  "name": "swft-newsletter",
+  "main": "src/index.js",
+  "compatibility_date": "2026-03-09",
+  "observability": { "enabled": true },
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "swft-portal",
+      "database_id": "dfd16777-238c-4679-a8e2-68a5bf9b707b"
+    }
+  ],
+  "vars": {
+    "PORTAL_ORIGIN": "https://www.swftstudios.com"
+  }
+  // Secret: npx wrangler secret put RESEND_API_KEY
+  // Optional var or secret: NEWSLETTER_FROM (e.g. "SWFT Studios <updates@news.swftstudios.com>")
+}

@@ -7,27 +7,32 @@
  *      test → one copy to the signed-in admin (nothing recorded)
  *      send → the next batches to subscribers who haven't had it; returns { sent, remaining, failed }.
  *             Call again while remaining > 0. Safe to repeat: nobody gets the same item twice.
+ * POST /api/admin/newsletter  { action: "skip" | "unskip", kind, key }
+ *      Stop (or restore) the automatic email for a new post that is still waiting (workers/newsletter).
  */
 import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
 import { sendResendEmail } from "../../_lib/resend.js";
-import { audienceCounts, buildEmail, fromAddress, KINDS, loadItems, newsletterReady, sendItem, sendsByItem } from "../../_lib/newsletter.js";
+import { audienceCounts, autoByItem, AUTO_HOLD_MINUTES, buildEmail, fromAddress, jsonReader, KINDS, loadItems, newsletterReady, sendItem, sendsByItem, setAuto } from "../../_lib/newsletter.js";
 
 export async function onRequestGet(context) {
   const gate = await requireAdmin(context);
   if (gate.response) return gate.response;
   const { env, request } = context;
   try {
-    const items = await loadItems(env, request);
+    const items = await loadItems(jsonReader(env, request));
     const ready = await newsletterReady(gate.db);
     const sent = ready ? await sendsByItem(gate.db) : {};
+    const auto = ready ? await autoByItem(gate.db) : {};
     return json({
       ok: true,
       ready,
       configured: !!env.RESEND_API_KEY,
       from: fromAddress(env),
       counts: await audienceCounts(gate.db),
-      items: items.map((i) => ({ ...i, sent: sent[`${i.kind}:${i.key}`] || null })),
+      autoOn: Object.keys(auto).length > 0,
+      autoHoldMinutes: AUTO_HOLD_MINUTES,
+      items: items.map((i) => ({ ...i, sent: sent[`${i.kind}:${i.key}`] || null, auto: auto[`${i.kind}:${i.key}`] || null })),
     });
   } catch (err) {
     console.error("admin newsletter get failed", err);
@@ -43,13 +48,17 @@ export async function onRequestPost(context) {
   try { b = JSON.parse(await request.text()); } catch { return json({ ok: false, error: "Invalid JSON" }, 400); }
   const action = str(b.action, 10);
   const kind = str(b.kind, 10);
+  if (action === "skip" || action === "unskip") {
+    const ok = await setAuto(gate.db, kind, str(b.key, 120), action === "skip" ? "skipped" : "waiting").catch(() => false);
+    return ok ? json({ ok: true }) : json({ ok: false, error: "That post isn't waiting to be sent automatically." }, 404);
+  }
   const subject = str(b.subject, 150);
   const summary = str(b.summary, 600);
   if (!KINDS[kind]) return json({ ok: false, error: "Unknown kind." }, 400);
   if (!subject) return json({ ok: false, error: "Write a subject line first." }, 400);
   if (!env.RESEND_API_KEY) return json({ ok: false, error: "RESEND_API_KEY is not set, so email can't be sent." }, 503);
 
-  const item = (await loadItems(env, request)).find((i) => i.kind === kind && i.key === str(b.key, 120));
+  const item = (await loadItems(jsonReader(env, request))).find((i) => i.kind === kind && i.key === str(b.key, 120));
   if (!item) return json({ ok: false, error: "That post or video isn't on the site." }, 404);
 
   try {

@@ -196,3 +196,120 @@ test("without migration 0010 the list still loads and sending says what to do", 
   assert.equal(r.status, 503);
   assert.match((await r.json()).error, /migration 0010/);
 });
+
+import { runAutoSend } from "../../functions/_lib/newsletter.js";
+import worker from "../../workers/newsletter/src/index.js";
+
+// A site whose blog list we control, served the way the cron Worker reads it.
+function site(posts) {
+  return async (path) => (path === "/data/blog-posts.json" ? posts : { videos: [] });
+}
+const post = (slug, title = `Post ${slug}`) => ({ slug, title, description: `About ${slug}.`, url: `/blog/${slug}.html`, published: null, updated: "2026-11-10" });
+const ENV = { RESEND_API_KEY: "re_test", PORTAL_ORIGIN: ORIGIN };
+const at = (min) => new Date(Date.UTC(2026, 10, 10, 12, 0) + min * 60000);
+
+test("auto-send: first run records existing posts without emailing anyone", async () => {
+  const db = makeDb();
+  addSub(db, "a@example.com", { interests: "blog" });
+  const r = await runAutoSend(db, ENV, site([post("old-1"), post("old-2")]), at(0));
+  assert.equal(r.baseline, 2);
+  assert.equal(batches.length, 0);
+  // Later runs leave them alone too.
+  await runAutoSend(db, ENV, site([post("old-1"), post("old-2")]), at(120));
+  assert.equal(batches.length, 0);
+});
+
+test("auto-send: a new post goes out once, after the hold, only to blog subscribers", async () => {
+  const db = makeDb();
+  addSub(db, "blog@example.com", { interests: "blog" });
+  addSub(db, "videos@example.com", { interests: "videos" });
+  await runAutoSend(db, ENV, site([post("old")]), at(0));
+
+  const live = site([post("fresh", "Fresh Post"), post("old")]);
+  assert.equal((await runAutoSend(db, ENV, live, at(15))).discovered, 1);
+  assert.equal(batches.length, 0, "not before the hold time");
+  await runAutoSend(db, ENV, live, at(30));
+  assert.equal(batches.length, 0, "still inside the hold");
+
+  const r = await runAutoSend(db, ENV, live, at(45));
+  assert.deepEqual(r.sent, [{ key: "fresh", count: 1 }]);
+  assert.deepEqual(recipients(), ["blog@example.com"]);
+  assert.equal(batches[0].emails[0].subject, "Fresh Post");
+  assert.ok(batches[0].emails[0].html.includes("About fresh."));
+  assert.equal(db.raw.prepare("SELECT status FROM newsletter_auto WHERE item_key = 'fresh'").get().status, "sent");
+
+  await runAutoSend(db, ENV, live, at(120));
+  assert.equal(batches.length, 1, "never twice");
+});
+
+test("auto-send: skipped posts and posts pulled before the hold are not sent; admin can skip and undo", async () => {
+  const db = makeDb();
+  const s = await setup(db);
+  addSub(db, "a@example.com", { interests: "blog" });
+  await runAutoSend(db, ENV, site([post("old")]), at(0));
+  await runAutoSend(db, ENV, site([post("keep"), post("pulled"), post("old")]), at(15));
+
+  const call = (body) => api.onRequestPost(ctx(db, { sid: s.admin, method: "POST", body }));
+  assert.equal((await call({ action: "skip", kind: "blog", key: "keep" })).status, 200);
+  assert.equal((await call({ action: "skip", kind: "blog", key: "old" })).status, 404, "baseline posts can't be queued");
+  assert.equal((await api.onRequestPost(ctx(db, { sid: s.other, method: "POST", body: { action: "skip", kind: "blog", key: "keep" } }))).status, 403);
+
+  // "pulled" disappeared from the site before its hold ended.
+  await runAutoSend(db, ENV, site([post("keep"), post("old")]), at(60));
+  assert.equal(batches.length, 0);
+
+  const listed = await (await api.onRequestGet(ctx(db, { sid: s.admin }))).json();
+  assert.equal(listed.autoOn, true);
+  assert.equal(listed.items.find((i) => i.key === BLOG.slug).auto, null);
+
+  assert.equal((await call({ action: "unskip", kind: "blog", key: "keep" })).status, 200);
+  await runAutoSend(db, ENV, site([post("keep"), post("old")]), at(75));
+  assert.deepEqual(recipients(), ["a@example.com"]);
+});
+
+test("auto-send: a failed run leaves the post waiting, and the next run finishes without duplicates", async () => {
+  const db = makeDb();
+  for (let i = 0; i < 150; i++) addSub(db, `p${i}@example.com`, { interests: "blog" });
+  await runAutoSend(db, ENV, site([post("old")]), at(0));
+  const live = site([post("new"), post("old")]);
+  await runAutoSend(db, ENV, live, at(15));
+  failOn.add(2);
+  await runAutoSend(db, ENV, live, at(60));
+  assert.equal(db.raw.prepare("SELECT status FROM newsletter_auto WHERE item_key = 'new'").get().status, "waiting");
+  await runAutoSend(db, ENV, live, at(75));
+  assert.equal(db.raw.prepare("SELECT status FROM newsletter_auto WHERE item_key = 'new'").get().status, "sent");
+  const delivered = batches.filter((_, i) => !failOn.has(i + 1)).flatMap((b) => b.emails.map((e) => e.to[0]));
+  assert.equal(delivered.length, 150);
+  assert.equal(new Set(delivered).size, 150);
+});
+
+test("auto-send: if the site can't be read, nothing changes", async () => {
+  const db = makeDb();
+  addSub(db, "a@example.com", { interests: "blog" });
+  await runAutoSend(db, ENV, site([post("old")]), at(0));
+  const r = await runAutoSend(db, ENV, async () => null, at(15));
+  assert.deepEqual(r, { baseline: 0, discovered: 0, sent: [], waiting: 0 });
+  assert.equal(db.raw.prepare("SELECT COUNT(*) n FROM newsletter_auto").get().n, 1);
+});
+
+test("cron Worker reads the live blog list and does nothing before migration 0010", async () => {
+  const fetches = [];
+  const prev = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    if (String(url).startsWith(ORIGIN)) { fetches.push(String(url)); return Response.json(String(url).endsWith("blog-posts.json") ? [post("a")] : { videos: [] }); }
+    return prev(url, init);
+  };
+  try {
+    const db = makeDb();
+    await worker.scheduled({ scheduledTime: at(0).getTime() }, { DB: db, ...ENV });
+    assert.ok(fetches.includes(`${ORIGIN}/data/blog-posts.json`));
+    assert.equal(db.raw.prepare("SELECT status FROM newsletter_auto WHERE item_key = 'a'").get().status, "baseline");
+
+    fetches.length = 0;
+    await worker.scheduled({ scheduledTime: at(0).getTime() }, { DB: makeDb(MIGRATIONS.slice(0, -1)), ...ENV });
+    assert.equal(fetches.length, 0);
+    assert.equal((await worker.fetch()).status, 404);
+  } finally {
+    globalThis.fetch = prev;
+  }
+});

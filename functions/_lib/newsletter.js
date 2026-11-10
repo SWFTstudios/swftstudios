@@ -25,15 +25,21 @@ export async function newsletterReady(db) {
   try { await db.prepare("SELECT 1 FROM newsletter_sends LIMIT 1").first(); return true; } catch { return false; }
 }
 
-/** Blog posts and videos from the site's data files, newest first, with a public link each. */
-export async function loadItems(env, request) {
-  const get = async (path) => {
+/** Reads a site data file from the Pages deployment (ASSETS) or, for the cron Worker, the live site. */
+export function jsonReader(env, request) {
+  return async (path) => {
     try {
-      const res = await env.ASSETS.fetch(new URL(path, request.url));
+      const res = env.ASSETS && request
+        ? await env.ASSETS.fetch(new URL(path, request.url))
+        : await fetch(siteOrigin(env) + path, { headers: { "Cache-Control": "no-cache" } });
       return res.ok ? await res.json() : null;
     } catch { return null; }
   };
-  const [posts, visuals] = await Promise.all([get("/data/blog-posts.json"), get("/data/visuals.json")]);
+}
+
+/** Blog posts and videos from the site's data files, newest first, with a public link each. */
+export async function loadItems(getJson) {
+  const [posts, visuals] = await Promise.all([getJson("/data/blog-posts.json"), getJson("/data/visuals.json")]);
   const blog = (Array.isArray(posts) ? posts : [])
     .filter((p) => p && p.slug && p.url)
     .sort((a, b) => String(b.published || b.updated || "").localeCompare(String(a.published || a.updated || "")))
@@ -163,4 +169,74 @@ export async function sendItem(db, env, item, { subject, summary }) {
   }
   const remaining = await pendingCount(db, item.kind, send.id);
   return { sent, remaining, failed };
+}
+
+/* ---------- Automatic sending of new blog posts (cron) ---------- */
+
+export const AUTO_KINDS = ["blog"];
+export const AUTO_HOLD_MINUTES = 30;
+const AUTO_MAX_ROUNDS = 8; // 8 × 500 = 4,000 emails per run; the rest go on the next run.
+
+const iso = (d) => d.toISOString().replace("T", " ").slice(0, 19);
+
+/** Per-item auto status for the admin list: { "blog:slug": { status, sendAfter } }. */
+export async function autoByItem(db) {
+  try {
+    const rows = (await db.prepare("SELECT kind, item_key, status, first_seen_at FROM newsletter_auto").all()).results;
+    return Object.fromEntries(rows.map((r) => [`${r.kind}:${r.item_key}`, {
+      status: r.status,
+      sendAfter: r.status === "waiting" ? iso(new Date(Date.parse(r.first_seen_at.replace(" ", "T") + "Z") + AUTO_HOLD_MINUTES * 60000)) : null,
+    }]));
+  } catch { return {}; }
+}
+
+/** Owner choice from admin: "skipped" (don't send automatically) or back to "waiting". */
+export async function setAuto(db, kind, key, status) {
+  const r = await db.prepare("UPDATE newsletter_auto SET status = ? WHERE kind = ? AND item_key = ? AND status IN ('waiting', 'skipped')")
+    .bind(status, kind, key).run();
+  return (r?.meta?.changes || 0) > 0;
+}
+
+/**
+ * One cron run. Returns a summary: { baseline, discovered, sent: [{ key, count }], waiting }.
+ * Posts that disappear from the site before their hold ends are never sent.
+ */
+export async function runAutoSend(db, env, getJson, now = new Date()) {
+  const summary = { baseline: 0, discovered: 0, sent: [], waiting: 0 };
+  const items = (await loadItems(getJson)).filter((i) => AUTO_KINDS.includes(i.kind));
+  if (!items.length) return summary; // site data unreachable: change nothing
+
+  for (const kind of AUTO_KINDS) {
+    const mine = items.filter((i) => i.kind === kind);
+    const known = new Set((await db.prepare("SELECT item_key FROM newsletter_auto WHERE kind = ?").bind(kind).all()).results.map((r) => r.item_key));
+    const firstRun = known.size === 0;
+    for (const it of mine) {
+      if (known.has(it.key)) continue;
+      await db.prepare("INSERT OR IGNORE INTO newsletter_auto (kind, item_key, status, first_seen_at) VALUES (?, ?, ?, ?)")
+        .bind(kind, it.key, firstRun ? "baseline" : "waiting", iso(now)).run();
+      if (firstRun) summary.baseline++; else summary.discovered++;
+    }
+  }
+
+  if (!env.RESEND_API_KEY) return summary;
+  const due = (await db.prepare("SELECT kind, item_key, first_seen_at FROM newsletter_auto WHERE status = 'waiting' ORDER BY first_seen_at").all()).results;
+  const cutoff = iso(new Date(now.getTime() - AUTO_HOLD_MINUTES * 60000));
+  for (const row of due) {
+    const item = items.find((i) => i.kind === row.kind && i.key === row.item_key);
+    if (!item || row.first_seen_at > cutoff) { summary.waiting++; continue; }
+    let count = 0, done = false;
+    for (let round = 0; round < AUTO_MAX_ROUNDS; round++) {
+      const r = await sendItem(db, env, item, { subject: item.title, summary: item.summary });
+      count += r.sent;
+      if (r.failed) break;
+      if (!r.remaining) { done = true; break; }
+    }
+    if (done) {
+      await db.prepare("UPDATE newsletter_auto SET status = 'sent', sent_at = ? WHERE kind = ? AND item_key = ?").bind(iso(now), row.kind, row.item_key).run();
+    } else {
+      summary.waiting++;
+    }
+    summary.sent.push({ key: item.key, count });
+  }
+  return summary;
 }

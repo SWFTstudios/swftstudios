@@ -202,3 +202,4 @@
 .admin-field { display: flex; flex-direction: column; gap: 0.35rem; margin: 0.75rem 0; }
 .admin-field input, .admin-field textarea { width: 100%; box-sizing: border-box; background: transparent; color: inherit; border: 1px solid var(--swft-border); border-radius: 12px; padding: 0.6rem 0.8rem; font: inherit; }
 .admin-field textarea { min-height: 6rem; resize: vertical; }
+.admin-row-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
