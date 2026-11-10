@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-10: Shared project files, mirrored to Google Drive
+
+### Added
+- **Project files** section in the client dashboard and in the admin Projects tab. Clients and SWFT both upload (drag and drop or Choose files, up to 25 MB each) and both see every file in the project, labeled by who sent it. Clients can remove their own uploads, never SWFT's; admins can remove any.
+- Files are stored in a private R2 bucket (`swft-portal-files`, binding `FILES`) and indexed in D1 (`project_files`, migration `0008_project_files.sql`). Downloads go through the portal only (signed-in, same project), as attachments with `nosniff`. Executables, scripts, `.html` and `.svg` are refused.
+- **Google Drive mirror** ([`functions/_lib/drive.js`](../functions/_lib/drive.js)): each upload is copied to `<root folder> / <project name> / <file>` using a service account. Until the secrets `GOOGLE_SERVICE_ACCOUNT_JSON` and `DRIVE_ROOT_FOLDER_ID` exist, files stay in R2 and show "Drive not connected yet"; the admin **Sync to Drive now** button mirrors everything not yet synced once it is set up. Failed copies are retried by that button.
+- Endpoints: `/api/portal/files` (client) and `/api/admin/files` (owner). Tests in `tests/admin/files.test.mjs`.
+
 ## 2026-11-10: Pick the completion date with a calendar
 
 ### Added

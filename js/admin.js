@@ -333,6 +333,16 @@
       });
 
       var notesBox = el("div");
+      var filesBox = el("div", { class: "admin-files" });
+      var syncBtn = el("button", { class: "admin-row-btn", type: "button", text: "Sync to Drive now", onclick: function () {
+        syncBtn.disabled = true;
+        P.api("/api/admin/files?sync=1", { method: "POST" }).then(function (x) {
+          syncBtn.disabled = false;
+          if (!x.res.ok || !x.data.ok) { alert((x.data && x.data.error) || "Sync failed."); return; }
+          if (!x.data.drive) { alert("Google Drive is not connected yet (needs the service account secrets)."); return; }
+          SWFTFiles.mount(filesBox, { base: "/api/admin/files", project: v.project.id, admin: true });
+        });
+      } });
       detail.replaceChildren(
         el("div", { class: "portal-card admin-project" }, [
           head,
@@ -342,10 +352,12 @@
           ms, v.progressReady ? addMs : null,
           el("p", { class: "portal-stat-label", text: "Updates (client sees these)" }), v.progressReady ? addUp : null,
           el("div", {}, ups),
+          el("p", { class: "portal-stat-label", text: "Files (shared with the client, mirrored to Google Drive)" }), filesBox, el("div", {}, [syncBtn]),
           el("p", { class: "portal-stat-label", text: "Private notes (only you)" }), notesBox,
         ])
       );
       renderNotes(notesBox, c.id);
+      SWFTFiles.mount(filesBox, { base: "/api/admin/files", project: v.project.id, admin: true });
       if (refocusId) {
         var g = detail.querySelector('.admin-milestone[data-id="' + refocusId + '"] .admin-grip');
         refocusId = null;

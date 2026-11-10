@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
-  <link rel="stylesheet" href="/css/portal.css?v=20261110-glass2">
+  <link rel="stylesheet" href="/css/portal.css?v=20261110-files">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -52,6 +52,12 @@
         </div>
       </section>
 
+      <section class="portal-card" id="files-card" style="margin-top:1.25rem;" hidden aria-labelledby="files-title">
+        <p class="portal-stat-label" id="files-title">Project files</p>
+        <p class="portal-muted">Send us logos, photos, copy and anything else for your site. Files from SWFT show up here too.</p>
+        <div id="files-box"></div>
+      </section>
+
       <section class="portal-card" id="metrics-card" style="margin-top:1.25rem;">
         <p class="portal-stat-label">Site performance (last 30 days)</p>
         <div id="metrics-body">
@@ -63,6 +69,7 @@
   <script src="/js/swft-nav.js?v=20261105-r4"></script>
   <script src="/js/swft-analytics.js?v=20261104-ga4"></script>
   <script src="/js/portal.js?v=20260930b"></script>
+  <script src="/js/portal-files.js?v=20261110-files"></script>
   <script>
     (function () {
       function statusBadge(status, billingKind) {
@@ -164,6 +171,9 @@
           if (when) li.append(h("small", "portal-muted", when));
           return li;
         }));
+        SWFTPortal.qs("#files-card").hidden = false;
+        if (view.preview) SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/admin/files", project: view.project.id, admin: true, readOnly: true });
+        else SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/portal/files" });
         var ups = view.updates || [];
         SWFTPortal.qs("#updates-wrap").hidden = !ups.length;
         SWFTPortal.qs("#updates").replaceChildren.apply(SWFTPortal.qs("#updates"), ups.map(function (u) {
@@ -180,7 +190,7 @@
           SWFTPortal.qs("#welcome").textContent = (r.data && r.data.error) || "Could not load that project.";
           return;
         }
-        var v = r.data.view;
+        var v = r.data.view; v.preview = true;
         var banner = SWFTPortal.qs("#preview-banner");
         banner.hidden = false;
         banner.replaceChildren(

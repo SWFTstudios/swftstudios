@@ -75,6 +75,16 @@ Every new project (created when a client pays) starts with the default steps in 
 
 Storage: migration `0004_project_progress.sql` (`project_milestones`, `project_updates`, `projects.name`, `projects.is_demo`). Before it is applied, the dashboard still loads; progress shows as unavailable.
 
+## Project files and Google Drive
+
+Each project has a **Files** section (above private notes). Files you upload appear on the client's dashboard, and the client's uploads appear here.
+They live in R2 (`swft-portal-files`) and are mirrored to Drive when Drive is connected:
+1. In Google Cloud, create a service account, enable the Drive API, and create a JSON key.
+2. In Drive, share your SWFT clients folder with the service account's email as **Editor**.
+3. In Cloudflare Pages > Settings > Variables and Secrets add `GOOGLE_SERVICE_ACCOUNT_JSON` (the whole key file) and `DRIVE_ROOT_FOLDER_ID` (the folder id from its URL).
+4. Click **Sync to Drive now** on any project to copy files uploaded earlier. Each project gets its own subfolder.
+Pages must also have the R2 binding `FILES` pointing at `swft-portal-files` (already in `wrangler.pages.jsonc`; add it in Settings > Bindings if the dashboard manages bindings).
+
 ## Demo client project
 
 `scripts/seed-demo-project.sql` creates client **elombekisala@gmail.com** with project "SWFT Studios website + content (demo)" (Website + Content Capture, active, analytics host swftstudios.com), six milestones (three done, one in progress) and three updates, dated relative to the day you run it. Re-running resets the demo only.

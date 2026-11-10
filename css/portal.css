@@ -290,3 +290,15 @@
 }
 .portal-update { border-top: 1px solid var(--swft-border); padding: 0.75rem 0; }
 .portal-update p { margin: 0.25rem 0 0; white-space: pre-wrap; }
+
+/* Shared files */
+.portal-files__drop { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; padding: 1rem; margin: 0.5rem 0 0.75rem; border: 1.5px dashed var(--swft-border); border-radius: 14px; transition: border-color 0.2s, background 0.2s; }
+.portal-files__drop.is-over { border-color: var(--swft-accent, currentColor); background: rgba(255, 255, 255, 0.06); }
+.portal-files__msg { min-height: 1.2em; margin: 0 0 0.5rem; }
+.portal-files__list { list-style: none; margin: 0; padding: 0; }
+.portal-file { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 0; border-top: 1px solid var(--swft-border); }
+.portal-file__info { min-width: 0; display: grid; gap: 0.15rem; }
+.portal-file__name { overflow-wrap: anywhere; font-weight: 600; }
+.portal-file__del { flex: none; background: none; border: 1px solid var(--swft-border); border-radius: 999px; padding: 0.3rem 0.75rem; color: inherit; font: inherit; font-size: 0.85rem; cursor: pointer; }
+.portal-file__del:hover { border-color: currentColor; }
+.portal-files__empty { padding: 0.5rem 0; }
