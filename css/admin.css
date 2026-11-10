@@ -199,3 +199,5 @@
 .admin-plist__empty { display: grid; gap: 0.5rem; justify-items: start; padding: 0.5rem 0; }
 .admin-pcard.needs-attention { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 55%, var(--swft-border)); }
 .admin-pcard__why { color: var(--swft-signal, #ff5a36); font-weight: 600; }
+.admin-schedule { align-items: center; margin-bottom: 1.25rem; }
+.admin-schedule .admin-milestone__date { flex: 1 1 12rem; }

@@ -323,3 +323,41 @@ test("marking a step done takes the picked date; the client sees that day; undon
   assert.equal((await post({ action: "set_milestone_date", id: "nope", date: "2026-11-01" })).status, 404);
   assert.equal((await post({ action: "set_milestone_date", id: call, date: "2026-11-01" }, s.other)).status, 403);
 });
+
+import { spreadDates } from "../../functions/_lib/projects.js";
+
+test("spreadDates: even steps, last on the end day, weekends pulled back to Friday", () => {
+  // 2026-11-10 is a Tuesday; three weeks later is Tuesday 2026-12-01.
+  const d = spreadDates("2026-11-10", "2026-12-01", 7);
+  assert.equal(d.length, 7);
+  assert.equal(d.at(-1), "2026-12-01");
+  assert.deepEqual([...d].sort(), d);
+  for (const x of d) assert.ok(![0, 6].includes(new Date(`${x}T00:00:00Z`).getUTCDay()), `${x} is a weekend`);
+  assert.deepEqual(spreadDates("2026-11-10", "2026-11-14", 1), ["2026-11-13"]);
+  assert.deepEqual(spreadDates("2026-11-10", "2026-12-01", 0), []);
+});
+
+test("schedule_milestones dates only the steps not done, in order; admin-only; bad windows rejected", async () => {
+  const db = makeDb();
+  const s = await setup(db);
+  const { project } = await upsertPaidUser(db, { email: "sched@example.com", tierId: "custom", checkoutId: "cs_sched", status: "paid" });
+  const steps = db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id);
+  db.raw.prepare("UPDATE project_milestones SET status = 'done', completed_at = '2026-11-09 12:00:00' WHERE id = ?").run(steps[0].id);
+  const post = (body, sid = s.admin) => adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid, method: "POST", body }));
+
+  const r = await post({ action: "schedule_milestones", projectId: project.id, start: "2026-11-10", end: "2026-12-01" });
+  assert.equal(r.status, 200);
+  const rows = db.raw.prepare("SELECT status, due_date FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id);
+  const open = rows.filter((x) => x.status !== "done");
+  assert.equal((await r.json()).scheduled, open.length);
+  assert.ok(rows.filter((x) => x.status === "done").every((x) => x.due_date === null));
+  const due = open.map((x) => x.due_date);
+  assert.ok(due.every(Boolean));
+  assert.deepEqual([...due].sort(), due);
+  assert.equal(due.at(-1), "2026-12-01");
+
+  assert.equal((await post({ action: "schedule_milestones", projectId: project.id, start: "2026-12-01", end: "2026-11-10" })).status, 400);
+  assert.equal((await post({ action: "schedule_milestones", projectId: project.id, start: "2026-11-10", end: "nope" })).status, 400);
+  assert.equal((await post({ action: "schedule_milestones", projectId: "missing", start: "2026-11-10", end: "2026-12-01" })).status, 404);
+  assert.equal((await post({ action: "schedule_milestones", projectId: project.id, start: "2026-11-10", end: "2026-12-01" }, s.other)).status, 403);
+});

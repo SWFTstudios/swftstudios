@@ -356,3 +356,46 @@
 .portal-note p { margin: 0.35rem 0 0; white-space: pre-wrap; overflow-wrap: break-word; }
 .portal-notes__empty { padding: 0.5rem 0; }
 .portal-page #panel-overview > .portal-overview { margin-top: 0.75rem; }
+
+/* ---------- Schedule calendar ---------- */
+.portal-cal__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.portal-cal__eta { margin: 0.35rem 0 0.15rem; font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.portal-cal__sub { margin: 0; }
+.portal-cal__legend { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin: 0; padding: 0; list-style: none; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.85; }
+.portal-cal__legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
+.portal-cal__legend li::before { content: ""; width: 0.6rem; height: 0.6rem; border-radius: 50%; border: 2px solid var(--swft-border); }
+.portal-cal__legend .is-done::before { background: var(--swft-ice, #c3cdfa); border-color: var(--swft-ice, #c3cdfa); }
+.portal-cal__legend .is-in_progress::before { background: var(--swft-signal, #ff5a36); border-color: var(--swft-signal, #ff5a36); }
+.portal-cal__legend .is-today::before { border-radius: 3px; border-color: var(--swft-signal, #ff5a36); }
+
+.portal-cal__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.portal-cal__dow { padding: 0 0.4rem 0.35rem; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.6; }
+.portal-cal__day { position: relative; min-height: 5.5rem; padding: 0.4rem; border-radius: 10px; border: 1px solid var(--glass-edge, var(--swft-border)); background: rgba(var(--mf-ink-rgb), 0.02); display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.portal-cal__day.is-outside { opacity: 0.35; }
+.portal-cal__day.is-past:not(.has-steps) { opacity: 0.5; }
+.portal-cal__day.is-window { background: color-mix(in srgb, var(--swft-signal, #ff5a36) 6%, transparent); }
+.portal-cal__day.is-today { border-color: var(--swft-signal, #ff5a36); box-shadow: 0 0 0 1px var(--swft-signal, #ff5a36) inset; }
+.portal-cal__day.is-finish { background: color-mix(in srgb, var(--swft-signal, #ff5a36) 14%, transparent); }
+.portal-cal__num { font-size: 0.8rem; font-weight: 600; opacity: 0.8; white-space: nowrap; }
+.portal-cal__tag { position: absolute; top: 0.4rem; right: 0.4rem; font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--swft-signal, #ff5a36); }
+.portal-cal__steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
+.portal-cal__step { padding: 0.2rem 0.45rem; border-radius: 6px; font-size: 0.72rem; line-height: 1.25; border: 1px solid var(--swft-border); overflow: hidden; }
+.portal-cal__step-name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.portal-cal__step.is-done { border-color: color-mix(in srgb, var(--swft-ice, #c3cdfa) 55%, transparent); color: var(--swft-ice, #c3cdfa); }
+.portal-cal__step.is-in_progress { border-color: var(--swft-signal, #ff5a36); background: color-mix(in srgb, var(--swft-signal, #ff5a36) 18%, transparent); }
+.portal-cal__step.is-upcoming { opacity: 0.9; }
+:root[data-mode="light"] .portal-cal__step.is-done { color: inherit; background: color-mix(in srgb, var(--swft-ice, #c3cdfa) 45%, transparent); }
+
+/* Phones: cells become compact dots; the Steps list below carries the names. */
+@media (max-width: 640px) {
+  .portal-cal__grid { gap: 3px; }
+  .portal-cal__dow { padding: 0 0 0.3rem; text-align: center; font-size: 0.62rem; }
+  .portal-cal__day { min-height: 2.9rem; padding: 0.3rem 0.2rem; align-items: center; border-radius: 8px; }
+  .portal-cal__num { font-size: 0.72rem; }
+  .portal-cal__tag { display: none; }
+  .portal-cal__steps { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 3px; }
+  .portal-cal__step { width: 0.55rem; height: 0.55rem; padding: 0; border-radius: 50%; border-width: 2px; }
+  .portal-cal__step-name { display: none; }
+  .portal-cal__step.is-done { background: var(--swft-ice, #c3cdfa); }
+  .portal-cal__step.is-in_progress { background: var(--swft-signal, #ff5a36); }
+}

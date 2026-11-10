@@ -132,6 +132,38 @@ export async function setMilestoneDate(db, id, date) {
   return true;
 }
 
+/**
+ * Target dates for an even plan between two days (YYYY-MM-DD): n steps share the span, the
+ * last one lands on `end`. A day that falls on a weekend moves back to Friday (never before `start`).
+ */
+export function spreadDates(start, end, n) {
+  const DAY = 24 * 60 * 60 * 1000;
+  const t0 = Date.parse(`${start}T00:00:00Z`);
+  const span = Math.round((Date.parse(`${end}T00:00:00Z`) - t0) / DAY);
+  const out = [];
+  for (let i = 1; i <= n; i++) {
+    let t = t0 + Math.round((i * span) / n) * DAY;
+    const wd = new Date(t).getUTCDay();
+    if (wd === 6) t -= DAY;
+    else if (wd === 0) t -= 2 * DAY;
+    out.push(new Date(Math.max(t, t0)).toISOString().slice(0, 10));
+  }
+  return out;
+}
+
+/** Give every step that isn't done a target date, in step order, between start and end. */
+export async function scheduleMilestones(db, projectId, start, end) {
+  const rows = (await db
+    .prepare("SELECT id FROM project_milestones WHERE project_id = ? AND status != 'done' ORDER BY sort_order, id")
+    .bind(projectId)
+    .all()).results;
+  const dates = spreadDates(start, end, rows.length);
+  for (let i = 0; i < rows.length; i++) {
+    await db.prepare("UPDATE project_milestones SET due_date = ? WHERE id = ?").bind(dates[i], rows[i].id).run();
+  }
+  return rows.length;
+}
+
 export async function addMilestone(db, projectId, { title, detail, dueDate }) {
   const next = await db
     .prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS n FROM project_milestones WHERE project_id = ?")
