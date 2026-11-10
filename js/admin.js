@@ -732,7 +732,95 @@
     }))]));
   }
 
-  var RENDER = { overview: renderOverview, analytics: renderAnalytics, clients: renderClients, outreach: renderOutreach, guides: renderGuides, emails: renderEmails, blog: renderBlog };
+  /* ---------- Newsletter: email subscribers about a new post or video ---------- */
+
+  var NL_KIND = { blog: "Blog post", videos: "Video" };
+
+  // Video titles not set in data/visuals.json come from Vimeo, like on the Visuals page.
+  function vimeoMeta(item) {
+    var page = "https://vimeo.com/" + item.vimeo + (item.hash ? "/" + item.hash : "");
+    return fetch("https://vimeo.com/api/oembed.json?url=" + encodeURIComponent(page))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  }
+
+  function renderNewsletter(root) {
+    var list = el("div"), detail = el("div", { class: "admin-guide-detail" });
+    root.replaceChildren(list, detail);
+    list.replaceChildren(card("Newsletter", [el("p", { class: "admin-muted", text: "Loading…" })]));
+    var load = function () {
+      P.api("/api/admin/newsletter").then(function (r) {
+        var d = r.data || {};
+        if (!r.res.ok || !d.ok) { list.replaceChildren(card("Newsletter", [notice((d && d.error) || "Could not load the newsletter.")])); return; }
+        var rows = d.items.map(function (it) {
+          var titleCell = el("span", { text: it.title || "Video " + it.vimeo });
+          if (!it.title && it.kind === "videos") vimeoMeta(it).then(function (m) {
+            if (m && m.title) { it.title = m.title; if (!it.summary && m.description) it.summary = m.description.slice(0, 300); titleCell.textContent = m.title; }
+          });
+          var sent = it.sent ? "Sent to " + it.sent.count + " · " + date(it.sent.at) : "Not sent";
+          var btn = el("button", { class: "admin-row-btn", type: "button", text: it.sent ? "Send to new subscribers" : "Email subscribers", onclick: function () { compose(detail, it, d, load); } });
+          return [NL_KIND[it.kind], titleCell, sent, btn];
+        });
+        list.replaceChildren(card("Newsletter", [
+          !d.configured ? notice("RESEND_API_KEY is not set on this project, so nothing can be sent yet.") : null,
+          !d.ready ? notice("Apply migration 0010 (npx wrangler d1 migrations apply swft-portal --remote) to send to subscribers.") : null,
+          el("div", { class: "admin-stats" }, [stat("Active subscribers", d.counts.active), stat("Want blog posts", d.counts.blog), stat("Want videos", d.counts.videos)]),
+          el("p", { class: "admin-muted", text: "Sending from " + d.from + ". Replies go to hello@swftstudios.com. Each subscriber only gets each post or video once." }),
+          table(["Type", "Title", "Status", ""], rows, "No blog posts or videos found."),
+        ]));
+      });
+    };
+    load();
+  }
+
+  function compose(box, it, d, reload) {
+    var audience = d.counts[it.kind];
+    var subject = el("input", { type: "text", value: it.title || "", maxlength: "150", "aria-label": "Subject line" });
+    var summary = el("textarea", { maxlength: "600", "aria-label": "Short summary" });
+    summary.value = it.summary || "";
+    var msg = el("p", { class: "admin-muted admin-update-msg", role: "status" });
+    var body = function (action) { return JSON.stringify({ action: action, kind: it.kind, key: it.key, subject: subject.value, summary: summary.value }); };
+
+    var testBtn = el("button", { class: "admin-row-btn", type: "button", text: "Send me a test", onclick: function () {
+      testBtn.disabled = true; msg.textContent = "Sending test…";
+      P.api("/api/admin/newsletter", { method: "POST", body: body("test") }).then(function (x) {
+        testBtn.disabled = false;
+        msg.textContent = x.res.ok && x.data.ok ? "Test sent to " + x.data.to + "." : (x.data && x.data.error) || "Could not send the test.";
+      });
+    } });
+
+    var sendBtn = el("button", { class: "mf-btn mf-btn--sm", type: "button", text: "Send to " + audience + (audience === 1 ? " subscriber" : " subscribers"), onclick: function () {
+      if (!subject.value.trim()) { subject.focus(); return; }
+      if (!confirm("Email “" + subject.value + "” to everyone who signed up for " + NL_KIND[it.kind].toLowerCase() + "s and hasn't had it yet?")) return;
+      sendBtn.disabled = testBtn.disabled = true;
+      var total = 0;
+      var step = function () {
+        P.api("/api/admin/newsletter", { method: "POST", body: body("send") }).then(function (x) {
+          var r = x.data || {};
+          if (!x.res.ok || !r.ok) { sendBtn.disabled = testBtn.disabled = false; msg.textContent = (total ? "Sent " + total + ", then stopped: " : "") + (r.error || "Could not send."); reload(); return; }
+          total += r.sent;
+          if (r.remaining > 0 && r.sent > 0 && !r.failed) { msg.textContent = "Sent " + total + ", " + r.remaining + " to go…"; step(); return; }
+          sendBtn.disabled = testBtn.disabled = false;
+          msg.textContent = r.failed ? "Sent " + total + ". Resend stopped accepting emails; click Send again to finish the other " + r.remaining + "."
+            : total ? "Done. Sent to " + total + (total === 1 ? " subscriber." : " subscribers.") : "Everyone on the list already has this one.";
+          reload();
+        });
+      };
+      msg.textContent = "Sending…";
+      step();
+    } });
+
+    box.replaceChildren(card("Email subscribers: " + NL_KIND[it.kind].toLowerCase(), [
+      el("p", { class: "admin-muted", text: "Link in the email: " + location.origin + it.path }),
+      el("label", { class: "admin-field" }, [el("span", { class: "portal-stat-label", text: "Subject" }), subject]),
+      el("label", { class: "admin-field" }, [el("span", { class: "portal-stat-label", text: "Summary (one or two sentences)" }), summary]),
+      el("div", { class: "admin-inline-form" }, [testBtn, sendBtn]),
+      msg,
+    ]));
+    box.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  var RENDER = { overview: renderOverview, analytics: renderAnalytics, clients: renderClients, outreach: renderOutreach, guides: renderGuides, emails: renderEmails, blog: renderBlog, newsletter: renderNewsletter };
   var drawn = {};
 
   function show(tab) {

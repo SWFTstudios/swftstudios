@@ -1,0 +1,166 @@
+/**
+ * "New blog post / new video" emails to the subscribers list.
+ *
+ * Who gets it: active subscribers (double opt-in confirmed) whose interests include
+ * the item's kind ("blog" or "videos"), minus anyone who opted out of all SWFT email
+ * on the preferences page, minus anyone who already got this item.
+ *
+ * Sending uses Resend's batch endpoint (up to 100 emails per call), a few batches per
+ * request so one click stays within Worker limits; the admin page keeps calling until
+ * nothing is left. Each email carries that subscriber's own unsubscribe link and
+ * RFC 8058 one-click List-Unsubscribe headers.
+ *
+ * Env: RESEND_API_KEY, optional NEWSLETTER_FROM (falls back to RESEND_FROM).
+ */
+import { randomId, sha256Hex } from "./portal-auth.js";
+import { escapeHtml, LEAD_INBOX } from "./resend.js";
+import { prefsReady, origin as siteOrigin } from "./email-prefs.js";
+import { INTERESTS, oneClickUnsubscribeUrl, unsubscribeUrl } from "./subscribers.js";
+
+export const KINDS = { blog: "Blog post", videos: "Video" };
+export const BATCH_SIZE = 100;
+export const BATCHES_PER_REQUEST = 5;
+
+export async function newsletterReady(db) {
+  try { await db.prepare("SELECT 1 FROM newsletter_sends LIMIT 1").first(); return true; } catch { return false; }
+}
+
+/** Blog posts and videos from the site's data files, newest first, with a public link each. */
+export async function loadItems(env, request) {
+  const get = async (path) => {
+    try {
+      const res = await env.ASSETS.fetch(new URL(path, request.url));
+      return res.ok ? await res.json() : null;
+    } catch { return null; }
+  };
+  const [posts, visuals] = await Promise.all([get("/data/blog-posts.json"), get("/data/visuals.json")]);
+  const blog = (Array.isArray(posts) ? posts : [])
+    .filter((p) => p && p.slug && p.url)
+    .sort((a, b) => String(b.published || b.updated || "").localeCompare(String(a.published || a.updated || "")))
+    .map((p) => ({ kind: "blog", key: String(p.slug), title: p.title || "", summary: p.description || "", path: p.url, date: p.published || p.updated || null }));
+  const videos = ((visuals && visuals.videos) || [])
+    .filter((v) => v && v.vimeo)
+    .map((v) => {
+      const key = String(v.slug || v.vimeo);
+      return { kind: "videos", key, vimeo: String(v.vimeo), hash: v.hash || "", title: v.title || "", summary: v.description || "", path: `/visuals.html?p=${encodeURIComponent(key)}`, date: v.year || null };
+    });
+  return [...blog, ...videos];
+}
+
+const interestClause = "(',' || s.interests || ',') LIKE ?";
+
+async function pendingWhere(db) {
+  const prefs = await prefsReady(db);
+  return `FROM subscribers s ${prefs ? "LEFT JOIN email_prefs ep ON ep.email = s.email" : ""}
+    WHERE s.status = 'active' AND ${interestClause} ${prefs ? "AND COALESCE(ep.all_off, 0) = 0" : ""}
+      AND NOT EXISTS (SELECT 1 FROM newsletter_deliveries d WHERE d.send_id = ? AND d.subscriber_id = s.id)`;
+}
+
+/** Subscribers who should get this item and haven't yet (up to `limit`). */
+async function pendingRecipients(db, kind, sendId, limit) {
+  const sql = `SELECT s.id, s.email, s.name ${await pendingWhere(db)} ORDER BY s.created_at, s.id LIMIT ?`;
+  return (await db.prepare(sql).bind(`%,${kind},%`, sendId || "", limit).all()).results;
+}
+
+async function pendingCount(db, kind, sendId) {
+  return (await db.prepare(`SELECT COUNT(*) AS n ${await pendingWhere(db)}`).bind(`%,${kind},%`, sendId || "").first()).n;
+}
+
+/** How many subscribers would get each kind, and how many are still waiting for one item. */
+export async function audienceCounts(db) {
+  const prefs = await prefsReady(db);
+  const count = async (kind) => (await db.prepare(
+    `SELECT COUNT(*) AS n FROM subscribers s ${prefs ? "LEFT JOIN email_prefs ep ON ep.email = s.email" : ""}
+     WHERE s.status = 'active' AND ${interestClause} ${prefs ? "AND COALESCE(ep.all_off, 0) = 0" : ""}`
+  ).bind(`%,${kind},%`).first()).n;
+  const active = (await db.prepare("SELECT COUNT(*) AS n FROM subscribers WHERE status = 'active'").first()).n;
+  return { active, blog: await count("blog"), videos: await count("videos") };
+}
+
+export async function sendsByItem(db) {
+  const rows = (await db.prepare("SELECT kind, item_key, sent_count, last_sent_at FROM newsletter_sends").all()).results;
+  return Object.fromEntries(rows.map((r) => [`${r.kind}:${r.item_key}`, { count: r.sent_count, at: r.last_sent_at }]));
+}
+
+/** The email for one subscriber. `subscriber` null = a test copy (no personal links). */
+export function buildEmail(env, item, { subject, summary }, subscriber) {
+  const origin = siteOrigin(env);
+  const link = origin + item.path;
+  const what = item.kind === "blog" ? "Read the post" : "Watch the video";
+  const topic = INTERESTS[item.kind].toLowerCase();
+  const hello = subscriber?.name ? `Hi ${escapeHtml(subscriber.name)},` : "Hi,";
+  const unsub = subscriber ? unsubscribeUrl(origin, subscriber.id) : `${origin}/account.html`;
+  const html = `<div style="font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:#111;max-width:560px">
+<p>${hello}</p>
+<p style="margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#777">New from SWFT Studios · ${escapeHtml(KINDS[item.kind])}</p>
+<h1 style="margin:0 0 12px;font-size:22px;line-height:1.25">${escapeHtml(subject)}</h1>
+${summary ? `<p>${escapeHtml(summary)}</p>` : ""}
+<p><a href="${link}" style="display:inline-block;background:#111;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold">${what}</a></p>
+<hr style="border:none;border-top:1px solid #e5e5e5;margin:28px 0 12px">
+<p style="font-size:12px;line-height:1.5;color:#777;margin:0">You're getting this because you signed up for SWFT Studios ${escapeHtml(topic)}.
+<a href="${unsub}" style="color:#555">Unsubscribe</a><br>SWFT Studios · ${LEAD_INBOX}</p>
+</div>`;
+  const text = `${subscriber?.name ? `Hi ${subscriber.name},` : "Hi,"}\n\nNew from SWFT Studios: ${subject}\n\n${summary ? summary + "\n\n" : ""}${what}: ${link}\n\n--\nYou signed up for SWFT Studios ${topic}. Unsubscribe: ${unsub}`;
+  const headers = subscriber
+    ? { "List-Unsubscribe": `<${oneClickUnsubscribeUrl(origin, subscriber.id)}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" }
+    : undefined;
+  return { html, text, headers };
+}
+
+export function fromAddress(env) {
+  return env.NEWSLETTER_FROM || env.RESEND_FROM || `SWFT Studios <${LEAD_INBOX}>`;
+}
+
+/** POST one Resend batch. Returns true when Resend accepted it. */
+async function postBatch(env, emails, idempotencyKey) {
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const res = await fetch("https://api.resend.com/emails/batch", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json", "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify(emails),
+      });
+      if (res.ok) return true;
+      console.error("Resend batch error", res.status, (await res.text().catch(() => "")).slice(0, 500));
+      if (![408, 425, 429, 500, 502, 503, 504].includes(res.status)) return false;
+    } catch (err) {
+      console.error("Resend batch fetch failed", err);
+    }
+    if (attempt === 1) await new Promise((r) => setTimeout(r, 600));
+  }
+  return false;
+}
+
+/**
+ * Send this item to the next few batches of subscribers who haven't had it.
+ * Returns { sent, remaining, failed }.
+ */
+export async function sendItem(db, env, item, { subject, summary }) {
+  let send = await db.prepare("SELECT * FROM newsletter_sends WHERE kind = ? AND item_key = ?").bind(item.kind, item.key).first();
+  if (!send) {
+    await db.prepare("INSERT OR IGNORE INTO newsletter_sends (id, kind, item_key, subject) VALUES (?, ?, ?, ?)")
+      .bind(randomId(12), item.kind, item.key, subject).run();
+    send = await db.prepare("SELECT * FROM newsletter_sends WHERE kind = ? AND item_key = ?").bind(item.kind, item.key).first();
+  } else if (send.subject !== subject) {
+    await db.prepare("UPDATE newsletter_sends SET subject = ? WHERE id = ?").bind(subject, send.id).run();
+  }
+
+  let sent = 0, failed = false;
+  for (let b = 0; b < BATCHES_PER_REQUEST; b++) {
+    const people = await pendingRecipients(db, item.kind, send.id, BATCH_SIZE);
+    if (!people.length) break;
+    const from = fromAddress(env);
+    const emails = people.map((p) => ({ from, to: [p.email], subject, reply_to: LEAD_INBOX, ...buildEmail(env, item, { subject, summary }, p) }));
+    // Same people for the same item = same key, so a retried batch is never delivered twice.
+    const key = `newsletter/${send.id}/${(await sha256Hex(people.map((p) => p.id).join(","))).slice(0, 32)}`;
+    if (!(await postBatch(env, emails, key))) { failed = true; break; }
+    await db.prepare(
+      `INSERT OR IGNORE INTO newsletter_deliveries (send_id, subscriber_id) SELECT ?, value FROM json_each(?)`
+    ).bind(send.id, JSON.stringify(people.map((p) => p.id))).run();
+    await db.prepare("UPDATE newsletter_sends SET sent_count = sent_count + ?, last_sent_at = datetime('now') WHERE id = ?")
+      .bind(people.length, send.id).run();
+    sent += people.length;
+  }
+  const remaining = await pendingCount(db, item.kind, send.id);
+  return { sent, remaining, failed };
+}

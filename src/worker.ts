@@ -32,6 +32,7 @@ import * as fnAdminNotes from "../functions/api/admin/notes.js";
 import * as fnAdminProject from "../functions/api/admin/project.js";
 // @ts-expect-error JS module without types
 import * as fnAdminAnalytics from "../functions/api/admin/analytics.js";
+import * as fnAdminNewsletter from "../functions/api/admin/newsletter.js";
 // @ts-expect-error JS module without types
 import * as fnPortalProject from "../functions/api/portal/project.js";
 // @ts-expect-error JS module without types
@@ -682,6 +683,7 @@ export default {
       "/api/admin/notes": fnAdminNotes,
       "/api/admin/project": fnAdminProject,
       "/api/admin/analytics": fnAdminAnalytics,
+      "/api/admin/newsletter": fnAdminNewsletter,
       "/api/portal/project": fnPortalProject,
     };
     const shared = SHARED_FNS[url.pathname];
