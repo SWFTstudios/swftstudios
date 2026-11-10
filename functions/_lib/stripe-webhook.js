@@ -81,8 +81,9 @@ export async function handleStripeEvent(env, event, deps) {
 
     // Payment Links may only have metadata on the link; try line items via price map later if needed
     if (!tierId) {
+      // Custom payment links (e.g. a proposal deposit) carry no tier metadata.
       console.warn("checkout without tierId metadata", obj.id);
-      tierId = "unknown";
+      tierId = "custom";
     }
 
     const status = obj.mode === "subscription" ? "active" : "paid";
@@ -106,7 +107,7 @@ export async function handleStripeEvent(env, event, deps) {
           await sendInviteEmail(env, {
             email,
             name: obj.customer_details?.name || obj.metadata?.name || "",
-            tierName: tier?.name || tierId,
+            tierName: tier?.name || (tierId === "custom" ? "your project" : tierId),
             inviteUrl,
           });
         }

@@ -144,3 +144,130 @@ test("analytics endpoint is admin-only and degrades per source", async () => {
   assert.equal(r.posthog.reason, "missing_key");
   assert.equal(r.host, "swftstudios.com");
 });
+
+/* ---------- default steps, editing, billing label ---------- */
+import { upsertPaidUser } from "../../functions/_lib/portal-db.js";
+import { DEFAULT_STEPS } from "../../functions/_lib/default-steps.js";
+import { handleStripeEvent } from "../../functions/_lib/stripe-webhook.js";
+import { getProjectView, seedDefaultSteps } from "../../functions/_lib/projects.js";
+
+const stepsOf = (db, id) => db.raw.prepare("SELECT title, status, sort_order, completed_at FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(id);
+
+test("a paid checkout creates the account, the project and the default steps", async () => {
+  const db = makeDb();
+  const { user, project } = await upsertPaidUser(db, { email: "New.Client@Example.com", stripeCustomerId: "cus_1", tierId: "custom", checkoutId: "cs_1", status: "paid" });
+  assert.equal(user.email, "new.client@example.com");
+  const steps = stepsOf(db, project.id);
+  assert.deepEqual(steps.map((s) => s.title), DEFAULT_STEPS.map((s) => s.title));
+  assert.equal(steps.find((s) => s.title === "Deposit paid").status, "done");
+  assert.ok(steps.find((s) => s.title === "Deposit paid").completed_at);
+  assert.equal(steps.find((s) => s.title === "Initial call").status, "upcoming");
+
+  // Stripe retries the same event: no duplicate project, no duplicate steps.
+  await upsertPaidUser(db, { email: "new.client@example.com", tierId: "custom", checkoutId: "cs_1", status: "paid" });
+  assert.equal(db.raw.prepare("SELECT COUNT(*) n FROM projects").get().n, 1);
+  assert.equal(stepsOf(db, project.id).length, DEFAULT_STEPS.length);
+  assert.equal(await seedDefaultSteps(db, project.id), 0);
+});
+
+test("provisioning still works before migration 0004 (no steps table)", async () => {
+  const db = makeDb(["0001_portal.sql"]);
+  const { user, project } = await upsertPaidUser(db, { email: "early@example.com", tierId: "website-only", checkoutId: "cs_2", status: "paid" });
+  assert.ok(user.id && project.id);
+});
+
+test("a checkout with no tier metadata is a custom project, not 'unknown'", async () => {
+  const db = makeDb();
+  const sent = [];
+  const out = await handleStripeEvent({ DB: db }, {
+    type: "checkout.session.completed",
+    data: { object: { id: "cs_3", mode: "payment", customer: "cus_3", customer_details: { email: "tim@example.com", name: "Tim" }, metadata: {} } },
+  }, {
+    upsertPaidUser,
+    createInviteToken: async () => "tok",
+    updateSubscriptionStatus: async () => {},
+    getStripeTier: () => null,
+    tierIdFromPriceId: () => null,
+    sendInviteEmail: async (_e, m) => { sent.push(m); },
+  });
+  assert.equal(out.tierId, "custom");
+  assert.equal(db.raw.prepare("SELECT tier_id FROM projects").get().tier_id, "custom");
+  assert.equal(sent[0].tierName, "your project");
+  const view = await getProjectView(db, db.raw.prepare("SELECT id FROM projects").get().id);
+  assert.equal(view.project.tierName, "Custom project");
+  assert.equal(view.project.billing, "one_time");
+  assert.equal(view.milestones.length, DEFAULT_STEPS.length);
+});
+
+test("billing is 'subscription' only when Stripe gave a subscription id", async () => {
+  const db = makeDb();
+  const { project } = await upsertPaidUser(db, { email: "sub@example.com", tierId: "content-growth-retainer", checkoutId: "cs_4", subscriptionId: "sub_1", status: "active" });
+  assert.equal((await getProjectView(db, project.id)).project.billing, "subscription");
+});
+
+test("admin edits and reorders steps; clients can't; bad input is rejected", async () => {
+  const db = makeDb();
+  const s = await setup(db);
+  const { project } = await upsertPaidUser(db, { email: "c@example.com", tierId: "custom", checkoutId: "cs_5", status: "paid" });
+  const [first, second] = db.raw.prepare("SELECT id, title FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id);
+  const post = (body, sid = s.admin) => adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid, method: "POST", body }));
+
+  assert.equal((await post({ action: "edit_milestone", id: first.id, title: "Intro call + CMS review", detail: "Talk through the CMS connection.", dueDate: "2026-11-20" })).status, 200);
+  const edited = db.raw.prepare("SELECT title, detail, due_date FROM project_milestones WHERE id = ?").get(first.id);
+  assert.deepEqual({ ...edited }, { title: "Intro call + CMS review", detail: "Talk through the CMS connection.", due_date: "2026-11-20" });
+  assert.equal((await post({ action: "edit_milestone", id: first.id, title: "", dueDate: "" })).status, 400);
+  assert.equal((await post({ action: "edit_milestone", id: first.id, title: "x", dueDate: "11/20/2026" })).status, 400);
+
+  // Move the second step up: it now comes first. Moving the first up again is a no-op.
+  assert.equal((await post({ action: "move_milestone", id: second.id, direction: "up" })).status, 200);
+  assert.equal(stepsOf(db, project.id)[0].title, second.title);
+  assert.equal((await post({ action: "move_milestone", id: second.id, direction: "up" })).status, 200);
+  assert.equal(stepsOf(db, project.id)[0].title, second.title);
+  assert.equal((await post({ action: "move_milestone", id: second.id, direction: "down" })).status, 200);
+  assert.equal(stepsOf(db, project.id)[0].title, "Intro call + CMS review");
+  assert.equal((await post({ action: "move_milestone", id: second.id, direction: "sideways" })).status, 400);
+
+  // A custom step added after the call (e.g. CMS connection) lands at the end with a description.
+  assert.equal((await post({ action: "add_milestone", projectId: project.id, title: "CMS connection", detail: "Connect the site to your Stagera system." })).status, 200);
+  const last = stepsOf(db, project.id).at(-1);
+  assert.equal(last.title, "CMS connection");
+
+  assert.equal((await post({ action: "edit_milestone", id: first.id, title: "hack" }, s.other)).status, 403);
+});
+
+test("defaults put Final approval and Final payment right before Launch", () => {
+  const t = DEFAULT_STEPS.map((s) => s.title);
+  const i = t.indexOf("Launch");
+  assert.deepEqual(t.slice(i - 2, i + 1), ["Final approval", "Final payment", "Launch"]);
+  assert.ok(t.indexOf("Review & revisions") < t.indexOf("Final approval"));
+  assert.match(DEFAULT_STEPS[i - 1].detail, /before launch/i);
+});
+
+test("drag reorder saves the whole order, shows on the client's side, and rejects stale or foreign lists", async () => {
+  const db = makeDb();
+  const s = await setup(db);
+  const { project } = await upsertPaidUser(db, { email: "r@example.com", tierId: "custom", checkoutId: "cs_r", status: "paid" });
+  const other = await upsertPaidUser(db, { email: "r2@example.com", tierId: "custom", checkoutId: "cs_r2", status: "paid" });
+  const ids = db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id).map((r) => r.id);
+  const post = (body, sid = s.admin) => adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid, method: "POST", body }));
+
+  const reversed = [...ids].reverse();
+  assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids: reversed })).status, 200);
+  assert.deepEqual(db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id).map((r) => r.id), reversed);
+
+  // The client sees the new order.
+  const view = await getProjectView(db, project.id);
+  assert.deepEqual(view.milestones.map((m) => m.id), reversed);
+
+  // Missing a step (stale page), duplicate ids, unknown ids, another project's ids, empty list: nothing changes.
+  for (const bad of [reversed.slice(1), [...reversed, reversed[0]], [...reversed.slice(1), "nope"], db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ?").all(other.project.id).map((r) => r.id)]) {
+    assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids: bad })).status, 409);
+  }
+  assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids: [] })).status, 400);
+  assert.deepEqual(db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id).map((r) => r.id), reversed);
+
+  // Clients and cross-origin writes are refused.
+  assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids }, s.other)).status, 403);
+  const xo = await adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid: s.admin, method: "POST", origin: "https://evil.example", body: { action: "reorder_milestones", projectId: project.id, ids } }));
+  assert.equal(xo.status, 403);
+});

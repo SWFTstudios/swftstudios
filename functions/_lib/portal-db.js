@@ -2,6 +2,7 @@
  * D1 helpers for the SWFT client portal.
  */
 
+import { seedDefaultSteps } from "./projects.js";
 import {
   getSessionIdFromRequest,
   hashPassword,
@@ -84,6 +85,8 @@ export async function upsertPaidUser(db, { email, stripeCustomerId, tierId, chec
     )
     .bind(projectId, user.id, tierId, checkoutId || null, subscriptionId || null, status || "paid")
     .run();
+
+  await seedDefaultSteps(db, projectId);
 
   const project = await db.prepare("SELECT * FROM projects WHERE id = ?").bind(projectId).first();
   return { user, project };

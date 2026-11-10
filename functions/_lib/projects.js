@@ -7,10 +7,12 @@
  */
 import { randomId } from "./portal-auth.js";
 import { getStripeTier, offerName } from "./stripe-tiers.js";
+import { DEFAULT_STEPS } from "./default-steps.js";
 
 export const MILESTONE_STATUSES = ["upcoming", "in_progress", "done"];
 
 function tierName(id) {
+  if (id === "custom" || id === "unknown") return "Custom project";
   return getStripeTier(id)?.name || offerName(id) || id;
 }
 
@@ -62,6 +64,8 @@ export async function getProjectView(db, projectId) {
       name: p.name || tierName(p.tier_id),
       tierName: tierName(p.tier_id),
       status: p.status,
+      // "subscription" only when Stripe gave us a subscription; everything else is a one-time payment.
+      billing: p.stripe_subscription_id ? "subscription" : "one_time",
       siteHost: p.site_host || null,
       createdAt: p.created_at,
       isDemo: !!p.is_demo,
@@ -102,6 +106,81 @@ export async function addMilestone(db, projectId, { title, detail, dueDate }) {
     .bind(id, projectId, title, detail || null, dueDate || null, next?.n || 1)
     .run();
   return id;
+}
+
+/**
+ * Give a new project the default steps (functions/_lib/default-steps.js).
+ * Does nothing if the project already has steps, so it is safe to call twice,
+ * and never throws: before migration 0004 there is no steps table, and a
+ * missing checklist must not fail a paid client's account creation.
+ */
+export async function seedDefaultSteps(db, projectId) {
+  try {
+    const have = await db
+      .prepare("SELECT COUNT(*) AS n FROM project_milestones WHERE project_id = ?")
+      .bind(projectId)
+      .first();
+    if (have?.n > 0) return 0;
+    let order = 1;
+    for (const step of DEFAULT_STEPS) {
+      await db
+        .prepare(
+          `INSERT INTO project_milestones (id, project_id, title, detail, status, sort_order, completed_at)
+           VALUES (?, ?, ?, ?, ?, ?, CASE WHEN ? = 'done' THEN datetime('now') ELSE NULL END)`
+        )
+        .bind(randomId(12), projectId, step.title, step.detail || null, step.status, order++, step.status)
+        .run();
+    }
+    return DEFAULT_STEPS.length;
+  } catch (err) {
+    console.error("seedDefaultSteps failed", err);
+    return 0;
+  }
+}
+
+export async function editMilestone(db, id, { title, detail, dueDate }) {
+  const r = await db
+    .prepare("UPDATE project_milestones SET title = ?, detail = ?, due_date = ? WHERE id = ?")
+    .bind(title, detail || null, dueDate || null, id)
+    .run();
+  return (r?.meta?.changes || 0) > 0;
+}
+
+/** Swap a step with its neighbour. direction: "up" (earlier) or "down" (later). */
+export async function moveMilestone(db, id, direction) {
+  const cur = await db.prepare("SELECT id, project_id, sort_order FROM project_milestones WHERE id = ?").bind(id).first();
+  if (!cur) return false;
+  const neighbour = await db
+    .prepare(
+      direction === "up"
+        ? `SELECT id, sort_order FROM project_milestones WHERE project_id = ? AND (sort_order < ? OR (sort_order = ? AND id < ?)) ORDER BY sort_order DESC, id DESC LIMIT 1`
+        : `SELECT id, sort_order FROM project_milestones WHERE project_id = ? AND (sort_order > ? OR (sort_order = ? AND id > ?)) ORDER BY sort_order ASC, id ASC LIMIT 1`
+    )
+    .bind(cur.project_id, cur.sort_order, cur.sort_order, cur.id)
+    .first();
+  if (!neighbour) return true; // already first/last: nothing to do
+  // Equal sort_order can't be swapped meaningfully; give the neighbour a distinct slot.
+  const a = cur.sort_order;
+  const b = neighbour.sort_order === a ? (direction === "up" ? a - 1 : a + 1) : neighbour.sort_order;
+  await db.prepare("UPDATE project_milestones SET sort_order = ? WHERE id = ?").bind(b, cur.id).run();
+  await db.prepare("UPDATE project_milestones SET sort_order = ? WHERE id = ?").bind(a, neighbour.id).run();
+  return true;
+}
+
+/**
+ * Set the order of a project's steps from a list of step ids (drag and drop).
+ * The list must contain exactly the project's current steps, so a stale page
+ * (a step added or removed elsewhere) is rejected instead of half-applied.
+ * Returns true, or false when the ids don't match the project.
+ */
+export async function reorderMilestones(db, projectId, ids) {
+  if (!Array.isArray(ids) || !ids.length || new Set(ids).size !== ids.length) return false;
+  const have = (await db.prepare("SELECT id FROM project_milestones WHERE project_id = ?").bind(projectId).all()).results.map((r) => r.id);
+  if (have.length !== ids.length || !ids.every((id) => have.includes(id))) return false;
+  for (let i = 0; i < ids.length; i++) {
+    await db.prepare("UPDATE project_milestones SET sort_order = ? WHERE id = ? AND project_id = ?").bind(i + 1, ids[i], projectId).run();
+  }
+  return true;
 }
 
 export async function deleteMilestone(db, id) {
