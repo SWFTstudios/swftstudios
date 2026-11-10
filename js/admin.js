@@ -391,24 +391,148 @@
   var EMAIL_STATUS = { sent: "The client was emailed.", opted_out: "Not emailed: the client turned off update emails.", failed: "The email didn't send (check RESEND_API_KEY). The update is on their dashboard.", unavailable: "Email isn't set up (RESEND_API_KEY). The update is on their dashboard.", not_sent: "Not emailed." };
   var EMAIL_SHORT = { sent: "emailed", opted_out: "not emailed (opted out)", failed: "email failed", unavailable: "email not set up", not_sent: "not emailed" };
 
-  function projectList() {
-    if (!state.clients.length) return el("p", { class: "admin-muted", text: "No client projects yet." });
-    return el("ul", { class: "admin-pcards" }, state.clients.map(function (c) {
-      var p = c.progress;
-      return el("li", {}, [el("button", { class: "admin-pcard", type: "button", onclick: function () { location.hash = "clients/" + encodeURIComponent(c.id); } }, [
-        el("span", { class: "admin-pcard__main" }, [
-          el("span", { class: "admin-pcard__name" }, [el("strong", { text: c.name }), c.isDemo ? el("span", { class: "admin-tag", text: "demo" }) : null]),
-          el("small", { class: "admin-muted", text: c.email }),
-          p && p.total ? el("span", { class: "admin-pcard__bar" }, [el("span", { style: "width:" + p.percent + "%" })]) : null,
-          el("small", { class: "admin-pcard__now", text: (p && p.total ? p.percent + "%" + (p.current ? " · " + p.current : "") : "No steps yet") }),
-        ]),
-        el("span", { class: "admin-pcard__side" }, [el("span", { class: "admin-pcard__status", text: c.status }), el("span", { class: "admin-pcard__chev", "aria-hidden": "true", text: "\u203a" })]),
-      ])]);
-    }));
+  /* Project list controls: search, filter, sort. Remembered on this device. */
+  var LIST_KEY = "swft-admin-projects";
+  var listOpts = (function () {
+    var d = { q: "", filter: "all", sort: "activity", hideDemos: false };
+    try { var saved = JSON.parse(localStorage.getItem(LIST_KEY) || "{}"); Object.keys(d).forEach(function (k) { if (k !== "q" && saved[k] != null) d[k] = saved[k]; }); } catch (e) { /* private mode */ }
+    return d;
+  })();
+  function saveListOpts() { try { localStorage.setItem(LIST_KEY, JSON.stringify({ filter: listOpts.filter, sort: listOpts.sort, hideDemos: listOpts.hideDemos })); } catch (e) { /* ignore */ } }
+  var STALE_DAYS = 7;
+  function daysSince(s) {
+    if (!s) return null;
+    var d = new Date(String(s).replace(" ", "T") + (/[zZ]|[+-]\d\d:?\d\d$/.test(s) ? "" : "Z"));
+    return isNaN(d) ? null : Math.floor((Date.now() - d) / 864e5);
   }
+  function isComplete(c) { return !!(c.progress && c.progress.total && c.progress.done >= c.progress.total); }
+  // Why a project needs a look, or null. Finished and canceled projects never do.
+  function attention(c) {
+    if (c.status === "past_due") return "Payment past due";
+    if (isComplete(c) || c.status === "canceled") return null;
+    if (c.overdue) return c.overdue === 1 ? "1 step past its target date" : c.overdue + " steps past their target date";
+    var since = daysSince(c.lastUpdateAt || c.createdAt);
+    if (since != null && since >= STALE_DAYS) return c.lastUpdateAt ? "No update in " + since + " days" : "No update posted yet";
+    return null;
+  }
+  var FILTERS = [
+    ["all", "All"],
+    ["attention", "Needs attention"],
+    ["progress", "In progress"],
+    ["complete", "Complete"],
+    ["past_due", "Past due"],
+  ];
+  var SORTS = [
+    ["activity", "Recently active"],
+    ["newest", "Newest"],
+    ["oldest", "Oldest"],
+    ["most", "Most progress"],
+    ["least", "Least progress"],
+    ["name", "Name A–Z"],
+  ];
+  function matches(c) {
+    if (listOpts.hideDemos && c.isDemo) return false;
+    var q = listOpts.q.trim().toLowerCase();
+    if (q && (c.name + " " + c.email + " " + (c.tierName || "") + " " + (c.siteHost || "")).toLowerCase().indexOf(q) === -1) return false;
+    switch (listOpts.filter) {
+      case "attention": return !!attention(c);
+      case "progress": return !isComplete(c) && c.status !== "canceled";
+      case "complete": return isComplete(c);
+      case "past_due": return c.status === "past_due";
+      default: return true;
+    }
+  }
+  function pct(c) { return c.progress && c.progress.total ? c.progress.percent : -1; }
+  function compare(a, b) {
+    var k = listOpts.sort;
+    if (k === "name") return a.name.localeCompare(b.name);
+    if (k === "most") return pct(b) - pct(a) || a.name.localeCompare(b.name);
+    if (k === "least") return pct(a) - pct(b) || a.name.localeCompare(b.name);
+    if (k === "oldest") return String(a.createdAt).localeCompare(String(b.createdAt));
+    if (k === "newest") return String(b.createdAt).localeCompare(String(a.createdAt));
+    return String(b.activityAt || "").localeCompare(String(a.activityAt || ""));
+  }
+
+  var listBody = null, listCount = null, filterBtns = [];
+  function projectControls() {
+    var search = el("input", { type: "search", class: "admin-plist__search", placeholder: "Search projects or client email", "aria-label": "Search projects", value: listOpts.q });
+    search.addEventListener("input", function () { listOpts.q = search.value; drawList(); });
+    var chips = el("div", { class: "admin-plist__chips", role: "group", "aria-label": "Filter projects" });
+    filterBtns = FILTERS.map(function (f) {
+      var b = el("button", { type: "button", class: "admin-chip", "data-filter": f[0], "aria-pressed": String(listOpts.filter === f[0]), onclick: function () {
+        listOpts.filter = f[0]; saveListOpts(); drawList();
+      } }, [el("span", { text: f[1] }), el("span", { class: "admin-chip__n" })]);
+      chips.appendChild(b);
+      return b;
+    });
+    var sort = el("select", { class: "admin-plist__sort", "aria-label": "Sort projects", onchange: function () { listOpts.sort = sort.value; saveListOpts(); drawList(); } },
+      SORTS.map(function (o) { var opt = el("option", { value: o[0], text: o[1] }); if (o[0] === listOpts.sort) opt.setAttribute("selected", "selected"); return opt; }));
+    var demos = el("input", { type: "checkbox", class: "portal-switch", id: "hide-demos" });
+    demos.checked = !!listOpts.hideDemos;
+    demos.addEventListener("change", function () { listOpts.hideDemos = demos.checked; saveListOpts(); drawList(); });
+    listCount = el("p", { class: "admin-muted admin-plist__count", role: "status" });
+    return el("div", { class: "admin-plist__controls" }, [
+      search,
+      chips,
+      el("div", { class: "admin-plist__row" }, [
+        el("label", { class: "admin-plist__sortwrap" }, [el("span", { class: "admin-muted", text: "Sort" }), sort]),
+        el("label", { class: "admin-plist__demos", for: "hide-demos" }, [demos, el("span", { text: "Hide demos" })]),
+      ]),
+      listCount,
+    ]);
+  }
+
+  function projectCard(c) {
+    var p = c.progress, why = attention(c);
+    var since = daysSince(c.activityAt);
+    return el("li", {}, [el("button", { class: "admin-pcard" + (why ? " needs-attention" : ""), type: "button", onclick: function () { location.hash = "clients/" + encodeURIComponent(c.id); } }, [
+      el("span", { class: "admin-pcard__main" }, [
+        el("span", { class: "admin-pcard__name" }, [el("strong", { text: c.name }), c.isDemo ? el("span", { class: "admin-tag", text: "demo" }) : null]),
+        el("small", { class: "admin-muted", text: c.email }),
+        p && p.total ? el("span", { class: "admin-pcard__bar" }, [el("span", { style: "width:" + p.percent + "%" })]) : null,
+        el("small", { class: "admin-pcard__now", text: (p && p.total ? p.percent + "%" + (p.current ? " · " + p.current : " · All steps done") : "No steps yet") + (since != null ? " · active " + (since === 0 ? "today" : since === 1 ? "yesterday" : since + "d ago") : "") }),
+        why ? el("small", { class: "admin-pcard__why", text: why }) : null,
+      ]),
+      el("span", { class: "admin-pcard__side" }, [el("span", { class: "admin-pcard__status", text: String(c.status || "").replace(/_/g, " ") }), el("span", { class: "admin-pcard__chev", "aria-hidden": "true", text: "›" })]),
+    ])]);
+  }
+
+  function drawList() {
+    if (!listBody) return;
+    var all = state.clients || [];
+    // Counts on each chip respect search + demo toggle, so they match what tapping shows.
+    var keep = listOpts.filter;
+    filterBtns.forEach(function (b) {
+      listOpts.filter = b.getAttribute("data-filter");
+      b.querySelector(".admin-chip__n").textContent = String(all.filter(matches).length);
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === keep));
+    });
+    listOpts.filter = keep;
+    var shown = all.filter(matches).sort(compare);
+    listCount.textContent = shown.length === all.length ? all.length + (all.length === 1 ? " project" : " projects") : "Showing " + shown.length + " of " + all.length + " projects";
+    if (!all.length) { listBody.replaceChildren(el("p", { class: "admin-muted", text: "No client projects yet." })); return; }
+    if (!shown.length) {
+      listBody.replaceChildren(el("div", { class: "admin-plist__empty" }, [
+        el("p", { class: "admin-muted", text: "No projects match." }),
+        el("button", { class: "admin-row-btn", type: "button", text: "Clear search and filters", onclick: function () {
+          listOpts.q = ""; listOpts.filter = "all"; listOpts.hideDemos = false; saveListOpts();
+          renderListCard();
+        } }),
+      ]));
+      return;
+    }
+    listBody.replaceChildren(el("ul", { class: "admin-pcards" }, shown.map(projectCard)));
+  }
+
+  function renderListCard() {
+    listBody = el("div");
+    listCard.replaceChildren(el("p", { class: "portal-stat-label", text: "Client projects" }), projectControls(), listBody);
+    drawList();
+  }
+
   function refreshList() {
     P.api("/api/admin/overview").then(function (r) {
-      if (r.res.ok && r.data.ok) { state = r.data; if (listCard) listCard.replaceChildren(el("p", { class: "portal-stat-label", text: "Client projects" }), projectList()); }
+      if (r.res.ok && r.data.ok) { state = r.data; drawList(); }
     });
   }
   function applyRoute() {
@@ -421,7 +545,8 @@
 
   function renderClients(root) {
     detailBox = el("div");
-    listCard = card("Client projects", [projectList()]);
+    listCard = el("div", { class: "portal-card" });
+    renderListCard();
     var general = el("div");
     generalCard = card("General notes", [general]);
     root.replaceChildren(listCard, detailBox, generalCard);

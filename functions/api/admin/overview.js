@@ -14,7 +14,11 @@ const PROGRESS_SQL = `SELECT p.id, p.name, p.is_demo, p.tier_id, p.status, p.sit
          (SELECT COUNT(*) FROM admin_notes n WHERE n.project_id = p.id) AS note_count,
          (SELECT COUNT(*) FROM project_milestones m WHERE m.project_id = p.id) AS ms_total,
          (SELECT COUNT(*) FROM project_milestones m WHERE m.project_id = p.id AND m.status = 'done') AS ms_done,
-         (SELECT title FROM project_milestones m WHERE m.project_id = p.id AND m.status != 'done' ORDER BY (m.status = 'in_progress') DESC, sort_order LIMIT 1) AS ms_current
+         (SELECT title FROM project_milestones m WHERE m.project_id = p.id AND m.status != 'done' ORDER BY (m.status = 'in_progress') DESC, sort_order LIMIT 1) AS ms_current,
+         (SELECT COUNT(*) FROM project_milestones m WHERE m.project_id = p.id AND m.status != 'done' AND m.due_date IS NOT NULL AND m.due_date < date('now')) AS ms_overdue,
+         (SELECT MAX(created_at) FROM project_updates pu WHERE pu.project_id = p.id) AS last_update_at,
+         (SELECT MAX(completed_at) FROM project_milestones m WHERE m.project_id = p.id) AS last_step_at,
+         p.updated_at
        FROM projects p JOIN users u ON u.id = p.user_id
        ORDER BY datetime(p.created_at) DESC LIMIT 200`;
 // Before migration 0004 there are no progress columns/tables: same list, no progress.
@@ -47,6 +51,10 @@ async function clients(db) {
       subscribed: !!r.stripe_subscription_id,
       noteCount: r.note_count,
       createdAt: r.created_at,
+      // Last time anything happened: project edited, update posted, or a step completed.
+      activityAt: [r.updated_at, r.last_update_at, r.last_step_at, r.created_at].filter(Boolean).sort().pop() || null,
+      lastUpdateAt: r.last_update_at || null,
+      overdue: r.ms_overdue || 0,
       progress: progressReady ? { done: r.ms_done || 0, total, percent: total ? Math.round(((r.ms_done || 0) / total) * 100) : 0, current: r.ms_current || null } : null,
     };
   });
