@@ -162,6 +162,53 @@
     });
   }
 
+  var refocusId = null;
+
+  /**
+   * Drag-and-drop ordering with pointer events (mouse, touch and pen). The list
+   * element captures the pointer, so moving cards around in the DOM can't drop
+   * the drag. On release the full new order is saved; the page reloads either
+   * way, so a failed save puts the cards back where the server has them.
+   */
+  function enableReorder(list, projectId, reload) {
+    var dragging = null, before = "";
+    var order = function () { return [].map.call(list.children, function (li) { return li.getAttribute("data-id"); }); };
+    list.addEventListener("pointerdown", function (e) {
+      if (e.button != null && e.button !== 0) return;
+      var grip = e.target.closest ? e.target.closest(".admin-grip") : null;
+      var li = grip && grip.closest(".admin-milestone");
+      if (!li) return;
+      e.preventDefault();
+      dragging = li; before = order().join(",");
+      li.classList.add("is-dragging"); list.classList.add("is-sorting");
+      try { list.setPointerCapture(e.pointerId); } catch (err) { /* older browsers: window listeners below still work */ }
+    });
+    list.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var others = [].filter.call(list.children, function (li) { return li !== dragging; });
+      var next = null;
+      for (var i = 0; i < others.length; i++) {
+        var r = others[i].getBoundingClientRect();
+        if (e.clientY < r.top + r.height / 2) { next = others[i]; break; }
+      }
+      if (next ? dragging.nextElementSibling !== next : dragging !== list.lastElementChild) list.insertBefore(dragging, next);
+    });
+    function finish(save) {
+      if (!dragging) return;
+      var li = dragging; dragging = null;
+      li.classList.remove("is-dragging"); list.classList.remove("is-sorting");
+      var ids = order();
+      if (save && ids.join(",") !== before) {
+        refocusId = li.getAttribute("data-id");
+        post({ action: "reorder_milestones", projectId: projectId, ids: ids }).then(function () { reload(); });
+      } else if (!save) {
+        reload();
+      }
+    }
+    list.addEventListener("pointerup", function () { finish(true); });
+    list.addEventListener("pointercancel", function () { finish(false); });
+  }
+
   function openProject(detail, c) {
     detail.replaceChildren(card("Project", [el("p", { class: "admin-muted", text: "Loading…" })]));
     P.api("/api/admin/project?id=" + encodeURIComponent(c.id)).then(function (r) {
@@ -190,15 +237,17 @@
             } }, ["upcoming", "in_progress", "done"].map(function (k) {
               var o = el("option", { value: k, text: STATUS_LABEL[k] }); if (k === m.status) o.selected = true; return o;
             }));
-            return el("li", { class: "admin-milestone is-" + m.status }, [
-              el("div", {}, [el("strong", { text: m.title }), m.detail ? el("p", { class: "admin-muted", text: m.detail }) : null, m.dueDate ? el("small", { text: (m.status === "done" ? "Done " : "Due ") + (m.completedAt ? date(m.completedAt) : m.dueDate) }) : null]),
+            // Drag tab: pointer drag is wired on the list (enableReorder); arrow keys move the step one place.
+            var grip = el("button", { class: "admin-grip", type: "button", title: "Drag to reorder", "aria-label": "Reorder " + m.title + ". Drag, or use the up and down arrow keys.", onkeydown: function (e) {
+              if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+              e.preventDefault();
+              refocusId = m.id;
+              post({ action: "move_milestone", id: m.id, direction: e.key === "ArrowUp" ? "up" : "down" }).then(function (ok) { if (ok) reload(); });
+            } });
+            return el("li", { class: "admin-milestone is-" + m.status, "data-id": m.id }, [
+              grip,
+              el("div", { class: "admin-milestone__body" }, [el("strong", { text: m.title }), m.detail ? el("p", { class: "admin-muted", text: m.detail }) : null, m.dueDate ? el("small", { text: (m.status === "done" ? "Done " : "Due ") + (m.completedAt ? date(m.completedAt) : m.dueDate) }) : null]),
               el("div", { class: "admin-milestone__ctl" }, [sel,
-                el("button", { class: "admin-row-btn", type: "button", "aria-label": "Move " + m.title + " up", text: "\u2191", onclick: function () {
-                  post({ action: "move_milestone", id: m.id, direction: "up" }).then(function (ok) { if (ok) reload(); });
-                } }),
-                el("button", { class: "admin-row-btn", type: "button", "aria-label": "Move " + m.title + " down", text: "\u2193", onclick: function () {
-                  post({ action: "move_milestone", id: m.id, direction: "down" }).then(function (ok) { if (ok) reload(); });
-                } }),
                 el("button", { class: "admin-row-btn", type: "button", text: "Edit", onclick: function () {
                   var title = prompt("Step title (client sees this)", m.title);
                   if (title == null || !title.trim()) return;
@@ -209,11 +258,12 @@
                   post({ action: "edit_milestone", id: m.id, title: title, detail: detail, dueDate: due.trim() }).then(function (ok) { if (ok) reload(); });
                 } }),
                 el("button", { class: "admin-row-btn", type: "button", text: "Remove", onclick: function () {
-                if (confirm("Remove milestone \u201c" + m.title + "\u201d?")) post({ action: "delete_milestone", id: m.id }).then(function (ok) { if (ok) reload(); });
-              } })]),
+                  if (confirm("Remove milestone \u201c" + m.title + "\u201d?")) post({ action: "delete_milestone", id: m.id }).then(function (ok) { if (ok) reload(); });
+                } })]),
             ]);
           }))
         : notice("Apply migration 0004 to track milestones and updates.");
+      if (v.progressReady) enableReorder(ms, v.project.id, reload);
 
       var mt = el("input", { type: "text", placeholder: "New milestone", "aria-label": "New milestone title", maxlength: "120" });
       var mdt = el("input", { type: "text", placeholder: "Short description (optional)", "aria-label": "New milestone description", maxlength: "400" });
@@ -243,13 +293,20 @@
         el("div", { class: "portal-card admin-project" }, [
           head,
           el("div", { class: "admin-project-progress" }, [progressBar(v.progress)]),
-          el("p", { class: "portal-stat-label", text: "Milestones (client sees these)" }), ms, v.progressReady ? addMs : null,
+          el("p", { class: "portal-stat-label", text: "Milestones (client sees these)" }),
+          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the dotted tab on a card to reorder. The client's dashboard updates right away." }) : null,
+          ms, v.progressReady ? addMs : null,
           el("p", { class: "portal-stat-label", text: "Updates (client sees these)" }), v.progressReady ? addUp : null,
           el("div", {}, ups),
           el("p", { class: "portal-stat-label", text: "Private notes (only you)" }), notesBox,
         ])
       );
       renderNotes(notesBox, c.id);
+      if (refocusId) {
+        var g = detail.querySelector('.admin-milestone[data-id="' + refocusId + '"] .admin-grip');
+        refocusId = null;
+        if (g) g.focus();
+      }
     });
   }
 

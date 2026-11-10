@@ -7,7 +7,12 @@
 - Admin **Projects**: **Edit** a step (title, description, target date), move steps **up/down**, and a description field on the add-step form. New actions `edit_milestone` and `move_milestone` on `POST /api/admin/project` (admin session + same-origin, same as the others). Use it to add project-specific steps after the initial call, such as a CMS connection.
 - Tests in `tests/admin/projects.test.mjs`: default steps on a paid checkout, retries don't duplicate, provisioning before migration 0004, custom tier, subscription vs one-time billing, edit/reorder/validation and client 403.
 
+- **Final approval** and **Final payment** are now default steps between "Review & revisions" and "Launch", so clients know the remaining balance is due before the site goes live. (Existing projects keep their own steps; add them by hand in Admin.)
+- Admin **drag to reorder**: each step card has a dotted tab on its left edge; click, hold and drag it, and the new order is saved and shows on the client's dashboard immediately. Keyboard: focus the tab and use the up/down arrow keys. New action `reorder_milestones { projectId, ids }` on `POST /api/admin/project`: the list must be exactly the project's current steps, otherwise 409 (a stale page can't half-apply an order).
+- Tests: default order around Final payment; reorder saved and visible to the client; stale, duplicate, unknown and foreign id lists rejected; client and cross-origin writes refused.
+
 ### Changed
+- Project steps are glass cards over a soft gradient (client dashboard and admin): translucent gradient fill, `backdrop-filter` blur, state-tinted borders (done = ice, in progress = signal glow). Falls back to a solid card without `backdrop-filter` or with reduced transparency, and has light-mode tokens.
 - A checkout with no tier metadata (a custom Payment Link such as a proposal deposit) is now stored as tier `custom` and shown as "Custom project", instead of `unknown`. The invite email says "your project".
 - Client dashboard billing card says **Payment received** for deposits and one-time payments. "Active subscription" is shown only when Stripe supplied a subscription id. The project view now includes `project.billing` (`subscription` or `one_time`).
 

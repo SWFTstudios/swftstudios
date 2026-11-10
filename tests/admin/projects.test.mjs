@@ -234,3 +234,40 @@ test("admin edits and reorders steps; clients can't; bad input is rejected", asy
 
   assert.equal((await post({ action: "edit_milestone", id: first.id, title: "hack" }, s.other)).status, 403);
 });
+
+test("defaults put Final approval and Final payment right before Launch", () => {
+  const t = DEFAULT_STEPS.map((s) => s.title);
+  const i = t.indexOf("Launch");
+  assert.deepEqual(t.slice(i - 2, i + 1), ["Final approval", "Final payment", "Launch"]);
+  assert.ok(t.indexOf("Review & revisions") < t.indexOf("Final approval"));
+  assert.match(DEFAULT_STEPS[i - 1].detail, /before launch/i);
+});
+
+test("drag reorder saves the whole order, shows on the client's side, and rejects stale or foreign lists", async () => {
+  const db = makeDb();
+  const s = await setup(db);
+  const { project } = await upsertPaidUser(db, { email: "r@example.com", tierId: "custom", checkoutId: "cs_r", status: "paid" });
+  const other = await upsertPaidUser(db, { email: "r2@example.com", tierId: "custom", checkoutId: "cs_r2", status: "paid" });
+  const ids = db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id).map((r) => r.id);
+  const post = (body, sid = s.admin) => adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid, method: "POST", body }));
+
+  const reversed = [...ids].reverse();
+  assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids: reversed })).status, 200);
+  assert.deepEqual(db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id).map((r) => r.id), reversed);
+
+  // The client sees the new order.
+  const view = await getProjectView(db, project.id);
+  assert.deepEqual(view.milestones.map((m) => m.id), reversed);
+
+  // Missing a step (stale page), duplicate ids, unknown ids, another project's ids, empty list: nothing changes.
+  for (const bad of [reversed.slice(1), [...reversed, reversed[0]], [...reversed.slice(1), "nope"], db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ?").all(other.project.id).map((r) => r.id)]) {
+    assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids: bad })).status, 409);
+  }
+  assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids: [] })).status, 400);
+  assert.deepEqual(db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id).map((r) => r.id), reversed);
+
+  // Clients and cross-origin writes are refused.
+  assert.equal((await post({ action: "reorder_milestones", projectId: project.id, ids }, s.other)).status, 403);
+  const xo = await adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid: s.admin, method: "POST", origin: "https://evil.example", body: { action: "reorder_milestones", projectId: project.id, ids } }));
+  assert.equal(xo.status, 403);
+});

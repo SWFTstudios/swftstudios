@@ -167,6 +167,22 @@ export async function moveMilestone(db, id, direction) {
   return true;
 }
 
+/**
+ * Set the order of a project's steps from a list of step ids (drag and drop).
+ * The list must contain exactly the project's current steps, so a stale page
+ * (a step added or removed elsewhere) is rejected instead of half-applied.
+ * Returns true, or false when the ids don't match the project.
+ */
+export async function reorderMilestones(db, projectId, ids) {
+  if (!Array.isArray(ids) || !ids.length || new Set(ids).size !== ids.length) return false;
+  const have = (await db.prepare("SELECT id FROM project_milestones WHERE project_id = ?").bind(projectId).all()).results.map((r) => r.id);
+  if (have.length !== ids.length || !ids.every((id) => have.includes(id))) return false;
+  for (let i = 0; i < ids.length; i++) {
+    await db.prepare("UPDATE project_milestones SET sort_order = ? WHERE id = ? AND project_id = ?").bind(i + 1, ids[i], projectId).run();
+  }
+  return true;
+}
+
 export async function deleteMilestone(db, id) {
   const r = await db.prepare("DELETE FROM project_milestones WHERE id = ?").bind(id).run();
   return (r?.meta?.changes || 0) > 0;
