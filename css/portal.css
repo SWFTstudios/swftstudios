@@ -356,3 +356,108 @@
 .portal-note p { margin: 0.35rem 0 0; white-space: pre-wrap; overflow-wrap: break-word; }
 .portal-notes__empty { padding: 0.5rem 0; }
 .portal-page #panel-overview > .portal-overview { margin-top: 0.75rem; }
+
+/* ---------- Schedule calendar ---------- */
+.portal-cal__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.portal-cal__eta { margin: 0.35rem 0 0.15rem; font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.portal-cal__sub { margin: 0; }
+.portal-cal__legend { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin: 0; padding: 0; list-style: none; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.85; }
+.portal-cal__legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
+.portal-cal__legend li::before { content: ""; width: 0.6rem; height: 0.6rem; border-radius: 50%; border: 2px solid var(--swft-border); }
+.portal-cal__legend .is-done::before { background: var(--swft-ice, #c3cdfa); border-color: var(--swft-ice, #c3cdfa); }
+.portal-cal__legend .is-in_progress::before { background: var(--swft-signal, #ff5a36); border-color: var(--swft-signal, #ff5a36); }
+.portal-cal__legend .is-today::before { border-radius: 3px; border-color: var(--swft-signal, #ff5a36); }
+
+/* Toolbar: ‹ label ›   Today  [Week|Month] */
+.portal-cal__bar { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.portal-cal__navs { display: flex; align-items: center; gap: 0.4rem; }
+.portal-cal__label { margin: 0; min-width: 9.5rem; text-align: center; font-weight: 600; font-size: 0.95rem; white-space: nowrap; }
+.portal-cal__nav, .portal-cal__today-btn, .portal-cal__seg button, .portal-cal__btn {
+  font: inherit; color: inherit; cursor: pointer; border: 1px solid var(--swft-border); background: rgba(var(--mf-ink-rgb), 0.03);
+  border-radius: 999px; min-height: 2.25rem; padding: 0 0.9rem; font-size: 0.8rem; touch-action: manipulation;
+}
+.portal-cal__nav { width: 2.25rem; padding: 0; font-size: 1.25rem; line-height: 1; }
+.portal-cal__nav:hover, .portal-cal__today-btn:hover, .portal-cal__seg button:hover { border-color: var(--swft-signal, #ff5a36); }
+.portal-cal__seg { display: inline-flex; border: 1px solid var(--swft-border); border-radius: 999px; padding: 2px; }
+.portal-cal__seg button { border: 0; background: transparent; min-height: 2rem; }
+.portal-cal__seg button[aria-pressed="true"] { background: var(--swft-text); color: var(--swft-bg); }
+
+.portal-cal__viewport { overflow: hidden; touch-action: pan-y; border-radius: 12px; outline-offset: 3px; }
+.portal-cal__pane { transition: transform 0.28s cubic-bezier(.2,.7,.2,1), opacity 0.28s ease; will-change: transform; }
+.portal-cal__app.is-saving .portal-cal__pane { opacity: 0.6; pointer-events: none; }
+
+.portal-cal__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.portal-cal__dow { padding: 0 0.4rem 0.35rem; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.6; }
+.portal-cal__day { position: relative; min-height: 5.5rem; padding: 0.4rem; border-radius: 10px; border: 1px solid var(--glass-edge, var(--swft-border)); background: rgba(var(--mf-ink-rgb), 0.02); display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; cursor: pointer; }
+.portal-cal__grid--week .portal-cal__day { min-height: 9rem; }
+.portal-cal__dayhead { display: flex; align-items: baseline; gap: 0.35rem; min-width: 0; }
+.portal-cal__wd { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.6; }
+.portal-cal__day.is-outside { opacity: 0.35; }
+.portal-cal__day.is-outside.has-steps { opacity: 0.75; }
+.portal-cal__day.is-past:not(.has-steps) { opacity: 0.5; }
+.portal-cal__day.is-window { background: color-mix(in srgb, var(--swft-signal, #ff5a36) 6%, transparent); }
+.portal-cal__day.is-today { border-color: var(--swft-signal, #ff5a36); box-shadow: 0 0 0 1px var(--swft-signal, #ff5a36) inset; }
+.portal-cal__day.is-finish { background: color-mix(in srgb, var(--swft-signal, #ff5a36) 14%, transparent); }
+.portal-cal__day.is-selected:not(.is-today) { border-color: color-mix(in srgb, var(--swft-text) 55%, transparent); }
+.portal-cal__day.is-drop { border-style: dashed; border-color: var(--swft-signal, #ff5a36); }
+.portal-cal__num { font-size: 0.8rem; font-weight: 600; opacity: 0.8; white-space: nowrap; }
+.portal-cal__tag { margin-left: auto; font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--swft-signal, #ff5a36); }
+.portal-cal__empty { margin: 0; opacity: 0.25; font-size: 0.8rem; }
+.portal-cal__steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
+.portal-cal__step { padding: 0.2rem 0.45rem; border-radius: 6px; font-size: 0.72rem; line-height: 1.25; border: 1px solid var(--swft-border); overflow: hidden; }
+.portal-cal__step[role="button"] { cursor: pointer; }
+.portal-cal__step[role="button"]:hover, .portal-cal__step[role="button"]:focus-visible { border-color: var(--swft-signal, #ff5a36); }
+.portal-cal__step-name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.portal-cal__grid--week .portal-cal__step-name { -webkit-line-clamp: 4; }
+.portal-cal__step.is-done { border-color: color-mix(in srgb, var(--swft-ice, #c3cdfa) 55%, transparent); color: var(--swft-ice, #c3cdfa); }
+.portal-cal__step.is-in_progress { border-color: var(--swft-signal, #ff5a36); background: color-mix(in srgb, var(--swft-signal, #ff5a36) 18%, transparent); }
+.portal-cal__step.is-upcoming { opacity: 0.9; }
+:root[data-mode="light"] .portal-cal__step.is-done { color: inherit; background: color-mix(in srgb, var(--swft-ice, #c3cdfa) 45%, transparent); }
+
+/* Selected day + undated steps, under the grid. */
+.portal-cal__dayinfo, .portal-cal__undated { margin-top: 0.9rem; }
+.portal-cal__dayinfo-title { margin: 0 0 0.45rem; font-weight: 600; font-size: 0.9rem; }
+.portal-cal__dayinfo-empty { margin: 0; font-size: 0.85rem; }
+.portal-cal__dayinfo-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.4rem; }
+.portal-cal__dayinfo-list .portal-cal__step { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.55rem 0.75rem; font-size: 0.85rem; border-radius: 10px; }
+.portal-cal__dayinfo-list .portal-cal__step-name { -webkit-line-clamp: 3; }
+.portal-cal__dayinfo-status { flex: none; font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.75; }
+.portal-cal__hint { margin: 0.75rem 0 0; font-size: 0.75rem; }
+
+/* Edit dialog (admin). */
+.portal-cal__dialog { border: 1px solid var(--swft-border); border-radius: 16px; padding: 0; width: min(24rem, calc(100vw - 2rem)); background: var(--swft-bg); color: var(--swft-text); }
+.portal-cal__dialog::backdrop { background: rgba(0, 0, 0, 0.55); }
+.portal-cal__dialog-form { display: grid; gap: 0.8rem; padding: 1.25rem; }
+.portal-cal__dialog-form .portal-stat-label { margin: 0; }
+.portal-cal__dialog-title { margin: -0.4rem 0 0; font-weight: 600; font-size: 1.05rem; }
+.portal-cal__field { display: grid; gap: 0.3rem; font-size: 0.8rem; }
+.portal-cal__field select, .portal-cal__field input { font: inherit; font-size: 16px; min-height: 2.6rem; padding: 0 0.7rem; border-radius: 10px; border: 1px solid var(--swft-border); background: rgba(var(--mf-ink-rgb), 0.04); color: inherit; }
+.portal-cal__dialog-actions { display: flex; justify-content: flex-end; gap: 0.5rem; }
+.portal-cal__btn { background: var(--swft-signal, #ff5a36); border-color: var(--swft-signal, #ff5a36); color: #fff; min-height: 2.5rem; padding: 0 1.2rem; }
+.portal-cal__btn--ghost { background: transparent; color: inherit; border-color: var(--swft-border); }
+
+/* Phones: month cells become compact dots (tap a day to see it below);
+   the week becomes a list of days with the step names. */
+@media (max-width: 640px) {
+  .portal-cal__bar { justify-content: center; }
+  .portal-cal__label { min-width: 8.5rem; font-size: 0.88rem; }
+  .portal-cal__grid--month { gap: 3px; }
+  .portal-cal__grid--month .portal-cal__dow { padding: 0 0 0.3rem; text-align: center; font-size: 0.62rem; }
+  .portal-cal__grid--month .portal-cal__day { min-height: 2.9rem; padding: 0.3rem 0.2rem; align-items: center; border-radius: 8px; }
+  .portal-cal__grid--month .portal-cal__dayhead { justify-content: center; }
+  .portal-cal__grid--month .portal-cal__num { font-size: 0.72rem; }
+  .portal-cal__grid--month .portal-cal__tag { display: none; }
+  .portal-cal__grid--month .portal-cal__steps { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 3px; }
+  .portal-cal__grid--month .portal-cal__step { width: 0.55rem; height: 0.55rem; padding: 0; border-radius: 50%; border-width: 2px; pointer-events: none; }
+  .portal-cal__grid--month .portal-cal__step-name { display: none; }
+  .portal-cal__grid--month .portal-cal__step.is-done { background: var(--swft-ice, #c3cdfa); }
+  .portal-cal__grid--month .portal-cal__step.is-in_progress { background: var(--swft-signal, #ff5a36); }
+  .portal-cal__grid--week { grid-template-columns: 1fr; gap: 4px; }
+  .portal-cal__grid--week .portal-cal__day { min-height: 0; flex-direction: row; align-items: flex-start; gap: 0.75rem; padding: 0.55rem 0.7rem; }
+  .portal-cal__grid--week .portal-cal__dayhead { flex: 0 0 3.6rem; flex-direction: column; gap: 0; }
+  .portal-cal__grid--week .portal-cal__num { font-size: 1.05rem; }
+  .portal-cal__grid--week .portal-cal__tag { margin: 0.15rem 0 0; }
+  .portal-cal__grid--week .portal-cal__steps { flex: 1; min-width: 0; }
+  .portal-cal__grid--week .portal-cal__step { font-size: 0.82rem; padding: 0.35rem 0.55rem; }
+  .portal-cal__grid--week .portal-cal__empty { align-self: center; }
+}

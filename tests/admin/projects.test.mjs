@@ -323,3 +323,82 @@ test("marking a step done takes the picked date; the client sees that day; undon
   assert.equal((await post({ action: "set_milestone_date", id: "nope", date: "2026-11-01" })).status, 404);
   assert.equal((await post({ action: "set_milestone_date", id: call, date: "2026-11-01" }, s.other)).status, 403);
 });
+
+import { spreadDates } from "../../functions/_lib/projects.js";
+
+test("spreadDates: even steps, last on the end day, weekends pulled back to Friday", () => {
+  // 2026-11-10 is a Tuesday; three weeks later is Tuesday 2026-12-01.
+  const d = spreadDates("2026-11-10", "2026-12-01", 7);
+  assert.equal(d.length, 7);
+  assert.equal(d.at(-1), "2026-12-01");
+  assert.deepEqual([...d].sort(), d);
+  for (const x of d) assert.ok(![0, 6].includes(new Date(`${x}T00:00:00Z`).getUTCDay()), `${x} is a weekend`);
+  assert.deepEqual(spreadDates("2026-11-10", "2026-11-14", 1), ["2026-11-13"]);
+  assert.deepEqual(spreadDates("2026-11-10", "2026-12-01", 0), []);
+});
+
+test("schedule_milestones dates only the steps not done, in order; admin-only; bad windows rejected", async () => {
+  const db = makeDb();
+  const s = await setup(db);
+  const { project } = await upsertPaidUser(db, { email: "sched@example.com", tierId: "custom", checkoutId: "cs_sched", status: "paid" });
+  const steps = db.raw.prepare("SELECT id FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id);
+  db.raw.prepare("UPDATE project_milestones SET status = 'done', completed_at = '2026-11-09 12:00:00' WHERE id = ?").run(steps[0].id);
+  const firstDue = db.raw.prepare("SELECT due_date FROM project_milestones WHERE id = ?").get(steps[0].id).due_date;
+  const post = (body, sid = s.admin) => adminProject.onRequestPost(ctx(db, "/api/admin/project", { sid, method: "POST", body }));
+
+  const r = await post({ action: "schedule_milestones", projectId: project.id, start: "2026-11-10", end: "2026-12-01" });
+  assert.equal(r.status, 200);
+  const rows = db.raw.prepare("SELECT title, status, due_date FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id);
+  const open = rows.filter((x) => x.status !== "done");
+  assert.equal((await r.json()).scheduled, open.length);
+  // Done steps keep whatever target they had (the seeded default); only open steps are re-planned.
+  assert.equal(rows[0].due_date, firstDue);
+  const due = open.map((x) => x.due_date);
+  assert.ok(due.every(Boolean));
+  assert.deepEqual([...due].sort(), due);
+  // Launch lands on the end day; the 30-day check-in comes 30 days later (pulled back off the weekend).
+  assert.equal(open.find((x) => x.title === "Launch").due_date, "2026-12-01");
+  assert.equal(due.at(-1), "2026-12-31");
+
+  // No end: the default step lengths pick the launch day.
+  const r2 = await post({ action: "schedule_milestones", projectId: project.id, start: "2026-11-10" });
+  assert.equal(r2.status, 200);
+  assert.ok((await r2.json()).end > "2026-11-10");
+
+  assert.equal((await post({ action: "schedule_milestones", projectId: project.id, start: "2026-12-01", end: "2026-11-10" })).status, 400);
+  assert.equal((await post({ action: "schedule_milestones", projectId: project.id, start: "2026-11-10", end: "nope" })).status, 400);
+  assert.equal((await post({ action: "schedule_milestones", projectId: "missing", start: "2026-11-10", end: "2026-12-01" })).status, 404);
+  assert.equal((await post({ action: "schedule_milestones", projectId: project.id, start: "2026-11-10", end: "2026-12-01" }, s.other)).status, 403);
+});
+
+import { planDates, addWorkdays } from "../../functions/_lib/projects.js";
+import { stepDuration } from "../../functions/_lib/default-steps.js";
+
+test("default step lengths: known titles, keyword fallbacks, and a 2-day default", () => {
+  assert.deepEqual(stepDuration("Build"), { days: 5 });
+  assert.deepEqual(stepDuration("30-day support check-in"), { afterLaunch: 30 });
+  assert.deepEqual(stepDuration("Designing website layout"), { days: 4 });
+  assert.deepEqual(stepDuration("CMS & Stagera connection"), { days: 3 });
+  assert.deepEqual(stepDuration("Something else"), { days: 2 });
+});
+
+test("planDates: longer steps get more of the window, launch on the end day, weekdays only", () => {
+  const titles = ["Designing website layout", "CMS & Stagera connection", "Build", "Review & revisions", "Final approval", "Final payment", "Launch", "30-day support check-in"];
+  const { dates, end } = planDates("2026-11-10", "2026-12-01", titles);
+  assert.equal(end, "2026-12-01");
+  assert.equal(dates[6], "2026-12-01");
+  assert.deepEqual([...dates].sort(), dates);
+  for (const x of dates) assert.ok(![0, 6].includes(new Date(`${x}T00:00:00Z`).getUTCDay()), `${x} is a weekend`);
+  // Build (5 days) spans more working days than CMS (3 days).
+  const gap = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
+  assert.ok(gap(dates[1], dates[2]) > gap(dates[0], dates[1]));
+  assert.equal(addWorkdays("2026-11-13", 1), "2026-11-16");
+});
+
+test("new projects start with default target dates on their open steps", async () => {
+  const db = makeDb();
+  const { project } = await upsertPaidUser(db, { email: "dates@example.com", tierId: "custom", checkoutId: "cs_dates", status: "paid" });
+  const rows = db.raw.prepare("SELECT status, due_date FROM project_milestones WHERE project_id = ? ORDER BY sort_order").all(project.id);
+  assert.ok(rows.filter((x) => x.status !== "done").every((x) => /^\d{4}-\d{2}-\d{2}$/.test(x.due_date)));
+  assert.ok(rows.filter((x) => x.status === "done").every((x) => x.due_date === null));
+});

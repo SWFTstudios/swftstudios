@@ -199,6 +199,11 @@
 .admin-plist__empty { display: grid; gap: 0.5rem; justify-items: start; padding: 0.5rem 0; }
 .admin-pcard.needs-attention { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 55%, var(--swft-border)); }
 .admin-pcard__why { color: var(--swft-signal, #ff5a36); font-weight: 600; }
+.admin-schedule { align-items: center; margin-bottom: 1.25rem; }
+.admin-schedule .admin-milestone__date { flex: 1 1 12rem; }
+.admin-cal { margin: 0.25rem 0 1rem; }
+.admin-cal__head { margin-bottom: 0.75rem; }
+.admin-cal__head .portal-cal__eta { margin-top: 0; }
 .admin-field { display: flex; flex-direction: column; gap: 0.35rem; margin: 0.75rem 0; }
 .admin-field input, .admin-field textarea { width: 100%; box-sizing: border-box; background: transparent; color: inherit; border: 1px solid var(--swft-border); border-radius: 12px; padding: 0.6rem 0.8rem; font: inherit; }
 .admin-field textarea { min-height: 6rem; resize: vertical; }

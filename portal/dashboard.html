@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
-  <link rel="stylesheet" href="/css/portal.css?v=20261110-notify">
+  <link rel="stylesheet" href="/css/portal.css?v=20261110-cal2">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -45,6 +45,23 @@
         <p class="portal-muted portal-overview__meta" id="project-meta"></p>
         <p class="portal-overview__bill"><span class="portal-stat-label">Billing</span><strong id="billing-status">Loading…</strong></p>
         <button type="button" class="portal-overview__notice" id="new-updates" hidden></button>
+      </section>
+
+      <section class="portal-card portal-cal" id="schedule-card" style="margin-top:1.25rem;" hidden aria-labelledby="schedule-title">
+        <div class="portal-cal__head">
+          <div>
+            <p class="portal-stat-label" id="schedule-title">Schedule</p>
+            <p class="portal-cal__eta" id="schedule-eta"></p>
+            <p class="portal-muted portal-cal__sub" id="schedule-sub"></p>
+          </div>
+          <ul class="portal-cal__legend" aria-label="Legend">
+            <li class="is-done">Done</li>
+            <li class="is-in_progress">In progress</li>
+            <li class="is-upcoming">Up next</li>
+            <li class="is-today">Today</li>
+          </ul>
+        </div>
+        <div id="schedule-cal"></div>
       </section>
 
       <section class="portal-card" id="progress-card" style="margin-top:1.25rem;" hidden aria-labelledby="progress-title">
@@ -88,6 +105,7 @@
   <script src="/js/swft-analytics.js?v=20261104-ga4"></script>
   <script src="/js/portal.js?v=20260930b"></script>
   <script src="/js/portal-files.js?v=20261110-files"></script>
+  <script src="/js/portal-calendar.js?v=20261110-cal2"></script>
   <script>
     (function () {
       function statusBadge(status, billingKind) {
@@ -165,11 +183,25 @@
       }
       var LABEL = { done: "Done", in_progress: "In progress", upcoming: "Up next" };
 
+      // ---------- Schedule calendar (js/portal-calendar.js) ----------
+      var cal = null, filesMounted = false;
+      function renderSchedule(milestones) {
+        var card = SWFTPortal.qs("#schedule-card");
+        if (!milestones.length) { card.hidden = true; return; }
+        card.hidden = false;
+        var s = SWFTCalendar.summary(milestones);
+        SWFTPortal.qs("#schedule-eta").textContent = s.eta;
+        SWFTPortal.qs("#schedule-sub").textContent = s.sub;
+        if (cal) cal.update(milestones);
+        else cal = SWFTCalendar.mount(SWFTPortal.qs("#schedule-cal"), { milestones: milestones });
+      }
+
       // Milestones + updates (from /api/portal/project, or the owner's preview).
       function renderProgress(view) {
         if (!view || !view.milestones || !view.milestones.length) return;
         SWFTPortal.qs("#tier-name").textContent = view.project.name;
         SWFTPortal.qs("#progress-card").hidden = false;
+        renderSchedule(view.milestones);
         var p = view.progress;
         var bar = SWFTPortal.qs("#progress-bar");
         var track = h("span", "portal-progress__track"); var fill = h("span"); fill.style.width = p.percent + "%"; track.appendChild(fill);
@@ -189,6 +221,9 @@
           return li;
         }));
         SWFTPortal.qs("#files-card").hidden = false;
+        // Files mount once: a background refresh must not reset an upload in progress.
+        if (filesMounted) return;
+        filesMounted = true;
         if (view.preview) SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/admin/files", project: view.project.id, admin: true, readOnly: true });
         else SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/portal/files" });
         if (view.preview) renderNotes((view.updates || []).map(function (u) { return { id: u.id, body: u.body, createdAt: u.createdAt, unread: false }; }), 0);
@@ -321,12 +356,18 @@
         statusBadge(data.project.status);
         loadNotes().then(function () { if (location.hash === "#notifications") selectTab("notifications"); });
 
-        SWFTPortal.api("/api/portal/project").then(function (r) {
-          if (r.res.ok && r.data && r.data.view) {
-            renderProgress(r.data.view);
-            statusBadge(r.data.view.project.status, r.data.view.project.billing);
-          }
-        });
+        function loadProject() {
+          return SWFTPortal.api("/api/portal/project").then(function (r) {
+            if (r.res.ok && r.data && r.data.view) {
+              renderProgress(r.data.view);
+              statusBadge(r.data.view.project.status, r.data.view.project.billing);
+            }
+          });
+        }
+        loadProject();
+        // Pick up changes SWFT makes (dates, steps) when the client comes back to the tab, and every few minutes.
+        document.addEventListener("visibilitychange", function () { if (!document.hidden) loadProject(); });
+        setInterval(function () { if (!document.hidden) loadProject(); }, 180000);
 
         var metrics = await SWFTPortal.api("/api/portal/metrics");
         if (metrics.data && metrics.data.metrics) {
