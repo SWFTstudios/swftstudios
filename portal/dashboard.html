@@ -65,7 +65,7 @@
   <script src="/js/portal.js?v=20260930b"></script>
   <script>
     (function () {
-      function statusBadge(status) {
+      function statusBadge(status, billingKind) {
         var el = SWFTPortal.qs("#status-badge");
         var billing = SWFTPortal.qs("#billing-status");
         var label = status || "none";
@@ -73,7 +73,8 @@
         el.className = "portal-badge";
         if (label === "paid" || label === "active") {
           el.classList.add("portal-badge");
-          billing.textContent = label === "active" ? "Active subscription" : "Paid";
+          // Only a real Stripe subscription is called a subscription; deposits and one-time payments are "Payment received".
+          billing.textContent = billingKind === "subscription" ? "Active subscription" : "Payment received";
         } else if (label === "past_due") {
           el.classList.add("portal-badge--warn");
           billing.textContent = "Past due";
@@ -186,7 +187,7 @@
         SWFTPortal.qs("#welcome").textContent = "Signed in as " + v.client.email;
         SWFTPortal.qs("#tier-name").textContent = v.project.name;
         SWFTPortal.qs("#project-meta").textContent = v.project.tierName + (v.project.siteHost ? " · Tracking host assigned." : " · Analytics pending.");
-        statusBadge(v.project.status);
+        statusBadge(v.project.status, v.project.billing);
         renderProgress(v);
         renderMetrics(r.data.metrics || { ok: false, message: "Analytics unavailable." });
       }
@@ -226,7 +227,10 @@
         statusBadge(data.project.status);
 
         SWFTPortal.api("/api/portal/project").then(function (r) {
-          if (r.res.ok && r.data && r.data.view) renderProgress(r.data.view);
+          if (r.res.ok && r.data && r.data.view) {
+            renderProgress(r.data.view);
+            statusBadge(r.data.view.project.status, r.data.view.project.billing);
+          }
         });
 
         var metrics = await SWFTPortal.api("/api/portal/metrics");

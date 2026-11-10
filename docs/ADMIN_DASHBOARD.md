@@ -67,7 +67,11 @@ origin check, notes create/list/delete, outreach degrade, Resend listing, and th
 
 Lists every client project with its progress. **Open** shows milestones (change status inline, add, remove), client-visible updates, and private notes. **View as client ↗** opens `/portal/dashboard.html?preview=<projectId>`: the client dashboard rendered from `GET /api/admin/project?id=…&metrics=1`, the same view the client gets from `GET /api/portal/project`, with a banner. Admin notes are never part of that view.
 
-Writes: `POST /api/admin/project` with `action` = `milestone_status`, `add_milestone`, `delete_milestone`, `add_update`, `delete_update`, `rename` (admin session + same-origin).
+Writes: `POST /api/admin/project` with `action` = `milestone_status`, `add_milestone`, `edit_milestone`, `move_milestone`, `delete_milestone`, `add_update`, `delete_update`, `rename` (admin session + same-origin).
+
+### Default steps and project-specific steps
+
+Every new project (created when a client pays) starts with the default steps in [`functions/_lib/default-steps.js`](../functions/_lib/default-steps.js): Initial call, Deposit paid (done), Design review, Build, Review & revisions, Launch, 30-day support check-in. After the initial call, open the project and add what that client needs (for example "CMS connection") with **Add**; use **Edit** to change a step's title, description or date, the arrows to reorder, **Remove** for steps that don't apply, and the status dropdown to check steps off. Changing the default list affects new projects only.
 
 Storage: migration `0004_project_progress.sql` (`project_milestones`, `project_updates`, `projects.name`, `projects.is_demo`). Before it is applied, the dashboard still loads; progress shows as unavailable.
 

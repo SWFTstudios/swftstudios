@@ -8,13 +8,14 @@
  *      milestone_status { id, status }        add_milestone { projectId, title, detail?, dueDate? }
  *      delete_milestone { id }                add_update    { projectId, body }
  *      delete_update    { id }                rename        { projectId, name }
+ *      edit_milestone { id, title, detail?, dueDate? }   move_milestone { id, direction: "up"|"down" }
  */
 import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
 import { fetchHostMetrics } from "../../_lib/posthog-metrics.js";
 import {
-  addMilestone, addUpdate, deleteMilestone, deleteUpdate, getProjectView,
-  MILESTONE_STATUSES, renameProject, setMilestoneStatus,
+  addMilestone, addUpdate, deleteMilestone, deleteUpdate, editMilestone, getProjectView,
+  MILESTONE_STATUSES, moveMilestone, renameProject, setMilestoneStatus,
 } from "../../_lib/projects.js";
 
 export async function onRequestGet(context) {
@@ -55,6 +56,15 @@ export async function onRequestPost(context) {
       if (dueDate && !DATE.test(dueDate)) return json({ ok: false, error: "Use YYYY-MM-DD for the date." }, 400);
       id = await addMilestone(db, str(b.projectId, 64), { title, detail: str(b.detail, 400), dueDate });
       ok = true;
+    } else if (action === "edit_milestone") {
+      const title = str(b.title, 120);
+      const dueDate = str(b.dueDate, 10);
+      if (!title) return json({ ok: false, error: "Title is required." }, 400);
+      if (dueDate && !DATE.test(dueDate)) return json({ ok: false, error: "Use YYYY-MM-DD for the date." }, 400);
+      ok = await editMilestone(db, str(b.id, 64), { title, detail: str(b.detail, 400), dueDate });
+    } else if (action === "move_milestone") {
+      if (b.direction !== "up" && b.direction !== "down") return json({ ok: false, error: "direction must be up or down." }, 400);
+      ok = await moveMilestone(db, str(b.id, 64), b.direction);
     } else if (action === "delete_milestone") {
       ok = await deleteMilestone(db, str(b.id, 64));
     } else if (action === "add_update") {

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-11-10: Default project steps, step editing, billing label
+
+### Added
+- Every new client project now starts with the same default steps: Initial call, Deposit paid (starts done), Design review, Build, Review & revisions, Launch, 30-day support check-in. The list lives in `functions/_lib/default-steps.js`; editing it changes only projects created afterwards. Steps are copied in when the Stripe webhook creates the project (`seedDefaultSteps` in `functions/_lib/projects.js`), never twice, and a missing steps table never blocks account creation.
+- Admin **Projects**: **Edit** a step (title, description, target date), move steps **up/down**, and a description field on the add-step form. New actions `edit_milestone` and `move_milestone` on `POST /api/admin/project` (admin session + same-origin, same as the others). Use it to add project-specific steps after the initial call, such as a CMS connection.
+- Tests in `tests/admin/projects.test.mjs`: default steps on a paid checkout, retries don't duplicate, provisioning before migration 0004, custom tier, subscription vs one-time billing, edit/reorder/validation and client 403.
+
+### Changed
+- A checkout with no tier metadata (a custom Payment Link such as a proposal deposit) is now stored as tier `custom` and shown as "Custom project", instead of `unknown`. The invite email says "your project".
+- Client dashboard billing card says **Payment received** for deposits and one-time payments. "Active subscription" is shown only when Stripe supplied a subscription id. The project view now includes `project.billing` (`subscription` or `one_time`).
+
+### Security
+- No new data exposure: the new fields are in the existing client-safe view, and the new write actions use the existing admin gate.
+
 ## 2026-11-04: Owner analytics, project progress, demo client
 
 ### Added

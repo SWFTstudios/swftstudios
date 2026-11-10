@@ -192,7 +192,23 @@
             }));
             return el("li", { class: "admin-milestone is-" + m.status }, [
               el("div", {}, [el("strong", { text: m.title }), m.detail ? el("p", { class: "admin-muted", text: m.detail }) : null, m.dueDate ? el("small", { text: (m.status === "done" ? "Done " : "Due ") + (m.completedAt ? date(m.completedAt) : m.dueDate) }) : null]),
-              el("div", { class: "admin-milestone__ctl" }, [sel, el("button", { class: "admin-row-btn", type: "button", text: "Remove", onclick: function () {
+              el("div", { class: "admin-milestone__ctl" }, [sel,
+                el("button", { class: "admin-row-btn", type: "button", "aria-label": "Move " + m.title + " up", text: "\u2191", onclick: function () {
+                  post({ action: "move_milestone", id: m.id, direction: "up" }).then(function (ok) { if (ok) reload(); });
+                } }),
+                el("button", { class: "admin-row-btn", type: "button", "aria-label": "Move " + m.title + " down", text: "\u2193", onclick: function () {
+                  post({ action: "move_milestone", id: m.id, direction: "down" }).then(function (ok) { if (ok) reload(); });
+                } }),
+                el("button", { class: "admin-row-btn", type: "button", text: "Edit", onclick: function () {
+                  var title = prompt("Step title (client sees this)", m.title);
+                  if (title == null || !title.trim()) return;
+                  var detail = prompt("Short description (optional, client sees this)", m.detail || "");
+                  if (detail == null) return;
+                  var due = prompt("Target date as YYYY-MM-DD (optional, leave empty for none)", m.dueDate || "");
+                  if (due == null) return;
+                  post({ action: "edit_milestone", id: m.id, title: title, detail: detail, dueDate: due.trim() }).then(function (ok) { if (ok) reload(); });
+                } }),
+                el("button", { class: "admin-row-btn", type: "button", text: "Remove", onclick: function () {
                 if (confirm("Remove milestone \u201c" + m.title + "\u201d?")) post({ action: "delete_milestone", id: m.id }).then(function (ok) { if (ok) reload(); });
               } })]),
             ]);
@@ -200,12 +216,13 @@
         : notice("Apply migration 0004 to track milestones and updates.");
 
       var mt = el("input", { type: "text", placeholder: "New milestone", "aria-label": "New milestone title", maxlength: "120" });
+      var mdt = el("input", { type: "text", placeholder: "Short description (optional)", "aria-label": "New milestone description", maxlength: "400" });
       var md = el("input", { type: "date", "aria-label": "Due date" });
       var addMs = el("form", { class: "admin-inline-form", onsubmit: function (e) {
         e.preventDefault();
         if (!mt.value.trim()) return;
-        post({ action: "add_milestone", projectId: v.project.id, title: mt.value, dueDate: md.value }).then(function (ok) { if (ok) reload(); });
-      } }, [mt, md, el("button", { class: "admin-row-btn", type: "submit", text: "Add" })]);
+        post({ action: "add_milestone", projectId: v.project.id, title: mt.value, detail: mdt.value, dueDate: md.value }).then(function (ok) { if (ok) reload(); });
+      } }, [mt, mdt, md, el("button", { class: "admin-row-btn", type: "submit", text: "Add" })]);
 
       var ut = el("textarea", { placeholder: "Write an update the client will see on their dashboard…", "aria-label": "New client update", maxlength: "2000" });
       var addUp = el("div", { class: "admin-note-form" }, [ut, el("button", { class: "admin-row-btn", type: "button", text: "Post update", onclick: function () {

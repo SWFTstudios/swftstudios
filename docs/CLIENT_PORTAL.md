@@ -25,7 +25,7 @@ Database id: `dfd16777-238c-4679-a8e2-68a5bf9b707b` (binding name **`DB`**).
 
 1. Client pays via `/book/` Checkout (reusable Price IDs) or a [Payment Link](../data/stripe-catalog.json).
 2. Stripe sends `checkout.session.completed` to `POST /api/stripe-webhook`.
-3. Webhook upserts user + project and emails a set-password link (Resend) when the user has no password yet.
+3. Webhook upserts user + project, copies in the default project steps ([`default-steps.js`](../functions/_lib/default-steps.js)), and emails a set-password link (Resend) when the user has no password yet. A payment with no tier metadata (custom Payment Link) becomes a "Custom project".
 4. Client completes [`/portal/onboard.html`](../portal/onboard.html) and lands on the dashboard.
 
 Catalog (Products, Prices, Payment Links): [`data/stripe-catalog.json`](../data/stripe-catalog.json).
