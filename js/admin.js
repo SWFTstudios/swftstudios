@@ -231,6 +231,29 @@
       var reload = function () { refreshList(); openProject(detail, c); };
 
       var back = el("button", { class: "admin-back", type: "button", text: "\u2190 All projects", onclick: function () { location.hash = "clients"; } });
+      // One-time link to set (or reset) the client's password. Emailed, and shown here to copy into a text.
+      var linkBox = el("div", { class: "admin-login-link", hidden: "hidden", role: "status" });
+      var linkBtn = el("button", { class: "admin-row-btn", type: "button", text: "Send login link", onclick: function () {
+        if (!confirm("Email " + v.client.email + " a one-time link to set their portal password? Any earlier link stops working.")) return;
+        linkBtn.disabled = true;
+        P.api("/api/admin/project", { method: "POST", body: JSON.stringify({ action: "send_login_link", projectId: v.project.id }) }).then(function (x) {
+          linkBtn.disabled = false;
+          var d = x.data || {};
+          if (!x.res.ok || !d.ok) { alert(d.error || "Could not create a login link."); return; }
+          var input = el("input", { type: "text", readonly: "readonly", value: d.url, "aria-label": "Login link", onfocus: function () { input.select(); } });
+          var copy = el("button", { class: "admin-row-btn", type: "button", text: "Copy", onclick: function () {
+            input.select();
+            (navigator.clipboard ? navigator.clipboard.writeText(d.url) : Promise.reject()).then(function () { copy.textContent = "Copied"; }, function () { document.execCommand("copy"); copy.textContent = "Copied"; });
+          } });
+          linkBox.replaceChildren(
+            el("p", { text: (d.emailed ? "Emailed to " + d.email + ". " : "Couldn't email it (check RESEND_API_KEY), so send it yourself. ")
+              + (d.hasPassword ? "They already have a password; this link lets them choose a new one." : "They haven't set a password yet.")
+              + " Works once, for 7 days:" }),
+            el("div", { class: "admin-inline-form" }, [input, copy]),
+          );
+          linkBox.hidden = false;
+        });
+      } });
       var head = el("div", { class: "admin-project-head" }, [
         el("div", {}, [
           el("h2", { class: "admin-project-title", text: v.project.name + (v.project.isDemo && !/demo/i.test(v.project.name) ? " · demo" : "") }),
@@ -242,6 +265,7 @@
             var name = prompt("Project name (shown to the client)", v.project.name);
             if (name != null) post({ action: "rename", projectId: v.project.id, name: name }).then(function (ok) { if (ok) reload(); });
           } }),
+          linkBtn,
         ]),
       ]);
 
@@ -417,6 +441,7 @@
         el("div", { class: "portal-card admin-project" }, [
           back,
           head,
+          linkBox,
           el("div", { class: "admin-project-progress" }, [progressBar(v.progress)]),
           el("p", { class: "portal-stat-label", text: "Post an update (shows in the client's Notifications)" }), v.progressReady ? addUp : null,
           el("div", { class: "admin-updates" }, ups.length ? ups : [el("p", { class: "admin-muted", text: "No updates yet." })]),

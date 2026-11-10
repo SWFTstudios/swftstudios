@@ -208,3 +208,6 @@
 .admin-field input, .admin-field textarea { width: 100%; box-sizing: border-box; background: transparent; color: inherit; border: 1px solid var(--swft-border); border-radius: 12px; padding: 0.6rem 0.8rem; font: inherit; }
 .admin-field textarea { min-height: 6rem; resize: vertical; }
 .admin-row-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.admin-login-link { margin: 0.75rem 0 1rem; padding: 0.9rem 1rem; border-radius: 14px; border: 1px solid var(--swft-border); background: rgba(var(--mf-ink-rgb), 0.04); }
+.admin-login-link p { margin: 0 0 0.6rem; }
+.admin-login-link input { flex: 1 1 16rem; min-width: 0; font-family: ui-monospace, monospace; font-size: 0.85rem; }

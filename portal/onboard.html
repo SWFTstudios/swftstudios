@@ -87,7 +87,8 @@
           }),
         });
         if (!result.res.ok || !result.data.ok) {
-          SWFTPortal.showMsg(msg, (result.data && result.data.error) || "Could not create account.", "error");
+          var linkSent = result.data && result.data.code === "needs_link";
+          SWFTPortal.showMsg(msg, (result.data && result.data.error) || "Could not create account.", linkSent ? "info" : "error");
           return;
         }
         window.location.href = result.data.redirect || "/portal/dashboard.html";

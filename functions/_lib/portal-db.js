@@ -189,18 +189,32 @@ export async function authenticateUser(db, email, password) {
   return ok ? user : null;
 }
 
+/**
+ * Returns { user, created } on success, or { error, code } where code is:
+ *   "exists"     the account has a password and this isn't it
+ *   "needs_link" the account exists without a password; only an emailed link may set it
+ *                (`user` is included so the caller can email that link to the account itself)
+ */
 export async function onboardUser(db, { email, password, inviteToken }) {
+  // A valid one-time link proves control of the account's inbox: set (or reset) its password.
   const invitedUserId = inviteToken ? await consumeInviteToken(db, inviteToken) : null;
-  let user = invitedUserId ? await findUserById(db, invitedUserId) : await findUserByEmail(db, email);
+  if (invitedUserId) {
+    const invited = await findUserById(db, invitedUserId);
+    if (invited) {
+      await setUserPassword(db, invited.id, password);
+      return { user: await findUserById(db, invited.id), created: !invited.password_hash };
+    }
+  }
 
+  const user = await findUserByEmail(db, email);
   if (user) {
     if (user.password_hash) {
       const ok = await verifyPassword(password, user.password_salt, user.password_hash);
       if (!ok) return { error: "Account already exists. Sign in instead.", code: "exists" };
       return { user, created: false };
     }
-    await setUserPassword(db, user.id, password);
-    return { user: await findUserById(db, user.id), created: true };
+    // Knowing someone's email must not be enough to claim the account SWFT created for them.
+    return { error: "This account was set up for you. We emailed a link to set your password.", code: "needs_link", user };
   }
 
   const id = randomId(16);
