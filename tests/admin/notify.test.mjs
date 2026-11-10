@@ -181,3 +181,18 @@ test("every person-facing email gets the footer; essential replies go out even a
   const team = sent.find((m) => m.subject === "t");
   assert.doesNotMatch(team.html, /Email preferences/);
 });
+
+test("overview gives the project list activity, last update and overdue counts", async () => {
+  const s = await setup();
+  const overview = await import("../../functions/api/admin/overview.js");
+  s.db.raw.prepare("INSERT INTO project_milestones(id,project_id,title,status,due_date,sort_order) VALUES ('m1','p-tim','Design','upcoming','2020-01-01',1),('m2','p-tim','Build','upcoming','2999-01-01',2),('m3','p-tim','Call','done',NULL,0)").run();
+  s.db.raw.prepare("UPDATE project_milestones SET completed_at='2026-11-05 12:00:00' WHERE id='m3'").run();
+  s.db.raw.prepare("INSERT INTO project_updates(id,project_id,body,created_at) VALUES ('u1','p-tim','hi','2026-11-08 09:00:00')").run();
+  s.db.raw.prepare("UPDATE projects SET created_at='2026-10-01 00:00:00', updated_at='2026-10-01 00:00:00' WHERE id='p-tim'").run();
+  const r = await (await overview.onRequestGet({ env: { DB: s.db, ASSETS: { fetch: async () => new Response("", { status: 404 }) } }, request: new Request(`${ORIGIN}/api/admin/overview`, { headers: { Cookie: `swft_portal_session=${s.admin}` } }) })).json();
+  const c = r.clients.find((x) => x.id === "p-tim");
+  assert.equal(c.overdue, 1);
+  assert.equal(c.lastUpdateAt, "2026-11-08 09:00:00");
+  assert.equal(c.activityAt, "2026-11-08 09:00:00");
+  assert.deepEqual([c.progress.done, c.progress.total], [1, 3]);
+});

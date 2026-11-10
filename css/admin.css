@@ -179,3 +179,23 @@
 .admin-update-msg { margin: 0; min-height: 1.2em; }
 .admin-updates { margin-bottom: 1.25rem; }
 .admin-note > .admin-row-btn { align-self: flex-start; flex: none; }
+
+/* Project list controls */
+.admin-plist__controls { display: grid; gap: 0.65rem; margin: 0.5rem 0 0.75rem; }
+.admin-plist__search { width: 100%; box-sizing: border-box; padding: 0.7rem 1rem; border: 1px solid var(--swft-border); border-radius: 999px; background: transparent; color: inherit; font: inherit; }
+.admin-plist__search:focus-visible { outline: 2px solid var(--swft-signal, #ff5a36); outline-offset: 1px; }
+.admin-plist__chips { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.admin-plist__chips::-webkit-scrollbar { display: none; }
+.admin-chip { flex: none; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; border: 1px solid var(--swft-border); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 0.88rem; cursor: pointer; white-space: nowrap; }
+.admin-chip[aria-pressed="true"] { background: var(--swft-text); color: var(--swft-bg); border-color: var(--swft-text); }
+.admin-chip__n { font-size: 0.75rem; opacity: 0.65; font-variant-numeric: tabular-nums; }
+.admin-chip:focus-visible { outline: 2px solid var(--swft-signal, #ff5a36); outline-offset: 2px; }
+.admin-plist__row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+.admin-plist__sortwrap { display: inline-flex; align-items: center; gap: 0.5rem; }
+.admin-plist__sort { padding: 0.4rem 2rem 0.4rem 0.75rem; border: 1px solid var(--swft-border); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 0.9rem; }
+.admin-plist__sort option { color: #111; }
+.admin-plist__demos { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem; }
+.admin-plist__count { margin: 0; font-size: 0.85rem; }
+.admin-plist__empty { display: grid; gap: 0.5rem; justify-items: start; padding: 0.5rem 0; }
+.admin-pcard.needs-attention { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 55%, var(--swft-border)); }
+.admin-pcard__why { color: var(--swft-signal, #ff5a36); font-weight: 600; }

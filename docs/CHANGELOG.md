@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-10: Search, filter and sort the admin project list
+
+### Added
+- Admin Projects list has a **search box** (project name, client email, package, site), **filter chips** with counts (All, Needs attention, In progress, Complete, Past due), a **Sort** menu (Recently active, Newest, Oldest, Most progress, Least progress, Name A–Z) and a **Hide demos** switch. Filter, sort and Hide demos are remembered on that device; the search clears on reload. A count shows "Showing 2 of 5 projects", and an empty result offers "Clear search and filters".
+- **Needs attention** = payment past due, a step past its target date, or no update in 7+ days (finished and canceled projects excluded). The reason shows in red on the card, and the card gets a red edge.
+- Each card shows when the project was last active (an update posted, a step completed, or the project edited). `/api/admin/overview` now returns `activityAt`, `lastUpdateAt` and `overdue` per project.
+
 ## 2026-11-10: Project updates notify clients; email preferences on every email
 
 ### Added
