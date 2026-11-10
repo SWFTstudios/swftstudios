@@ -52,12 +52,13 @@ export async function getProjectView(db, projectId) {
         .bind(projectId)
         .all()).results.map((m) => ({ id: m.id, title: m.title, detail: m.detail || "", status: m.status, dueDate: m.due_date || null, completedAt: m.completed_at || null }))
     : [];
-  const updates = ready
-    ? (await db
-        .prepare(`SELECT id, body, created_at FROM project_updates WHERE project_id = ? ORDER BY datetime(created_at) DESC LIMIT 20`)
-        .bind(projectId)
-        .all()).results.map((u) => ({ id: u.id, body: u.body, createdAt: u.created_at }))
-    : [];
+  let updates = [];
+  if (ready) {
+    const q = (cols) => db.prepare(`SELECT ${cols} FROM project_updates WHERE project_id = ? ORDER BY datetime(created_at) DESC, id LIMIT 20`).bind(projectId).all();
+    // email_status arrives with migration 0009; fall back without it.
+    const rows = (await q("id, body, created_at, email_status").catch(() => q("id, body, created_at"))).results;
+    updates = rows.map((u) => ({ id: u.id, body: u.body, createdAt: u.created_at, emailStatus: u.email_status || null }));
+  }
   return {
     project: {
       id: p.id,

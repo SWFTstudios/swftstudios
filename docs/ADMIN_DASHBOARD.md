@@ -75,6 +75,14 @@ Every new project (created when a client pays) starts with the default steps in 
 
 Storage: migration `0004_project_progress.sql` (`project_milestones`, `project_updates`, `projects.name`, `projects.is_demo`). Before it is applied, the dashboard still loads; progress shows as unavailable.
 
+## Updates and client notifications
+
+Open a project (tap its card), write in **Post an update**, keep **Email the client** on, and post. The client sees it in their dashboard's Notifications tab (with an unread count) and gets an email unless they turned update emails off. Under each update you'll see `emailed`, `not emailed (opted out)`, `email failed` or `email not set up` (no `RESEND_API_KEY`).
+
+## Email preferences
+
+Every email to a person (not the team inbox) goes through `sendPersonEmail()` in `functions/_lib/email-prefs.js`, which applies their preferences and adds the footer and one-click unsubscribe headers. New code that emails a client or lead should use it, not `sendResendEmail()` directly. Preferences live in D1 `email_prefs`.
+
 ## Project files and Google Drive
 
 Each project has a **Files** section (above private notes). Files you upload appear on the client's dashboard, and the client's uploads appear here.

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script id="swft-mode">(function(){var m;try{m=localStorage.getItem("swft-mode")}catch(e){}document.documentElement.setAttribute("data-mode",m==="light"||m==="system"?m:"dark")})();</script>
+  <meta charset="utf-8">
+  <title>Email Preferences | SWFT Studios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
+  <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
+  <link rel="stylesheet" href="/css/portal.css?v=20261110-notify">
+  <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
+</head>
+<body class="ps-page portal-page">
+  <div id="swft-nav" data-active=""></div>
+  <main>
+    <div class="portal-shell">
+      <header class="ps-hero ps-hero--left" style="margin-bottom:1rem;">
+        <p class="ps-eyebrow">Email</p>
+        <h1 class="ps-title">Email preferences</h1>
+        <p class="ps-lead" id="who">Loading…</p>
+      </header>
+
+      <section class="portal-card" id="confirm-card" hidden>
+        <p class="portal-stat-label">Unsubscribe</p>
+        <p id="confirm-text"></p>
+        <button type="button" class="mf-btn mf-btn--sm" id="confirm-btn">Unsubscribe</button>
+      </section>
+
+      <section class="portal-card" id="prefs-card" hidden style="margin-top:1rem;">
+        <p class="portal-stat-label">Choose what we send you</p>
+        <ul class="portal-prefs" id="prefs"></ul>
+        <div class="portal-prefs__all">
+          <button type="button" class="portal-btn-ghost" id="all-btn">Unsubscribe from everything</button>
+        </div>
+        <p class="portal-muted" style="margin:0.75rem 0 0;font-size:0.85rem;">If you contact us or ask for a link, we'll still send that one reply so you get what you asked for.</p>
+      </section>
+      <p class="portal-msg portal-msg--info" id="msg" role="status" hidden></p>
+    </div>
+  </main>
+  <script src="/js/swft-nav.js?v=20261105-r4"></script>
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search);
+      var t = q.get("t") || "";
+      var off = q.get("off");
+      var $ = function (s) { return document.querySelector(s); };
+      var LABEL = { project: "Project updates", account: "Account and payments", replies: "Replies to your requests", all: "all SWFT Studios emails" };
+      function say(text) { var m = $("#msg"); m.textContent = text; m.hidden = !text; }
+      function api(body) {
+        return fetch("/api/email-prefs" + (body ? "" : "?t=" + encodeURIComponent(t)), body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.assign({ t: t }, body)) } : {})
+          .then(function (r) { return r.json().catch(function () { return { ok: false }; }); });
+      }
+      function row(key, label, hint, on, onchange) {
+        var li = document.createElement("li"); li.className = "portal-pref";
+        var id = "pref-" + key;
+        var text = document.createElement("label"); text.htmlFor = id; text.className = "portal-pref__text";
+        var strong = document.createElement("strong"); strong.textContent = label;
+        var small = document.createElement("small"); small.className = "portal-muted"; small.textContent = hint;
+        text.append(strong, small);
+        var sw = document.createElement("input"); sw.type = "checkbox"; sw.id = id; sw.className = "portal-switch"; sw.checked = on; sw.setAttribute("role", "switch");
+        sw.onchange = function () { onchange(sw.checked, sw); };
+        li.append(text, sw);
+        return li;
+      }
+      function render(d) {
+        if (!d.ok) { $("#who").textContent = d.error || "That link isn't valid."; $("#prefs-card").hidden = true; return; }
+        $("#who").textContent = "For " + d.email + (d.allOff ? ". You're unsubscribed from everything." : ".");
+        var items = d.categories.map(function (c) {
+          return row(c.key, c.label, c.hint, c.on && !d.allOff, function (on, sw) {
+            var ch = {}; ch[c.key] = on;
+            sw.disabled = true;
+            api({ changes: ch }).then(function (x) { render(x); say(x.ok ? "Saved." : (x.error || "Could not save.")); });
+          });
+        });
+        if (d.news !== null) items.push(row("news", "News and drops", "New films, blog posts and products. Turning this back on needs a fresh confirm from the sign-up page.", d.news, function (on, sw) {
+          if (on) { location.href = "/account.html#updates"; return; }
+          sw.disabled = true;
+          api({ news: false }).then(function (x) { render(x); say(x.ok ? "You're off the news list." : (x.error || "Could not save.")); });
+        }));
+        $("#prefs").replaceChildren.apply($("#prefs"), items);
+        $("#prefs-card").hidden = false;
+        $("#all-btn").hidden = d.allOff;
+      }
+      $("#all-btn").onclick = function () {
+        api({ allOff: true }).then(function (x) { render(x); say(x.ok ? "Done. You won't get emails from us unless you ask for one." : (x.error || "Could not save.")); });
+      };
+      if (!t) { $("#who").textContent = "Open this page from the link at the bottom of any SWFT Studios email."; return; }
+      api().then(function (d) {
+        render(d);
+        if (d.ok && off && LABEL[off]) {
+          $("#confirm-card").hidden = false;
+          $("#confirm-text").textContent = "Stop " + (off === "all" ? "" : "getting ") + LABEL[off] + (off === "all" ? "? You can turn any of them back on below." : " emails?");
+          if (off === "all") $("#confirm-text").textContent = "Unsubscribe from all SWFT Studios emails?";
+          $("#confirm-btn").onclick = function () {
+            var body = off === "all" ? { allOff: true } : { changes: (function () { var o = {}; o[off] = false; return o; })() };
+            api(body).then(function (x) { render(x); $("#confirm-card").hidden = true; say(x.ok ? "You're unsubscribed from " + LABEL[off] + "." : (x.error || "Could not save.")); });
+          };
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

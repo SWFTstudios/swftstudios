@@ -7,7 +7,8 @@
  */
 import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
-import { escapeHtml, LEAD_INBOX, sendResendEmail } from "../../_lib/resend.js";
+import { escapeHtml, LEAD_INBOX } from "../../_lib/resend.js";
+import { sendPersonEmail } from "../../_lib/email-prefs.js";
 import { QUESTIONS } from "../growth-guide.js";
 
 const CAL_URL = "https://cal.com/swftstudios/swft-meeting";
@@ -86,15 +87,17 @@ export async function onRequestPost(context) {
     <p>Or just reply to this email with questions.</p>
     <p>SWFT Studios<br>hello@swftstudios.com</p>`;
 
-  const sent = await sendResendEmail(context.env, {
+  const mail = await sendPersonEmail(context.env, {
     to: row.email,
+    category: "replies",
     subject: `Your Free SWFT Growth Guide results${row.business_name ? `: ${row.business_name}` : ""}`,
     html,
     replyTo: LEAD_INBOX,
     // One send per version of the text, so a double click can't email twice
     idempotencyKey: `guide-results/${id}/${results.length}`,
   });
-  if (!sent) return json({ ok: false, error: "The email didn't send. Check RESEND_API_KEY and try again." }, 502);
+  if (mail.status === "opted_out") return json({ ok: false, error: "This person turned off these emails, so nothing was sent." }, 409);
+  if (!mail.sent) return json({ ok: false, error: "The email didn't send. Check RESEND_API_KEY and try again." }, 502);
 
   await gate.db
     .prepare("UPDATE growth_guides SET status = 'sent', results = ?, results_sent_at = datetime('now') WHERE id = ?")

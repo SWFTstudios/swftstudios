@@ -7,7 +7,7 @@
  * POST /api/admin/project  { action, ... }
  *      milestone_status { id, status, completedOn? }     set_milestone_date { id, date }
  *                                             add_milestone { projectId, title, detail?, dueDate? }
- *      delete_milestone { id }                add_update    { projectId, body }
+ *      delete_milestone { id }                add_update    { projectId, body, notify? (default true: email the client) }
  *      delete_update    { id }                rename        { projectId, name }
  *      edit_milestone { id, title, detail?, dueDate? }   move_milestone { id, direction: "up"|"down" }
  *      reorder_milestones { projectId, ids: [every step id, in the new order] }
@@ -15,6 +15,7 @@
 import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
 import { fetchHostMetrics } from "../../_lib/posthog-metrics.js";
+import { emailUpdate } from "../../_lib/notifications.js";
 import {
   addMilestone, addUpdate, deleteMilestone, deleteUpdate, editMilestone, getProjectView, isFutureDate, isValidDate,
   MILESTONE_STATUSES, moveMilestone, renameProject, reorderMilestones, setMilestoneDate, setMilestoneStatus,
@@ -88,8 +89,13 @@ export async function onRequestPost(context) {
     } else if (action === "add_update") {
       const body = str(b.body, 2000);
       if (!body) return json({ ok: false, error: "Write the update first." }, 400);
-      id = await addUpdate(db, str(b.projectId, 64), body);
-      ok = true;
+      const projectId = str(b.projectId, 64);
+      if (!(await db.prepare("SELECT id FROM projects WHERE id = ?").bind(projectId).first())) return json({ ok: false, error: "Project not found." }, 404);
+      id = await addUpdate(db, projectId, body);
+      let emailStatus = "not_sent";
+      if (b.notify !== false) emailStatus = await emailUpdate(context.env, db, id);
+      else await db.prepare("UPDATE project_updates SET email_status = 'not_sent' WHERE id = ?").bind(id).run().catch(() => {});
+      return json({ ok: true, id, emailStatus });
     } else if (action === "delete_update") {
       ok = await deleteUpdate(db, str(b.id, 64));
     } else if (action === "rename") {
