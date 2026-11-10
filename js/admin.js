@@ -228,9 +228,10 @@
       var v = r.data.view;
       var reload = function () { refreshList(); openProject(detail, c); };
 
+      var back = el("button", { class: "admin-back", type: "button", text: "\u2190 All projects", onclick: function () { location.hash = "clients"; } });
       var head = el("div", { class: "admin-project-head" }, [
         el("div", {}, [
-          el("h2", { class: "admin-project-title", text: v.project.name + (v.project.isDemo ? " · demo" : "") }),
+          el("h2", { class: "admin-project-title", text: v.project.name + (v.project.isDemo && !/demo/i.test(v.project.name) ? " · demo" : "") }),
           el("p", { class: "admin-muted", text: v.client.email + " · " + v.project.tierName + " · " + v.project.status + (v.project.siteHost ? " · " + v.project.siteHost : "") }),
         ]),
         el("div", { class: "admin-project-actions" }, [
@@ -318,14 +319,31 @@
         post({ action: "add_milestone", projectId: v.project.id, title: mt.value, detail: mdt.value, dueDate: md.value }).then(function (ok) { if (ok) reload(); });
       } }, [mt, mdt, md, el("button", { class: "admin-row-btn", type: "submit", text: "Add" })]);
 
-      var ut = el("textarea", { placeholder: "Write an update the client will see on their dashboard…", "aria-label": "New client update", maxlength: "2000" });
-      var addUp = el("div", { class: "admin-note-form" }, [ut, el("button", { class: "admin-row-btn", type: "button", text: "Post update", onclick: function () {
-        if (!ut.value.trim()) return;
-        post({ action: "add_update", projectId: v.project.id, body: ut.value }).then(function (ok) { if (ok) reload(); });
-      } })]);
+      var ut = el("textarea", { placeholder: "Write an update for " + v.client.email + "…", "aria-label": "New client update", maxlength: "2000" });
+      var notify = el("input", { type: "checkbox", id: "notify-client", checked: "checked", class: "portal-switch" });
+      var upMsg = el("p", { class: "admin-muted admin-update-msg", role: "status" });
+      var postBtn = el("button", { class: "mf-btn mf-btn--sm", type: "button", text: "Post update", onclick: function () {
+        if (!ut.value.trim()) { ut.focus(); return; }
+        postBtn.disabled = true; upMsg.textContent = "Posting…";
+        P.api("/api/admin/project", { method: "POST", body: JSON.stringify({ action: "add_update", projectId: v.project.id, body: ut.value, notify: notify.checked }) }).then(function (x) {
+          postBtn.disabled = false;
+          if (!x.res.ok || !x.data.ok) { upMsg.textContent = (x.data && x.data.error) || "Could not post."; return; }
+          lastUpdateMsg = "Posted. " + (EMAIL_STATUS[x.data.emailStatus] || "");
+          reload();
+        });
+      } });
+      var addUp = el("div", { class: "admin-update-form" }, [
+        ut,
+        el("div", { class: "admin-update-form__row" }, [
+          el("label", { class: "admin-update-form__notify", for: "notify-client" }, [notify, el("span", { text: "Email the client" })]),
+          postBtn,
+        ]),
+        upMsg,
+      ]);
+      if (lastUpdateMsg) { upMsg.textContent = lastUpdateMsg; lastUpdateMsg = ""; }
       var ups = v.updates.map(function (u) {
         return el("div", { class: "admin-note" }, [
-          el("div", {}, [el("p", { text: u.body }), el("small", { text: date(u.createdAt) })]),
+          el("div", {}, [el("p", { text: u.body }), el("small", { text: date(u.createdAt) + (u.emailStatus ? " · " + (EMAIL_SHORT[u.emailStatus] || u.emailStatus) : "") })]),
           el("button", { class: "admin-row-btn", type: "button", text: "Delete", onclick: function () {
             if (confirm("Delete this update?")) post({ action: "delete_update", id: u.id }).then(function (ok) { if (ok) reload(); });
           } }),
@@ -345,13 +363,14 @@
       } });
       detail.replaceChildren(
         el("div", { class: "portal-card admin-project" }, [
+          back,
           head,
           el("div", { class: "admin-project-progress" }, [progressBar(v.progress)]),
+          el("p", { class: "portal-stat-label", text: "Post an update (shows in the client's Notifications)" }), v.progressReady ? addUp : null,
+          el("div", { class: "admin-updates" }, ups.length ? ups : [el("p", { class: "admin-muted", text: "No updates yet." })]),
           el("p", { class: "portal-stat-label", text: "Milestones (client sees these)" }),
           v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the grip on the left of a card to reorder. Tap a card to see its details and set dates. The client's dashboard updates right away." }) : null,
           ms, v.progressReady ? addMs : null,
-          el("p", { class: "portal-stat-label", text: "Updates (client sees these)" }), v.progressReady ? addUp : null,
-          el("div", {}, ups),
           el("p", { class: "portal-stat-label", text: "Files (shared with the client, mirrored to Google Drive)" }), filesBox, el("div", {}, [syncBtn]),
           el("p", { class: "portal-stat-label", text: "Private notes (only you)" }), notesBox,
         ])
@@ -366,33 +385,48 @@
     });
   }
 
-  var listCard = null, detailBox = null;
-  function projectRows() {
-    return state.clients.map(function (c) {
-      return [
-        el("div", {}, [el("strong", { text: c.name }), c.isDemo ? el("span", { class: "admin-tag", text: "demo" }) : null, el("br"), el("small", { class: "admin-muted", text: c.email })]),
-        c.tierName, c.status, progressBar(c.progress), c.siteHost || "—",
-        el("button", { class: "admin-row-btn", type: "button", text: "Open", onclick: function () {
-          openProject(detailBox, c);
-          detailBox.scrollIntoView({ behavior: "smooth", block: "start" });
-        } }),
-      ];
-    });
+  var listCard = null, detailBox = null, generalCard = null;
+  var route = { id: null };
+  var lastUpdateMsg = "";
+  var EMAIL_STATUS = { sent: "The client was emailed.", opted_out: "Not emailed: the client turned off update emails.", failed: "The email didn't send (check RESEND_API_KEY). The update is on their dashboard.", unavailable: "Email isn't set up (RESEND_API_KEY). The update is on their dashboard.", not_sent: "Not emailed." };
+  var EMAIL_SHORT = { sent: "emailed", opted_out: "not emailed (opted out)", failed: "email failed", unavailable: "email not set up", not_sent: "not emailed" };
+
+  function projectList() {
+    if (!state.clients.length) return el("p", { class: "admin-muted", text: "No client projects yet." });
+    return el("ul", { class: "admin-pcards" }, state.clients.map(function (c) {
+      var p = c.progress;
+      return el("li", {}, [el("button", { class: "admin-pcard", type: "button", onclick: function () { location.hash = "clients/" + encodeURIComponent(c.id); } }, [
+        el("span", { class: "admin-pcard__main" }, [
+          el("span", { class: "admin-pcard__name" }, [el("strong", { text: c.name }), c.isDemo ? el("span", { class: "admin-tag", text: "demo" }) : null]),
+          el("small", { class: "admin-muted", text: c.email }),
+          p && p.total ? el("span", { class: "admin-pcard__bar" }, [el("span", { style: "width:" + p.percent + "%" })]) : null,
+          el("small", { class: "admin-pcard__now", text: (p && p.total ? p.percent + "%" + (p.current ? " · " + p.current : "") : "No steps yet") }),
+        ]),
+        el("span", { class: "admin-pcard__side" }, [el("span", { class: "admin-pcard__status", text: c.status }), el("span", { class: "admin-pcard__chev", "aria-hidden": "true", text: "\u203a" })]),
+      ])]);
+    }));
   }
   function refreshList() {
     P.api("/api/admin/overview").then(function (r) {
-      if (r.res.ok && r.data.ok) { state = r.data; listCard.replaceChildren(el("p", { class: "portal-stat-label", text: "Client projects" }), table(["Project", "Package", "Status", "Progress", "Site", ""], projectRows(), "No client projects yet.")); }
+      if (r.res.ok && r.data.ok) { state = r.data; if (listCard) listCard.replaceChildren(el("p", { class: "portal-stat-label", text: "Client projects" }), projectList()); }
     });
+  }
+  function applyRoute() {
+    if (!listCard) return;
+    var c = route.id ? state.clients.find(function (k) { return k.id === route.id; }) : null;
+    listCard.hidden = !!c; generalCard.hidden = !!c; detailBox.hidden = !c;
+    if (c) { openProject(detailBox, c); window.scrollTo(0, 0); }
+    else detailBox.replaceChildren();
   }
 
   function renderClients(root) {
     detailBox = el("div");
-    listCard = card("Client projects", [table(["Project", "Package", "Status", "Progress", "Site", ""], projectRows(), "No client projects yet. Run scripts/seed-demo-project.sql for a demo.")]);
+    listCard = card("Client projects", [projectList()]);
     var general = el("div");
-    root.replaceChildren(listCard, detailBox, card("General notes", [general]));
+    generalCard = card("General notes", [general]);
+    root.replaceChildren(listCard, detailBox, generalCard);
     renderNotes(general, null);
-    var demo = state.clients.find(function (k) { return k.isDemo; });
-    if (demo) openProject(detailBox, demo);
+    applyRoute();
   }
 
   /* ---------- Analytics (the SWFT site itself) ---------- */
@@ -581,7 +615,15 @@
     document.querySelectorAll(".admin-panel").forEach(function (p) { p.hidden = p.id !== "tab-" + tab; });
     var root = document.getElementById("tab-" + tab);
     if (!drawn[tab] || tab === "overview") { RENDER[tab](root); drawn[tab] = true; }
-    try { history.replaceState(null, "", "#" + tab); } catch (e) { /* ignore */ }
+    var h = "#" + tab + (tab === "clients" && route.id ? "/" + encodeURIComponent(route.id) : "");
+    try { history.replaceState(null, "", h); } catch (e) { /* ignore */ }
+  }
+
+  // #clients = project list, #clients/<id> = one project's details
+  function parseHash() {
+    var parts = (location.hash || "").slice(1).split("/");
+    route.id = parts[0] === "clients" && parts[1] ? decodeURIComponent(parts[1]) : null;
+    return parts[0];
   }
 
   async function init() {
@@ -598,11 +640,13 @@
     P.qs("#who").textContent = "Signed in as " + state.admin.email;
     P.qs("#app").hidden = false;
     document.querySelectorAll(".admin-tabs button").forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.tab); }); });
-    var start = (location.hash || "").slice(1);
+    var start = parseHash();
     show(RENDER[start] ? start : "overview");
     window.addEventListener("hashchange", function () {
-      var t = (location.hash || "").slice(1);
-      if (RENDER[t]) show(t);
+      var t = parseHash();
+      if (!RENDER[t]) return;
+      if (t === "clients" && drawn.clients) { if (document.getElementById("tab-clients").hidden) show(t); applyRoute(); }
+      else show(t);
     });
   }
 

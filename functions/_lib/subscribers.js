@@ -11,7 +11,8 @@
  * list. Confirm tokens are random, stored as SHA-256, valid 7 days.
  */
 import { randomId, sha256Hex } from "./portal-auth.js";
-import { escapeHtml, sendResendEmail } from "./resend.js";
+import { escapeHtml } from "./resend.js";
+import { sendPersonEmail } from "./email-prefs.js";
 
 export const INTERESTS = {
   videos: "New films & videos",
@@ -77,8 +78,10 @@ export async function subscribe(db, env, request, { email, name, interests, sour
   const confirmUrl = `${origin}/account.html?confirm=${token}`;
   const list = interests.split(",").map((k) => INTERESTS[k]).filter(Boolean);
   const hello = name ? `Hi ${escapeHtml(name)},` : "Hi,";
-  const sent = await sendResendEmail(env, {
+  const { sent } = await sendPersonEmail(env, {
     to: email,
+    category: "replies",
+    essential: true, // they just asked for this link
     subject: "Confirm your SWFT Studios updates",
     idempotencyKey: `subscribe-${id}-${tokenHash.slice(0, 16)}`,
     html: `<div style="font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:#111;max-width:520px">

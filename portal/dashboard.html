@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
-  <link rel="stylesheet" href="/css/portal.css?v=20261110-overview">
+  <link rel="stylesheet" href="/css/portal.css?v=20261110-notify">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -28,6 +28,13 @@
 
       <p class="portal-preview" id="preview-banner" role="status" hidden></p>
 
+      <div class="portal-tabs" role="tablist" aria-label="Dashboard sections">
+        <button type="button" role="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true">Overview</button>
+        <button type="button" role="tab" id="tab-notifications" aria-controls="panel-notifications" aria-selected="false" tabindex="-1">Notifications <span class="portal-tabs__badge" id="unread-badge" hidden></span></button>
+      </div>
+
+      <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+
       <section class="portal-card portal-overview" id="project-card" aria-label="Project overview">
         <div class="portal-overview__top">
           <p class="portal-stat-label">Project</p>
@@ -37,15 +44,12 @@
         <div class="portal-progress" id="progress-bar"></div>
         <p class="portal-muted portal-overview__meta" id="project-meta"></p>
         <p class="portal-overview__bill"><span class="portal-stat-label">Billing</span><strong id="billing-status">Loading…</strong></p>
+        <button type="button" class="portal-overview__notice" id="new-updates" hidden></button>
       </section>
 
       <section class="portal-card" id="progress-card" style="margin-top:1.25rem;" hidden aria-labelledby="progress-title">
         <p class="portal-stat-label" id="progress-title">Steps</p>
         <ol class="portal-timeline" id="timeline"></ol>
-        <div id="updates-wrap" hidden>
-          <p class="portal-stat-label" style="margin-top:1.5rem;">Latest updates from SWFT</p>
-          <div id="updates"></div>
-        </div>
       </section>
 
       <section class="portal-card" id="files-card" style="margin-top:1.25rem;" hidden aria-labelledby="files-title">
@@ -60,6 +64,24 @@
           <p class="portal-muted">Loading metrics…</p>
         </div>
       </section>
+      </div>
+
+      <div id="panel-notifications" role="tabpanel" aria-labelledby="tab-notifications" hidden>
+        <section class="portal-card portal-notify" aria-labelledby="notify-title">
+          <p class="portal-stat-label" id="notify-title">Updates from SWFT</p>
+          <ul class="portal-notes" id="notes"><li class="portal-muted">Loading…</li></ul>
+        </section>
+        <section class="portal-card" id="notify-email" style="margin-top:1rem;" hidden>
+          <p class="portal-stat-label">Email</p>
+          <ul class="portal-prefs">
+            <li class="portal-pref">
+              <label class="portal-pref__text" for="email-updates"><strong>Email me when there's an update</strong><small class="portal-muted">We send one email per update. Turn it off any time.</small></label>
+              <input type="checkbox" class="portal-switch" id="email-updates" role="switch">
+            </li>
+          </ul>
+          <p style="margin:0.75rem 0 0;"><a class="portal-link" id="prefs-link" href="#">All email preferences</a></p>
+        </section>
+      </div>
     </div>
   </main>
   <script src="/js/swft-nav.js?v=20261105-r4"></script>
@@ -169,14 +191,77 @@
         SWFTPortal.qs("#files-card").hidden = false;
         if (view.preview) SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/admin/files", project: view.project.id, admin: true, readOnly: true });
         else SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/portal/files" });
-        var ups = view.updates || [];
-        SWFTPortal.qs("#updates-wrap").hidden = !ups.length;
-        SWFTPortal.qs("#updates").replaceChildren.apply(SWFTPortal.qs("#updates"), ups.map(function (u) {
-          var d = h("div", "portal-update");
-          d.append(h("small", "portal-muted", day(u.createdAt)), h("p", null, u.body));
-          return d;
-        }));
+        if (view.preview) renderNotes((view.updates || []).map(function (u) { return { id: u.id, body: u.body, createdAt: u.createdAt, unread: false }; }), 0);
       }
+
+      // ---------- Tabs + notifications ----------
+      var unread = 0, previewMode = false;
+      function stamp(s) {
+        var d = new Date(String(s).replace(" ", "T") + "Z");
+        return isNaN(d) ? "" : d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) + " · " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+      }
+      function setUnread(n) {
+        unread = n;
+        var b = SWFTPortal.qs("#unread-badge");
+        b.hidden = !n; b.textContent = n > 9 ? "9+" : String(n);
+        b.setAttribute("aria-label", n + " unread");
+        var notice = SWFTPortal.qs("#new-updates");
+        notice.hidden = !n;
+        notice.textContent = n === 1 ? "1 new update from SWFT \u2192" : n + " new updates from SWFT \u2192";
+      }
+      function renderNotes(items, n) {
+        var list = SWFTPortal.qs("#notes");
+        if (!items.length) { list.replaceChildren(h("li", "portal-muted portal-notes__empty", "No updates yet. When we post one about your project it shows up here.")); }
+        else list.replaceChildren.apply(list, items.map(function (u) {
+          var li = h("li", "portal-note" + (u.unread ? " is-unread" : ""));
+          var top = h("div", "portal-note__top");
+          top.append(h("small", "portal-muted", stamp(u.createdAt)));
+          if (u.unread) top.append(h("span", "portal-note__new", "New"));
+          li.append(top, h("p", null, u.body));
+          return li;
+        }));
+        setUnread(n);
+      }
+      function loadNotes() {
+        return SWFTPortal.api("/api/portal/notifications").then(function (r) {
+          if (!r.res.ok || !r.data.ok) { SWFTPortal.qs("#notes").replaceChildren(h("li", "portal-muted", (r.data && r.data.error) || "Could not load updates.")); return; }
+          renderNotes(r.data.items, r.data.unread);
+          var e = r.data.email;
+          if (e) {
+            SWFTPortal.qs("#notify-email").hidden = false;
+            var sw = SWFTPortal.qs("#email-updates");
+            sw.checked = e.on;
+            SWFTPortal.qs("#prefs-link").href = e.prefsUrl;
+            sw.onchange = function () {
+              sw.disabled = true;
+              SWFTPortal.api("/api/portal/notifications", { method: "POST", body: JSON.stringify({ action: "email", on: sw.checked }) }).then(function (x) {
+                sw.disabled = false;
+                if (!x.res.ok || !x.data.ok) sw.checked = !sw.checked;
+              });
+            };
+          }
+        });
+      }
+      function selectTab(name, focus) {
+        ["overview", "notifications"].forEach(function (t) {
+          var on = t === name;
+          var tab = SWFTPortal.qs("#tab-" + t);
+          tab.setAttribute("aria-selected", String(on)); tab.tabIndex = on ? 0 : -1;
+          SWFTPortal.qs("#panel-" + t).hidden = !on;
+          if (on && focus) tab.focus();
+        });
+        try { history.replaceState(null, "", name === "notifications" ? "#notifications" : location.pathname + location.search); } catch (e) { /* ignore */ }
+        if (name === "notifications" && unread && !previewMode) {
+          SWFTPortal.api("/api/portal/notifications", { method: "POST", body: JSON.stringify({ action: "seen" }) }).then(function (r) { if (r.res.ok) setUnread(0); });
+        }
+      }
+      SWFTPortal.qs("#tab-overview").onclick = function () { selectTab("overview"); };
+      SWFTPortal.qs("#tab-notifications").onclick = function () { selectTab("notifications"); };
+      SWFTPortal.qs("#new-updates").onclick = function () { selectTab("notifications"); window.scrollTo(0, 0); };
+      SWFTPortal.qs(".portal-tabs").addEventListener("keydown", function (e) {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        selectTab(SWFTPortal.qs("#tab-overview").getAttribute("aria-selected") === "true" ? "notifications" : "overview", true);
+      });
 
       // Owner preview: /portal/dashboard.html?preview=<projectId>
       async function preview(id) {
@@ -185,7 +270,7 @@
           SWFTPortal.qs("#welcome").textContent = (r.data && r.data.error) || "Could not load that project.";
           return;
         }
-        var v = r.data.view; v.preview = true;
+        var v = r.data.view; v.preview = true; previewMode = true;
         var banner = SWFTPortal.qs("#preview-banner");
         banner.hidden = false;
         banner.replaceChildren(
@@ -222,6 +307,7 @@
             '<a class="mf-btn mf-btn--sm mf-btn--ghost" href="/account.html#updates">Email preferences</a>';
           meta.insertAdjacentElement("afterend", acts);
           statusBadge("none");
+          renderNotes([], 0);
           renderMetrics({
             ok: false,
             message: "Traffic, leads and bookings for your site appear here once your project is live.",
@@ -233,6 +319,7 @@
           ? "Tracking host assigned."
           : "Analytics pending. We install tracking when your site is live.";
         statusBadge(data.project.status);
+        loadNotes().then(function () { if (location.hash === "#notifications") selectTab("notifications"); });
 
         SWFTPortal.api("/api/portal/project").then(function (r) {
           if (r.res.ok && r.data && r.data.view) {

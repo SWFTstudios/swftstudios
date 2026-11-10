@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-10: Project updates notify clients; email preferences on every email
+
+### Added
+- **Admin Projects:** each project is a tappable card (name, client, progress, status). Tapping opens that project's own page (`#clients/<id>`, with **← All projects**). The **Post an update** box sits at the top with an **Email the client** switch (on by default). After posting you see whether the client was emailed, opted out, or email isn't set up; each update shows its email status.
+- **Client dashboard tabs:** Overview and **Notifications**. Notifications lists every update from SWFT, newest first, with a red unread count on the tab and a "1 new update from SWFT →" link in the overview card. Opening the tab marks them read. Links in update emails open `#notifications` directly.
+- **Update emails** to the client: subject "New update on <project>", the update text, and an Open your dashboard button. Clients can turn these off from the Notifications tab.
+- **Email preferences for every person-facing email** ([`functions/_lib/email-prefs.js`](../functions/_lib/email-prefs.js), migration `0009_email_prefs_notifications.sql`). Categories: Project updates, Account and payments, Replies to your requests; plus the News and drops list. Every email carries an "Email preferences · Unsubscribe" footer and RFC 8058 `List-Unsubscribe` / `List-Unsubscribe-Post` headers. Page: `/email-preferences.html?t=<token>` (no sign-in, token only appears in that person's emails), with per-category switches and **Unsubscribe from everything**.
+- Routed through it: portal invite (account), Growth Guide results (replies; the admin sees a clear message if the person opted out), contact/booking/audit/guide/checkout/build-request confirmations and the news confirm link (sent because the person just asked, but still with the footer). Team alerts to the SWFT inbox are unchanged. Cold outreach keeps its own unsubscribe and suppression list.
+- Tests: `tests/admin/notify.test.mjs` (7).
+
 ## 2026-11-10: Client dashboard overview fits on one screen
 
 ### Changed

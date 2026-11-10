@@ -8,6 +8,7 @@
  * the inbox, so a stale env value can't send leads somewhere else.
  */
 import { notifyViaSheet } from "./sheets.js";
+import { sendPersonEmail } from "./email-prefs.js";
 
 export const LEAD_INBOX = "hello@swftstudios.com";
 const DEFAULT_FROM = `SWFT Studios <${LEAD_INBOX}>`;
@@ -26,7 +27,7 @@ export function escapeHtml(value) {
  * Send one email via Resend HTTP API.
  * Returns true on success. Never throws.
  */
-export async function sendResendEmail(env, { to, subject, html, text, replyTo, idempotencyKey }) {
+export async function sendResendEmail(env, { to, subject, html, text, replyTo, idempotencyKey, headers: mailHeaders }) {
   const apiKey = env.RESEND_API_KEY;
   if (!apiKey || !to) {
     console.error("Resend skipped: missing RESEND_API_KEY or recipient");
@@ -42,6 +43,7 @@ export async function sendResendEmail(env, { to, subject, html, text, replyTo, i
   };
   if (text) payload.text = text;
   if (replyTo) payload.reply_to = replyTo;
+  if (mailHeaders && Object.keys(mailHeaders).length) payload.headers = mailHeaders;
 
   const headers = {
     Authorization: `Bearer ${apiKey}`,
@@ -118,13 +120,18 @@ export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, tea
   // Do not assure a visitor we received an inquiry unless our team email
   // succeeded or a durable CRM backup was confirmed.
   if (visitorEmail && (results.team || backupStored)) {
-    results.visitor = await sendResendEmail(env, {
+    // The visitor just asked for this, so it is sent even if they opted out before,
+    // but it carries the preferences / unsubscribe footer like every other email.
+    const r = await sendPersonEmail(env, {
       to: visitorEmail,
+      category: "replies",
+      essential: true,
       subject: confirmSubject,
       html: confirmHtml,
       replyTo: LEAD_INBOX,
       idempotencyKey: `${base}/visitor`,
     });
+    results.visitor = r.sent;
   }
 
   return results;

@@ -4,7 +4,8 @@
  *
  * Env: STRIPE_WEBHOOK_SECRET, STRIPE_SECRET_KEY (optional), DB, RESEND_API_KEY
  */
-import { escapeHtml, sendResendEmail } from "../_lib/resend.js";
+import { escapeHtml } from "../_lib/resend.js";
+import { sendPersonEmail } from "../_lib/email-prefs.js";
 import {
   createInviteToken,
   requireDb,
@@ -25,12 +26,14 @@ async function sendInviteEmail(env, { email, name, tierName, inviteUrl }) {
     <p>This link expires in 7 days. If it expires, visit <a href="https://www.swftstudios.com/portal/onboard.html">portal onboarding</a> with the same email.</p>
     <p>SWFT Studios</p>
   `;
-  return sendResendEmail(env, {
+  const r = await sendPersonEmail(env, {
     to: email,
+    category: "account",
     subject: "Set up your SWFT client portal",
     html,
     idempotencyKey: `portal-invite/${email}/${Date.now()}`,
   });
+  return r.sent;
 }
 
 export async function onRequestPost(context) {

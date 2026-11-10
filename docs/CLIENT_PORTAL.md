@@ -12,6 +12,10 @@ Client-facing account area for SWFT Studios customers: email + password sign-in,
 
 Passwords are never stored in plaintext. Cloudflare D1 stores a per-user salt + PBKDF2-SHA-256 hash. Sessions use an httpOnly `Secure` cookie (`swft_portal_session`).
 
+## Notifications
+
+The dashboard has Overview and **Notifications** tabs. Notifications shows every update SWFT posts (unread ones marked New), a switch for update emails, and a link to all email preferences (`/email-preferences.html`).
+
 ## Project files
 
 The dashboard has a **Project files** card: clients upload logos, photos and copy, and see files SWFT shares back. Stored in R2, mirrored to the shared Google Drive. See [ADMIN_DASHBOARD.md](ADMIN_DASHBOARD.md#project-files-and-google-drive).
