@@ -1,5 +1,7 @@
 /**
- * POST /api/portal/onboard — create password (or complete invite) and start session.
+ * POST /api/portal/onboard — create an account, or set/reset a password with an emailed
+ * one-time link, and start a session. An existing account without a password can only be
+ * finished through a link, so here we email one to that account's own address.
  */
 import {
   isValidEmail,
@@ -9,6 +11,7 @@ import {
   str,
 } from "../../_lib/portal-auth.js";
 import { createSession, onboardUser, requireDb } from "../../_lib/portal-db.js";
+import { recentlySent, sendLoginLink } from "../../_lib/login-links.js";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -37,6 +40,10 @@ export async function onRequestPost(context) {
 
   try {
     const result = await onboardUser(db, { email, password, inviteToken });
+    if (result.code === "needs_link") {
+      if (!(await recentlySent(db, result.user.id))) await sendLoginLink(env, db, result.user, { hasPassword: false });
+      return json({ ok: false, error: result.error, code: result.code }, 409);
+    }
     if (result.error) {
       return json({ ok: false, error: result.error, code: result.code }, 409);
     }

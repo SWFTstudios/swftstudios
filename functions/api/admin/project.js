@@ -18,6 +18,7 @@ import { requireAdmin } from "../../_lib/admin-auth.js";
 import { json, str } from "../../_lib/portal-auth.js";
 import { fetchHostMetrics } from "../../_lib/posthog-metrics.js";
 import { emailUpdate } from "../../_lib/notifications.js";
+import { sendLoginLink } from "../../_lib/login-links.js";
 import {
   addMilestone, addUpdate, deleteMilestone, deleteUpdate, editMilestone, getProjectView, isFutureDate, isValidDate,
   MILESTONE_STATUSES, moveMilestone, renameProject, reorderMilestones, scheduleMilestones, setMilestoneDate, setMilestoneStatus,
@@ -86,6 +87,14 @@ export async function onRequestPost(context) {
       if (!ids.length) return json({ ok: false, error: "ids is required." }, 400);
       ok = await reorderMilestones(db, str(b.projectId, 64), ids);
       if (!ok) return json({ ok: false, error: "The steps changed since this page loaded. Refresh and try again." }, 409);
+    } else if (action === "send_login_link") {
+      const user = await db
+        .prepare("SELECT u.* FROM projects p JOIN users u ON u.id = p.user_id WHERE p.id = ?")
+        .bind(str(b.projectId, 64))
+        .first();
+      if (!user) return json({ ok: false, error: "Project not found." }, 404);
+      const { url, sent } = await sendLoginLink(context.env, db, user);
+      return json({ ok: true, url, emailed: sent, email: user.email, hasPassword: !!user.password_hash });
     } else if (action === "schedule_milestones") {
       const start = str(b.start, 10), end = str(b.end, 10);
       if (!isValidDate(start) || (end && !isValidDate(end))) return json({ ok: false, error: "Pick a start date (and an optional launch date)." }, 400);

@@ -33,6 +33,7 @@ import * as fnAdminProject from "../functions/api/admin/project.js";
 // @ts-expect-error JS module without types
 import * as fnAdminAnalytics from "../functions/api/admin/analytics.js";
 import * as fnAdminNewsletter from "../functions/api/admin/newsletter.js";
+import * as fnPortalOnboard from "../functions/api/portal/onboard.js";
 // @ts-expect-error JS module without types
 import * as fnPortalProject from "../functions/api/portal/project.js";
 // @ts-expect-error JS module without types
@@ -678,6 +679,7 @@ export default {
     const SHARED_FNS: Record<string, Record<string, unknown>> = {
       "/api/portal/me": fnPortalMe,
       "/api/portal/login": fnPortalLogin,
+      "/api/portal/onboard": fnPortalOnboard,
       "/api/admin/overview": fnAdminOverview,
       "/api/admin/emails": fnAdminEmails,
       "/api/admin/notes": fnAdminNotes,
