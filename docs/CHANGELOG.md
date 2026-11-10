@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-10: Client dashboard overview fits on one screen
+
+### Changed
+- Project, progress and billing are now one **overview card** at the top of the client dashboard: status, big percent, steps done, the current step ("Now: ...") and billing, all visible on a phone without scrolling. The header is compact on phones. Step timeline, files and site metrics follow below.
+
 ## 2026-11-10: Shared project files, mirrored to Google Drive
 
 ### Added

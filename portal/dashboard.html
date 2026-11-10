@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
-  <link rel="stylesheet" href="/css/portal.css?v=20261110-files">
+  <link rel="stylesheet" href="/css/portal.css?v=20261110-overview">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -28,23 +28,19 @@
 
       <p class="portal-preview" id="preview-banner" role="status" hidden></p>
 
-      <div class="portal-grid">
-        <section class="portal-card" id="project-card">
+      <section class="portal-card portal-overview" id="project-card" aria-label="Project overview">
+        <div class="portal-overview__top">
           <p class="portal-stat-label">Project</p>
-          <h2 id="tier-name" style="margin:0.35rem 0 0.5rem;font-size:1.35rem;">Loading…</h2>
-          <p><span id="status-badge" class="portal-badge portal-badge--muted">Loading…</span></p>
-          <p class="portal-muted" id="project-meta"></p>
-        </section>
-        <section class="portal-card" id="billing-card">
-          <p class="portal-stat-label">Billing</p>
-          <p class="portal-stat" id="billing-status">Loading…</p>
-          <p class="portal-muted" id="billing-note">Stripe status for your engagement.</p>
-        </section>
-      </div>
+          <span id="status-badge" class="portal-badge portal-badge--muted">Loading…</span>
+        </div>
+        <h2 id="tier-name" class="portal-overview__name">Loading…</h2>
+        <div class="portal-progress" id="progress-bar"></div>
+        <p class="portal-muted portal-overview__meta" id="project-meta"></p>
+        <p class="portal-overview__bill"><span class="portal-stat-label">Billing</span><strong id="billing-status">Loading…</strong></p>
+      </section>
 
       <section class="portal-card" id="progress-card" style="margin-top:1.25rem;" hidden aria-labelledby="progress-title">
-        <p class="portal-stat-label" id="progress-title">Project progress</p>
-        <div class="portal-progress" id="progress-bar"></div>
+        <p class="portal-stat-label" id="progress-title">Steps</p>
         <ol class="portal-timeline" id="timeline"></ol>
         <div id="updates-wrap" hidden>
           <p class="portal-stat-label" style="margin-top:1.5rem;">Latest updates from SWFT</p>
@@ -155,11 +151,10 @@
         var p = view.progress;
         var bar = SWFTPortal.qs("#progress-bar");
         var track = h("span", "portal-progress__track"); var fill = h("span"); fill.style.width = p.percent + "%"; track.appendChild(fill);
-        bar.replaceChildren(
-          h("p", "portal-progress__pct", p.percent + "%"),
-          track,
-          h("p", "portal-muted", p.done + " of " + p.total + " steps done" + (p.current ? " · Now: " + p.current : ""))
-        );
+        var row = h("div", "portal-progress__row");
+        row.append(h("p", "portal-progress__pct", p.percent + "%"), h("p", "portal-muted portal-progress__count", p.done + " of " + p.total + " steps done"));
+        bar.replaceChildren(row, track);
+        if (p.current) bar.append(h("p", "portal-progress__now", "Now: " + p.current));
         bar.setAttribute("role", "progressbar"); bar.setAttribute("aria-valuenow", String(p.percent)); bar.setAttribute("aria-valuemin", "0"); bar.setAttribute("aria-valuemax", "100");
         SWFTPortal.qs("#timeline").replaceChildren.apply(SWFTPortal.qs("#timeline"), view.milestones.map(function (m) {
           var li = h("li", "portal-timeline__item is-" + m.status);
