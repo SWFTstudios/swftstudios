@@ -36,17 +36,19 @@
 .admin-progress__bar span { display: block; height: 100%; background: var(--swft-signal, #ff5a36); border-radius: 6px; }
 .admin-progress small { opacity: 0.75; }
 .admin-tag { display: inline-block; margin-left: 0.4rem; padding: 0.05rem 0.5rem; border-radius: 999px; font-size: 0.72rem; background: var(--swft-ice, #c3cdfa); color: #0b0b0b; vertical-align: middle; }
-.admin-project { margin-top: 1.25rem; display: grid; gap: 0.9rem; }
+.admin-project { margin-top: 1.25rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.9rem; }
 .admin-project-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: flex-start; }
 .admin-project-title { margin: 0; font-size: 1.5rem; letter-spacing: -0.03em; }
 .admin-project-head p { margin: 0.3rem 0 0; }
 .admin-project-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .admin-project-actions a { text-decoration: none; }
 .admin-project-progress .admin-progress { max-width: 28rem; }
-/* Step cards share the client's glass look (tokens + orbs live in portal.css). */
+/* Step cards share the client's glass look (tokens + orbs live in portal.css).
+   Each card is one uniform row (grip, status dot, title, status pill, chevron);
+   details and controls open in an animated panel, so nothing is squeezed. */
 .admin-milestones {
-  list-style: none; margin: 0.5rem 0 0; padding: 1rem; display: grid; gap: 0.6rem;
-  position: relative; isolation: isolate; overflow: hidden; border-radius: 20px;
+  list-style: none; margin: 0.5rem 0 0; padding: 1rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.65rem;
+  position: relative; isolation: isolate; overflow: hidden; overflow: clip; border-radius: 20px;
 }
 .admin-milestones::before {
   content: ""; position: absolute; inset: -25%; z-index: -1; pointer-events: none;
@@ -57,45 +59,91 @@
   filter: blur(28px);
 }
 .admin-milestone {
-  display: flex; align-items: stretch; gap: 0.85rem; padding: 0.6rem 0.85rem 0.6rem 0.6rem; position: relative;
-  border-radius: 16px; border: 1px solid var(--glass-edge);
+  position: relative; border-radius: 16px; border: 1px solid var(--glass-edge);
   background: linear-gradient(135deg, var(--glass-a), var(--glass-b));
   box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
   -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%);
 }
 .admin-milestone.is-done { border-color: color-mix(in srgb, var(--swft-ice, #c3cdfa) 45%, var(--glass-edge)); }
-.admin-milestone.is-in_progress { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 60%, var(--glass-edge)); }
-.admin-milestone__body { flex: 1 1 auto; min-width: 0; padding: 0.15rem 0; }
-.admin-milestone.is-dragging { z-index: 2; transform: scale(1.015); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 var(--glass-hi); cursor: grabbing; }
-.admin-milestones.is-sorting { user-select: none; -webkit-user-select: none; }
-/* Drag tab: a small pill on the card's left edge with a dotted grip. */
+.admin-milestone.is-in_progress { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 60%, var(--glass-edge)); box-shadow: var(--glass-shadow), 0 0 24px rgba(255, 90, 54, 0.14), inset 0 1px 0 var(--glass-hi); }
+.admin-milestone.is-dragging { z-index: 2; transform: scale(1.015); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 var(--glass-hi); }
+.admin-milestones.is-sorting, .admin-milestones.is-sorting * { user-select: none; -webkit-user-select: none; cursor: grabbing; }
+
+/* The row: always one line, always the same height. */
+.admin-milestone__row { display: flex; align-items: stretch; min-height: 3.5rem; }
+
+/* Grip: part of the card, not a second component. A quiet strip on the left edge
+   separated by a hairline; the dots brighten on hover and while dragging. */
 .admin-grip {
-  flex: 0 0 auto; width: 1.45rem; align-self: stretch; min-height: 2.4rem; padding: 0; border-radius: 10px; cursor: grab;
-  display: grid; place-items: center;
-  border: 1px solid var(--glass-edge); color: inherit; touch-action: none; opacity: 0.75; transition: opacity 0.15s;
-  background: linear-gradient(180deg, var(--glass-a), var(--glass-b));
+  flex: 0 0 auto; width: 2.5rem; padding: 0; margin: 0; display: grid; place-items: center; cursor: grab;
+  background: transparent; border: 0; border-right: 1px solid var(--glass-edge); border-radius: 15px 0 0 15px;
+  color: var(--swft-text, #f0eeec); touch-action: none;
 }
-/* Six grip dots (2 x 3) drawn with one dot plus box-shadows. */
-.admin-grip::before {
-  content: ""; width: 3px; height: 3px; margin: -12px 6px 0 0; border-radius: 50%; background: currentColor;
+.admin-grip__dots {
+  width: 3px; height: 3px; margin: -12px 6px 0 0; border-radius: 50%; background: currentColor; opacity: 0.4; transition: opacity 0.15s;
   box-shadow: 6px 0 currentColor, 0 6px currentColor, 6px 6px currentColor, 0 12px currentColor, 6px 12px currentColor;
 }
-.admin-grip:hover, .admin-grip:focus-visible { opacity: 1; }
-.admin-grip:active, .admin-milestone.is-dragging .admin-grip { cursor: grabbing; opacity: 1; }
-.admin-grip:focus-visible { outline: 2px solid var(--swft-signal, #ff5a36); outline-offset: 2px; }
+.admin-grip:hover .admin-grip__dots, .admin-grip:focus-visible .admin-grip__dots, .admin-milestone.is-dragging .admin-grip__dots { opacity: 0.9; }
+.admin-grip:hover { background: linear-gradient(90deg, var(--glass-a), transparent); }
+.admin-grip:focus-visible { outline: 2px solid var(--swft-signal, #ff5a36); outline-offset: -2px; }
+
+/* Toggle: the rest of the row. */
+.admin-milestone__toggle {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 1rem 0.5rem 0.95rem;
+  background: transparent; border: 0; border-radius: 0 15px 15px 0; color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+.admin-milestone__toggle:hover { background: linear-gradient(90deg, transparent, var(--glass-a)); }
+.admin-milestone__toggle:focus-visible { outline: 2px solid var(--swft-signal, #ff5a36); outline-offset: -2px; }
+.admin-milestone__dot { flex: 0 0 auto; width: 0.8rem; height: 0.8rem; border-radius: 50%; border: 2px solid var(--swft-border); }
+.admin-milestone.is-done .admin-milestone__dot { background: var(--swft-ice, #c3cdfa); border-color: var(--swft-ice, #c3cdfa); }
+.admin-milestone.is-in_progress .admin-milestone__dot { background: var(--swft-signal, #ff5a36); border-color: var(--swft-signal, #ff5a36); box-shadow: 0 0 0 4px rgba(255, 90, 54, 0.2); }
+.admin-milestone__title { flex: 1 1 auto; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-milestone__chev { flex: 0 0 auto; width: 0.55rem; height: 0.55rem; border: solid currentColor; border-width: 0 2px 2px 0; opacity: 0.6; transform: translateY(-2px) rotate(45deg); transition: transform 0.25s ease; }
+.admin-milestone.is-open .admin-milestone__chev { transform: translateY(2px) rotate(-135deg); }
+
+/* Status pill (same wording and colours the client sees). */
+.admin-pill {
+  flex: 0 0 auto; padding: 0.18rem 0.6rem; border-radius: 999px; border: 1px solid var(--glass-edge);
+  font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; opacity: 0.85;
+}
+.admin-milestone.is-done .admin-pill { border-color: color-mix(in srgb, var(--swft-ice, #c3cdfa) 55%, transparent); color: var(--swft-ice, #c3cdfa); }
+.admin-milestone.is-in_progress .admin-pill { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 60%, transparent); color: var(--swft-signal, #ff5a36); opacity: 1; }
+
+/* Details: animated dropdown. Closed content is hidden from sight and from keyboard focus. */
+.admin-milestone__panel { display: grid; grid-template-rows: 0fr; }
+.admin-milestone.is-open .admin-milestone__panel { grid-template-rows: 1fr; }
+.admin-milestone__panel-inner { min-height: 0; overflow: hidden; visibility: hidden; padding: 0 1rem 0 3.45rem; }
+.admin-milestone.is-open .admin-milestone__panel-inner { visibility: visible; padding-bottom: 1rem; }
+.admin-milestone__detail { margin: 0 0 0.35rem; line-height: 1.5; }
+.admin-milestone__when { display: block; margin-bottom: 0.6rem; opacity: 0.65; }
+.admin-milestone__ctl { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.65rem; }
+.admin-milestone__ctl select { flex: 1 1 9rem; max-width: 14rem; min-height: 2.25rem; }
+.admin-milestone__ctl .admin-row-btn { flex: 0 0 auto; min-height: 2.25rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .admin-milestone { transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.2s ease; }
+  .admin-milestone__panel { transition: grid-template-rows 0.28s ease; }
+  .admin-milestone__panel-inner { transition: visibility 0s linear 0.28s, padding-bottom 0.28s ease; }
+  .admin-milestone.is-open .admin-milestone__panel-inner { transition: visibility 0s, padding-bottom 0.28s ease; }
+}
 .admin-sort-hint { margin: 0.25rem 0 0; font-size: 0.85rem; opacity: 0.7; }
-@media (prefers-reduced-motion: no-preference) { .admin-milestone { transition: transform 0.12s ease, box-shadow 0.12s ease; } }
-.admin-milestone p { margin: 0.2rem 0; }
-.admin-milestone small { opacity: 0.6; }
-.admin-milestone__ctl { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; flex: 0 0 auto; }
-@media (min-width: 641px) { .admin-milestone__ctl { flex-wrap: nowrap; } }
 .admin-milestone select, .admin-inline-form input {
   background: transparent; color: inherit; border: 1px solid var(--swft-border); border-radius: 999px; padding: 0.3rem 0.75rem; font: inherit;
 }
 .admin-milestone select option { background: var(--mf-surface); }
+@media (max-width: 480px) {
+  .portal-card.admin-project { padding: 1rem 0.75rem; }
+  .admin-milestones { padding: 0.5rem; gap: 0.5rem; border-radius: 16px; }
+  .admin-grip { width: 2.2rem; }
+  .admin-milestone__toggle { gap: 0.6rem; padding: 0.5rem 0.8rem 0.5rem 0.75rem; }
+  /* Narrow screens: the dot carries the status so the title gets the room.
+     The label stays in the accessibility tree and in the dropdown below. */
+  .admin-pill { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .admin-milestone__panel-inner { padding-left: 1rem; padding-right: 1rem; }
+  .admin-milestone__ctl select { flex-basis: 100%; max-width: none; }
+  .admin-milestone__ctl .admin-row-btn { flex: 1 1 0; }
+}
 .admin-inline-form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .admin-inline-form input[type="text"] { flex: 1 1 14rem; }
-@media (max-width: 640px) { .admin-milestone { flex-wrap: wrap; } .admin-milestone__ctl { flex-basis: 100%; padding-left: 2.55rem; } }
 
 /* Guides tab: results composer */
 .admin-guide-detail { margin-top: 1.25rem; scroll-margin-top: 6rem; }

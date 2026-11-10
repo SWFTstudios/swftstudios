@@ -162,7 +162,7 @@
     });
   }
 
-  var refocusId = null;
+  var refocusId = null, openIds = {}, openFor = null;
 
   /**
    * Drag-and-drop ordering with pointer events (mouse, touch and pen). The list
@@ -230,8 +230,16 @@
         ]),
       ]);
 
+      // Which step cards are open survives reloads (status change, edit, drag). A freshly opened
+      // project starts with its in-progress step open.
+      if (openFor !== v.project.id) {
+        openFor = v.project.id; openIds = {};
+        v.milestones.forEach(function (m) { if (m.status === "in_progress") openIds[m.id] = true; });
+      }
       var ms = v.progressReady
         ? el("ol", { class: "admin-milestones" }, v.milestones.map(function (m) {
+            var panelId = "ms-panel-" + m.id;
+            var isOpen = !!openIds[m.id];
             var sel = el("select", { "aria-label": "Status of " + m.title, onchange: function () {
               post({ action: "milestone_status", id: m.id, status: sel.value }).then(function (ok) { if (ok) reload(); });
             } }, ["upcoming", "in_progress", "done"].map(function (k) {
@@ -243,24 +251,41 @@
               e.preventDefault();
               refocusId = m.id;
               post({ action: "move_milestone", id: m.id, direction: e.key === "ArrowUp" ? "up" : "down" }).then(function (ok) { if (ok) reload(); });
-            } });
-            return el("li", { class: "admin-milestone is-" + m.status, "data-id": m.id }, [
-              grip,
-              el("div", { class: "admin-milestone__body" }, [el("strong", { text: m.title }), m.detail ? el("p", { class: "admin-muted", text: m.detail }) : null, m.dueDate ? el("small", { text: (m.status === "done" ? "Done " : "Due ") + (m.completedAt ? date(m.completedAt) : m.dueDate) }) : null]),
-              el("div", { class: "admin-milestone__ctl" }, [sel,
-                el("button", { class: "admin-row-btn", type: "button", text: "Edit", onclick: function () {
-                  var title = prompt("Step title (client sees this)", m.title);
-                  if (title == null || !title.trim()) return;
-                  var detail = prompt("Short description (optional, client sees this)", m.detail || "");
-                  if (detail == null) return;
-                  var due = prompt("Target date as YYYY-MM-DD (optional, leave empty for none)", m.dueDate || "");
-                  if (due == null) return;
-                  post({ action: "edit_milestone", id: m.id, title: title, detail: detail, dueDate: due.trim() }).then(function (ok) { if (ok) reload(); });
-                } }),
-                el("button", { class: "admin-row-btn", type: "button", text: "Remove", onclick: function () {
-                  if (confirm("Remove milestone \u201c" + m.title + "\u201d?")) post({ action: "delete_milestone", id: m.id }).then(function (ok) { if (ok) reload(); });
-                } })]),
+            } }, [el("span", { class: "admin-grip__dots", "aria-hidden": "true" })]);
+            var li = el("li", { class: "admin-milestone is-" + m.status + (isOpen ? " is-open" : ""), "data-id": m.id });
+            var toggle = el("button", { class: "admin-milestone__toggle", type: "button", "aria-expanded": isOpen ? "true" : "false", "aria-controls": panelId, title: m.title, onclick: function () {
+              var open = !li.classList.contains("is-open");
+              li.classList.toggle("is-open", open);
+              toggle.setAttribute("aria-expanded", open ? "true" : "false");
+              if (open) openIds[m.id] = true; else delete openIds[m.id];
+            } }, [
+              el("span", { class: "admin-milestone__dot", "aria-hidden": "true" }),
+              el("span", { class: "admin-milestone__title", text: m.title }),
+              el("span", { class: "admin-pill", text: STATUS_LABEL[m.status] }),
+              el("span", { class: "admin-milestone__chev", "aria-hidden": "true" }),
             ]);
+            var when = m.dueDate ? (m.status === "done" ? "Done " : "Due ") + (m.completedAt ? date(m.completedAt) : m.dueDate) : "";
+            li.append(
+              el("div", { class: "admin-milestone__row" }, [grip, toggle]),
+              el("div", { class: "admin-milestone__panel", id: panelId }, [el("div", { class: "admin-milestone__panel-inner" }, [
+                m.detail ? el("p", { class: "admin-milestone__detail", text: m.detail }) : el("p", { class: "admin-milestone__detail admin-muted", text: "No description." }),
+                when ? el("small", { class: "admin-milestone__when", text: when }) : null,
+                el("div", { class: "admin-milestone__ctl" }, [sel,
+                  el("button", { class: "admin-row-btn", type: "button", text: "Edit", onclick: function () {
+                    var title = prompt("Step title (client sees this)", m.title);
+                    if (title == null || !title.trim()) return;
+                    var detail = prompt("Short description (optional, client sees this)", m.detail || "");
+                    if (detail == null) return;
+                    var due = prompt("Target date as YYYY-MM-DD (optional, leave empty for none)", m.dueDate || "");
+                    if (due == null) return;
+                    post({ action: "edit_milestone", id: m.id, title: title, detail: detail, dueDate: due.trim() }).then(function (ok) { if (ok) reload(); });
+                  } }),
+                  el("button", { class: "admin-row-btn", type: "button", text: "Remove", onclick: function () {
+                    if (confirm("Remove milestone \u201c" + m.title + "\u201d?")) post({ action: "delete_milestone", id: m.id }).then(function (ok) { if (ok) reload(); });
+                  } })]),
+              ])]),
+            );
+            return li;
           }))
         : notice("Apply migration 0004 to track milestones and updates.");
       if (v.progressReady) enableReorder(ms, v.project.id, reload);
@@ -294,7 +319,7 @@
           head,
           el("div", { class: "admin-project-progress" }, [progressBar(v.progress)]),
           el("p", { class: "portal-stat-label", text: "Milestones (client sees these)" }),
-          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the dotted tab on a card to reorder. The client's dashboard updates right away." }) : null,
+          v.progressReady ? el("p", { class: "admin-sort-hint", text: "Drag the grip on the left of a card to reorder. Tap a card to see its details. The client's dashboard updates right away." }) : null,
           ms, v.progressReady ? addMs : null,
           el("p", { class: "portal-stat-label", text: "Updates (client sees these)" }), v.progressReady ? addUp : null,
           el("div", {}, ups),

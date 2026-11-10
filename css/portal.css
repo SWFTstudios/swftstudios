@@ -244,8 +244,8 @@
   }
 }
 .portal-timeline {
-  list-style: none; margin: 0; padding: 1rem; display: grid; gap: 0.75rem;
-  position: relative; isolation: isolate; overflow: hidden; border-radius: 20px;
+  list-style: none; margin: 0; padding: 1rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.75rem;
+  position: relative; isolation: isolate; overflow: hidden; overflow: clip; border-radius: 20px;
 }
 .portal-timeline::before {
   content: ""; position: absolute; inset: -25%; z-index: -1; pointer-events: none;
@@ -274,9 +274,19 @@
 .portal-timeline__item.is-in_progress { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 60%, var(--glass-edge)); box-shadow: var(--glass-shadow), 0 0 0 1px rgba(255, 90, 54, 0.12), 0 0 28px rgba(255, 90, 54, 0.18), inset 0 1px 0 var(--glass-hi); }
 .portal-timeline__item.is-in_progress::before { background: var(--swft-signal, #ff5a36); border-color: var(--swft-signal, #ff5a36); box-shadow: 0 0 0 4px rgba(255, 90, 54, 0.2); }
 .portal-timeline__item.is-upcoming { opacity: 0.88; }
-.portal-timeline__top { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.portal-timeline__status { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; }
-.portal-timeline__item.is-in_progress .portal-timeline__status { color: var(--swft-signal, #ff5a36); opacity: 1; }
+.portal-timeline__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; flex-wrap: nowrap; }
+.portal-timeline__top strong { flex: 1 1 auto; min-width: 0; line-height: 1.35; overflow-wrap: break-word; }
+.portal-timeline__status { flex: 0 0 auto; padding: 0.18rem 0.6rem; border-radius: 999px; border: 1px solid var(--glass-edge); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; opacity: 0.85; white-space: nowrap; }
+.portal-timeline__item.is-done .portal-timeline__status { border-color: color-mix(in srgb, var(--swft-ice, #c3cdfa) 55%, transparent); color: var(--swft-ice, #c3cdfa); }
+.portal-timeline__item.is-in_progress .portal-timeline__status { border-color: color-mix(in srgb, var(--swft-signal, #ff5a36) 60%, transparent); color: var(--swft-signal, #ff5a36); opacity: 1; }
 .portal-timeline__item p { margin: 0.25rem 0; }
+/* Phones: more room for text, and the status pill always sits under the title so every card has the same shape. */
+@media (max-width: 480px) {
+  #progress-card.portal-card { padding: 1.1rem 0.75rem; }
+  .portal-timeline { padding: 0.5rem; gap: 0.6rem; border-radius: 16px; }
+  .portal-timeline__item { padding: 0.9rem 0.9rem 0.9rem 2.4rem; }
+  .portal-timeline__item::before { left: 0.9rem; }
+  .portal-timeline__top { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+}
 .portal-update { border-top: 1px solid var(--swft-border); padding: 0.75rem 0; }
 .portal-update p { margin: 0.25rem 0 0; white-space: pre-wrap; }
