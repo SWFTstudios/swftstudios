@@ -201,3 +201,6 @@
 .admin-pcard__why { color: var(--swft-signal, #ff5a36); font-weight: 600; }
 .admin-schedule { align-items: center; margin-bottom: 1.25rem; }
 .admin-schedule .admin-milestone__date { flex: 1 1 12rem; }
+.admin-cal { margin: 0.25rem 0 1rem; }
+.admin-cal__head { margin-bottom: 0.75rem; }
+.admin-cal__head .portal-cal__eta { margin-top: 0; }

@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://www.swftstudios.com/portal/dashboard.html">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
   <link rel="stylesheet" href="/css/page-shell.css?v=20261105-r2">
-  <link rel="stylesheet" href="/css/portal.css?v=20261110-cal">
+  <link rel="stylesheet" href="/css/portal.css?v=20261110-cal2">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
 </head>
 <body class="ps-page portal-page">
@@ -61,7 +61,7 @@
             <li class="is-today">Today</li>
           </ul>
         </div>
-        <div class="portal-cal__grid" id="schedule-grid"></div>
+        <div id="schedule-cal"></div>
       </section>
 
       <section class="portal-card" id="progress-card" style="margin-top:1.25rem;" hidden aria-labelledby="progress-title">
@@ -105,6 +105,7 @@
   <script src="/js/swft-analytics.js?v=20261104-ga4"></script>
   <script src="/js/portal.js?v=20260930b"></script>
   <script src="/js/portal-files.js?v=20261110-files"></script>
+  <script src="/js/portal-calendar.js?v=20261110-cal2"></script>
   <script>
     (function () {
       function statusBadge(status, billingKind) {
@@ -182,90 +183,17 @@
       }
       var LABEL = { done: "Done", in_progress: "In progress", upcoming: "Up next" };
 
-      // ---------- Schedule calendar ----------
-      function localDay(s) {
-        if (!s) return null;
-        var ymd = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
-        var d = ymd ? new Date(+ymd[1], +ymd[2] - 1, +ymd[3]) : new Date(String(s).replace(" ", "T") + (/T|Z/.test(s) ? "" : "Z"));
-        if (isNaN(d)) return null;
-        d.setHours(0, 0, 0, 0);
-        return d;
-      }
-      function keyOf(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
-      function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
-      function longDay(d) { return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }); }
-
+      // ---------- Schedule calendar (js/portal-calendar.js) ----------
+      var cal = null, filesMounted = false;
       function renderSchedule(milestones) {
-        var items = milestones.map(function (m) {
-          return { m: m, d: localDay(m.status === "done" ? m.completedAt : m.dueDate) };
-        }).filter(function (x) { return x.d; });
         var card = SWFTPortal.qs("#schedule-card");
-        if (!items.length) { card.hidden = true; return; }
+        if (!milestones.length) { card.hidden = true; return; }
         card.hidden = false;
-
-        var today = new Date(); today.setHours(0, 0, 0, 0);
-        var first = items.reduce(function (a, x) { return x.d < a ? x.d : a; }, today);
-        var open = milestones.filter(function (m) { return m.status !== "done"; });
-        var last = items.reduce(function (a, x) { return x.d > a ? x.d : a; }, first);
-        var finish = open.length
-          ? items.filter(function (x) { return x.m.status !== "done"; }).reduce(function (a, x) { return !a || x.d > a ? x.d : a; }, null)
-          : null;
-
-        var eta = SWFTPortal.qs("#schedule-eta"), sub = SWFTPortal.qs("#schedule-sub");
-        if (!open.length) {
-          eta.textContent = "All steps complete";
-          sub.textContent = "Finished " + longDay(last) + ".";
-        } else if (finish) {
-          var days = Math.round((finish - today) / 864e5);
-          eta.textContent = "Estimated completion: " + finish.toLocaleDateString([], { month: "long", day: "numeric" });
-          sub.textContent = days > 1 ? days + " days to go" : days === 1 ? "1 day to go" : days === 0 ? "Due today" : "Wrapping up";
-          if (open.length > items.filter(function (x) { return x.m.status !== "done"; }).length) sub.textContent += " · some steps don't have a date yet";
-        } else {
-          eta.textContent = "Dates coming soon";
-          sub.textContent = "We'll add target dates to your steps shortly.";
-        }
-
-        var byDay = {};
-        items.forEach(function (x) { (byDay[keyOf(x.d)] = byDay[keyOf(x.d)] || []).push(x.m); });
-        var end = finish && finish > last ? finish : last;
-        if (today > end) end = today;
-        var gridStart = addDays(first, -first.getDay());
-        var gridEnd = addDays(end, 6 - end.getDay());
-
-        var grid = SWFTPortal.qs("#schedule-grid");
-        var nodes = [];
-        var base = new Date(2026, 0, 4); // a Sunday
-        for (var w = 0; w < 7; w++) {
-          nodes.push(h("div", "portal-cal__dow", addDays(base, w).toLocaleDateString([], { weekday: "short" })));
-        }
-        for (var d = gridStart, i = 0; d <= gridEnd; d = addDays(d, 1), i++) {
-          var steps = byDay[keyOf(d)] || [];
-          var cls = "portal-cal__day";
-          if (d < first || d > end) cls += " is-outside";
-          if (d < today) cls += " is-past";
-          if (+d === +today) cls += " is-today";
-          if (finish && d >= today && d <= finish) cls += " is-window";
-          if (finish && +d === +finish) cls += " is-finish";
-          if (steps.length) cls += " has-steps";
-          var cell = h("div", cls);
-          var num = d.getDate() === 1 || i === 0 ? d.toLocaleDateString([], { month: "short", day: "numeric" }) : String(d.getDate());
-          cell.append(h("span", "portal-cal__num", num));
-          if (+d === +today) cell.append(h("span", "portal-cal__tag", "Today"));
-          if (steps.length) {
-            cell.setAttribute("aria-label", longDay(d) + ": " + steps.map(function (m) { return m.title + " (" + (LABEL[m.status] || m.status) + ")"; }).join(", "));
-            var ul = h("ul", "portal-cal__steps");
-            steps.forEach(function (m) {
-              var li = h("li", "portal-cal__step is-" + m.status);
-              li.append(h("span", "portal-cal__step-name", m.title));
-              ul.append(li);
-            });
-            cell.append(ul);
-          } else {
-            cell.setAttribute("aria-hidden", "true");
-          }
-          nodes.push(cell);
-        }
-        grid.replaceChildren.apply(grid, nodes);
+        var s = SWFTCalendar.summary(milestones);
+        SWFTPortal.qs("#schedule-eta").textContent = s.eta;
+        SWFTPortal.qs("#schedule-sub").textContent = s.sub;
+        if (cal) cal.update(milestones);
+        else cal = SWFTCalendar.mount(SWFTPortal.qs("#schedule-cal"), { milestones: milestones });
       }
 
       // Milestones + updates (from /api/portal/project, or the owner's preview).
@@ -293,6 +221,9 @@
           return li;
         }));
         SWFTPortal.qs("#files-card").hidden = false;
+        // Files mount once: a background refresh must not reset an upload in progress.
+        if (filesMounted) return;
+        filesMounted = true;
         if (view.preview) SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/admin/files", project: view.project.id, admin: true, readOnly: true });
         else SWFTFiles.mount(SWFTPortal.qs("#files-box"), { base: "/api/portal/files" });
         if (view.preview) renderNotes((view.updates || []).map(function (u) { return { id: u.id, body: u.body, createdAt: u.createdAt, unread: false }; }), 0);
@@ -425,12 +356,18 @@
         statusBadge(data.project.status);
         loadNotes().then(function () { if (location.hash === "#notifications") selectTab("notifications"); });
 
-        SWFTPortal.api("/api/portal/project").then(function (r) {
-          if (r.res.ok && r.data && r.data.view) {
-            renderProgress(r.data.view);
-            statusBadge(r.data.view.project.status, r.data.view.project.billing);
-          }
-        });
+        function loadProject() {
+          return SWFTPortal.api("/api/portal/project").then(function (r) {
+            if (r.res.ok && r.data && r.data.view) {
+              renderProgress(r.data.view);
+              statusBadge(r.data.view.project.status, r.data.view.project.billing);
+            }
+          });
+        }
+        loadProject();
+        // Pick up changes SWFT makes (dates, steps) when the client comes back to the tab, and every few minutes.
+        document.addEventListener("visibilitychange", function () { if (!document.hidden) loadProject(); });
+        setInterval(function () { if (!document.hidden) loadProject(); }, 180000);
 
         var metrics = await SWFTPortal.api("/api/portal/metrics");
         if (metrics.data && metrics.data.metrics) {
