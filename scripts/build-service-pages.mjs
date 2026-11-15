@@ -221,8 +221,7 @@ function page(s, data, offers) {
         <p class="mf-lead">${s.lead}</p>
         <div class="mf-actions mf-statement__actions">
           <a class="mf-btn" href="${BOOK_URL}" target="_blank" rel="noopener">Book a free strategy call <span class="mf-arrow" aria-hidden="true">↗</span></a>
-          <a class="mf-btn mf-btn--ghost" href="/build.html?service=${s.slug}">Customize a package ↗</a>
-          <a class="mf-link" href="/contact.html?service=${s.slug}">Request a quote</a>
+          <a class="mf-btn mf-btn--ghost" href="/build.html?service=${s.slug}">Customize a package ↗</a><a class="mf-link" href="/contact.html?service=${s.slug}">Request a quote</a>
         </div>
       </div>
     </section>
@@ -239,7 +238,7 @@ function page(s, data, offers) {
       </div>
     </section>
 
-    ${swbProof}<section class="mf-section mf-section--tight" aria-labelledby="included-title">
+${swbProof}    <section class="mf-section mf-section--tight" aria-labelledby="included-title">
       <div class="mf-wrap">
         <div class="mf-head">
           <p class="mf-label">(Scope)</p>
