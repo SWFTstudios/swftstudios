@@ -58,7 +58,7 @@ test("site search has safe targets and descriptive labels", () => {
   assert.equal(new Set(ids).size, ids.length);
   for (const entry of search) {
     assert.ok(entry.title && entry.kind);
-    assert.match(entry.url, /^(\/[^/]|https:\/\/cal\.com\/swftstudios\/)/);
+    assert.match(entry.url, /^(\/($|[^/])|https:\/\/cal\.com\/swftstudios\/)/);
   }
   assert.ok(search.some(x => x.url.includes("build.html?service=websites&goal=splash")));
 });
