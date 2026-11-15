@@ -90,12 +90,8 @@
               <label for="contact-challenge">What are you looking to accomplish? <span class="req">*</span></label>
               <textarea id="contact-challenge" name="challenge" required placeholder="e.g. A new website that helps customers book"></textarea>
             </div>
-            <div class="mf-field">
-              <label for="contact-outcome">What does success look like? (optional)</label>
-              <textarea id="contact-outcome" name="desired_outcome" placeholder="e.g. 10 more bookings a month"></textarea>
-            </div>
-
             <details class="mf-field" style="margin-block:1rem"><summary style="cursor:pointer">Optional project details (budget, timeline, goals)</summary>
+            <div class="mf-field"><label for="contact-outcome">What does success look like?</label><textarea id="contact-outcome" name="desired_outcome" placeholder="e.g. 10 more bookings a month"></textarea></div>
             <fieldset class="mf-field">
               <legend>Budget</legend>
               <div class="mf-chips" id="contact-budget">
@@ -247,12 +243,13 @@
               form.reset();
               showStatus("Project sent. We'll be in touch within one business day.", "success");
               if (window.SWFTAnalytics) {
-                window.SWFTAnalytics.track("lead_form_submit", {
+                window.SWFTAnalytics.track("contact_form_submit", {
                   page_path: location.pathname,
                   form_name: "contact",
                   service_interest: serviceNeeded,
                   budget_range: payload.budget || "",
                 });
+                window.SWFTAnalytics.track("lead_form_submit", {page_path: location.pathname, form_name: "contact", service_interest: serviceNeeded});
               }
             } else {
               showStatus("Something went wrong. Email us at hello@swftstudios.com.", "error");
