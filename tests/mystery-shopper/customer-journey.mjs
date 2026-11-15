@@ -47,12 +47,13 @@ await step("Configure website and add-ons",async()=>{
   await page.locator('[data-extra="extra-pages"]').click();
   const receipt=compact(await page.locator("#swb-summary").innerText());
   await snap("03-builder");
-  if(!receipt.includes("Additional website page")||!receipt.includes("$575"))throw Error("Incorrect builder receipt: "+receipt);
+  const receiptAccurate=receipt.includes("Additional website page")&&receipt.includes("$575");
   await page.locator("#swb-add-cart").click();
   await page.waitForURL(u=>u.pathname==="/cart.html",{timeout:25000});
   const cart=compact(await page.locator("body").innerText());
   await snap("04-cart");
   if(!cart.includes("Additional website page")||!cart.includes("Website Only"))throw Error("Cart missing selected items: "+cart);
+  if(!receiptAccurate)throw Error("Builder receipt omits selected extra, while cart displays it: "+receipt+" / CART "+cart.slice(0,500));
   return {receipt,cart:cart.slice(0,800),paid:false};
 });
 await step("Inquiry form as first-time customer",async()=>{
@@ -82,7 +83,15 @@ await step("Discovery calendar reachable",async()=>{
     const text=compact(await p.locator("body").innerText());
     await snap("07-calendar",p);
     if(!/swft|meeting|select|calendar|booking|30 min/i.test(text))throw Error("Booking calendar did not load: "+text);
-    return {status:response.status(),headings:headings.map(compact),buttons:buttons.map(compact),body:text.slice(0,1000),bookingConfirmed:false};
+    const slots=p.getByRole("button",{name:/^(8:30|9:00|9:30|10:00|10:30|11:00|11:30)pm$/i});
+    let form={selectedSlot:false};
+    if(await slots.count()){
+      await slots.first().click();
+      await pause(900);
+      await snap("08-calendar-selected",p);
+      form={selectedSlot:true,url:p.url(),body:compact(await p.locator("body").innerText()).slice(0,1100),inputs:await p.locator("input").evaluateAll(nodes=>nodes.map(n=>({name:n.name,type:n.type,placeholder:n.placeholder})).slice(0,20)),buttons:(await p.locator("button").allTextContents()).map(compact).slice(-20)};
+    }
+    return {status:response.status(),headings:headings.map(compact),buttons:buttons.map(compact),body:text.slice(0,1000),form,bookingConfirmed:false};
   }finally{await p.close();}
 });
 await fs.writeFile(out+"/result.json",JSON.stringify({root,submit,steps,errors},null,2));
