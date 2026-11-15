@@ -1,0 +1,28 @@
+name: SWFT funnel smoke checks
+on:
+  pull_request:
+    paths:
+      - "index.html"
+      - "campaigns/**"
+      - "scripts/build-campaign-pages.mjs"
+      - "js/funnel-attribution.js"
+      - "css/conversion-funnel.css"
+      - "tests/funnel/**"
+      - "data/services.json"
+      - "data/pricing.json"
+      - "package.json"
+  workflow_dispatch:
+jobs:
+  verify-funnel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check funnel markup and CTAs
+        run: npm run test:funnel
+      - name: Verify generated campaign pages are up to date
+        run: |
+          npm run build:campaigns
+          git diff --exit-code -- campaigns/

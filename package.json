@@ -19,7 +19,9 @@
     "build:icons": "node scripts/build-app-icons.mjs",
     "build:payments": "node scripts/build-payments.mjs && node scripts/build-book-pages.mjs",
     "stripe:sync": "node scripts/stripe-sync.mjs && npm run build:payments",
-    "build:guide-pdf": "node scripts/build-growth-guide-pdf.mjs"
+    "build:guide-pdf": "node scripts/build-growth-guide-pdf.mjs",
+    "build:campaigns": "node scripts/build-campaign-pages.mjs",
+    "test:funnel": "node --test tests/funnel/*.test.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",
