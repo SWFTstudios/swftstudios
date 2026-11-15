@@ -39,6 +39,10 @@ jobs:
         run: |
           npm run build:campaigns
           git diff --exit-code -- campaigns/
+      - name: Verify indexed service pages regenerate with builder links and proof
+        run: |
+          npm run build:services
+          git diff --exit-code -- websites.html apps.html software.html marketing.html content.html automations.html analytics.html
       - name: Verify server-side add-on pricing, builder and search index
         run: npm run test:commerce
       - name: Verify search index is generated from current data
