@@ -32,6 +32,7 @@ export async function onRequestPost(context) {
   }
 
   const cart = priceCart(body.items);
+  if (cart.tooMany || cart.unknownIds.length || cart.invalidAddons.length) return json({ ok: false, error: "Some items need a qualifying base package or are no longer available. Please review your cart before checking out." }, 400);
   if (!cart.lines.length) return json({ ok: false, error: "Your cart is empty." }, 400);
   const email = str(body.email, 320).toLowerCase();
   const name = str(body.name, 120);
