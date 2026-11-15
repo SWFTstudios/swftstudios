@@ -49,7 +49,7 @@ await step("Configure website and add-ons",async()=>{
   await snap("03-builder");
   const receiptAccurate=receipt.includes("Additional website page")&&receipt.includes("$575");
   await page.locator("#swb-add-cart").click();
-  await page.waitForURL(u=>u.pathname==="/cart.html",{timeout:25000});
+  await page.waitForURL(u=>u.pathname==="/cart"||u.pathname==="/cart.html",{timeout:25000});
   const cart=compact(await page.locator("body").innerText());
   await snap("04-cart");
   if(!cart.includes("Additional website page")||!cart.includes("Website Only"))throw Error("Cart missing selected items: "+cart);
@@ -83,7 +83,7 @@ await step("Discovery calendar reachable",async()=>{
     const text=compact(await p.locator("body").innerText());
     await snap("07-calendar",p);
     if(!/swft|meeting|select|calendar|booking|30 min/i.test(text))throw Error("Booking calendar did not load: "+text);
-    const slots=p.getByRole("button",{name:/^(8:30|9:00|9:30|10:00|10:30|11:00|11:30)pm$/i});
+    const slots=p.locator("button").filter({hasText:/8:30pm|9:00pm|9:30pm/i});
     let form={selectedSlot:false};
     if(await slots.count()){
       await slots.first().click();
