@@ -50,9 +50,9 @@ test("mobile hero leaves a skyline break and uses shorter copy",()=>{
   const html=read("index.html");
   const css=read("css/conversion-funnel.css");
   assert.match(html, /fnl-hero-copy--mobile/);
-  assert.match(css, /fnl-home-hero \\.mf-hero__foot/);
+  assert.match(css, /fnl-home-hero \.mf-hero__foot/);
   assert.match(css, /27svh/);
-  assert.match(css, /fnl-home-hero \\.mf-hero__media::after/);
+  assert.match(css, /fnl-home-hero \.mf-hero__media::after/);
 });
 test("navigation renders a magnifying-glass search field and single-line menu actions",()=>{
   const js=read("js/swft-nav.js");
@@ -60,12 +60,12 @@ test("navigation renders a magnifying-glass search field and single-line menu ac
   const navCss=read("css/swft-nav.css");
   new Script(js, {filename:"swft-nav.js"});
   new Script(read("js/site-search.js"), {filename:"site-search.js"});
-  assert.match(js, /svg\\("search", "sn-search__icon"\\)/);
+  assert.match(js, /svg\("search", "sn-search__icon"\)/);
   assert.match(js, /sn-search__text/);
   assert.match(js, /sn-ptile--feature/);
   assert.match(js, /label: "Growth Guide"/);
-  assert.match(searchCss, /\\.sn-search__icon svg/);
-  assert.doesNotMatch(searchCss, /\\.sn-search span\\{display:none\\}/);
-  assert.match(navCss, /\\.sn-ptile--feature/);
-  assert.match(navCss, /\\.sn-panel-ghost > span:last-child/);
+  assert.match(searchCss, /\.sn-search__icon svg/);
+  assert.doesNotMatch(searchCss, /\.sn-search span\{display:none\}/);
+  assert.match(navCss, /\.sn-ptile--feature/);
+  assert.match(navCss, /\.sn-panel-ghost > span:last-child/);
 });
