@@ -1,0 +1,32 @@
+name: Live customer mystery shopper
+on:
+  pull_request:
+    paths:
+      - "tests/mystery-shopper/**"
+      - ".github/workflows/mystery-shopper.yml"
+  workflow_dispatch:
+jobs:
+  mobile-customer-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Chromium and Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test public SWFT site as a fictional mobile customer
+        env:
+          SWFT_TEST_URL: https://swftstudios.com
+          SWFT_TEST_SEND_INQUIRY: "0"
+        run: node tests/mystery-shopper/customer-journey.mjs
+      - name: Preserve test evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: swft-mobile-customer-audit
+          path: artifacts/mystery-shopper/
+          retention-days: 7
