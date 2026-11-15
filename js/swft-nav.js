@@ -164,11 +164,11 @@
     { label: "About",     href: "/about.html",    key: "about",     icon: "info" },
     { label: "Blog",      href: "/blog.html",     key: "blog",      icon: "doc" },
     { label: "Films",     href: "/visuals.html",  key: "visuals",   icon: "film" },
-    { label: "Build your package", href: "/build.html", key: "builder", icon: "tag" },
-    { label: "Contact",   href: "/contact.html",  key: "contact",   icon: "mail" }
+    { label: "Contact",   href: "/contact.html",  key: "contact",   icon: "mail" },
+    { label: "Build your package", href: "/build.html", key: "builder", icon: "tag" }
   ];
   var PANEL_FOOT = [
-    { label: "Free SWFT Growth Guide", href: "/growth-guide.html", key: "growth-guide", icon: "search" },
+    { label: "Growth Guide", href: "/growth-guide.html", key: "growth-guide", icon: "search" },
     { label: "Log in",            href: "/account.html", key: "account",      icon: "user" }
   ];
   // Older pages still say data-active="team" etc.
@@ -231,7 +231,7 @@
       '<div class="sn-ptiles">' +
         COMPANY.map(function (l) {
           var on = l.key === active;
-          return '<a class="sn-ptile' + (on ? " is-active" : "") + '" href="' + l.href + '"' + (on ? ' aria-current="page"' : "") + ">" + svg(l.icon, "sn-ptile__icon") + "<span>" + l.label + "</span></a>";
+          return '<a class="sn-ptile' + (l.key === "builder" ? " sn-ptile--feature" : "") + (on ? " is-active" : "") + ''" href="' + l.href + '"' + (on ? ' aria-current="page"' : "") + ">" + svg(l.icon, "sn-ptile__icon") + "<span>" + l.label + "</span></a>";
         }).join("") +
       "</div>" +
     "</section>";
@@ -280,7 +280,7 @@
           megaHTML() +
         "</div>" +
         '<div class="sn-actions">' +
-          '<button type="button" class="sn-search" data-swft-search-open aria-label="Search SWFT Studios">' + svg("search") + '<span>Search</span></button>' +
+          '<button type="button" class="sn-search" data-swft-search-open aria-label="Search SWFT Studios">' + svg("search", "sn-search__icon") + '<span class="sn-search__text">Search</span></button>' +
           '<a href="/account.html" class="sn-contact sn-login' + (active === "account" ? " is-active" : "") + '"' + (active === "account" ? ' aria-current="page"' : "") + ">Log in</a>" +
           '<a href="/contact.html" class="sn-contact' + (active === "contact" ? " is-active" : "") + '"' + (active === "contact" ? ' aria-current="page"' : "") + ">Contact</a>" +
           '<a href="' + CTA.href + '" class="sn-cta" target="_blank" rel="noopener">' + CTA.label + ARROW + "</a>" +
@@ -295,7 +295,7 @@
           '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
         "</div>" +
         '<div class="sn-panel-body">' +
-          '<button type="button" class="sn-panel-search" data-swft-search-open>' + svg("search") + '<span>Search services, packages and projects</span></button>' +
+          '<button type="button" class="sn-panel-search" data-swft-search-open>' + svg("search", "sn-panel-search__icon") + '<span>Search services, packages and projects</span></button>' +
           panelServicesHTML(active) +
           panelCompanyHTML(active) +
           '<div class="sn-panel-actions">' +
