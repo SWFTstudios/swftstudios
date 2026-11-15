@@ -150,6 +150,7 @@
 
   // Top bar (desktop), after the Services menu. Keys match each page's data-active.
   var LINKS = [
+    { label: "Build a package", href: "/build.html", key: "builder" },
     { label: "Work",     href: "/work.html",     key: "work" },
     { label: "Pricing",  href: "/pricing.html",  key: "pricing" },
     { label: "About",    href: "/about.html",    key: "about" },
@@ -163,6 +164,7 @@
     { label: "About",     href: "/about.html",    key: "about",     icon: "info" },
     { label: "Blog",      href: "/blog.html",     key: "blog",      icon: "doc" },
     { label: "Films",     href: "/visuals.html",  key: "visuals",   icon: "film" },
+    { label: "Build your package", href: "/build.html", key: "builder", icon: "tag" },
     { label: "Contact",   href: "/contact.html",  key: "contact",   icon: "mail" }
   ];
   var PANEL_FOOT = [
@@ -187,7 +189,7 @@
       '<div class="sn-mega__cols">' + cols + "</div>" +
       '<div class="sn-mega__foot">' +
         '<p><b>Not sure where to start?</b> Get a free plan for your business.</p>' +
-        '<span class="sn-mega__links"><a href="/services.html">All services <span aria-hidden="true">→</span></a>' +
+        '<span class="sn-mega__links"><a href="/services.html">All services <span aria-hidden="true">→</span></a><a href="/build.html">Build a package <span aria-hidden="true">→</span></a>' +
         '<a href="' + BOOK_URL + '" target="_blank" rel="noopener">Book a free strategy call <span aria-hidden="true">→</span></a></span>' +
       "</div>" +
     "</div>";
@@ -278,6 +280,7 @@
           megaHTML() +
         "</div>" +
         '<div class="sn-actions">' +
+          '<button type="button" class="sn-search" data-swft-search-open aria-label="Search SWFT Studios">' + svg("search") + '<span>Search</span></button>' +
           '<a href="/account.html" class="sn-contact sn-login' + (active === "account" ? " is-active" : "") + '"' + (active === "account" ? ' aria-current="page"' : "") + ">Log in</a>" +
           '<a href="/contact.html" class="sn-contact' + (active === "contact" ? " is-active" : "") + '"' + (active === "contact" ? ' aria-current="page"' : "") + ">Contact</a>" +
           '<a href="' + CTA.href + '" class="sn-cta" target="_blank" rel="noopener">' + CTA.label + ARROW + "</a>" +
@@ -292,6 +295,7 @@
           '<button class="sn-close" id="sn-close" aria-label="Close menu">×</button>' +
         "</div>" +
         '<div class="sn-panel-body">' +
+          '<button type="button" class="sn-panel-search" data-swft-search-open>' + svg("search") + '<span>Search services, packages and projects</span></button>' +
           panelServicesHTML(active) +
           panelCompanyHTML(active) +
           '<div class="sn-panel-actions">' +
@@ -534,7 +538,8 @@
     loadOnce("/js/mono.js?v=20261105-r2", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
     loadOnce("/js/swft-app.js?v=20261105-r2", "data-swft-app");
-    loadOnce("/js/cart.js?v=20261105-r2", "data-swft-cart");
+    loadOnce("/js/cart.js?v=20261115-bowl", "data-swft-cart");
+    loadOnce("/js/site-search.js?v=20261115", "data-swft-search");
     var annotate = function () { if (document.querySelector(".an-hl, .an-ul, .an-circle, .an-note")) loadOnce("/js/annotate.js?v=20261105-sketch", "data-swft-annotate"); };
     annotate();
     window.addEventListener("load", function () { setTimeout(annotate, 300); }); // marks rendered by scripts (pricing)

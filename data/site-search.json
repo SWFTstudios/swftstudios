@@ -1,0 +1,748 @@
+{
+  "entries": [
+    {
+      "id": "page-home",
+      "kind": "Page",
+      "title": "SWFT Studios",
+      "url": "/",
+      "description": "Websites, video, automation and marketing in NYC and North Jersey",
+      "keywords": "home agency studio"
+    },
+    {
+      "id": "page-builder",
+      "kind": "Tool",
+      "title": "Build your service package",
+      "url": "/build.html",
+      "description": "Choose a package, customize extras and see the price",
+      "keywords": "builder customize configure services addons add ons bowl quote"
+    },
+    {
+      "id": "page-pricing",
+      "kind": "Page",
+      "title": "Service pricing",
+      "url": "/pricing.html",
+      "description": "Published packages and starting prices",
+      "keywords": "prices cost rates budget"
+    },
+    {
+      "id": "page-work",
+      "kind": "Page",
+      "title": "SWFT portfolio",
+      "url": "/work.html",
+      "description": "Real client projects and case studies",
+      "keywords": "examples clients projects proof"
+    },
+    {
+      "id": "page-call",
+      "kind": "Call",
+      "title": "Book a free discovery call",
+      "url": "https://cal.com/swftstudios/swft-meeting",
+      "description": "Get help deciding what to build",
+      "keywords": "call discovery consult appointment calendar"
+    },
+    {
+      "id": "page-contact",
+      "kind": "Page",
+      "title": "Send a project inquiry",
+      "url": "/contact.html",
+      "description": "Describe your project and receive next steps",
+      "keywords": "contact email quote"
+    },
+    {
+      "id": "page-guide",
+      "kind": "Guide",
+      "title": "Free SWFT Growth Guide",
+      "url": "/growth-guide.html",
+      "description": "Find where customers get stuck",
+      "keywords": "free audit diagnose funnel growth"
+    },
+    {
+      "id": "service-websites",
+      "kind": "Service",
+      "title": "Websites",
+      "url": "/websites.html",
+      "description": "Fast, mobile-first websites on Webflow or Shopify that turn visitors into calls, bookings and sales. Websites start at $400 for up to 5 pages. SWFT Studios, NYC and North Jersey.",
+      "keywords": "Up to 5 pages, from $400 build A website that books the job."
+    },
+    {
+      "id": "service-apps",
+      "kind": "Service",
+      "title": "Mobile & Web Apps",
+      "url": "/apps.html",
+      "description": "SWFT Studios designs and builds iPhone, Android and web apps, customer portals and booking apps, from clickable prototype to app store launch.",
+      "keywords": "iPhone, Android and portals build Your business, in their pocket."
+    },
+    {
+      "id": "service-software",
+      "kind": "Service",
+      "title": "Custom Software & CRMs",
+      "url": "/software.html",
+      "description": "SWFT Studios builds custom CRMs, dashboards and internal tools that replace the stack of subscriptions your team works around. NYC and North Jersey.",
+      "keywords": "Replace the apps you rent build One system that fits how you work."
+    },
+    {
+      "id": "service-marketing",
+      "kind": "Service",
+      "title": "Paid Ads & Marketing",
+      "url": "/marketing.html",
+      "description": "Meta and Google ads, local SEO, Google Business Profile and AI search visibility for local businesses in NYC and North Jersey, tracked from click to booked job.",
+      "keywords": "Meta, Google and SEO grow Ads that pay for themselves."
+    },
+    {
+      "id": "service-content",
+      "kind": "Service",
+      "title": "Content & Creative",
+      "url": "/content.html",
+      "description": "On-site photography, short-form video, brand films, social media management and live streaming from SWFT Studios in NYC and North Jersey.",
+      "keywords": "Photo, video, social and live grow Content that stops the scroll."
+    },
+    {
+      "id": "service-automations",
+      "kind": "Service",
+      "title": "Automations",
+      "url": "/automations.html",
+      "description": "SWFT Studios connects your forms, CRM, calendar and inbox so missed-call text-backs, instant replies, reminders and review requests run on their own. From $750.",
+      "keywords": "Follow-up, reminders, reviews automate Busywork, on autopilot."
+    },
+    {
+      "id": "service-analytics",
+      "kind": "Service",
+      "title": "Tracking & Reporting",
+      "url": "/analytics.html",
+      "description": "SWFT Studios sets up GA4, conversion tracking and an automatic monthly report so you know which ads, posts and pages bring in calls, bookings and sales. From $500.",
+      "keywords": "Know what brings in customers automate Know what works."
+    },
+    {
+      "id": "offer-website-only",
+      "kind": "Package",
+      "title": "Website Only",
+      "url": "/book/website-only.html",
+      "description": "A responsive site of up to 5 pages using your content, with base features: one contact or booking path, basic SEO and launch support. Starting at $400",
+      "keywords": "Web Design & Development One-time Up to 5 responsive site pages (for example: Home, About, Services/Shop, Gallery and Contact) Design and development in Webflow or Shopify using your supplied branding, copy and photos 1 standard contact/lead form or link to an existing booking system"
+    },
+    {
+      "id": "offer-website-content-half",
+      "kind": "Package",
+      "title": "Website + Content Capture",
+      "url": "/book/website-content-half.html",
+      "description": "Up to 5 website pages plus a 3-hour shoot: 50 edited photos and 3 short-form videos included. Starting at $2,000",
+      "keywords": "Web Design & Development One-time Up to 5 responsive website pages built in Webflow or Shopify 1 on-location photo + video session lasting up to 3 hours at 1 business location 50 edited high-resolution photos from the included session"
+    },
+    {
+      "id": "offer-website-content-full",
+      "kind": "Package",
+      "title": "Website + Extended Content",
+      "url": "/book/website-content-full.html",
+      "description": "Up to 7 site pages and a 6-hour shoot covering up to 2 nearby locations, with 80 photos and 5 short videos. Starting at $3,000",
+      "keywords": "Web Design & Development One-time Up to 7 responsive website pages in Webflow or Shopify 1 full-day content session of up to 6 hours, including travel between up to 2 nearby locations 80 edited high-resolution photos from the included session"
+    },
+    {
+      "id": "offer-website-care",
+      "kind": "Package",
+      "title": "Website Care",
+      "url": "/book/website-care.html",
+      "description": "Keep your site fast, secure and current without learning the platform. We handle checks, updates and small edits every month. Starting at $150/mo",
+      "keywords": "Web Design & Development Monthly Up to 1 hour of edits each month: text, photos, prices, menus, team or blog posts Monthly health check: forms, booking links, checkout, mobile layout and page speed Uptime monitoring, with us alerted if the site goes down"
+    },
+    {
+      "id": "offer-app-design-sprint",
+      "kind": "Package",
+      "title": "App Design Sprint",
+      "url": "/book/app-design-sprint.html",
+      "description": "Turn an app idea into a clickable prototype your team, investors or developer can test and build from. Starting at $1,500",
+      "keywords": "App Design & Development One-time 1 discovery workshop (up to 2 hours) to define users, goals and core features User flow map for up to 3 core user journeys Up to 12 high-fidelity screens designed in Figma for mobile, desktop or both"
+    },
+    {
+      "id": "offer-app-mvp",
+      "kind": "Package",
+      "title": "App MVP Build",
+      "url": "/pricing.html#app-mvp",
+      "description": "A launch-ready first version of your web app with the core features customers need on day one. Starting at $6,000",
+      "keywords": "App Design & Development One-time Design and development of up to 5 core features agreed in a written scope Responsive web app that works on phones, tablets and desktop and can be added to a home screen User accounts with email sign-in and password reset"
+    },
+    {
+      "id": "offer-app-care",
+      "kind": "Package",
+      "title": "App Care & Support",
+      "url": "/book/app-care.html",
+      "description": "Monitoring, security updates, bug fixes and small improvements so your app keeps working as you grow. Starting at $400/mo",
+      "keywords": "App Design & Development Monthly Uptime and error monitoring with alerts Security patches and dependency updates each month Bug fixes for issues in the code we delivered"
+    },
+    {
+      "id": "offer-gbp-refresh",
+      "kind": "Package",
+      "title": "GBP Content Refresh",
+      "url": "/book/gbp-content-refresh.html",
+      "description": "Refresh your local presence with a 90-minute shoot, 15 edited photos, 1 short video and a Google Business Profile update. Starting at $400",
+      "keywords": "Marketing & Local SEO One-time 90-minute on-site photo + video session at 1 business location 15 edited high-resolution photos 1 edited vertical video (15 to 30 seconds)"
+    },
+    {
+      "id": "offer-ads-management",
+      "kind": "Package",
+      "title": "Ads Management",
+      "url": "/book/ads-management.html",
+      "description": "Meta ad campaigns on Facebook and Instagram, set up, run and optimized using the photos and video you already have. Starting at $500/mo",
+      "keywords": "Marketing & Local SEO Monthly Campaign strategy plus audience and location targeting for 1 active campaign Up to 4 ad variations per month built from your supplied photo and video Pixel and lead form checks before launch"
+    },
+    {
+      "id": "offer-full-growth-partner",
+      "kind": "Package",
+      "title": "Full Growth Partner",
+      "url": "/book/full-growth-partner.html",
+      "description": "Monthly creative and campaign support: 3-hour shoot, 30 edited photos, 3 short videos and 1 managed Meta campaign. Starting at $1,200/mo",
+      "keywords": "Marketing & Local SEO Monthly 1 on-site content session of up to 3 hours each month at 1 business location 30 edited high-resolution photos per month 3 edited vertical short-form videos (15 to 30 seconds each) per month"
+    },
+    {
+      "id": "offer-photo-session",
+      "kind": "Package",
+      "title": "Brand Photo Session",
+      "url": "/book/photo-session.html",
+      "description": "A 2-hour on-site shoot that gives you a library of real, on-brand photos to use everywhere. Starting at $450",
+      "keywords": "Photography One-time Pre-shoot call and a shot list planned with you Up to 2 hours of on-site photography at 1 location Proofing gallery of every usable frame, so you pick your favorites"
+    },
+    {
+      "id": "offer-product-photos",
+      "kind": "Package",
+      "title": "Product Photography",
+      "url": "/book/product-photos.html",
+      "description": "Clean, consistent product shots for your online store, menu or catalog. Starting at $400",
+      "keywords": "Photography One-time Up to 10 products photographed at your location 3 edited images per product: front, angle and detail on a clean background 3 styled lifestyle images featuring your products"
+    },
+    {
+      "id": "offer-photo-plan",
+      "kind": "Package",
+      "title": "Monthly Photo Plan",
+      "url": "/book/photo-plan.html",
+      "description": "A standing monthly shoot so your website, menu and feed always have fresh, real photos. Starting at $400/mo",
+      "keywords": "Photography Monthly 1 on-site shoot of up to 2 hours each month at 1 location Monthly shot list built around your promotions, new products and season 25 edited high-resolution photos per month, or up to 10 products in a product month"
+    },
+    {
+      "id": "offer-short-form-pack",
+      "kind": "Package",
+      "title": "Short-Form Video Pack",
+      "url": "/book/short-form-pack.html",
+      "description": "A shoot planned for Reels, TikTok and Shorts, edited into ready-to-post vertical videos. Starting at $600",
+      "keywords": "Videography One-time Up to 2 hours of on-site filming at 1 location Creative plan with hooks and a shot list built from what your audience already watches 4 edited vertical videos (15 to 45 seconds each)"
+    },
+    {
+      "id": "offer-brand-film",
+      "kind": "Package",
+      "title": "Brand Film",
+      "url": "/book/brand-film.html",
+      "description": "A polished story film for your homepage, pitch or launch, with cutdowns for social. Starting at $1,800",
+      "keywords": "Videography One-time Pre-production: creative brief, script outline and shot list Up to 4 hours of filming at up to 2 nearby locations 1 hero film (60 to 120 seconds) in widescreen"
+    },
+    {
+      "id": "offer-video-plan",
+      "kind": "Package",
+      "title": "Monthly Video Plan",
+      "url": "/book/video-plan.html",
+      "description": "Fresh short-form video every month, planned from what performed last month. Starting at $500/mo",
+      "keywords": "Videography Monthly 1 on-site shoot each month at 1 location Monthly creative plan with hooks and formats based on last month's results Edited vertical videos with captions, licensed music and your logo"
+    },
+    {
+      "id": "offer-social-setup",
+      "kind": "Package",
+      "title": "Social Profile Setup",
+      "url": "/book/social-setup.html",
+      "description": "Get your profiles looking right and a clear plan before you post, so every visit can turn into a follow. Starting at $350",
+      "keywords": "Social Media Management One-time Audit of up to 3 profiles (for example Instagram, Facebook and TikTok) Optimized bio, profile photo, links and contact buttons on each Highlight covers and a link-in-bio page"
+    },
+    {
+      "id": "offer-content-growth-retainer",
+      "kind": "Package",
+      "title": "Content + Growth Retainer",
+      "url": "/book/content-growth-retainer.html",
+      "description": "Monthly starter content: 60-minute shoot, 12 edited photos, 1 short video and 2 Google Business Profile posts. Starting at $450/mo",
+      "keywords": "Social Media Management Monthly 1 on-site photo + video visit of up to 60 minutes per month at 1 location 12 edited high-resolution photos per month 1 edited vertical short-form video (15 to 30 seconds) per month"
+    },
+    {
+      "id": "offer-managed-social",
+      "kind": "Package",
+      "title": "Managed Social",
+      "url": "/book/managed-social.html",
+      "description": "We plan, write and post your social content and answer comments, so your feed never goes quiet. Starting at $500/mo",
+      "keywords": "Social Media Management Monthly 2 platforms (for example Instagram and Facebook, or Instagram and TikTok) 12 posts per month, built from your content or SWFT shoot content Monthly content calendar you approve before anything goes live"
+    },
+    {
+      "id": "offer-livestream-single",
+      "kind": "Package",
+      "title": "Single-Camera Stream",
+      "url": "/book/livestream-single.html",
+      "description": "A clean, reliable stream for talks, classes, services and smaller events. Starting at $900",
+      "keywords": "Live Streaming One-time 1 camera operator and 1 HD camera Up to 2 hours of live coverage, plus setup and a test before you go live Audio from a wireless mic or your venue's sound system"
+    },
+    {
+      "id": "offer-livestream-multi",
+      "kind": "Package",
+      "title": "Multi-Camera Production",
+      "url": "/book/livestream-multi.html",
+      "description": "A broadcast-style show for conferences, launches, performances and big moments. Starting at $2,500",
+      "keywords": "Live Streaming One-time Up to 3 cameras with 2 operators and a live director switching shots Up to 4 hours of live coverage, plus setup and a pre-show test Audio mixed from your venue's sound board or our mics"
+    },
+    {
+      "id": "offer-livestream-recurring",
+      "kind": "Package",
+      "title": "Recurring Streams",
+      "url": "/book/livestream-recurring.html",
+      "description": "Weekly services, classes or shows streamed by the same crew at the same venue, every time. Starting at $1,800/mo",
+      "keywords": "Live Streaming Monthly 4 single-camera streams per month at the same venue, up to 2 hours each The same operator and a saved setup, so every week starts on time Stream to 1 destination, with your branded title card and name graphics"
+    },
+    {
+      "id": "offer-lead-follow-up",
+      "kind": "Package",
+      "title": "Lead Follow-up Automation",
+      "url": "/book/lead-follow-up.html",
+      "description": "Stop losing leads to missed calls and slow replies. We set up the texts, emails and reminders that follow up for you. Starting at $750",
+      "keywords": "Automations One-time Missed-call text-back for 1 business phone number Instant text and email reply to new form and booking leads 1 follow-up sequence (up to 3 emails and 2 texts) for leads who have not booked"
+    },
+    {
+      "id": "offer-automation-care",
+      "kind": "Package",
+      "title": "Automation Care",
+      "url": "/book/automation-care.html",
+      "description": "We watch your follow-up, booking and review automations, fix what breaks and tune messages from what is converting. Starting at $250/mo",
+      "keywords": "Automations Monthly Monthly check of every automation, form and booking path Fixes when a connected tool or integration changes Up to 2 hours a month of message, sequence or pipeline edits"
+    },
+    {
+      "id": "offer-analytics-setup",
+      "kind": "Package",
+      "title": "Tracking Setup",
+      "url": "/book/analytics-setup.html",
+      "description": "Connect your website, Google profile and ads so every call, form and sale is counted and has a source. Starting at $500",
+      "keywords": "Tracking & Reporting One-time Google Analytics 4 and Google Tag Manager set up on 1 website Up to 5 conversion events tracked (for example calls, forms, bookings and purchases) Meta Pixel installed, plus Conversions API where your platform supports it"
+    },
+    {
+      "id": "offer-analytics-reporting",
+      "kind": "Package",
+      "title": "Monthly Insights",
+      "url": "/book/analytics-reporting.html",
+      "description": "A monthly read on what is working, what slipped and the three moves that matter next. Starting at $250/mo",
+      "keywords": "Tracking & Reporting Monthly Dashboard kept current across your website, Google Business Profile, social and ads Monthly written report: traffic, leads by source, conversion rate and top content 3 prioritized recommendations each month"
+    },
+    {
+      "id": "build-websites-splash",
+      "kind": "Build a package",
+      "title": "Simple splash / coming-soon page",
+      "url": "/build.html?service=websites&goal=splash",
+      "description": "One focused page to introduce your business and capture interest.",
+      "keywords": "Websites & e-commerce Landing pages, service sites, stores Simple splash / coming-soon page"
+    },
+    {
+      "id": "build-websites-landing",
+      "kind": "Build a package",
+      "title": "Campaign / lead-generation landing page",
+      "url": "/build.html?service=websites&goal=landing",
+      "description": "One conversion-focused page for ads or appointments.",
+      "keywords": "Websites & e-commerce Landing pages, service sites, stores Campaign / lead-generation landing page"
+    },
+    {
+      "id": "build-websites-service",
+      "kind": "Build a package",
+      "title": "Full service-business website",
+      "url": "/build.html?service=websites&goal=service",
+      "description": "Up to 5 pages with clear service info and contact or booking.",
+      "keywords": "Websites & e-commerce Landing pages, service sites, stores Full service-business website"
+    },
+    {
+      "id": "build-websites-store",
+      "kind": "Build a package",
+      "title": "Online shop / selling products",
+      "url": "/build.html?service=websites&goal=store",
+      "description": "Small Shopify shop using your assets; up to five supplied products at the base scope.",
+      "keywords": "Websites & e-commerce Landing pages, service sites, stores Online shop / selling products"
+    },
+    {
+      "id": "build-websites-brand",
+      "kind": "Build a package",
+      "title": "Website plus original photo and video",
+      "url": "/build.html?service=websites&goal=brand",
+      "description": "Website and coordinated on-site creative production.",
+      "keywords": "Websites & e-commerce Landing pages, service sites, stores Website plus original photo and video"
+    },
+    {
+      "id": "build-websites-custom",
+      "kind": "Build a package",
+      "title": "Bigger or more complex website",
+      "url": "/build.html?service=websites&goal=custom",
+      "description": "More pages, migrations, unusual bookings or integrations need a scoped quote.",
+      "keywords": "Websites & e-commerce Landing pages, service sites, stores Bigger or more complex website"
+    },
+    {
+      "id": "build-apps-prototype",
+      "kind": "Build a package",
+      "title": "Clickable app prototype",
+      "url": "/build.html?service=apps&goal=prototype",
+      "description": "Validate an idea and user journey before building.",
+      "keywords": "Mobile & web apps Product design, prototypes, MVPs Clickable app prototype"
+    },
+    {
+      "id": "build-apps-mvp",
+      "kind": "Build a package",
+      "title": "Full app / first MVP",
+      "url": "/build.html?service=apps&goal=mvp",
+      "description": "Production features, accounts and integrations require a scoped estimate.",
+      "keywords": "Mobile & web apps Product design, prototypes, MVPs Full app / first MVP"
+    },
+    {
+      "id": "build-apps-portal",
+      "kind": "Build a package",
+      "title": "Customer portal / web app",
+      "url": "/build.html?service=apps&goal=portal",
+      "description": "Self-service accounts or dashboards; scope first.",
+      "keywords": "Mobile & web apps Product design, prototypes, MVPs Customer portal / web app"
+    },
+    {
+      "id": "build-software-crm",
+      "kind": "Build a package",
+      "title": "Custom CRM / pipeline",
+      "url": "/build.html?service=software&goal=crm",
+      "description": "Organize inquiries, customers and follow-up in a tailored system.",
+      "keywords": "Custom software & CRMs Dashboards, CRM and internal tools Custom CRM / pipeline"
+    },
+    {
+      "id": "build-software-operations",
+      "kind": "Build a package",
+      "title": "Operations dashboard",
+      "url": "/build.html?service=software&goal=operations",
+      "description": "Bring your process and tools together in one system.",
+      "keywords": "Custom software & CRMs Dashboards, CRM and internal tools Operations dashboard"
+    },
+    {
+      "id": "build-software-integrations",
+      "kind": "Build a package",
+      "title": "Custom integrations",
+      "url": "/build.html?service=software&goal=integrations",
+      "description": "Connect the tools you already use; discovery first.",
+      "keywords": "Custom software & CRMs Dashboards, CRM and internal tools Custom integrations"
+    },
+    {
+      "id": "build-marketing-local",
+      "kind": "Build a package",
+      "title": "Improve Google Business Profile",
+      "url": "/build.html?service=marketing&goal=local",
+      "description": "Refresh your local presence with content and a clear next step.",
+      "keywords": "Advertising & local marketing Google, Meta, Google Business Profile Improve Google Business Profile"
+    },
+    {
+      "id": "build-marketing-ads",
+      "kind": "Build a package",
+      "title": "Run a paid ads campaign",
+      "url": "/build.html?service=marketing&goal=ads",
+      "description": "Management for Meta or Google campaigns; ad spend is separate.",
+      "keywords": "Advertising & local marketing Google, Meta, Google Business Profile Run a paid ads campaign"
+    },
+    {
+      "id": "build-marketing-growth",
+      "kind": "Build a package",
+      "title": "Ongoing growth partner",
+      "url": "/build.html?service=marketing&goal=growth",
+      "description": "Content, ads and lead tracking together.",
+      "keywords": "Advertising & local marketing Google, Meta, Google Business Profile Ongoing growth partner"
+    },
+    {
+      "id": "build-marketing-strategy",
+      "kind": "Build a package",
+      "title": "Not sure what marketing will work",
+      "url": "/build.html?service=marketing&goal=strategy",
+      "description": "Review your funnel with us and choose a starting point.",
+      "keywords": "Advertising & local marketing Google, Meta, Google Business Profile Not sure what marketing will work"
+    },
+    {
+      "id": "build-content-photos",
+      "kind": "Build a package",
+      "title": "Photos of the business / team",
+      "url": "/build.html?service=content&goal=photos",
+      "description": "A planned photo shoot for digital marketing.",
+      "keywords": "Content & creative Photos, video, social and live Photos of the business / team"
+    },
+    {
+      "id": "build-content-products",
+      "kind": "Build a package",
+      "title": "Product photography",
+      "url": "/build.html?service=content&goal=products",
+      "description": "Images for your shop, catalog and ads.",
+      "keywords": "Content & creative Photos, video, social and live Product photography"
+    },
+    {
+      "id": "build-content-reels",
+      "kind": "Build a package",
+      "title": "Short-form social videos",
+      "url": "/build.html?service=content&goal=reels",
+      "description": "A pack of edited vertical videos.",
+      "keywords": "Content & creative Photos, video, social and live Short-form social videos"
+    },
+    {
+      "id": "build-content-film",
+      "kind": "Build a package",
+      "title": "Brand film",
+      "url": "/build.html?service=content&goal=film",
+      "description": "Tell your story with a produced hero video.",
+      "keywords": "Content & creative Photos, video, social and live Brand film"
+    },
+    {
+      "id": "build-content-social",
+      "kind": "Build a package",
+      "title": "Social media planning + management",
+      "url": "/build.html?service=content&goal=social",
+      "description": "A one-time setup or ongoing management.",
+      "keywords": "Content & creative Photos, video, social and live Social media planning + management"
+    },
+    {
+      "id": "build-content-live",
+      "kind": "Build a package",
+      "title": "Livestream an event",
+      "url": "/build.html?service=content&goal=live",
+      "description": "Single- or multi-camera event coverage.",
+      "keywords": "Content & creative Photos, video, social and live Livestream an event"
+    },
+    {
+      "id": "build-automations-followup",
+      "kind": "Build a package",
+      "title": "Automatically follow up with leads",
+      "url": "/build.html?service=automations&goal=followup",
+      "description": "New inquiries get a fast response without busywork.",
+      "keywords": "Automations Follow-up, reminders and workflows Automatically follow up with leads"
+    },
+    {
+      "id": "build-automations-maintenance",
+      "kind": "Build a package",
+      "title": "Maintain automations monthly",
+      "url": "/build.html?service=automations&goal=maintenance",
+      "description": "Health checks and improvements for existing automations.",
+      "keywords": "Automations Follow-up, reminders and workflows Maintain automations monthly"
+    },
+    {
+      "id": "build-automations-custom",
+      "kind": "Build a package",
+      "title": "Complex / multi-system workflows",
+      "url": "/build.html?service=automations&goal=custom",
+      "description": "Custom workflows and integrations need a discovery call.",
+      "keywords": "Automations Follow-up, reminders and workflows Complex / multi-system workflows"
+    },
+    {
+      "id": "build-analytics-setup",
+      "kind": "Build a package",
+      "title": "Set up conversion tracking",
+      "url": "/build.html?service=analytics&goal=setup",
+      "description": "Understand where calls, inquiries and purchases originate.",
+      "keywords": "Analytics & tracking GA4, conversion events, dashboards Set up conversion tracking"
+    },
+    {
+      "id": "build-analytics-report",
+      "kind": "Build a package",
+      "title": "Monthly reporting",
+      "url": "/build.html?service=analytics&goal=report",
+      "description": "Get recurring actionable reporting instead of raw dashboards.",
+      "keywords": "Analytics & tracking GA4, conversion events, dashboards Monthly reporting"
+    },
+    {
+      "id": "build-analytics-advanced",
+      "kind": "Build a package",
+      "title": "Advanced attribution / integrations",
+      "url": "/build.html?service=analytics&goal=advanced",
+      "description": "Specialized dashboards require a scoped quote.",
+      "keywords": "Analytics & tracking GA4, conversion events, dashboards Advanced attribution / integrations"
+    },
+    {
+      "id": "build-photography-onsite",
+      "kind": "Build a package",
+      "title": "Brand / team photography",
+      "url": "/build.html?service=photography&goal=onsite",
+      "description": "Portraits, location and service images.",
+      "keywords": "Photography On-site, product and monthly photos Brand / team photography"
+    },
+    {
+      "id": "build-photography-products",
+      "kind": "Build a package",
+      "title": "Product photography",
+      "url": "/build.html?service=photography&goal=products",
+      "description": "A catalog-ready shoot for products.",
+      "keywords": "Photography On-site, product and monthly photos Product photography"
+    },
+    {
+      "id": "build-photography-monthly",
+      "kind": "Build a package",
+      "title": "Monthly photo production",
+      "url": "/build.html?service=photography&goal=monthly",
+      "description": "Keep a predictable stream of fresh imagery.",
+      "keywords": "Photography On-site, product and monthly photos Monthly photo production"
+    },
+    {
+      "id": "build-videography-short",
+      "kind": "Build a package",
+      "title": "Short-form Reels / Shorts",
+      "url": "/build.html?service=videography&goal=short",
+      "description": "Capture several edited social videos in one shoot.",
+      "keywords": "Videography Short-form packs, brand films Short-form Reels / Shorts"
+    },
+    {
+      "id": "build-videography-film",
+      "kind": "Build a package",
+      "title": "Brand video / documentary",
+      "url": "/build.html?service=videography&goal=film",
+      "description": "Longer hero film and cutdowns.",
+      "keywords": "Videography Short-form packs, brand films Brand video / documentary"
+    },
+    {
+      "id": "build-videography-monthly",
+      "kind": "Build a package",
+      "title": "Monthly video plan",
+      "url": "/build.html?service=videography&goal=monthly",
+      "description": "Scheduled recurring content shoots.",
+      "keywords": "Videography Short-form packs, brand films Monthly video plan"
+    },
+    {
+      "id": "build-social-media-setup",
+      "kind": "Build a package",
+      "title": "Social media strategy & setup",
+      "url": "/build.html?service=social-media&goal=setup",
+      "description": "Profiles, templates and a posting plan.",
+      "keywords": "Social media Setup, content and ongoing management Social media strategy & setup"
+    },
+    {
+      "id": "build-social-media-manage",
+      "kind": "Build a package",
+      "title": "Full social management",
+      "url": "/build.html?service=social-media&goal=manage",
+      "description": "Regular posts and management.",
+      "keywords": "Social media Setup, content and ongoing management Full social management"
+    },
+    {
+      "id": "build-social-media-content",
+      "kind": "Build a package",
+      "title": "Monthly content creation",
+      "url": "/build.html?service=social-media&goal=content",
+      "description": "Fresh photos and video for your channels.",
+      "keywords": "Social media Setup, content and ongoing management Monthly content creation"
+    },
+    {
+      "id": "build-live-streaming-single",
+      "kind": "Build a package",
+      "title": "Simple live event",
+      "url": "/build.html?service=live-streaming&goal=single",
+      "description": "One camera, one destination, focused coverage.",
+      "keywords": "Live streaming Live events, multi-camera production Simple live event"
+    },
+    {
+      "id": "build-live-streaming-multi",
+      "kind": "Build a package",
+      "title": "Multi-camera production",
+      "url": "/build.html?service=live-streaming&goal=multi",
+      "description": "Larger events with multiple angles and crew.",
+      "keywords": "Live streaming Live events, multi-camera production Multi-camera production"
+    },
+    {
+      "id": "build-live-streaming-recurring",
+      "kind": "Build a package",
+      "title": "Recurring livestreams",
+      "url": "/build.html?service=live-streaming&goal=recurring",
+      "description": "A consistent stream each month.",
+      "keywords": "Live streaming Live events, multi-camera production Recurring livestreams"
+    },
+    {
+      "id": "work-brooklyn-steel",
+      "kind": "Case study",
+      "title": "Brooklyn Steel Co.",
+      "url": "/case-study/brooklyn-steel.html",
+      "description": "Shopify launch: product education, bundle builder, Brew Guides",
+      "keywords": "E-Commerce (Shopify) E-Commerce (Shopify) Sell a premium appliance online to people who have never used an espresso machine like it, and grow the size of each order. storefront"
+    },
+    {
+      "id": "work-manna-hydration",
+      "kind": "Case study",
+      "title": "Manna Hydration",
+      "url": "/case-study/manna-hydration.html",
+      "description": "Shopify store: seasonal drops, shop the look, blog and newsletter",
+      "keywords": "E-Commerce (Shopify) E-Commerce (Shopify) Turn a large, fast changing catalog and steady social traffic into repeat online sales. storefront"
+    },
+    {
+      "id": "work-thyme-and-table",
+      "kind": "Case study",
+      "title": "Thyme & Table",
+      "url": "/case-study/thyme-and-table.html",
+      "description": "Shopify store: mega menu, recipes, support hub",
+      "keywords": "E-Commerce (Shopify) E-Commerce (Shopify) Help shoppers find the right product quickly ==across hundreds of items==, and give them the confidence to buy higher priced appliances online. storefront"
+    },
+    {
+      "id": "work-tal-hydration",
+      "kind": "Case study",
+      "title": "TAL Hydration",
+      "url": "/case-study/tal-hydration.html",
+      "description": "Shopify store: product families, 2 in 1 story, Shop at Walmart links",
+      "keywords": "E-Commerce (Shopify) E-Commerce (Shopify) Give a retail first brand its own online home that builds loyalty and helps shoppers choose, ==whether they buy online or at Walmart==. storefront"
+    },
+    {
+      "id": "work-scribble-and-scribe",
+      "kind": "Case study",
+      "title": "Scribble & Scribe",
+      "url": "/case-study/scribble-and-scribe.html",
+      "description": "Custom Webflow store built for mobile and social traffic",
+      "keywords": "E-Commerce (Webflow) E-Commerce (Webflow) Sell online to a design conscious audience that ==judges the brand by how the website looks and feels==. website"
+    },
+    {
+      "id": "work-blurred-lines-entertainment",
+      "kind": "Case study",
+      "title": "Blurred Lines Entertainment",
+      "url": "/case-study/blurred-lines-entertainment.html",
+      "description": "Wedding video, Instagram ads and a homepage built for booking",
+      "keywords": "Content & Production Content & Production Show couples and event hosts the energy Yanko brings before they ever meet him, and make booking him the easy next step. website"
+    },
+    {
+      "id": "work-built-by-me-ez",
+      "kind": "Case study",
+      "title": "Built By Me EZ",
+      "url": "/case-study/built-by-me-ez.html",
+      "description": "Instagram to booked sessions on autopilot, plus online course sales",
+      "keywords": "Custom Website Build Custom Website Build Turn Instagram followers into booked, paid training clients and course buyers, without Omar managing his schedule by hand. website"
+    },
+    {
+      "id": "work-roller-reels",
+      "kind": "Case study",
+      "title": "Roller Reels",
+      "url": "/case-study/roller-reels.html",
+      "description": "Portfolio site rebuilt to turn viewers into project inquiries",
+      "keywords": "Content & Production Content & Production Get more and better fitting project inquiries from people who are already impressed by the work. website"
+    },
+    {
+      "id": "work-hawthorne-global-ministries",
+      "kind": "Case study",
+      "title": "Hawthorne Global Ministries",
+      "url": "/case-study/hawthorne-global-ministries.html",
+      "description": "Mission first website with clear paths to give and get involved",
+      "keywords": "Custom Website Build Custom Website Build Build trust with new visitors and ==turn interest into prayer, giving and long term involvement==. website"
+    },
+    {
+      "id": "work-alpha-ministries-international",
+      "kind": "Case study",
+      "title": "Alpha Ministries International",
+      "url": "/case-study/alpha-ministries-international.html",
+      "description": "One home for four ministries, events and giving",
+      "keywords": "Custom Website Build Custom Website Build Help visitors understand the full scope of the work, find events and support the ministry with confidence. website"
+    },
+    {
+      "id": "work-western-hp",
+      "kind": "Case study",
+      "title": "Western HP",
+      "url": "/case-study/western-hp.html",
+      "description": "Service website built to turn visits into inquiries",
+      "keywords": "Custom Website Build Custom Website Build ==Look credible right away== and turn website visitors into inquiries. website"
+    },
+    {
+      "id": "work-snooze-lane",
+      "kind": "Case study",
+      "title": "Snooze Lane",
+      "url": "/case-study/snooze-lane.html",
+      "description": "App landing page and brand for an iOS launch",
+      "keywords": "Website + iOS App App Get people to understand and trust a brand new app concept ==fast enough to download it==. website"
+    },
+    {
+      "id": "work-hamper",
+      "kind": "Case study",
+      "title": "Hamper",
+      "url": "/case-study/hamper.html",
+      "description": "App landing page focused on trust and easy signup",
+      "keywords": "Website + iOS App App Get more people to try the service for the first time, and make that first order feel easy. website"
+    }
+  ]
+}

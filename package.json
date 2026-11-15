@@ -21,7 +21,9 @@
     "stripe:sync": "node scripts/stripe-sync.mjs && npm run build:payments",
     "build:guide-pdf": "node scripts/build-growth-guide-pdf.mjs",
     "build:campaigns": "node scripts/build-campaign-pages.mjs",
-    "test:funnel": "node --test tests/funnel/*.test.mjs"
+    "test:funnel": "node --test tests/funnel/*.test.mjs",
+    "build:site-search": "node scripts/build-site-search.mjs",
+    "test:commerce": "node --test tests/commerce/*.test.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250525.0",

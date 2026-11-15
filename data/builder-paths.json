@@ -1,0 +1,629 @@
+{
+  "services": [
+    {
+      "id": "websites",
+      "name": "Websites & e-commerce",
+      "line": "Landing pages, service sites, stores",
+      "scenarios": [
+        {
+          "id": "splash",
+          "name": "Simple splash / coming-soon page",
+          "description": "One focused page to introduce your business and capture interest.",
+          "tierIds": [
+            "website-only"
+          ],
+          "proof": [
+            "built-by-me-ez"
+          ]
+        },
+        {
+          "id": "landing",
+          "name": "Campaign / lead-generation landing page",
+          "description": "One conversion-focused page for ads or appointments.",
+          "tierIds": [
+            "website-only"
+          ],
+          "proof": [
+            "built-by-me-ez",
+            "western-hp"
+          ]
+        },
+        {
+          "id": "service",
+          "name": "Full service-business website",
+          "description": "Up to 5 pages with clear service info and contact or booking.",
+          "tierIds": [
+            "website-only",
+            "website-content-half"
+          ],
+          "proof": [
+            "western-hp",
+            "built-by-me-ez"
+          ]
+        },
+        {
+          "id": "store",
+          "name": "Online shop / selling products",
+          "description": "Small Shopify shop using your assets; up to five supplied products at the base scope.",
+          "tierIds": [
+            "website-only",
+            "website-content-half"
+          ],
+          "proof": [
+            "brooklyn-steel",
+            "manna-hydration"
+          ]
+        },
+        {
+          "id": "brand",
+          "name": "Website plus original photo and video",
+          "description": "Website and coordinated on-site creative production.",
+          "tierIds": [
+            "website-content-half",
+            "website-content-full"
+          ],
+          "proof": [
+            "blurred-lines-entertainment",
+            "built-by-me-ez"
+          ]
+        },
+        {
+          "id": "custom",
+          "name": "Bigger or more complex website",
+          "description": "More pages, migrations, unusual bookings or integrations need a scoped quote.",
+          "tierIds": [],
+          "proof": [
+            "brooklyn-steel"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "apps",
+      "name": "Mobile & web apps",
+      "line": "Product design, prototypes, MVPs",
+      "scenarios": [
+        {
+          "id": "prototype",
+          "name": "Clickable app prototype",
+          "description": "Validate an idea and user journey before building.",
+          "tierIds": [
+            "app-design-sprint"
+          ],
+          "proof": [
+            "hamper",
+            "snooze-lane"
+          ]
+        },
+        {
+          "id": "mvp",
+          "name": "Full app / first MVP",
+          "description": "Production features, accounts and integrations require a scoped estimate.",
+          "tierIds": [],
+          "proof": [
+            "hamper",
+            "snooze-lane"
+          ]
+        },
+        {
+          "id": "portal",
+          "name": "Customer portal / web app",
+          "description": "Self-service accounts or dashboards; scope first.",
+          "tierIds": [],
+          "proof": [
+            "hamper"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "software",
+      "name": "Custom software & CRMs",
+      "line": "Dashboards, CRM and internal tools",
+      "scenarios": [
+        {
+          "id": "crm",
+          "name": "Custom CRM / pipeline",
+          "description": "Organize inquiries, customers and follow-up in a tailored system.",
+          "tierIds": [],
+          "proof": [
+            "built-by-me-ez"
+          ]
+        },
+        {
+          "id": "operations",
+          "name": "Operations dashboard",
+          "description": "Bring your process and tools together in one system.",
+          "tierIds": [],
+          "proof": [
+            "western-hp"
+          ]
+        },
+        {
+          "id": "integrations",
+          "name": "Custom integrations",
+          "description": "Connect the tools you already use; discovery first.",
+          "tierIds": [],
+          "proof": []
+        }
+      ]
+    },
+    {
+      "id": "marketing",
+      "name": "Advertising & local marketing",
+      "line": "Google, Meta, Google Business Profile",
+      "scenarios": [
+        {
+          "id": "local",
+          "name": "Improve Google Business Profile",
+          "description": "Refresh your local presence with content and a clear next step.",
+          "tierIds": [
+            "gbp-refresh"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "ads",
+          "name": "Run a paid ads campaign",
+          "description": "Management for Meta or Google campaigns; ad spend is separate.",
+          "tierIds": [
+            "ads-management"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "growth",
+          "name": "Ongoing growth partner",
+          "description": "Content, ads and lead tracking together.",
+          "tierIds": [
+            "full-growth-partner"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "strategy",
+          "name": "Not sure what marketing will work",
+          "description": "Review your funnel with us and choose a starting point.",
+          "tierIds": [],
+          "proof": [
+            "built-by-me-ez"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "content",
+      "name": "Content & creative",
+      "line": "Photos, video, social and live",
+      "scenarios": [
+        {
+          "id": "photos",
+          "name": "Photos of the business / team",
+          "description": "A planned photo shoot for digital marketing.",
+          "tierIds": [
+            "photo-session"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "products",
+          "name": "Product photography",
+          "description": "Images for your shop, catalog and ads.",
+          "tierIds": [
+            "product-photos"
+          ],
+          "proof": [
+            "brooklyn-steel"
+          ]
+        },
+        {
+          "id": "reels",
+          "name": "Short-form social videos",
+          "description": "A pack of edited vertical videos.",
+          "tierIds": [
+            "short-form-pack"
+          ],
+          "proof": [
+            "blurred-lines-entertainment",
+            "roller-reels"
+          ]
+        },
+        {
+          "id": "film",
+          "name": "Brand film",
+          "description": "Tell your story with a produced hero video.",
+          "tierIds": [
+            "brand-film"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "social",
+          "name": "Social media planning + management",
+          "description": "A one-time setup or ongoing management.",
+          "tierIds": [
+            "social-setup",
+            "managed-social"
+          ],
+          "proof": [
+            "roller-reels"
+          ]
+        },
+        {
+          "id": "live",
+          "name": "Livestream an event",
+          "description": "Single- or multi-camera event coverage.",
+          "tierIds": [
+            "livestream-single",
+            "livestream-multi"
+          ],
+          "proof": []
+        }
+      ]
+    },
+    {
+      "id": "automations",
+      "name": "Automations",
+      "line": "Follow-up, reminders and workflows",
+      "scenarios": [
+        {
+          "id": "followup",
+          "name": "Automatically follow up with leads",
+          "description": "New inquiries get a fast response without busywork.",
+          "tierIds": [
+            "lead-follow-up"
+          ],
+          "proof": [
+            "built-by-me-ez"
+          ]
+        },
+        {
+          "id": "maintenance",
+          "name": "Maintain automations monthly",
+          "description": "Health checks and improvements for existing automations.",
+          "tierIds": [
+            "automation-care"
+          ],
+          "proof": []
+        },
+        {
+          "id": "custom",
+          "name": "Complex / multi-system workflows",
+          "description": "Custom workflows and integrations need a discovery call.",
+          "tierIds": [],
+          "proof": []
+        }
+      ]
+    },
+    {
+      "id": "analytics",
+      "name": "Analytics & tracking",
+      "line": "GA4, conversion events, dashboards",
+      "scenarios": [
+        {
+          "id": "setup",
+          "name": "Set up conversion tracking",
+          "description": "Understand where calls, inquiries and purchases originate.",
+          "tierIds": [
+            "analytics-setup"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "report",
+          "name": "Monthly reporting",
+          "description": "Get recurring actionable reporting instead of raw dashboards.",
+          "tierIds": [
+            "analytics-reporting"
+          ],
+          "proof": []
+        },
+        {
+          "id": "advanced",
+          "name": "Advanced attribution / integrations",
+          "description": "Specialized dashboards require a scoped quote.",
+          "tierIds": [],
+          "proof": []
+        }
+      ]
+    },
+    {
+      "id": "photography",
+      "name": "Photography",
+      "line": "On-site, product and monthly photos",
+      "scenarios": [
+        {
+          "id": "onsite",
+          "name": "Brand / team photography",
+          "description": "Portraits, location and service images.",
+          "tierIds": [
+            "photo-session"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "products",
+          "name": "Product photography",
+          "description": "A catalog-ready shoot for products.",
+          "tierIds": [
+            "product-photos"
+          ],
+          "proof": [
+            "brooklyn-steel"
+          ]
+        },
+        {
+          "id": "monthly",
+          "name": "Monthly photo production",
+          "description": "Keep a predictable stream of fresh imagery.",
+          "tierIds": [
+            "photo-plan"
+          ],
+          "proof": [
+            "roller-reels"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "videography",
+      "name": "Videography",
+      "line": "Short-form packs, brand films",
+      "scenarios": [
+        {
+          "id": "short",
+          "name": "Short-form Reels / Shorts",
+          "description": "Capture several edited social videos in one shoot.",
+          "tierIds": [
+            "short-form-pack"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "film",
+          "name": "Brand video / documentary",
+          "description": "Longer hero film and cutdowns.",
+          "tierIds": [
+            "brand-film"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "monthly",
+          "name": "Monthly video plan",
+          "description": "Scheduled recurring content shoots.",
+          "tierIds": [
+            "video-plan"
+          ],
+          "proof": [
+            "roller-reels"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "social-media",
+      "name": "Social media",
+      "line": "Setup, content and ongoing management",
+      "scenarios": [
+        {
+          "id": "setup",
+          "name": "Social media strategy & setup",
+          "description": "Profiles, templates and a posting plan.",
+          "tierIds": [
+            "social-setup"
+          ],
+          "proof": [
+            "roller-reels"
+          ]
+        },
+        {
+          "id": "manage",
+          "name": "Full social management",
+          "description": "Regular posts and management.",
+          "tierIds": [
+            "managed-social"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        },
+        {
+          "id": "content",
+          "name": "Monthly content creation",
+          "description": "Fresh photos and video for your channels.",
+          "tierIds": [
+            "content-growth-retainer"
+          ],
+          "proof": [
+            "blurred-lines-entertainment"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "live-streaming",
+      "name": "Live streaming",
+      "line": "Live events, multi-camera production",
+      "scenarios": [
+        {
+          "id": "single",
+          "name": "Simple live event",
+          "description": "One camera, one destination, focused coverage.",
+          "tierIds": [
+            "livestream-single"
+          ],
+          "proof": []
+        },
+        {
+          "id": "multi",
+          "name": "Multi-camera production",
+          "description": "Larger events with multiple angles and crew.",
+          "tierIds": [
+            "livestream-multi"
+          ],
+          "proof": []
+        },
+        {
+          "id": "recurring",
+          "name": "Recurring livestreams",
+          "description": "A consistent stream each month.",
+          "tierIds": [
+            "livestream-recurring"
+          ],
+          "proof": []
+        }
+      ]
+    }
+  ],
+  "proof": {
+    "built-by-me-ez": {
+      "name": "Built By Me EZ",
+      "desc": "Training bookings, site and digital courses",
+      "url": "/case-study/built-by-me-ez.html",
+      "image": "/images/built_by_me_ez_thumbnail.webp"
+    },
+    "western-hp": {
+      "name": "Western HP",
+      "desc": "Service website designed around inquiries",
+      "url": "/case-study/western-hp.html",
+      "image": "/images/whp_desktop_screenshot.webp"
+    },
+    "brooklyn-steel": {
+      "name": "Brooklyn Steel Co.",
+      "desc": "Shopify store, product education and bundles",
+      "url": "/case-study/brooklyn-steel.html",
+      "image": "/images/brooklyn-steel-thumbnail.webp"
+    },
+    "manna-hydration": {
+      "name": "Manna Hydration",
+      "desc": "Shopify storefront and merchandise",
+      "url": "/case-study/manna-hydration.html",
+      "image": "/images/manna-hydration-thumbnail.webp"
+    },
+    "blurred-lines-entertainment": {
+      "name": "Blurred Lines Entertainment",
+      "desc": "Film, Instagram ads and site",
+      "url": "/case-study/blurred-lines-entertainment.html",
+      "image": "/images/BLE_SWFT_thumbnail.webp"
+    },
+    "hamper": {
+      "name": "Hamper",
+      "desc": "App-launch website and visual identity",
+      "url": "/case-study/hamper.html",
+      "image": "/images/hamper_app_website_thumbnail.webp"
+    },
+    "snooze-lane": {
+      "name": "Snooze Lane",
+      "desc": "iOS app launch site and branding",
+      "url": "/case-study/snooze-lane.html",
+      "image": "/images/Snooze-Lane-Desktop-thumbnail.webp"
+    },
+    "roller-reels": {
+      "name": "Roller Reels",
+      "desc": "Creative portfolio and lead-focused website",
+      "url": "/case-study/roller-reels.html",
+      "image": "/images/Roller_Reels_thumbnail.webp"
+    }
+  },
+  "upsells": {
+    "website-only": [
+      [
+        "photo-session",
+        "Give your website original photos"
+      ],
+      [
+        "gbp-refresh",
+        "Help local customers find your business"
+      ],
+      [
+        "lead-follow-up",
+        "Respond to new inquiries faster"
+      ]
+    ],
+    "website-content-half": [
+      [
+        "lead-follow-up",
+        "Connect site forms to follow-up"
+      ],
+      [
+        "website-care",
+        "Keep pages and media updated"
+      ]
+    ],
+    "website-content-full": [
+      [
+        "lead-follow-up",
+        "Connect site inquiries to your workflow"
+      ],
+      [
+        "website-care",
+        "Keep your site current"
+      ]
+    ],
+    "gbp-refresh": [
+      [
+        "website-only",
+        "Give search visitors a place to book"
+      ]
+    ],
+    "ads-management": [
+      [
+        "analytics-setup",
+        "Measure leads and bookings"
+      ],
+      [
+        "short-form-pack",
+        "Use campaign-ready footage"
+      ]
+    ],
+    "photo-session": [
+      [
+        "social-setup",
+        "Plan where to publish your new images"
+      ]
+    ],
+    "product-photos": [
+      [
+        "website-only",
+        "Put your product photos into a shop"
+      ]
+    ],
+    "short-form-pack": [
+      [
+        "ads-management",
+        "Put your videos in front of buyers"
+      ]
+    ],
+    "brand-film": [
+      [
+        "ads-management",
+        "Get the most from your hero film"
+      ]
+    ],
+    "lead-follow-up": [
+      [
+        "analytics-setup",
+        "Measure the inquiries you're responding to"
+      ]
+    ]
+  }
+}
