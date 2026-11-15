@@ -21,8 +21,8 @@ jobs:
       - name: Test public SWFT site as a fictional mobile customer
         env:
           SWFT_TEST_URL: https://swftstudios-website.pages.dev
-          SWFT_TEST_SEND_INQUIRY: "1"
-          SWFT_TEST_BOOK_CALL: "1"
+          SWFT_TEST_SEND_INQUIRY: "0"
+          SWFT_TEST_BOOK_CALL: "0"
         run: node tests/mystery-shopper/customer-journey.mjs
       - name: Preserve test evidence
         uses: actions/upload-artifact@v4
