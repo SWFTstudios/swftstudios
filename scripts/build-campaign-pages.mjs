@@ -299,6 +299,7 @@ function renderCampaign(slug,cfg,serviceSource,pricingSource){
           <p class="mf-lead">${escapeHTML(cfg.lead)}</p>
           <div class="mf-actions">
             <a class="mf-btn" href="${BOOK_URL}" target="_blank" rel="noopener" data-funnel-cta="calendar">Book a free discovery call <span class="mf-arrow" aria-hidden="true">↗</span></a>
+            <a class="mf-btn mf-btn--ghost" href="/build.html?service=${escapeHTML(slug)}" data-funnel-cta="builder">Build a package ↗</a>
             <a class="mf-btn mf-btn--ghost" href="${escapeHTML(contact)}" data-funnel-cta="inquiry">Get a quote</a>
           </div>
           <div class="fnl-campaign-hero__promise"><span>30-minute conversation</span><span>Clear next steps</span><span>No obligation</span></div>
