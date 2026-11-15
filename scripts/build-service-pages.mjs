@@ -165,6 +165,22 @@ function page(s, data, offers) {
     : "";
   const faq = s.faq.map((f) => `<details><summary>${esc(f.q)}</summary><div><p>${esc(f.a)}</p></div></details>`).join("\n          ");
   const relatedCards = related.map((r) => serviceCard(r)).join("\n");
+  const swbProof = (function section(slug){
+ const service=builder.services.find(s=>s.id===slug);
+ if(!service)return "";
+ const proofIds=[...new Set(service.scenarios.flatMap(x=>x.proof))].slice(0,3);
+ if(!proofIds.length)return "";
+ const cards=proofIds.map(id=>{const p=builder.proof[id];if(!p)return "";
+  return `<a class="swb-service-proof__card" href="${p.url}"><img loading="lazy" src="${p.image}" alt="${p.name} project preview"><strong>${p.name} ↗</strong><p>${p.desc}</p></a>`;
+ }).join("\n");
+ return `    <section class="mf-section mf-section--tight" aria-labelledby="swb-proof-title"><div class="mf-wrap">
+      <div class="mf-head"><p class="mf-label">(Related SWFT work)</p><h2 class="mf-h2" id="swb-proof-title">See a relevant <span class="mf-script">example.</span></h2></div>
+      <p class="mf-body">Explore real projects from our portfolio. Specific deliverables and technical integrations depend on each project's scope.</p>
+      <div class="swb-service-proof">${cards}</div>
+      <div class="mf-actions"><a class="mf-btn mf-btn--sm" href="/build.html?service=${slug}">Build a package ↗</a><a class="mf-btn mf-btn--sm mf-btn--ghost" href="/work.html">See all work</a></div>
+    </div></section>\n\n`;
+})(s.slug);
+
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -183,7 +199,7 @@ function page(s, data, offers) {
   <meta property="og:image" content="${SITE}/images/swft-thumbnail.webp">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/css/swft-nav.css?v=20261105-r4">
-  <link rel="stylesheet" href="/css/services.css?v=20261105-r2">
+  <link rel="stylesheet" href="/css/services.css?v=20261105-r2">\n  <link rel="stylesheet" href="/css/builder.css?v=20261115">
   <link href="/images/favicon.webp" rel="shortcut icon" type="image/x-icon">
   <script type="application/ld+json">${JSON.stringify(ld)}</script>
 </head>
@@ -204,7 +220,8 @@ function page(s, data, offers) {
         <p class="mf-lead">${s.lead}</p>
         <div class="mf-actions mf-statement__actions">
           <a class="mf-btn" href="${BOOK_URL}" target="_blank" rel="noopener">Book a free strategy call <span class="mf-arrow" aria-hidden="true">↗</span></a>
-          <a class="mf-btn mf-btn--ghost" href="/contact.html?service=${s.slug}">Get a quote</a>
+          <a class="mf-btn mf-btn--ghost" href="/build.html?service=${s.slug}">Customize a package ↗</a>
+          <a class="mf-link" href="/contact.html?service=${s.slug}">Request a quote</a>
         </div>
       </div>
     </section>
@@ -221,7 +238,7 @@ function page(s, data, offers) {
       </div>
     </section>
 
-    <section class="mf-section mf-section--tight" aria-labelledby="included-title">
+    ${swbProof}<section class="mf-section mf-section--tight" aria-labelledby="included-title">
       <div class="mf-wrap">
         <div class="mf-head">
           <p class="mf-label">(Scope)</p>
@@ -255,7 +272,7 @@ function page(s, data, offers) {
           </div>
           ${offerCards}
           <div class="mf-actions">
-            <a class="mf-btn" href="/contact.html?service=${s.slug}">Get a quote <span class="mf-arrow" aria-hidden="true">↗</span></a>
+            <a class="mf-btn" href="/build.html?service=${s.slug}">Customize a package <span class="mf-arrow" aria-hidden="true">↗</span></a>
             <a class="mf-btn mf-btn--ghost" href="/pricing.html#svc-${s.slug}">All pricing</a>
           </div>
         </div>

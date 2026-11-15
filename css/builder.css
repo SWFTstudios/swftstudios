@@ -62,3 +62,11 @@
 .swb-buy-button{width:100%;justify-content:center}
 @media(max-width:900px){.swb-layout{grid-template-columns:1fr}.swb-aside{position:static;grid-row:2}.swb-receipt{padding:1.1rem}}
 @media(max-width:580px){.swb-options{grid-template-columns:1fr}.swb-option--wide{grid-column:auto}.swb-panel{padding:1.1rem}.swb-progress span{font-size:.61rem;padding:.42rem .5rem}.swb-controls .mf-btn{font-size:.85rem;padding:.7rem 1rem}.swb-review-actions .mf-btn{width:100%;justify-content:center}}
+
+/* Matching real projects on the main, indexable service pages */
+.swb-service-proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1rem;margin:1.5rem 0}
+.swb-service-proof__card{color:var(--mf-text);text-decoration:none;display:block}
+.swb-service-proof__card img{width:100%;aspect-ratio:1.45;object-fit:cover;display:block;border:1px solid var(--mf-line);border-radius:14px}
+.swb-service-proof__card strong{display:block;margin:.7rem 0 .35rem;font-weight:600}
+.swb-service-proof__card p{color:var(--mf-muted);font-size:.87rem;margin:0}
+.swb-service-proof__card:hover strong{text-decoration:underline}
