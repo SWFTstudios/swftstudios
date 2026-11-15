@@ -23,3 +23,24 @@ for(const slug of slugs){
     assert.match(html,/\/services\.html/);
   });
 }
+
+test("booked notification bubble opens the existing this-could-be-you dialog",()=>{
+  const homepage=read("index.html");
+  const script=read("js/notify-badge.js");
+  const nav=read("js/swft-nav.js");
+  assert.match(homepage, /class="mf-notify" data-mf-notify/);
+  assert.match(homepage, /<span class="mf-script">Get booked\.<\/span>/);
+  assert.match(nav, /\[data-mf-notify\].*notify-badge\.js/);
+  assert.match(script, /This could be you\./);
+  assert.match(script, /aria-haspopup.*dialog/);
+});
+test("featured project names stay grouped during word animations",()=>{
+  const homepage=read("index.html");
+  const css=read("css/conversion-funnel.css");
+  for (const name of ["Built By Me EZ","Blurred Lines Entertainment","Brooklyn Steel Co."]) {
+    assert.ok(homepage.includes('<span class="fnl-project__name">'+name+'</span>'));
+  }
+  assert.match(css, /\.fnl-project h3 \.fnl-project__name/);
+  assert.match(css, /\.fnl-project h3 \.fnl-project__arrow/);
+  assert.doesNotMatch(css, /\.fnl-project h3 span \{/);
+});
