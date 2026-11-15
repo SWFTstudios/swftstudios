@@ -74,8 +74,8 @@
             </div>
             <div class="mf-field-row">
               <div class="mf-field">
-                <label for="contact-business">Business name <span class="req">*</span></label>
-                <input type="text" id="contact-business" name="business_name" required autocomplete="organization">
+                <label for="contact-business">Business name (optional)</label>
+                <input type="text" id="contact-business" name="business_name" autocomplete="organization">
               </div>
               <div class="mf-field">
                 <label for="contact-phone">Phone (optional)</label>
@@ -83,18 +83,19 @@
               </div>
             </div>
             <div class="mf-field">
-              <label for="contact-website">Website or social link <span class="req">*</span></label>
-              <input type="text" id="contact-website" name="website" required placeholder="https:// or @handle">
+              <label for="contact-website">Website or social link (optional)</label>
+              <input type="text" id="contact-website" name="website" placeholder="https:// or @handle">
             </div>
             <div class="mf-field">
-              <label for="contact-challenge">What&rsquo;s getting in the way today? <span class="req">*</span></label>
-              <textarea id="contact-challenge" name="challenge" required placeholder="e.g. People find us on Instagram but never book"></textarea>
+              <label for="contact-challenge">What are you looking to accomplish? <span class="req">*</span></label>
+              <textarea id="contact-challenge" name="challenge" required placeholder="e.g. A new website that helps customers book"></textarea>
             </div>
             <div class="mf-field">
-              <label for="contact-outcome">What does success look like? <span class="req">*</span></label>
-              <textarea id="contact-outcome" name="desired_outcome" required placeholder="e.g. 10 more bookings a month"></textarea>
+              <label for="contact-outcome">What does success look like? (optional)</label>
+              <textarea id="contact-outcome" name="desired_outcome" placeholder="e.g. 10 more bookings a month"></textarea>
             </div>
 
+            <details class="mf-field" style="margin-block:1rem"><summary style="cursor:pointer">Optional project details (budget, timeline, goals)</summary>
             <fieldset class="mf-field">
               <legend>Budget</legend>
               <div class="mf-chips" id="contact-budget">
@@ -116,8 +117,9 @@
               <textarea id="contact-details" name="details" placeholder="Scope, must-haves, examples you like, constraints"></textarea>
             </div>
 
+            </details>
             <div class="mf-actions">
-              <button type="submit" class="mf-btn contact-submit" id="contact-submit"><span class="button_text">Send project details</span> <span class="mf-arrow" aria-hidden="true">↗</span></button>
+              <button type="submit" class="mf-btn contact-submit" id="contact-submit"><span class="button_text">Send inquiry</span> <span class="mf-arrow" aria-hidden="true">↗</span></button>
               <p class="mf-label mf-label--muted">Reply within one business day</p>
             </div>
             <p id="contact-status" class="mf-status contact-status" role="status" aria-live="polite" hidden></p>
@@ -151,7 +153,13 @@
       const statusEl = document.getElementById("contact-status");
       const submitBtn = document.getElementById("contact-submit");
       const submitLabel = submitBtn ? submitBtn.querySelector(".button_text") : null;
-      const LABEL = "Send project details";
+      const LABEL = "Send inquiry";
+      let formStarted = false;
+      form.addEventListener("focusin", function (event) {
+        if (formStarted || !event.target.closest("input,textarea")) return;
+        formStarted = true;
+        if (window.SWFTAnalytics) window.SWFTAnalytics.track("lead_form_start", {page_path: location.pathname, form_name: "contact"});
+      });
       if (!form) return;
 
       // Quote links pass ?service=<id>: a service page slug (data/services.json)
@@ -193,7 +201,7 @@
         const challenge = val("challenge");
         const desiredOutcome = val("desired_outcome");
 
-        if (!name || !email || !businessName || !website || !serviceNeeded || !challenge || !desiredOutcome) {
+        if (!name || !email || !serviceNeeded || !challenge) {
           showStatus(serviceNeeded ? "Please fill in all required fields." : "Pick what you need, then fill in the required fields.", "error");
           return;
         }
@@ -239,7 +247,7 @@
               form.reset();
               showStatus("Project sent. We'll be in touch within one business day.", "success");
               if (window.SWFTAnalytics) {
-                window.SWFTAnalytics.track("contact_form_submit", {
+                window.SWFTAnalytics.track("lead_form_submit", {
                   page_path: location.pathname,
                   form_name: "contact",
                   service_interest: serviceNeeded,
