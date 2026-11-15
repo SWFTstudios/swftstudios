@@ -165,6 +165,7 @@ function page(s, data, offers) {
     : "";
   const faq = s.faq.map((f) => `<details><summary>${esc(f.q)}</summary><div><p>${esc(f.a)}</p></div></details>`).join("\n          ");
   const relatedCards = related.map((r) => serviceCard(r)).join("\n");
+  const builder = json("data/builder-paths.json");
   const swbProof = (function section(slug){
  const service=builder.services.find(s=>s.id===slug);
  if(!service)return "";
