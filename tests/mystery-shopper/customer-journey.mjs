@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import { chromium } from "playwright";
 const root=(process.env.SWFT_TEST_URL||"https://swftstudios.com").replace(/\/$/,"");
 const submit=process.env.SWFT_TEST_SEND_INQUIRY==="1";
+const book=process.env.SWFT_TEST_BOOK_CALL==="1";
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:"reduce",timezoneId:"America/New_York"});
 const page=await context.newPage();
@@ -90,6 +91,18 @@ await step("Discovery calendar reachable",async()=>{
       await pause(900);
       await snap("08-calendar-selected",p);
       form={selectedSlot:true,url:p.url(),body:compact(await p.locator("body").innerText()).slice(0,1100),inputs:await p.locator("input").evaluateAll(nodes=>nodes.map(n=>({name:n.name,type:n.type,placeholder:n.placeholder})).slice(0,20)),buttons:(await p.locator("button").allTextContents()).map(compact).slice(-20)};
+    }
+    if(book && form.selectedSlot){
+      await p.locator('input[name="name"]').fill("[SWFT TEST] Browser QA Customer");
+      await p.locator('input[name="email"]').fill("hello@swftstudios.com");
+      await snap("09-calendar-ready-to-book",p);
+      await p.getByRole("button",{name:"Confirm",exact:true}).click();
+      await pause(7500);
+      const after=compact(await p.locator("body").innerText());
+      await snap("10-calendar-booking-result",p);
+      const confirmed=/booking confirmed|you are booked|booked successfully|your booking is confirmed|meeting confirmed|successfully booked|booking successful/i.test(after);
+      if(!confirmed)throw Error("No confirmed booking after submit. URL "+p.url()+" body "+after.slice(0,1100));
+      return {status:response.status(),bookedAs:"[SWFT TEST] Browser QA Customer",email:"hello@swftstudios.com",calendarResult:after.slice(0,1300),bookingURL:p.url(),bookingConfirmed:true};
     }
     return {status:response.status(),headings:headings.map(compact),buttons:buttons.map(compact),body:text.slice(0,1000),form,bookingConfirmed:false};
   }finally{await p.close();}
