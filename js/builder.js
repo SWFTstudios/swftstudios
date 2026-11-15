@@ -114,7 +114,7 @@
       (rec.length?'<h3 class="swb-subhead">Often paired with your choice</h3><p class="swb-hint">Independent services that can help the original package work harder. These are separate packages, with their own inclusions.</p><div class="swb-addons">'+rec.map(function (pair) {
         var o=entry(pair[0]);return checkbox("cross",o.id,o.name,pair[1],money(o.priceCents)+(o.monthly?"/month":" one-time"),state.cross.has(o.id),true);
       }).join("")+'</div>':'') +
-      '<hr class="swb-section-divider"><h3 class="swb-subhead">Ready to review your bowl?</h3><p class="swb-hint">Your selected package and extras will go to the existing secure cart. Stripe recalculates every amount from our server catalog.</p>' +
+      '<hr class="swb-section-divider"><h3 class="swb-subhead">Ready to review your package?</h3><p class="swb-hint">Your selected package and extras will go to the existing secure cart. Stripe recalculates every amount from our server catalog.</p>' +
       '<div class="swb-review-actions"><button type="button" id="swb-add-cart" class="mf-btn swb-buy-button">Add package to cart &amp; review ↗</button></div>' +
       '<p class="swb-hint" style="margin-top:1.1rem">Need a feature not listed? <a class="swb-inline-link" href="'+CALL+'" target="_blank" rel="noopener">Book a free scope call</a>.</p>';
   }
