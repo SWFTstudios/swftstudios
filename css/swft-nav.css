@@ -744,3 +744,39 @@ html.sa-side-collapsed .mode-switch--side .mode-switch__btn[aria-checked="false"
 .oc-actions { margin-top: 1.25rem; }
 /* Add to cart buttons on pricing cards and service pages */
 .cart-add.is-added { opacity: 0.75; }
+
+/* Responsive nav/menu polish: intentional single-line actions and a
+   full-width package builder tile, never squashed two-column labels. */
+.sn-actions { display:flex;align-items:center;justify-content:flex-end;gap:.55rem;min-width:0; }
+.sn-ptiles { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.sn-ptile { min-width:0;gap:.45rem;line-height:1.2; }
+.sn-ptile .sn-ptile__icon { flex:none; }
+.sn-ptile > span:last-child { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.sn-ptile--feature {
+  grid-column:1/-1;
+  justify-content:center;
+  border-color:var(--mf-line-strong);
+  background:rgba(var(--mf-ink-rgb),.09);
+}
+.sn-panel-duo { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.sn-panel-ghost { min-width:0;gap:.4rem;white-space:nowrap; }
+.sn-panel-ghost__icon { flex:none; }
+.sn-panel-ghost > span:last-child { min-width:0;white-space:nowrap; }
+.sn-panel-search > span:last-child { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+@media(max-width:520px){
+  .sn-nav { gap:.65rem; }
+  .sn-panel-top { gap:.5rem;padding-inline:.95rem; }
+  .sn-panel-top .sn-panel-brand { font-size:clamp(1.08rem,4.1vw,1.3rem);min-width:0; }
+  .sn-panel-book { font-size:.83rem;padding:.65rem .8rem;flex:none; }
+  .sn-close { width:2.55rem;height:2.55rem; }
+  .sn-panel-body { padding-inline:.95rem; }
+  .sn-ptile { font-size:clamp(.83rem,3.65vw,1rem);padding:.65rem .6rem; }
+  .sn-panel-ghost { font-size:clamp(.78rem,3.35vw,.92rem);padding:.7rem .45rem; }
+  .sn-panel-ghost__icon svg { width:16px;height:16px; }
+}
+@media(max-width:350px){
+  .sn-panel-book { font-size:.76rem;padding:.55rem .65rem; }
+  .sn-panel-top .sn-panel-brand { font-size:1.02rem; }
+  .sn-ptile { font-size:.8rem;gap:.3rem; }
+  .sn-panel-ghost { gap:.25rem;font-size:.76rem; }
+}

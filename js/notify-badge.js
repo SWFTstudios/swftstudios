@@ -19,12 +19,6 @@
     { app: "Orders", title: "New order · $480", text: "2 items · paid with Apple Pay" },
     { app: "Messages", title: "New lead from your website", text: "“Are you free this Saturday?”" }
   ];
-  var HEADS = [
-    "Imagine that was a new customer.",
-    "Imagine that ping was a sale.",
-    "Imagine that was a new lead."
-  ];
-
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
   }
@@ -34,7 +28,7 @@
   function open() {
     if (overlay) return;
     var p = PINGS[turn % PINGS.length];
-    var head = HEADS[turn % HEADS.length];
+    var head = "This could be you.";
     turn++;
     lastFocus = document.activeElement;
     overlay = document.createElement("div");

@@ -18,7 +18,8 @@
 .fnl-project:hover img { transform:scale(1.04); }
 .fnl-project:focus-visible,.fnl-offer:focus-visible,.fnl-testimonial__visual:focus-visible { outline:2px solid var(--mf-ink); outline-offset:4px; border-radius:12px; }
 .fnl-project h3 { font-size:clamp(1.22rem,1.7vw,1.75rem); font-weight:600; letter-spacing:-.035em; line-height:1.08; margin:.45rem 0; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-.fnl-project h3 span { font-size:.9rem; }
+.fnl-project h3 .fnl-project__name { min-width:0; flex:1; font-size:inherit; }
+.fnl-project h3 .fnl-project__arrow { font-size:.9rem; flex:none; margin-left:auto; }
 .fnl-project p { color:var(--mf-muted); font-size:.94rem; line-height:1.45; margin:.5rem 0 0; }
 .fnl-inline-next { display:flex; gap:1rem 2rem; align-items:center; justify-content:space-between; margin-top:1.8rem; padding:1.3rem 0; border-top:1px solid var(--mf-line); border-bottom:1px solid var(--mf-line); }
 .fnl-inline-next p { margin:0; color:var(--mf-muted); max-width:46ch; }
@@ -122,4 +123,76 @@
 }
 @media (prefers-reduced-motion:reduce) {
   .fnl-project img,.fnl-offer { transition:none; }
+}
+
+/* Homepage mobile cinema: keep the skyline unobstructed between the
+   promise and the action area. Desktop typography and motion stay intact. */
+.fnl-hero-copy--mobile { display: none; }
+@media (max-width: 760px) {
+  .fnl-home-hero {
+    padding-top: calc(var(--sn-height, 66px) + 1.15rem);
+    padding-bottom: 0;
+  }
+  .fnl-home-hero .mf-hero__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .7rem;
+    margin-bottom: 1.25rem;
+  }
+  .fnl-home-hero .mf-hero__top .mf-label { max-width: 39ch; font-size: .68rem; line-height: 1.35; }
+  .fnl-home-hero .mf-hero__top .mf-pill { max-width: 100%; font-size: .65rem; padding: .6rem .85rem; }
+  .fnl-home-hero .mf-hero__title {
+    font-size: clamp(3rem, 11.8vw, 5.1rem);
+    line-height: .93;
+  }
+  /* A scenic interval keeps the skyline visible instead of placing body
+     copy directly over the buildings. CTA text sits over the dark water. */
+  .fnl-home-hero .mf-hero__foot {
+    position: relative;
+    margin-top: clamp(9.5rem, 27svh, 15rem);
+    padding: 2.2rem 0 2.6rem;
+    gap: 1.3rem;
+    align-items: stretch;
+    isolation: isolate;
+  }
+  .fnl-home-hero .mf-hero__foot::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -3rem calc(-1 * var(--mf-pad, 1.5rem)) -1px;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,.63) 32%, rgba(0,0,0,.90) 100%);
+    pointer-events: none;
+  }
+  .fnl-home-hero .mf-hero__media::after {
+    background: linear-gradient(180deg,
+      rgba(0,0,0,.34) 0%,
+      rgba(0,0,0,.24) 32%,
+      rgba(0,0,0,.15) 57%,
+      rgba(0,0,0,.52) 76%,
+      var(--mf-page) 100%);
+  }
+  .fnl-home-hero .fnl-hero-copy--desktop { display: none; }
+  .fnl-home-hero .fnl-hero-copy--mobile { display: inline; }
+  .fnl-home-hero .mf-hero__foot .mf-lead {
+    max-width: 33ch;
+    font-size: clamp(1.05rem, 4.3vw, 1.25rem);
+    line-height: 1.33;
+    margin: 0 0 1.2rem;
+    text-wrap: pretty;
+  }
+  .fnl-home-hero .fnl-primary-actions { gap: .65rem; }
+  .fnl-home-hero .fnl-primary-actions .mf-btn {
+    min-height: 3rem;
+    padding-block: .75rem;
+  }
+  .fnl-home-hero .mf-proof {
+    margin-top: .25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,.2);
+  }
+  .fnl-home-hero .fnl-hero-note { font-size: .67rem; line-height: 1.45; }
+}
+@media (max-width: 375px) {
+  .fnl-home-hero .mf-hero__title { font-size: 11.5vw; }
+  .fnl-home-hero .mf-hero__foot { margin-top: clamp(8.5rem, 25svh, 12rem); }
 }
