@@ -11,6 +11,19 @@ on:
       - "data/services.json"
       - "data/pricing.json"
       - "package.json"
+      - "build.html"
+      - "data/addons.json"
+      - "data/builder-paths.json"
+      - "data/site-search.json"
+      - "js/cart.js"
+      - "js/site-search.js"
+      - "js/builder.js"
+      - "js/swft-nav.js"
+      - "functions/_lib/shop*.js"
+      - "functions/api/checkout.js"
+      - "scripts/build-site-search.mjs"
+      - "scripts/build-service-pages.mjs"
+      - "tests/commerce/**"
   workflow_dispatch:
 jobs:
   verify-funnel:
@@ -26,3 +39,9 @@ jobs:
         run: |
           npm run build:campaigns
           git diff --exit-code -- campaigns/
+      - name: Verify server-side add-on pricing, builder and search index
+        run: npm run test:commerce
+      - name: Verify search index is generated from current data
+        run: |
+          npm run build:site-search
+          git diff --exit-code -- data/site-search.json
