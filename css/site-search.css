@@ -1,0 +1,31 @@
+/* Shared predictive search — inherits Mono light/dark tokens */
+.sn-search { display:inline-flex;align-items:center;gap:.35rem;border:1px solid var(--mf-line-strong);border-radius:999px;background:transparent;color:var(--mf-ink);font:500 .9rem/1 var(--mf-font,sans-serif);cursor:pointer;padding:.55rem .8rem;white-space:nowrap; }
+.sn-search:hover,.sn-search:focus-visible{border-color:var(--mf-ink);outline:none}
+.sn-search svg{width:1.05rem;height:1.05rem}
+.sn-panel-search{display:flex;align-items:center;gap:.8rem;width:100%;border:1px solid var(--mf-line-strong);background:var(--mf-surface);color:var(--mf-text);padding:.95rem 1.1rem;border-radius:12px;font:600 1rem/1.2 var(--mf-font,sans-serif);cursor:pointer;margin:.6rem 0 1.2rem;text-align:left}
+.sn-panel-search svg{width:1.25rem;height:1.25rem}
+.swfts-overlay{position:fixed;inset:0;z-index:3000;display:flex;justify-content:center;align-items:flex-start;padding:clamp(5rem,11vh,7rem) 1rem 1rem;color:var(--mf-text)}
+.swfts-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px)}
+.swfts-dialog{position:relative;z-index:1;width:min(100%,750px);max-height:calc(100dvh - 8rem);overflow:auto;border:1px solid var(--mf-line-strong);border-radius:20px;background:var(--mf-bg);box-shadow:0 35px 100px rgba(0,0,0,.4);padding:clamp(1rem,3vw,1.6rem)}
+.swfts-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
+.swfts-close{border:1px solid var(--mf-line);background:var(--mf-surface);color:var(--mf-text);border-radius:50%;width:2.1rem;height:2.1rem;cursor:pointer;font-size:1.4rem}
+.swfts-searchbox{display:flex;align-items:center;gap:.7rem;border:1px solid var(--mf-line-strong);border-radius:12px;background:var(--mf-surface);padding:0 1rem}
+.swfts-searchbox:focus-within{border-color:var(--mf-ink)}
+.swfts-search-icon{font-size:1.8rem;color:var(--mf-muted)}
+.swfts-searchbox input{width:100%;min-width:0;min-height:3.5rem;outline:0;background:transparent;border:0;color:var(--mf-text);font:500 clamp(.9rem,2vw,1.2rem)/1.3 var(--mf-font,sans-serif)}
+.swfts-searchbox input::placeholder{color:var(--mf-muted)}
+.swfts-keyhint{color:var(--mf-muted);font:.68rem/1 var(--mf-mono,monospace)}
+.swfts-hints{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin:.9rem 0 1.1rem;color:var(--mf-muted);font-size:.77rem}
+.swfts-hints button{border:1px solid var(--mf-line);border-radius:999px;padding:.33rem .6rem;background:transparent;color:var(--mf-text);cursor:pointer;font:inherit}
+.swfts-hints button:hover,.swfts-hints button:focus-visible{border-color:var(--mf-ink)}
+.swfts-list{border-top:1px solid var(--mf-line);max-height:min(53vh,490px);overflow-y:auto}
+.swfts-result{display:grid;grid-template-columns:105px minmax(0,1fr) auto;gap:1rem;align-items:center;color:var(--mf-text);text-decoration:none;padding:.9rem .4rem;border-bottom:1px solid var(--mf-line)}
+.swfts-result:hover,.swfts-result:focus-visible,.swfts-result.is-current{background:rgba(var(--mf-ink-rgb),.07);outline:0;border-radius:8px}
+.swfts-result__type{font:.68rem/1.3 var(--mf-mono,monospace);color:var(--mf-muted)}
+.swfts-result__body strong{display:block;font-weight:600;font-size:.98rem}
+.swfts-result__body small{color:var(--mf-muted);font-size:.82rem;line-height:1.35;display:block;margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swfts-status{padding:1.5rem 0;color:var(--mf-muted);font-size:.94rem}
+.swfts-status a,.swfts-bottom a{color:var(--mf-text)}
+.swfts-bottom{display:flex;justify-content:space-between;gap:.65rem;flex-wrap:wrap;padding-top:1.2rem;font-size:.88rem}
+@media(max-width:1100px){.sn-search span{display:none}.sn-search{padding:.55rem}}
+@media(max-width:640px){.swfts-overlay{padding:4.2rem .65rem .5rem}.swfts-dialog{padding:1rem;border-radius:16px;max-height:calc(100dvh - 5rem)}.swfts-result{grid-template-columns:1fr auto;gap:.45rem}.swfts-result__type{grid-column:1/-1}.swfts-result__body small{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.swfts-searchbox input{font-size:.91rem}}
