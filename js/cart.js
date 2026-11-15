@@ -13,6 +13,7 @@
   "use strict";
   if (window.SWFTCart) return;
   var KEY = "swft-cart";
+  var INTENT_KEY = "swft-cart-brief";
   var DEPOSIT = 50;
   var CAL = "https://cal.com/swftstudios/swft-meeting";
 
@@ -88,7 +89,18 @@
     track("cart_add", { item: id });
     return true;
   }
-  function addMany(ids) {
+  function saveBrief(brief) {
+    if (!brief || typeof brief !== "object") return;
+    var clean = {};
+    ["service","goal","goalName","serviceName","tierId"].forEach(function (key) {
+      clean[key] = String(brief[key] || "").slice(0,120).replace(/[<>]/g,"");
+    });
+    try { localStorage.setItem(INTENT_KEY,JSON.stringify(clean)); } catch(e) { /* optional */ }
+  }
+  function readBrief() {
+    try { return JSON.parse(localStorage.getItem(INTENT_KEY) || "null"); } catch(e) { return null; }
+  }
+  function addMany(ids, brief) {
     return catalog().then(function (cat) {
       var next = items().slice();
       ids.filter(function (x) { return cat[x] && !cat[x].addon; }).forEach(function (x) { if (next.indexOf(x) === -1) next.push(x); });
@@ -97,6 +109,7 @@
         throw Error("Review your selections. Every extra needs an eligible service, with up to 12 line items per order.");
       }
       write(next);
+      saveBrief(brief);
       ids.forEach(function (id) { track("cart_add", { item: id }); });
       return next;
     });
@@ -104,6 +117,8 @@
   function remove(id) {
     var next = items().filter(function (x) { return x !== id; });
     next = next.filter(function (x) { return eligible(x, next, cachedCatalog); });
+    var brief = readBrief();
+    if (brief && next.indexOf(brief.tierId) === -1) { try { localStorage.removeItem(INTENT_KEY); } catch(e){} }
     write(next);
   }
 
@@ -211,7 +226,11 @@
         }).join("");
         var due = 0, project = 0, later = 0, monthly = 0;
         lines.forEach(function (o) { due += o.dueNow; if (o.monthly) monthly += o.priceCents; else { project += o.priceCents; later += o.priceCents - o.dueNow; } });
-        sum.innerHTML =
+        var brief = readBrief();
+        var briefLine = brief && ids.indexOf(brief.tierId) !== -1
+          ? '<p class="cart-sum__note"><strong>Your project type:</strong> ' + esc(brief.goalName || brief.goal) + ' · ' + esc(brief.serviceName || brief.service) + '. <a href="/build.html?service='+encodeURIComponent(brief.service || "")+'">Edit choices</a></p>'
+          : "";
+        sum.innerHTML = briefLine +
           (project ? '<div class="cart-sum__row"><span>Projects (starting prices)</span><b>' + usd(project) + "</b></div>" : "") +
           (monthly ? '<div class="cart-sum__row"><span>Monthly plans</span><b>' + usd(monthly) + "/mo</b></div>" : "") +
           '<div class="cart-sum__row cart-sum__row--due"><span>Due today</span><b>' + usd(due) + "</b></div>" +
@@ -238,10 +257,14 @@
       var btns = root.querySelectorAll("#cart-pay, #cart-comp");
       btns.forEach(function (b) { b.disabled = true; });
       status.hidden = false; status.className = "mf-status is-info"; status.textContent = comp ? "Creating the order…" : "Opening secure checkout…";
+      var brief = readBrief();
+      var briefNote = brief && items().indexOf(brief.tierId) !== -1
+        ? "Chosen project: " + (brief.serviceName||brief.service) + " / " + (brief.goalName||brief.goal) + ".\n"
+        : "";
       fetch("/api/checkout", {
         method: "POST", credentials: "same-origin",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ items: items(), email: v("email"), name: v("name"), business: v("business"), notes: v("notes"), comp: !!comp })
+        body: JSON.stringify({ items: items(), email: v("email"), name: v("name"), business: v("business"), notes: (briefNote+v("notes")).slice(0,1500), comp: !!comp })
       }).then(function (r) { return r.json().catch(function () { return {}; }); }).then(function (d) {
         btns.forEach(function (b) { b.disabled = false; });
         if (d.ok && d.url) { track(comp ? "cart_comp" : "cart_checkout", { items: items().length }); if (comp) write([]); location.href = d.url; return; }
