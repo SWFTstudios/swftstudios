@@ -18,17 +18,17 @@
 
   // What to suggest after adding each service (only services you can buy online)
   var UPSELLS = {
-    "website-only": ["gbp-refresh", "photo-session", "lead-follow-up", "website-care"],
-    "website-content-half": ["lead-follow-up", "analytics-setup", "website-care"],
-    "website-content-full": ["lead-follow-up", "analytics-setup", "website-care"],
+    "website-only": ["extra-pages", "photo-session", "gbp-refresh", "lead-follow-up"],
+    "website-content-half": ["extra-photos", "extra-reels", "lead-follow-up", "website-care"],
+    "website-content-full": ["extra-photos", "extra-reels", "lead-follow-up", "analytics-setup"],
     "app-design-sprint": ["app-care", "analytics-setup"],
-    "gbp-refresh": ["website-only", "photo-session", "lead-follow-up"],
+    "gbp-refresh": ["location-profiles", "local-page", "website-only"],
     "ads-management": ["analytics-setup", "lead-follow-up", "short-form-pack"],
     "full-growth-partner": ["analytics-reporting", "lead-follow-up"],
-    "photo-session": ["social-setup", "short-form-pack", "gbp-refresh"],
+    "photo-session": ["extra-photos", "social-setup", "short-form-pack"],
     "product-photos": ["short-form-pack", "social-setup"],
-    "short-form-pack": ["social-setup", "ads-management"],
-    "brand-film": ["short-form-pack", "ads-management"],
+    "short-form-pack": ["extra-reels", "extra-shoot", "social-setup"],
+    "brand-film": ["extra-reels", "raw-assets", "ads-management"],
     "social-setup": ["managed-social", "photo-session"],
     "livestream-single": ["short-form-pack"],
     "livestream-multi": ["short-form-pack", "brand-film"],
@@ -46,10 +46,11 @@
   function track(n, d) { try { if (window.SWFTAnalytics) window.SWFTAnalytics.track(n, d || {}); } catch (e) { /* optional */ } }
 
   /* ---------- Catalog (from the public pricing data) ---------- */
-  var catalogP = null;
+  var catalogP = null, cachedCatalog = {};
   function catalog() {
     if (!catalogP) {
-      catalogP = fetch("/data/pricing.json", { credentials: "same-origin" }).then(function (r) { return r.json(); }).then(function (d) {
+      catalogP = Promise.all(["/data/pricing.json", "/data/addons.json"].map(function (url) { return fetch(url, { credentials: "same-origin" }).then(function (r) { if (!r.ok) throw Error("Catalog unavailable"); return r.json(); }); })).then(function (data) {
+        var d = data[0], addonData = data[1];
         var map = {};
         (d.categories || []).forEach(function (cat) {
           (cat.services || []).forEach(function (s) {
@@ -64,19 +65,47 @@
             });
           });
         });
+        (addonData.addons || []).forEach(function (a) {
+          map[a.id] = { id:a.id, name:a.name, monthly:false, addon:true, requires:a.requires || [], priceCents:a.priceCents,
+            dueNow:Math.round(a.priceCents * DEPOSIT / 100), priceLabel:usd(a.priceCents) + " one-time", desc:a.description || "", category:a.category || "Add-on", url:"/build.html" };
+        });
+        cachedCatalog = map;
         return map;
-      }).catch(function () { catalogP = null; return {}; });
+      }).catch(function () { catalogP = null; return cachedCatalog; });
     }
     return catalogP;
   }
 
+  function eligible(id, list, cat) {
+    var entry = cat[id];
+    return !!entry && (!entry.addon || entry.requires.some(function (base) { return list.indexOf(base) !== -1; }));
+  }
   function add(id) {
-    var a = items();
-    if (a.indexOf(id) === -1) a.push(id);
+    var a = items().slice();
+    if (cachedCatalog[id] && !eligible(id, a, cachedCatalog)) return false;
+    if (a.indexOf(id) === -1 && a.length < 12) a.push(id);
     write(a);
     track("cart_add", { item: id });
+    return true;
   }
-  function remove(id) { write(items().filter(function (x) { return x !== id; })); }
+  function addMany(ids) {
+    return catalog().then(function (cat) {
+      var next = items().slice();
+      ids.filter(function (x) { return cat[x] && !cat[x].addon; }).forEach(function (x) { if (next.indexOf(x) === -1) next.push(x); });
+      ids.filter(function (x) { return cat[x] && cat[x].addon; }).forEach(function (x) { if (next.indexOf(x) === -1 && eligible(x, next, cat)) next.push(x); });
+      if (next.length > 12 || ids.some(function (x) { return !cat[x] || !eligible(x, next, cat); })) {
+        throw Error("Review your selections. Every extra needs an eligible service, with up to 12 line items per order.");
+      }
+      write(next);
+      ids.forEach(function (id) { track("cart_add", { item: id }); });
+      return next;
+    });
+  }
+  function remove(id) {
+    var next = items().filter(function (x) { return x !== id; });
+    next = next.filter(function (x) { return eligible(x, next, cachedCatalog); });
+    write(next);
+  }
 
   /* ---------- Floating cart pill ---------- */
   var pill;
@@ -107,7 +136,7 @@
   }
   function suggestionsFor(id, cat) {
     var have = items();
-    return (UPSELLS[id] || DEFAULT_UPSELLS).filter(function (x) { return cat[x] && have.indexOf(x) === -1; }).slice(0, 3);
+    return (UPSELLS[id] || DEFAULT_UPSELLS).filter(function (x) { return eligible(x, have, cat) && have.indexOf(x) === -1; }).slice(0, 3);
   }
   function suggestionHTML(o) {
     return '<li class="cart-sugg"><div><b>' + esc(o.name) + "</b><span>" + esc(o.priceLabel) + "</span></div>" +
@@ -190,7 +219,7 @@
           '<p class="cart-sum__note">Every project starts with a 50% deposit. Final price is confirmed on your kickoff call; scope changes are quoted before work starts. Have a discount code? Enter it on the payment page.</p>';
         // Suggestions from everything in the cart
         var pool = [];
-        ids.forEach(function (id) { (UPSELLS[id] || DEFAULT_UPSELLS).forEach(function (x) { if (cat[x] && ids.indexOf(x) === -1 && pool.indexOf(x) === -1) pool.push(x); }); });
+        ids.forEach(function (id) { (UPSELLS[id] || DEFAULT_UPSELLS).forEach(function (x) { if (eligible(x, ids, cat) && ids.indexOf(x) === -1 && pool.indexOf(x) === -1) pool.push(x); }); });
         sug.parentNode.hidden = !pool.length;
         sug.innerHTML = pool.slice(0, 4).map(function (x) { return suggestionHTML(cat[x]); }).join("");
       });
@@ -230,7 +259,7 @@
     draw();
   }
 
-  window.SWFTCart = { add: add, remove: remove, items: items, open: openPop };
+  window.SWFTCart = { add: add, addMany: addMany, remove: remove, items: items, catalog: catalog, open: openPop };
   function init() {
     paint();
     var root = document.getElementById("cart-root");
