@@ -231,7 +231,7 @@
       '<div class="sn-ptiles">' +
         COMPANY.map(function (l) {
           var on = l.key === active;
-          return '<a class="sn-ptile' + (l.key === "builder" ? " sn-ptile--feature" : "") + (on ? " is-active" : "") + ''" href="' + l.href + '"' + (on ? ' aria-current="page"' : "") + ">" + svg(l.icon, "sn-ptile__icon") + "<span>" + l.label + "</span></a>";
+          return '<a class="sn-ptile' + (l.key === "builder" ? " sn-ptile--feature" : "") + (on ? " is-active" : "") + '" href="' + l.href + '"' + (on ? ' aria-current="page"' : "") + ">" + svg(l.icon, "sn-ptile__icon") + "<span>" + l.label + "</span></a>";
         }).join("") +
       "</div>" +
     "</section>";
