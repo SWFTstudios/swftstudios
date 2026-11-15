@@ -20,7 +20,7 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Test public SWFT site as a fictional mobile customer
         env:
-          SWFT_TEST_URL: https://swftstudios.com
+          SWFT_TEST_URL: https://swftstudios-website.pages.dev
           SWFT_TEST_SEND_INQUIRY: "0"
         run: node tests/mystery-shopper/customer-journey.mjs
       - name: Preserve test evidence
