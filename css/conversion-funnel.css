@@ -18,7 +18,8 @@
 .fnl-project:hover img { transform:scale(1.04); }
 .fnl-project:focus-visible,.fnl-offer:focus-visible,.fnl-testimonial__visual:focus-visible { outline:2px solid var(--mf-ink); outline-offset:4px; border-radius:12px; }
 .fnl-project h3 { font-size:clamp(1.22rem,1.7vw,1.75rem); font-weight:600; letter-spacing:-.035em; line-height:1.08; margin:.45rem 0; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-.fnl-project h3 span { font-size:.9rem; }
+.fnl-project h3 .fnl-project__name { min-width:0; flex:1; font-size:inherit; }
+.fnl-project h3 .fnl-project__arrow { font-size:.9rem; flex:none; margin-left:auto; }
 .fnl-project p { color:var(--mf-muted); font-size:.94rem; line-height:1.45; margin:.5rem 0 0; }
 .fnl-inline-next { display:flex; gap:1rem 2rem; align-items:center; justify-content:space-between; margin-top:1.8rem; padding:1.3rem 0; border-top:1px solid var(--mf-line); border-bottom:1px solid var(--mf-line); }
 .fnl-inline-next p { margin:0; color:var(--mf-muted); max-width:46ch; }
