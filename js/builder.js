@@ -153,7 +153,7 @@
         showError("Cart is still loading. Please try again."); return;
       }
       b.disabled=true; b.textContent="Adding your package…";
-      window.SWFTCart.addMany(selectedProducts()).then(function () {
+      window.SWFTCart.addMany(selectedProducts(), {service:state.service,goal:state.scenario,goalName:scenario().name,serviceName:service().name,tierId:state.tierId}).then(function () {
         track("builder_add_to_cart","cart");
         location.href="/cart.html";
       }).catch(function (err) {
