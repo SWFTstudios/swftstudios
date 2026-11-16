@@ -30,7 +30,7 @@ export function escapeHtml(value) {
 export async function sendResendEmail(env, { to, subject, html, text, replyTo, idempotencyKey, headers: mailHeaders }) {
   const apiKey = env.RESEND_API_KEY;
   if (!apiKey || !to) {
-    console.error("Resend skipped: missing RESEND_API_KEY or recipient");
+    console.error(apiKey ? "Resend skipped: no recipient" : "Resend skipped: RESEND_API_KEY is not set for this environment");
     return false;
   }
 
@@ -96,7 +96,7 @@ export function notifyAddress() {
  * Team alert + visitor confirmation. Best-effort; does not throw.
  * Team alert goes through Resend, falling back to the Google Sheets script.
  */
-export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, teamSubject, teamHtml, confirmSubject, confirmHtml, idempotencyBase, backupStored = false }) {
+export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, teamSubject, teamHtml, confirmSubject, confirmHtml, idempotencyBase, backupStored = false, sendVisitorConfirmation = true }) {
   const team = teamRecipients(env);
   const base = idempotencyBase || `${kind}/${Date.now()}`;
   const results = { team: false, visitor: false };
@@ -119,7 +119,7 @@ export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, tea
 
   // Do not assure a visitor we received an inquiry unless our team email
   // succeeded or a durable CRM backup was confirmed.
-  if (visitorEmail && (results.team || backupStored)) {
+  if (sendVisitorConfirmation && visitorEmail && (results.team || backupStored)) {
     // The visitor just asked for this, so it is sent even if they opted out before,
     // but it carries the preferences / unsubscribe footer like every other email.
     const r = await sendPersonEmail(env, {

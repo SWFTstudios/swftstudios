@@ -367,6 +367,9 @@
       '<nav class="sd-nav" aria-label="Main">' +
         '<p class="sd-label">Menu</p>' +
         sideLink("/", "home", "Home", /^\/$/) +
+        // Desktop hides the top bar, so search needs its own entry here (also "/" or Ctrl/⌘+K).
+        '<button type="button" class="sd-link sd-search" data-swft-search-open title="Search (press /)" aria-keyshortcuts="/ Control+K Meta+K">' +
+          '<span class="sd-ico">' + icon("search", 20) + '</span><span class="sd-txt">Search</span></button>' +
         services +
         sideLink("/work.html", "work", "Work", /^\/work\.html$|^\/case-study\//) +
         sideLink("/pricing.html", "tag", "Pricing", /^\/pricing\.html$/) +

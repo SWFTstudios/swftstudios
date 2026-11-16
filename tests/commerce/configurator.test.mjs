@@ -18,13 +18,13 @@ test("fixed extras match the published add-on catalog", () => {
     addon.requires.forEach((id) => assert.ok(known.has(id), "Invalid qualifying tier: " + id));
   }
 });
-test("checkout price is always recalculated; package + add-on 50% due now", () => {
+test("checkout price is always recalculated; paid-in-full package + add-on due in full", () => {
   const cart = priceCart(["extra-pages","website-only"]);
   assert.equal(cart.lines[0].id, "website-only"); // Tier first for webhook provisioning
   assert.equal(cart.lines[1].id, "extra-pages");
   assert.equal(cart.projectTotalCents, 57500);
-  assert.equal(cart.dueNowCents, 28750);
-  assert.equal(cart.laterCents, 28750);
+  assert.equal(cart.dueNowCents, 57500);
+  assert.equal(cart.laterCents, 0);
   assert.deepEqual(cart.invalidAddons, []);
 });
 test("orphaned, unrelated, unknown and oversized carts cannot checkout", () => {
@@ -38,7 +38,7 @@ test("monthly pricing coexists with a one-time package", () => {
   const cart = priceCart(["website-only","website-care"]);
   assert.equal(cart.projectTotalCents, 40000);
   assert.equal(cart.monthlyCents, 15000);
-  assert.equal(cart.dueNowCents, 35000);
+  assert.equal(cart.dueNowCents, 55000);
   assert.equal(cart.hasMonthly, true);
 });
 test("every preconfigured scenario uses a real, purchasable package", () => {

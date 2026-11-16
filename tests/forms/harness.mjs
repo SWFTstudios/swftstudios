@@ -5,7 +5,8 @@
  * Pages Function handlers. Outbound calls are intercepted: Resend emails are
  * recorded (and can be forced to fail), Google Sheets script calls are
  * recorded (and can be forced to fail), Airtable is off (no token), Stripe
- * Payment Links come from the handlers' built-in defaults.
+ * Payment Links come from the handlers' built-in defaults. /api/checkout runs
+ * against a mock Stripe (sessions recorded in h.stripe, nothing is charged).
  *
  *   import { startHarness } from "./harness.mjs";
  *   const h = await startHarness();   // h.url, h.emails, h.sheets, h.failResend(n), h.failSheets(n), h.close()
@@ -19,6 +20,7 @@ import { onRequestPost as contact } from "../../functions/api/contact.js";
 import { onRequestPost as growthAudit } from "../../functions/api/growth-audit.js";
 import { onRequestPost as bookTier } from "../../functions/api/book-tier.js";
 import { onRequestPost as buildRequest } from "../../functions/api/build-request.js";
+import { onRequestPost as checkout } from "../../functions/api/checkout.js";
 
 const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const ROUTES = {
@@ -26,6 +28,7 @@ const ROUTES = {
   "/api/growth-audit": growthAudit,
   "/api/book-tier": bookTier,
   "/api/build-request": buildRequest,
+  "/api/checkout": checkout,
 };
 const TYPES = {
   ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript",
@@ -36,6 +39,8 @@ const TYPES = {
 export async function startHarness({ env: extraEnv = {} } = {}) {
   const emails = [];
   const sheets = [];
+  const stripe = [];
+  const contactRequests = [];
   let failNext = 0;
   let failSheetsNext = 0;
   const realFetch = globalThis.fetch;
@@ -60,13 +65,18 @@ export async function startHarness({ env: extraEnv = {} } = {}) {
       sheets.push(JSON.parse(init.body));
       return new Response(JSON.stringify({ ok: true }), { status: 200 });
     }
+    if (url === "https://api.stripe.com/v1/checkout/sessions") {
+      const params = Object.fromEntries(new URLSearchParams(init.body));
+      stripe.push(params);
+      return new Response(JSON.stringify({ id: "cs_test_mock", url: params.success_url.replace("{CHECKOUT_SESSION_ID}", "cs_test_mock") }), { status: 200 });
+    }
     if (url.startsWith("https://api.airtable.com/") || url.startsWith("https://api.stripe.com/")) {
       throw new Error(`unexpected outbound call in test: ${url}`);
     }
     return realFetch(input, init);
   };
 
-  const env = { RESEND_API_KEY: "re_test_key", ...extraEnv };
+  const env = { RESEND_API_KEY: "re_test_key", STRIPE_SECRET_KEY: "sk_test_mock", ...extraEnv };
 
   const server = createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
@@ -75,9 +85,12 @@ export async function startHarness({ env: extraEnv = {} } = {}) {
       if (handler) {
         const chunks = [];
         for await (const c of req) chunks.push(c);
+        if (url.pathname === "/api/contact") contactRequests.push(JSON.parse(Buffer.concat(chunks).toString() || "{}"));
+        const headers = { "Content-Type": req.headers["content-type"] || "application/json" };
+        if (req.headers.origin) headers.Origin = req.headers.origin;
         const request = new Request(url.href.replace("http://localhost", `http://${req.headers.host}`), {
           method: "POST",
-          headers: { "Content-Type": req.headers["content-type"] || "application/json" },
+          headers,
           body: Buffer.concat(chunks),
         });
         const response = await handler({ request, env });
@@ -105,9 +118,11 @@ export async function startHarness({ env: extraEnv = {} } = {}) {
     url: `http://127.0.0.1:${port}`,
     emails,
     sheets,
+    stripe,
+    contactRequests,
     failResend(n) { failNext = n; },
     failSheets(n) { failSheetsNext = n; },
-    reset() { emails.length = 0; sheets.length = 0; failNext = 0; failSheetsNext = 0; },
+    reset() { emails.length = 0; sheets.length = 0; stripe.length = 0; contactRequests.length = 0; failNext = 0; failSheetsNext = 0; },
     close() {
       globalThis.fetch = realFetch;
       return new Promise((r) => server.close(r));

@@ -581,6 +581,7 @@ html.sa-standalone .sn-nav.is-hidden { transform: none; }
     cursor: pointer; list-style: none; white-space: nowrap; transition: background 0.15s, color 0.15s;
   }
   .sd-link::-webkit-details-marker { display: none; }
+  button.sd-link { background: none; border: 0; font-family: inherit; text-align: left; }
   .sd-link:hover, .sd-link:focus-visible { background: rgba(var(--mf-ink-rgb), 0.06); color: var(--mf-ink); outline: none; }
   .sd-link.is-active { background: rgba(var(--mf-ink-rgb), 0.1); color: var(--mf-ink); font-weight: 600; }
   .sd-ico { display: grid; place-items: center; flex: none; width: 22px; }

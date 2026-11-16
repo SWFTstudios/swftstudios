@@ -32,6 +32,10 @@
 .swb-receipt dl div{display:flex;justify-content:space-between;gap:1rem;border-top:1px solid var(--mf-line);padding:.7rem 0}
 .swb-receipt dt,.swb-receipt dd{margin:0;font-size:.87rem}
 .swb-receipt dd{font-weight:600;text-align:right}
+.swb-receipt dt small{display:block;color:var(--mf-muted);font-size:.76rem;margin-top:.15rem}
+.swb-receipt .swb-sum__group{margin:1rem 0 -.6rem;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.swb-receipt .swb-sum__group+dl{margin-top:.6rem}
+.swb-receipt .swb-due>span+span{font-size:.87rem;text-align:right;color:var(--mf-muted)}
 .swb-receipt .swb-due{padding-top:.9rem;border-top:1px solid var(--mf-line-strong);display:flex;justify-content:space-between;gap:1rem;font-size:1.05rem}
 .swb-receipt .swb-due strong{font-size:1.5rem;letter-spacing:-.04em}
 .swb-consult{border:1px solid var(--mf-line);border-radius:16px;padding:1.2rem}
