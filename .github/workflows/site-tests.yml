@@ -30,7 +30,8 @@ jobs:
 
   browser:
     name: Browser journeys (mobile + desktop)
-    runs-on: ubuntu-latest
+    # Pinned: Playwright 1.56 has no Chromium build for ubuntu-latest (26.04).
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
