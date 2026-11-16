@@ -1,13 +1,11 @@
 /**
  * Cloudflare Pages Function. POST /api/growth-audit
- * Writes Free Growth Audit leads to Airtable CRM (Growth Audits + Pipeline).
+ * Logs Free Growth Audit leads to the Google Sheets lead log (when configured).
  * Sends Resend team notify + visitor confirmation when RESEND_API_KEY is set.
  *
  * Env (Pages → Settings → Variables and Secrets):
- *   AIRTABLE_TOKEN (secret)
  *   RESEND_API_KEY (secret)
- *   optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_GROWTH_AUDIT, AIRTABLE_TABLE_PEOPLE,
- *             AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
+ *   optional: GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 import { storeLead } from "../_lib/leads.js";

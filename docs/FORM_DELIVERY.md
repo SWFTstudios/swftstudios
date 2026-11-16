@@ -25,18 +25,17 @@ Check **Cloudflare → Workers & Pages → swftstudios-website → Settings → 
 - Every lead email goes to **hello@swftstudios.com**. This is fixed in code (`LEAD_INBOX` in `functions/_lib/resend.js`).
 - `NOTIFY_EMAIL` (optional): extra recipients, one address or a comma-separated list, e.g. `elombe@swftstudios.com`. It adds copies; it can no longer replace the inbox.
 - `RESEND_FROM`: `SWFT Studios <hello@swftstudios.com>`; the `swftstudios.com` sending domain must be verified with Resend.
-- `AIRTABLE_TOKEN` is optional for email delivery; recommended as a **separate backup** and for the CRM, with correct base/table permissions.
 - `GOOGLE_SHEETS_WEBHOOK_URL` + `GOOGLE_SHEETS_SECRET` (optional **secrets**): log every lead to a Google Sheet and let that script email hello@ if Resend fails. Setup: [`GOOGLE_SHEETS_LEADS.md`](GOOGLE_SHEETS_LEADS.md).
 
-**Do not put a Resend or Airtable API key in GitHub, HTML, a URL or chat.** Configure it as an environment secret. Check Resend sender verification and Resend logs if API calls return an error.
+**Do not put a Resend API key in GitHub, HTML, a URL or chat.** Configure it as an environment secret. Check Resend sender verification and Resend logs if API calls return an error.
 
 ## Reliability behavior
 
-The team email is sent to hello@swftstudios.com plus any `NOTIFY_EMAIL` extras, with the lead as reply-to. A transient Resend failure (429/5xx/network) is retried once with the same idempotency key, so it can't double-send. The visitor confirmation is attempted only after SWFT team email delivery succeeds **or** Airtable saved the submission. Customer-facing form success requires at least one of those durable outcomes; an unconfirmed request returns a non-2xx error and actionable contact text.
+The team email is sent to hello@swftstudios.com plus any `NOTIFY_EMAIL` extras, with the lead as reply-to. A transient Resend failure (429/5xx/network) is retried once with the same idempotency key, so it can't double-send. The visitor confirmation is attempted only after SWFT team email delivery succeeds **or** the Google Sheet saved the submission. Customer-facing form success requires at least one of those durable outcomes; an unconfirmed request returns a non-2xx error and actionable contact text.
 
-Each lead is saved to Airtable **and** the Google Sheet in parallel; either one counts as a durable copy. If the Resend team email fails (or `RESEND_API_KEY` is missing), the Google Sheets script emails hello@swftstudios.com instead, and the form succeeds. See [`GOOGLE_SHEETS_LEADS.md`](GOOGLE_SHEETS_LEADS.md).
+Each lead is logged to the Google Sheet when configured (Airtable was removed in November 2026). If the Resend team email fails (or `RESEND_API_KEY` is missing), the Google Sheets script emails hello@swftstudios.com instead, and the form succeeds. See [`GOOGLE_SHEETS_LEADS.md`](GOOGLE_SHEETS_LEADS.md).
 
-The CRM is a backup, not a dependency: a custom quote email can succeed even when Airtable is offline or not configured. Selecting extras never charges Stripe and must produce `quoteRequested: true`. A base-only order preserves the original Stripe Payment Link. All Worker routes now delegate to the same Pages Function handlers to prevent the domain using a stale version that lacked quote handling.
+The Sheet is a backup, not a dependency: a custom quote email succeeds even when the Sheet is not configured. Selecting extras never charges Stripe and must produce `quoteRequested: true`. A base-only order preserves the original Stripe Payment Link. All Worker routes now delegate to the same Pages Function handlers to prevent the domain using a stale version that lacked quote handling.
 
 The booking pages use a non-autofillable hidden spam field; previously mobile autofill could trigger an apparently successful-but-dropped intake.
 

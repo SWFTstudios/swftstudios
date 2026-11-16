@@ -1,12 +1,12 @@
 /**
  * Cloudflare Pages Function. POST /api/book-tier
  * Books a pricing-ladder tier:
- *   1) Writes the lead to Airtable CRM (Paid Bookings + Pipeline).
+ *   1) Logs the lead to the Google Sheets lead log (when configured).
  *   2) Returns the durable Stripe Payment Link for that tier (no secret key required).
  *   3) Sends Resend team notify + visitor confirmation when configured.
  *
- * Env: AIRTABLE_TOKEN, RESEND_API_KEY
- * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_*, RESEND_FROM, NOTIFY_EMAIL,
+ * Env: RESEND_API_KEY
+ * optional: GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET, RESEND_FROM, NOTIFY_EMAIL,
  *   STRIPE_PAYMENT_LINK_* overrides, STRIPE_SECRET_KEY (optional Checkout fallback)
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
@@ -216,7 +216,7 @@ export async function onRequestPost(context) {
         : `${tier.priceDisplay} (paid in full)`;
 
   const saved = await storeLead(env, {
-    formGroup: "Paid Booking", // Existing CRM booking intake; quoteOnly is labeled explicitly below.
+    formGroup: "Paid Booking", // Sheet tab for booking intake; quoteOnly is labeled explicitly below.
     formType: tier.name,
     person: { name, email, phone },
     company: { name: businessName, website, phone },
@@ -243,9 +243,8 @@ export async function onRequestPost(context) {
     },
   });
 
-  // Airtable is a helpful CRM backup, not a prerequisite for email delivery.
-  // A valid quote must reach the SWFT inbox OR be stored durably.
-  // Do not discard a customer request solely because Airtable is unavailable.
+  // A valid quote must reach the SWFT inbox OR be stored durably (Sheet).
+  // Do not discard a customer request solely because the Sheet is unavailable.
 
   const cancelPath = tier.bookUrl || `/book/${tier.id}.html`;
   const checkoutUrl = quoteOnly ? null : await resolveCheckoutUrl(env, {

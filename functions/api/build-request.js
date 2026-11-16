@@ -1,14 +1,12 @@
 /**
  * Cloudflare Pages Function. POST /api/build-request
  * Handles the "Order Your Website" booking flow:
- *   1) Writes the lead to Airtable CRM (Website Build Requests + Pipeline).
+ *   1) Emails the lead to hello@ and logs it to the Google Sheets lead log (when configured).
  *   2) Optionally opens a Stripe Checkout session for the chosen plan.
  * Env (set in Pages → Settings → Variables and Secrets):
- *   AIRTABLE_TOKEN (secret, required to save)
+ *   RESEND_API_KEY (secret)
  *   STRIPE_SECRET_KEY (secret, optional, enables checkout)
- *   optional overrides: AIRTABLE_BASE_ID, AIRTABLE_TABLE,
- *     AIRTABLE_TABLE_PEOPLE, AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE,
- *     STRIPE_PRICE_MONTHLY
+ *   optional: GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET, STRIPE_PRICE_MONTHLY
  */
 import { storeLead } from "../_lib/leads.js";
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
