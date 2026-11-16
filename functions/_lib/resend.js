@@ -118,7 +118,7 @@ export async function sendLeadEmails(env, { kind, visitorEmail, visitorName, tea
   }
 
   // Do not assure a visitor we received an inquiry unless our team email
-  // succeeded or a durable CRM backup was confirmed.
+  // succeeded or a durable Sheet backup was confirmed.
   if (sendVisitorConfirmation && visitorEmail && (results.team || backupStored)) {
     // The visitor just asked for this, so it is sent even if they opted out before,
     // but it carries the preferences / unsubscribe footer like every other email.

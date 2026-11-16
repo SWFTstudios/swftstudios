@@ -12,9 +12,9 @@
  *       The visitor finished the worksheet online: both sides get a copy of
  *       the answers, the visitor gets the cal.com link.
  *
- * Every kind is saved to the CRM (Growth Audits table, form type says which),
- * the Sheets lead log via storeLead, and D1 growth_guides (admin Guides tab).
- * Env: RESEND_API_KEY, AIRTABLE_TOKEN (+ the optional ones in growth-audit.js)
+ * Every kind is saved to the Sheets lead log via storeLead (form type says
+ * which) and D1 growth_guides (admin Guides tab).
+ * Env: RESEND_API_KEY (+ the optional ones in growth-audit.js)
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 import { storeLead } from "../_lib/leads.js";
@@ -194,7 +194,7 @@ export async function onRequestPost(context) {
   }
 
   const saved = await storeLead(env, {
-    formGroup: "Growth Audit", // same CRM table the audit used
+    formGroup: "Growth Audit", // same Sheet tab the audit used
     formType: lead.formType,
     person: { name: firstName || email, email, firstName },
     company: lead.company || { name: firstName ? `${firstName} (Growth Guide)` : "Growth Guide" },

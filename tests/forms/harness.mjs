@@ -4,7 +4,7 @@
  * Serves the site from the repo root and routes the form endpoints to the real
  * Pages Function handlers. Outbound calls are intercepted: Resend emails are
  * recorded (and can be forced to fail), Google Sheets script calls are
- * recorded (and can be forced to fail), Airtable is off (no token), Stripe
+ * recorded (and can be forced to fail), Stripe
  * Payment Links come from the handlers' built-in defaults. /api/checkout runs
  * against a mock Stripe (sessions recorded in h.stripe, nothing is charged).
  *
@@ -70,7 +70,7 @@ export async function startHarness({ env: extraEnv = {} } = {}) {
       stripe.push(params);
       return new Response(JSON.stringify({ id: "cs_test_mock", url: params.success_url.replace("{CHECKOUT_SESSION_ID}", "cs_test_mock") }), { status: 200 });
     }
-    if (url.startsWith("https://api.airtable.com/") || url.startsWith("https://api.stripe.com/")) {
+    if (url.startsWith("https://api.stripe.com/")) {
       throw new Error(`unexpected outbound call in test: ${url}`);
     }
     return realFetch(input, init);

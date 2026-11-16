@@ -8,7 +8,7 @@
  *   node tests/forms/live-smoke.mjs https://<preview>.swftstudios-website.pages.dev
  *
  * Then look for three "[SWFT TEST]" emails in hello@swftstudios.com.
- * Airtable (if configured) gets matching rows marked [SWFT TEST]; delete them after.
+ * The Google Sheet (if configured) gets matching rows marked [SWFT TEST]; delete them after.
  */
 const base = (process.argv[2] || "").replace(/\/$/, "");
 if (!/^https?:\/\//.test(base)) {
@@ -50,7 +50,7 @@ for (const [name, path, body] of checks) {
     const delivered = res.ok && data.ok && data.emailDelivered === true;
     if (!delivered) failed++;
     console.log(`${delivered ? "PASS" : "FAIL"}  ${name}: HTTP ${res.status}` +
-      `, emailDelivered=${data.emailDelivered}, storedInAirtable=${data.stored}` +
+      `, emailDelivered=${data.emailDelivered}, storedInSheet=${data.stored}` +
       (data.error ? `, error="${data.error}"` : "") + (data.warning ? `, warning="${data.warning}"` : ""));
   } catch (err) {
     failed++;

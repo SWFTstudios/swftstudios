@@ -3,23 +3,12 @@
 # If swftstudios.com routes through a separately deployed Worker, set the same secret there.
 # An API key in one Cloudflare project/environment is NOT automatically shared with another.
 # Rotate with: npx wrangler pages secret put RESEND_API_KEY --project-name=swftstudios-website
-# Optional: also set AIRTABLE_TOKEN and STRIPE_SECRET_KEY the same way.
-#
-# Airtable CRM (SWFT Website Leads) — token needs data.records:read + data.records:write.
-# Schema scopes only for one-time setup / MCP table creation. See docs/AIRTABLE_CRM.md
+# Optional: also set STRIPE_SECRET_KEY the same way.
+# Optional Google Sheets lead log: GOOGLE_SHEETS_WEBHOOK_URL + GOOGLE_SHEETS_SECRET (docs/GOOGLE_SHEETS_LEADS.md).
 
 RESEND_API_KEY=re_xxxxxxxx
 # RESEND_FROM=SWFT Studios <hello@swftstudios.com>
 # NOTIFY_EMAIL=elombe@swftstudios.com
-# AIRTABLE_TOKEN=
-# AIRTABLE_BASE_ID=appjwRgcgS0BD4lT7
-# AIRTABLE_TABLE_COMPANIES=tblsWplUc9TypNts6
-# AIRTABLE_TABLE_PEOPLE=tbl8Dh908emJXZ6vj
-# AIRTABLE_TABLE_PIPELINE=tblRnwAPc9Yz6LnHz
-# AIRTABLE_TABLE_GROWTH_AUDIT=tbl4yRS7k6ZIYQ4zh
-# AIRTABLE_TABLE_CONTACT=tbl1juYArQAJxoQcf
-# AIRTABLE_TABLE_BOOKINGS=tbloX0ged1EJUOpuA
-# AIRTABLE_TABLE=tbl2oMRm4qjOftvLQ
 # STRIPE_SECRET_KEY=
 # STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx
 # PORTAL_ADMIN_SECRET=generate-a-long-random-string

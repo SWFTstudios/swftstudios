@@ -49,21 +49,11 @@ export interface Env extends PortalEnv {
   AI?: { run(model: string, opts: { messages: { role: string; content: string }[] }): Promise<unknown> };
   /* Secrets — set with `wrangler secret put` (or in the Cloudflare dashboard) */
   STRIPE_SECRET_KEY?: string;
-  AIRTABLE_TOKEN?: string;
   /** Resend API key for lead notify + visitor confirmation emails */
   RESEND_API_KEY?: string;
   /* Non-secret config — safe defaults baked in; override via vars if needed */
   STRIPE_PRICE_MONTHLY?: string;
   STRIPE_PRICE_MAINTENANCE?: string;
-  AIRTABLE_BASE_ID?: string;
-  AIRTABLE_TABLE?: string;
-  AIRTABLE_TABLE_CONTACT?: string;
-  /** Airtable table id for Growth Audit leads — set via Worker vars */
-  AIRTABLE_TABLE_GROWTH_AUDIT?: string;
-  AIRTABLE_TABLE_BOOKINGS?: string;
-  AIRTABLE_TABLE_PEOPLE?: string;
-  AIRTABLE_TABLE_COMPANIES?: string;
-  AIRTABLE_TABLE_PIPELINE?: string;
   FORMSUBMIT_EMAIL?: string;
   /** Cal.com booking page for the availability pill (defaults: swftstudios / swft-meeting) */
   CAL_USERNAME?: string;
@@ -83,14 +73,6 @@ export interface Env extends PortalEnv {
 const DEFAULTS = {
   STRIPE_PRICE_MONTHLY: "price_1Td9xhAF4d9gCyuNnjPgqkho", // $299/mo SWFT Monthly Website Plan
   STRIPE_PRICE_MAINTENANCE: "price_1Td9xiAF4d9gCyuN6rUc25R0", // $99/mo SWFT Website Maintenance
-  AIRTABLE_BASE_ID: "appjwRgcgS0BD4lT7",
-  AIRTABLE_TABLE: "tbl2oMRm4qjOftvLQ", // Website Build Requests
-  AIRTABLE_TABLE_CONTACT: "tbl1juYArQAJxoQcf", // Contact Inquiries
-  AIRTABLE_TABLE_GROWTH_AUDIT: "tbl4yRS7k6ZIYQ4zh",
-  AIRTABLE_TABLE_BOOKINGS: "tbloX0ged1EJUOpuA",
-  AIRTABLE_TABLE_PEOPLE: "tbl8Dh908emJXZ6vj",
-  AIRTABLE_TABLE_COMPANIES: "tblsWplUc9TypNts6",
-  AIRTABLE_TABLE_PIPELINE: "tblRnwAPc9Yz6LnHz",
 };
 
 type CaseStudyInput = {
@@ -235,7 +217,7 @@ async function tryAiMatch(
 }
 
 /* ============================================================
-   Website build-request intake: store lead in Airtable +
+   Website build-request intake: email the lead +
    start a Stripe Checkout session for the chosen plan.
    ============================================================ */
 
@@ -445,188 +427,6 @@ async function sendFormSubmitEmail(
   } catch {
     return false;
   }
-}
-
-type FormGroup = "Growth Audit" | "Project Inquiry" | "Paid Booking" | "Website Build";
-
-function airtableTable(env: Env, key: keyof typeof DEFAULTS): string {
-  const fromEnv = (env as unknown as Record<string, string | undefined>)[key];
-  return fromEnv || DEFAULTS[key];
-}
-
-function escapeAirtableFormula(value: string): string {
-  return value.replace(/'/g, "\\'");
-}
-
-async function createAirtableRecord(
-  env: Env,
-  table: string,
-  fields: Record<string, unknown>
-): Promise<{ ok: boolean; id: string | null }> {
-  const token = env.AIRTABLE_TOKEN;
-  if (!token || !table) return { ok: false, id: null };
-  const baseId = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
-  try {
-    const res = await fetch(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ records: [{ fields }], typecast: true }),
-    });
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
-      console.error("Airtable create failed", table, res.status, errBody.slice(0, 400));
-      return { ok: false, id: null };
-    }
-    const data = (await res.json()) as { records?: { id?: string }[] };
-    const id = data?.records?.[0]?.id || null;
-    return { ok: !!id, id };
-  } catch (err) {
-    console.error("Airtable create fetch failed", err);
-    return { ok: false, id: null };
-  }
-}
-
-async function findAirtableId(env: Env, table: string, formula: string): Promise<string | null> {
-  const token = env.AIRTABLE_TOKEN;
-  if (!token || !table) return null;
-  const baseId = env.AIRTABLE_BASE_ID || DEFAULTS.AIRTABLE_BASE_ID;
-  try {
-    const url = new URL(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`);
-    url.searchParams.set("filterByFormula", formula);
-    url.searchParams.set("maxRecords", "1");
-    const res = await fetch(url.toString(), { headers: { Authorization: `Bearer ${token}` } });
-    if (!res.ok) return null;
-    const data = (await res.json()) as { records?: { id?: string }[] };
-    return data?.records?.[0]?.id || null;
-  } catch {
-    return null;
-  }
-}
-
-async function findOrCreateCompany(
-  env: Env,
-  company: { name?: string; website?: string; phone?: string; industry?: string }
-): Promise<string | null> {
-  const name = String(company.name || "").trim();
-  if (!name) return null;
-  const table = airtableTable(env, "AIRTABLE_TABLE_COMPANIES");
-  const existing = await findAirtableId(env, table, `{Business Name} = '${escapeAirtableFormula(name)}'`);
-  if (existing) return existing;
-  const fields: Record<string, unknown> = {
-    "Business Name": name.slice(0, 200),
-    "Company Status": "Prospect",
-  };
-  if (company.website) fields.Website = String(company.website).trim().slice(0, 500);
-  if (company.phone) fields.Phone = String(company.phone).trim().slice(0, 40);
-  if (company.industry) fields["Industry / category"] = String(company.industry).trim().slice(0, 200);
-  return (await createAirtableRecord(env, table, fields)).id;
-}
-
-async function findOrCreatePerson(
-  env: Env,
-  person: {
-    name: string;
-    email: string;
-    phone?: string;
-    firstName?: string;
-    lastName?: string;
-    companyId?: string | null;
-  }
-): Promise<string | null> {
-  const email = String(person.email || "").trim().toLowerCase();
-  if (!email) return null;
-  const table = airtableTable(env, "AIRTABLE_TABLE_PEOPLE");
-  const existing = await findAirtableId(env, table, `LOWER({Email}) = '${escapeAirtableFormula(email)}'`);
-  if (existing) return existing;
-  const fields: Record<string, unknown> = {
-    Name: String(person.name || email).trim().slice(0, 200),
-    Email: email.slice(0, 320),
-  };
-  if (person.phone) fields.Phone = String(person.phone).trim().slice(0, 40);
-  if (person.firstName) fields["First Name"] = String(person.firstName).trim().slice(0, 120);
-  if (person.lastName) fields["Last Name"] = String(person.lastName).trim().slice(0, 120);
-  if (person.companyId) fields.Company = [person.companyId];
-  return (await createAirtableRecord(env, table, fields)).id;
-}
-
-async function storeCrmLead(
-  env: Env,
-  lead: {
-    formGroup: FormGroup;
-    formType?: string;
-    formFields: Record<string, unknown>;
-    person: { name: string; email: string; phone?: string; firstName?: string; lastName?: string };
-    company?: { name?: string; website?: string; phone?: string; industry?: string };
-    sourcePage?: string;
-    utmSource?: string;
-    utmMedium?: string;
-    utmCampaign?: string;
-    notes?: string;
-    submittedAt?: string;
-  }
-): Promise<boolean> {
-  if (!env.AIRTABLE_TOKEN) return false;
-
-  const formTableKey: Record<FormGroup, keyof typeof DEFAULTS> = {
-    "Growth Audit": "AIRTABLE_TABLE_GROWTH_AUDIT",
-    "Project Inquiry": "AIRTABLE_TABLE_CONTACT",
-    "Paid Booking": "AIRTABLE_TABLE_BOOKINGS",
-    "Website Build": "AIRTABLE_TABLE",
-  };
-  const pipelineLink: Record<FormGroup, string> = {
-    "Growth Audit": "Growth Audit",
-    "Project Inquiry": "Contact Inquiry",
-    "Paid Booking": "Paid Booking",
-    "Website Build": "Website Build",
-  };
-
-  const formTable = airtableTable(env, formTableKey[lead.formGroup]);
-  const submittedAt = lead.submittedAt || new Date().toISOString();
-
-  let companyId: string | null = null;
-  let personId: string | null = null;
-  try {
-    if (lead.company?.name) companyId = await findOrCreateCompany(env, lead.company);
-    personId = await findOrCreatePerson(env, { ...lead.person, companyId });
-  } catch (err) {
-    console.error("CRM upsert failed; continuing with form-only write", err);
-  }
-
-  const formFields = { ...lead.formFields };
-  if (personId) formFields.Person = [personId];
-  if (!formFields.Status) formFields.Status = "New";
-  if (!formFields["Submitted At"]) formFields["Submitted At"] = submittedAt;
-
-  const formResult = await createAirtableRecord(env, formTable, formFields);
-  if (!formResult.ok || !formResult.id) return false;
-
-  const pipelineTable = airtableTable(env, "AIRTABLE_TABLE_PIPELINE");
-  const leadLabel =
-    [lead.person.name, lead.company?.name].filter(Boolean).join(" · ") || lead.person.email;
-  const pipelineFields: Record<string, unknown> = {
-    Lead: leadLabel.slice(0, 200),
-    Stage: "New",
-    "Form Group": lead.formGroup,
-    "Form Type": (lead.formType || lead.formGroup).slice(0, 200),
-    "Source Page": String(lead.sourcePage || "").slice(0, 300),
-    "UTM Source": String(lead.utmSource || "").slice(0, 120),
-    "UTM Medium": String(lead.utmMedium || "").slice(0, 120),
-    "UTM Campaign": String(lead.utmCampaign || "").slice(0, 120),
-    Notes: String(lead.notes || "").slice(0, 4000),
-    "Submitted At": submittedAt,
-  };
-  if (personId) pipelineFields.Person = [personId];
-  if (companyId) pipelineFields.Company = [companyId];
-  pipelineFields[pipelineLink[lead.formGroup]] = [formResult.id];
-
-  const pipelineResult = await createAirtableRecord(env, pipelineTable, pipelineFields);
-  if (!pipelineResult.ok) console.error("Pipeline write failed; form row was stored", formResult.id);
-  return true;
-}
-
-/** @deprecated Prefer storeCrmLead — kept for any residual call sites */
-async function writeToAirtable(env: Env, table: string, fields: Record<string, unknown>): Promise<boolean> {
-  return (await createAirtableRecord(env, table, fields)).ok;
 }
 
 export default {

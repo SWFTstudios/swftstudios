@@ -1,15 +1,14 @@
 # Google Sheets lead log + email fallback
 
-Every form submission (contact, Free Growth Audit, booking / quote, website build) is saved in **two places at once**, then emailed:
+Every form submission (contact, Free Growth Audit, booking / quote, website build) is emailed to the team and, when this guide is set up, logged to a Google Sheet:
 
 | Step | Where | Needs |
 |---|---|---|
-| 1. CRM | **Airtable** (form table + Pipeline) | `AIRTABLE_TOKEN` (already used) |
-| 2. Lead log | **Google Sheet**, one tab per form | `GOOGLE_SHEETS_WEBHOOK_URL` + `GOOGLE_SHEETS_SECRET` (this guide) |
-| 3. Notification | Email to **hello@swftstudios.com** via Resend | `RESEND_API_KEY` (already used) |
-| 3b. If Resend fails | The Google Sheets script emails **hello@swftstudios.com** instead | same two Sheets values |
+| 1. Lead log | **Google Sheet**, one tab per form | `GOOGLE_SHEETS_WEBHOOK_URL` + `GOOGLE_SHEETS_SECRET` (this guide) |
+| 2. Notification | Email to **hello@swftstudios.com** via Resend | `RESEND_API_KEY` (already used) |
+| 2b. If Resend fails | The Google Sheets script emails **hello@swftstudios.com** instead | same two Sheets values |
 
-Airtable and the Sheet are independent: either one counts as a saved copy, and a form still succeeds if the email went out, or if either copy was saved. The Sheets part does nothing until its two secrets are set.
+Airtable was removed in November 2026; the Sheet is the only saved copy besides the email. A form succeeds if the team email went out or the Sheet row was saved. The Sheets part does nothing until its two secrets are set.
 
 The site posts to a small **Google Apps Script web app** ([`scripts/google-sheets-leads.gs`](../scripts/google-sheets-leads.gs)) that lives inside the spreadsheet. No Google API keys or service accounts are needed.
 
@@ -43,7 +42,7 @@ Keep the URL and secret out of GitHub, HTML and chat. They are secrets in Cloudf
 
 | Symptom | Likely cause |
 |---|---|
-| No rows appear, Airtable and email work | The two Cloudflare secrets aren't set (or the site wasn't redeployed after adding them), or the secret doesn't match `SHARED_SECRET`. Check Cloudflare request logs for `Google Sheets webhook rejected`. |
+| No rows appear, email works | The two Cloudflare secrets aren't set (or the site wasn't redeployed after adding them), or the secret doesn't match `SHARED_SECRET`. Check Cloudflare request logs for `Google Sheets webhook rejected`. |
 | `unauthorized` in the logs | `GOOGLE_SHEETS_SECRET` differs from the script property `SHARED_SECRET`. |
 | The URL opens a Google sign-in page | The deployment's access isn't "Anyone". Redeploy with **Who has access: Anyone**. |
 | `unknown sheet` in the logs | A form group was renamed in code. Add the new tab name to `CONFIG.SHEETS` in the script and redeploy it. |

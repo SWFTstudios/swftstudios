@@ -1,4 +1,8 @@
-# SWFT — Booking Flow Integrations (Airtable + Stripe + Resend)
+# SWFT — Booking Flow Integrations (Stripe + Resend)
+
+> **November 2026: Airtable was removed.** Leads are emailed to hello@swftstudios.com via Resend and,
+> optionally, logged to a Google Sheet ([`GOOGLE_SHEETS_LEADS.md`](GOOGLE_SHEETS_LEADS.md)). Airtable sections
+> below are kept for history only; `AIRTABLE_*` variables are no longer read and can be deleted from Cloudflare.
 
 **Submissions go straight to Airtable** — no more FormSubmit for live lead forms.
 Production is **Cloudflare Pages** project **`swftstudios-website`**. Forms post to

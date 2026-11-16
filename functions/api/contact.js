@@ -1,20 +1,19 @@
 /**
  * Cloudflare Pages Function. POST /api/contact
- * Writes project inquiries to Airtable CRM (Contact Inquiries + Pipeline) and
- * the Google Sheets lead log, then emails hello@swftstudios.com (Resend) with a
- * visitor confirmation. If Resend fails, the Google Sheets script emails hello@.
+ * Emails hello@swftstudios.com (Resend) with a visitor confirmation, and logs the
+ * inquiry to the Google Sheets lead log when configured. If Resend fails, the
+ * Google Sheets script emails hello@.
  *
  * Response: 200 { ok:true, stored, emailDelivered } once at least one durable
- * channel (CRM row or team email) confirmed the inquiry; 503 { ok:false,
+ * channel (team email or Sheet row) confirmed the inquiry; 503 { ok:false,
  * code:"delivery_unavailable" } when none did, so the page never shows a false
- * success. Submissions marked [SWFT TEST] are QA: stored with Status "Test",
- * no Pipeline card, a "[TEST]" team subject and no visitor confirmation.
+ * success. Submissions marked [SWFT TEST] are QA: Sheet Status "Test", a
+ * "[TEST]" team subject and no visitor confirmation.
  * `submissionId` (from the page) makes a repeated send of the same inquiry
  * idempotent at the email provider.
  *
- * Env: AIRTABLE_TOKEN, RESEND_API_KEY, GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET;
- * optional: AIRTABLE_BASE_ID, AIRTABLE_TABLE_CONTACT, AIRTABLE_TABLE_PEOPLE,
- *   AIRTABLE_TABLE_COMPANIES, AIRTABLE_TABLE_PIPELINE, RESEND_FROM, NOTIFY_EMAIL
+ * Env: RESEND_API_KEY; optional: GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET,
+ *   RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 import { storeLead } from "../_lib/leads.js";
@@ -76,9 +75,9 @@ export async function onRequestPost(context) {
 
   // Which delivery channels exist here (booleans only, never values). Logged when
   // none exists, because then every inquiry fails until a secret is restored.
-  const channels = { airtable: !!env.AIRTABLE_TOKEN, resend: !!env.RESEND_API_KEY, sheets: sheetsConfigured(env) };
-  if (!channels.airtable && !channels.resend && !channels.sheets) {
-    console.error("contact: no delivery channel configured (AIRTABLE_TOKEN, RESEND_API_KEY and GOOGLE_SHEETS_* all unset)");
+  const channels = { resend: !!env.RESEND_API_KEY, sheets: sheetsConfigured(env) };
+  if (!channels.resend && !channels.sheets) {
+    console.error("contact: no delivery channel configured (RESEND_API_KEY and GOOGLE_SHEETS_* unset)");
   }
 
   const saved = await storeLead(env, {

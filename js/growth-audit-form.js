@@ -240,7 +240,7 @@
       desiredServiceLabel: serviceLabel(serviceId),
       details: combinedDetails,
       photoLinks: photoLinks,
-      /* Compatibility aliases for existing Airtable columns */
+      /* Compatibility aliases for existing lead-log columns */
       businessCategory: serviceLabel(serviceId) || "Growth Audit",
       challenge: val("biggest_leak") || serviceLabel(serviceId) || "Growth Audit inquiry",
       biggestLeak: val("biggest_leak"),

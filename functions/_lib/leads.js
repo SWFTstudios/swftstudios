@@ -1,21 +1,17 @@
 /**
- * Save a form submission everywhere it should live: the Airtable CRM and the
- * Google Sheets lead log, in parallel. Either one counts as a durable copy.
- * Neither is a prerequisite for the other, or for the email to hello@.
+ * Save a form submission to the Google Sheets lead log (when configured).
+ * The team email to hello@ (functions/_lib/resend.js) is the primary record;
+ * the Sheet is an optional durable copy and a fallback mailer if Resend is down.
  */
-import { storeCrmLead } from "./airtable-crm.js";
 import { appendLeadRow } from "./sheets.js";
 
 /**
  * @param {Record<string, string|undefined>} env
- * @param {Parameters<typeof storeCrmLead>[1]} lead same shape storeCrmLead takes
- * @returns {Promise<{ airtable: boolean, sheet: boolean, stored: boolean, label: string }>}
+ * @param {{ formGroup: string, formType?: string, formFields?: Record<string, unknown>, submittedAt?: string }} lead
+ *   Extra fields callers pass (person, company, UTM, notes, isTest) are accepted and ignored here.
+ * @returns {Promise<{ sheet: boolean, stored: boolean, label: string }>}
  */
 export async function storeLead(env, lead) {
-  const [airtable, sheet] = await Promise.all([
-    storeCrmLead(env, lead).catch((err) => { console.error("Airtable store threw", err); return false; }),
-    appendLeadRow(env, lead).catch((err) => { console.error("Sheets store threw", err); return false; }),
-  ]);
-  const where = [airtable && "Airtable", sheet && "Google Sheet"].filter(Boolean);
-  return { airtable, sheet, stored: airtable || sheet, label: where.length ? where.join(" + ") : "No" };
+  const sheet = await appendLeadRow(env, lead).catch((err) => { console.error("Sheets store threw", err); return false; });
+  return { sheet, stored: sheet, label: sheet ? "Google Sheet" : "Email only" };
 }
