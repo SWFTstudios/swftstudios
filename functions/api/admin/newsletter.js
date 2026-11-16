@@ -65,12 +65,12 @@ export async function onRequestPost(context) {
     if (action === "test") {
       const mail = buildEmail(env, item, { subject, summary }, null);
       const ok = await sendResendEmail(env, { to: gate.user.email, subject: `[Test] ${subject}`, html: mail.html, text: mail.text });
-      return ok ? json({ ok: true, to: gate.user.email }) : json({ ok: false, error: "Resend didn't accept the test email." }, 502);
+      return ok ? json({ ok: true, to: gate.user.email }) : json({ ok: false, error: "Resend didn't accept the test email." }, 503);
     }
     if (action === "send") {
       if (!(await newsletterReady(gate.db))) return json({ ok: false, error: "Apply migration 0010 first." }, 503);
       const r = await sendItem(gate.db, env, item, { subject, summary });
-      if (r.failed && !r.sent) return json({ ok: false, error: "Resend didn't accept the emails. Nothing was marked as sent; try again.", remaining: r.remaining }, 502);
+      if (r.failed && !r.sent) return json({ ok: false, error: "Resend didn't accept the emails. Nothing was marked as sent; try again.", remaining: r.remaining }, 503);
       return json({ ok: true, ...r });
     }
     return json({ ok: false, error: "Unknown action." }, 400);

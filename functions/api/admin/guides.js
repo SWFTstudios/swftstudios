@@ -97,7 +97,7 @@ export async function onRequestPost(context) {
     idempotencyKey: `guide-results/${id}/${results.length}`,
   });
   if (mail.status === "opted_out") return json({ ok: false, error: "This person turned off these emails, so nothing was sent." }, 409);
-  if (!mail.sent) return json({ ok: false, error: "The email didn't send. Check RESEND_API_KEY and try again." }, 502);
+  if (!mail.sent) return json({ ok: false, error: "The email didn't send. Check RESEND_API_KEY and try again." }, 503);
 
   await gate.db
     .prepare("UPDATE growth_guides SET status = 'sent', results = ?, results_sent_at = datetime('now') WHERE id = ?")

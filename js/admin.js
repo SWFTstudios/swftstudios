@@ -794,6 +794,78 @@
     load();
   }
 
+  /* ---------- Leads: every website form submission (D1 leads table) ----------
+     Saved before any email is sent, so a lead shows up here even when the
+     notification email failed ("Email failed" badge). */
+  var LEAD_STATUS = { new: "New", contacted: "Contacted", won: "Won", lost: "Lost", spam: "Spam", test: "Test" };
+
+  function openLead(box, l, statuses, reload) {
+    var rows = Object.keys(l.fields || {}).filter(function (k) { return l.fields[k] !== "" && l.fields[k] != null; })
+      .map(function (k) { return [k, String(l.fields[k])]; });
+    var notes = el("textarea", { "aria-label": "Private notes for this lead", rows: "4" });
+    notes.value = l.notes || "";
+    var msg = el("p", { class: "admin-muted" });
+    var save = el("button", { class: "mf-btn mf-btn--sm", type: "button", text: "Save notes", onclick: function () {
+      save.disabled = true; msg.textContent = "Saving…";
+      P.api("/api/admin/leads", { method: "POST", body: JSON.stringify({ id: l.id, notes: notes.value }) }).then(function (r) {
+        save.disabled = false;
+        msg.textContent = r.res.ok && r.data.ok ? "Saved." : (r.data && r.data.error) || "Could not save.";
+        if (r.res.ok && r.data.ok) reload();
+      });
+    } });
+    box.replaceChildren(card((l.business || l.name || l.email || "Lead") + " · " + l.formGroup, [
+      el("p", {}, [l.email ? el("a", { class: "portal-link", href: "mailto:" + l.email, text: l.email }) : "No email",
+        (l.phone ? " · " + l.phone : "") + " · " + date(l.createdAt)]),
+      el("p", { class: "admin-muted", text: "Source: " + (l.sourcePage || "—") + (l.utmSource ? " · UTM " + [l.utmSource, l.utmMedium, l.utmCampaign].filter(Boolean).join(" / ") : "") +
+        " · Team email: " + (l.emailDelivered === true ? "sent" : l.emailDelivered === false ? "FAILED, follow up from here" : "not recorded") }),
+      table(["Field", "Answer"], rows, "No fields."),
+      el("p", { class: "portal-stat-label", text: "Private notes" }),
+      el("div", { class: "admin-note-form" }, [notes]),
+      el("div", { class: "admin-inline-form" }, [save, msg])
+    ]));
+    box.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function renderLeads(root) {
+    var list = el("div"), detail = el("div", { class: "admin-guide-detail" });
+    var filter = el("select", { "aria-label": "Show leads" });
+    [["", "Active (not test)"], ["new", "New"], ["contacted", "Contacted"], ["won", "Won"], ["lost", "Lost"], ["spam", "Spam"], ["test", "Test"], ["all", "Everything"]]
+      .forEach(function (o) { filter.appendChild(el("option", { value: o[0], text: o[1] })); });
+    var search = el("input", { type: "search", placeholder: "Search name, email or business", "aria-label": "Search leads" });
+    root.replaceChildren(el("div", { class: "admin-inline-form" }, [filter, search]), list, detail);
+    var timer = null;
+    var load = function () {
+      list.replaceChildren(card("Website leads", [el("p", { class: "admin-muted", text: "Loading…" })]));
+      var qs = "?status=" + encodeURIComponent(filter.value) + (search.value.trim() ? "&q=" + encodeURIComponent(search.value.trim()) : "");
+      P.api("/api/admin/leads" + qs).then(function (r) {
+        var d = r.data || {};
+        if (!r.res.ok || !d.ok) { list.replaceChildren(card("Website leads", [notice((d && d.error) || "Could not load leads.")])); return; }
+        var c = d.counts || {};
+        list.replaceChildren(card("Website leads", [
+          el("p", { class: "admin-muted", text: (c.new || 0) + " new · " + (c.contacted || 0) + " contacted · " + (c.won || 0) + " won" +
+            (d.emailFailed ? " · " + d.emailFailed + " whose team email failed" : "") }),
+          table(["When", "Who", "Business", "Form", "Email", "Status", ""], d.leads.map(function (l) {
+            var sel = el("select", { "aria-label": "Status for " + (l.name || l.email), onchange: function () {
+              sel.disabled = true;
+              P.api("/api/admin/leads", { method: "POST", body: JSON.stringify({ id: l.id, status: sel.value }) }).then(function (res) {
+                sel.disabled = false;
+                if (!(res.res.ok && res.data.ok)) { alert((res.data && res.data.error) || "Could not update."); sel.value = l.status; }
+                else l.status = sel.value;
+              });
+            } });
+            d.statuses.forEach(function (st) { var o = el("option", { value: st, text: LEAD_STATUS[st] || st }); if (st === l.status) o.selected = true; sel.appendChild(o); });
+            return [date(l.createdAt), (l.name ? l.name + " · " : "") + (l.email || ""), l.business || "—", l.formGroup,
+              l.emailDelivered === false ? "Failed" : l.emailDelivered ? "Sent" : "—", sel,
+              el("button", { class: "admin-row-btn", type: "button", text: "View", onclick: function () { openLead(detail, l, d.statuses, load); } })];
+          }), "No leads yet.")
+        ]));
+      });
+    };
+    filter.addEventListener("change", load);
+    search.addEventListener("input", function () { clearTimeout(timer); timer = setTimeout(load, 300); });
+    load();
+  }
+
   function renderEmails(root) {
     root.replaceChildren(card("Sent emails (Resend)", [el("p", { class: "admin-muted", text: "Loading…" })]));
     P.api("/api/admin/emails").then(function (r) {
@@ -918,7 +990,7 @@
     box.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  var RENDER = { overview: renderOverview, analytics: renderAnalytics, clients: renderClients, outreach: renderOutreach, guides: renderGuides, emails: renderEmails, blog: renderBlog, newsletter: renderNewsletter };
+  var RENDER = { overview: renderOverview, analytics: renderAnalytics, clients: renderClients, outreach: renderOutreach, guides: renderGuides, leads: renderLeads, emails: renderEmails, blog: renderBlog, newsletter: renderNewsletter };
   var drawn = {};
 
   function show(tab) {

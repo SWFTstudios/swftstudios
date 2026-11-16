@@ -1,0 +1,47 @@
+name: Site tests
+# Every PR: API/unit suites, then the real-browser form and customer-journey
+# checks (mobile + desktop). Outside services are mocked: no email, lead,
+# Stripe charge or calendar booking is created.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+concurrency:
+  group: site-tests-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  unit:
+    name: API and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm run test:commerce
+      - run: npm run test:forms
+      - run: npm run test:funnel
+      - run: npm run test:admin
+      - run: npm run test:subscribe
+      - run: npm run test:availability
+
+  browser:
+    name: Browser journeys (mobile + desktop)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --package-lock=false --legacy-peer-deps playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Lead forms deliver to hello@ (mocked email)
+        run: npm run test:forms:browser
+      - name: Search → build → cart → checkout, contact form states
+        run: npm run test:funnel:browser

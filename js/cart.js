@@ -286,7 +286,9 @@
         btns.forEach(function (b) { b.disabled = false; });
         if (d.ok && d.url) { track(comp ? "cart_comp" : "cart_checkout", { items: items().length }); if (comp) write([]); location.href = d.url; return; }
         status.className = "mf-status is-error";
-        status.innerHTML = esc(d.error || "Checkout couldn't start. Try again.") + (d.code === "checkout_unavailable" ? ' <a class="mf-link" href="' + CAL + '" target="_blank" rel="noopener">Book a call</a>' : "");
+        // Any failure (including a non-JSON error page) offers the call route, so no one is stuck.
+        status.innerHTML = esc(d.error || "Checkout couldn't start. Try again in a moment, or book a call and we'll invoice you.") +
+          (d.code === "checkout_invalid" ? "" : ' <a class="mf-link" href="' + CAL + '" target="_blank" rel="noopener">Book a call</a>');
       }, function () { btns.forEach(function (b) { b.disabled = false; }); status.className = "mf-status is-error"; status.textContent = "You look offline. Try again in a moment."; });
     }
     form.addEventListener("submit", function (e) { e.preventDefault(); submit(false); });

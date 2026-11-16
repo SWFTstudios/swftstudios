@@ -11,7 +11,7 @@
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 import { getStripeTier, resolvePaymentLinkUrl, resolveStripePriceId } from "../_lib/stripe-tiers.js";
-import { storeLead } from "../_lib/leads.js";
+import { storeLead, markLeadEmailed } from "../_lib/leads.js";
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -297,6 +297,7 @@ export async function onRequestPost(context) {
       <p>SWFT Studios</p>
     `,
   });
+  await markLeadEmailed(env, saved, emailed.team);
 
   // Never claim success for an undelivered, unrecorded form.
   // A customer confirmation alone is not proof the owner received the lead.

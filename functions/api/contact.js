@@ -1,11 +1,12 @@
 /**
  * Cloudflare Pages Function. POST /api/contact
- * Emails hello@swftstudios.com (Resend) with a visitor confirmation, and logs the
- * inquiry to the Google Sheets lead log when configured. If Resend fails, the
+ * Saves the inquiry to D1 (admin Leads tab), emails hello@swftstudios.com (Resend)
+ * with a visitor confirmation, and logs it to the Google Sheets lead log when
+ * configured. If Resend fails, the
  * Google Sheets script emails hello@.
  *
  * Response: 200 { ok:true, stored, emailDelivered } once at least one durable
- * channel (team email or Sheet row) confirmed the inquiry; 503 { ok:false,
+ * channel (D1 lead row, team email or Sheet row) confirmed the inquiry; 503 { ok:false,
  * code:"delivery_unavailable" } when none did, so the page never shows a false
  * success. Submissions marked [SWFT TEST] are QA: Sheet Status "Test", a
  * "[TEST]" team subject and no visitor confirmation.
@@ -16,10 +17,8 @@
  *   RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { storeLead } from "../_lib/leads.js";
+import { storeLead, markLeadEmailed, TEST_MARKER } from "../_lib/leads.js";
 import { sheetsConfigured } from "../_lib/sheets.js";
-
-const TEST_MARKER = /\[\s*SWFT\s+TEST\b/i;
 
 const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
@@ -75,9 +74,9 @@ export async function onRequestPost(context) {
 
   // Which delivery channels exist here (booleans only, never values). Logged when
   // none exists, because then every inquiry fails until a secret is restored.
-  const channels = { resend: !!env.RESEND_API_KEY, sheets: sheetsConfigured(env) };
-  if (!channels.resend && !channels.sheets) {
-    console.error("contact: no delivery channel configured (RESEND_API_KEY and GOOGLE_SHEETS_* unset)");
+  const channels = { d1: !!env.DB, resend: !!env.RESEND_API_KEY, sheets: sheetsConfigured(env) };
+  if (!channels.d1 && !channels.resend && !channels.sheets) {
+    console.error("contact: no delivery channel configured (DB, RESEND_API_KEY and GOOGLE_SHEETS_* unset)");
   }
 
   const saved = await storeLead(env, {
@@ -148,6 +147,7 @@ export async function onRequestPost(context) {
       <p>SWFT Studios</p>
     `,
   });
+  await markLeadEmailed(env, saved, emailed.team);
 
   if (!saved.stored && !emailed.team) {
     console.error("contact: inquiry not delivered", JSON.stringify({ channels, stored: false, emailed: false, test: isTest }));
