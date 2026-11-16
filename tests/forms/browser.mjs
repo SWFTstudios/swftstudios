@@ -61,6 +61,7 @@ await check("Contact form", async (page) => {
   await page.fill("#contact-website", "https://acme.example");
   await page.locator('#contact-service input[name="service_needed"]').first().check({ force: true });
   await page.fill("#contact-challenge", "No inquiries from the site");
+  await page.locator("details:has(#contact-outcome) > summary").click(); // optional details start collapsed
   await page.fill("#contact-outcome", "More bookings");
   await page.click("#contact-submit");
   await page.waitForSelector("#contact-status.is-success", { timeout: 5000 });

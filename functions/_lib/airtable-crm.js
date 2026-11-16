@@ -172,11 +172,15 @@ export async function findOrCreatePerson(env, person) {
  *   utmCampaign?: string,
  *   notes?: string,
  *   submittedAt?: string,
+ *   isTest?: boolean,   // QA submission: stored with Status "Test", no Pipeline card
  * }} lead
  * @returns {Promise<boolean>}
  */
 export async function storeCrmLead(env, lead) {
-  if (!env.AIRTABLE_TOKEN) return false;
+  if (!env.AIRTABLE_TOKEN) {
+    console.error("Airtable skipped: AIRTABLE_TOKEN is not set for this environment");
+    return false;
+  }
 
   const formKey = FORM_GROUP_TO_TABLE[lead.formGroup];
   if (!formKey) {
@@ -202,11 +206,14 @@ export async function storeCrmLead(env, lead) {
 
   const formFields = { ...lead.formFields };
   if (personId) formFields.Person = [personId];
+  if (lead.isTest) formFields.Status = "Test";
   if (!formFields.Status) formFields.Status = "New";
   if (!formFields["Submitted At"]) formFields["Submitted At"] = submittedAt;
 
   const formResult = await createRecord(env, formTable, formFields);
   if (!formResult.ok || !formResult.id) return false;
+  // QA submissions stay out of the sales Pipeline so they never get a follow-up.
+  if (lead.isTest) return true;
 
   const pipelineTable = tableId(env, "AIRTABLE_TABLE_PIPELINE");
   const linkField = FORM_GROUP_TO_PIPELINE_LINK[lead.formGroup];

@@ -22,6 +22,7 @@
     "build:guide-pdf": "node scripts/build-growth-guide-pdf.mjs",
     "build:campaigns": "node scripts/build-campaign-pages.mjs",
     "test:funnel": "node --test tests/funnel/*.test.mjs",
+    "test:funnel:browser": "node tests/funnel/journey.browser.mjs",
     "build:site-search": "node scripts/build-site-search.mjs",
     "test:commerce": "node --test tests/commerce/*.test.mjs"
   },

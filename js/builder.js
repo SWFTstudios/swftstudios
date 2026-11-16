@@ -1,4 +1,5 @@
-/* SWFT guided service builder. Published prices + eligibility, no client-supplied checkout prices. */
+/* SWFT guided service builder. Published prices + eligibility, no client-supplied checkout prices.
+   Totals and payment terms come from js/swft-pricing.js, the same rules the cart uses. */
 (function () {
   "use strict";
   var panel = document.getElementById("swb-panel");
@@ -12,6 +13,8 @@
   var state = { step:0, service:null, scenario:null, tierId:null, extras:new Set(), cross:new Set() };
   var CALL = "https://cal.com/swftstudios/swft-meeting";
   var query = new URLSearchParams(location.search);
+  var SAVE_KEY = "swft-builder-state";
+  var Pricing = window.SWFTPricing;
   var money = function (c) { return "$" + (c/100).toLocaleString("en-US",{maximumFractionDigits:0}); };
   var escape = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g,function (x) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]; }); };
   var service = function () { return config && config.services.find(function (s) { return s.id === state.service; }); };
@@ -22,13 +25,39 @@
   }
   function showError(msg) { error.hidden = !msg; error.textContent = msg || ""; }
   function selectedProducts() { return [state.tierId].concat(Array.from(state.extras),Array.from(state.cross)).filter(Boolean); }
-  function priceTotals() {
-    var items = selectedProducts().map(entry).filter(Boolean);
-    var once = 0, monthly = 0;
-    items.forEach(function (item) { if (item.monthly) monthly += item.priceCents; else once += item.priceCents; });
-    return { once:once, monthly:monthly, today:Math.round(once*.5)+monthly, later:once-Math.round(once*.5) };
+  function priceQuote() { return Pricing.quote(selectedProducts(), catalog); }
+  function termsText(o) {
+    if (!o) return "";
+    if (o.monthly) return money(o.priceCents)+"/mo";
+    return money(o.priceCents)+(o.pay==="deposit"?" · "+o.percent+"% deposit to start":" · paid in full");
   }
-  function eligibleAddons() { return addons.filter(function (a) { return a.requires.indexOf(state.tierId) !== -1; }); }
+  function save() {
+    try {
+      sessionStorage.setItem(SAVE_KEY,JSON.stringify({step:state.step,service:state.service,scenario:state.scenario,tierId:state.tierId,extras:Array.from(state.extras),cross:Array.from(state.cross)}));
+    } catch (e) { /* private mode: selections last this page only */ }
+  }
+  function restore() {
+    var saved;
+    try { saved=JSON.parse(sessionStorage.getItem(SAVE_KEY)||"null"); } catch (e) { saved=null; }
+    if (!saved || !saved.service) return false;
+    // Only resume the same path the URL asks for (Back/Forward, or "Edit choices").
+    var wanted=query.get("service"), wantedGoal=query.get("goal");
+    if (wanted && wanted!==saved.service) return false;
+    if (wantedGoal && wantedGoal!==saved.scenario) return false;
+    var s=config.services.find(function (x) { return x.id===saved.service; });
+    if (!s) return false;
+    state.service=s.id;
+    var g=s.scenarios.find(function (x) { return x.id===saved.scenario; });
+    state.scenario=g?g.id:null;
+    state.tierId=g && g.tierIds.indexOf(saved.tierId)!==-1 && entry(saved.tierId)?saved.tierId:(g?g.tierIds[0]||null:null);
+    var allowed=eligibleAddons().map(function (a) { return a.id; });
+    (saved.extras||[]).forEach(function (id) { if (allowed.indexOf(id)!==-1) state.extras.add(id); });
+    var rec=state.tierId?recommendedOffers().map(function (x) { return x[0]; }):[];
+    (saved.cross||[]).forEach(function (id) { if (rec.indexOf(id)!==-1) state.cross.add(id); });
+    state.step=Math.min(Number(saved.step)||1,!g?1:!state.tierId?2:3);
+    return true;
+  }
+  function eligibleAddons() { return addons.filter(function (a) { return a.requires.indexOf(state.tierId) !== -1 && entry(a.id); }); }
   function recommendedOffers() {
     var list = (config.upsells[state.tierId] || []).slice();
     if (state.service === "websites" && state.scenario === "store") list.unshift(["product-photos","Photograph your products for the shop"]);
@@ -40,21 +69,36 @@
       summary.innerHTML = '<p class="mf-label">(Your package)</p><h2>Made for your business.</h2><p>Your running total and what you selected will appear here.</p>';
       return;
     }
-    var s=service(), g=scenario(), base=entry(state.tierId), prices=priceTotals();
+    var s=service(), g=scenario(), base=entry(state.tierId);
     if (!base) {
       summary.innerHTML = '<p class="mf-label">(Your direction)</p><h2>'+escape(s.name)+'</h2><p>'+(g?escape(g.name):"Choose what you need.")+'</p>' +
         '<p>Complex or custom work needs a scoped quote. No payment is taken here.</p><a class="mf-link" href="'+CALL+'" target="_blank" rel="noopener">Book a free call ↗</a>';
       return;
     }
-    var choices=selectedProducts().map(entry).filter(Boolean);
+    var q=priceQuote(), byId={};
+    q.lines.forEach(function (l) { byId[l.id]=l; });
+    var row=function (l) {
+      return '<div><dt>'+escape(l.name)+'<small>'+escape(Pricing.termsLabel(l))+'</small></dt><dd>'+money(l.totalCents)+(l.monthly?'/mo':'')+'</dd></div>';
+    };
+    var group=function (title,ids) {
+      var rows=ids.map(function (id) { return byId[id]; }).filter(Boolean);
+      return rows.length?'<p class="swb-sum__group">'+title+'</p><dl>'+rows.map(row).join("")+'</dl>':"";
+    };
+    var due=function (label,value,strong) { return '<div class="swb-due"><span>'+label+'</span>'+(strong?'<strong>'+value+'</strong>':'<span>'+value+'</span>')+'</div>'; };
+    var notes=[];
+    if (q.lines.some(function (l) { return l.pay==="full"; })) notes.push("Paid-in-full items are charged in full at checkout.");
+    if (q.hasDeposit) notes.push("Deposit items start with a deposit; the balance is invoiced before delivery.");
+    if (q.hasMonthly) notes.push("Monthly plans start with the first month today.");
     summary.innerHTML='<p class="mf-label">(Your package)</p><h2>'+escape(base.name)+'</h2>' +
-      '<p>'+escape(g ? g.name : s.name)+'</p><dl>' +
-      choices.map(function (o) { return '<div><dt>'+escape(o.name)+(o.monthly?' · monthly':'')+'</dt><dd>'+money(o.priceCents)+(o.monthly?'/mo':'')+'</dd></div>'; }).join("")+'</dl>' +
-      (prices.once?'<div class="swb-due"><span>One-time total</span><strong>'+money(prices.once)+'</strong></div>':'') +
-      (prices.monthly?'<p>Plus recurring plans: '+money(prices.monthly)+'/month</p>':'') +
-      '<div class="swb-due"><span>Estimated due at checkout</span><strong>'+money(prices.today)+'</strong></div>' +
-      (prices.later?'<p>Remaining one-time balance: '+money(prices.later)+' invoiced before delivery.</p>':'') +
-      '<p>One-time items: 50% deposit. Monthly plans: first month today. Actual checkout totals are confirmed server-side.</p>';
+      '<p>'+escape(g ? g.name : s.name)+'</p>' +
+      group("Base package",[state.tierId]) +
+      group("Extras",Array.from(state.extras)) +
+      group("Paired services",Array.from(state.cross)) +
+      (q.oneTimeCents?due("One-time total",money(q.oneTimeCents),true):'') +
+      (q.monthlyCents?due("Recurring plans",money(q.monthlyCents)+"/month",true):'') +
+      due("Estimated due today",money(q.dueNowCents),true) +
+      (q.laterCents?due("Remaining balance",money(q.laterCents)+", invoiced before delivery",false):'') +
+      '<p>'+notes.join(" ")+' Checkout totals are confirmed by our server.</p>';
   }
   function renderProof() {
     if (!config) return;
@@ -95,7 +139,7 @@
     panel.innerHTML='<p class="mf-label">(03 / Choose the base)</p><h2>Pick your starting package.</h2><p class="swb-hint">These are existing published offers, not custom prices. Read the included scope before choosing. You can add extras next.</p>' +
       '<div class="swb-options">'+g.tierIds.map(function (id) {
         var o=entry(id); if (!o) return "";
-        return card('data-tier="'+escape(id)+'"',"",o.name,o.desc,o.monthly?money(o.priceCents)+"/mo":money(o.priceCents)+" one-time",state.tierId===id);
+        return card('data-tier="'+escape(id)+'"',"",o.name,o.desc,termsText(o),state.tierId===id);
       }).join("")+'</div>' +
       '<p class="swb-hint" style="margin-top:1.25rem">Not seeing a package that fits? <a class="swb-inline-link" href="'+CALL+'" target="_blank" rel="noopener">Book a free call</a> instead.</p>';
   }
@@ -120,6 +164,7 @@
   }
   function render() {
     showError("");
+    save();
     document.querySelectorAll("[data-swb-progress]").forEach(function (el) {
       var i=Number(el.getAttribute("data-swb-progress")); el.removeAttribute("aria-current");
       if (i===state.step) el.setAttribute("aria-current","step");
@@ -166,17 +211,14 @@
   Promise.all(["/data/builder-paths.json","/data/pricing.json","/data/addons.json"].map(function (url) {
     return fetch(url,{credentials:"same-origin"}).then(function (r) { if(!r.ok) throw Error("Catalog couldn't load"); return r.json(); });
   })).then(function (result) {
+    Pricing=window.SWFTPricing;
+    if (!Pricing) throw Error("Pricing rules couldn't load");
     config=result[0]; addons=result[2].addons||[];
-    (result[1].categories||[]).forEach(function (group) {
-      (group.services||[]).forEach(function (s) {
-        (s.offers||[]).forEach(function (o) {
-          if(!o.priceCents || !o.pay || !o.stripe) return;
-          catalog[o.id]={id:o.id,name:o.name,priceCents:o.priceCents,desc:o.description||"",monthly:o.kind==="Monthly"};
-        });
-      });
-    });
+    // Packages AND fixed-price extras: every selectable item must be priced.
+    catalog=Pricing.buildCatalog(result[1],result[2]);
     var requested=query.get("service"),goal=query.get("goal");
-    if (requested && config.services.some(function (s) { return s.id===requested; })) {
+    var resumed=restore();
+    if (!resumed && requested && config.services.some(function (s) { return s.id===requested; })) {
       state.service=requested;state.step=1;
       if (goal && service().scenarios.some(function (g) { return g.id===goal; })) {
         state.scenario=goal;state.tierId=scenario().tierIds[0]||null;state.step=2;

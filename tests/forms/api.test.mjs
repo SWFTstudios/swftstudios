@@ -144,3 +144,55 @@ test("spam honeypot is not emailed", async () => {
   await post("/api/contact", { name: "Bot", email: "bot@example.com", company_website: "spam" });
   assert.equal(h.emails.length, 0);
 });
+
+test("[SWFT TEST] inquiries are tagged, not followed up, and not confirmed to the visitor", async () => {
+  const r = await post("/api/contact", {
+    name: "QA Customer", email: "qa@example.com", businessName: "[SWFT TEST] Local Fitness Studio",
+    businessType: "Websites", challenge: "Automated QA run",
+  });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.ok, true);
+  assert.equal(r.body.test, true);
+  const team = teamEmail();
+  assert.match(team.subject, /^\[TEST\] Project inquiry/);
+  assert.match(team.html, /no follow-up needed/);
+  assert.equal(h.emails.some((e) => e.to.includes("qa@example.com")), false, "no visitor confirmation for QA leads");
+});
+
+test("a real inquiry is not mistaken for a test", async () => {
+  const r = await post("/api/contact", { name: "Testa Rossa", email: visitor.email, businessName: "Test Kitchen", challenge: "Testing the market" });
+  assert.equal(r.body.test, undefined);
+  assert.doesNotMatch(teamEmail().subject, /\[TEST\]/);
+});
+
+test("the same submissionId uses the same email idempotency key (no duplicate alerts)", async () => {
+  const body = { submissionId: "3f9c2a1e-7b6d-4c1a-9e2f-123456789abc", name: "Dup Test", email: visitor.email, challenge: "x" };
+  await post("/api/contact", body);
+  await post("/api/contact", body);
+  const keys = h.emails.filter((e) => e.to.includes(INBOX)).map((e) => e.idempotencyKey);
+  assert.equal(keys.length, 2); // the harness records both; Resend drops the repeat by key
+  assert.equal(keys[0], keys[1]);
+  assert.equal(keys[0], "contact/3f9c2a1e-7b6d-4c1a-9e2f-123456789abc/team");
+});
+
+test("total delivery failure returns 503 with a machine-readable code", async () => {
+  h.failResend(10);
+  const r = await post("/api/contact", { name: "Down Test", email: visitor.email, challenge: "x" });
+  assert.equal(r.status, 503);
+  assert.equal(r.body.ok, false);
+  assert.equal(r.body.code, "delivery_unavailable");
+});
+
+test("saved to the lead log but email failed: accepted, with an accurate status", async () => {
+  const sh = await startHarness({ env: { GOOGLE_SHEETS_WEBHOOK_URL: "https://script.google.com/macros/s/test/exec", GOOGLE_SHEETS_SECRET: "s" } });
+  try {
+    sh.failResend(10);
+    const res = await fetch(sh.url + "/api/contact", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "Partial", email: visitor.email, challenge: "x" }) });
+    const body = await res.json();
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+    assert.equal(body.stored, true);
+    assert.equal(body.emailDelivered, true, "the Sheets script delivers the team alert when Resend is down");
+  } finally { await sh.close(); }
+});

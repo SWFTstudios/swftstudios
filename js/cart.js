@@ -3,18 +3,19 @@
    - Any [data-cart-add="<offer id>"] button adds that service to the cart
      (saved in this browser) and opens a pop-up with add-on suggestions.
    - A small "Cart" pill shows bottom-right while the cart has items.
-   - /cart.html (#cart-root): review, totals (50% deposit today, monthly
-     plans start with the first month), details, then Stripe Checkout via
-     POST /api/checkout. Admins also get "Create free order".
-   Prices shown here come from /data/pricing.json; the server re-prices
-   everything from its own copy before charging.
+   - /cart.html (#cart-root): review, itemized totals, details, then Stripe
+     Checkout via POST /api/checkout. Admins also get "Create free order".
+   Prices and payment terms (paid in full, deposit, monthly) come from
+   /data/pricing.json + /data/addons.json through js/swft-pricing.js, the same
+   rules the builder uses. The server re-prices everything from its own copy
+   before charging.
    ============================================================ */
 (function () {
   "use strict";
   if (window.SWFTCart) return;
   var KEY = "swft-cart";
   var INTENT_KEY = "swft-cart-brief";
-  var DEPOSIT = 50;
+  var PRICING_SRC = "/js/swft-pricing.js?v=20261116";
   var CAL = "https://cal.com/swftstudios/swft-meeting";
 
   // What to suggest after adding each service (only services you can buy online)
@@ -48,38 +49,39 @@
 
   /* ---------- Catalog (from the public pricing data) ---------- */
   var catalogP = null, cachedCatalog = {};
+  function pricingLib() {
+    if (window.SWFTPricing) return Promise.resolve(window.SWFTPricing);
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = PRICING_SRC; s.async = true;
+      s.onload = function () { window.SWFTPricing ? resolve(window.SWFTPricing) : reject(Error("Pricing unavailable")); };
+      s.onerror = function () { reject(Error("Pricing unavailable")); };
+      document.head.appendChild(s);
+    });
+  }
   function catalog() {
     if (!catalogP) {
-      catalogP = Promise.all(["/data/pricing.json", "/data/addons.json"].map(function (url) { return fetch(url, { credentials: "same-origin" }).then(function (r) { if (!r.ok) throw Error("Catalog unavailable"); return r.json(); }); })).then(function (data) {
-        var d = data[0], addonData = data[1];
-        var map = {};
-        (d.categories || []).forEach(function (cat) {
-          (cat.services || []).forEach(function (s) {
-            (s.offers || []).forEach(function (o) {
-              if (!o.pay || !o.priceCents) return; // quote-first offers can't be bought online
-              var monthly = o.pay.type === "monthly";
-              map[o.id] = {
-                id: o.id, name: o.name, monthly: monthly, priceCents: o.priceCents,
-                dueNow: monthly ? o.priceCents : Math.round(o.priceCents * DEPOSIT / 100),
-                priceLabel: o.priceLabel || "", desc: o.description || "", category: cat.label, url: o.bookUrl || "/pricing.html#" + o.id
-              };
-            });
-          });
-        });
-        (addonData.addons || []).forEach(function (a) {
-          map[a.id] = { id:a.id, name:a.name, monthly:false, addon:true, requires:a.requires || [], priceCents:a.priceCents,
-            dueNow:Math.round(a.priceCents * DEPOSIT / 100), priceLabel:usd(a.priceCents) + " one-time", desc:a.description || "", category:a.category || "Add-on", url:"/build.html" };
-        });
+      catalogP = Promise.all([pricingLib()].concat(["/data/pricing.json", "/data/addons.json"].map(function (url) { return fetch(url, { credentials: "same-origin" }).then(function (r) { if (!r.ok) throw Error("Catalog unavailable"); return r.json(); }); }))).then(function (data) {
+        var map = data[0].buildCatalog(data[1], data[2]);
+        Object.keys(map).forEach(function (id) { if (map[id].addon) map[id].priceLabel = usd(map[id].priceCents) + " one-time"; });
         cachedCatalog = map;
         return map;
       }).catch(function () { catalogP = null; return cachedCatalog; });
     }
     return catalogP;
   }
+  function quote(ids, cat) { return window.SWFTPricing.quote(ids, cat || cachedCatalog); }
+  function termsLine(o, list, cat) {
+    if (o.monthly) return usd(o.priceCents) + " a month, first month today.";
+    var line = window.SWFTPricing ? quote(list.indexOf(o.id) === -1 ? list.concat(o.id) : list, cat).lines.filter(function (l) { return l.id === o.id; })[0] : null;
+    if (!line) return usd(o.priceCents) + ".";
+    return line.pay === "deposit"
+      ? usd(line.dueNowCents) + " today (" + line.percent + "% deposit of " + usd(line.totalCents) + ")."
+      : usd(line.totalCents) + " today, paid in full.";
+  }
 
   function eligible(id, list, cat) {
-    var entry = cat[id];
-    return !!entry && (!entry.addon || entry.requires.some(function (base) { return list.indexOf(base) !== -1; }));
+    return window.SWFTPricing ? window.SWFTPricing.eligible(id, list, cat) : !!cat[id] && !cat[id].addon;
   }
   function add(id) {
     var a = items().slice();
@@ -171,7 +173,7 @@
           '<button type="button" class="sc-close" aria-label="Close">×</button>' +
           '<p class="sc-tag"><span class="mf-dot" aria-hidden="true"></span>Added to your cart</p>' +
           '<h2 class="sc-title" id="cart-pop-title">' + esc(o.name) + "</h2>" +
-          '<p class="sc-body">' + (o.monthly ? usd(o.priceCents) + " a month, first month today." : usd(o.dueNow) + " today (50% deposit of " + usd(o.priceCents) + ").") + "</p>" +
+          '<p class="sc-body">' + esc(termsLine(o, items(), cat)) + "</p>" +
           (sugg.length ? '<p class="cart-pop__label">Often added with it</p><ul class="cart-suggs">' + sugg.map(suggestionHTML).join("") + "</ul>" : "") +
           '<a class="mf-btn sc-go" href="/cart.html">View cart <span class="mf-arrow" aria-hidden="true">→</span></a>' +
           '<button type="button" class="sc-later">Keep browsing</button>' +
@@ -200,6 +202,24 @@
     openPop(id);
   });
 
+  /* ---------- Itemized summary (shared by cart page) ---------- */
+  function summaryRows(q) {
+    var row = function (label, value, cls) { return '<div class="cart-sum__row' + (cls ? " " + cls : "") + '"><span>' + label + "</span><b>" + value + "</b></div>"; };
+    return (q.packageCents ? row("Packages", usd(q.packageCents)) : "") +
+      (q.extrasCents ? row("Extras", usd(q.extrasCents)) : "") +
+      (q.oneTimeCents && q.extrasCents && q.packageCents ? row("One-time total", usd(q.oneTimeCents)) : "") +
+      (q.monthlyCents ? row("Monthly plans", usd(q.monthlyCents) + "/mo") : "") +
+      row("Due today", usd(q.dueNowCents), "cart-sum__row--due") +
+      (q.laterCents ? row("Balance, invoiced before delivery", usd(q.laterCents)) : "");
+  }
+  function termsNote(q) {
+    var parts = [];
+    if (q.lines.some(function (l) { return l.pay === "full"; })) parts.push("Paid-in-full items are charged in full today.");
+    if (q.hasDeposit) parts.push("Deposit items are charged a deposit today; the balance is invoiced before delivery.");
+    if (q.hasMonthly) parts.push("Monthly plans start with the first month today.");
+    return parts.join(" ");
+  }
+
   /* ---------- /cart.html ---------- */
   function renderCartPage(root) {
     var list = root.querySelector("[data-cart-lines]");
@@ -217,25 +237,22 @@
         var ids = items().filter(function (id) { return cat[id]; });
         empty.hidden = !!ids.length; full.hidden = !ids.length;
         if (!ids.length) return;
-        var lines = ids.map(function (id) { return cat[id]; });
-        list.innerHTML = lines.map(function (o) {
-          return '<li class="cart-line"><div class="cart-line__main"><p class="mf-label mf-label--muted">' + esc(o.category) + (o.monthly ? " · Monthly" : " · One-time") + "</p>" +
-            '<h3><a href="' + esc(o.url) + '">' + esc(o.name) + "</a></h3><p>" + esc(o.priceLabel) + "</p></div>" +
-            '<div class="cart-line__money"><b>' + usd(o.dueNow) + '</b><span>' + (o.monthly ? "first month today" : "deposit today") + "</span>" +
+        var q = quote(ids, cat);
+        list.innerHTML = q.lines.map(function (l) {
+          var o = cat[l.id];
+          return '<li class="cart-line"><div class="cart-line__main"><p class="mf-label mf-label--muted">' + esc(o.category) + (l.monthly ? " · Monthly" : " · One-time") + "</p>" +
+            '<h3><a href="' + esc(o.url) + '">' + esc(o.name) + "</a></h3><p>" + (l.monthly ? usd(l.totalCents) + "/mo" : usd(l.totalCents) + (l.kind === "addon" ? " add-on" : "")) + "</p></div>" +
+            '<div class="cart-line__money"><b>' + usd(l.dueNowCents) + '</b><span>' + esc(window.SWFTPricing.termsLabel(l)) + "</span>" +
             '<button type="button" class="cart-line__remove" data-cart-remove="' + esc(o.id) + '" aria-label="Remove ' + esc(o.name) + '">Remove</button></div></li>';
         }).join("");
-        var due = 0, project = 0, later = 0, monthly = 0;
-        lines.forEach(function (o) { due += o.dueNow; if (o.monthly) monthly += o.priceCents; else { project += o.priceCents; later += o.priceCents - o.dueNow; } });
         var brief = readBrief();
         var briefLine = brief && ids.indexOf(brief.tierId) !== -1
-          ? '<p class="cart-sum__note"><strong>Your project type:</strong> ' + esc(brief.goalName || brief.goal) + ' · ' + esc(brief.serviceName || brief.service) + '. <a href="/build.html?service='+encodeURIComponent(brief.service || "")+'">Edit choices</a></p>'
+          ? '<p class="cart-sum__note"><strong>Your project type:</strong> ' + esc(brief.goalName || brief.goal) + ' · ' + esc(brief.serviceName || brief.service) + '. <a href="/build.html?service='+encodeURIComponent(brief.service || "")+'&amp;resume=1">Edit choices</a></p>'
           : "";
-        sum.innerHTML = briefLine +
-          (project ? '<div class="cart-sum__row"><span>Projects (starting prices)</span><b>' + usd(project) + "</b></div>" : "") +
-          (monthly ? '<div class="cart-sum__row"><span>Monthly plans</span><b>' + usd(monthly) + "/mo</b></div>" : "") +
-          '<div class="cart-sum__row cart-sum__row--due"><span>Due today</span><b>' + usd(due) + "</b></div>" +
-          (later ? '<div class="cart-sum__row"><span>Balance, invoiced before delivery</span><b>' + usd(later) + "</b></div>" : "") +
-          '<p class="cart-sum__note">Every project starts with a 50% deposit. Final price is confirmed on your kickoff call; scope changes are quoted before work starts. Have a discount code? Enter it on the payment page.</p>';
+        sum.innerHTML = briefLine + summaryRows(q) +
+          '<p class="cart-sum__note">' + termsNote(q) + ' Scope changes are quoted before work starts. Have a discount code? Enter it on the payment page.</p>';
+        var pay = root.querySelector("#cart-pay");
+        if (pay) pay.innerHTML = (q.hasDeposit ? "Pay deposit &amp; continue" : "Continue to secure checkout") + ' <span class="mf-arrow" aria-hidden="true">↗</span>';
         // Suggestions from everything in the cart
         var pool = [];
         ids.forEach(function (id) { (UPSELLS[id] || DEFAULT_UPSELLS).forEach(function (x) { if (eligible(x, ids, cat) && ids.indexOf(x) === -1 && pool.indexOf(x) === -1) pool.push(x); }); });
@@ -282,7 +299,7 @@
     draw();
   }
 
-  window.SWFTCart = { add: add, addMany: addMany, remove: remove, items: items, catalog: catalog, open: openPop };
+  window.SWFTCart = { add: add, addMany: addMany, remove: remove, items: items, catalog: catalog, quote: quote, open: openPop };
   function init() {
     paint();
     var root = document.getElementById("cart-root");

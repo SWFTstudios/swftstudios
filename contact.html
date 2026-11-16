@@ -146,18 +146,26 @@
   <script>
     (function () {
       const form = document.getElementById("contact-form");
+      if (!form) return;
       const statusEl = document.getElementById("contact-status");
       const submitBtn = document.getElementById("contact-submit");
       const submitLabel = submitBtn ? submitBtn.querySelector(".button_text") : null;
       const LABEL = "Send inquiry";
+      const INBOX = "hello@swftstudios.com";
+      const TIMEOUT_MS = 25000;
       let formStarted = false;
+      let sending = false;
+      // One id per inquiry: a retry of the same inquiry can't email the team twice.
+      let submissionId = newId();
+      function newId() {
+        try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) { /* older browser */ }
+        return "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+      }
       form.addEventListener("focusin", function (event) {
         if (formStarted || !event.target.closest("input,textarea")) return;
         formStarted = true;
         if (window.SWFTAnalytics) window.SWFTAnalytics.track("lead_form_start", {page_path: location.pathname, form_name: "contact"});
       });
-      if (!form) return;
-
       // Quote links pass ?service=<id>: a service page slug (data/services.json)
       // or an older pricing service id (data/pricing.json). data-service lists both.
       try {
@@ -170,25 +178,36 @@
       } catch (e) {
         /* bad query string: leave the chips empty */
       }
-
-      function showStatus(msg, type) {
+      function showStatus(msg, type, withEmailLink) {
         statusEl.textContent = msg;
+        if (withEmailLink) {
+          const a = document.createElement("a");
+          a.className = "mf-link";
+          a.href = "mailto:" + INBOX + "?subject=" + encodeURIComponent("Project inquiry");
+          a.textContent = INBOX;
+          statusEl.appendChild(document.createTextNode(" "));
+          statusEl.appendChild(a);
+        }
         statusEl.hidden = false;
         statusEl.className = "mf-status contact-status is-" + type;
       }
-
       function val(name) {
         const el = form.elements.namedItem(name);
         return el ? String(el.value || "").trim() : "";
       }
-
+      function setSending(on) {
+        sending = on;
+        submitBtn.disabled = on;
+        form.setAttribute("aria-busy", on ? "true" : "false");
+        if (submitLabel) submitLabel.textContent = on ? "Sending…" : LABEL;
+      }
       form.addEventListener("submit", function (e) {
         e.preventDefault();
+        if (sending) return; // double tap / double click: one request only
         if (val("company_website")) {
           showStatus("Message sent, we'll be in touch within one business day.", "success");
           return;
         }
-
         const name = val("name");
         const email = val("email");
         const businessName = val("business_name");
@@ -196,18 +215,25 @@
         const serviceNeeded = val("service_needed");
         const challenge = val("challenge");
         const desiredOutcome = val("desired_outcome");
-
-        if (!name || !email || !serviceNeeded || !challenge) {
+        const missing = !serviceNeeded ? form.querySelector('input[name="service_needed"]')
+          : !name ? form.elements.namedItem("name")
+          : !email ? form.elements.namedItem("email")
+          : !challenge ? form.elements.namedItem("challenge") : null;
+        if (missing) {
           showStatus(serviceNeeded ? "Please fill in all required fields." : "Pick what you need, then fill in the required fields.", "error");
+          missing.focus();
           return;
         }
-
-        submitBtn.disabled = true;
-        if (submitLabel) submitLabel.textContent = "Sending…";
-        statusEl.hidden = true;
-
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showStatus("Enter a valid email address so we can reply.", "error");
+          form.elements.namedItem("email").focus();
+          return;
+        }
+        setSending(true);
+        showStatus("Sending your inquiry…", "info");
         const params = new URLSearchParams(location.search);
         const payload = {
+          submissionId: submissionId,
           name: name,
           email: email,
           phone: val("phone"),
@@ -227,22 +253,26 @@
           utmMedium: params.get("utm_medium") || "",
           utmCampaign: params.get("utm_campaign") || "",
         };
-
+        const controller = window.AbortController ? new AbortController() : null;
+        const timer = controller ? setTimeout(function () { controller.abort(); }, TIMEOUT_MS) : null;
         fetch("/api/contact", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify(payload),
+          signal: controller ? controller.signal : undefined,
         })
           .then(function (res) {
-            return res.json().then(function (data) {
-              return { ok: res.ok, data: data };
+            // A proxy/error page is not JSON: treat it as a failed delivery, not a crash.
+            return res.json().catch(function () { return {}; }).then(function (data) {
+              return { ok: res.ok, status: res.status, data: data || {} };
             });
           })
           .then(function (result) {
             if (result.ok && result.data.ok) {
               form.reset();
-              showStatus("Project sent. We'll be in touch within one business day.", "success");
-              if (window.SWFTAnalytics) {
+              submissionId = newId();
+              showStatus("Project received. We'll be in touch within one business day.", "success");
+              if (window.SWFTAnalytics && !result.data.test) {
                 window.SWFTAnalytics.track("contact_form_submit", {
                   page_path: location.pathname,
                   form_name: "contact",
@@ -251,16 +281,22 @@
                 });
                 window.SWFTAnalytics.track("lead_form_submit", {page_path: location.pathname, form_name: "contact", service_interest: serviceNeeded});
               }
+            } else if (result.status === 400 && result.data.error) {
+              showStatus(result.data.error, "error");
             } else {
-              showStatus("Something went wrong. Email us at hello@swftstudios.com.", "error");
+              // Nothing was confirmed on our side: keep what they typed and give a sure route.
+              showStatus("We couldn't send your inquiry right now. Your details are still here; try again in a moment, or email us at", "error", true);
             }
           })
-          .catch(function () {
-            showStatus("Unable to send right now. Email hello@swftstudios.com.", "error");
+          .catch(function (err) {
+            const timedOut = err && err.name === "AbortError";
+            showStatus(timedOut
+              ? "This is taking longer than usual and we couldn't confirm it arrived. Please try again, or email us at"
+              : "You look offline, so nothing was sent. Check your connection and try again, or email us at", "error", true);
           })
           .finally(function () {
-            submitBtn.disabled = false;
-            if (submitLabel) submitLabel.textContent = LABEL;
+            if (timer) clearTimeout(timer);
+            setSending(false);
           });
       });
     })();
