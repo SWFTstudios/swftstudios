@@ -54,9 +54,8 @@ for (const [label, opts] of VIEWPORTS) {
   });
 
   await check(`[${label}] builder total includes extras; cart and Stripe match`, opts, async (page) => {
-    await page.goto(`${h.url}/build.html?utm_source=qa`);
-    await page.locator('[data-service="websites"]').click();
-    await page.locator('[data-scenario="landing"]').click();
+    // Start from a search deep link (service + goal), as customers do.
+    await page.goto(`${h.url}/build.html?service=websites&goal=landing&utm_source=qa`);
     await page.locator('[data-tier="website-only"]').click();
     expect((await summary(page)).includes("$400"), "base price missing");
     await page.locator("#swb-next").click();

@@ -40,8 +40,10 @@
     var saved;
     try { saved=JSON.parse(sessionStorage.getItem(SAVE_KEY)||"null"); } catch (e) { saved=null; }
     if (!saved || !saved.service) return false;
-    var wanted=query.get("service");
+    // Only resume the same path the URL asks for (Back/Forward, or "Edit choices").
+    var wanted=query.get("service"), wantedGoal=query.get("goal");
     if (wanted && wanted!==saved.service) return false;
+    if (wantedGoal && wantedGoal!==saved.scenario) return false;
     var s=config.services.find(function (x) { return x.id===saved.service; });
     if (!s) return false;
     state.service=s.id;
@@ -215,7 +217,7 @@
     // Packages AND fixed-price extras: every selectable item must be priced.
     catalog=Pricing.buildCatalog(result[1],result[2]);
     var requested=query.get("service"),goal=query.get("goal");
-    var resumed=(!goal || query.get("resume")==="1") && restore();
+    var resumed=restore();
     if (!resumed && requested && config.services.some(function (s) { return s.id===requested; })) {
       state.service=requested;state.step=1;
       if (goal && service().scenarios.some(function (g) { return g.id===goal; })) {
