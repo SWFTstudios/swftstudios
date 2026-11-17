@@ -61,13 +61,13 @@ for (const [label, opts] of VIEWPORTS) {
     await page.locator("#swb-next").click();
     await page.locator('[data-extra="extra-pages"]').click();
     let s = await summary(page);
-    expect(/Additional website page/.test(s), "extra not listed: " + s);
+    expect(/Extra unique pages/.test(s), "extra not listed: " + s);
     expect(/One-time total \$575/.test(s), "total should be $575: " + s);
     expect(/Estimated due today \$575/.test(s), "Website Only is paid in full, due today should be $575: " + s);
     expect(!/Remaining balance/.test(s), "no balance on a paid-in-full package");
     await page.locator('[data-extra="extra-pages"]').click();
     s = await summary(page);
-    expect(/One-time total \$400/.test(s) && !/Additional website page/.test(s), "removing extra should return to $400: " + s);
+    expect(/One-time total \$400/.test(s) && !/Extra unique pages/.test(s), "removing extra should return to $400: " + s);
     await page.locator('[data-extra="extra-pages"]').click();
     expect((await page.locator('[data-extra="extra-pages"]').getAttribute("aria-pressed")) === "true", "toggle state not exposed");
     await page.locator("#swb-add-cart").click();
@@ -82,7 +82,7 @@ for (const [label, opts] of VIEWPORTS) {
     await page.goBack();
     await page.locator("#swb-summary dl").first().waitFor();
     s = await summary(page);
-    expect(/Additional website page/.test(s) && /\$575/.test(s), "back navigation erased selections: " + s);
+    expect(/Extra unique pages/.test(s) && /\$575/.test(s), "back navigation erased selections: " + s);
     await page.goForward();
 
     await page.fill("#cart-email", "qa@example.com");

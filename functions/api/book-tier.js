@@ -17,8 +17,10 @@ const str = (v, max = 4000) => String(v ?? "").trim().slice(0, max);
 
 // Canonical scope + indicative one-time pricing. Do NOT accept prices or labels
 // from the browser. Add-ons are ALWAYS quote-only with no Stripe redirect.
+// Flat-priced extras are sold once per order, never by quantity.
+const FLAT_ADD_ONS = new Set(["extra-pages"]);
 const ADD_ON_CATALOG = {
-  "extra-pages": ["Additional page", "Website extras", 17500],
+  "extra-pages": ["Extra unique pages", "Website extras", 17500],
   "content-shoot": ["Add an original photo + video shoot", "Website extras", null],
   "booking-advanced": ["Advanced booking setup", "Website extras", null],
   "shopify-migration": ["Store or catalog migration", "Website extras", null],
@@ -153,7 +155,8 @@ export async function onRequestPost(context) {
     const id = str(raw?.id, 80);
     const entry = Object.hasOwn(ADD_ON_CATALOG, id) ? ADD_ON_CATALOG[id] : null;
     const qty = raw?.quantity === undefined ? 1 : Number(raw.quantity);
-    if (!entry || !Number.isInteger(qty) || qty < 1 || qty > 5) {
+    const maxQty = FLAT_ADD_ONS.has(id) ? 1 : 5;
+    if (!entry || !Number.isInteger(qty) || qty < 1 || qty > maxQty) {
       return json({ ok: false, error: "Invalid add-on selection or quantity." }, 400);
     }
     if (seenAddOns.has(id)) return json({ ok: false, error: "Duplicate add-on selection." }, 400);

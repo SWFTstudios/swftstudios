@@ -2,8 +2,8 @@
 export const ADDONS = Object.freeze({
   "extra-pages": {
     "id": "extra-pages",
-    "name": "Additional website page",
-    "description": "One additional page beyond the included scope.",
+    "name": "Extra unique pages",
+    "description": "Unique pages beyond your standard 5, like a service, location or event page. One flat price for the set.",
     "priceCents": 17500,
     "category": "Website extras",
     "requires": [
