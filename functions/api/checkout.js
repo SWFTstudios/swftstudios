@@ -77,6 +77,8 @@ export async function onRequestPost(context) {
   }
 
   /* ---------- Stripe Checkout ---------- */
+  // Upstream failures return 503, not 502: on the custom domain Cloudflare replaces a
+  // Function's 502/504 with its own plain-text error page, hiding this JSON from the cart.
   const key = env.STRIPE_SECRET_KEY;
   if (!key) {
     return json({ ok: false, code: "checkout_unavailable", error: "Online checkout isn't switched on yet. Book a call and we'll send you an invoice." }, 503);
@@ -127,12 +129,12 @@ export async function onRequestPost(context) {
     const s = await res.json().catch(() => ({}));
     if (!res.ok || !s.url) {
       console.error("Stripe checkout error", res.status, JSON.stringify(s).slice(0, 500));
-      return json({ ok: false, error: "Checkout couldn't start. Try again, or book a call and we'll invoice you." }, 502);
+      return json({ ok: false, code: "checkout_failed", error: "Checkout couldn't start. Try again, or book a call and we'll invoice you." }, 503);
     }
     return json({ ok: true, url: s.url });
   } catch (err) {
     console.error("Stripe checkout fetch failed", err);
-    return json({ ok: false, error: "Checkout couldn't start. Try again in a moment." }, 502);
+    return json({ ok: false, code: "checkout_failed", error: "Checkout couldn't start. Try again in a moment, or book a call and we'll invoice you." }, 503);
   }
 }
 

@@ -17,7 +17,7 @@
  * Env: RESEND_API_KEY (+ the optional ones in growth-audit.js)
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { storeLead } from "../_lib/leads.js";
+import { storeLead, markLeadEmailed } from "../_lib/leads.js";
 import { siteOrigin } from "../_lib/subscribers.js";
 
 const CAL_URL = "https://cal.com/swftstudios/swft-meeting";
@@ -210,6 +210,7 @@ export async function onRequestPost(context) {
     idempotencyBase: base,
     ...mail,
   });
+  await markLeadEmailed(env, saved, emailed.team);
 
   if (!saved.stored && !emailed.team) {
     return json({ ok: false, error: "We couldn't send that. Email hello@swftstudios.com or try again shortly." }, 503);

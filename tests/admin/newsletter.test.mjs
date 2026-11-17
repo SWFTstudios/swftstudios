@@ -165,7 +165,7 @@ test("a rejected batch stops the run, keeps what was sent, and a retry finishes 
   batches = [];
   addSub(db, "late@example.com", { interests: "blog" });
   const allFail = await api.onRequestPost(ctx(db, { sid: s.admin, method: "POST", body: sendBody() }));
-  assert.equal(allFail.status, 502);
+  assert.equal(allFail.status, 503);
 });
 
 test("test sends one copy to the admin and records nothing; bad input is rejected", async () => {

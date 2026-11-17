@@ -8,7 +8,7 @@
  *   optional: GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET, RESEND_FROM, NOTIFY_EMAIL
  */
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
-import { storeLead } from "../_lib/leads.js";
+import { storeLead, markLeadEmailed } from "../_lib/leads.js";
 
 const ALLOWED_SERVICES = new Set([
   "gbp-refresh",
@@ -175,6 +175,7 @@ export async function onRequestPost(context) {
       <p>SWFT Studios</p>
     `,
   });
+  await markLeadEmailed(env, saved, emailed.team);
 
   if (!saved.stored && !emailed.team) {
     return json({ ok: false,

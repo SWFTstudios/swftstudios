@@ -8,7 +8,7 @@
  *   STRIPE_SECRET_KEY (secret, optional, enables checkout)
  *   optional: GOOGLE_SHEETS_WEBHOOK_URL, GOOGLE_SHEETS_SECRET, STRIPE_PRICE_MONTHLY
  */
-import { storeLead } from "../_lib/leads.js";
+import { storeLead, markLeadEmailed } from "../_lib/leads.js";
 import { escapeHtml, sendLeadEmails } from "../_lib/resend.js";
 
 const DEFAULTS = {
@@ -169,6 +169,7 @@ export async function onRequestPost(context) {
       ',</p><p>We received your website build details and will contact you about next steps.</p>' +
       '<p>Questions? Reply to this email or write to hello@swftstudios.com.</p>'
   });
+  await markLeadEmailed(env, saved, emailed.team);
 
   if (!saved.stored && !emailed.team) {
     return json({ ok: false,

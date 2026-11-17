@@ -35,7 +35,7 @@ export async function onRequestPost(context) {
   try {
     const res = await subscribe(db, env, request, { email, name, interests, sourcePage: str(body.sourcePage, 300) });
     if (!res.sent && !res.throttled) {
-      return json({ ok: false, error: "We couldn't send the confirmation email. Try again in a few minutes." }, 502);
+      return json({ ok: false, error: "We couldn't send the confirmation email. Try again in a few minutes." }, 503);
     }
     return json(DONE);
   } catch (err) {

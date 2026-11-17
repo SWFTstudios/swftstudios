@@ -538,7 +538,7 @@
     loadOnce("/js/mono.js?v=20261105-r2", "data-swft-mono");
     loadOnce("/js/strategy-call.js?v=20261103-notify", "data-swft-strategy");
     loadOnce("/js/swft-app.js?v=20261116-search", "data-swft-app");
-    loadOnce("/js/cart.js?v=20261116-terms", "data-swft-cart");
+    loadOnce("/js/cart.js?v=20261117-errors", "data-swft-cart");
     loadOnce("/js/site-search.js?v=20261115", "data-swft-search");
     var annotate = function () { if (document.querySelector(".an-hl, .an-ul, .an-circle, .an-note")) loadOnce("/js/annotate.js?v=20261105-sketch", "data-swft-annotate"); };
     annotate();

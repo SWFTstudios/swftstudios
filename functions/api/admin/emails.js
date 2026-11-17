@@ -19,7 +19,7 @@ export async function onRequestGet(context) {
     if (res.status === 401 || res.status === 403) {
       return json({ ok: true, configured: true, emails: [], note: "This Resend key can only send. Use a full-access key to list sent emails here." });
     }
-    if (!res.ok) return json({ ok: false, error: `Resend returned ${res.status}.` }, 502);
+    if (!res.ok) return json({ ok: false, error: `Resend returned ${res.status}.` }, 503);
     const body = await res.json();
     const emails = (body.data || []).map((e) => ({
       id: e.id,
@@ -32,7 +32,7 @@ export async function onRequestGet(context) {
     return json({ ok: true, configured: true, emails });
   } catch (err) {
     console.error("admin emails failed", err);
-    return json({ ok: false, error: "Could not reach Resend." }, 502);
+    return json({ ok: false, error: "Could not reach Resend." }, 503);
   }
 }
 

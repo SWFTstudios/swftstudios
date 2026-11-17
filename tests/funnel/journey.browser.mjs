@@ -161,6 +161,21 @@ for (const [label, opts] of VIEWPORTS) {
     expect(await page.locator("#contact-submit").isEnabled(), "button stays disabled after failure");
   });
 
+  await check(`[${label}] checkout failure (even a plain-text error page) offers a call`, opts, async (page) => {
+    await page.goto(`${h.url}/build.html?service=websites&goal=landing`);
+    await page.locator('[data-tier="website-only"]').click();
+    await page.locator("#swb-next").click();
+    await page.locator("#swb-add-cart").click();
+    await page.waitForURL(/\/cart\.html/);
+    await page.route("**/api/checkout", (r) => r.fulfill({ status: 502, contentType: "text/plain", body: "error code: 502" }));
+    await page.fill("#cart-email", "qa@example.com");
+    await page.locator("#cart-pay").click();
+    await page.locator("#cart-status.is-error").waitFor();
+    const msg = text(await page.locator("#cart-status").innerText());
+    expect(/couldn't start/i.test(msg) && /Book a call/.test(msg), "cart error copy: " + msg);
+    expect(await page.locator("#cart-pay").isEnabled(), "pay button stays disabled after failure");
+  });
+
   await check(`[${label}] free call links go to Cal.com`, opts, async (page) => {
     await page.goto(`${h.url}/build.html`);
     const hrefs = await page.locator('a[href*="cal.com"]').evaluateAll((a) => a.map((x) => x.href));
