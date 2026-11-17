@@ -118,6 +118,15 @@ for (const tierId of TIERS) {
   });
 }
 
+test("extra unique pages is one flat set: quantity above 1 is refused", async () => {
+  const tierId = TIERS[0];
+  const base = { tierId, quoteOnly: true, name: "Pat Client", email: visitor.email, businessName: "Client Co" };
+  const two = await post("/api/book-tier", { ...base, customization: { goal: "More bookings", addOns: [{ id: "extra-pages", quantity: 2 }] } });
+  assert.equal(two.status, 400, JSON.stringify(two.body));
+  const one = await post("/api/book-tier", { ...base, customization: { goal: "More bookings", addOns: [{ id: "extra-pages", quantity: 1 }] } });
+  assert.equal(one.status, 200, JSON.stringify(one.body));
+});
+
 test("a transient Resend failure is retried and still reaches hello@", async () => {
   h.failResend(1);
   const r = await post("/api/contact", { name: "Retry Test", email: visitor.email, businessName: "Retry Co" });

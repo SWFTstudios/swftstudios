@@ -27,7 +27,7 @@
 
   // All extras request a scoped quote; the existing Stripe link is base-only.
   var pricedAddOns = {
-    "extra-pages": { cents: 17500, unit: "page" },
+    "extra-pages": { cents: 17500, unit: "set", flat: true },
     "local-page": { cents: 25000, unit: "page" },
     "extra-reels": { cents: 12500, unit: "video" },
     "extra-photos": { cents: 10000, unit: "10 edited photos" },
@@ -44,7 +44,7 @@
       title: "Website extras",
       intro: "More than the base build? Tell us what you'd like to explore.",
       items: [
-        ["extra-pages", "Additional page", "One standard page beyond the agreed base site; complex features quoted separately."],
+        ["extra-pages", "Extra unique pages", "Unique pages beyond your standard 5, like a service, location or event page. One flat price for the set. Complex features quoted separately."],
         ["booking-advanced", "Advanced booking setup", "More complex calendars, deposits or scheduling workflows."],
         ["shopify-migration", "Store or catalog migration", "Move products or content from an existing platform."],
         ["automations", "CRM + email follow-ups", "Connect leads to email or follow-up automations."],
@@ -152,7 +152,8 @@
   function baseInclusionHint(id) {
     if (id === "extra-photos") return baseCounts.photos + " photos already included; adds 10 per pack";
     if (id === "extra-reels") return baseCounts.videos + " short videos already included; adds 1 per video";
-    if (id === "extra-pages" || id === "local-page") return "Up to " + baseCounts.pages + " pages already included; adds 1 page";
+    if (id === "extra-pages") return "Up to " + baseCounts.pages + " standard pages already included; adds a set of unique pages";
+    if (id === "local-page") return "Up to " + baseCounts.pages + " pages already included; adds 1 page";
     if (id === "extra-shoot") return baseCounts.shootMinutes + " shoot minutes already included; adds 60 minutes";
     if (id === "location-profiles") return baseCounts.profiles + " profile already included; adds 1 profile";
     return "";
@@ -240,7 +241,7 @@
         '</legend><p class="book-choice-help">' + escapeHtml(group.intro) +
         '</p><div class="book-choice-grid">' + available.map(function (item) {
           var price = addonPricing(item[0]);
-          var quantity = price
+          var quantity = price && !price.flat
             ? '<div class="book-addon-quantity" hidden><label for="book-qty-' + escapeHtml(item[0]) +
               '">Quantity</label><select id="book-qty-' + escapeHtml(item[0]) +
               '" aria-label="' + escapeHtml(item[1]) +
@@ -271,7 +272,7 @@
         id: el.value,
         label: el.getAttribute("data-addon-label") || el.value,
         group: el.getAttribute("data-addon-group") || "",
-        quantity: addonPricing(el.value) && el.closest(".book-addon-item").querySelector("select")
+        quantity: addonPricing(el.value) && !addonPricing(el.value).flat && el.closest(".book-addon-item").querySelector("select")
           ? Math.min(5, Math.max(1, Number(el.closest(".book-addon-item").querySelector("select").value) || 1))
           : 1
       };
@@ -295,11 +296,12 @@
   }
 
   function deliverableChanges(selected) {
-    var morePhotos = 0, moreVideos = 0, morePages = 0, moreMinutes = 0, moreProfiles = 0;
+    var morePhotos = 0, moreVideos = 0, morePages = 0, moreMinutes = 0, moreProfiles = 0, uniquePages = false;
     selected.forEach(function (a) {
       if (a.id === "extra-photos") morePhotos += 10 * a.quantity;
       if (a.id === "extra-reels") moreVideos += a.quantity;
-      if (a.id === "extra-pages" || a.id === "local-page") morePages += a.quantity;
+      if (a.id === "extra-pages") uniquePages = true;
+      if (a.id === "local-page") morePages += a.quantity;
       if (a.id === "extra-shoot") moreMinutes += 60 * a.quantity;
       if (a.id === "location-profiles") moreProfiles += a.quantity;
     });
@@ -310,6 +312,7 @@
       " added = " + (baseCounts.videos + moreVideos) + " short videos");
     if (morePages) results.push(baseCounts.pages + " included + " + morePages +
       " added = " + (baseCounts.pages + morePages) + " website pages");
+    if (uniquePages) results.push(baseCounts.pages + " standard pages + a set of extra unique pages");
     if (moreMinutes) results.push(baseCounts.shootMinutes / 60 + " included + " +
       moreMinutes / 60 + " added = " + (baseCounts.shootMinutes + moreMinutes) / 60 + " shoot hours");
     if (moreProfiles) results.push(baseCounts.profiles + " included + " + moreProfiles +
